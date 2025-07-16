@@ -54,13 +54,10 @@ public class MindMap {
   private DrawArea           _da;  // TBD - Temporary
   private GLib.Settings      _settings;
   private Node?              _last_node       = null;
-  private Connection?        _last_connection = null;  // REMOVE
   private Array<Node>        _nodes;
   private Connections        _connections;
   private Stickers           _stickers;
   private Theme              _theme;
-  private NodeSide           _orig_side;
-  private Array<NodeInfo?>   _orig_info;
   private Node?              _last_match     = null;
   private Node?              _attach_node    = null;
   private SummaryNode?       _attach_summary = null;
@@ -178,14 +175,18 @@ public class MindMap {
       return( _braindump );
     }
   }
+  public Node? last_node {
+    get {
+      return( _last_node );
+    }
+    set {
+      _last_node = value;
+    }
+  }
 
   public signal void changed();
   public signal void current_changed( MindMap map );
   public signal void theme_changed( MindMap map );
-  public signal void scale_changed( double scale );
-  public signal void scroll_changed();
-  public signal void show_properties( string? tab, PropertyGrab grab_type );
-  public signal void hide_properties();
   public signal void loaded();
   public signal void queue_draw();
   public signal void see( bool animate = true, double width_adjust = 0, double pad = 100.0 );
@@ -218,9 +219,6 @@ public class MindMap {
 
     /* Allocate the note node links manager */
     _node_links = new NodeLinks();
-
-    /* Create the node information array */
-    _orig_info = new Array<NodeInfo?>();
 
     // Create the braindump list
     _braindump = new Array<string>();
@@ -1139,10 +1137,9 @@ public class MindMap {
     _selected.clear_connections();
     _last_node.linked_node = new NodeLink( node );
     undo_buffer.add_item( new UndoNodeLink( _last_node, null ) );
-    _last_connection  = null;
-    _last_node        = null;
-    set_node_mode( _attach_node, NodeMode.NONE );
-    _attach_node      = null;
+    _da.last_connection = null;
+    _last_node          = null;
+    set_attach_node( null );
     auto_save();
     queue_draw();
   }
@@ -1584,7 +1581,7 @@ public class MindMap {
       orig_index         = current.index();
       orig_summary       = current.summary_node();
       orig_summary_index = (orig_summary != null) ? orig_summary.node_index( current ) : -1;
-      current.detach( _orig_side );
+      current.detach( _da.get_orig_side() );
       if( (orig_summary != null) && (orig_summary.summarized_count() > 1) ) {
         orig_summary.remove_node( current );
       }
@@ -1607,14 +1604,13 @@ public class MindMap {
     }
 
     /* Attach the node */
-    set_node_mode( _attach_node, NodeMode.NONE );
-    _attach_node = null;
+    set_attach_node( null );
 
     /* Add the attachment information to the undo buffer */
     if( isroot ) {
-      undo_buffer.add_item( new UndoNodeAttach.for_root( current, orig_index, _orig_info ) );
+      undo_buffer.add_item( new UndoNodeAttach.for_root( current, orig_index, _da.orig_info ) );
     } else {
-      undo_buffer.add_item( new UndoNodeAttach( current, orig_parent, _orig_side, orig_index, _orig_info, orig_summary, orig_summary_index ) );
+      undo_buffer.add_item( new UndoNodeAttach( current, orig_parent, _da.get_orig_side(), orig_index, _da.orig_info, orig_summary, orig_summary_index ) );
     }
 
     queue_draw();
@@ -3189,11 +3185,7 @@ public class MindMap {
       double x, y, w, h;
       current_node.bbox( out x, out y, out w, out h );
       conn.draw_to( (x + (w / 2)), (y + (h / 2)) );
-      if( _attach_node != null ) {
-        set_node_mode( _attach_node, NodeMode.NONE );
-      }
-      _attach_node = current_node;
-      set_node_mode( _attach_node, NodeMode.ATTACHABLE );
+      set_attach_node( current_node );
     } else {
       conn.draw_to( _da.press_x, _da.press_y );
     }
@@ -3209,11 +3201,7 @@ public class MindMap {
     double x, y, w, h;
     node.bbox( out x, out y, out w, out h );
     _selected.current_connection().draw_to( (x + (w / 2)), (y + (h / 2)) );
-    if( _attach_node != null ) {
-      set_node_mode( _attach_node, NodeMode.NONE );
-    }
-    _attach_node = node;
-    set_node_mode( _attach_node, NodeMode.ATTACHABLE );
+    set_attach_node( node );
     queue_draw();
   }
 
@@ -3227,10 +3215,9 @@ public class MindMap {
     undo_buffer.add_item( new UndoConnectionAdd( current ) );
     _selected.set_current_connection( current );
     handle_connection_edit_on_creation( current );
-    _last_connection = null;
-    _last_node       = null;
-    set_node_mode( _attach_node, NodeMode.NONE );
-    _attach_node     = null;
+    _da.last_connection = null;
+    _last_node          = null;
+    set_attach_node( null );
     auto_save();
     queue_draw();
   }
@@ -3263,7 +3250,7 @@ public class MindMap {
     undo_buffer.add_item( new UndoConnectionDelete( current ) );
     _connections.remove_connection( current, false );
     _selected.remove_connection( current );
-    _last_connection = null;
+    _da.last_connection = null;
     auto_save();
     queue_draw();
   }

@@ -447,7 +447,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void tab_changed( int page_num ) {
     var da = get_da( page_num );
     do_buffer_changed( da.map.current_undo_buffer() );
-    on_current_changed( da );
+    on_current_changed( da.map );
     update_title( da );
     canvas_changed( da );
     save_tab_state( page_num );
@@ -517,13 +517,16 @@ public class MainWindow : Gtk.ApplicationWindow {
     /* Create and pack the canvas */
     var da = new DrawArea( this, _settings );
     da.current_changed.connect( on_current_changed );
+    da.map.current_changed.connect( on_current_changed );
     da.scale_changed.connect( change_scale );
     da.scroll_changed.connect( change_origin );
     da.show_properties.connect( show_properties );
     da.hide_properties.connect( hide_properties );
     da.map.undo_buffer.buffer_changed.connect( do_buffer_changed );
     da.map.undo_text.buffer_changed.connect( do_buffer_changed );
-    da.theme_changed.connect( on_theme_changed );
+    da.map.theme_changed.connect( on_theme_changed );
+    da.map.queue_draw.connect( da.queue_draw );
+    da.map.see.connect( da.see );
     da.animator.enable = _settings.get_boolean( "enable-animations" );
 
     if( fname != null ) {
@@ -1456,9 +1459,9 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Called whenever the theme is changed
-  private void on_theme_changed( DrawArea da ) {
+  private void on_theme_changed( MindMap map ) {
     var settings  = Gtk.Settings.get_default();
-    var dark_mode = da.map.get_theme().prefer_dark;
+    var dark_mode = map.get_theme().prefer_dark;
     if( settings != null ) {
       settings.gtk_application_prefer_dark_theme = dark_mode;
     }
@@ -1558,9 +1561,9 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   /* Called whenever the node selection changes in the canvas */
-  private void on_current_changed( DrawArea da ) {
-    action_set_enabled( "win.action_zoom_selected", (da.map.get_current_node() != null) );
-    _focus_btn.active = da.map.get_focus_mode();
+  private void on_current_changed( MindMap map ) {
+    action_set_enabled( "win.action_zoom_selected", (map.get_current_node() != null) );
+    _focus_btn.active = map.get_focus_mode();
   }
 
   /*
