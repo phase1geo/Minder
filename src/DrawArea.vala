@@ -67,9 +67,8 @@ public class DrawArea : Gtk.DrawingArea {
   private bool                  _resize          = false;
   private bool                  _orig_resizable  = false;
   private bool                  _motion          = false;
-  private Node?                 _last_node       = null;     // SAME REMOVE
+  private Node?                 _last_node       = null;  // SAME REMOVE
   private Connection?           _last_connection = null;  // SAME
-  private CanvasText            _orig_text;
   private NodeSide              _orig_side;               // SAME ??
   private Array<NodeInfo?>      _orig_info;               // SAME ??
   private int                   _orig_width;
@@ -396,7 +395,6 @@ public class DrawArea : Gtk.DrawingArea {
     _pressed         = false;
     _press_num       = 0;
     _motion          = false;
-    _orig_text       = new CanvasText( _map );
     _last_connection = null;
 
     _map.set_current_node( null );
@@ -419,7 +417,6 @@ public class DrawArea : Gtk.DrawingArea {
     _pressed         = false;
     _press_num       = 0;
     _motion          = false;
-    _orig_text       = new CanvasText( _map );
     _last_connection = null;
 
     /* Create the main idea node */
@@ -1720,7 +1717,6 @@ public class DrawArea : Gtk.DrawingArea {
         /* If we are not in motion, set the cursor */
         } else if( !_motion ) {
           current_node.name.set_cursor_all( false );
-          _orig_text.copy( current_node.name );
           current_node.name.move_cursor_to_end();
 
         /* If we are not a root node or a summary node, move the node into the appropriate position */
