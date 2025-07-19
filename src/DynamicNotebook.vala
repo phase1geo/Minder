@@ -307,16 +307,23 @@
                     }
                 } else if (e.button == 1 && e.type == Gdk.EventType.2BUTTON_PRESS && duplicate_m.visible) {
                     this.duplicate ();
-                } else if (e.button == 3) {
-                    menu.popup_at_pointer (e);
-                    var cont = (this.get_parent() as Gtk.Container);
-                    uint num_tabs = (cont == null) ? 0 : cont.get_children ().length ();
-                    close_other_m.label = ngettext (_("Close Other Tab"), _("Close Other Tabs"), num_tabs - 1);
-                    close_other_m.sensitive = (num_tabs != 1);
-                    new_window_m.sensitive = (num_tabs != 1);
-                    pin_m.label = "Pin";
-                    if (this.pinned) {
-                        pin_m.label = "Unpin";
+                } else if (e.button == 3) { 
+                    if (menu != null) {
+                        menu.popup_at_pointer (e);
+                        var cont = (this.get_parent() as Gtk.Container);
+                        uint num_tabs = (cont == null) ? 0 : cont.get_children ().length ();
+                        if (close_other_m != null)
+                            close_other_m.label = ngettext (_("Close Other Tab"), _("Close Other Tabs"), num_tabs - 1);
+                        if (close_other_m != null)
+                            close_other_m.sensitive = (num_tabs != 1);
+                        if (new_window_m != null)
+                            new_window_m.sensitive = (num_tabs != 1);
+                        if (pin_m != null) {
+                            pin_m.label = "Pin";
+                            if (this.pinned) {
+                                pin_m.label = "Unpin";
+                            }
+                        }
                     }
                 } else {
                     return false;
@@ -926,11 +933,11 @@
             });
 
             destroy.connect (() => {
-		        notebook.switch_page.disconnect (on_switch_page);
-		        notebook.page_added.disconnect (on_page_added);
-		        notebook.page_removed.disconnect (on_page_removed);
-		        notebook.page_reordered.disconnect (on_page_reordered);
-		        notebook.create_window.disconnect (on_create_window);
+                notebook.switch_page.disconnect (on_switch_page);
+                notebook.page_added.disconnect (on_page_added);
+                notebook.page_removed.disconnect (on_page_removed);
+                notebook.page_reordered.disconnect (on_page_reordered);
+                notebook.create_window.disconnect (on_create_window);
             });
 
             notebook.switch_page.connect (on_switch_page);
