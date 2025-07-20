@@ -149,7 +149,7 @@ public class Tagger {
     listbox.row_activated.connect((row) => {
       var label = (Label)row.get_child();
       var value = label.get_text();
-      _map.da.add_tag( value );
+      _map.canvas.add_tag( value );
       popover.popdown();
     });
 
@@ -159,7 +159,7 @@ public class Tagger {
 
     _entry.activate.connect( () => {
       var value = _entry.text;
-      _map.da.add_tag( value );
+      _map.canvas.add_tag( value );
       popover.popdown();
     });
 

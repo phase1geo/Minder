@@ -134,7 +134,7 @@ public class ThemeEditor : Gtk.Box {
     };
     _prefer_dark.notify["active"].connect((e) => {
       _theme.prefer_dark = !_theme.prefer_dark;
-      _win.get_current_da().map.set_theme( _theme, true );
+      _win.get_current_map().model.set_theme( _theme, true );
     });
 
     grid.attach( dark_lbl,     0, (row + 1) );
@@ -200,7 +200,7 @@ public class ThemeEditor : Gtk.Box {
     };
     btn.color_set.connect(() => {
       _theme.set_color( name, btn.rgba );
-      _win.get_current_da().map.set_theme( _theme, true );
+      _win.get_current_map().model.set_theme( _theme, true );
     });
     _btns.set( name, btn );
 
@@ -264,14 +264,14 @@ public class ThemeEditor : Gtk.Box {
 
   /* Deletes the current theme */
   private void delete_theme() {
-    _win.get_current_da().map.set_theme( _win.themes.get_theme( _( "Default" ) ), true );
+    _win.get_current_map().model.set_theme( _win.themes.get_theme( _( "Default" ) ), true );
     _win.themes.delete_theme( _orig_theme.name );
     _win.hide_theme_editor();
   }
 
   /* Hides the theme editor panel without saving */
   private void close_window() {
-    _win.get_current_da().map.set_theme( _orig_theme, true );
+    _win.get_current_map().model.set_theme( _orig_theme, true );
     _win.hide_theme_editor();
   }
 

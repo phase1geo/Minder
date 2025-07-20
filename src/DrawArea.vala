@@ -45,9 +45,7 @@ public class DrawArea : Gtk.DrawingArea {
   private const string pointer_cursor = "pointer";
   private const string pan_cursor     = "grabbing";
 
-  private Document              _doc;
   private MindMap               _map;
-  private GLib.Settings         _settings;
   private double                _press_x;
   private double                _press_y;
   private double                _scaled_x;
@@ -97,11 +95,6 @@ public class DrawArea : Gtk.DrawingArea {
   public MainWindow win      { private set; get; }
   public Animator   animator { set; get; }
 
-  public GLib.Settings settings {
-    get {
-      return( _settings );
-    }
-  }
   public MindMap map {
     get {
       return( _map );
@@ -198,19 +191,10 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void hide_properties();
 
   /* Default constructor */
-  public DrawArea( MainWindow w, GLib.Settings settings ) {
+  public DrawArea( MindMap map, MainWindow w ) {
 
-    win = w;
-
-    _settings = settings;
-
-    // Create the mind map model
-    _map = new MindMap( this, settings );
-    _map.queue_draw.connect( queue_draw );
-    _map.see.connect( see );
-
-    // Create the document
-    _doc = new Document( this );
+    _map = map;
+    win  = w;
 
     /* Allocate memory for the animator */
     animator = new Animator( this );
@@ -244,17 +228,17 @@ public class DrawArea : Gtk.DrawingArea {
     url_parser      = new UrlParser();
     unicode_parser  = new UnicodeParser( this );
 
-    markdown_parser.enable = settings.get_boolean( "enable-markdown" );
-    url_parser.enable      = settings.get_boolean( "auto-parse-embedded-urls" );
-    unicode_parser.enable  = settings.get_boolean( "enable-unicode-input" );
+    markdown_parser.enable = _map.settings.get_boolean( "enable-markdown" );
+    url_parser.enable      = _map.settings.get_boolean( "auto-parse-embedded-urls" );
+    unicode_parser.enable  = _map.settings.get_boolean( "enable-unicode-input" );
 
     /* Create text completion */
     _completion = new TextCompletion( this );
 
     /* Get the value of the new node from edit */
-    update_create_new_from_edit( settings );
-    settings.changed.connect(() => {
-      update_create_new_from_edit( settings );
+    update_create_new_from_edit( _map.settings );
+    _map.settings.changed.connect(() => {
+      update_create_new_from_edit( _map.settings );
     });
 
     /* Add event listeners */
@@ -342,22 +326,6 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   //-------------------------------------------------------------
-  // Returns the stored document.
-  public Document get_doc() {
-    return( _doc );
-  }
-
-  //-------------------------------------------------------------
-  // Updates the CSS for the current theme.
-  public void update_css() {
-    StyleContext.add_provider_for_display(
-      Display.get_default(),
-      _map.get_theme().get_css_provider( win.text_size ),
-      STYLE_PROVIDER_PRIORITY_APPLICATION
-    );
-  }
-
-  //-------------------------------------------------------------
   // Gets the top and bottom y position of this draw area.
   public void get_window_ys( out int top, out int bottom ) {
     var vh = get_allocated_height();
@@ -384,46 +352,8 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   //-------------------------------------------------------------
-  // Retrieves canvas size settings and returns the approximate
-  // dimensions.
-  public void get_dimensions( out int width, out int height ) {
-    var sidebar_width = _settings.get_boolean( "current-properties-shown" ) ||
-                        _settings.get_boolean( "map-properties-shown" )     ||
-                        _settings.get_boolean( "sticker-properties-shown" ) ||
-                        _settings.get_boolean( "style-properties-shown" ) ? _settings.get_int( "properties-width" ) : 0;
-    width  = _settings.get_int( "window-w" ) - sidebar_width;
-    height = _settings.get_int( "window-h" );
-  }
-
-  //-------------------------------------------------------------
-  // Initializes the canvas to prepare it for a document that
-  // will be loaded.
-  public void initialize_for_open() {
-
-    // Initialize the map model
-    _map.initialize();
-
-    /* Initialize variables */
-    origin_x         = 0.0;
-    origin_y         = 0.0;
-    sfactor          = 1.0;
-    _pressed         = false;
-    _press_num       = 0;
-    _motion          = false;
-    _last_connection = null;
-
-    _map.set_current_node( null );
-
-    queue_draw();
-
-  }
-
-  //-------------------------------------------------------------
-  // Initialize the empty drawing area with a node.
-  public void initialize_for_new() {
-
-    // Initialize the mindmap model
-    _map.initialize();
+  // Initialize the drawing area.
+  public void initialize() {
 
     // Initialize variables
     origin_x         = 0.0;
@@ -433,30 +363,6 @@ public class DrawArea : Gtk.DrawingArea {
     _press_num       = 0;
     _motion          = false;
     _last_connection = null;
-
-    /* Create the main idea node */
-    var n = new Node.with_name( _map, _("Main Idea"), _map.layouts.get_default() );
-
-    /* Get the rough dimensions of the canvas */
-    int wwidth, wheight;
-    get_dimensions( out wwidth, out wheight );
-
-    /* Set the node information */
-    n.posx  = (wwidth  / 2) - 30;
-    n.posy  = (wheight / 2) - 10;
-    n.style = StyleInspector.styles.get_global_style();
-
-    _map.get_nodes().append_val( n );
-
-    /* Make this initial node the current node */
-    _map.set_current_node( n );
-    Idle.add(() => {
-      _map.set_node_mode( n, NodeMode.EDITABLE, false );
-      return( false );
-    });
-
-    /* Redraw the canvas */
-    queue_draw();
 
   }
 
@@ -1572,8 +1478,8 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Selects the given node on hover, if enabled.
   private bool select_node_on_hover( Node node, bool shift ) {
-    if( _settings.get_boolean( "select-on-hover" ) ) {
-      var timeout = _settings.get_int( "select-on-hover-timeout" );
+    if( _map.settings.get_boolean( "select-on-hover" ) ) {
+      var timeout = _map.settings.get_int( "select-on-hover-timeout" );
       _select_hover_id = Timeout.add( timeout, () => {
         _select_hover_id = 0;
         if( !shift || (_map.selected.num_nodes() == 0) ) {
@@ -1592,8 +1498,8 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Selects the given connection on hover, if enabled.
   private bool select_connection_on_hover( Connection conn, bool shift ) {
-    if( _settings.get_boolean( "select-on-hover" ) ) {
-      var timeout = _settings.get_int( "select-on-hover-timeout" );
+    if( _map.settings.get_boolean( "select-on-hover" ) ) {
+      var timeout = _map.settings.get_int( "select-on-hover-timeout" );
       _select_hover_id = Timeout.add( timeout, () => {
         _select_hover_id = 0;
         if( !shift || (_map.selected.num_connections() == 0) ) {
@@ -1612,8 +1518,8 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Selects the current sticker/group on hover.
   private bool select_sticker_group_on_hover( bool shift ) {
-    if( _settings.get_boolean( "select-on-hover" ) ) {
-      var timeout = _settings.get_int( "select-on-hover-timeout" );
+    if( _map.settings.get_boolean( "select-on-hover" ) ) {
+      var timeout = _map.settings.get_int( "select-on-hover-timeout" );
       var sticker = _map.get_sticker_at_position( _scaled_x, _scaled_y );
       if( sticker != null ) {
         _select_hover_id = Timeout.add( timeout, () => {
@@ -2255,7 +2161,7 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Displays the quick entry UI in insertion mode.
   public void handle_control_E() {
-    var quick_entry = new QuickEntry( _map, false, _settings );
+    var quick_entry = new QuickEntry( _map, false, _map.settings );
     quick_entry.preload( "- " );
   }
 
@@ -2281,7 +2187,7 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Displays the quick entry UI in replacement mode.
   public void handle_control_R() {
-    var quick_entry = new QuickEntry( _map, true, _settings );
+    var quick_entry = new QuickEntry( _map, true, _map.settings );
     var export      = (ExportText)win.exports.get_by_name( "text" );
     quick_entry.preload( export.export_node( _map, _map.selected.current_node(), "" ) );
   }
@@ -3225,7 +3131,7 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Updates the create_new_from_edit variable.
   private void update_create_new_from_edit( GLib.Settings settings ) {
-    _create_new_from_edit = settings.get_boolean( "new-node-from-edit" );
+    _create_new_from_edit = _map.settings.get_boolean( "new-node-from-edit" );
   }
 
   //-------------------------------------------------------------

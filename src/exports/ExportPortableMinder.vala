@@ -41,7 +41,7 @@ public class ExportPortableMinder : Export {
     archive.open_filename( fname );
 
     /* Add the Minder file to the archive */
-    archive_file( archive, map.da.get_doc().filename );
+    archive_file( archive, map.doc.filename );
 
     /* Add the images */
     var image_ids = map.image_manager.get_ids();
@@ -192,7 +192,7 @@ public class ExportPortableMinder : Export {
     DirUtils.remove( img_dir );
 
     /* Finally, load the minder file and re-save it */
-    map.da.get_doc().load();
+    map.doc.load();
     map.auto_save();
 
     return( true );

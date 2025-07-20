@@ -79,7 +79,7 @@ public class Layout : Object {
     double px, py, pw, ph;
     parent.bbox( out px, out py, out pw, out ph );
 
-    var nb = new NodeBounds.with_bounds( parent.map.da, px, py, pw, ph );
+    var nb = new NodeBounds.with_bounds( parent.map, px, py, pw, ph );
 
     double x2 = nb.x + nb.width;
     double y2 = nb.y + nb.height;

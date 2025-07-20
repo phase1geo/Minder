@@ -170,8 +170,8 @@ public class ExportOPML : Export {
           var root = new Node( map, map.layouts.get_default() );
           import_node( map, root, it, node_id, ref expand_state, map.get_theme() );
           if (map.get_nodes().length == 0) {
-            root.posx = (map.da.get_allocated_width()  / 2) - 30;
-            root.posy = (map.da.get_allocated_height() / 2) - 10;
+            root.posx = (map.canvas.get_allocated_width()  / 2) - 30;
+            root.posy = (map.canvas.get_allocated_height() / 2) - 10;
           } else {
             map.get_nodes().index( map.get_nodes().length - 1 ).layout.position_root( map.get_nodes().index( map.get_nodes().length - 1 ), root );
           }

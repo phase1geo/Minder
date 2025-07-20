@@ -27,7 +27,8 @@ public class UndoNodeReparent : UndoItem {
   private int  _first_index;
   private int  _last_index;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoNodeReparent( Node node, int first_index, int last_index ) {
     base( _( "reparent children" ) );
     _node        = node;
@@ -35,21 +36,25 @@ public class UndoNodeReparent : UndoItem {
     _last_index  = last_index;
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data.
   public override void undo( MindMap map ) {
-    map.da.animator.add_nodes( map.get_nodes(), "undo_make_children_siblings" );
+    map.canvas.animator.add_nodes( map.get_nodes(), "undo_make_children_siblings" );
     for( int i=(_last_index - 1); i>=_first_index; i-- ) {
       var child = _node.parent.children().index( i );
       child.detach( child.side );
       child.attach( _node, 0, null );
     }
-    map.da.animator.animate();
+    map.canvas.animator.animate();
     map.auto_save();
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation.
   public override void redo( MindMap map ) {
+    map.canvas.animator.add_nodes( map.get_nodes(), "redo_make_children_siblings" );
     _node.make_children_siblings( _node.children().index( 0 ), false );
+    map.canvas.animator.animate();
     map.auto_save();
   }
 

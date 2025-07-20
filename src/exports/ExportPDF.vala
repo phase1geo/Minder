@@ -54,7 +54,7 @@ public class ExportPDF : Export {
     context.translate( ((0 - x) + (margin / sf)), ((0 - y) + (margin / sf)) );
 
     /* Draw background */
-    map.da.get_style_context().render_background( context, x, y, w, h );
+    map.canvas.get_style_context().render_background( context, x, y, w, h );
 
     /* Recreate the image */
     map.draw_all( context, true, false );

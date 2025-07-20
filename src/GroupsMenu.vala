@@ -95,7 +95,7 @@ public class GroupsMenu {
     var num    = groups.length;
 
     /* Set the menu sensitivity */
-    _map.da.action_set_enabled( "groups.action_merge_groups", (num > 1) );
+    _map.canvas.action_set_enabled( "groups.action_merge_groups", (num > 1) );
 
   }
 
@@ -111,12 +111,12 @@ public class GroupsMenu {
 
   /* Edits the group note */
   private void action_edit_note() {
-    _map.da.show_properties( "current", PropertyGrab.NOTE );
+    _map.show_properties( "current", PropertyGrab.NOTE );
   }
 
   /* Allows the user to change the color of the selected groups */
   private void action_change_color() {
-    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _map.da.win );
+    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _map.win );
     color_picker.color_activated.connect((color) => {
       _map.change_group_color( color );
     });

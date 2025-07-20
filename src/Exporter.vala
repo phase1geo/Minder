@@ -132,7 +132,7 @@ public class Exporter : Box {
     var dialog = Utils.make_file_chooser( _( "Export As %s" ).printf( export.label ), _( "Export" ) );
 
     /* Set the default filename */
-    var default_fname = Utils.rootname( win.get_current_da().get_doc().filename );
+    var default_fname = Utils.rootname( win.get_current_map().doc.filename );
     dialog.set_initial_name( win.repair_filename( default_fname, export.extensions ) );
 
     var filters = new GLib.ListStore( typeof( FileFilter ) );
@@ -151,7 +151,7 @@ public class Exporter : Box {
         var file = dialog.save.end( res );
         if( file != null ) {
           var fname = file.get_path();
-          export.export( fname = win.repair_filename( fname, export.extensions ), win.get_current_da().map );
+          export.export( fname = win.repair_filename( fname, export.extensions ), win.get_current_map() );
           win.notification( _( "Minder Export Completed" ), fname );
         }
       } catch( Error e ) {}

@@ -49,6 +49,8 @@ public class NodeInspector : Box {
 
   public signal void update_icons();
 
+  //-------------------------------------------------------------
+  // Constructor.
   public NodeInspector( MainWindow win ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 10 );
@@ -68,21 +70,23 @@ public class NodeInspector : Box {
 
   }
 
-  /* Called whenever the user clicks on a tab in the tab bar */
-  private void tab_changed( DrawArea? da ) {
+  //-------------------------------------------------------------
+  // Called whenever the user clicks on a tab in the tab bar.
+  private void tab_changed( MindMap? map ) {
     if( _map != null ) {
       _map.current_changed.disconnect( node_changed );
       _map.theme_changed.disconnect( theme_changed );
     }
-    _map = da.map;
-    if( da != null ) {
-      da.map.current_changed.connect( node_changed );
-      da.map.theme_changed.connect( theme_changed );
+    _map = map;
+    if( map != null ) {
+      map.current_changed.connect( node_changed );
+      map.theme_changed.connect( theme_changed );
       node_changed();
     }
   }
 
-  /* Sets the width of this inspector to the given value */
+  //-------------------------------------------------------------
+  // Sets the width of this inspector to the given value.
   public void set_width( int width ) {
     _sw.width_request = width;
   }
@@ -99,7 +103,8 @@ public class NodeInspector : Box {
 
   }
 
-  /* Creates the task UI elements */
+  //-------------------------------------------------------------
+  // Creates the task UI elements.
   private void create_task() {
 
     var lbl = new Label( _( "Task" ) ) {

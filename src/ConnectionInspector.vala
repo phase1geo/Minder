@@ -50,15 +50,13 @@ public class ConnectionInspector : Box {
   }
 
   /* Called whenever the tab in the main window changes */
-  private void tab_changed( DrawArea? da ) {
+  private void tab_changed( MindMap? map ) {
     if( _map != null ) {
       _map.current_changed.disconnect( connection_changed );
     }
-    if( da != null ) {
-      _map = da.map;
-      da.map.current_changed.connect( connection_changed );
-    } else {
-      _map = null;
+    _map = map;
+    if( map != null ) {
+      map.current_changed.connect( connection_changed );
     }
   }
 

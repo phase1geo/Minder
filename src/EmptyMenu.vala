@@ -89,15 +89,15 @@ public class EmptyMenu {
   /* Called when the menu is popped up */
   private void on_popup() {
 
-    _map.da.action_set_enabled( "empty.action_paste",            _map.node_pasteable() );
-    _map.da.action_set_enabled( "empty.action_add_root_node",    !connection_selected() );
-    _map.da.action_set_enabled( "empty.action_select_root_node", _map.root_selectable() );
+    _map.canvas.action_set_enabled( "empty.action_paste",            _map.node_pasteable() );
+    _map.canvas.action_set_enabled( "empty.action_add_root_node",    !connection_selected() );
+    _map.canvas.action_set_enabled( "empty.action_select_root_node", _map.root_selectable() );
 
   }
 
   /* Pastes node tree as root from clipboard */
   private void action_paste() {
-    _map.da.do_paste( false );
+    _map.canvas.do_paste( false );
   }
 
   /* Creates a new root node */
@@ -107,7 +107,7 @@ public class EmptyMenu {
 
   /* Adds top-level nodes via the quick entry facility */
   private void action_add_quick_entry() {
-    _map.da.handle_control_E();
+    _map.canvas.handle_control_E();
   }
 
   /* Selects the current root node */

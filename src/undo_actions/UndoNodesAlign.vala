@@ -51,7 +51,8 @@ public class UndoNodesAlign : UndoItem {
   Array<Node>          _nodes;
   Array<NodeAlignInfo> _info;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change.
   public UndoNodesAlign( Array<Node> nodes ) {
     base( _( "node alignment" ) );
     _nodes = new Array<Node>();
@@ -63,22 +64,26 @@ public class UndoNodesAlign : UndoItem {
     }
   }
 
+  //-------------------------------------------------------------
+  // Perform the node alignment change with animation.
   private void change( MindMap map ) {
-    map.da.animator.add_nodes( _nodes, "align change" );
+    map.canvas.animator.add_nodes( _nodes, "align change" );
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
       _info.index( i ).swap_with_node( node );
     }
-    map.da.animator.animate();
+    map.canvas.animator.animate();
     map.auto_save();
   }
 
-  /* Undoes a node image change */
+  //-------------------------------------------------------------
+  // Undoes a node image change.
   public override void undo( MindMap map ) {
     change( map );
   }
 
-  /* Redoes a node image change */
+  //-------------------------------------------------------------
+  // Redoes a node image change.
   public override void redo( MindMap map ) {
     change( map );
   }

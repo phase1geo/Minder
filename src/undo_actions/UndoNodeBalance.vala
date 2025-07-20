@@ -76,7 +76,7 @@ public class UndoNodeBalance : UndoItem {
   //-------------------------------------------------------------
   // Perform the swap.
   private void change( MindMap map, Array<BalanceNodes> nodes ) {
-    map.da.animator.add_nodes( map.get_nodes(), "undo balance nodes" );
+    map.canvas.animator.add_nodes( map.get_nodes(), "undo balance nodes" );
     if( _root == null ) {
       for( int i=0; i<map.get_nodes().length; i++ ) {
         nodes.index( i ).change( map.get_nodes().index( i ) );
@@ -84,7 +84,7 @@ public class UndoNodeBalance : UndoItem {
     } else {
       nodes.index( 0 ).change( _root );
     }
-    map.da.animator.animate();
+    map.canvas.animator.animate();
   }
 
   //-------------------------------------------------------------

@@ -92,7 +92,7 @@ public class ConnectionMenu {
   /* Called when the menu is popped up */
   public void show( double x, double y ) {
 
-    _map.da.action_set_enabled( "conn.action_edit_sticker", (_map.get_current_connection().sticker != null) );
+    _map.canvas.action_set_enabled( "conn.action_edit_sticker", (_map.get_current_connection().sticker != null) );
 
     // Display the popover at the given location
     Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
@@ -117,7 +117,7 @@ public class ConnectionMenu {
 
   /* Changes the note status of the currently selected node */
   private void action_edit_note() {
-    _map.da.show_properties( "current", PropertyGrab.NOTE );
+    _map.show_properties( "current", PropertyGrab.NOTE );
   }
 
   /* Removes the sticker attached to the connection */

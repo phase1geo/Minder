@@ -51,8 +51,8 @@ public class SequenceNum {
 
   //-------------------------------------------------------------
   // Default constructor
-  public SequenceNum( DrawArea da ) {
-    _layout = da.create_pango_layout( "1" );
+  public SequenceNum( MindMap map ) {
+    _layout = map.canvas.create_pango_layout( "1" );
     initialize_font();
   }
 

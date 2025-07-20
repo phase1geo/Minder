@@ -38,11 +38,11 @@ public class QuickEntry : Gtk.Window {
     modal           = true;
     deletable       = false;
     title           = _( "Quick Entry" );
-    transient_for   = map.da.win;
+    transient_for   = map.win;
 
     /* Initialize member variables */
     _map    = map;
-    _export = (ExportText)map.da.win.exports.get_by_name( "text" );
+    _export = (ExportText)map.win.exports.get_by_name( "text" );
 
     /* Add window elements */
     var box = new Box( Orientation.VERTICAL, 0 );

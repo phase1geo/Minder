@@ -34,7 +34,7 @@ public class NodeAlign {
 
   private static void align_to( MindMap map, Array<Node> nodes, NodeAlignFunc align_func ) {
     map.undo_buffer.add_item( new UndoNodesAlign( nodes ) );
-    map.da.animator.add_nodes( nodes, "align_to" );
+    map.canvas.animator.add_nodes( nodes, "align_to" );
     var first = nodes.index( 0 );
     for( int i=1; i<nodes.length; i++ ) {
       var node = nodes.index( i );
@@ -44,7 +44,7 @@ public class NodeAlign {
         node.layout.propagate_side( node, first.side );
       }
     }
-    map.da.animator.animate();
+    map.canvas.animator.animate();
     map.auto_save();
   }
 

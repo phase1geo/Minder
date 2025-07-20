@@ -140,7 +140,7 @@ public class NodesMenu {
   // Shows this menu.
   public void show( double x, double y ) {
 
-    on_popup( _map.da );
+    on_popup( _map.canvas );
 
     /* Display the popover at the given location */
     Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
@@ -263,7 +263,7 @@ public class NodesMenu {
 
   /* Changes the color of all selected nodes */
   public void action_change_link_colors() {
-    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _map.da.win );
+    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _map.win );
     color_picker.color_activated.connect((color) => {
       _map.change_link_colors( color_picker.get_rgba() );
     });

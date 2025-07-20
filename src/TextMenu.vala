@@ -135,7 +135,7 @@ public class TextMenu {
    character at the current cursor location.
   */
   private void action_insert_emoji() {
-    _map.da.handle_control_period();
+    _map.canvas.handle_control_period();
   }
 
   /* Opens the first link found */
@@ -164,17 +164,17 @@ public class TextMenu {
    text that currently has a link associated with it.
   */
   private void action_add_link() {
-    _map.da.url_editor.add_url();
+    _map.canvas.url_editor.add_url();
   }
 
   /* Allows the user to remove the link located at the current cursor */
   private void action_remove_link() {
-    _map.da.url_editor.remove_url();
+    _map.canvas.url_editor.remove_url();
   }
 
   /* Allows the user to edit the associated link. */
   private void action_edit_link() {
-    _map.da.url_editor.edit_url();
+    _map.canvas.url_editor.edit_url();
   }
 
   /* Restores an embedded link that was previously removed */
@@ -208,16 +208,16 @@ public class TextMenu {
     var callout = _map.get_current_callout();
 
     /* Set the menu sensitivity */
-    _map.da.action_set_enabled( "text.action_copy",  copy_or_cut_possible() );
-    _map.da.action_set_enabled( "text.action_cut",   copy_or_cut_possible() );
-    _map.da.action_set_enabled( "text.action_paste", paste_possible() );
+    _map.canvas.action_set_enabled( "text.action_copy",  copy_or_cut_possible() );
+    _map.canvas.action_set_enabled( "text.action_cut",   copy_or_cut_possible() );
+    _map.canvas.action_set_enabled( "text.action_paste", paste_possible() );
 
     /* Initialize the visible attribute */
-    _map.da.action_set_enabled( "text.action_open_link",    false );
-    _map.da.action_set_enabled( "text.action_add_link",     false );
-    _map.da.action_set_enabled( "text.action_edit_link",    false );
-    _map.da.action_set_enabled( "text.action_delete_link",  false );
-    _map.da.action_set_enabled( "text.action_restore_link", false );
+    _map.canvas.action_set_enabled( "text.action_open_link",    false );
+    _map.canvas.action_set_enabled( "text.action_add_link",     false );
+    _map.canvas.action_set_enabled( "text.action_edit_link",    false );
+    _map.canvas.action_set_enabled( "text.action_delete_link",  false );
+    _map.canvas.action_set_enabled( "text.action_restore_link", false );
     _clear_selection = false;
 
     CanvasText? ct = null;
@@ -254,11 +254,11 @@ public class TextMenu {
       //    1       1       rest
 
       // Set view of all link menus
-      _map.da.action_set_enabled( "text.action_open_link",    (valid && !ignore) );
-      _map.da.action_set_enabled( "text.action_add_link",     (!embedded && !ignore && _map.add_link_possible( ct )) );
-      _map.da.action_set_enabled( "text.action_edit_link",    (valid && !selected && !embedded) );
-      _map.da.action_set_enabled( "text.action_delete_link",  (valid && !selected && (!embedded || !ignore)) );
-      _map.da.action_set_enabled( "text.action_restore_link", (valid && !selected && embedded && ignore) );
+      _map.canvas.action_set_enabled( "text.action_open_link",    (valid && !ignore) );
+      _map.canvas.action_set_enabled( "text.action_add_link",     (!embedded && !ignore && _map.add_link_possible( ct )) );
+      _map.canvas.action_set_enabled( "text.action_edit_link",    (valid && !selected && !embedded) );
+      _map.canvas.action_set_enabled( "text.action_delete_link",  (valid && !selected && (!embedded || !ignore)) );
+      _map.canvas.action_set_enabled( "text.action_restore_link", (valid && !selected && embedded && ignore) );
 
       _clear_selection = valid && !selected;
 

@@ -46,7 +46,7 @@ public class ExportImage : Export {
     var context = new Context( surface );
 
     /* Recreate the image */
-    map.da.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
+    map.canvas.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
     context.translate( (10 - x), (10 - y) );
     context.scale( scale, scale );
     map.draw_all( context, true, false );

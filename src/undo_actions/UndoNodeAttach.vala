@@ -36,7 +36,8 @@ public class UndoNodeAttach : UndoItem {
   private Array<NodeInfo?> _new_info;
   private SummaryNode?     _new_summary;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoNodeAttach( Node n, Node? old_parent, NodeSide old_side, int old_index, Array<NodeInfo?> old_info, SummaryNode? old_summary, int old_summary_index ) {
     base( _( "attach node" ) );
     _n           = n;
@@ -53,7 +54,8 @@ public class UndoNodeAttach : UndoItem {
     _new_summary = n.summary_node();
   }
 
-  /* Constructor for root nodes */
+  //-------------------------------------------------------------
+  // Constructor for root nodes.
   public UndoNodeAttach.for_root( Node n, int old_index, Array<NodeInfo?> old_info ) {
     base( _( "attach node" ) );
     _n           = n;
@@ -69,10 +71,11 @@ public class UndoNodeAttach : UndoItem {
     _new_summary = n.summary_node();
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data.
   public override void undo( MindMap map ) {
     int index = 0;
-    map.da.animator.add_nodes( map.get_nodes(), "undo attach" );
+    map.canvas.animator.add_nodes( map.get_nodes(), "undo attach" );
     if( _new_summary != null ) {
       _new_summary.remove_node( _n );
     }
@@ -90,14 +93,15 @@ public class UndoNodeAttach : UndoItem {
       }
     }
     map.set_current_node( _n );
-    map.da.animator.animate();
+    map.canvas.animator.animate();
     map.auto_save();
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation.
   public override void redo( MindMap map ) {
     int index = 0;
-    map.da.animator.add_nodes( map.get_nodes(), "redo attach" );
+    map.canvas.animator.add_nodes( map.get_nodes(), "redo attach" );
     if( _old_summary != null ) {
       _old_summary.remove_node( _n );
     }
@@ -119,7 +123,7 @@ public class UndoNodeAttach : UndoItem {
       }
     }
     map.set_current_node( _n );
-    map.da.animator.animate();
+    map.canvas.animator.animate();
     map.auto_save();
   }
 

@@ -32,15 +32,17 @@ public class NodeLink {
     }
   }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor.
   public NodeLink( Node node ) {
-    _fname      = node.map.da.get_doc().filename;
-    _temp_file  = !node.map.da.get_doc().is_saved();
+    _fname      = node.map.doc.filename;
+    _temp_file  = !node.map.doc.is_saved();
     _node_title = node.name.text.text;
     _node_id    = node.id();
   }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public NodeLink.for_local( int id ) {
     _fname      = "";
     _temp_file  = false;
@@ -48,30 +50,37 @@ public class NodeLink {
     _node_id    = id;
   }
 
-  /* Constructor from XML node */
+  //-------------------------------------------------------------
+  // Constructor from XML node.
   public NodeLink.from_xml( Xml.Node* node ) {
     _temp_file = false;
     load( node );
   }
 
-  /* Returns true if the linked node exists in the same mindmap as the node that links to it */
+  //-------------------------------------------------------------
+  // Returns true if the linked node exists in the same mindmap
+  // as the node that links to it.
   public bool is_local() {
     return( _fname == "" );
   }
 
-  /* Returns true if this node_link can be linked to the given document */
+  //-------------------------------------------------------------
+  // Returns true if this node_link can be linked to the given
+  // document.
   public bool is_linkable( string fname, int node_id ) {
     return( (fname == _fname) ? (_node_id != node_id) : !_temp_file );
   }
 
-  /* Returns true if the specified node link matches ourselves */
+  //-------------------------------------------------------------
+  // Returns true if the specified node link matches ourselves.
   public bool matches( NodeLink other ) {
     return( (_fname == other._fname) && (_node_id == other._node_id) );
   }
 
-  /* This should be called whenever a NodeLink is assigned to a node */
-  public void normalize( DrawArea da ) {
-    if( _fname == da.get_doc().filename ) {
+  //-------------------------------------------------------------
+  // This should be called whenever a NodeLink is assigned to a node.
+  public void normalize( MindMap map ) {
+    if( _fname == map.doc.filename ) {
       _fname      = "";
       _temp_file  = false;
       _node_title = "";
@@ -81,13 +90,13 @@ public class NodeLink {
   //-------------------------------------------------------------
   // Displays the linked node.  If the node is in a different file,
   // opens the mindmap and selects the given node.
-  public void select( DrawArea da ) {
-    if( (_fname == "") || da.win.open_file( _fname, false ) ) {
-      var other_da = da.win.get_current_da();
-      var node     = other_da.map.get_node( other_da.map.get_nodes(), _node_id );
+  public void select( MindMap map ) {
+    if( (_fname == "") || map.win.open_file( _fname, false ) ) {
+      var other_map = map.win.get_current_map();
+      var node      = other_map.model.get_node( other_map.model.get_nodes(), _node_id );
       Idle.add(() => {
-        if( other_da.map.select_node( node, false ) ) {
-          other_da.map.queue_draw();
+        if( other_map.model.select_node( node, false ) ) {
+          other_map.canvas.queue_draw();
         } else {
           // Node was not found
         }
@@ -100,7 +109,7 @@ public class NodeLink {
   // Returns the node link string to display in a tooltip.
   public string get_tooltip( MindMap map ) {
     if( _fname == "" ) {
-      var linked_node = map.get_node( map.get_nodes(), _node_id );
+      var linked_node = map.model.get_node( map.model.get_nodes(), _node_id );
       if( linked_node != null ) {
         return( linked_node.name.text.text );
       } else {
@@ -117,7 +126,7 @@ public class NodeLink {
   // Returns the text to display in a Markdown link.
   public string get_markdown_text( MindMap map ) {
     if( _fname == "" ) {
-      var linked_node = map.get_node( map.get_nodes(), _node_id );
+      var linked_node = map.model.get_node( map.model.get_nodes(), _node_id );
       return( linked_node.name.text.text );
     } else {
       string title = "";

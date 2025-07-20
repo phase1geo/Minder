@@ -211,7 +211,7 @@ public class NodeMenu {
   public void show( double x, double y ) {
 
     // Handle menu state
-    on_popup( _map.da );
+    on_popup( _map.canvas );
 
     // Display the popover at the given location
     Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
@@ -378,7 +378,7 @@ public class NodeMenu {
    node.
   */
   private void action_paste() {
-    _map.da.do_paste( false );
+    _map.canvas.do_paste( false );
   }
 
   /*
@@ -386,7 +386,7 @@ public class NodeMenu {
    in the clipboard.
   */
   private void action_replace() {
-    _map.da.do_paste( true );
+    _map.canvas.do_paste( true );
   }
 
   /* Deletes the current node */
@@ -422,7 +422,7 @@ public class NodeMenu {
 
   /* Changes the note status of the currently selected node */
   private void action_edit_note() {
-    _map.da.show_properties( "current", PropertyGrab.NOTE );
+    _map.show_properties( "current", PropertyGrab.NOTE );
   }
 
   /* Changes the image of the currently selected node */
@@ -510,12 +510,12 @@ public class NodeMenu {
 
   /* Show the quick entry insert window */
   private void action_quick_entry_insert() {
-    _map.da.handle_control_E();
+    _map.canvas.handle_control_E();
   }
 
   /* Show the quick entry replace window */
   private void action_quick_entry_replace() {
-    _map.da.handle_control_R();
+    _map.canvas.handle_control_R();
   }
 
   /* Detaches the currently selected node and make it a root node */
@@ -575,7 +575,7 @@ public class NodeMenu {
 
   /* Centers the current node */
   private void action_center_current_node() {
-    _map.da.center_current_node();
+    _map.canvas.center_current_node();
   }
 
   private void action_sort_alphabetically() {
@@ -587,7 +587,7 @@ public class NodeMenu {
   }
 
   public void action_change_link_color() {
-    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _map.da.win );
+    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _map.win );
     color_picker.color_activated.connect((color) => {
       _map.change_current_link_color( color );
     });

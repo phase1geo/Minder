@@ -31,7 +31,8 @@ public class UndoNodeMove : UndoItem {
   private int          _new_index;
   private SummaryNode? _new_summary;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoNodeMove( Node n, NodeSide old_side, int old_index, SummaryNode? old_summary ) {
     base( _( "move node" ) );
     _n           = n;
@@ -43,10 +44,11 @@ public class UndoNodeMove : UndoItem {
     _new_summary = n.summary_node();
   }
 
-  /* Perform the node move change */
+  //-------------------------------------------------------------
+  // Perform the node move change.
   public void change( MindMap map, NodeSide old_side, SummaryNode? old_summary, NodeSide new_side, int new_index, SummaryNode? new_summary ) {
     Node parent = _n.parent;
-    map.da.animator.add_nodes( map.get_nodes(), "undo move" );
+    map.canvas.animator.add_nodes( map.get_nodes(), "undo move" );
     _n.detach( old_side );
     if( old_summary != null ) {
       old_summary.remove_node( _n );
@@ -57,16 +59,18 @@ public class UndoNodeMove : UndoItem {
     if( new_summary != null ) {
       new_summary.add_node( _n );
     }
-    map.da.animator.animate();
+    map.canvas.animator.animate();
     map.auto_save();
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data.
   public override void undo( MindMap map ) {
     change( map, _new_side, _new_summary, _old_side, _old_index, _old_summary );
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation.
   public override void redo( MindMap map ) {
     change( map, _old_side, _old_summary, _new_side, _new_index, _new_summary );
   }

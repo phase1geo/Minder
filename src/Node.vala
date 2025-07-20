@@ -82,37 +82,37 @@ public enum NodeSide {
 
 public class NodeBounds {
 
-  private DrawArea _da;
-  private double   _x = 0.0;
-  private double   _y = 0.0;
+  private MindMap _map;
+  private double  _x = 0.0;
+  private double  _y = 0.0;
 
   public double x {
     get {
-      return( _x + _da.origin_x );
+      return( _x + _map.origin_x );
     }
     set {
-      _x = (value - _da.origin_x);
+      _x = (value - _map.origin_x);
     }
   }
   public double y {
     get {
-      return( _y + _da.origin_y );
+      return( _y + _map.origin_y );
     }
     set {
-      _y = (value - _da.origin_y);
+      _y = (value - _map.origin_y);
     }
   }
   public double width  { set; get; default = 0.0; }
   public double height { set; get; default = 0.0; }
 
   /* Default constructor */
-  public NodeBounds( DrawArea da ) {
-    _da = da;
+  public NodeBounds( MindMap map ) {
+    _map = map;
   }
 
   /* Constructor with bounds information */
-  public NodeBounds.with_bounds( DrawArea da, double x, double y, double w, double h ) {
-    _da         = da;
+  public NodeBounds.with_bounds( MindMap map, double x, double y, double w, double h ) {
+    _map        = map;
     this.x      = x;
     this.y      = y;
     this.width  = w;
@@ -126,7 +126,7 @@ public class NodeBounds {
 
   /* Copies the given node bounds to this instance */
   public void copy_from( NodeBounds nb ) {
-    _da         = nb._da;
+    _map        = nb._map;
     this.x      = nb.x;
     this.y      = nb.y;
     this.width  = nb.width;
@@ -153,7 +153,7 @@ public class NodeBounds {
 
   /* Returns a string version of this instance */
   public string to_string() {
-    return( "da: %s, x: %g, y: %g, w: %g, h: %g".printf( (_da != null).to_string(), x, y, width, height ) );
+    return( "map: %s, x: %g, y: %g, w: %g, h: %g".printf( (_map != null).to_string(), x, y, width, height ) );
   }
 
 }
@@ -248,11 +248,11 @@ public class Node : Object {
   }
   public double posx {
     get {
-      return( _posx + _map.da.origin_x );
+      return( _posx + _map.origin_x );
     }
     set {
       double diff = (value - posx);
-      _posx = value - _map.da.origin_x;
+      _posx = value - _map.origin_x;
       update_tree_bbox( diff, 0 );
       position_text();
       if( diff != 0 ) {
@@ -262,11 +262,11 @@ public class Node : Object {
   }
   public double posy {
     get {
-      return( _posy + _map.da.origin_y );
+      return( _posy + _map.origin_y );
     }
     set {
       double diff = (value - posy);
-      _posy = value - _map.da.origin_y;
+      _posy = value - _map.origin_y;
       update_tree_bbox( 0, diff );
       position_text();
       if( diff != 0 ) {
@@ -292,7 +292,7 @@ public class Node : Object {
     set {
       if( _mode != value ) {
         if( _mode == NodeMode.EDITABLE ) {
-          if( _map.da.settings.get_boolean( "auto-parse-embedded-urls" ) ) {
+          if( _map.settings.get_boolean( "auto-parse-embedded-urls" ) ) {
             // TBD - _urls.parse_embedded_urls( name );
           }
         }
@@ -473,7 +473,7 @@ public class Node : Object {
     set {
       _linked_node = value;
       if( _linked_node != null ) {
-        _linked_node.normalize( _map.da );
+        _linked_node.normalize( _map );
       }
       update_size();
     }
@@ -548,7 +548,7 @@ public class Node : Object {
     _map       = map;
     _id        = map.next_node_id;
     _children  = new Array<Node>();
-    _tree_bbox = new NodeBounds( map.da );
+    _tree_bbox = new NodeBounds( map );
     _layout    = layout;
     _name      = new CanvasText( map );
     _name.resized.connect( position_text_and_update_size );
@@ -560,7 +560,7 @@ public class Node : Object {
     _map       = map;
     _id        = map.next_node_id;
     _children  = new Array<Node>();
-    _tree_bbox = new NodeBounds( map.da );
+    _tree_bbox = new NodeBounds( map );
     _layout    = layout;
     _name      = new CanvasText.with_text( map, n );
     _name.resized.connect( position_text_and_update_size );
@@ -571,7 +571,7 @@ public class Node : Object {
   public Node.from_xml( MindMap map, Layout? layout, Xml.Node* n, bool isroot, Node? sibling_parent, ref Array<Node> siblings ) {
     _map       = map;
     _children  = new Array<Node>();
-    _tree_bbox = new NodeBounds( map.da );
+    _tree_bbox = new NodeBounds( map );
     _layout    = layout;
     _name      = new CanvasText.with_text( map, "" );
     _name.resized.connect( position_text_and_update_size );
@@ -585,7 +585,7 @@ public class Node : Object {
     _map       = map;
     _id        = map.next_node_id;
     _children  = n._children;
-    _tree_bbox = new NodeBounds( map.da );
+    _tree_bbox = new NodeBounds( map );
     _name      = new CanvasText( map );
     copy_variables( n, im );
     _name.resized.connect( position_text_and_update_size );
@@ -600,7 +600,7 @@ public class Node : Object {
     _map       = map;
     _id        = map.next_node_id;
     _children  = new Array<Node>();
-    _tree_bbox = new NodeBounds( map.da );
+    _tree_bbox = new NodeBounds( map );
     _name      = new CanvasText( map );
     copy_variables( n, im );
   }
@@ -610,7 +610,7 @@ public class Node : Object {
     _map       = map;
     _id        = n.id();
     _children  = new Array<Node>();
-    _tree_bbox = new NodeBounds( map.da );
+    _tree_bbox = new NodeBounds( map );
     _name      = new CanvasText( map );
     copy_variables( n, im );
     _name.resized.connect( position_text_and_update_size );
@@ -626,10 +626,10 @@ public class Node : Object {
 
   /* Adds the valid parsers */
   public void set_parsers() {
-    _name.text.add_parser( _map.da.markdown_parser );
-    // _name.text.add_parser( _map.da.tagger_parser );
-    _name.text.add_parser( _map.da.url_parser );
-    _name.text.add_parser( _map.da.unicode_parser );
+    _name.text.add_parser( _map.canvas.markdown_parser );
+    // _name.text.add_parser( _map.canvas.tagger_parser );
+    _name.text.add_parser( _map.canvas.url_parser );
+    _name.text.add_parser( _map.canvas.unicode_parser );
   }
 
   /* Copies just the variables of the node, minus the children nodes */
@@ -729,7 +729,7 @@ public class Node : Object {
   public void update_sequence_num() {
     if( parent.sequence ) {
       if( _sequence_num == null ) {
-        _sequence_num = new SequenceNum( _map.da );
+        _sequence_num = new SequenceNum( _map );
         _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
       }
       var seq_type = SequenceNumType.NUM;
@@ -1952,7 +1952,7 @@ public class Node : Object {
       var our_summary   = summary_node();
 
       if( (other_index + 1) == our_index ) {
-        map.da.animator.add_nodes( map.get_nodes(), "swap_with_sibling" );
+        map.canvas.animator.add_nodes( map.get_nodes(), "swap_with_sibling" );
         detach( side );
         if( our_summary != null ) {
           our_summary.remove_node( this );
@@ -1964,12 +1964,12 @@ public class Node : Object {
         }
         our_parent.last_selected_child = this;
         map.undo_buffer.add_item( new UndoNodeMove( this, side, our_index, our_summary ) );
-        map.da.animator.animate();
+        map.canvas.animator.animate();
         return( true );
 
       } else if( (our_index + 1) == other_index ) {
         var other_side = other.side;
-        map.da.animator.add_nodes( map.get_nodes(), "swap_with_sibling" );
+        map.canvas.animator.add_nodes( map.get_nodes(), "swap_with_sibling" );
         other.detach( other_side );
         if( other_summary != null ) {
           other_summary.remove_node( other );
@@ -1980,7 +1980,7 @@ public class Node : Object {
           our_summary.add_node( other );
         }
         map.undo_buffer.add_item( new UndoNodeMove( other, other_side, other_index, other_summary ) );
-        map.da.animator.animate();
+        map.canvas.animator.animate();
         return( true );
       }
 
@@ -2006,11 +2006,11 @@ public class Node : Object {
         map.undo_buffer.add_item( new UndoNodeUnclify( this ) );
       }
 
-      map.da.animator.add_nodes( map.get_nodes(), "make_sibling_of_grandparent" );
+      map.canvas.animator.add_nodes( map.get_nodes(), "make_sibling_of_grandparent" );
       detach( side );
       attach( grandparent, parent_idx, null );
 
-      map.da.animator.animate();
+      map.canvas.animator.animate();
 
       return( true );
 
@@ -2031,7 +2031,7 @@ public class Node : Object {
       var idx          = index();
       var num_children = (int)_children.length;
 
-      map.da.animator.add_nodes( map.get_nodes(), "make_children_siblings" );
+      map.canvas.animator.add_nodes( map.get_nodes(), "make_children_siblings" );
       for( int i=(num_children - 1); i>=0; i-- ) {
         var child = _children.index( i );
         child.detach( child.side );
@@ -2040,7 +2040,7 @@ public class Node : Object {
       if( add_undo ) {
         map.undo_buffer.add_item( new UndoNodeReparent( this, idx, idx + num_children ) );
       }
-      map.da.animator.animate();
+      map.canvas.animator.animate();
 
       return( true );
 

@@ -137,9 +137,9 @@ public class Callout : Object {
   //-------------------------------------------------------------
   // Adds the valid parsers.
   public void set_parsers() {
-    _text.text.add_parser( _node.map.da.markdown_parser );
-    _text.text.add_parser( _node.map.da.url_parser );
-    _text.text.add_parser( _node.map.da.unicode_parser );
+    _text.text.add_parser( _node.map.canvas.markdown_parser );
+    _text.text.add_parser( _node.map.canvas.url_parser );
+    _text.text.add_parser( _node.map.canvas.unicode_parser );
   }
 
   //-------------------------------------------------------------

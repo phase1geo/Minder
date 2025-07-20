@@ -49,7 +49,7 @@ public class ExportPNG : Export {
 
     /* Recreate the image */
     if( !transparent ) {
-      map.da.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
+      map.canvas.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
     }
 
     /* Translate the image */

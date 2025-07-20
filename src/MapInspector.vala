@@ -75,20 +75,20 @@ public class MapInspector : Box {
   }
 
   /* Listen for any changes to the current tab in the main window */
-  private void tab_changed( DrawArea? da ) {
+  private void tab_changed( MindMap? map ) {
     if( _map != null ) {
       _map.loaded.disconnect( update_theme_layout );
       _map.current_changed.disconnect( current_changed );
     }
-    if( da != null ) {
-      da.map.loaded.connect( update_theme_layout );
-      da.map.current_changed.connect( current_changed );
+    if( map != null ) {
+      map.loaded.connect( update_theme_layout );
+      map.current_changed.connect( current_changed );
     }
-    _map = da.map;
-    _map.da.animator.enable     = _settings.get_boolean( "enable-animations" );
-    _map.get_connections().hide = _settings.get_boolean( "hide-connections" );
-    _hide_callouts.set_active( _map.hide_callouts );
-    _map.set_theme( _map.get_theme(), false );
+    _map = map;
+    _map.canvas.animator.enable = _settings.get_boolean( "enable-animations" );
+    _map.model.get_connections().hide = _settings.get_boolean( "hide-connections" );
+    _hide_callouts.set_active( _map.model.hide_callouts );
+    _map.model.set_theme( _map.model.get_theme(), false );
     update_theme_layout();
   }
 

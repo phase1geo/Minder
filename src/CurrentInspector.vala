@@ -25,8 +25,8 @@ using Granite.Widgets;
 
 public class CurrentInspector : Box {
 
-  private DrawArea? _da = null;
-  private Stack     _stack;
+  private MindMap? _map = null;
+  private Stack    _stack;
 
   public signal void update_icons();
 
@@ -88,13 +88,13 @@ public class CurrentInspector : Box {
   }
 
   /* Connected signal will provide us whenever the current tab changes in the main window */
-  private void tab_changed( DrawArea? da ) {
-    if( _da != null ) {
-      _da.current_changed.disconnect( current_changed );
+  private void tab_changed( MindMap? map ) {
+    if( _map != null ) {
+      _map.current_changed.disconnect( current_changed );
     }
-    _da = da;
-    if( da != null ) {
-      da.current_changed.connect( current_changed );
+    _map = map;
+    if( map != null ) {
+      map.current_changed.connect( current_changed );
       current_changed();
     }
   }
@@ -102,17 +102,17 @@ public class CurrentInspector : Box {
   /* Called whenever the user changes the current node in the canvas */
   private void current_changed() {
 
-    if( _da.map.get_current_node() != null ) {
+    if( _map.get_current_node() != null ) {
       if( _stack.visible_child_name != "node" ) {
         _stack.transition_type = (_stack.visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
         _stack.set_visible_child_name( "node" );
       }
-    } else if( _da.map.get_current_connection() != null ) {
+    } else if( _map.get_current_connection() != null ) {
       if( _stack.visible_child_name != "connection" ) {
         _stack.transition_type = (_stack.visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
         _stack.set_visible_child_name( "connection" );
       }
-    } else if( _da.map.get_current_group() != null ) {
+    } else if( _map.get_current_group() != null ) {
       if( _stack.visible_child_name != "group" ) {
         _stack.transition_type = (_stack.visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
         _stack.set_visible_child_name( "group" );
@@ -127,17 +127,17 @@ public class CurrentInspector : Box {
   /* Gives the node or connection note field keyboard focus */
   public void grab_note() {
 
-    if( _da.map.get_current_node() != null ) {
+    if( _map.get_current_node() != null ) {
       var ni = _stack.get_child_by_name( "node" ) as NodeInspector;
       if( ni != null ) {
         ni.grab_note();
       }
-    } else if( _da.map.get_current_connection() != null ) {
+    } else if( _map.get_current_connection() != null ) {
       var ci = _stack.get_child_by_name( "connection" ) as ConnectionInspector;
       if( ci != null ) {
         ci.grab_note();
       }
-    } else if( _da.map.get_current_group() != null ) {
+    } else if( _map.get_current_group() != null ) {
       var gi = _stack.get_child_by_name( "group" ) as GroupInspector;
       if( gi != null ) {
         gi.grab_note();

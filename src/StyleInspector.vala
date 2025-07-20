@@ -132,14 +132,14 @@ public class StyleInspector : Box {
   }
 
   /* Listen for any changes to the current tab in the main window */
-  private void tab_changed( DrawArea? da ) {
+  private void tab_changed( MindMap? map ) {
     if( _map != null ) {
       _map.current_changed.disconnect( handle_current_changed );
     }
-    if( da != null ) {
-      da.map.current_changed.connect( handle_current_changed );
+    if( map != null ) {
+      map.current_changed.connect( handle_current_changed );
     }
-    _map = da.map;
+    _map = map;
     handle_ui_changed();
   }
 

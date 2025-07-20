@@ -148,7 +148,7 @@ public class MinderClipboard {
           string str;
           var stream   = clipboard.read_async.end( res, out str );
           var contents = Utils.read_stream( stream );
-          var link     = MindMap.deserialize_for_node_link( contents );
+          var link     = MapModel.deserialize_for_node_link( contents );
           if( link != null ) {
             note.paste_node_link( link );
           }
