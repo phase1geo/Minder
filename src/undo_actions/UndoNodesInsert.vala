@@ -39,7 +39,7 @@ public class UndoNodesInsert : UndoItem {
     for( int i=0; i<nodes.length; i++ ) {
       var node = nodes.index( i );
       if( node.parent == null ) {
-        _nodes.append_val( { null, node, map.root_index( node ), false } );
+        _nodes.append_val( { null, node, map.model.root_index( node ), false } );
       } else {
         _nodes.append_val( { node.parent, node, node.index(), node.parent.folded } );
       }
@@ -51,7 +51,7 @@ public class UndoNodesInsert : UndoItem {
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
       if( node.parent == null ) {
-        map.remove_root( node.index );
+        map.model.remove_root( node.index );
       } else {
         if( node.parent_folded ) {
           node.parent.folded = true;
@@ -69,7 +69,7 @@ public class UndoNodesInsert : UndoItem {
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
       if( node.parent == null ) {
-        map.add_root( node.n, node.index );
+        map.model.add_root( node.n, node.index );
       } else {
         node.parent.folded = node.parent_folded;
         node.n.attach( node.parent, node.index, null );

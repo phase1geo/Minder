@@ -42,7 +42,7 @@ public class ExportPDF : Export {
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
-    map.document_rectangle( out x, out y, out w, out h );
+    map.model.document_rectangle( out x, out y, out w, out h );
 
     /* Calculate the required scaling factor to get the document to fit */
     double width  = (page_width  - (2 * margin)) / w;
@@ -57,7 +57,7 @@ public class ExportPDF : Export {
     map.canvas.get_style_context().render_background( context, x, y, w, h );
 
     /* Recreate the image */
-    map.draw_all( context, true, false );
+    map.model.draw_all( context, true, false );
 
     /* Draw the page to the PDF file */
     context.show_page();

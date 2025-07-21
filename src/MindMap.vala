@@ -22,7 +22,7 @@
 using Gtk;
 using Gdk;
 
-public class MindMap : MapModel {
+public class MindMap {
 
   private MainWindow     _win;
   private GLib.Settings  _settings;
@@ -32,6 +32,12 @@ public class MindMap : MapModel {
   private UndoBuffer     _undo_buffer;
   private UndoTextBuffer _undo_text;
   private Selection      _selected;
+
+  /* Allocate static parsers */
+  public MarkdownParser markdown_parser { get; private set; }
+  public TaggerParser   tagger_parser   { get; private set; }
+  public UrlParser      url_parser      { get; private set; }
+  public UnicodeParser  unicode_parser  { get; private set; }
 
   public MainWindow win {
     get {
@@ -63,6 +69,11 @@ public class MindMap : MapModel {
       return( _selected );
     }
   }
+  public UndoTextBuffer undo_text {
+    get {
+      return( _undo_text );
+    }
+  }
 
   // Convenience functions
   public double origin_x {
@@ -73,6 +84,36 @@ public class MindMap : MapModel {
   public double origin_y {
     get {
       return( _canvas.origin_y );
+    }
+  }
+  public Animator animator {
+    get {
+      return( _canvas.animator );
+    }
+  }
+  public Array<string> braindump {
+    get {
+      return( _model.braindump );
+    }
+  }
+  public Stickers stickers {
+    get {
+      return( _model.stickers );
+    }
+  }
+  public NodeGroups groups {
+    get {
+      return( _model.groups );
+    }
+  }
+  public ImageManager image_manager {
+    get {
+      return( _image_manager );
+    }
+  }
+  public Layouts layouts {
+    get {
+      return( _layouts );
     }
   }
 
@@ -90,8 +131,6 @@ public class MindMap : MapModel {
   //-------------------------------------------------------------
   // Constructor
   public MindMap( MainWindow win, GLib.Settings settings ) {
-
-    base( this );  // TODO - Remove this when we don't need to inherit from the MapModel
 
     _win      = win;
     _settings = settings;
@@ -114,11 +153,21 @@ public class MindMap : MapModel {
     // Create the selection handler
     _selected = new Selection( this );
 
+    // Create the parsers
+    tagger_parser   = new TaggerParser( this );
+    markdown_parser = new MarkdownParser( this );
+    url_parser      = new UrlParser();
+    unicode_parser  = new UnicodeParser( this );
+
+    markdown_parser.enable = settings.get_boolean( "enable-markdown" );
+    url_parser.enable      = settings.get_boolean( "auto-parse-embedded-urls" );
+    unicode_parser.enable  = settings.get_boolean( "enable-unicode-input" );
+
     // Connect signals
-    _model.tmp_changed.connect( handle_model_changed );
-    _model.tmp_current_changed.connect( handle_current_changed );
-    _model.tmp_theme_changed.connect( handle_theme_changed );
-    _model.tmp_loaded.connect( handle_model_loaded );
+    _model.changed.connect( handle_model_changed );
+    _model.current_changed.connect( handle_current_changed );
+    _model.theme_changed.connect( handle_theme_changed );
+    _model.loaded.connect( handle_model_loaded );
     _model.queue_draw.connect( _canvas.queue_draw );
     _model.see.connect( _canvas.see );
 
@@ -244,7 +293,7 @@ public class MindMap : MapModel {
 
     _model.set_current_node( null );
 
-    queue_draw();
+    _canvas.queue_draw();
 
   }
 
@@ -276,12 +325,12 @@ public class MindMap : MapModel {
     });
 
     // Redraw the canvas
-    queue_draw();
+    _canvas.queue_draw();
 
   }
 
   //-------------------------------------------------------------
-  // SELECTION CONVENIENCE METHODS
+  // SELECTION METHODS
   //-------------------------------------------------------------
 
   //-------------------------------------------------------------
@@ -291,9 +340,51 @@ public class MindMap : MapModel {
   }
 
   //-------------------------------------------------------------
+  // Returns if a node is currently selected.
+  public bool is_node_selected() {
+    return( get_current_node() != null );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the current node to the given node
+  public void set_current_node( Node? n ) {
+    if( n == null ) {
+      _selected.clear_nodes();
+    } else if( _selected.is_node_selected( n ) && (_selected.num_nodes() == 1) ) {
+      _model.set_node_mode( _selected.nodes().index( 0 ), NodeMode.CURRENT );
+    } else {
+      _selected.clear_nodes( false );
+      var last_folded = n.folded_ancestor();
+      if( last_folded != null ) {
+        last_folded.set_fold_only( false );
+        add_undo( new UndoNodeFolds.single( last_folded ) );
+      }
+      _selected.add_node( n );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Returns the current connection
   public Connection? get_current_connection() {
     return( _selected.current_connection() );
+  }
+
+  //-------------------------------------------------------------
+  // Returns if a connection is currently selected.
+  public bool is_connection_selected() {
+    return( get_current_connect() != null );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the current connection to the given node
+  public void set_current_connection( Connection? c ) {
+    if( c != null ) {
+      _selected.set_current_connection( c );
+      c.from_node.last_selected_connection = c;
+      c.to_node.last_selected_connection   = c;
+    } else {
+      _selected.clear_connections();
+    }
   }
 
   //-------------------------------------------------------------
@@ -303,9 +394,52 @@ public class MindMap : MapModel {
   }
 
   //-------------------------------------------------------------
+  // Returns if a callout is currently selected.
+  public bool is_callout_selected() {
+    return( get_current_callout() != null );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the current selected callout to the specified callout
+  public void set_current_callout( Callout? c ) {
+    _selected.set_current_callout( c );
+  }
+
+  //-------------------------------------------------------------
   // Returns the current group (if selected)
   public NodeGroup? get_current_group() {
     return( _selected.current_group() );
+  }
+
+  //-------------------------------------------------------------
+  // Returns if a group is currently selected.
+  public bool is_group_selected() {
+    return( get_current_group() != null );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the current selected group to the specified group
+  public void set_current_group( NodeGroup? g ) {
+    _selected.set_current_group( g );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the current sticker (if selected).
+  public Sticker? get_current_sticker() {
+    return( _selected.current_sticker() );
+  }
+
+  //-------------------------------------------------------------
+  // Returns if a sticker is currently selected.
+  public bool is_sticker_selected() {
+    return( get_current_sticker() != null );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the current selected sticker to the specified sticker
+  public void set_current_sticker( Sticker? s ) {
+    _selected.set_current_sticker( s );
+    _stickers.select_sticker( s );
   }
 
   //-------------------------------------------------------------
@@ -332,6 +466,7 @@ public class MindMap : MapModel {
     return( _selected.groups() );
   }
 
+
   //-------------------------------------------------------------
   // UNDO BUFFER
   //-------------------------------------------------------------
@@ -356,6 +491,24 @@ public class MindMap : MapModel {
   // Adds an undoable text operation to the undo buffer.
   public void add_text_undo( UndoTextItem item ) {
     _undo_buffer.add_item( item );
+  }
+
+  //-------------------------------------------------------------
+  // NODE FUNCTIONS
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Convenience function that provides an array of all of the
+  // root nodes in the mindmap.
+  public Array<Node> get_nodes() {
+    return( _model.get_nodes() );
+  }
+
+  //-------------------------------------------------------------
+  // Convenience function that provides the connections in the
+  // mind map.
+  public Connections get_connections() {
+    return( _model.get_connections() );
   }
 
   //-------------------------------------------------------------
@@ -387,13 +540,32 @@ public class MindMap : MapModel {
   //-------------------------------------------------------------
   // Sets the focus mode
   public void set_focus_mode( bool mode ) {
-    _model.tmp_set_focus_mode( selected, mode );  // TODO - Avoiding name collisions
+    _model.set_focus_mode( selected, mode );  // TODO - Avoiding name collisions
   }
 
   //-------------------------------------------------------------
   // Updates the focus mode
   public void update_focus_mode() {
-    _model.tmp_update_focus_mode( selected );
+    _model.update_focus_mode( selected );
+  }
+
+  //-------------------------------------------------------------
+  // Causes the canvas to be redrawn.
+  public void queue_draw() {
+    _canvas.queue_draw();
+  }
+
+  //-------------------------------------------------------------
+  // Convenience function to cause the map model to be saved to
+  // the filesystem.
+  public void auto_save() {
+    _model.auto_save();
+  }
+
+  //-------------------------------------------------------------
+  // Convenience function that returns the current theme.
+  public Theme get_theme() {
+    return( _model.get_theme() );
   }
 
 }

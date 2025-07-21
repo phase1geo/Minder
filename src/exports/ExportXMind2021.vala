@@ -667,16 +667,16 @@ public class ExportXMind2021 : Export {
 
     var sclass = get_json_string( obj, "structureClass" );
     if( sclass != "" ) {
-      node = map.create_root_node();
+      node = map.model.create_root_node();
       if( sclass == "org.xmind.ui.map.unbalanced" ) {
         node.layout = map.layouts.get_layout( _( "Horizontal" ) );
       } else {
         node.layout = map.layouts.get_layout( _( "To right" ) );
       }
     } else if( !attached ) {
-      node = map.create_root_node();
+      node = map.model.create_root_node();
     } else {
-      node = map.create_child_node( parent );
+      node = map.model.create_child_node( parent );
     }
 
     /* Handle the ID */

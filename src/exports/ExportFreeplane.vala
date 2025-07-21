@@ -283,7 +283,7 @@ public class ExportFreeplane : Export {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "node" ) {
           var root = import_node( it, map, null, color_map, id_map, link_ids, to_nodes, ifile );
-          map.position_root_node( root );
+          map.model.position_root_node( root );
           map.get_nodes().append_val( root );
         }
       }
@@ -297,7 +297,7 @@ public class ExportFreeplane : Export {
     /* Finish up the connections */
     for( int i=0; i<to_nodes.length; i++ ) {
       if( id_map.has_key( to_nodes.index( i ) ) ) {
-        var to_node = map.get_node( map.get_nodes(), id_map.get( to_nodes.index( i ) ) );
+        var to_node = map.model.get_node( map.get_nodes(), id_map.get( to_nodes.index( i ) ) );
         if( to_node != null ) {
           map.get_connections().complete_connection( i, to_node );
         }

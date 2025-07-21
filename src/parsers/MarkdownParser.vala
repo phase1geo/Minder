@@ -21,20 +21,20 @@
 
 public class MarkdownParser : TextParser {
 
-  private DrawArea _da;
+  private MindMap _map;
 
   /* Default constructor */
-  public MarkdownParser( DrawArea da ) {
+  public MarkdownParser( MindMap map ) {
     base( "Markdown" );
 
-    _da = da;
+    _map = map;
 
     /* Header */
     add_regex( "^(#{1,6})[^#].*$", highlight_header );
 
     /* Lists */
     add_regex( "^\\s*(\\*|\\+|\\-|[0-9]+\\.)\\s", (text, match) => {
-      add_tag( text, match, 1, FormatTag.COLOR, _da.map.get_theme().get_color( "markdown_listitem" ).to_string() );
+      add_tag( text, match, 1, FormatTag.COLOR, _map.get_theme().get_color( "markdown_listitem" ).to_string() );
     });
 
     /* Code */

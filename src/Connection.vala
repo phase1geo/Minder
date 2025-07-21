@@ -624,13 +624,13 @@ public class Connection : Object {
 
     string? f = node->get_prop( "from_id" );
     if( f != null ) {
-      _from_node = map.get_node( nodes, int.parse( f ) );
+      _from_node = map.model.get_node( nodes, int.parse( f ) );
       connect_node( _from_node );
     }
 
     string? t = node->get_prop( "to_id" );
     if( t != null ) {
-      _to_node = map.get_node( nodes, int.parse( t ) );
+      _to_node = map.model.get_node( nodes, int.parse( t ) );
       connect_node( _to_node );
     }
 

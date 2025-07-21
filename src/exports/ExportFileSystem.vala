@@ -66,7 +66,7 @@ public class ExportFileSystem : Export {
 
   /* Imports given filename into drawing area */
   public override bool import( string dname, MindMap map ) {
-    var node = map.create_root_node( Path.get_basename( dname ) );
+    var node = map.model.create_root_node( Path.get_basename( dname ) );
     return( import_node( dname, node, map ) );
   }
 
@@ -76,7 +76,7 @@ public class ExportFileSystem : Export {
       var dir = Dir.open( dname, 0 );
       string? name;
       while( (name = dir.read_name()) != null ) {
-        var node = map.create_child_node( parent, name );
+        var node = map.model.create_child_node( parent, name );
         var path = Path.build_filename( dname, name );
         if( !import_node( path, node, map ) ) {
           return( false );

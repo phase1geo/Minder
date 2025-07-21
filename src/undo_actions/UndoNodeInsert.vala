@@ -40,7 +40,7 @@ public class UndoNodeInsert : UndoItem {
   /* Performs an undo operation for this data */
   public override void undo( MindMap map ) {
     if( _parent == null ) {
-      map.remove_root( _index );
+      map.model.remove_root( _index );
     } else {
       if( _parent_folded ) {
         _parent.folded = true;
@@ -57,7 +57,7 @@ public class UndoNodeInsert : UndoItem {
   /* Performs a redo operation */
   public override void redo( MindMap map ) {
     if( _parent == null ) {
-      map.add_root( _n, _index );
+      map.model.add_root( _n, _index );
     } else {
       _parent.folded = _parent_folded;
       _n.attach( _parent, _index, null );

@@ -303,7 +303,7 @@ public class Document : Object {
     root->set_prop( "etag" , _etag );
 
     doc->set_root_element( root );
-    _map.save( root );
+    _map.model.save( root );
     var res = doc->save_format_file( dest_filename, 1 );
     delete doc;
 

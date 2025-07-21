@@ -756,7 +756,7 @@ public class FormattedText {
   /* Initializes this instance */
   private void initialize( MindMap map ) {
     if( _attr_tags == null ) {
-      var theme = map.get_theme();
+      var theme = map.model.get_theme();
       _attr_tags = new TagAttr[FormatTag.LENGTH];
       _attr_tags[FormatTag.BOLD]       = new BoldInfo();
       _attr_tags[FormatTag.ITALICS]    = new ItalicsInfo();

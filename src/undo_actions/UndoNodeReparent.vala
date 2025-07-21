@@ -39,7 +39,7 @@ public class UndoNodeReparent : UndoItem {
   //-------------------------------------------------------------
   // Performs an undo operation for this data.
   public override void undo( MindMap map ) {
-    map.canvas.animator.add_nodes( map.get_nodes(), "undo_make_children_siblings" );
+    map.canvas.animator.add_nodes( map.model.get_nodes(), "undo_make_children_siblings" );
     for( int i=(_last_index - 1); i>=_first_index; i-- ) {
       var child = _node.parent.children().index( i );
       child.detach( child.side );
@@ -52,7 +52,7 @@ public class UndoNodeReparent : UndoItem {
   //-------------------------------------------------------------
   // Performs a redo operation.
   public override void redo( MindMap map ) {
-    map.canvas.animator.add_nodes( map.get_nodes(), "redo_make_children_siblings" );
+    map.canvas.animator.add_nodes( map.model.get_nodes(), "redo_make_children_siblings" );
     _node.make_children_siblings( _node.children().index( 0 ), false );
     map.canvas.animator.animate();
     map.auto_save();

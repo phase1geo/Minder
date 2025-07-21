@@ -76,7 +76,7 @@ public class ExportPrint : Object {
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
-    _map.document_rectangle( out x, out y, out w, out h );
+    _map.model.document_rectangle( out x, out y, out w, out h );
 
     /* Calculate the required scaling factor to get the document to fit */
     double width  = page_width  / w;
@@ -88,7 +88,7 @@ public class ExportPrint : Object {
     ctx.translate( (0 - x), (0 - y) );
 
     /* Draw the map */
-    _map.draw_all( ctx, true, false );
+    _map.model.draw_all( ctx, true, false );
 
   }
 

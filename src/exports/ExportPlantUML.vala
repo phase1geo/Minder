@@ -204,25 +204,25 @@ public class ExportPlantUML : Export {
     /* Create node with the leftover text */
     switch( depth ) {
       case 1 :
-        last_node = map.create_root_node( text );
+        last_node = map.model.create_root_node( text );
         break;
       case 2 :
         if( last_node != null ) {
-          last_node = map.create_main_node( last_node.get_root(), side, text );
+          last_node = map.model.create_main_node( last_node.get_root(), side, text );
         }
         break;
       default :
         if( last_node != null ) {
           var last_depth = last_node.get_level() + 1;
           if( (last_depth + 1) == depth ) {
-            last_node = map.create_child_node( last_node, text );
+            last_node = map.model.create_child_node( last_node, text );
           } else if( last_depth == depth ) {
-            last_node = map.create_sibling_node( last_node, true, text );
+            last_node = map.model.create_sibling_node( last_node, true, text );
           } else if( last_depth > depth ) {
             for( int i=0; i<(last_depth - depth); i++ ) {
               last_node = last_node.parent;
             }
-            last_node = map.create_sibling_node( last_node, true, text );
+            last_node = map.model.create_sibling_node( last_node, true, text );
           }
         }
         break;

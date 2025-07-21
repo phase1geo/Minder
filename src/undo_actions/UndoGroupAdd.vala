@@ -25,20 +25,23 @@ public class UndoGroupAdd : UndoItem {
 
   private NodeGroup _group;
 
-  /* Constructor for adding a group */
+  //-------------------------------------------------------------
+  // Constructor for adding a group.
   public UndoGroupAdd( NodeGroup group ) {
     base( _( "add group" ) );
     _group = group;
   }
 
-  /* Undoes a connection change */
+  //-------------------------------------------------------------
+  // Undoes a connection change.
   public override void undo( MindMap map ) {
     map.groups.remove_group( _group );
     map.queue_draw();
     map.auto_save();
   }
 
-  /* Redoes a connection change */
+  //-------------------------------------------------------------
+  // Redoes a connection change.
   public override void redo( MindMap map ) {
     map.groups.add_group( _group );
     map.queue_draw();

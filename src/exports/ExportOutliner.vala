@@ -36,7 +36,7 @@ public class ExportOutliner : Export {
     outliner->new_prop( "condensed",   "false" );
     outliner->new_prop( "show-tasks",  show_tasks( map ).to_string() );
     outliner->new_prop( "show-depth",  "false" );
-    outliner->new_prop( "markdown",    map.canvas.markdown_parser.enable.to_string() );
+    outliner->new_prop( "markdown",    map.markdown_parser.enable.to_string() );
     outliner->new_prop( "blank-rows",  "false" );
     outliner->new_prop( "auto-sizing", "false" );
 
@@ -170,7 +170,7 @@ public class ExportOutliner : Export {
   private void import_theme( Xml.Node* n, MindMap map ) {
     var m = n->get_prop( "name" );
     if( m != null ) {
-      map.set_theme( map.win.themes.get_theme( m ), false );
+      map.model.set_theme( map.win.themes.get_theme( m ), false );
     }
   }
 

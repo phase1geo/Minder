@@ -178,12 +178,6 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Allocate static parsers */
-  public MarkdownParser markdown_parser { get; private set; }
-  public TaggerParser   tagger_parser   { get; private set; }
-  public UrlParser      url_parser      { get; private set; }
-  public UnicodeParser  unicode_parser  { get; private set; }
-
   public signal void current_changed( MindMap map );
   public signal void scale_changed( double scale );
   public signal void scroll_changed();
@@ -221,16 +215,6 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
-
-    /* Create the parsers */
-    tagger_parser   = new TaggerParser( this );
-    markdown_parser = new MarkdownParser( this );
-    url_parser      = new UrlParser();
-    unicode_parser  = new UnicodeParser( this );
-
-    markdown_parser.enable = _map.settings.get_boolean( "enable-markdown" );
-    url_parser.enable      = _map.settings.get_boolean( "auto-parse-embedded-urls" );
-    unicode_parser.enable  = _map.settings.get_boolean( "enable-unicode-input" );
 
     /* Create text completion */
     _completion = new TextCompletion( this );

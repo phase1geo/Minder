@@ -21,14 +21,14 @@
 
 public class TaggerParser : TextParser {
 
-  private DrawArea _da;
+  private MindMap _map;
 
   /* Default constructor */
-  public TaggerParser( DrawArea da ) {
+  public TaggerParser( MindMap map ) {
 
     base( "Tagger" );
 
-    _da = da;
+    _map = map;
 
     add_regex( "\\s(@(\\S*))", handle_tag );
     add_regex( "\\s", handle_notag );
@@ -44,7 +44,7 @@ public class TaggerParser : TextParser {
     add_tag( text, match, 1, FormatTag.TAG, tag );
 
     /* If the FormattedText item matches the currently edited */
-    var current = _da.map.get_current_node();
+    var current = _map.get_current_node();
     if( (current != null) && (current.name.text == text) ) {
 
       int start, end;
@@ -53,7 +53,7 @@ public class TaggerParser : TextParser {
       /* If the cursor is at the end of the tag, display the auto-completer */
       var cursor = current.name.cursor;
       if( (start <= cursor) && (cursor <= end) ) {
-        _da.show_auto_completion( _da.tagger.get_matches( tag ), (start + 1), end );
+        _map.canvas.show_auto_completion( _map.canvas.tagger.get_matches( tag ), (start + 1), end );
       }
 
     }
@@ -62,12 +62,12 @@ public class TaggerParser : TextParser {
 
   /* Handles hiding the auto-completion window */
   private void handle_notag( FormattedText text, MatchInfo match ) {
-    var current = _da.map.get_current_node();
+    var current = _map.get_current_node();
     if( (current != null) && (current.name.text == text) ) {
       int start, end;
       match.fetch_pos( 0, out start, out end );
       if( current.name.cursor == start ) {
-        _da.hide_auto_completion();
+        _map.canvas.hide_auto_completion();
       }
     }
   }

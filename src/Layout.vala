@@ -224,7 +224,7 @@ public class Layout : Object {
 
     for( int i=0; i<nodes.length; i++ ) {
       if( nodes.index( i ) == last ) {
-        n.map.handle_tree_overlap( prev );
+        n.map.model.handle_tree_overlap( prev );
       }
     }
 

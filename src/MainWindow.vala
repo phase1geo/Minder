@@ -413,7 +413,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     var value = settings.get_boolean( "auto-parse-embedded-urls" );
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
-      map.canvas.url_parser.enable = value;
+      map.url_parser.enable = value;
     }
   }
 
@@ -423,7 +423,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     var value = settings.get_boolean( "enable-markdown" );
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
-      map.canvas.markdown_parser.enable = value;
+      map.markdown_parser.enable = value;
     }
   }
 
@@ -433,7 +433,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     var value = settings.get_boolean( "enable-unicode-input" );
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
-      map.canvas.unicode_parser.enable = value;
+      map.unicode_parser.enable = value;
     }
   }
 
@@ -620,7 +620,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private bool find_unchanged_tab() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
-      if( !map.is_loaded ) {
+      if( !map.model.is_loaded ) {
         _nb.page = i;
         map.canvas.grab_focus();
         return( true );
@@ -1805,12 +1805,12 @@ public class MainWindow : Gtk.ApplicationWindow {
     var text     = _search_entry.get_text().casefold();
     var name     = all_tabs ? get_tab_label_name( _nb.page ) : "";
     if( text == "" ) return;
-    current.get_match_items( name, text, search_opts, ref _search_items );
+    current.model.get_match_items( name, text, search_opts, ref _search_items );
     if( all_tabs ) {
       for( int i=0; i<_nb.get_n_pages(); i++ ) {
         var map = get_map( i );
         if( map != current ) {
-          map.get_match_items( get_tab_label_name( i ), text, search_opts, ref _search_items );
+          map.model.get_match_items( get_tab_label_name( i ), text, search_opts, ref _search_items );
         }
       }
     }
@@ -1894,7 +1894,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     win.view_name     = null;
 
     /* Display the most relevant information based on the current state */
-    if( map.is_node_editable() || map.is_connection_editable() ) {
+    if( map.model.is_node_editable() || map.model.is_connection_editable() ) {
       win.section_name = "text-editing";
     } else if( map.is_node_selected() ) {
       win.section_name = "node";
