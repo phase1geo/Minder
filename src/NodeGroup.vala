@@ -197,7 +197,7 @@ public class NodeGroup : Object {
     string? i = n->get_prop( "id" );
     if( i != null ) {
       var id   = int.parse( i );
-      var node = map.get_node( nodes, id );
+      var node = map.model.get_node( nodes, id );
       if( node != null ) {
         node.group = true;
         _nodes.append_val( node );

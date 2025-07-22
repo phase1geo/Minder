@@ -35,13 +35,13 @@ public class UndoNodeLayout : UndoItem {
 
   /* Performs an undo operation for this data */
   public override void undo( MindMap map ) {
-    map.set_layout( _old_layout, _root, false );
+    map.model.set_layout( _old_layout, _root, false );
     map.loaded();
   }
 
   /* Performs a redo operation */
   public override void redo( MindMap map ) {
-    map.set_layout( _new_layout, _root, false );
+    map.model.set_layout( _new_layout, _root, false );
     map.loaded();
   }
 

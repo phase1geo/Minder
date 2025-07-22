@@ -412,7 +412,7 @@ public class Selection {
   public bool clear_nodes( bool signal_change = true, double alpha = 1.0 ) {
     var num = _nodes.length;
     for( int i=0; i<num; i++ ) {
-      _map.set_node_mode( _nodes.index( i ), NodeMode.NONE );
+      _map.model.set_node_mode( _nodes.index( i ), NodeMode.NONE );
       _nodes.index( i ).alpha = alpha;
     }
     _nodes.remove_range( 0, num );
@@ -426,7 +426,7 @@ public class Selection {
   public bool clear_connections( bool signal_change = true, double alpha = 1.0 ) {
     var num = _conns.length;
     for( int i=0; i<num; i++ ) {
-      _map.set_connection_mode( _conns.index( i ), ConnMode.NONE );
+      _map.model.set_connection_mode( _conns.index( i ), ConnMode.NONE );
       _conns.index( i ).alpha = alpha;
     }
     _conns.remove_range( 0, num );
@@ -466,7 +466,7 @@ public class Selection {
   public bool clear_callouts( bool signal_change = true, double alpha = 1.0 ) {
     var num = _callouts.length;
     for( int i=0; i<num; i++ ) {
-      _map.set_callout_mode( _callouts.index( i ), CalloutMode.NONE );
+      _map.model.set_callout_mode( _callouts.index( i ), CalloutMode.NONE );
       _callouts.index( i ).alpha = alpha;
     }
     _callouts.remove_range( 0, num );

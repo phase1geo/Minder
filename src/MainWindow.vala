@@ -1894,7 +1894,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     win.view_name     = null;
 
     /* Display the most relevant information based on the current state */
-    if( map.model.is_node_editable() || map.model.is_connection_editable() ) {
+    if( map.is_node_editable() || map.is_connection_editable() ) {
       win.section_name = "text-editing";
     } else if( map.is_node_selected() ) {
       win.section_name = "node";

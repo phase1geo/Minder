@@ -81,7 +81,7 @@ public class UndoNodeAttach : UndoItem {
     }
     _n.detach( _new_side );
     if( _old_parent == null ) {
-      map.add_root( _n, _old_index );
+      map.model.add_root( _n, _old_index );
       _n.set_node_info( _old_info, ref index );
     } else {
       _n.set_node_info( _old_info, ref index );
@@ -106,7 +106,7 @@ public class UndoNodeAttach : UndoItem {
       _old_summary.remove_node( _n );
     }
     if( _old_parent == null ) {
-      map.remove_root( _old_index );
+      map.model.remove_root( _old_index );
     } else {
       _n.detach( _old_side );
     }

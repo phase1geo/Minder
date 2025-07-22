@@ -32,6 +32,8 @@ public class MindMap {
   private UndoBuffer     _undo_buffer;
   private UndoTextBuffer _undo_text;
   private Selection      _selected;
+  private bool           _focus_mode  = false;
+  private double         _focus_alpha = 0.05;
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -69,9 +71,24 @@ public class MindMap {
       return( _selected );
     }
   }
+  public UndoBuffer undo_buffer {
+    get {
+      return( _undo_buffer );
+    }
+  }
   public UndoTextBuffer undo_text {
     get {
       return( _undo_text );
+    }
+  }
+  public bool focus_mode {
+    get {
+      return( _focus_mode );
+    }
+  }
+  public double focus_alpha {
+    get {
+      return( _focus_alpha );
     }
   }
 
@@ -114,6 +131,11 @@ public class MindMap {
   public Layouts layouts {
     get {
       return( _layouts );
+    }
+  }
+  public int next_node_id {
+    get {
+      return( _model.next_node_id );
     }
   }
 
@@ -182,6 +204,12 @@ public class MindMap {
     _undo_buffer.buffer_changed.connect( handle_undo_buffer_changed );
 
     _selected.selection_changed.connect( handle_selection_changed );
+
+    // Get the value of the new node from edit
+    update_focus_mode_alpha();
+    _settings.changed.connect(() => {
+      update_focus_mode_alpha();
+    });
 
   }
 
@@ -291,7 +319,7 @@ public class MindMap {
 
     initialize();
 
-    _model.set_current_node( null );
+    set_current_node( null );
 
     _canvas.queue_draw();
 
@@ -318,7 +346,7 @@ public class MindMap {
     _model.get_nodes().append_val( n );
 
     // Make this initial node the current node
-    _model.set_current_node( n );
+    set_current_node( n );
     Idle.add(() => {
       _model.set_node_mode( n, NodeMode.EDITABLE, false );
       return( false );
@@ -330,7 +358,7 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
-  // SELECTION METHODS
+  // NODE SELECTION METHODS
   //-------------------------------------------------------------
 
   //-------------------------------------------------------------
@@ -340,9 +368,23 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
+  // Helper function that returns true if a single node is currently
+  // selected and matches the given NodeMode state.
+  private bool is_node_mode( NodeMode mode ) {
+    var current = get_current_node();
+    return( (current != null) && (current.mode == mode) );
+  }
+
+  //-------------------------------------------------------------
   // Returns if a node is currently selected.
   public bool is_node_selected() {
-    return( get_current_node() != null );
+    return( is_node_mode( NodeMode.CURRENT ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if one node is selected and it is editable.
+  public bool is_node_editable() {
+    return( is_node_mode( NodeMode.EDITABLE ) );
   }
 
   //-------------------------------------------------------------
@@ -364,15 +406,264 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
+  // If the specified node is not null, selects the node and
+  // makes it the current node.
+  public bool select_node( Node? n, bool animate = true ) {
+    if( n != null ) {
+      if( n != _selected.current_node() ) {
+        var folded = n.folded_ancestor();
+        if( folded != null ) {
+          folded.set_fold_only( false );
+        }
+        _selected.set_current_node( n, (_focus_mode ? _focus_alpha : 1.0) );
+        if( n.parent != null ) {
+          n.parent.last_selected_child = n;
+        }
+        if( n.is_summarized() ) {
+          n.summary_node().last_selected_node = n;
+        }
+        _canvas.see( animate );
+      }
+      return( true );
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if there is a root that is available for selection.
+  public bool root_selectable() {
+    var current_node = _selected.current_node();
+    var current_conn = _selected.current_connection();
+    return( (current_conn == null) && ((current_node == null) ? (_model.get_nodes().length > 0) : (current_node.get_root() != current_node)) );
+  }
+
+  //-------------------------------------------------------------
+  // If there is no current node, selects the first root node;
+  // otherwise, selects the current node's root node.
+  public void select_root_node() {
+    if( _selected.current_connection() != null ) return;
+    var current = get_current_node();
+    if( current == null ) {
+      if( _model.get_nodes().length > 0 ) {
+        if( _model.select_node( _model.get_nodes().index( 0 ) ) ) {
+          queue_draw();
+        }
+      }
+    } else if( select_node( current.get_root() ) ) {
+      queue_draw();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the next node to select after the current node is
+  // removed.
+  public Node? next_node_to_select() {
+    var current = _selected.current_node();
+    if( current != null ) {
+      if( current.is_root() ) {
+        var nodes = _model.get_nodes();
+        if( nodes.length > 1 ) {
+          for( int i=0; i<nodes.length; i++ ) {
+            if( nodes.index( i ) == current ) {
+              if( i == 0 ) {
+                return( nodes.index( 1 ) );
+              } else if( (i + 1) == nodes.length ) {
+                return( nodes.index( i - 1 ) );
+              }
+              break;
+            }
+          }
+        }
+      } else {
+        Node? next = current.parent.next_child( current );
+        if( next == null ) {
+          next = current.parent.prev_child( current );
+          if( next == null ) {
+            next = current.parent;
+          }
+        }
+        return( next );
+      }
+    }
+    return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Selects the next (dir = 1) or previous (dir = -1) sibling.
+  public void select_sibling_node( int dir ) {
+    var current = _selected.current_node();
+    if( current != null ) {
+      Array<Node> nodes;
+      int         index = 0;
+      if( current.is_root() ) {
+        nodes = _model.get_nodes();
+        for( int i=0; i<nodes.length; i++ ) {
+          if( nodes.index( i ) == current ) {
+            index = i;
+            break;
+          }
+        }
+      } else {
+        nodes = current.parent.children();
+        index = current.index();
+      }
+      if( (index + dir) < 0 ) {
+        if( select_node( nodes.index( nodes.length - 1 ) ) ) {
+          queue_draw();
+        }
+      } else {
+        if( select_node( nodes.index( (index + dir) % nodes.length ) ) ) {
+          queue_draw();
+        }
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if there are any selected nodes that contain
+  // children.
+  public bool children_selectable() {
+    var nodes      = _selected.nodes();
+    var selectable = false;
+    for( int i=0; i<nodes.length; i++ ) {
+      var node = nodes.index( i );
+      selectable |= (!node.is_leaf() && !node.folded);
+    }
+    return( selectable );
+  }
+
+  //-------------------------------------------------------------
+  // Selects the last selected child node of the current node.
+  public void select_child_node() {
+    var current = get_current_node();
+    if( (current != null) && !current.is_leaf() && !current.folded ) {
+      if( select_node( current.last_selected_child ?? current.children().index( 0 ) ) ) {
+        queue_draw();
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Selects all of the child nodes.
+  public void select_child_nodes() {
+    var nodes   = _selected.nodes_copy();
+    var changed = _selected.clear_nodes( false );
+    for( int i=0; i<nodes.length; i++ ) {
+      changed |= _selected.add_child_nodes( nodes.index( i ), false );
+    }
+    if( changed ) {
+      current_changed();
+    }
+    queue_draw();
+  }
+
+  //-------------------------------------------------------------
+  // Selects all of the nodes in the current node's tree.
+  public void select_node_tree() {
+    var current = get_current_node();
+    _selected.add_node_tree( current );
+    queue_draw();
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if any of the selected nodes contains a parent
+  // node.
+  public bool parent_selectable() {
+    var nodes      = _selected.nodes();
+    var selectable = false;
+    for( int i=0; i<nodes.length; i++ ) {
+      selectable |= !nodes.index( i ).is_root();
+    }
+    return( selectable );
+  }
+
+  //-------------------------------------------------------------
+  // Selects the parent nodes of the selected nodes.
+  public void select_parent_nodes() {
+    var child_nodes  = _selected.nodes();
+    var parent_nodes = new Array<Node>();
+    for( int i=0; i<child_nodes.length; i++ ) {
+      var node = child_nodes.index( i );
+      if( (node != null) && !node.is_root() ) {
+        if( node.is_summary() ) {
+          parent_nodes.append_val( (node as SummaryNode).last_selected_node );
+        } else {
+          parent_nodes.append_val( node.parent );
+        }
+      }
+    }
+    if( parent_nodes.length > 0 ) {
+      _selected.clear_nodes();
+      for( int i=0; i<parent_nodes.length; i++ ) {
+        _selected.add_node( parent_nodes.index( i ) );
+      }
+      _canvas.see();
+      queue_draw();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Selects the callout associated with the current node (if one
+  // exists).
+  public void select_callout() {
+    if( is_node_selected() && (get_current_node().callout != null) ) {
+      set_current_callout( get_current_node().callout );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Selects the node that is linked to the specified node.  If
+  // node is null, use the current node.
+  public void select_linked_node( Node? node = null ) {
+    var n = node;
+    if( n == null ) {
+      n = get_current_node();
+    }
+    if( (n != null) && (n.linked_node != null) ) {
+      n.linked_node.select( _map );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the array of selected nodes
+  public Array<Node> get_selected_nodes() {
+    return( _selected.nodes() );
+  }
+
+  //-------------------------------------------------------------
+  // CONNECTION SELECTION METHODS
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
   // Returns the current connection
   public Connection? get_current_connection() {
     return( _selected.current_connection() );
   }
 
   //-------------------------------------------------------------
+  // Helper function that returns true if a connection is currently
+  // selected and matches the given mode.
+  private bool is_connection_mode( ConnMode mode ) {
+    var current = get_current_connection();
+    return( (current != null) && (current.mode == mode) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if we are connecting a connection title.
+  public bool is_connection_connecting() {
+    return( is_connection_mode( ConnMode.CONNECTING ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if we are editing a connection title.
+  public bool is_connection_editable() {
+    return( is_connection_mode( ConnMode.EDITABLE ) );
+  }
+
+  //-------------------------------------------------------------
   // Returns if a connection is currently selected.
   public bool is_connection_selected() {
-    return( get_current_connect() != null );
+    return( is_connection_mode( ConnMode.SELECTED ) );
   }
 
   //-------------------------------------------------------------
@@ -388,15 +679,93 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
+  // Selects the given connection node.
+  public void select_connection_node( bool start ) {
+    var current = get_current_connection();
+    if( current != null ) {
+      if( select_node( start ? current.from_node : current.to_node ) ) {
+        _canvas.clear_current_connection( true );
+        queue_draw();
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Selects the next connection in the list.
+  public void select_connection( int dir ) {
+    var current = get_current_connection();
+    if( current != null ) {
+      var conn = _model.connections.get_connection( current, dir );
+      if( conn != null ) {
+        set_current_connection( conn );
+        _canvas.see();
+        queue_draw();
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Selects the first connection in the list.
+  public void select_attached_connection() {
+    var current = get_current_node();
+    if( current =! null ) {
+      if( current.last_selected_connection != null ) {
+        set_current_connection( current.last_selected_connection );
+        _canvas.see();
+        queue_draw();
+      } else {
+        var conn = _model.connections.get_attached_connection( current );
+        if( conn != null ) {
+          set_current_connection( conn );
+          _canvas.see();
+          queue_draw();
+        }
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the array of selected connections
+  public Array<Connection> get_selected_connections() {
+    return( _selected.connections() );
+  }
+
+  //-------------------------------------------------------------
+  // CALLOUT SELECTION METHODS
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Selects the node associated with the current callout.
+  public void select_callout_node() {
+    if( is_callout_selected() ) {
+      set_current_node( get_current_callout().node );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Returns the current callout
   public Callout? get_current_callout() {
     return( _selected.current_callout() );
   }
 
   //-------------------------------------------------------------
+  // Helper function that returns true if a callout is currently
+  // selected and matches the given mode.
+  private bool is_callout_mode( CalloutMode mode ) {
+    var current = get_current_callout();
+    return( (current != null) && (current.mode == mode) );
+  }
+
+  //-------------------------------------------------------------
   // Returns if a callout is currently selected.
   public bool is_callout_selected() {
-    return( get_current_callout() != null );
+    return( is_callout_mode( CalloutMode.SELECTED ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if we are editing a callout title.
+  public bool is_callout_editable() {
+    return( is_callout_mode( CalloutMode.EDITABLE ) );
   }
 
   //-------------------------------------------------------------
@@ -404,6 +773,16 @@ public class MindMap {
   public void set_current_callout( Callout? c ) {
     _selected.set_current_callout( c );
   }
+
+  //-------------------------------------------------------------
+  // Returns the array of selected callouts
+  public Array<Callout> get_selected_callouts() {
+    return( _selected.callouts() );
+  }
+
+  //-------------------------------------------------------------
+  // GROUP SELECTION METHODS
+  //-------------------------------------------------------------
 
   //-------------------------------------------------------------
   // Returns the current group (if selected)
@@ -424,6 +803,16 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
+  // Returns the array of selected groups
+  public Array<NodeGroup> get_selected_groups() {
+    return( _selected.groups() );
+  }
+
+  //-------------------------------------------------------------
+  // STICKER SELECTION METHODS
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
   // Returns the current sticker (if selected).
   public Sticker? get_current_sticker() {
     return( _selected.current_sticker() );
@@ -441,31 +830,6 @@ public class MindMap {
     _selected.set_current_sticker( s );
     _stickers.select_sticker( s );
   }
-
-  //-------------------------------------------------------------
-  // Returns the array of selected nodes
-  public Array<Node> get_selected_nodes() {
-    return( _selected.nodes() );
-  }
-
-  //-------------------------------------------------------------
-  // Returns the array of selected connections
-  public Array<Connection> get_selected_connections() {
-    return( _selected.connections() );
-  }
-
-  //-------------------------------------------------------------
-  // Returns the array of selected callouts
-  public Array<Callout> get_selected_callouts() {
-    return( _selected.callouts() );
-  }
-
-  //-------------------------------------------------------------
-  // Returns the array of selected groups
-  public Array<NodeGroup> get_selected_groups() {
-    return( _selected.groups() );
-  }
-
 
   //-------------------------------------------------------------
   // UNDO BUFFER
@@ -508,7 +872,72 @@ public class MindMap {
   // Convenience function that provides the connections in the
   // mind map.
   public Connections get_connections() {
-    return( _model.get_connections() );
+    return( _model.connections );
+  }
+
+  //-------------------------------------------------------------
+  // FOCUS MODE FUNCTIONS
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Returns the current focus mode state.
+  public bool get_focus_mode() {
+    return( _focus_mode );
+  }
+
+  //-------------------------------------------------------------
+  // Called when the focus button active state changes.  Causes
+  // all nodes and connections to have the alpha state set to
+  // almost transparent (when focus mode is enabled) or fully opaque.
+  public void set_focus_mode( bool focus ) {
+    _focus_mode = focus;
+    update_focus_mode();
+  }
+
+  //-------------------------------------------------------------
+  // Update the focus mode.
+  public void update_focus_mode() {
+    var selnodes = selected.nodes();
+    var selconns = selected.connections();
+    var alpha    = (_focus_mode && ((selnodes.length > 0) || (selconns.length > 0))) ? _focus_alpha : 1.0;
+    var nodes    = _model.get_nodes();
+    for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).alpha = alpha;
+    }
+    if( _focus_mode ) {
+      for( int i=0; i<selnodes.length; i++ ) {
+        var current = selnodes.index( i );
+        current.alpha = 1.0;
+        var parent = current.parent;
+        while( parent != null ) {
+          parent.set_alpha_only( 1.0 );
+          parent = parent.parent;
+        }
+      }
+      _model.connections.update_alpha();
+      for( int i=0; i<selconns.length; i++ ) {
+        selconns.index( i ).alpha = 1.0;
+      }
+    }
+    queue_draw();
+  }
+
+  //-------------------------------------------------------------
+  // Updates all alpha values with the given value.
+  public void update_focus_mode_alpha() {
+    var key   = "focus-mode-alpha";
+    var alpha = _settings.get_double( key );
+    if( (alpha < 0) || (alpha >= 1.0) ) {
+      _settings.set_double( key, _focus_alpha );
+    } else if( _focus_alpha != alpha ) {
+      _focus_alpha = alpha;
+      var nodes = _model.get_nodes();
+      for( int i=0; i<nodes.length; i++ ) {
+        nodes.index( i ).update_alpha( alpha );
+      }
+      _model.connections.update_alpha();
+      queue_draw();
+    }
   }
 
   //-------------------------------------------------------------
@@ -535,18 +964,6 @@ public class MindMap {
                         _settings.get_boolean( "style-properties-shown" ) ? _settings.get_int( "properties-width" ) : 0;
     width  = _settings.get_int( "window-w" ) - sidebar_width;
     height = _settings.get_int( "window-h" );
-  }
-
-  //-------------------------------------------------------------
-  // Sets the focus mode
-  public void set_focus_mode( bool mode ) {
-    _model.set_focus_mode( selected, mode );  // TODO - Avoiding name collisions
-  }
-
-  //-------------------------------------------------------------
-  // Updates the focus mode
-  public void update_focus_mode() {
-    _model.update_focus_mode( selected );
   }
 
   //-------------------------------------------------------------

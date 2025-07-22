@@ -42,7 +42,7 @@ public class UndoNodeDetach : UndoItem {
   /* Performs an undo operation for this data */
   public override void undo( MindMap map ) {
     map.canvas.animator.add_nodes( map.get_nodes(), "undo detach" );
-    map.remove_root( _root_index );
+    map.model.remove_root( _root_index );
     _old_parent.layout.propagate_side( _n, _old_side );
     _n.attach( _old_parent, _old_index, null, false );
     map.set_current_node( _n );
@@ -55,7 +55,7 @@ public class UndoNodeDetach : UndoItem {
   public override void redo( MindMap map ) {
     map.canvas.animator.add_nodes( map.get_nodes(), "redo detach" );
     _n.detach( _old_side );
-    map.add_root( _n, _root_index );
+    map.model.add_root( _n, _root_index );
     map.set_current_node( _n );
     map.canvas.animator.animate();
     map.auto_save();

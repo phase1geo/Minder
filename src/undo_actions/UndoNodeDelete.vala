@@ -44,7 +44,7 @@ public class UndoNodeDelete : UndoItem {
   // Undoes a node deletion.
   public override void undo( MindMap map ) {
     if( _parent == null ) {
-      map.add_root( _node, _index );
+      map.model.add_root( _node, _index );
     } else {
       _node.attached = true;
       _node.attach_init( _parent, _index );
@@ -63,7 +63,7 @@ public class UndoNodeDelete : UndoItem {
   public override void redo( MindMap map ) {
     UndoNodeGroups? tmp_groups = null;
     if( _parent == null ) {
-      map.remove_root( _index );
+      map.model.remove_root( _index );
     } else {
       _node.detach( _node.side );
     }

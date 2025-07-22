@@ -338,38 +338,38 @@ public class NodeMenu {
     /* Set the menu sensitivity */
     da.action_set_enabled( "node.action_paste", true );
     da.action_set_enabled( "node.action_replace", true );
-    da.action_set_enabled( "node.action_add_connection", !_map.get_connections().hide );
+    da.action_set_enabled( "node.action_add_connection", !_map.model.connections.hide );
     da.action_set_enabled( "node.action_add_parent_node", node_parentable() );
     da.action_set_enabled( "node.action_change_link_color",    !current.is_root() );
     da.action_set_enabled( "node.action_randomize_link_color", !current.is_root() );
     da.action_set_enabled( "node.action_reparent_link_color",  (!current.is_root() && !current.main_branch() && current.link_color_root) );
     da.action_set_enabled( "node.action_fold_node", node_foldable() );
-    da.action_set_enabled( "node.action_toggle_sequence", _map.sequences_togglable() );
+    da.action_set_enabled( "node.action_toggle_sequence", _map.model.sequences_togglable() );
     da.action_set_enabled( "node.action_change_link", node_linkable() );
-    da.action_set_enabled( "node.action_detach_node", _map.detachable() );
+    da.action_set_enabled( "node.action_detach_node", _map.model.detachable() );
     da.action_set_enabled( "node.action_sort_alphabetically", node_sortable() );
     da.action_set_enabled( "node.action_sort_randomly",       node_sortable() );
     da.action_set_enabled( "node.action_select_root_node", _map.root_selectable() );
-    da.action_set_enabled( "node.action_select_next_sibling_node", _map.sibling_selectable() );
-    da.action_set_enabled( "node.action_select_previous_sibling_node", _map.sibling_selectable() );
+    da.action_set_enabled( "node.action_select_next_sibling_node", _map.sibling_exists() );
+    da.action_set_enabled( "node.action_select_previous_sibling_node", _map.sibling_exists() );
     da.action_set_enabled( "node.action_select_child_node", _map.children_selectable() );
     da.action_set_enabled( "node.action_select_parent_node", _map.parent_selectable() );
     da.action_set_enabled( "node.action_select_linked_node", node_has_link() );
     da.action_set_enabled( "node.action_select_callout", node_has_callout() );
     da.action_set_enabled( "node.action_remove_sticker", (current.sticker != null) );
     da.action_set_enabled( "node.action_add_sibling_node", !current.is_summary() );
-    da.action_set_enabled( "node.action_convert_to_summary_node", _map.node_summarizable() );
+    da.action_set_enabled( "node.action_convert_to_summary_node", _map.model.node_summarizable() );
 
   }
 
   /* Copies the current node to the clipboard */
   private void action_copy() {
-    _map.do_copy();
+    _map.model.do_copy();
   }
 
   /* Cuts the current node to the clipboard */
   private void action_cut() {
-    _map.do_cut();
+    _map.model.do_cut();
   }
 
   /*
@@ -391,18 +391,18 @@ public class NodeMenu {
 
   /* Deletes the current node */
   private void action_delete_node() {
-    _map.delete_node();
+    _map.model.delete_node();
   }
 
   /* Deletes just the node that is selected */
   private void action_delete_node_only() {
-    _map.delete_nodes();
+    _map.model.delete_nodes();
   }
 
   /* Displays the sidebar to edit the node properties */
   private void action_edit_node() {
     var current = _map.get_current_node();
-    _map.set_node_mode( current, NodeMode.EDITABLE );
+    _map.model.set_node_mode( current, NodeMode.EDITABLE );
     _map.queue_draw();
   }
 
@@ -410,12 +410,12 @@ public class NodeMenu {
   private void action_change_task() {
     if( node_is_task() ) {
       if( node_task_is_done() ) {
-        _map.change_current_task( false, false );
+        _map.model.change_current_task( false, false );
       } else {
-        _map.change_current_task( true, true );
+        _map.model.change_current_task( true, true );
       }
     } else {
-      _map.change_current_task( true, false );
+      _map.model.change_current_task( true, false );
     }
     _map.current_changed( _map );
   }
@@ -428,9 +428,9 @@ public class NodeMenu {
   /* Changes the image of the currently selected node */
   private void action_change_image() {
     if( node_has_image() ) {
-      _map.delete_current_image();
+      _map.model.delete_current_image();
     } else {
-      _map.add_current_image();
+      _map.model.add_current_image();
     }
     _map.current_changed( _map );
   }
@@ -447,65 +447,65 @@ public class NodeMenu {
   /* Changes the node link of the currently selected node */
   private void action_change_link() {
     if( node_has_link() ) {
-      _map.delete_links();
+      _map.model.delete_links();
     } else {
-      _map.start_connection( false, true );
+      _map.model.start_connection( false, true );
     }
   }
 
   /* Changes the connection of the currently selected node */
   private void action_add_connection() {
-    _map.start_connection( false, false );
+    _map.model.start_connection( false, false );
   }
 
   /* Creates a group from the currently selected node */
   private void action_add_group() {
-    _map.add_group();
+    _map.model.add_group();
   }
 
   /* Adds a callback to the currently selected node */
   private void action_add_callout() {
     if( node_has_callout() ) {
-      _map.remove_callout();
+      _map.model.remove_callout();
     } else {
-      _map.add_callout();
+      _map.model.add_callout();
     }
   }
 
   /* Fold the currently selected node */
   private void action_fold_node() {
-    _map.change_current_fold( !node_is_folded() );
+    _map.model.change_current_fold( !node_is_folded() );
   }
 
   //-------------------------------------------------------------
   // Toggles the sequence indicator of the current node
   private void action_toggle_sequence() {
-    _map.toggle_sequence();
+    _map.model.toggle_sequence();
   }
 
   /* Creates a new root node */
   private void action_add_root_node() {
-    _map.add_root_node();
+    _map.model.add_root_node();
   }
 
   /* Creates a new parent node for the current node */
   private void action_add_parent_node() {
-    _map.add_parent_node();
+    _map.model.add_parent_node();
   }
 
   /* Creates a new child node from the current node */
   private void action_add_child_node() {
-    _map.add_child_node();
+    _map.model.add_child_node();
   }
 
   /* Creates a sibling node of the current node */
   private void action_add_sibling_node() {
-    _map.add_sibling_node( false );
+    _map.model.add_sibling_node( false );
   }
 
   /* Converts the current node into a summary node */
   private void action_convert_to_summary_node() {
-    _map.add_summary_node_from_current();
+    _map.model.add_summary_node_from_current();
   }
 
   /* Show the quick entry insert window */
@@ -520,7 +520,7 @@ public class NodeMenu {
 
   /* Detaches the currently selected node and make it a root node */
   private void action_detach_node() {
-    _map.detach();
+    _map.model.detach();
   }
 
   /* Selects the current root node */
@@ -579,27 +579,27 @@ public class NodeMenu {
   }
 
   private void action_sort_alphabetically() {
-    _map.sort_alphabetically();
+    _map.model.sort_alphabetically();
   }
 
   private void action_sort_randomly() {
-    _map.sort_randomly();
+    _map.model.sort_randomly();
   }
 
   public void action_change_link_color() {
     var color_picker = new ColorChooserDialog( _( "Select a link color" ), _map.win );
     color_picker.color_activated.connect((color) => {
-      _map.change_current_link_color( color );
+      _map.model.change_current_link_color( color );
     });
     color_picker.present();
   }
 
   private void action_randomize_link_color() {
-    _map.randomize_current_link_color();
+    _map.model.randomize_current_link_color();
   }
 
   private void action_reparent_link_color() {
-    _map.reparent_current_link_color();
+    _map.model.reparent_current_link_color();
   }
 
 }

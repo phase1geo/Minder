@@ -64,8 +64,6 @@ public class MapModel {
   private Sticker?      _attach_sticker = null;
   private uint?         _auto_save_id   = null;
   private bool          _debug        = true;
-  private bool          _focus_mode   = false;
-  private double        _focus_alpha  = 0.05;
   private NodeGroups    _groups;
   private int           _next_node_id    = -1;
   private NodeLinks     _node_links;
@@ -81,6 +79,11 @@ public class MapModel {
   public MindMap map {
     get {
       return( _map );
+    }
+  }
+  public Connections connections {
+    get {
+      return( _connections );
     }
   }
   public Stickers stickers {
@@ -115,7 +118,7 @@ public class MapModel {
     }
     set {
       if( _hide_callouts != value ) {
-        if( is_callout_editable() ) {
+        if( _map.is_callout_editable() ) {
           set_callout_mode( _map.selected.current_callout(), CalloutMode.NONE );
           _map.selected.clear_callouts( false );
         }
@@ -189,12 +192,6 @@ public class MapModel {
 
     // Create the braindump list
     _braindump = new Array<string>();
-
-    /* Get the value of the new node from edit */
-    update_focus_mode_alpha( _map.settings );
-    _map.settings.changed.connect(() => {
-      update_focus_mode_alpha( _map.settings );
-    });
 
     /* Set the theme to the default theme */
     set_theme( win.themes.get_theme( _map.settings.get_string( "default-theme" ) ), false );
@@ -277,11 +274,6 @@ public class MapModel {
   /* Returns the list of nodes */
   public Array<Node> get_nodes() {
     return( _nodes );
-  }
-
-  /* Returns the connections list */
-  public Connections get_connections() {
-    return( _connections );
   }
 
   /* Searches for and returns the node with the specified ID */
@@ -730,7 +722,7 @@ public class MapModel {
       _map.add_undo( new UndoNodeCallout( current ) );
       current.callout = new Callout( current );
       current.callout.style = StyleInspector.styles.get_global_style();
-      _map.set_current_callout( current.callout, (_focus_mode ? _focus_alpha : 1.0) );
+      _map.selected.set_current_callout( current.callout, (_map.focus_mode ? _map.focus_alpha : 1.0) );
       set_callout_mode( current.callout, CalloutMode.EDITABLE );
       queue_draw();
       auto_save();
@@ -1153,7 +1145,7 @@ public class MapModel {
       conn = _connections.on_curve( x, y );
     }
     if( conn != null ) {
-      if( !_map.is_connection_selected( conn ) && (conn.mode != ConnMode.EDITABLE) ) {
+      if( !_map.selected.is_connection_selected( conn ) && (conn.mode != ConnMode.EDITABLE) ) {
         _map.set_current_connection( conn );
         queue_draw();
       }
@@ -1169,7 +1161,7 @@ public class MapModel {
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i ).contains( x, y, null );
       if( node != null ) {
-        if( !_map.is_node_selected( node ) && (node.mode != NodeMode.EDITABLE) ) {
+        if( !_map.selected.is_node_selected( node ) && (node.mode != NodeMode.EDITABLE) ) {
           _map.set_current_node( node );
           queue_draw();
         }
@@ -1177,6 +1169,26 @@ public class MapModel {
       }
     }
     return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the sibling node in the given direction of the current
+  // node.
+  public Node? sibling_node( Node? node, int dir ) {
+    if( node != null ) {
+      if( node.is_root() ) {
+        for( int i=0; i<_nodes.length; i++ ) {
+          if( _nodes.index( i ) == node ) {
+            return( (((i + dir) < 0) || ((i + dir) >= _nodes.length)) ? null : _nodes.index( i + dir ) );
+          }
+        }
+      } else if( dir == 1 ) {
+        return( node.parent.next_child( node ) );
+      } else {
+        return( node.parent.prev_child( node ) );
+      }
+    }
+    return( null );
   }
 
   //-------------------------------------------------------------
@@ -1360,7 +1372,7 @@ public class MapModel {
 
     /* Draw the current node on top of all others */
     if( (current_node != null) && (current_node.folded_ancestor() == null) ) {
-      current_node.draw_all( ctx, _theme, null, (!is_node_editable() && moving_node), exporting );
+      current_node.draw_all( ctx, _theme, null, (!_map.is_node_editable() && moving_node), exporting );
     }
 
     /* Draw the current connection on top of everything else */
@@ -1468,326 +1480,9 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
-  // Returns true if we are connecting a connection title.
-  public bool is_connection_connecting() {
-    var current = _map.selected.current_connection();
-    return( (current != null) && (current.mode == ConnMode.CONNECTING) );
-  }
-
-  //-------------------------------------------------------------
-  // Returns true if we are editing a connection title.
-  public bool is_connection_editable() {
-    var current = _map.selected.current_connection();
-    return( (current != null) && (current.mode == ConnMode.EDITABLE) );
-  }
-
-  //-------------------------------------------------------------
-  // Returns true if we are editing a callout title.
-  public bool is_callout_editable() {
-    var current = _map.selected.current_callout();
-    return( (current != null) && (current.mode == CalloutMode.EDITABLE) );
-  }
-
-  //-------------------------------------------------------------
-  // Returns true if we are in node edit mode.
-  public bool is_node_editable() {
-    var current = _map.selected.current_node();
-    return( (current != null) && (current.mode == NodeMode.EDITABLE) );
-  }
-
-  //-------------------------------------------------------------
-  // Returns the next node to select after the current node is
-  // removed.
-  public Node? next_node_to_select() {
-    var current = _map.selected.current_node();
-    if( current != null ) {
-      if( current.is_root() ) {
-        if( _nodes.length > 1 ) {
-          for( int i=0; i<_nodes.length; i++ ) {
-            if( _nodes.index( i ) == current ) {
-              if( i == 0 ) {
-                return( _nodes.index( 1 ) );
-              } else if( (i + 1) == _nodes.length ) {
-                return( _nodes.index( i - 1 ) );
-              }
-              break;
-            }
-          }
-        }
-      } else {
-        Node? next = current.parent.next_child( current );
-        if( next == null ) {
-          next = current.parent.prev_child( current );
-          if( next == null ) {
-            next = current.parent;
-          }
-        }
-        return( next );
-      }
-    }
-    return( null );
-  }
-
-  //-------------------------------------------------------------
-  // If the specified node is not null, selects the node and
-  // makes it the current node.
-  public bool select_node( Node? n, bool animate = true ) {
-    if( n != null ) {
-      if( n != _map.selected.current_node() ) {
-        var folded = n.folded_ancestor();
-        if( folded != null ) {
-          folded.set_fold_only( false );
-        }
-        _map.set_current_node( n, (_focus_mode ? _focus_alpha : 1.0) );
-        if( n.parent != null ) {
-          n.parent.last_selected_child = n;
-        }
-        if( n.is_summarized() ) {
-          n.summary_node().last_selected_node = n;
-        }
-        see( animate );
-      }
-      return( true );
-    }
-    return( false );
-  }
-
-  //-------------------------------------------------------------
-  // Returns true if there is a root that is available for selection.
-  public bool root_selectable() {
-    var current_node = _map.selected.current_node();
-    var current_conn = _map.selected.current_connection();
-    return( (current_conn == null) && ((current_node == null) ? (_nodes.length > 0) : (current_node.get_root() != current_node)) );
-  }
-
-  //-------------------------------------------------------------
-  // If there is no current node, selects the first root node;
-  // otherwise, selects the current node's root node.
-  public void select_root_node() {
-    if( _map.selected.current_connection() != null ) return;
-    var current = _map.selected.current_node();
-    if( current == null ) {
-      if( _nodes.length > 0 ) {
-        if( select_node( _nodes.index( 0 ) ) ) {
-          queue_draw();
-        }
-      }
-    } else if( select_node( current.get_root() ) ) {
-      queue_draw();
-    }
-  }
-
-  //-------------------------------------------------------------
   // Returns true if there is a sibling available for selection.
-  public bool sibling_selectable() {
-    var current = _map.selected.current_node();
-    return( (current != null) && (current.is_root() ? (_nodes.length > 1) : (current.parent.children().length > 1)) );
-  }
-
-  //-------------------------------------------------------------
-  // Returns the sibling node in the given direction of the current
-  // node.
-  public Node? sibling_node( int dir ) {
-    var current = _map.selected.current_node();
-    if( current != null ) {
-      if( current.is_root() ) {
-        for( int i=0; i<_nodes.length; i++ ) {
-          if( _nodes.index( i ) == current ) {
-            return( (((i + dir) < 0) || ((i + dir) >= _nodes.length)) ? null : _nodes.index( i + dir ) );
-          }
-        }
-      } else if( dir == 1 ) {
-        return( current.parent.next_child( current ) );
-      } else {
-        return( current.parent.prev_child( current ) );
-      }
-    }
-    return( null );
-  }
-
-  //-------------------------------------------------------------
-  // Selects the next (dir = 1) or previous (dir = -1) sibling.
-  public void select_sibling_node( int dir ) {
-    var current = _map.selected.current_node();
-    if( current != null ) {
-      Array<Node> nodes;
-      int         index = 0;
-      if( current.is_root() ) {
-        nodes = _nodes;
-        for( int i=0; i<_nodes.length; i++ ) {
-          if( _nodes.index( i ) == current ) {
-            index = i;
-            break;
-          }
-        }
-      } else {
-        nodes = current.parent.children();
-        index = current.index();
-      }
-      if( (index + dir) < 0 ) {
-        if( select_node( nodes.index( nodes.length - 1 ) ) ) {
-          queue_draw();
-        }
-      } else {
-        if( select_node( nodes.index( (index + dir) % nodes.length ) ) ) {
-          queue_draw();
-        }
-      }
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Returns true if there is a child node of the current node.
-  public bool children_selectable() {
-    var nodes      = _map.selected.nodes();
-    var selectable = false;
-    for( int i=0; i<nodes.length; i++ ) {
-      var node = nodes.index( i );
-      selectable |= (!node.is_leaf() && !node.folded);
-    }
-    return( selectable );
-  }
-
-  //-------------------------------------------------------------
-  // Selects the last selected child node of the current node.
-  public void select_child_node() {
-    var current = _map.selected.current_node();
-    if( (current != null) && !current.is_leaf() && !current.folded ) {
-      if( select_node( current.last_selected_child ?? current.children().index( 0 ) ) ) {
-        queue_draw();
-      }
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Selects all of the child nodes.
-  public void select_child_nodes() {
-    var nodes   = _map.selected.nodes_copy();
-    var changed = _map.selected.clear_nodes( false );
-    for( int i=0; i<nodes.length; i++ ) {
-      changed |= _map.selected.add_child_nodes( nodes.index( i ), false );
-    }
-    if( changed ) {
-      current_changed();
-    }
-    queue_draw();
-  }
-
-  //-------------------------------------------------------------
-  // Selects all of the nodes in the current node's tree.
-  public void select_node_tree() {
-    var current = _map.selected.current_node();
-    _map.selected.add_node_tree( current );
-    queue_draw();
-  }
-
-  //-------------------------------------------------------------
-  // Returns true if there is a parent node of the current node.
-  public bool parent_selectable() {
-    var nodes      = _map.selected.nodes();
-    var selectable = false;
-    for( int i=0; i<nodes.length; i++ ) {
-      selectable |= !nodes.index( i ).is_root();
-    }
-    return( selectable );
-  }
-
-  //-------------------------------------------------------------
-  // Selects the parent nodes of the selected nodes.
-  public void select_parent_nodes() {
-    var child_nodes  = _map.selected.nodes();
-    var parent_nodes = new Array<Node>();
-    for( int i=0; i<child_nodes.length; i++ ) {
-      var node = child_nodes.index( i );
-      if( (node != null) && !node.is_root() ) {
-        if( node.is_summary() ) {
-          parent_nodes.append_val( (node as SummaryNode).last_selected_node );
-        } else {
-          parent_nodes.append_val( node.parent );
-        }
-      }
-    }
-    if( parent_nodes.length > 0 ) {
-      _map.selected.clear_nodes();
-      for( int i=0; i<parent_nodes.length; i++ ) {
-        _map.selected.add_node( parent_nodes.index( i ) );
-      }
-      see();
-      queue_draw();
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Selects the node that is linked to this node.
-  public void select_linked_node( Node? node = null ) {
-    var n = node;
-    if( n == null ) {
-      n = _map.selected.current_node();
-    }
-    if( (n != null) && (n.linked_node != null) ) {
-      n.linked_node.select( _map );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Selects the given connection node.
-  public void select_connection_node( bool start ) {
-    var current = _map.selected.current_connection();
-    if( current != null ) {
-      if( select_node( start ? current.from_node : current.to_node ) ) {
-        _map.canvas.clear_current_connection( true );
-        queue_draw();
-      }
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Selects the next connection in the list.
-  public void select_connection( int dir ) {
-    var current = _map.selected.current_connection();
-    if( current == null ) return;
-    var conn = _connections.get_connection( current, dir );
-    if( conn != null ) {
-      _map.set_current_connection( conn );
-      see();
-      queue_draw();
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Selects the first connection in the list.
-  public void select_attached_connection() {
-    var current = _map.selected.current_node();
-    if( current == null ) return;
-    if( current.last_selected_connection != null ) {
-      _map.set_current_connection( current.last_selected_connection );
-      see();
-      queue_draw();
-    } else {
-      var conn = _connections.get_attached_connection( current );
-      if( conn != null ) {
-        _map.set_current_connection( conn );
-        see();
-        queue_draw();
-      }
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Selects the callout associated with the current node (if one
-  // exists).
-  public void select_callout() {
-    if( _map.is_node_selected() && (_map.selected.current_node().callout != null) ) {
-      _map.set_current_callout( _map.selected.current_node().callout );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Selects the node associated with the current callout.
-  public void select_callout_node() {
-    if( _map.is_callout_selected() ) {
-      _map.set_current_node( _map.selected.current_callout().node );
-    }
+  public bool sibling_exists( Node? node ) {
+    return( (node != null) && (node.is_root() ? (_nodes.length > 1) : (node.parent.children().length > 1)) );
   }
 
   //-------------------------------------------------------------
@@ -1827,7 +1522,7 @@ public class MapModel {
   public void delete_node() {
     var current = _map.selected.current_node();
     if( current == null ) return;
-    Node? next_node = next_node_to_select();
+    Node? next_node = _map.next_node_to_select();
     var   conns     = new Array<Connection>();
     UndoNodeGroups? undo_groups = null;
     _connections.node_deleted( current, conns );
@@ -1848,7 +1543,7 @@ public class MapModel {
       current.delete();
     }
     _map.selected.remove_node( current );
-    select_node( next_node );
+    _map.select_node( next_node );
     queue_draw();
     auto_save();
   }
@@ -2001,7 +1696,7 @@ public class MapModel {
     var node         = create_root_node( _( "Another Idea" ) );
     var int_node_len = (int)(_nodes.length - 1);
     _map.add_undo( new UndoNodeInsert( node, int_node_len ) );
-    if( select_node( node ) ) {
+    if( _map.select_node( node ) ) {
       set_node_mode( node, NodeMode.EDITABLE, false );
       queue_draw();
     }
@@ -2019,7 +1714,7 @@ public class MapModel {
     conn.connect_to( node );
     _connections.add_connection( conn );
     _map.add_undo( new UndoConnectedNode( node, index, conn ) );
-    if( select_node( node ) ) {
+    if( _map.select_node( node ) ) {
       set_node_mode( node, NodeMode.EDITABLE, false );
       queue_draw();
     }
@@ -2456,13 +2151,13 @@ public class MapModel {
   //-------------------------------------------------------------
   // Selects all of the text in the current node.
   public void select_all() {
-    if( is_connection_editable() ) {
+    if( _map.is_connection_editable() ) {
       _map.selected.current_connection().title.set_cursor_all( false );
       queue_draw();
-    } else if( is_node_editable() ) {
+    } else if( _map.is_node_editable() ) {
       _map.selected.current_node().name.set_cursor_all( false );
       queue_draw();
-    } else if( is_callout_editable() ) {
+    } else if( _map.is_callout_editable() ) {
       _map.selected.current_callout().text.set_cursor_all( false );
       queue_draw();
     }
@@ -2471,13 +2166,13 @@ public class MapModel {
   //-------------------------------------------------------------
   // Deselects all of the text in the current node.
   public void deselect_all() {
-    if( is_connection_editable() ) {
+    if( _map.is_connection_editable() ) {
       _map.selected.current_connection().title.clear_selection();
       queue_draw();
-    } else if( is_node_editable() ) {
+    } else if( _map.is_node_editable() ) {
       _map.selected.current_node().name.clear_selection();
       queue_draw();
-    } else if( is_callout_editable() ) {
+    } else if( _map.is_callout_editable() ) {
       _map.selected.current_callout().text.clear_selection();
       queue_draw();
     }
@@ -2638,16 +2333,16 @@ public class MapModel {
       }
     } else if( _map.selected.nodes().length > 1 ) {
       MinderClipboard.copy_nodes( _map );
-    } else if( is_connection_editable() || is_callout_editable() ) {
+    } else if( _map.is_connection_editable() || _map.is_callout_editable() ) {
       copy_selected_text();
     }
   }
 
   /* Cuts the current node from the tree and stores it in the clipboard */
   public void cut_node_to_clipboard() {
-    var current = _map.selected.current_node();
+    var current = _map.get_current_node();
     if( current == null ) return;
-    var next_node = next_node_to_select();
+    var next_node = _map.next_node_to_select();
     var conns     = new Array<Connection>();
     UndoNodeGroups? undo_groups = null;
     _connections.node_deleted( current, conns );
@@ -2666,7 +2361,7 @@ public class MapModel {
       current.delete();
     }
     _map.selected.remove_node( current );
-    select_node( next_node );
+    _map.select_node( next_node );
     queue_draw();
     auto_save();
   }
@@ -2717,7 +2412,7 @@ public class MapModel {
       }
     } else if( _map.selected.nodes().length > 1 ) {
       cut_selected_nodes_to_clipboard();
-    } else if( is_connection_editable() || is_callout_editable() ) {
+    } else if( _map.is_connection_editable() || _map.is_callout_editable() ) {
       cut_selected_text();
     }
   }
@@ -2784,7 +2479,7 @@ public class MapModel {
       add_root( nodes.index( i ), -1 );
     }
     _map.add_undo( new UndoNodesReplace( node, nodes ) );
-    select_node( nodes.index( 0 ) );
+    _map.select_node( nodes.index( 0 ) );
     queue_draw();
     current_changed();
     auto_save();
@@ -2833,7 +2528,7 @@ public class MapModel {
       new_node.set_image( image_manager, ni );
     }
     _map.add_undo( new UndoNodeInsert( new_node, ((node == null) ? (int)(_nodes.length - 1) : new_node.index()) ) );
-    select_node( new_node );
+    _map.select_node( new_node );
     queue_draw();
     current_changed();
     auto_save();
@@ -2874,7 +2569,7 @@ public class MapModel {
       }
     }
     _map.add_undo( new UndoNodePaste( nodes, conns, groups ) );
-    select_node( nodes.index( 0 ) );
+    _map.select_node( nodes.index( 0 ) );
     queue_draw();
     current_changed();
     auto_save();
@@ -3088,66 +2783,6 @@ public class MapModel {
     if( (conn.title == null) && _map.settings.get_boolean( "edit-connection-title-on-creation" ) ) {
       conn.change_title( _map, "", true );
       set_connection_mode( conn, ConnMode.EDITABLE, false );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Returns the current focus mode state.
-  public bool get_focus_mode() {
-    return( _focus_mode );
-  }
-
-  //-------------------------------------------------------------
-  // Called when the focus button active state changes.  Causes
-  // all nodes and connections to have the alpha state set to
-  // almost transparent (when focus mode is enabled) or fully opaque.
-  public void set_focus_mode( Selection selected, bool focus ) {
-    double alpha = focus ? _focus_alpha : 1.0;
-    _focus_mode = focus;
-    update_focus_mode( selected );
-  }
-
-  //-------------------------------------------------------------
-  // Update the focus mode.
-  public void update_focus_mode( Selection selected ) {
-    var nodes = selected.nodes();
-    var conns = selected.connections();
-    var alpha = (_focus_mode && ((nodes.length > 0) || (conns.length > 0))) ? _focus_alpha : 1.0;
-    for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).alpha = alpha;
-    }
-    if( _focus_mode ) {
-      for( int i=0; i<nodes.length; i++ ) {
-        var current = nodes.index( i );
-        current.alpha = 1.0;
-        var parent = current.parent;
-        while( parent != null ) {
-          parent.set_alpha_only( 1.0 );
-          parent = parent.parent;
-        }
-      }
-      _connections.update_alpha();
-      for( int i=0; i<conns.length; i++ ) {
-        conns.index( i ).alpha = 1.0;
-      }
-    }
-    queue_draw();
-  }
-
-  //-------------------------------------------------------------
-  // Updates all alpha values with the given value.
-  public void update_focus_mode_alpha( GLib.Settings settings ) {
-    var key   = "focus-mode-alpha";
-    var alpha = settings.get_double( key );
-    if( (alpha < 0) || (alpha >= 1.0) ) {
-      settings.set_double( key, _focus_alpha );
-    } else if( _focus_alpha != alpha ) {
-      _focus_alpha = alpha;
-      for( int i=0; i<_nodes.length; i++ ) {
-        _nodes.index( i ).update_alpha( alpha );
-      }
-      _connections.update_alpha();
-      queue_draw();
     }
   }
 

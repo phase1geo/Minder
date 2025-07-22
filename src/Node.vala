@@ -626,10 +626,10 @@ public class Node : Object {
 
   /* Adds the valid parsers */
   public void set_parsers() {
-    _name.text.add_parser( _map.canvas.markdown_parser );
-    // _name.text.add_parser( _map.canvas.tagger_parser );
-    _name.text.add_parser( _map.canvas.url_parser );
-    _name.text.add_parser( _map.canvas.unicode_parser );
+    _name.text.add_parser( _map.markdown_parser );
+    // _name.text.add_parser( _map.tagger_parser );
+    _name.text.add_parser( _map.url_parser );
+    _name.text.add_parser( _map.unicode_parser );
   }
 
   /* Copies just the variables of the node, minus the children nodes */
@@ -2137,7 +2137,7 @@ public class Node : Object {
         _children.index( i ).attached = false;
         _map.get_nodes().append_val( _children.index( i ) );
       }
-      _map.remove_root_node( this );
+      _map.model.remove_root_node( this );
     } else {
       int idx = index();
       propagate_task_info_up( (0 - _task_count), (0 - _task_done) );
@@ -2165,7 +2165,7 @@ public class Node : Object {
     for( int i=0; i<children().length; i++ ) {
       var child = children().index( i );
       if( child.is_root() ) {
-        _map.remove_root_node( child );
+        _map.model.remove_root_node( child );
       } else {
         child.detach( child.side );
       }
