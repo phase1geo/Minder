@@ -113,12 +113,12 @@ public class UrlEditor : Box {
     if( node != null ) {
       selected = node.mode == NodeMode.CURRENT;
       if( selected ) {
-        _map.set_node_mode( node, NodeMode.EDITABLE );
+        _map.model.set_node_mode( node, NodeMode.EDITABLE );
       }
     } else if( callout != null ) {
       selected = callout.mode == CalloutMode.SELECTED;
       if( selected ) {
-        _map.set_callout_mode( callout, CalloutMode.EDITABLE );
+        _map.model.set_callout_mode( callout, CalloutMode.EDITABLE );
       }
     }
     if( ct != null ) {
@@ -129,9 +129,9 @@ public class UrlEditor : Box {
       ct.clear_selection();
       if( selected ) {
         if( node != null ) {
-          _map.set_node_mode( node, NodeMode.CURRENT );
+          _map.model.set_node_mode( node, NodeMode.CURRENT );
         } else if( callout != null ) {
-          _map.set_callout_mode( callout, CalloutMode.SELECTED );
+          _map.model.set_callout_mode( callout, CalloutMode.SELECTED );
         }
       }
       _map.queue_draw();
@@ -174,12 +174,12 @@ public class UrlEditor : Box {
     if( node != null ) {
       selected = node.mode == NodeMode.CURRENT;
       if( selected ) {
-        _map.set_node_mode( node, NodeMode.EDITABLE );
+        _map.model.set_node_mode( node, NodeMode.EDITABLE );
       }
     } else if( callout != null ) {
       selected = callout.mode == CalloutMode.SELECTED;
       if( selected ) {
-        _map.set_callout_mode( callout, CalloutMode.EDITABLE );
+        _map.model.set_callout_mode( callout, CalloutMode.EDITABLE );
       }
     }
     if( ct != null ) {
@@ -187,9 +187,9 @@ public class UrlEditor : Box {
       ct.clear_selection();
       if( selected ) {
         if( node != null ) {
-          _map.set_node_mode( node, NodeMode.CURRENT );
+          _map.model.set_node_mode( node, NodeMode.CURRENT );
         } else if( callout != null ) {
-          _map.set_callout_mode( callout, CalloutMode.SELECTED );
+          _map.model.set_callout_mode( callout, CalloutMode.SELECTED );
         }
       }
       _map.queue_draw();

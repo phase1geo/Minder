@@ -92,14 +92,14 @@ public class ConnectionInspector : Box {
       hexpand = true
     };
     _color.color_set.connect(() => {
-      _map.change_current_connection_color( _color.rgba );
+      _map.model.change_current_connection_color( _color.rgba );
     });
 
     _reset = new Button.from_icon_name( "edit-undo-symbolic" ) {
       tooltip_text = _( "Use Theme Default Color" )
     };
     _reset.clicked.connect(() => {
-      _map.change_current_connection_color( null );
+      _map.model.change_current_connection_color( null );
     });
 
     var bbox = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -195,7 +195,7 @@ public class ConnectionInspector : Box {
    and redraws the canvas when needed.
   */
   private void note_changed() {
-    _map.change_current_connection_note( _note.buffer.text );
+    _map.model.change_current_connection_note( _note.buffer.text );
   }
 
   /* Saves the original version of the node's note so that we can */
@@ -207,23 +207,23 @@ public class ConnectionInspector : Box {
   /* When the note buffer loses focus, save the note change to the undo buffer */
   private void note_focus_out() {
     if( (_connection != null) && (_connection.note != _orig_note) ) {
-      _map.undo_buffer.add_item( new UndoConnectionNote( _connection, _orig_note ) );
+      _map.add_undo( new UndoConnectionNote( _connection, _orig_note ) );
     }
   }
 
   /* When a node link is added, tell the current node */
   private int note_node_link_added( NodeLink link, out string text ) {
-    return( _map.add_note_node_link( link, out text ) );
+    return( _map.model.add_note_node_link( link, out text ) );
   }
 
   /* Handles a click on the node link with the given ID */
   private void note_node_link_clicked( int id ) {
-    _map.note_node_link_clicked( id );
+    _map.model.note_node_link_clicked( id );
   }
 
   /* Handles a hover over a node link */
   private void note_node_link_hover( int id ) {
-    var link = _map.node_links.get_node_link( id );
+    var link = _map.model.node_links.get_node_link( id );
     if( link != null ) {
       _note.show_tooltip( link.get_tooltip( _map ) );
     }
@@ -231,7 +231,7 @@ public class ConnectionInspector : Box {
 
   /* Deletes the current connection */
   private void connection_delete() {
-    _map.delete_connection();
+    _map.model.delete_connection();
   }
 
   /* Grabs the focus on the note widget */

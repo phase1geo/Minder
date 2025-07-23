@@ -221,7 +221,7 @@ public class NodeInspector : Box {
       halign = Align.FILL
     };
     _link_color.color_set.connect(() => {
-      _map.change_current_link_color( _link_color.rgba );
+      _map.model.change_current_link_color( _link_color.rgba );
     });
 
     _link_box = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -274,7 +274,7 @@ public class NodeInspector : Box {
       halign = Align.FILL
     };
     _root_color.color_set.connect(() => {
-      _map.change_current_link_color( _root_color.rgba );
+      _map.model.change_current_link_color( _root_color.rgba );
     });
 
     var cbox = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -391,7 +391,7 @@ public class NodeInspector : Box {
       tooltip_text = _( "Edit Image" )
     };
     btn_edit.clicked.connect(() => {
-      _map.edit_current_image();
+      _map.model.edit_current_image();
     });
 
     var btn_del = new Button.from_icon_name( "edit-delete-symbolic" ) {
@@ -399,7 +399,7 @@ public class NodeInspector : Box {
       tooltip_text = _( "Remove Image" )
     };
     btn_del.clicked.connect(() => {
-      _map.delete_current_image();
+      _map.model.delete_current_image();
     });
 
     _resize = new ToggleButton() {
@@ -440,7 +440,7 @@ public class NodeInspector : Box {
 
     drop.drop.connect((val, x, y) => {
       var file = (File)val;
-      return( _map.update_current_image( file.get_uri() ) );
+      return( _map.model.update_current_image( file.get_uri() ) );
     });
 
     return( box );
@@ -449,7 +449,7 @@ public class NodeInspector : Box {
 
   /* Called when the user clicks on the image button */
   private void image_button_clicked() {
-    _map.add_current_image();
+    _map.model.add_current_image();
   }
 
   /* Called if the user clicks on the image URI */
@@ -523,7 +523,7 @@ public class NodeInspector : Box {
   private void task_changed() {
     var current = _map.get_current_node();
     if( current != null ) {
-      _map.change_current_task( !current.task_enabled(), false );
+      _map.model.change_current_task( !current.task_enabled(), false );
     }
   }
 
@@ -531,7 +531,7 @@ public class NodeInspector : Box {
   private void fold_changed() {
     var current = _map.get_current_node();
     if( current != null ) {
-      _map.change_current_fold( !current.folded );
+      _map.model.change_current_fold( !current.folded );
     }
   }
 
@@ -554,12 +554,12 @@ public class NodeInspector : Box {
     if( _color_reveal.reveal_child ) {
       _color_reveal.reveal_child = false;
       if( current != null ) {
-        _map.change_current_link_color( null );
+        _map.model.change_current_link_color( null );
       }
     } else {
       _color_reveal.reveal_child = true;
       if( (current != null) && (_root_color.rgba != _map.get_theme().get_color( "root_background" )) ) {
-        _map.change_current_link_color( _root_color.get_rgba() );
+        _map.model.change_current_link_color( _root_color.get_rgba() );
       }
     }
   }
@@ -570,7 +570,7 @@ public class NodeInspector : Box {
   */
   private void note_changed() {
     if( _ignore_changes ) return;
-    _map.change_current_node_note( _note.buffer.text );
+    _map.model.change_current_node_note( _note.buffer.text );
   }
 
   /* Saves the original version of the node's note so that we can */
@@ -582,23 +582,23 @@ public class NodeInspector : Box {
   /* When the note buffer loses focus, save the note change to the undo buffer */
   private void note_focus_out() {
     if( (_node != null) && (_node.note != _orig_note) ) {
-      _map.undo_buffer.add_item( new UndoNodeNote( _node, _orig_note ) );
+      _map.add_undo( new UndoNodeNote( _node, _orig_note ) );
     }
   }
 
   /* When a node link is added, tell the current node */
   private int note_node_link_added( NodeLink link, out string text ) {
-    return( _map.add_note_node_link( link, out text ) );
+    return( _map.model.add_note_node_link( link, out text ) );
   }
 
   /* Handles a click on the node link with the given ID */
   private void note_node_link_clicked( int id ) {
-    _map.note_node_link_clicked( id );
+    _map.model.note_node_link_clicked( id );
   }
 
   /* Handles a hover over a node link */
   private void note_node_link_hover( int id ) {
-    var link = _map.node_links.get_node_link( id );
+    var link = _map.model.node_links.get_node_link( id );
     if( link != null ) {
       _note.show_tooltip( link.get_tooltip( _map ) );
     }
@@ -611,18 +611,18 @@ public class NodeInspector : Box {
 
   /* Cuts the current node to the clipboard */
   private void node_cut() {
-    _map.cut_node_to_clipboard();
+    _map.model.cut_node_to_clipboard();
   }
 
   /* Detaches the current node and makes it a parent node */
   private void node_detach() {
-    _map.detach();
+    _map.model.detach();
     _detach_btn.set_sensitive( false );
   }
 
   /* Deletes the current node */
   private void node_delete() {
-    _map.delete_node();
+    _map.model.delete_node();
   }
 
   /* Grabs the focus on the note widget */

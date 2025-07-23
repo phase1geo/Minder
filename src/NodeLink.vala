@@ -95,8 +95,8 @@ public class NodeLink {
       var other_map = map.win.get_current_map();
       var node      = other_map.model.get_node( other_map.model.get_nodes(), _node_id );
       Idle.add(() => {
-        if( other_map.model.select_node( node, false ) ) {
-          other_map.canvas.queue_draw();
+        if( other_map.select_node( node, false ) ) {
+          other_map.queue_draw();
         } else {
           // Node was not found
         }

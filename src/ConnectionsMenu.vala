@@ -69,7 +69,7 @@ public class ConnectionsMenu {
   //-------------------------------------------------------------
   // Deletes the current node.
   private void action_delete() {
-    _map.delete_connections();
+    _map.model.delete_connections();
   }
 
 }

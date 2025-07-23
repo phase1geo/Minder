@@ -85,6 +85,12 @@ public class MindMap {
     get {
       return( _focus_mode );
     }
+    set {
+      if( _focus_mode != value ) {
+        _focus_mode = value;
+        update_focus_mode();
+      }
+    }
   }
   public double focus_alpha {
     get {
@@ -113,6 +119,11 @@ public class MindMap {
       return( _model.braindump );
     }
   }
+  public Connections connections {
+    get {
+      return( _model.connections );
+    }
+  }
   public Stickers stickers {
     get {
       return( _model.stickers );
@@ -125,17 +136,20 @@ public class MindMap {
   }
   public ImageManager image_manager {
     get {
-      return( _image_manager );
+      return( _model.image_manager );
     }
   }
   public Layouts layouts {
     get {
-      return( _layouts );
+      return( _model.layouts );
     }
   }
   public int next_node_id {
     get {
       return( _model.next_node_id );
+    }
+    set {
+      _model.next_node_id = value;
     }
   }
 
@@ -157,11 +171,11 @@ public class MindMap {
     _win      = win;
     _settings = settings;
 
-    // Create the drawing area where the map will be drawn and interacted with
-    _canvas = new DrawArea( this, win );
-
     // Create the map model
     _model = new MapModel( this );
+
+    // Create the drawing area where the map will be drawn and interacted with
+    _canvas = new DrawArea( this, win );
 
     // Create the document
     _doc = new Document( this );
@@ -445,7 +459,7 @@ public class MindMap {
     var current = get_current_node();
     if( current == null ) {
       if( _model.get_nodes().length > 0 ) {
-        if( _model.select_node( _model.get_nodes().index( 0 ) ) ) {
+        if( select_node( _model.get_nodes().index( 0 ) ) ) {
           queue_draw();
         }
       }
@@ -552,7 +566,7 @@ public class MindMap {
       changed |= _selected.add_child_nodes( nodes.index( i ), false );
     }
     if( changed ) {
-      current_changed();
+      current_changed( this );
     }
     queue_draw();
   }
@@ -620,7 +634,7 @@ public class MindMap {
       n = get_current_node();
     }
     if( (n != null) && (n.linked_node != null) ) {
-      n.linked_node.select( _map );
+      n.linked_node.select( this );
     }
   }
 
@@ -628,6 +642,21 @@ public class MindMap {
   // Returns the array of selected nodes
   public Array<Node> get_selected_nodes() {
     return( _selected.nodes() );
+  }
+
+  //-------------------------------------------------------------
+  // Selects all nodes within the selected box.
+  public void select_nodes_within_box( SelectBox select_box, bool shift ) {
+    Gdk.Rectangle box = {
+      (int)((select_box.w < 0) ? (select_box.x + select_box.w) : select_box.x),
+      (int)((select_box.h < 0) ? (select_box.y + select_box.h) : select_box.y),
+      (int)((select_box.w < 0) ? (0 - select_box.w) : select_box.w),
+      (int)((select_box.h < 0) ? (0 - select_box.h) : select_box.h)
+    };
+    if( !shift ) {
+      _selected.clear_nodes();
+    }
+    _model.select_nodes_within_rectangle( box );
   }
 
   //-------------------------------------------------------------
@@ -708,7 +737,7 @@ public class MindMap {
   // Selects the first connection in the list.
   public void select_attached_connection() {
     var current = get_current_node();
-    if( current =! null ) {
+    if( current != null ) {
       if( current.last_selected_connection != null ) {
         set_current_connection( current.last_selected_connection );
         _canvas.see();
@@ -828,8 +857,43 @@ public class MindMap {
   // Sets the current selected sticker to the specified sticker
   public void set_current_sticker( Sticker? s ) {
     _selected.set_current_sticker( s );
-    _stickers.select_sticker( s );
+    _model.stickers.select_sticker( s );
   }
+
+  //-------------------------------------------------------------
+  // GENERAL SELECTION FUNCTIONS
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Selects all of the text in the current node.
+  public void select_all() {
+    if( is_connection_editable() ) {
+      _selected.current_connection().title.set_cursor_all( false );
+      queue_draw();
+    } else if( is_node_editable() ) {
+      _selected.current_node().name.set_cursor_all( false );
+      queue_draw();
+    } else if( is_callout_editable() ) {
+      _selected.current_callout().text.set_cursor_all( false );
+      queue_draw();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Deselects all of the text in the current node.
+  public void deselect_all() {
+    if( is_connection_editable() ) {
+      _selected.current_connection().title.clear_selection();
+      queue_draw();
+    } else if( is_node_editable() ) {
+      _selected.current_node().name.clear_selection();
+      queue_draw();
+    } else if( is_callout_editable() ) {
+      _selected.current_callout().text.clear_selection();
+      queue_draw();
+    }
+  }
+
 
   //-------------------------------------------------------------
   // UNDO BUFFER
@@ -869,30 +933,15 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
-  // Convenience function that provides the connections in the
-  // mind map.
-  public Connections get_connections() {
-    return( _model.connections );
+  // Returns the sibling node in the given direction from the
+  // currently selected node.
+  public Node? sibling_node( int dir ) {
+    return( _model.sibling_node( get_current_node(), dir ) );
   }
 
   //-------------------------------------------------------------
   // FOCUS MODE FUNCTIONS
   //-------------------------------------------------------------
-
-  //-------------------------------------------------------------
-  // Returns the current focus mode state.
-  public bool get_focus_mode() {
-    return( _focus_mode );
-  }
-
-  //-------------------------------------------------------------
-  // Called when the focus button active state changes.  Causes
-  // all nodes and connections to have the alpha state set to
-  // almost transparent (when focus mode is enabled) or fully opaque.
-  public void set_focus_mode( bool focus ) {
-    _focus_mode = focus;
-    update_focus_mode();
-  }
 
   //-------------------------------------------------------------
   // Update the focus mode.
@@ -943,16 +992,6 @@ public class MindMap {
   //-------------------------------------------------------------
   // MISCELLANEOUS
   //-------------------------------------------------------------
-
-  //-------------------------------------------------------------
-  // Updates the CSS for the current theme.
-  public void update_css() {
-    StyleContext.add_provider_for_display(
-      Display.get_default(),
-      _model.get_theme().get_css_provider( _win.text_size ),
-      STYLE_PROVIDER_PRIORITY_APPLICATION
-    );
-  }
 
   //-------------------------------------------------------------
   // Retrieves canvas size settings and returns the approximate

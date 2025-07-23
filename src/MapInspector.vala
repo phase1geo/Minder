@@ -86,9 +86,9 @@ public class MapInspector : Box {
     }
     _map = map;
     _map.canvas.animator.enable = _settings.get_boolean( "enable-animations" );
-    _map.model.get_connections().hide = _settings.get_boolean( "hide-connections" );
+    _map.model.connections.hide = _settings.get_boolean( "hide-connections" );
     _hide_callouts.set_active( _map.model.hide_callouts );
-    _map.model.set_theme( _map.model.get_theme(), false );
+    _map.model.set_theme( _map.get_theme(), false );
     update_theme_layout();
   }
 
@@ -131,8 +131,8 @@ public class MapInspector : Box {
   /* Called whenever the hide connections switch is changed within the inspector */
   private void hide_connections_changed() {
     _map.set_current_connection( null );
-    _map.get_connections().hide = !_map.get_connections().hide;
-    _settings.set_boolean( "hide-connections", _map.get_connections().hide );
+    _map.connections.hide = !_map.connections.hide;
+    _settings.set_boolean( "hide-connections", _map.connections.hide );
     _map.queue_draw();
   }
 
@@ -164,7 +164,7 @@ public class MapInspector : Box {
 
   /* Called whenever the hide connections switch is changed within the inspector */
   private void hide_callouts_changed() {
-    _map.hide_callouts = !_map.hide_callouts;
+    _map.model.hide_callouts = !_map.model.hide_callouts;
     _map.queue_draw();
   }
 
@@ -254,7 +254,7 @@ public class MapInspector : Box {
       var name   = names.index( index );
       var layout = _map.layouts.get_layout( name );
       var node   = _map.get_current_node();
-      _map.set_layout( name, ((node == null) ? null : node.get_root()) );
+      _map.model.set_layout( name, ((node == null) ? null : node.get_root()) );
       _balance.set_sensitive( layout.balanceable );
       _alignment_revealer.reveal_child = (name == _( "Manual" ));
     }
@@ -337,7 +337,7 @@ public class MapInspector : Box {
 
   /* Updates the state of the node alignment buttons */
   private void update_node_alignment() {
-    var enable_alignment = _map.nodes_alignable();
+    var enable_alignment = _map.model.nodes_alignable();
     _hleft.set_sensitive( enable_alignment );
     _hcenter.set_sensitive( enable_alignment );
     _hright.set_sensitive( enable_alignment );
@@ -402,21 +402,21 @@ public class MapInspector : Box {
       tooltip_text = _( "Balance Nodes" )
     };
     _balance.clicked.connect(() => {
-      _map.balance_nodes( true, true );
+      _map.model.balance_nodes( true, true );
     });
 
     _fold_completed = new Button.from_icon_name( "minder-fold-completed-light-symbolic" ) {
       tooltip_text = _( "Fold Completed Tasks" )
     };
     _fold_completed.clicked.connect(() => {
-      _map.fold_completed_tasks();
+      _map.model.fold_completed_tasks();
     });
 
     _unfold_all = new Button.from_icon_name( "minder-unfold-light-symbolic" ) {
       tooltip_text = _( "Unfold All Nodes" )
     };
     _unfold_all.clicked.connect(() => {
-      _map.unfold_all_nodes();
+      _map.model.unfold_all_nodes();
     });
 
     update_icons.connect(() => {
@@ -471,7 +471,7 @@ public class MapInspector : Box {
         item.add_controller( click );
         click.pressed.connect((n_press, x, y) => {
           select_theme( name );
-          _map.set_theme( theme, true );
+          _map.model.set_theme( theme, true );
           if( theme.custom && (n_press == 2) ) {
             edit_current_theme();
           }
@@ -483,7 +483,7 @@ public class MapInspector : Box {
 
     /* Make sure that the current theme is selected */
     if( _map != null ) {
-      select_theme( _map.get_theme_name() );
+      select_theme( _map.get_theme().name );
     }
 
   }
@@ -559,7 +559,7 @@ public class MapInspector : Box {
   private void update_theme_layout() {
 
     /* Make sure the current theme is selected */
-    select_theme( _map.get_theme_name() );
+    select_theme( _map.get_theme().name );
 
     /* Initialize the button states */
     current_changed();
@@ -580,8 +580,8 @@ public class MapInspector : Box {
   private void current_changed() {
 
     Node? current         = _map.get_current_node();
-    var   foldable        = _map.completed_tasks_foldable();
-    var   unfoldable      = _map.unfoldable();
+    var   foldable        = _map.model.completed_tasks_foldable();
+    var   unfoldable      = _map.model.unfoldable();
     bool  layout_selected = false;
 
     /* Select the layout that corresponds with the current tree */

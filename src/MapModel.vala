@@ -70,7 +70,6 @@ public class MapModel {
   private bool          _hide_callouts   = false;
   private Array<string> _braindump;
 
-  public MainWindow     win             { private set; get; }
   public Layouts        layouts         { set; get; default = new Layouts(); }
   public ImageManager   image_manager   { set; get; default = new ImageManager(); }
   public bool           is_loaded       { get; private set; default = false; }
@@ -194,7 +193,7 @@ public class MapModel {
     _braindump = new Array<string>();
 
     /* Set the theme to the default theme */
-    set_theme( win.themes.get_theme( _map.settings.get_string( "default-theme" ) ), false );
+    set_theme( _map.win.themes.get_theme( _map.settings.get_string( "default-theme" ) ), false );
 
     // Initialize variables
     _attach_node    = null;
@@ -204,24 +203,21 @@ public class MapModel {
 
   }
 
-  /* Returns the name of the currently selected theme */
-  public string get_theme_name() {
-    return( _theme.name );
-  }
-
-  /* Returns the current theme */
+  //-------------------------------------------------------------
+  // Returns the current theme.
   public Theme get_theme() {
     return( _theme );
   }
 
-  /* Sets the theme to the given value */
+  //-------------------------------------------------------------
+  // Sets the theme to the given value.
   public void set_theme( Theme theme, bool save ) {
     Theme? orig_theme = _theme;
     _theme        = theme;
     _theme.index  = (orig_theme != null) ? orig_theme.index : -1;
     _theme.rotate = _map.settings.get_boolean( "rotate-main-link-colors" );
     FormattedText.set_theme( theme );
-    _map.update_css();
+    update_css();
     if( orig_theme != null ) {
       update_theme_colors( orig_theme );
     }
@@ -232,14 +228,26 @@ public class MapModel {
     }
   }
 
-  /* Updates all nodes with the new theme colors */
+  //-------------------------------------------------------------
+  // Updates the CSS for the current theme.
+  public void update_css() {
+    StyleContext.add_provider_for_display(
+      Display.get_default(),
+      get_theme().get_css_provider( _map.win.text_size ),
+      STYLE_PROVIDER_PRIORITY_APPLICATION
+    );
+  }
+
+  //-------------------------------------------------------------
+  // Updates all nodes with the new theme colors.
   private void update_theme_colors( Theme old_theme ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).update_theme_colors( old_theme, _theme );
     }
   }
 
-  /* Sets the layout to the given value */
+  //-------------------------------------------------------------
+  // Sets the layout to the given value.
   public void set_layout( string name, Node? root_node, bool undoable = true ) {
     var old_layout = (root_node == null) ? _nodes.index( 0 ).layout : root_node.layout;
     var new_layout = layouts.get_layout( name );
@@ -263,7 +271,8 @@ public class MapModel {
     _map.canvas.animator.animate();
   }
 
-  /* Updates all of the node sizes */
+  //-------------------------------------------------------------
+  // Updates all of the node sizes.
   public void update_node_sizes() {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).update_tree();
@@ -291,28 +300,28 @@ public class MapModel {
   private void load_theme( Xml.Node* n ) {
 
     /* Load the theme */
-    var theme       = new Theme.from_theme( win.themes.get_theme( "default" ) );
+    var theme       = new Theme.from_theme( _map.win.themes.get_theme( "default" ) );
     theme.temporary = true;
     theme.rotate    = _map.settings.get_boolean( "rotate-main-link-colors" );
 
     var valid = theme.load( n );
 
     /* If this theme does not currently exist, add the theme temporarily */
-    if( !win.themes.exists( theme ) ) {
+    if( !_map.win.themes.exists( theme ) ) {
       if( valid ) {
-        theme.name = win.themes.uniquify_name( theme.name );
-        win.themes.add_theme( theme );
+        theme.name = _map.win.themes.uniquify_name( theme.name );
+        _map.win.themes.add_theme( theme );
       } else {
         theme.name = "default";
       }
     }
 
     /* Get the theme */
-    _theme = win.themes.get_theme( theme.name );
+    _theme = _map.win.themes.get_theme( theme.name );
 
     /* If we are the current drawarea, update the CSS and indicate the theme change */
     if( _map.win.get_current_map() == _map ) {
-      _map.update_css();
+      update_css();
       theme_changed();
     }
 
@@ -917,7 +926,7 @@ public class MapModel {
   public void add_current_image() {
     var current = _map.selected.current_node();
     if( (current != null) && (current.image == null) ) {
-      image_manager.choose_image( win, (id) => {
+      image_manager.choose_image( _map.win, (id) => {
         var curr = _map.selected.current_node();
         curr.set_image( image_manager, new NodeImage( image_manager, id, curr.style.node_width ) );
         if( curr.image != null ) {
@@ -1387,17 +1396,8 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
-  // Selects all nodes within the selected box.
-  public void select_nodes_within_box( SelectBox select_box, bool shift ) {
-    Gdk.Rectangle box = {
-      (int)((select_box.w < 0) ? (select_box.x + select_box.w) : select_box.x),
-      (int)((select_box.h < 0) ? (select_box.y + select_box.h) : select_box.y),
-      (int)((select_box.w < 0) ? (0 - select_box.w) : select_box.w),
-      (int)((select_box.h < 0) ? (0 - select_box.h) : select_box.h)
-    };
-    if( !shift ) {
-      _map.selected.clear_nodes();
-    }
+  // Selects all nodes within the given rectangle.
+  public void select_nodes_within_rectangle( Gdk.Rectangle box ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).select_within_box( box, _map.selected );
     }
@@ -2145,36 +2145,6 @@ public class MapModel {
       return( (_nodes.length > 0) ? _nodes.index( _nodes.length - 1 ) : null );
     } else {
       return( node.is_summary() ? null : node.parent.last_child() );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Selects all of the text in the current node.
-  public void select_all() {
-    if( _map.is_connection_editable() ) {
-      _map.selected.current_connection().title.set_cursor_all( false );
-      queue_draw();
-    } else if( _map.is_node_editable() ) {
-      _map.selected.current_node().name.set_cursor_all( false );
-      queue_draw();
-    } else if( _map.is_callout_editable() ) {
-      _map.selected.current_callout().text.set_cursor_all( false );
-      queue_draw();
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Deselects all of the text in the current node.
-  public void deselect_all() {
-    if( _map.is_connection_editable() ) {
-      _map.selected.current_connection().title.clear_selection();
-      queue_draw();
-    } else if( _map.is_node_editable() ) {
-      _map.selected.current_node().name.clear_selection();
-      queue_draw();
-    } else if( _map.is_callout_editable() ) {
-      _map.selected.current_callout().text.clear_selection();
-      queue_draw();
     }
   }
 

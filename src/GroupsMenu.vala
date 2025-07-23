@@ -101,12 +101,12 @@ public class GroupsMenu {
 
   /* Deletes the current group */
   private void action_delete_groups() {
-    _map.remove_groups();
+    _map.model.remove_groups();
   }
 
   /* Merges two or more groups into a single group */
   private void action_merge_groups() {
-    _map.add_group();
+    _map.model.add_group();
   }
 
   /* Edits the group note */
@@ -118,7 +118,7 @@ public class GroupsMenu {
   private void action_change_color() {
     var color_picker = new ColorChooserDialog( _( "Select a link color" ), _map.win );
     color_picker.color_activated.connect((color) => {
-      _map.change_group_color( color );
+      _map.model.change_group_color( color );
     });
     color_picker.present();
   }

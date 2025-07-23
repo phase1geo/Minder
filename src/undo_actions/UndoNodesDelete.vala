@@ -58,7 +58,7 @@ public class UndoNodesDelete : UndoItem {
       map.selected.add_node( ni.node );
     }
     for( int i=0; i<_conns.length; i++ ) {
-      map.get_connections().add_connection( _conns.index( i ) );
+      map.connections.add_connection( _conns.index( i ) );
     }
     map.groups.apply_undos( _groups );
     map.queue_draw();
@@ -74,7 +74,7 @@ public class UndoNodesDelete : UndoItem {
       map.groups.remove_node( _nodes.index( i ).node, ref tmp_group );
     }
     for( int i=0; i<_conns.length; i++ ) {
-      map.get_connections().remove_connection( _conns.index( i ), false );
+      map.connections.remove_connection( _conns.index( i ), false );
     }
     map.queue_draw();
     map.auto_save();

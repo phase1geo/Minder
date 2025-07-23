@@ -39,7 +39,7 @@ public class UndoConnectionsDelete : UndoItem {
     var selections = map.selected;
     selections.clear();
     for( int i=0; i<_conns.length; i++ ) {
-      map.get_connections().add_connection( _conns.index( i ) );
+      map.connections.add_connection( _conns.index( i ) );
       selections.add_connection( _conns.index( i ) );
     }
     map.queue_draw();
@@ -49,7 +49,7 @@ public class UndoConnectionsDelete : UndoItem {
   /* Redoes connection deletions */
   public override void redo( MindMap map ) {
     for( int i=0; i<_conns.length; i++ ) {
-      map.get_connections().remove_connection( _conns.index( i ), false );
+      map.connections.remove_connection( _conns.index( i ), false );
     }
     map.selected.clear_connections();
     map.queue_draw();

@@ -90,7 +90,7 @@ public class ExportYed : Export {
     }
 
     /* Add connections */
-    export_connections( graph, yns, map.get_connections().connections, map.get_theme() );
+    export_connections( graph, yns, map.connections.connections, map.get_theme() );
 
     Xml.Node* d7 = new Xml.Node( null, "data" );
     d7->new_prop( "key", "d7" );

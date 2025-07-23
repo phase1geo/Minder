@@ -195,7 +195,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Allocate the image editor popover */
     _image_editor = new ImageEditor( this );
-    _image_editor.changed.connect( _map.current_image_edited );
+    _image_editor.changed.connect( _map.model.current_image_edited );
 
     /* Allocate the URL editor popover */
     _url_editor = new UrlEditor( this );
@@ -217,7 +217,7 @@ public class DrawArea : Gtk.DrawingArea {
     _orig_info = new Array<NodeInfo?>();
 
     /* Create text completion */
-    _completion = new TextCompletion( this );
+    _completion = new TextCompletion( _map );
 
     /* Get the value of the new node from edit */
     update_create_new_from_edit( _map.settings );
@@ -438,7 +438,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       if( _shift ) {
         _map.selected.add_connection( conn );
-        _map.handle_connection_edit_on_creation( conn );
+        _map.model.handle_connection_edit_on_creation( conn );
       } else {
         _map.set_current_connection( conn );
       }
@@ -463,14 +463,14 @@ public class DrawArea : Gtk.DrawingArea {
     /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
     switch( component ) {
       case MapItemComponent.TASK :
-        _map.toggle_task( node );
+        _map.model.toggle_task( node );
         current_changed( _map );
         return( false );
       case MapItemComponent.NODE_LINK :
         _map.select_linked_node( node );
         return( false );
       case MapItemComponent.FOLD :
-        _map.toggle_fold( node, _shift );
+        _map.model.toggle_fold( node, _shift );
         current_changed( _map );
         return( false );
       case MapItemComponent.RESIZER :
@@ -516,7 +516,7 @@ public class DrawArea : Gtk.DrawingArea {
     */
     } else if( !_control && !_shift && (_press_num == 2) ) {
       if( component == MapItemComponent.IMAGE ) {
-        _map.edit_current_image();
+        _map.model.edit_current_image();
         return( false );
       } else {
         _map.model.set_node_mode( node, NodeMode.EDITABLE );
@@ -697,7 +697,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     MapItemComponent component;
-    var match_conn = _map.get_connection_at_position( scaled_x, scaled_y, out component );
+    var match_conn = _map.model.get_connection_at_position( scaled_x, scaled_y, out component );
     if( (match_conn != null) && component.is_connection_handle() && (match_conn.mode == ConnMode.SELECTED) ) {
       if( component == MapItemComponent.DRAG_HANDLE ) {
         _map.model.set_connection_mode( match_conn, ConnMode.ADJUSTING );
@@ -1131,7 +1131,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void on_draw( DrawingArea da, Context ctx, int width, int height ) {
     ctx.scale( sfactor, sfactor );
     draw_background( ctx );
-    _map.draw_all( ctx, false, (_pressed && _motion && !_resize) );
+    _map.model.draw_all( ctx, false, (_pressed && _motion && !_resize) );
   }
 
   //-------------------------------------------------------------
@@ -1272,9 +1272,9 @@ public class DrawArea : Gtk.DrawingArea {
             current_node.resize( diffx );
             _map.auto_save();
           } else {
-            var attach_summary = _map.attachable_summary_node( _scaled_x, _scaled_y );
-            if( attach_summary != null ) {
-              _map.model.set_attach_summary( attach_summary );
+            var attach_summary = _map.model.attachable_summary_node( _scaled_x, _scaled_y );
+            if( _map.model.attach_summary != null ) {
+              _map.model.set_attach_summary( _map.model.attach_summary );
             }
             var attach_node = _map.model.attachable_node( _scaled_x, _scaled_y );
             if( attach_node != null ) {
@@ -1373,13 +1373,13 @@ public class DrawArea : Gtk.DrawingArea {
           set_tooltip_markup( Utils.prepare_note_markup( current_conn.note ) );
           return;
         } else {
-          var match_conn = _map.get_connection_at_position( _scaled_x, _scaled_y, out component );
+          var match_conn = _map.model.get_connection_at_position( _scaled_x, _scaled_y, out component );
           if( (match_conn != null) && select_connection_on_hover( match_conn, _shift ) ) {
             return;
           }
         }
       } else {
-        var match_conn = _map.get_connection_at_position( _scaled_x, _scaled_y, out component );
+        var match_conn = _map.model.get_connection_at_position( _scaled_x, _scaled_y, out component );
         if( match_conn != null ) {
           if( component == MapItemComponent.NOTE ) {
             set_tooltip_markup( Utils.prepare_note_markup( match_conn.note ) );
@@ -1391,7 +1391,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       var match_node = _map.model.get_node_at_position( _scaled_x, _scaled_y, out component );
       if( match_node != null ) {
-        _map.update_last_match( match_node );
+        _map.model.update_last_match( match_node );
         if( (current_conn != null) && ((current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING)) ) {
           _map.model.set_attach_node( match_node );
         } else if( component == MapItemComponent.TASK ) {
@@ -1450,7 +1450,7 @@ public class DrawArea : Gtk.DrawingArea {
         return;
       }
 
-      _map.update_last_match( null );
+      _map.model.update_last_match( null );
       reset_cursor();
       set_tooltip_markup( null );
       select_sticker_group_on_hover( _shift );
@@ -1587,9 +1587,9 @@ public class DrawArea : Gtk.DrawingArea {
       /* If the connection end is released on an attachable node, attach the connection to the node */
       if( _map.model.attach_node != null ) {
         if( current_conn.mode == ConnMode.LINKING ) {
-          _map.end_link( _map.model.attach_node );
+          _map.model.end_link( _map.model.attach_node );
         } else {
-          _map.end_connection( _map.model.attach_node );
+          _map.model.end_connection( _map.model.attach_node );
           if( _last_connection != null ) {
             _map.add_undo( new UndoConnectionChange( _( "connection endpoint change" ), _last_connection, current_conn ) );
           }
@@ -1617,7 +1617,7 @@ public class DrawArea : Gtk.DrawingArea {
 
         /* If we are hovering over an attach node, perform the attachment */
         if( _map.model.attach_node != null ) {
-          _map.attach_current_node();
+          _map.model.attach_current_node();
 
         /* If we are not in motion, set the cursor */
         } else if( !_motion ) {
@@ -1637,9 +1637,9 @@ public class DrawArea : Gtk.DrawingArea {
           } else {
             current_node.parent.move_to_position( current_node, _orig_side, scale_value( x ), scale_value( y ) );
           }
-          if( !current_node.is_summarized() && (_map.attach_summary != null) ) {
-            _map.attach_summary.add_node( current_node );
-          } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_map.attach_summary == null) ) {
+          if( !current_node.is_summarized() && (_map.model.attach_summary != null) ) {
+            _map.model.attach_summary.add_node( current_node );
+          } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_map.model.attach_summary == null) ) {
             current_node.summary_node().remove_node( current_node );
           } else if( current_node.is_summarized() ) {
             current_node.summary_node().node_moved( current_node );
@@ -1679,7 +1679,7 @@ public class DrawArea : Gtk.DrawingArea {
   // drawing area.
   private void handle_backspace() {
     if( _map.is_connection_editable() ) {
-      _map.selected.current_connection().title.backspace( _map.undo_text );
+      _map.get_current_connection().title.backspace( _map.undo_text );
       queue_draw();
       _map.auto_save();
     } else if( _map.is_connection_selected() ) {
@@ -1692,8 +1692,8 @@ public class DrawArea : Gtk.DrawingArea {
       _map.auto_save();
     } else if( _map.is_node_selected() ) {
       Node? next;
-      var   current = _map.selected.current_node();
-      if( ((next = _map.model.sibling_node( 1 )) == null) && ((next = _map.model.sibling_node( -1 )) == null) && current.is_root() ) {
+      var   current = _map.get_current_node();
+      if( ((next = _map.sibling_node( 1 )) == null) && ((next = _map.sibling_node( -1 )) == null) && current.is_root() ) {
         _map.model.delete_node();
       } else {
         if( next == null ) {
@@ -1711,7 +1711,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( _map.selected.num_groups() > 0 ) {
       _map.model.remove_groups();
     } else if( _map.is_callout_editable() ) {
-      _map.selected.current_callout().text.backspace( _map.undo_text );
+      _map.get_current_callout().text.backspace( _map.undo_text );
       queue_draw();
       _map.auto_save();
     } else if( _map.is_callout_selected() ) {
@@ -1830,7 +1830,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
     } else if( _map.is_connection_connecting() ) {
       var current = _map.selected.current_connection();
-      _map.get_connections().remove_connection( current, true );
+      _map.connections.remove_connection( current, true );
       _map.selected.remove_connection( current );
       _map.model.set_attach_node( null );
       _map.selected.set_current_node( _map.model.last_node );
@@ -1889,7 +1889,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
       }
     } else if( _map.is_connection_connecting() && (_map.model.attach_node != null) ) {
-      _map.end_connection( _map.model.attach_node );
+      _map.model.end_connection( _map.model.attach_node );
     } else if( _map.is_node_selected() ) {
       if( !_map.selected.current_node().is_root() ) {
         _map.model.add_sibling_node( shift );

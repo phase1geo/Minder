@@ -41,14 +41,14 @@ public class UndoNodeCut : UndoItem {
   /* Undoes a node deletion */
   public override void undo( MindMap map ) {
     if( _parent == null ) {
-      map.add_root( _node, _index );
+      map.model.add_root( _node, _index );
     } else {
       _node.attached = true;
       _node.attach_init( _parent, _index );
     }
     map.set_current_node( _node );
     for( int i=0; i<_conns.length; i++ ) {
-      map.get_connections().add_connection( _conns.index( i ) );
+      map.model.connections.add_connection( _conns.index( i ) );
     }
     map.groups.apply_undo( _groups );
     map.queue_draw();
@@ -60,13 +60,13 @@ public class UndoNodeCut : UndoItem {
     UndoNodeGroups? tmp_groups = null;
     MinderClipboard.copy_nodes( map );
     if( _parent == null ) {
-      map.remove_root( _index );
+      map.model.remove_root( _index );
     } else {
       _node.detach( _node.side );
     }
     map.set_current_node( null );
     for( int i=0; i<_conns.length; i++ ) {
-      map.get_connections().remove_connection( _conns.index( i ), false );
+      map.connections.remove_connection( _conns.index( i ), false );
     }
     map.groups.remove_node( _node, ref tmp_groups );
     map.queue_draw();

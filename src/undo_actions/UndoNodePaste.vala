@@ -53,7 +53,7 @@ public class UndoNodePaste : UndoItem {
       _nodes.index( i ).detach( _nodes.index( i ).side );
     }
     for( int i=0; i<_conns.length; i++ ) {
-      map.get_connections().remove_connection( _conns.index( i ), false );
+      map.connections.remove_connection( _conns.index( i ), false );
     }
     for( int i=0; i<_groups.length; i++ ) {
       map.groups.remove_group( _groups.index( i ) );
@@ -70,7 +70,7 @@ public class UndoNodePaste : UndoItem {
       _nodes.index( i ).attach( _parents.index( i ), _indices.index( i ), null );
     }
     for( int i=0; i<_conns.length; i++ ) {
-      map.get_connections().add_connection( _conns.index( i ) );
+      map.connections.add_connection( _conns.index( i ) );
     }
     for( int i=0; i<_groups.length; i++ ) {
       map.groups.add_group( _groups.index( i ) );

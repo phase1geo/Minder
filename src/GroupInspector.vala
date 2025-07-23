@@ -123,24 +123,24 @@ public class GroupInspector : Box {
   private void note_focus_out() {
     if( (_group != null) && (_note.buffer.text != _orig_note) ) {
       _group.note = _note.buffer.text;
-      _map.undo_buffer.add_item( new UndoGroupNote( _group, _orig_note ) );
+      _map.add_undo( new UndoGroupNote( _group, _orig_note ) );
       _map.auto_save();
     }
   }
 
   /* When a node link is added, tell the current node */
   private int note_node_link_added( NodeLink link, out string text ) {
-    return( _map.add_note_node_link( link, out text ) );
+    return( _map.model.add_note_node_link( link, out text ) );
   }
 
   /* Handles a click on the node link with the given ID */
   private void note_node_link_clicked( int id ) {
-    _map.note_node_link_clicked( id );
+    _map.model.note_node_link_clicked( id );
   }
 
   /* Handles a hover over a node link */
   private void note_node_link_hover( int id ) {
-    var link = _map.node_links.get_node_link( id );
+    var link = _map.model.node_links.get_node_link( id );
     if( link != null ) {
       _note.show_tooltip( link.get_tooltip( _map ) );
     }

@@ -350,8 +350,8 @@ public class NodeMenu {
     da.action_set_enabled( "node.action_sort_alphabetically", node_sortable() );
     da.action_set_enabled( "node.action_sort_randomly",       node_sortable() );
     da.action_set_enabled( "node.action_select_root_node", _map.root_selectable() );
-    da.action_set_enabled( "node.action_select_next_sibling_node", _map.sibling_exists() );
-    da.action_set_enabled( "node.action_select_previous_sibling_node", _map.sibling_exists() );
+    da.action_set_enabled( "node.action_select_next_sibling_node", _map.model.sibling_exists( current ) );
+    da.action_set_enabled( "node.action_select_previous_sibling_node", _map.model.sibling_exists( current ) );
     da.action_set_enabled( "node.action_select_child_node", _map.children_selectable() );
     da.action_set_enabled( "node.action_select_parent_node", _map.parent_selectable() );
     da.action_set_enabled( "node.action_select_linked_node", node_has_link() );

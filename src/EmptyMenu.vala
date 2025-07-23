@@ -89,7 +89,7 @@ public class EmptyMenu {
   /* Called when the menu is popped up */
   private void on_popup() {
 
-    _map.canvas.action_set_enabled( "empty.action_paste",            _map.node_pasteable() );
+    _map.canvas.action_set_enabled( "empty.action_paste",            _map.model.node_pasteable() );
     _map.canvas.action_set_enabled( "empty.action_add_root_node",    !connection_selected() );
     _map.canvas.action_set_enabled( "empty.action_select_root_node", _map.root_selectable() );
 
@@ -102,7 +102,7 @@ public class EmptyMenu {
 
   /* Creates a new root node */
   private void action_add_root_node() {
-    _map.add_root_node();
+    _map.model.add_root_node();
   }
 
   /* Adds top-level nodes via the quick entry facility */

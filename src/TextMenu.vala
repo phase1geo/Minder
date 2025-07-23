@@ -114,12 +114,12 @@ public class TextMenu {
 
   /* Copies the selected text to the clipboard */
   private void action_copy() {
-    _map.copy_selected_text();
+    _map.model.copy_selected_text();
   }
 
   /* Copies the selected text to the clipboard and removes the text */
   private void action_cut() {
-    _map.cut_selected_text();
+    _map.model.cut_selected_text();
   }
 
   /*
@@ -255,7 +255,7 @@ public class TextMenu {
 
       // Set view of all link menus
       _map.canvas.action_set_enabled( "text.action_open_link",    (valid && !ignore) );
-      _map.canvas.action_set_enabled( "text.action_add_link",     (!embedded && !ignore && _map.add_link_possible( ct )) );
+      _map.canvas.action_set_enabled( "text.action_add_link",     (!embedded && !ignore && _map.model.add_link_possible( ct )) );
       _map.canvas.action_set_enabled( "text.action_edit_link",    (valid && !selected && !embedded) );
       _map.canvas.action_set_enabled( "text.action_delete_link",  (valid && !selected && (!embedded || !ignore)) );
       _map.canvas.action_set_enabled( "text.action_restore_link", (valid && !selected && embedded && ignore) );

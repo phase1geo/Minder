@@ -553,7 +553,7 @@ public class QuickEntry : Gtk.Window {
     _map.set_current_node( nodes.index( 0 ) );
     _map.queue_draw();
     _map.auto_save();
-    _map.see();
+    _map.canvas.see();
     return( true );
   }
 
@@ -568,7 +568,7 @@ public class QuickEntry : Gtk.Window {
     _map.set_current_node( nodes.index( 0 ) );
     _map.queue_draw();
     _map.auto_save();
-    _map.see();
+    _map.canvas.see();
     return( true );
   }
 

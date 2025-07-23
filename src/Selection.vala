@@ -147,9 +147,9 @@ public class Selection {
   /* Adds a node to the current selection.  Returns true if the node was added. */
   public bool add_node( Node node, bool signal_change = true ) {
     if( is_node_selected( node ) || ((node.parent != null) && node.parent.folded) ) return( false );
-    _map.set_node_mode( node, ((_nodes.length == 0) ? NodeMode.CURRENT : NodeMode.SELECTED) );
+    _map.model.set_node_mode( node, ((_nodes.length == 0) ? NodeMode.CURRENT : NodeMode.SELECTED) );
     if( _nodes.length == 1 ) {
-      _map.set_node_mode( _nodes.index( 0 ), NodeMode.SELECTED );
+      _map.model.set_node_mode( _nodes.index( 0 ), NodeMode.SELECTED );
     }
     _nodes.append_val( node );
     if( signal_change ) {
@@ -221,7 +221,7 @@ public class Selection {
   /* Adds a connection to the current selection */
   public bool add_connection( Connection conn ) {
     if( is_connection_selected( conn ) ) return( false );
-    _map.set_connection_mode( conn, ConnMode.SELECTED );
+    _map.model.set_connection_mode( conn, ConnMode.SELECTED );
     _conns.append_val( conn );
     selection_changed();
     return( true );
@@ -260,13 +260,13 @@ public class Selection {
   */
   public bool remove_node( Node node, double alpha = 1.0, bool signal_change = true ) {
     if( is_node_selected( node ) ) {
-      _map.set_node_mode( node, NodeMode.NONE );
+      _map.model.set_node_mode( node, NodeMode.NONE );
       node.alpha = alpha;
       for( int i=0; i<_nodes.length; i++ ) {
         if( node == _nodes.index( i ) ) {
           _nodes.remove_index( i );
           if( _nodes.length == 1 ) {
-            _map.set_node_mode( _nodes.index( 0 ), NodeMode.CURRENT );
+            _map.model.set_node_mode( _nodes.index( 0 ), NodeMode.CURRENT );
           }
           if( signal_change ) {
             selection_changed();
@@ -341,7 +341,7 @@ public class Selection {
   */
   public bool remove_connection( Connection conn, double alpha = 1.0 ) {
     if( is_connection_selected( conn ) ) {
-      _map.set_connection_mode( conn, ConnMode.NONE );
+      _map.model.set_connection_mode( conn, ConnMode.NONE );
       conn.alpha = alpha;
       for( int i=0; i<_conns.length; i++ ) {
         if( conn == _conns.index( i ) ) {

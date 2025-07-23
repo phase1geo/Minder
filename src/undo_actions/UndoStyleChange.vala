@@ -77,7 +77,7 @@ public class UndoStyleChange : UndoItem {
       case StyleAffects.ALL         :
         {
           var nodes = map.get_nodes();
-          var conns = map.get_connections().connections;
+          var conns = map.connections.connections;
           for( int i=0; i<nodes.length; i++ ) {
             set_style_for_tree( nodes.index( i ), change_type, ref index );
           }

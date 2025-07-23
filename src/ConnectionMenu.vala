@@ -103,7 +103,7 @@ public class ConnectionMenu {
 
   /* Deletes the current node */
   private void action_delete() {
-    _map.delete_connection();
+    _map.model.delete_connection();
   }
 
   /* Displays the sidebar to edit the node properties */
@@ -112,7 +112,7 @@ public class ConnectionMenu {
     if( conn.title == null ) {
       conn.change_title( _map, "", true );
     }
-    _map.set_connection_mode( conn, ConnMode.EDITABLE );
+    _map.model.set_connection_mode( conn, ConnMode.EDITABLE );
   }
 
   /* Changes the note status of the currently selected node */
@@ -123,7 +123,7 @@ public class ConnectionMenu {
   /* Removes the sticker attached to the connection */
   private void action_remove_sticker() {
     var current = _map.get_current_connection();
-    _map.undo_buffer.add_item( new UndoConnectionStickerRemove( current ) );
+    _map.add_undo( new UndoConnectionStickerRemove( current ) );
     current.sticker = null;
     _map.queue_draw();
     _map.auto_save();

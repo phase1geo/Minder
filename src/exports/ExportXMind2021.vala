@@ -430,7 +430,7 @@ public class ExportXMind2021 : Export {
   private Json.Array export_relationships( MindMap map ) {
 
     var rels  = new Json.Array();
-    var conns = map.get_connections().connections;
+    var conns = map.connections.connections;
 
     for( int i=0; i<conns.length; i++ ) {
 
@@ -824,7 +824,7 @@ public class ExportXMind2021 : Export {
         var conn = new Connection( map, from_node );
         conn.change_title( map, title );
         conn.connect_to( to_node );
-        map.get_connections().add_connection( conn );
+        map.connections.add_connection( conn );
 
         if( sid != null ) {
           id_map.set( sid, new IdObject.for_connection( conn ) );

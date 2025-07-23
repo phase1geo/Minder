@@ -36,7 +36,7 @@ public class UndoConnectionChange : UndoItem {
   /* Undoes a connection change */
   public override void undo( MindMap map ) {
     if( _old_connection == null ) {
-      map.model.get_connections().remove_connection( _new_connection, true );
+      map.connections.remove_connection( _new_connection, true );
     }
     map.set_current_connection( _old_connection );
     map.queue_draw();
@@ -46,7 +46,7 @@ public class UndoConnectionChange : UndoItem {
   /* Redoes a connection change */
   public override void redo( MindMap map ) {
     if( _new_connection == null ) {
-      map.model.get_connections().remove_connection( _old_connection, true );
+      map.connections.remove_connection( _old_connection, true );
     }
     map.set_current_connection( _new_connection );
     map.queue_draw();

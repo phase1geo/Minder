@@ -220,9 +220,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     _brain.ideas_changed.connect((change, name_index) => {
       var map = get_current_map();
       switch( change ) {
-        case BraindumpChangeType.ADD    :  map.braindump.append_val( name_index );  break;
-        case BraindumpChangeType.REMOVE :  map.braindump.remove_index( int.parse( name_index ) );  break;
-        case BraindumpChangeType.CLEAR  :  map.braindump.remove_range( 0, map.braindump.length );  break;
+        case BraindumpChangeType.ADD    :  map.model.braindump.append_val( name_index );  break;
+        case BraindumpChangeType.REMOVE :  map.model.braindump.remove_index( int.parse( name_index ) );  break;
+        case BraindumpChangeType.CLEAR  :  map.model.braindump.remove_range( 0, map.model.braindump.length );  break;
       }
       map.auto_save();
     });
@@ -383,7 +383,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _text_size = value;
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
-      map.update_css();
+      map.model.update_css();
     }
   }
 
@@ -467,7 +467,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   public void update_node_sizes() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
-      map.update_node_sizes();
+      map.model.update_node_sizes();
     }
   }
 
@@ -518,7 +518,6 @@ public class MainWindow : Gtk.ApplicationWindow {
     /* Create and pack the canvas */
     var map = new MindMap( this, _settings );
     map.current_changed.connect( on_current_changed );
-    map.map.current_changed.connect( on_current_changed );
     map.scale_changed.connect( change_scale );
     map.scroll_changed.connect( change_origin );
     map.show_properties.connect( show_properties );
@@ -606,7 +605,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void close_unchanged_tabs() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
-      if( !map.is_loaded ) {
+      if( !map.model.is_loaded ) {
         _nb.detach_tab( _nb.get_nth_page( i ) );
         return;
       }
@@ -1073,7 +1072,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     var map = get_current_map();
     if( map != null ) {
-      map.braindump_shown = show;
+      map.model.braindump_shown = show;
       save_tab_state( _nb.page );
     }
 
@@ -1100,7 +1099,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _focus_btn.clicked.connect((e) => {
       var map = get_current_map();
       update_title( map );
-      map.set_focus_mode( _focus_btn.active );
+      map.focus_mode = _focus_btn.active;
       map.canvas.grab_focus();
     });
 
@@ -1562,7 +1561,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Called whenever the node selection changes in the canvas */
   private void on_current_changed( MindMap map ) {
     action_set_enabled( "win.action_zoom_selected", (map.get_current_node() != null) );
-    _focus_btn.active = map.get_focus_mode();
+    _focus_btn.active = map.focus_mode;
   }
 
   /*
@@ -1999,7 +1998,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       node->new_prop( "origin-x",  map.canvas.origin_x.to_string() );
       node->new_prop( "origin-y",  map.canvas.origin_y.to_string() );
       node->new_prop( "scale",     map.canvas.sfactor.to_string() );
-      node->new_prop( "braindump", map.braindump_shown.to_string() );
+      node->new_prop( "braindump", map.model.braindump_shown.to_string() );
       root->add_child( node );
     }
 
@@ -2053,7 +2052,7 @@ public class MainWindow : Gtk.ApplicationWindow {
             change_scale( map.canvas.sfactor );
           }
           if( braindump != null ) {
-            map.braindump_shown = bool.parse( braindump );
+            map.model.braindump_shown = bool.parse( braindump );
           }
           map.doc.load_filename( fname, bool.parse( saved ) );
           if( map.doc.load() ) {

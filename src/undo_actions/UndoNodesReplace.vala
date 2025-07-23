@@ -38,9 +38,9 @@ public class UndoNodesReplace : UndoItem {
 
   /* Performs an undo operation for this data */
   public override void undo( MindMap map ) {
-    map.replace_node( _new_nodes.index( 0 ), _orig_node );
+    map.model.replace_node( _new_nodes.index( 0 ), _orig_node );
     for( int i=1; i<_new_nodes.length; i++ ) {
-      map.remove_root_node( _new_nodes.index( i ) );
+      map.model.remove_root_node( _new_nodes.index( i ) );
     }
     map.set_current_node( _orig_node );
     map.queue_draw();
@@ -49,9 +49,9 @@ public class UndoNodesReplace : UndoItem {
 
   /* Performs a redo operation */
   public override void redo( MindMap map ) {
-    map.replace_node( _orig_node, _new_nodes.index( 0 ) );
+    map.model.replace_node( _orig_node, _new_nodes.index( 0 ) );
     for( int i=1; i<_new_nodes.length; i++ ) {
-      map.add_root( _new_nodes.index( i ), -1 );
+      map.model.add_root( _new_nodes.index( i ), -1 );
     }
     map.set_current_node( _new_nodes.index( 0 ) );
     map.queue_draw();

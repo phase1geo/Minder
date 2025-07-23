@@ -188,7 +188,7 @@ public class ExportXMind8 : Export {
   /* Exports the map contents */
   private void export_map( MindMap map, Xml.Node* sheet, string timestamp, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
     var nodes = map.get_nodes();
-    var conns = map.get_connections().connections;
+    var conns = map.connections.connections;
     Xml.Node* top = export_node( map, nodes.index( 0 ), timestamp, true, dir, file_list, styles );
     if( nodes.length > 1 ) {
       for( Xml.Node* it=top->children; it!=null; it=it->next ) {
@@ -420,7 +420,7 @@ public class ExportXMind8 : Export {
 
   private void export_connections( MindMap map, Xml.Node* sheet, string timestamp, Array<Xml.Node*> styles ) {
 
-    var conns = map.get_connections().connections;
+    var conns = map.connections.connections;
 
     if( conns.length > 0 ) {
 
@@ -847,7 +847,7 @@ public class ExportXMind8 : Export {
           var conn = new Connection( map, from_node );
           conn.change_title( map, title );
           conn.connect_to( to_node );
-          map.get_connections().add_connection( conn );
+          map.connections.add_connection( conn );
 
           if( sid != null ) {
             id_map.set( sid, new IdObject.for_connection( conn ) );

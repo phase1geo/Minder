@@ -100,7 +100,7 @@ public class ExportFreeplane : Export {
     /* Add arrowlinks */
     int         index = 0;
     Connection? conn  = null;
-    while( (conn = map.get_connections().get_attached_connection( node, index++ )) != null ) {
+    while( (conn = map.connections.get_attached_connection( node, index++ )) != null ) {
       if( conn.from_node == node ) {
         n->add_child( export_arrowlink( conn, map ) );
       }
@@ -299,7 +299,7 @@ public class ExportFreeplane : Export {
       if( id_map.has_key( to_nodes.index( i ) ) ) {
         var to_node = map.model.get_node( map.get_nodes(), id_map.get( to_nodes.index( i ) ) );
         if( to_node != null ) {
-          map.get_connections().complete_connection( i, to_node );
+          map.connections.complete_connection( i, to_node );
         }
       }
     }
@@ -483,7 +483,7 @@ public class ExportFreeplane : Export {
     }
 
     /* Add the connection to the connections list */
-    map.get_connections().add_connection( conn );
+    map.connections.add_connection( conn );
 
   }
 

@@ -75,7 +75,7 @@ public class CalloutMenu {
   //-------------------------------------------------------------
   // Deletes the current callout.
   private void action_delete() {
-    _map.remove_callout();
+    _map.model.remove_callout();
   }
 
   //-------------------------------------------------------------

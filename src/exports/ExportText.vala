@@ -171,8 +171,8 @@ public class ExportText : Export {
   private void parent_node( MindMap map, Node node, bool node_in_sequence, Node? parent ) {
     if( parent == null ) {
       node.style = StyleInspector.styles.get_global_style();
-      map.position_root_node( node );
-      map.add_root( node, -1 );
+      map.model.position_root_node( node );
+      map.model.add_root( node, -1 );
       map.set_current_node( node );
     } else {
       parent.sequence = node_in_sequence;
@@ -267,7 +267,7 @@ public class ExportText : Export {
 
     var current = map.get_current_node();
     if( (current != null) && replace ) {
-      map.replace_node( current, stack.index( 0 ).node );
+      map.model.replace_node( current, stack.index( 0 ).node );
     } else {
       parent_node( map, stack.index( 0 ).node, stack.index( 0 ).in_sequence, current );
     }

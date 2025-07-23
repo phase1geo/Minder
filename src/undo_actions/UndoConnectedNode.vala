@@ -35,8 +35,8 @@ public class UndoConnectedNode : UndoItem {
   }
 
   public override void undo( MindMap map ) {
-    map.remove_root( _index );
-    map.get_connections().remove_connection( _conn, false );
+    map.model.remove_root( _index );
+    map.connections.remove_connection( _conn, false );
     if( map.get_current_node() == _node ) {
       map.set_current_node( null );
     }
@@ -46,7 +46,7 @@ public class UndoConnectedNode : UndoItem {
 
   public override void redo( MindMap map ) {
     map.get_nodes().insert_val( _index, _node );
-    map.get_connections().add_connection( _conn );
+    map.connections.add_connection( _conn );
     map.set_current_node( _node );
     map.queue_draw();
     map.auto_save();

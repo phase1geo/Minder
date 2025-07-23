@@ -51,11 +51,11 @@ public class MinderClipboard {
     NodeGroups  groups;
 
     /* Store the data to copy */
-    map.get_nodes_for_clipboard( out nodes, out conns, out groups );
+    map.model.get_nodes_for_clipboard( out nodes, out conns, out groups );
 
     /* Inform the clipboard */
     var clipboard = Display.get_default().get_clipboard();
-    var text      = map.serialize_for_copy( nodes, conns, groups );
+    var text      = map.model.serialize_for_copy( nodes, conns, groups );
 
     var bytes = new Bytes( text.data );
     var provider = new ContentProvider.for_bytes( NODES_TARGET_NAME, bytes );
@@ -97,20 +97,20 @@ public class MinderClipboard {
           string str;
           var stream = clipboard.read_async.end( res, out str );
           var contents = Utils.read_stream( stream );
-          map.paste_nodes( contents, shift );
+          map.model.paste_nodes( contents, shift );
         });
       } else if( clipboard.get_formats().contain_mime_type( "image/png" ) || !text_needed ) {
         clipboard.read_texture_async.begin( null, (ob, res) => {
           var texture = clipboard.read_texture_async.end( res );
           if( texture != null ) {
             var pixbuf = Utils.texture_to_pixbuf( texture );
-            map.paste_image( pixbuf, true );
+            map.model.paste_image( pixbuf, true );
           }
         });
       } else if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
         clipboard.read_text_async.begin( null, (obj, res) => {
           var text = clipboard.read_text_async.end( res );
-          map.paste_text( text, shift );
+          map.model.paste_text( text, shift );
         });
       }
     } catch( Error e ) {}
@@ -129,7 +129,7 @@ public class MinderClipboard {
           string str;
           var stream = clipboard.read_async.end( res, out str );
           var contents = Utils.read_stream( stream );
-          map.paste_node_link( contents );
+          map.model.paste_node_link( contents );
         });
       }
     } catch( Error e ) {}
