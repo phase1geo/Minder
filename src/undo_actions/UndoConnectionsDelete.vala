@@ -36,21 +36,17 @@ public class UndoConnectionsDelete : UndoItem {
 
   /* Undoes connection deletions */
   public override void undo( MindMap map ) {
-    var selections = map.selected;
-    selections.clear();
-    for( int i=0; i<_conns.length; i++ ) {
-      map.connections.add_connection( _conns.index( i ) );
-      selections.add_connection( _conns.index( i ) );
-    }
+    var selected = map.selected;
+    selected.clear();
+    map.connections.add_connections( _conns );
+    selected.add_connections( _conns );
     map.queue_draw();
     map.auto_save();
   }
 
   /* Redoes connection deletions */
   public override void redo( MindMap map ) {
-    for( int i=0; i<_conns.length; i++ ) {
-      map.connections.remove_connection( _conns.index( i ), false );
-    }
+    map.connections.remove_connections( _conns, false );
     map.selected.clear_connections();
     map.queue_draw();
     map.auto_save();

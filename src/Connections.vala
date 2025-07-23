@@ -33,19 +33,22 @@ public class Connections {
 
   public bool hide { set; get; default = false; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public Connections() {
     _connections = new Array<Connection>();
   }
 
-  /* Removes all connections */
+  //-------------------------------------------------------------
+  // Removes all connections.
   public void clear_all_connections() {
     _connections.remove_range( 0, _connections.length );
   }
 
-  /* Adds the given connection */
+  //-------------------------------------------------------------
+  // Adds the given connection being sure not to add a connection
+  // that already exists.
   public void add_connection( Connection conn ) {
-    /* Don't add the connection if it has already been added */
     for( int i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ) == conn ) {
         return;
@@ -54,7 +57,16 @@ public class Connections {
     _connections.append_val( conn );
   }
 
-  /* Removes the given connection */
+  //-------------------------------------------------------------
+  // Adds an array of connections.
+  public void add_connections( Array<Connection> conns ) {
+    for( int i=0; i<conns.length; i++ ) {
+      add_connection( conns.index( i ) );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Removes the given connection.
   public bool remove_connection( Connection conn, bool disconnect ) {
     for( uint i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ) == conn ) {
@@ -67,6 +79,14 @@ public class Connections {
       }
     }
     return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Removes an array of connections
+  public void remove_connections( Array<Connection> conns, bool disconnect ) {
+    for( int i=0; i<conns.length; i++ ) {
+      remove_connection( conns.index( i ), disconnect );
+    }
   }
 
   /* Complete the stored connections */

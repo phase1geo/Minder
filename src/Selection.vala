@@ -30,7 +30,8 @@ public class Selection {
 
   public signal void selection_changed();
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public Selection( MindMap map ) {
     _map      = map;
     _nodes    = new Array<Node>();
@@ -40,111 +41,135 @@ public class Selection {
     _callouts = new Array<Callout>();
   }
 
-  /* Returns true if the given node is currently selected */
+  //-------------------------------------------------------------
+  // Returns true if the given node is currently selected.
   public bool is_node_selected( Node node ) {
     return( node.mode.is_selected() );
   }
 
-  /* Returns true if the given connection is currently selected */
+  //-------------------------------------------------------------
+  // Returns true if the given connection is currently selected.
   public bool is_connection_selected( Connection conn ) {
     return( conn.mode == ConnMode.SELECTED );
   }
 
-  /* Returns true if the given sticker is currently selected */
+  //-------------------------------------------------------------
+  // Returns true if the given sticker is currently selected.
   public bool is_sticker_selected( Sticker sticker ) {
     return( sticker.mode == StickerMode.SELECTED );
   }
 
-  /* Returns true if the given group is currently selected */
+  //-------------------------------------------------------------
+  // Returns true if the given group is currently selected.
   public bool is_group_selected( NodeGroup group ) {
     return( group.mode == GroupMode.SELECTED );
   }
 
+  //-------------------------------------------------------------
+  // Returns true if the given callout is currently selected.
   public bool is_callout_selected( Callout callout ) {
     return( callout.mode.is_selected() );
   }
 
-  /* Returns true if the given node is the only selected item */
+  //-------------------------------------------------------------
+  // Returns true if the given node is the only selected item.
   public bool is_current_node( Node node ) {
     return( (_nodes.length == 1) && (_nodes.index( 0 ) == node) );
   }
 
-  /* Returns true if the given connection is the only selected item */
+  //-------------------------------------------------------------
+  // Returns true if the given connection is the only selected item.
   public bool is_current_connection( Connection conn ) {
     return( (_conns.length == 1) && (_conns.index( 0 ) == conn) );
   }
 
-  /* Returns true if the given sticker is the only selected item */
+  //-------------------------------------------------------------
+  // Returns true if the given sticker is the only selected item.
   public bool is_current_sticker( Sticker sticker ) {
     return( (_stickers.length == 1) && (_stickers.index( 0 ) == sticker) );
   }
 
-  /* Returns true if the given group is the only selected item */
+  //-------------------------------------------------------------
+  // Returns true if the given group is the only selected item.
   public bool is_current_group( NodeGroup group ) {
     return( (_groups.length == 1) && (_groups.index( 0 ) == group ) );
   }
 
-  /* Returns true if the given callout is the only selected item */
+  //-------------------------------------------------------------
+  // Returns true if the given callout is the only selected item.
   public bool is_current_callout( Callout callout ) {
     return( (_callouts.length == 1) && (_callouts.index( 0 ) == callout) );
   }
 
-  /* Returns the currently selected node */
+  //-------------------------------------------------------------
+  // Returns the currently selected node.
   public Node? current_node() {
     return( (_nodes.length == 1) ? _nodes.index( 0 ) : null );
   }
 
-  /* Returns the currently selected connection */
+  //-------------------------------------------------------------
+  // Returns the currently selected connection.
   public Connection? current_connection() {
     return( (_conns.length == 1) ? _conns.index( 0 ) : null );
   }
 
-  /* Returns the currently selected sticker */
+  //-------------------------------------------------------------
+  // Returns the currently selected sticker.
   public Sticker? current_sticker() {
     return( (_stickers.length == 1) ? _stickers.index( 0 ) : null );
   }
 
-  /* Returns the currently selected group */
+  //-------------------------------------------------------------
+  // Returns the currently selected group.
   public NodeGroup? current_group() {
     return( (_groups.length == 1) ? _groups.index( 0 ) : null );
   }
 
-  /* Returns the currently selected callout */
+  //-------------------------------------------------------------
+  // Returns the currently selected callout.
   public Callout? current_callout() {
     return( (_callouts.length == 1) ? _callouts.index( 0 ) : null );
   }
 
-  /* Sets the current node, clearing all other selected items */
+  //-------------------------------------------------------------
+  // Sets the current node, clearing all other selected items.
   public void set_current_node( Node node, double clear_alpha = 1.0 ) {
     clear( false, clear_alpha );
     add_node( node );
   }
 
-  /* Sets the current connection, clearing all other selected items */
+  //-------------------------------------------------------------
+  // Sets the current connection, clearing all other selected
+  // items.
   public void set_current_connection( Connection conn, double clear_alpha = 1.0 ) {
     clear( false, clear_alpha );
     add_connection( conn );
   }
 
-  /* Sets the current sticker, clearing all other selected items */
+  //-------------------------------------------------------------
+  // Sets the current sticker, clearing all other selected items.
   public void set_current_sticker( Sticker sticker, double clear_alpha = 1.0 ) {
     clear( false, clear_alpha );
     add_sticker( sticker );
   }
 
-  /* Sets the current group, clearing all other selected items */
+  //-------------------------------------------------------------
+  // Sets the current group, clearing all other selected items.
   public void set_current_group( NodeGroup group, double clear_alpha = 1.0 ) {
     clear( false, clear_alpha );
     add_group( group );
   }
 
-  /* Sets the current callout, clearing all other selected items */
+  //-------------------------------------------------------------
+  // Sets the current callout, clearing all other selected items.
   public void set_current_callout( Callout callout, double clear_alpha = 1.0 ) {
     clear( false, clear_alpha );
     add_callout( callout );
   }
 
-  /* Adds a node to the current selection.  Returns true if the node was added. */
+  //-------------------------------------------------------------
+  // Adds a node to the current selection.  Returns true if the
+  // node was added.
   public bool add_node( Node node, bool signal_change = true ) {
     if( is_node_selected( node ) || ((node.parent != null) && node.parent.folded) ) return( false );
     _map.model.set_node_mode( node, ((_nodes.length == 0) ? NodeMode.CURRENT : NodeMode.SELECTED) );
@@ -158,7 +183,8 @@ public class Selection {
     return( true );
   }
 
-  /* Adds the children nodes of the current node */
+  //-------------------------------------------------------------
+  // Adds the children nodes of the current node.
   public bool add_child_nodes( Node node, bool signal_change = true ) {
     var children = node.children();
     var changed  = false;
@@ -171,7 +197,8 @@ public class Selection {
     return( changed );
   }
 
-  /* Adds the entire node tree to the selection */
+  //-------------------------------------------------------------
+  // Adds the entire node tree to the selection.
   public bool add_node_tree( Node node, bool signal_change = true ) {
     if( add_node_tree_helper( node ) ) {
       if( signal_change ) {
@@ -182,7 +209,8 @@ public class Selection {
     return( false );
   }
 
-  /* Helper method to add the entire node tree to the selection */
+  //-------------------------------------------------------------
+  // Helper method to add the entire node tree to the selection.
   private bool add_node_tree_helper( Node node ) {
     var children = node.children();
     var changed  = add_node( node, false );
@@ -192,7 +220,9 @@ public class Selection {
     return( changed );
   }
 
-  /* Adds all of the nodes at the specified node's level to the selection */
+  //-------------------------------------------------------------
+  // Adds all of the nodes at the specified node's level to the
+  // selection.
   public bool add_nodes_at_level( Node node, bool signal_change = true ) {
     var level = node.get_level();
     var root  = node.get_root();
@@ -218,7 +248,8 @@ public class Selection {
     }
   }
 
-  /* Adds a connection to the current selection */
+  //-------------------------------------------------------------
+  // Adds a connection to the current selection.
   public bool add_connection( Connection conn ) {
     if( is_connection_selected( conn ) ) return( false );
     _map.model.set_connection_mode( conn, ConnMode.SELECTED );
@@ -227,7 +258,16 @@ public class Selection {
     return( true );
   }
 
-  /* Adds a sticker to the current selection */
+  //-------------------------------------------------------------
+  // Adds an array of connections to the current selection.
+  public void add_connections( Array<Connection> conns ) {
+    for( int i=0; i<conns.length; i++ ) {
+      add_connection( conns.index( i ) );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Adds a sticker to the current selection.
   public bool add_sticker( Sticker sticker ) {
     if( is_sticker_selected( sticker ) ) return( false );
     sticker.mode = StickerMode.SELECTED;
@@ -236,7 +276,8 @@ public class Selection {
     return( true );
   }
 
-  /* Adds a sticker to the current selection */
+  //-------------------------------------------------------------
+  // Adds a sticker to the current selection.
   public bool add_group( NodeGroup group ) {
     if( is_group_selected( group ) ) return( false );
     group.mode = GroupMode.SELECTED;
@@ -245,7 +286,8 @@ public class Selection {
     return( true );
   }
 
-  /* Adds a callout to the current selection */
+  //-------------------------------------------------------------
+  // Adds a callout to the current selection.
   public bool add_callout( Callout callout ) {
     if( is_callout_selected( callout ) ) return( false );
     callout.mode = CalloutMode.SELECTED;
@@ -254,10 +296,9 @@ public class Selection {
     return( true );
   }
 
-  /*
-   Removes the given node from the current selection.  Returns true if the
-   node is removed.
-  */
+  //-------------------------------------------------------------
+  // Removes the given node from the current selection.  Returns
+  // true if the node is removed.
   public bool remove_node( Node node, double alpha = 1.0, bool signal_change = true ) {
     if( is_node_selected( node ) ) {
       _map.model.set_node_mode( node, NodeMode.NONE );
@@ -278,7 +319,8 @@ public class Selection {
     return( false );
   }
 
-  /* Removes child nodes of the given parent from the selection */
+  //-------------------------------------------------------------
+  // Removes child nodes of the given parent from the selection.
   public bool remove_child_nodes( Node node, double alpha = 1.0 ) {
     var children = node.children();
     var retval   = false;
@@ -291,7 +333,8 @@ public class Selection {
     return( retval );
   }
 
-  /* Removes an entire node tree from the selection */
+  //-------------------------------------------------------------
+  // Removes an entire node tree from the selection.
   public bool remove_node_tree( Node node, double alpha = 1.0 ) {
     if( remove_node_tree_helper( node, alpha ) ) {
       selection_changed();
@@ -300,7 +343,8 @@ public class Selection {
     return( false );
   }
 
-  /* Removes an entire node tree from the selection */
+  //-------------------------------------------------------------
+  // Removes an entire node tree from the selection.
   public bool remove_node_tree_helper( Node node, double alpha = 1.0 ) {
     var children = node.children();
     var retval   = remove_node( node, alpha, false );
@@ -310,7 +354,9 @@ public class Selection {
     return( retval );
   }
 
-  /* Adds all of the nodes at the specified node's level to the selection */
+  //-------------------------------------------------------------
+  // Adds all of the nodes at the specified node's level to the
+  // selection.
   public bool remove_nodes_at_level( Node node, double alpha = 1.0 ) {
     var level = node.get_level();
     var root  = node.get_root();
@@ -321,7 +367,8 @@ public class Selection {
     return( false );
   }
 
-  /* Helper function for remove_nodes_at_level */
+  //-------------------------------------------------------------
+  // Helper function for remove_nodes_at_level.
   private bool remove_nodes_at_level_helper( Node node, double alpha, uint level, uint curr_level ) {
     if( level == curr_level ) {
       return( remove_node( node, alpha, false ) );
@@ -335,10 +382,9 @@ public class Selection {
     }
   }
 
-  /*
-   Removes the given connection from the current selection.  Returns true
-   if the connection is removed.
-  */
+  //-------------------------------------------------------------
+  // Removes the given connection from the current selection.
+  // Returns true if the connection is removed.
   public bool remove_connection( Connection conn, double alpha = 1.0 ) {
     if( is_connection_selected( conn ) ) {
       _map.model.set_connection_mode( conn, ConnMode.NONE );
@@ -354,10 +400,9 @@ public class Selection {
     return( false );
   }
 
-  /*
-   Removes the given sticker from the current selection.  Returns true
-   if the sticker is removed.
-  */
+  //-------------------------------------------------------------
+  // Removes the given sticker from the current selection.
+  // Returns true if the sticker is removed.
   public bool remove_sticker( Sticker sticker, double alpha = 1.0 ) {
     if( is_sticker_selected( sticker ) ) {
       sticker.mode = StickerMode.NONE;
@@ -372,10 +417,9 @@ public class Selection {
     return( false );
   }
 
-  /*
-   Removes the given group from the current selection.  Returns true
-   if the group is removed.
-  */
+  //-------------------------------------------------------------
+  // Removes the given group from the current selection.  Returns
+  // true if the group is removed.
   public bool remove_group( NodeGroup group, double alpha = 1.0 ) {
     if( is_group_selected( group ) ) {
       group.mode = GroupMode.NONE;
@@ -390,10 +434,9 @@ public class Selection {
     return( false );
   }
 
-  /*
-   Removes the given callout from the current selection.  Returns true
-   if the callout is removed.
-  */
+  //-------------------------------------------------------------
+  // Removes the given callout from the current selection.
+  // Returns true if the callout is removed.
   public bool remove_callout( Callout callout, double alpha = 1.0 ) {
     if( is_callout_selected( callout ) ) {
       callout.mode = CalloutMode.NONE;
@@ -408,7 +451,8 @@ public class Selection {
     return( false );
   }
 
-  /* Clears all of the selected nodes */
+  //-------------------------------------------------------------
+  // Clears all of the selected nodes.
   public bool clear_nodes( bool signal_change = true, double alpha = 1.0 ) {
     var num = _nodes.length;
     for( int i=0; i<num; i++ ) {
@@ -422,7 +466,8 @@ public class Selection {
     return( num > 0 );
   }
 
-  /* Clears all of the selected connections */
+  //-------------------------------------------------------------
+  // Clears all of the selected connections.
   public bool clear_connections( bool signal_change = true, double alpha = 1.0 ) {
     var num = _conns.length;
     for( int i=0; i<num; i++ ) {
@@ -436,7 +481,8 @@ public class Selection {
     return( num > 0 );
   }
 
-  /* Clears all of the selected stickers */
+  //-------------------------------------------------------------
+  // Clears all of the selected stickers.
   public bool clear_stickers( bool signal_change = true ) {
     var num = _stickers.length;
     for( int i=0; i<num; i++ ) {
@@ -449,7 +495,8 @@ public class Selection {
     return( num > 0 );
   }
 
-  /* Clears all of the selected groups */
+  //-------------------------------------------------------------
+  // Clears all of the selected groups.
   public bool clear_groups( bool signal_change = true ) {
     var num = _groups.length;
     for( int i=0; i<num; i++ ) {
@@ -462,7 +509,8 @@ public class Selection {
     return( num > 0 );
   }
 
-  /* Clears all of the selected callouts */
+  //-------------------------------------------------------------
+  // Clears all of the selected callouts.
   public bool clear_callouts( bool signal_change = true, double alpha = 1.0 ) {
     var num = _callouts.length;
     for( int i=0; i<num; i++ ) {
@@ -476,7 +524,8 @@ public class Selection {
     return( num > 0 );
   }
 
-  /* Clears the current selection */
+  //-------------------------------------------------------------
+  // Clears the current selection.
   public bool clear( bool signal_change = true, double alpha = 1.0 ) {
     var changed = false;
     changed |= clear_nodes( false, alpha );
@@ -490,37 +539,44 @@ public class Selection {
     return( changed );
   }
 
-  /* Returns the number of nodes selected */
+  //-------------------------------------------------------------
+  // Returns the number of nodes selected.
   public int num_nodes() {
     return( (int)_nodes.length );
   }
 
-  /* Returns the number of connections selected */
+  //-------------------------------------------------------------
+  // Returns the number of connections selected.
   public int num_connections() {
     return( (int)_conns.length );
   }
 
-  /* Returns the number of stickers selected */
+  //-------------------------------------------------------------
+  // Returns the number of stickers selected.
   public int num_stickers() {
     return( (int)_stickers.length );
   }
 
-  /* Returns the number of groups selected */
+  //-------------------------------------------------------------
+  // Returns the number of groups selected.
   public int num_groups() {
     return( (int)_groups.length );
   }
 
-  /* Returns the number of callouts selected */
+  //-------------------------------------------------------------
+  // Returns the number of callouts selected.
   public int num_callouts() {
     return( (int)_callouts.length );
   }
 
-  /* Returns an array of currently selected nodes */
+  //-------------------------------------------------------------
+  // Returns an array of currently selected nodes.
   public Array<Node> nodes() {
     return( _nodes );
   }
 
-  /* Returns a copy of the given nodes array */
+  //-------------------------------------------------------------
+  // Returns a copy of the given nodes array.
   public Array<Node> nodes_copy() {
     var nodes = new Array<Node>();
     for( int i=0; i<_nodes.length; i++ ) {
@@ -529,14 +585,16 @@ public class Selection {
     return( nodes );
   }
 
-  /* Returns an array of currently selected nodes in index order */
+  //-------------------------------------------------------------
+  // Returns an array of currently selected nodes in index order.
   public Array<Node> ordered_nodes() {
     var nodes = new Array<Node>();
     ordered_nodes_helper( _map.get_nodes(), ref nodes );
     return( nodes );
   }
 
-  /* Helper method for the ordered_nodes method */
+  //-------------------------------------------------------------
+  // Helper method for the ordered_nodes method.
   private void ordered_nodes_helper( Array<Node> children, ref Array<Node> nodes ) {
     for( int i=0; i<children.length; i++ ) {
       var node = children.index( i );
@@ -549,30 +607,34 @@ public class Selection {
     }
   }
 
-  /* Returns an array of currently selected connections */
+  //-------------------------------------------------------------
+  // Returns an array of currently selected connections.
   public Array<Connection> connections() {
     return( _conns );
   }
 
-  /* Returns an array of currently selected stickers */
+  //-------------------------------------------------------------
+  // Returns an array of currently selected stickers.
   public Array<Sticker> stickers() {
     return( _stickers );
   }
 
-  /* Returns an array of currently selected groups */
+  //-------------------------------------------------------------
+  // Returns an array of currently selected groups.
   public Array<NodeGroup> groups() {
     return( _groups );
   }
 
-  /* Returns an array of currently selected callouts */
+  //-------------------------------------------------------------
+  // Returns an array of currently selected callouts.
   public Array<Callout> callouts() {
     return( _callouts );
   }
 
-  /*
-   Returns all of the selected nodes that do not have ancestors that are also selected.  The
-   parent array must be allocated prior to calling this function.
-  */
+  //-------------------------------------------------------------
+  // Returns all of the selected nodes that do not have ancestors
+  // that are also selected.  The parent array must be allocated
+  // prior to calling this function.
   public void get_parents( ref Array<Node> parents ) {
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
@@ -590,10 +652,9 @@ public class Selection {
     }
   }
 
-  /*
-   Iterates through the selections, create a list of subtrees containing only selected
-   nodes but maintaining their hierarchy.
-  */
+  //-------------------------------------------------------------
+  // Iterates through the selections, create a list of subtrees
+  // containing only selected nodes but maintaining their hierarchy.
   public void get_subtrees( ref Array<Node> subtrees, ImageManager im ) {
 
     /* Get the list of all parent nodes */
@@ -610,9 +671,8 @@ public class Selection {
 
   }
 
-  /*
-   Helper function for the get_subtrees method.
-  */
+  //-------------------------------------------------------------
+  // Helper function for the get_subtrees method.
   private void get_subtrees_helper( Node old_parent, Node new_parent, ImageManager im ) {
 
     for( int i=0; i<old_parent.children().length; i++ ) {
