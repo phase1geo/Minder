@@ -25,13 +25,15 @@ public class UndoConnectionAdd : UndoItem {
 
   Connection _connection;
 
-  /* Constructor for adding a connection */
+  //-------------------------------------------------------------
+  // Constructor for adding a connection.
   public UndoConnectionAdd( Connection connection ) {
     base( _( "add connection" ) );
     _connection = connection;
   }
 
-  /* Undoes a connection change */
+  //-------------------------------------------------------------
+  // Undoes a connection change.
   public override void undo( MindMap map ) {
     map.connections.remove_connection( _connection, false );
     map.set_current_connection( null );
@@ -39,7 +41,8 @@ public class UndoConnectionAdd : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a connection change */
+  //-------------------------------------------------------------
+  // Redoes a connection change.
   public override void redo( MindMap map ) {
     map.connections.add_connection( _connection );
     map.set_current_connection( _connection );

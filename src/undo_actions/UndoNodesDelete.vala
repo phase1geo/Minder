@@ -38,7 +38,8 @@ public class UndoNodesDelete : UndoItem {
   Array<Connection>      _conns;
   Array<UndoNodeGroups?> _groups;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoNodesDelete( Array<Node> nodes, Array<Connection> conns, Array<UndoNodeGroups?> groups ) {
     base( _( "delete nodes" ) );
     _nodes = new Array<NodeInfo>();
@@ -49,7 +50,8 @@ public class UndoNodesDelete : UndoItem {
     _groups = groups;
   }
 
-  /* Undoes a node deletion */
+  //-------------------------------------------------------------
+  // Undoes a node deletion.
   public override void undo( MindMap map ) {
     map.selected.clear();
     for( int i=0; i<_nodes.length; i++ ) {
@@ -63,7 +65,8 @@ public class UndoNodesDelete : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a node deletion */
+  //-------------------------------------------------------------
+  // Redoes a node deletion.
   public override void redo( MindMap map ) {
     map.selected.clear();
     for( int i=0; i<_nodes.length; i++ ) {

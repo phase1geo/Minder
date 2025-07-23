@@ -25,7 +25,8 @@ public class UndoConnectionsDelete : UndoItem {
 
   Array<Connection> _conns;
 
-  /* Constructor for deleting connections */
+  //-------------------------------------------------------------
+  // Constructor for deleting connections.
   public UndoConnectionsDelete( Array<Connection> conns ) {
     base( _( "delete connections" ) );
     _conns = new Array<Connection>();
@@ -34,7 +35,8 @@ public class UndoConnectionsDelete : UndoItem {
     }
   }
 
-  /* Undoes connection deletions */
+  //-------------------------------------------------------------
+  // Undoes connection deletions.
   public override void undo( MindMap map ) {
     var selected = map.selected;
     selected.clear();
@@ -44,7 +46,8 @@ public class UndoConnectionsDelete : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes connection deletions */
+  //-------------------------------------------------------------
+  // Redoes connection deletions.
   public override void redo( MindMap map ) {
     map.connections.remove_connections( _conns, false );
     map.selected.clear_connections();

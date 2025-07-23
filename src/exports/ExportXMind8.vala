@@ -75,12 +75,14 @@ public class ExportXMind8 : Export {
     }
   }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor.
   public ExportXMind8() {
     base( "xmind-8", _( "XMind 8" ), { ".xmind" }, true, true, false );
   }
 
-  /* Exports the given drawing area to the file of the given name */
+  //-------------------------------------------------------------
+  // Exports the given drawing area to the file of the given name.
   public override bool export( string fname, MindMap map ) {
 
     /* Create temporary directory to place contents in */
@@ -109,7 +111,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Generates the manifest file */
+  //-------------------------------------------------------------
+  // Generates the manifest file.
   private bool export_manifest( string dir, FileItems file_list ) {
 
     Xml.Doc* doc = new Xml.Doc( "1.0" );
@@ -141,7 +144,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Creates the file-entry node within the manifest */
+  //-------------------------------------------------------------
+  // Creates the file-entry node within the manifest.
   private Xml.Node* manifest_file_entry( string path, string type ) {
     Xml.Node* n = new Xml.Node( null, "file-entry" );
     n->set_prop( "full-path", path );
@@ -149,7 +153,8 @@ public class ExportXMind8 : Export {
     return( n );
   }
 
-  /* Generate the main content file from  */
+  //-------------------------------------------------------------
+  // Generate the main content file from.
   private bool export_content( MindMap map, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
 
     Xml.Doc*  doc       = new Xml.Doc( "1.0" );
@@ -185,7 +190,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Exports the map contents */
+  //-------------------------------------------------------------
+  // Exports the map contents.
   private void export_map( MindMap map, Xml.Node* sheet, string timestamp, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
     var nodes = map.get_nodes();
     var conns = map.connections.connections;
@@ -213,6 +219,8 @@ public class ExportXMind8 : Export {
     export_connections( map, sheet, timestamp, styles );
   }
 
+  //-------------------------------------------------------------
+  // Exports the node
   private Xml.Node* export_node( MindMap map, Node node, string timestamp, bool top, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
 
     Xml.Node* topic = new Xml.Node( null, "topic" );
@@ -303,7 +311,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Exports the given node's image */
+  //-------------------------------------------------------------
+  // Exports the given node's image.
   private void export_image( MindMap map, Node node, string dir, FileItems file_list, Xml.Node* topic ) {
 
     var img_name  = map.image_manager.get_file( node.image.id );
@@ -336,7 +345,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Exports node styling information */
+  //-------------------------------------------------------------
+  // Exports node styling information.
   private void export_node_style( Node node, Xml.Node* n ) {
 
     /* Node border shape */
@@ -365,7 +375,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Exports a node note */
+  //-------------------------------------------------------------
+  // Exports a node note.
   private Xml.Node* export_node_note( Node node, Array<Xml.Node*> styles ) {
 
     Xml.Node* note  = new Xml.Node( null, "notes" );
@@ -384,7 +395,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Converts the given HTML string into the XHTML equivalent */
+  //-------------------------------------------------------------
+  // Converts the given HTML string into the XHTML equivalent.
   private string replace_formatting( string str, Array<Xml.Node*> styles ) {
 
     var bold_id = ids++;
@@ -418,6 +430,8 @@ public class ExportXMind8 : Export {
 
   }
 
+  //-------------------------------------------------------------
+  // Exports the connections of the mindmap.
   private void export_connections( MindMap map, Xml.Node* sheet, string timestamp, Array<Xml.Node*> styles ) {
 
     var conns = map.connections.connections;
@@ -476,7 +490,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Creates the styles.xml file in the main directory */
+  //-------------------------------------------------------------
+  // Creates the styles.xml file in the main directory.
   private void export_styles( string dir, FileItems file_list, Array<Xml.Node*> nodes ) {
 
     Xml.Doc*  doc    = new Xml.Doc( "1.0" );
@@ -503,7 +518,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Exports the contents of the meta file */
+  //-------------------------------------------------------------
+  // Exports the contents of the meta file.
   private void export_meta( MindMap map, string dir, FileItems file_list ) {
 
     Xml.Doc*  doc       = new Xml.Doc( "1.0" );
@@ -538,7 +554,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Write the contents as a zip file */
+  //-------------------------------------------------------------
+  // Write the contents as a zip file.
   private void archive_contents( string dir, string outname, FileItems files ) {
 
     GLib.File pwd = GLib.File.new_for_path( dir );
@@ -591,7 +608,8 @@ public class ExportXMind8 : Export {
 
   // --------------------------------------------------------------------------------------
 
-  /* Main method used to import an XMind mind-map into Minder */
+  //-------------------------------------------------------------
+  // Main method used to import an XMind mind-map into Minder.
   public override bool import( string fname, MindMap map ) {
 
     /* Create temporary directory to place contents in */
@@ -620,7 +638,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Import the content file */
+  //-------------------------------------------------------------
+  // Import the content file.
   private bool import_content( MindMap map, string fname, string dir, HashMap<string,IdObject> id_map ) {
 
     /* Read in the contents of the XMind 8 file */
@@ -639,7 +658,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Import the xmind map */
+  //-------------------------------------------------------------
+  // Import the xmind map.
   private void import_map( MindMap map, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "sheet") ) {
@@ -649,7 +669,8 @@ public class ExportXMind8 : Export {
     }
   }
 
-  /* Import a sheet */
+  //-------------------------------------------------------------
+  // Import a sheet.
   private void import_sheet( MindMap map, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
@@ -661,7 +682,8 @@ public class ExportXMind8 : Export {
     }
   }
 
-  /* Imports an XMind topic (this is a node in Minder) */
+  //-------------------------------------------------------------
+  // Imports an XMind topic (this is a node in Minder).
   private void import_topic( MindMap map, Node? parent, Xml.Node* n, bool attached, string dir, HashMap<string,IdObject> id_map ) {
 
     Node node;
@@ -705,7 +727,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Returns the string stored in a <title> node */
+  //-------------------------------------------------------------
+  // Returns the string stored in a <title> node.
   private string get_title( Xml.Node* n ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.TEXT_NODE ) {
@@ -715,12 +738,14 @@ public class ExportXMind8 : Export {
     return( "" );
   }
 
-  /* Imports the node name information */
+  //-------------------------------------------------------------
+  // Imports the node name information.
   private void import_node_name( Node node, Xml.Node* n ) {
     node.name.text.insert_text( 0, get_title( n ) );
   }
 
-  /* Imports the node note */
+  //-------------------------------------------------------------
+  // Imports the node note.
   private void import_node_notes( Node node, Xml.Node* n ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
@@ -731,12 +756,14 @@ public class ExportXMind8 : Export {
     }
   }
 
-  /* Imports the node note as plain text */
+  //-------------------------------------------------------------
+  // Imports the node note as plain text.
   private void import_note_plain( Node node, Xml.Node* n ) {
     node.note = get_title( n );
   }
 
-  /* Imports an image from a file */
+  //-------------------------------------------------------------
+  // Imports an image from a file.
   private void import_image( MindMap map, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
 
     int height = 1;
@@ -765,7 +792,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Importa child nodes */
+  //-------------------------------------------------------------
+  // Imports child nodes.
   private void import_children( MindMap map, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "topics") ) {
@@ -780,7 +808,8 @@ public class ExportXMind8 : Export {
     }
   }
 
-  /* Imports boundary information */
+  //-------------------------------------------------------------
+  // Imports boundary information.
   private void import_boundaries( MindMap map, Node node, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
@@ -808,7 +837,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Import connections */
+  //-------------------------------------------------------------
+  // Import connections.
   private void import_relationships( MindMap map, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
@@ -860,7 +890,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Imports and applies styling information */
+  //-------------------------------------------------------------
+  // Imports and applies styling information.
   private bool import_styles( MindMap map, string fname, HashMap<string,IdObject> id_map ) {
 
     /* Read in the contents of the Freemind file */
@@ -882,7 +913,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Imports tha main styles XML node */
+  //-------------------------------------------------------------
+  // Imports tha main styles XML node.
   private void import_styles_content( MindMap map, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
@@ -897,7 +929,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Imports the style information for one of the supported objects */
+  //-------------------------------------------------------------
+  // Imports the style information for one of the supported objects.
   private void import_styles_style( MindMap map, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     string? id = n->get_prop( "id" );
@@ -915,7 +948,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Imports the style information for a given node */
+  //-------------------------------------------------------------
+  // Imports the style information for a given node.
   private void import_styles_topic( MindMap map, Xml.Node* n, Node node ) {
 
     string? sc = n->get_prop( "shape-class" );
@@ -985,7 +1019,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Imports connection styling information */
+  //-------------------------------------------------------------
+  // Imports connection styling information.
   private void import_styles_connection( MindMap map, Xml.Node* n, Connection conn ) {
 
     string? arrow_start = n->get_prop( "arrow-begin-class" );
@@ -1033,7 +1068,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Imports styling information for a node group */
+  //-------------------------------------------------------------
+  // Imports styling information for a node group.
   private void import_styles_boundary( MindMap map, Xml.Node* n, NodeGroup group ) {
 
     string? f = n->get_prop( "fill" );
@@ -1045,7 +1081,8 @@ public class ExportXMind8 : Export {
 
   }
 
-  /* Unarchives all of the files within the given XMind 8 file */
+  //-------------------------------------------------------------
+  // Unarchives all of the files within the given XMind 8 file.
   private void unarchive_contents( string fname, string dir ) {
 
     Archive.Read archive = new Archive.Read();
