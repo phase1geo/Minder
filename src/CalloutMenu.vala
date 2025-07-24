@@ -23,7 +23,7 @@ using Gtk;
 
 public class CalloutMenu {
 
-  private DrawArea    _da;
+  private MindMap     _map;
   private PopoverMenu _popover;
 
   private const GLib.ActionEntry action_entries[] = {
@@ -35,7 +35,7 @@ public class CalloutMenu {
   // Default constructor
   public CalloutMenu( Gtk.Application app, DrawArea da ) {
 
-    _da = da;
+    _map = da.map;
 
     var del_menu = new GLib.Menu();
     del_menu.append( _( "Delete" ), "callout.action_delete" );
@@ -48,12 +48,12 @@ public class CalloutMenu {
     menu.append_section( null, sel_menu );
 
     _popover = new PopoverMenu.from_model( menu );
-    _popover.set_parent( _da );
+    _popover.set_parent( da );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();
     actions.add_action_entries( action_entries, this );
-    _da.insert_action_group( "callout", actions );
+    da.insert_action_group( "callout", actions );
 
     // Add keyboard shortcuts
     app.set_accels_for_action( "callout.action_delete", { "Delete" } );
@@ -72,14 +72,16 @@ public class CalloutMenu {
 
   }
 
-  /* Deletes the current group */
+  //-------------------------------------------------------------
+  // Deletes the current callout.
   private void action_delete() {
-    _da.remove_callout();
+    _map.model.remove_callout();
   }
 
-  /* Selects the top-most nodes in each selected node group */
+  //-------------------------------------------------------------
+  // Selects the node associated with the current callout.
   private void action_select_node() {
-    _da.select_callout_node();
+    _map.select_callout_node();
   }
 
 }

@@ -29,7 +29,7 @@ public class ConnectionInspector : Box {
   private ColorButton    _color;
   private Button         _reset;
   private NoteView       _note;
-  private DrawArea?      _da         = null;
+  private MindMap?       _map        = null;
   private string         _orig_note  = "";
   private Connection?    _connection = null;
 
@@ -50,14 +50,14 @@ public class ConnectionInspector : Box {
   }
 
   /* Called whenever the tab in the main window changes */
-  private void tab_changed( DrawArea? da ) {
-    if( _da != null ) {
-      _da.current_changed.disconnect( connection_changed );
+  private void tab_changed( MindMap? map ) {
+    if( _map != null ) {
+      _map.current_changed.disconnect( connection_changed );
     }
-    if( da != null ) {
-      da.current_changed.connect( connection_changed );
+    _map = map;
+    if( map != null ) {
+      map.current_changed.connect( connection_changed );
     }
-    _da = da;
   }
 
   /* Sets the width of this inspector to the given value */
@@ -92,14 +92,14 @@ public class ConnectionInspector : Box {
       hexpand = true
     };
     _color.color_set.connect(() => {
-      _da.change_current_connection_color( _color.rgba );
+      _map.model.change_current_connection_color( _color.rgba );
     });
 
     _reset = new Button.from_icon_name( "edit-undo-symbolic" ) {
       tooltip_text = _( "Use Theme Default Color" )
     };
     _reset.clicked.connect(() => {
-      _da.change_current_connection_color( null );
+      _map.model.change_current_connection_color( null );
     });
 
     var bbox = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -195,43 +195,43 @@ public class ConnectionInspector : Box {
    and redraws the canvas when needed.
   */
   private void note_changed() {
-    _da.change_current_connection_note( _note.buffer.text );
+    _map.model.change_current_connection_note( _note.buffer.text );
   }
 
   /* Saves the original version of the node's note so that we can */
   private void note_focus_in() {
-    _connection = _da.get_current_connection();
+    _connection = _map.get_current_connection();
     _orig_note  = _note.buffer.text;
   }
 
   /* When the note buffer loses focus, save the note change to the undo buffer */
   private void note_focus_out() {
     if( (_connection != null) && (_connection.note != _orig_note) ) {
-      _da.undo_buffer.add_item( new UndoConnectionNote( _connection, _orig_note ) );
+      _map.add_undo( new UndoConnectionNote( _connection, _orig_note ) );
     }
   }
 
   /* When a node link is added, tell the current node */
   private int note_node_link_added( NodeLink link, out string text ) {
-    return( _da.add_note_node_link( link, out text ) );
+    return( _map.model.add_note_node_link( link, out text ) );
   }
 
   /* Handles a click on the node link with the given ID */
   private void note_node_link_clicked( int id ) {
-    _da.note_node_link_clicked( id );
+    _map.model.note_node_link_clicked( id );
   }
 
   /* Handles a hover over a node link */
   private void note_node_link_hover( int id ) {
-    var link = _da.node_links.get_node_link( id );
+    var link = _map.model.node_links.get_node_link( id );
     if( link != null ) {
-      _note.show_tooltip( link.get_tooltip( _da ) );
+      _note.show_tooltip( link.get_tooltip( _map ) );
     }
   }
 
   /* Deletes the current connection */
   private void connection_delete() {
-    _da.delete_connection();
+    _map.model.delete_connection();
   }
 
   /* Grabs the focus on the note widget */
@@ -242,11 +242,11 @@ public class ConnectionInspector : Box {
   /* Called whenever the user changes the current node in the canvas */
   private void connection_changed() {
 
-    Connection? current = _da.get_current_connection();
+    Connection? current = _map.get_current_connection();
 
     if( current != null ) {
       var note = current.note;
-      _color.rgba       = (current.color != null) ? current.color : _da.get_theme().get_color( "connection_background" );
+      _color.rgba       = (current.color != null) ? current.color : _map.get_theme().get_color( "connection_background" );
       _note.buffer.text = note;
       _reset.set_sensitive( current.color != null );
     }

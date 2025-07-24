@@ -26,11 +26,11 @@ public class UndoStyleBranchMargin : UndoStyleChange {
   GenericArray<int> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleBranchMargin( StyleAffects affects, int branch_margin, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleBranchMargin( StyleAffects affects, int branch_margin, MindMap map ) {
+    base( affects, map );
     _values = new GenericArray<int>();
     _values.add( branch_margin );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

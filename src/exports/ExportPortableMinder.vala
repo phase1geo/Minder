@@ -32,7 +32,7 @@ public class ExportPortableMinder : Export {
    Exports the current mindmap along with all images to a single file that can
    be imported in a different computer/location.
   */
-  public override bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, MindMap map ) {
 
     /* Create the tar.gz archive named according the the first argument */
     Archive.Write archive = new Archive.Write ();
@@ -41,13 +41,13 @@ public class ExportPortableMinder : Export {
     archive.open_filename( fname );
 
     /* Add the Minder file to the archive */
-    archive_file( archive, da.get_doc().filename );
+    archive_file( archive, map.doc.filename );
 
     /* Add the images */
-    var image_ids = da.image_manager.get_ids();
+    var image_ids = map.image_manager.get_ids();
     for( int i=0; i<image_ids.length; i++ ) {
       var id = image_ids.index( i );
-      archive_file( archive, da.image_manager.get_file( id ), id );
+      archive_file( archive, map.image_manager.get_file( id ), id );
     }
 
     /* Close the archive */
@@ -110,7 +110,7 @@ public class ExportPortableMinder : Export {
    Converts the portable Minder file into the Minder document and moves all
    stored images to the ImageManager on the local computer.
   */
-  public override bool import( string fname, DrawArea da ) {
+  public override bool import( string fname, MindMap map ) {
 
     Archive.Read archive = new Archive.Read();
     archive.support_filter_gzip();
@@ -177,7 +177,7 @@ public class ExportPortableMinder : Export {
         entry.xattr_reset();
         if( (entry.xattr_next( out name, out value, out size ) == Archive.Result.OK) && (name == "image_id") ) {
           int* id = (int*)value;
-          da.image_manager.add_image( "file://" + entry.pathname(), *id );
+          map.image_manager.add_image( "file://" + entry.pathname(), *id );
         }
       }
 
@@ -192,8 +192,8 @@ public class ExportPortableMinder : Export {
     DirUtils.remove( img_dir );
 
     /* Finally, load the minder file and re-save it */
-    da.get_doc().load();
-    da.auto_save();
+    map.doc.load();
+    map.auto_save();
 
     return( true );
 

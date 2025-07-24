@@ -27,7 +27,7 @@ public class GroupInspector : Box {
 
   private ScrolledWindow _sw;
   private NoteView       _note;
-  private DrawArea?      _da        = null;
+  private MindMap?       _map       = null;
   private string         _orig_note = "";
   private NodeGroup?     _group     = null;
 
@@ -44,14 +44,14 @@ public class GroupInspector : Box {
   }
 
   /* Called whenever the tab in the main window changes */
-  private void tab_changed( DrawArea? da ) {
-    if( _da != null ) {
-      _da.current_changed.disconnect( group_changed );
+  private void tab_changed( MindMap? map ) {
+    if( _map != null ) {
+      _map.current_changed.disconnect( group_changed );
     }
-    if( da != null ) {
-      da.current_changed.connect( group_changed );
+    _map = map;
+    if( map != null ) {
+      map.current_changed.connect( group_changed );
     }
-    _da = da;
   }
 
   /* Sets the width of this inspector to the given value */
@@ -115,7 +115,7 @@ public class GroupInspector : Box {
 
   /* Saves the original version of the node's note so that we can */
   private void note_focus_in() {
-    _group     = _da.get_current_group();
+    _group     = _map.get_current_group();
     _orig_note = _note.buffer.text;
   }
 
@@ -123,26 +123,26 @@ public class GroupInspector : Box {
   private void note_focus_out() {
     if( (_group != null) && (_note.buffer.text != _orig_note) ) {
       _group.note = _note.buffer.text;
-      _da.undo_buffer.add_item( new UndoGroupNote( _group, _orig_note ) );
-      _da.auto_save();
+      _map.add_undo( new UndoGroupNote( _group, _orig_note ) );
+      _map.auto_save();
     }
   }
 
   /* When a node link is added, tell the current node */
   private int note_node_link_added( NodeLink link, out string text ) {
-    return( _da.add_note_node_link( link, out text ) );
+    return( _map.model.add_note_node_link( link, out text ) );
   }
 
   /* Handles a click on the node link with the given ID */
   private void note_node_link_clicked( int id ) {
-    _da.note_node_link_clicked( id );
+    _map.model.note_node_link_clicked( id );
   }
 
   /* Handles a hover over a node link */
   private void note_node_link_hover( int id ) {
-    var link = _da.node_links.get_node_link( id );
+    var link = _map.model.node_links.get_node_link( id );
     if( link != null ) {
-      _note.show_tooltip( link.get_tooltip( _da ) );
+      _note.show_tooltip( link.get_tooltip( _map ) );
     }
   }
 
@@ -154,7 +154,7 @@ public class GroupInspector : Box {
   /* Called whenever the user changes the current node in the canvas */
   private void group_changed() {
 
-    NodeGroup? current = _da.get_current_group();
+    NodeGroup? current = _map.get_current_group();
 
     if( current != null ) {
       var note = current.note;

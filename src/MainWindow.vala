@@ -161,7 +161,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   public delegate void OverwriteFunc( bool overwrite );
 
-  public signal void canvas_changed( DrawArea? da );
+  public signal void canvas_changed( MindMap? map );
 
   /* Create the main window UI */
   public MainWindow( Gtk.Application app, GLib.Settings settings ) {
@@ -218,13 +218,13 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
 
     _brain.ideas_changed.connect((change, name_index) => {
-      var da = get_current_da();
+      var map = get_current_map();
       switch( change ) {
-        case BraindumpChangeType.ADD    :  da.braindump.append_val( name_index );  break;
-        case BraindumpChangeType.REMOVE :  da.braindump.remove_index( int.parse( name_index ) );  break;
-        case BraindumpChangeType.CLEAR  :  da.braindump.remove_range( 0, da.braindump.length );  break;
+        case BraindumpChangeType.ADD    :  map.model.braindump.append_val( name_index );  break;
+        case BraindumpChangeType.REMOVE :  map.model.braindump.remove_index( int.parse( name_index ) );  break;
+        case BraindumpChangeType.CLEAR  :  map.model.braindump.remove_range( 0, map.model.braindump.length );  break;
       }
-      da.auto_save();
+      map.auto_save();
     });
 
     var content = new Box( Orientation.HORIZONTAL, 0 );
@@ -325,8 +325,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     var focus = new EventControllerFocus();
     _pane.add_controller( focus );
     focus.enter.connect(() => {
-      var da = get_current_da();
-      update_title( da );
+      var map = get_current_map();
+      update_title( map );
     });
 
     /* Load the exports data */
@@ -351,9 +351,10 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Returns the DrawingArea associated with the given notebook
   // page index.
-  private DrawArea get_da( int page ) {
+  private MindMap get_map( int page ) {
     var ol = (Overlay)_nb.get_nth_page( page );
-    return( (DrawArea)ol.child );
+    var da = (DrawArea)ol.child;
+    return( da.map );
   }
 
   //-------------------------------------------------------------
@@ -381,8 +382,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     var value = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
     _text_size = value;
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
-      da.update_css();
+      var map = get_map( i );
+      map.model.update_css();
     }
   }
 
@@ -401,8 +402,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void setting_changed_animations() {
     var value = settings.get_boolean( "enable-animations" );
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
-      da.animator.enable = value;
+      var map = get_map( i );
+      map.canvas.animator.enable = value;
     }
   }
 
@@ -411,8 +412,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void setting_changed_embedded_urls() {
     var value = settings.get_boolean( "auto-parse-embedded-urls" );
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
-      da.url_parser.enable = value;
+      var map = get_map( i );
+      map.url_parser.enable = value;
     }
   }
 
@@ -421,8 +422,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void setting_changed_markdown() {
     var value = settings.get_boolean( "enable-markdown" );
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
-      da.markdown_parser.enable = value;
+      var map = get_map( i );
+      map.markdown_parser.enable = value;
     }
   }
 
@@ -431,8 +432,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void setting_changed_unicode_input() {
     var value = settings.get_boolean( "enable-unicode-input" );
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
-      da.unicode_parser.enable = value;
+      var map = get_map( i );
+      map.unicode_parser.enable = value;
     }
   }
 
@@ -445,14 +446,14 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // This needs to be called whenever the tab is changed
   private void tab_changed( int page_num ) {
-    var da = get_da( page_num );
-    do_buffer_changed( da.current_undo_buffer() );
-    on_current_changed( da );
-    update_title( da );
-    canvas_changed( da );
+    var map = get_map( page_num );
+    do_buffer_changed( map.current_undo_buffer() );
+    on_current_changed( map );
+    update_title( map );
+    canvas_changed( map );
     save_tab_state( page_num );
-    _brain.set_list( da.braindump );
-    set_braindump_ui( da.braindump_shown );
+    _brain.set_list( map.model.braindump );
+    set_braindump_ui( map.model.braindump_shown );
   }
 
   //-------------------------------------------------------------
@@ -465,8 +466,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Updates all of the node sizes in all tabs
   public void update_node_sizes() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
-      da.update_node_sizes();
+      var map = get_map( i );
+      map.model.update_node_sizes();
     }
   }
 
@@ -479,11 +480,11 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Closes the tab associated with the given drawing area
   private void close_tab( int page_num ) {
-    var da = get_da( page_num );
-    if( da.get_doc().is_saved() ) {
+    var map = get_map( page_num );
+    if( map.doc.is_saved() ) {
       remove_tab( page_num );
     } else {
-      show_save_warning( da );
+      show_save_warning( map );
     }
   }
 
@@ -504,43 +505,43 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
-  // Creates a draw area
-  public DrawArea create_da() {
-    var da = new DrawArea( this, _settings );
-    return( da );
+  // Creates a new mindmap.
+  public MindMap create_map() {
+    var map = new MindMap( this, _settings );
+    return( map );
   }
 
   //-------------------------------------------------------------
   // Adds a new tab to the notebook
-  public DrawArea add_tab( string? fname, TabAddReason reason ) {
+  public MindMap add_tab( string? fname, TabAddReason reason ) {
 
     /* Create and pack the canvas */
-    var da = new DrawArea( this, _settings );
-    da.current_changed.connect( on_current_changed );
-    da.scale_changed.connect( change_scale );
-    da.scroll_changed.connect( change_origin );
-    da.show_properties.connect( show_properties );
-    da.hide_properties.connect( hide_properties );
-    da.undo_buffer.buffer_changed.connect( do_buffer_changed );
-    da.undo_text.buffer_changed.connect( do_buffer_changed );
-    da.theme_changed.connect( on_theme_changed );
-    da.animator.enable = _settings.get_boolean( "enable-animations" );
+    var map = new MindMap( this, _settings );
+    map.current_changed.connect( on_current_changed );
+    map.scale_changed.connect( change_scale );
+    map.scroll_changed.connect( change_origin );
+    map.show_properties.connect( show_properties );
+    map.hide_properties.connect( hide_properties );
+    map.undo_buffer.buffer_changed.connect( do_buffer_changed );
+    map.undo_text.buffer_changed.connect( do_buffer_changed );
+    map.theme_changed.connect( on_theme_changed );
+    map.canvas.animator.enable = _settings.get_boolean( "enable-animations" );
 
     if( fname != null ) {
-      da.get_doc().load_filename( fname, (reason == TabAddReason.OPEN) );
+      map.doc.load_filename( fname, (reason == TabAddReason.OPEN) );
     }
 
     /* Create the overlay that will hold the canvas so that we can put an entry box for emoji support */
     var overlay = new Overlay() {
-      child = da
+      child = map.canvas
     };
 
-    var tab_label = new Label( da.get_doc().label ) { margin_start  = 10,
+    var tab_label = new Label( map.doc.label ) { margin_start  = 10,
       margin_end    = 5,
       margin_top    = 5,
       margin_top    = 5,
       margin_bottom = 5,
-      tooltip_text  = da.get_doc().label
+      tooltip_text  = map.doc.label
     };
 
     var tab_close = new Button.from_icon_name( "window-close-symbolic" ) {
@@ -578,13 +579,13 @@ public class MainWindow : Gtk.ApplicationWindow {
     });
 
     /* Update the titlebar */
-    update_title( da );
+    update_title( map );
 
     /* Make the drawing area new */
     if( reason == TabAddReason.NEW ) {
-      da.initialize_for_new();
+      map.initialize_for_new();
     } else {
-      da.initialize_for_open();
+      map.initialize_for_open();
     }
 
     /* Indicate that the tab has changed */
@@ -592,9 +593,9 @@ public class MainWindow : Gtk.ApplicationWindow {
       _nb.page = tab_index;
     }
 
-    da.grab_focus();
+    map.canvas.grab_focus();
 
-    return( da );
+    return( map );
 
   }
 
@@ -603,8 +604,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   */
   private void close_unchanged_tabs() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
-      if( !da.is_loaded ) {
+      var map = get_map( i );
+      if( !map.model.is_loaded ) {
         _nb.detach_tab( _nb.get_nth_page( i ) );
         return;
       }
@@ -617,10 +618,10 @@ public class MainWindow : Gtk.ApplicationWindow {
   */
   private bool find_unchanged_tab() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
-      if( !da.is_loaded ) {
+      var map = get_map( i );
+      if( !map.model.is_loaded ) {
         _nb.page = i;
-        da.grab_focus();
+        map.canvas.grab_focus();
         return( true );
       }
     }
@@ -632,14 +633,14 @@ public class MainWindow : Gtk.ApplicationWindow {
    is already found, refresh the tab with the file contents and make it the current
    tab; otherwise, add the new tab and populate it.
   */
-  private DrawArea add_tab_conditionally( string? fname, TabAddReason reason ) {
+  private MindMap add_tab_conditionally( string? fname, TabAddReason reason ) {
 
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
-      if( da.get_doc().filename == fname ) {
-        da.initialize_for_open();
+      var map = get_map( i );
+      if( map.doc.filename == fname ) {
+        map.initialize_for_open();
         _nb.page = i;
-        return( da );
+        return( map );
       }
     }
 
@@ -656,27 +657,27 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   /* Returns the current drawing area */
-  public DrawArea? get_current_da( string? caller = null ) {
+  public MindMap? get_current_map( string? caller = null ) {
     if( _debug && (caller != null) ) {
-      stdout.printf( "get_current_da called from %s\n", caller );
+      stdout.printf( "get_current_map called from %s\n", caller );
     }
     if( _nb.page == -1 ) { return( null ); }
-    return( get_da( _nb.page ) );
+    return( get_map( _nb.page ) );
   }
 
   /* Updates the title */
-  private void update_title( DrawArea? da ) {
+  private void update_title( MindMap? map ) {
     var label = " \u2014 Minder";
     if( _focus_btn.active ) {
       label += " (%s)".printf( _( "Focus Mode" ) );
     }
-    if( (da == null) || !da.get_doc().is_saved() ) {
+    if( (map == null) || !map.doc.is_saved() ) {
       label = _( "Unnamed Document" ) + label;
     } else {
-      if( da.get_doc().readonly ) {
+      if( map.doc.readonly ) {
         label += " [%s]%s".printf( _( "Read-Only" ), label );
       }
-      label = GLib.Path.get_basename( da.get_doc().filename ) + label;
+      label = GLib.Path.get_basename( map.doc.filename ) + label;
     }
     var lbl = (Label)_header.title_widget;
     lbl.label = label;
@@ -1069,9 +1070,9 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Shows or hides the braindump UI.
   public void set_braindump_ui( bool show ) {
 
-    var da = get_current_da();
-    if( da != null ) {
-      da.braindump_shown = show;
+    var map = get_current_map();
+    if( map != null ) {
+      map.model.braindump_shown = show;
       save_tab_state( _nb.page );
     }
 
@@ -1080,8 +1081,8 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     if( show ) {
       _brain.grab_focus();
-    } else if( da != null ) {
-      da.grab_focus();
+    } else if( map != null ) {
+      map.canvas.grab_focus();
     }
 
   }
@@ -1096,10 +1097,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
 
     _focus_btn.clicked.connect((e) => {
-      var da = get_current_da();
-      update_title( da );
-      da.set_focus_mode( _focus_btn.active );
-      da.grab_focus();
+      var map = get_current_map();
+      update_title( map );
+      map.focus_mode = _focus_btn.active;
+      map.canvas.grab_focus();
     });
 
     _header.pack_end( _focus_btn );
@@ -1235,7 +1236,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Displays the save warning dialog window
-  public void show_save_warning( DrawArea da ) {
+  public void show_save_warning( MindMap map ) {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
       _( "Save current unnamed document?" ),
@@ -1260,9 +1261,9 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     dialog.response.connect((id) => {
       switch( id ) {
-        case ResponseType.ACCEPT :  save_file( da, true );  break;
+        case ResponseType.ACCEPT :  save_file( map, true );  break;
         case ResponseType.CLOSE  :  
-          da.get_doc().remove();
+          map.doc.remove();
           remove_tab( null );
           break;
       }
@@ -1276,10 +1277,10 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Displays the overwrite warning dialog window.  Returns true
   // when overwrite is wanted and false when reload is wanted.
-  public void ask_modified_overwrite( DrawArea da, OverwriteFunc func ) {
+  public void ask_modified_overwrite( MindMap map, OverwriteFunc func ) {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
-      _( "The file %s was modified outside of the application." ).printf( da.get_doc().filename ),
+      _( "The file %s was modified outside of the application." ).printf( map.doc.filename ),
       _( "What do you want to do?" ),
       "dialog-warning",
       ButtonsType.NONE
@@ -1310,10 +1311,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     /* Close any unchanged tabs */
     if( find_unchanged_tab() ) return;
 
-    var da = add_tab( null, TabAddReason.NEW );
+    var map = add_tab( null, TabAddReason.NEW );
 
     /* Set the title to indicate that we have an unnamed document */
-    update_title( da );
+    update_title( map );
 
   }
 
@@ -1366,7 +1367,7 @@ public class MainWindow : Gtk.ApplicationWindow {
           if( file != null ) {
             open_file( file.get_path(), dir );
             Utils.store_chooser_folder( file.get_path(), dir );
-            get_current_da( "do_open" ).grab_focus();
+            get_current_map( "do_open" ).canvas.grab_focus();
           }
         } catch( Error e ) {}
       });
@@ -1377,7 +1378,7 @@ public class MainWindow : Gtk.ApplicationWindow {
           if( file != null ) {
             open_file( file.get_path(), dir );
             Utils.store_chooser_folder( file.get_path(), dir );
-            get_current_da( "do_open" ).grab_focus();
+            get_current_map( "do_open" ).canvas.grab_focus();
           }
         } catch( Error e ) {}
       });
@@ -1394,9 +1395,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
     close_unchanged_tabs();
     if( fname.has_suffix( ".minder" ) ) {
-      var da = add_tab_conditionally( fname, TabAddReason.OPEN );
-      update_title( da );
-      if( da.get_doc().load() ) {
+      var map = add_tab_conditionally( fname, TabAddReason.OPEN );
+      update_title( map );
+      if( map.doc.load() ) {
         save_tab_state( _nb.page );
       }
       return( true );
@@ -1406,9 +1407,9 @@ public class MainWindow : Gtk.ApplicationWindow {
           string new_fname;
           if( exports.index( i ).filename_matches( fname, out new_fname ) ) {
             new_fname += ".minder";
-            var da = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-            update_title( da );
-            if( exports.index( i ).import( fname, da ) ) {
+            var map = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
+            update_title( map );
+            if( exports.index( i ).import( fname, map ) ) {
               save_tab_state( _nb.page );
               return( true );
             }
@@ -1426,10 +1427,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     close_unchanged_tabs();
     for( int i=0; i<exports.length(); i++ ) {
       if( exports.index( i ).name == export_name ) {
-        var da = add_tab_conditionally( null, TabAddReason.IMPORT );
-        new_fname = da.get_doc().filename;
-        update_title( da );
-        if( exports.index( i ).import( fname, da ) ) {
+        var map = add_tab_conditionally( null, TabAddReason.IMPORT );
+        new_fname = map.doc.filename;
+        update_title( map );
+        if( exports.index( i ).import( fname, map ) ) {
           return( true );
         }
         close_current_tab();
@@ -1441,24 +1442,24 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Perform an undo action
   public void do_undo() {
-    var da = get_current_da( "do_undo" );
-    da.current_undo_buffer().undo();
-    da.grab_focus();
+    var map = get_current_map( "do_undo" );
+    map.current_undo_buffer().undo();
+    map.canvas.grab_focus();
   }
 
   //-------------------------------------------------------------
   // Perform a redo action
   public void do_redo() {
-    var da = get_current_da( "do_redo" );
-    da.current_undo_buffer().redo();
-    da.grab_focus();
+    var map = get_current_map( "do_redo" );
+    map.current_undo_buffer().redo();
+    map.canvas.grab_focus();
   }
 
   //-------------------------------------------------------------
   // Called whenever the theme is changed
-  private void on_theme_changed( DrawArea da ) {
+  private void on_theme_changed( MindMap map ) {
     var settings  = Gtk.Settings.get_default();
-    var dark_mode = da.get_theme().prefer_dark;
+    var dark_mode = map.get_theme().prefer_dark;
     if( settings != null ) {
       settings.gtk_application_prefer_dark_theme = dark_mode;
     }
@@ -1502,7 +1503,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Allow the user to select a filename to save the document as
-  public void save_file( DrawArea da, bool remove_after_save ) {
+  public void save_file( MindMap map, bool remove_after_save ) {
 
     var dialog  = Utils.make_file_chooser( _( "Save File" ), _( "Save" ) );
     var filters = new GLib.ListStore( typeof( FileFilter ) );
@@ -1511,12 +1512,12 @@ public class MainWindow : Gtk.ApplicationWindow {
     filter.set_filter_name( _( "Minder" ) );
     filter.add_pattern( "*.minder" );
     filters.append( filter );
-    if( da.get_doc().is_saved() ) {
-      dialog.set_initial_name( da.get_doc().filename );
+    if( map.doc.is_saved() ) {
+      dialog.set_initial_name( map.doc.filename );
     } else {
-      dialog.set_initial_name( da.get_doc().label );
-      if( da.get_nodes().length > 0 ) {
-        var root_str = da.get_nodes().index( 0 ).name.text.text.strip();
+      dialog.set_initial_name( map.doc.label );
+      if( map.get_nodes().length > 0 ) {
+        var root_str = map.get_nodes().index( 0 ).name.text.text.strip();
         if( root_str != "" ) {
           dialog.set_initial_name( convert_name_to_filename( root_str ) );
         }
@@ -1533,16 +1534,16 @@ public class MainWindow : Gtk.ApplicationWindow {
           if( !fname.has_suffix( ".minder" ) ) {
             fname += ".minder";
           }
-          da.get_doc().filename = fname;
-          da.get_doc().save();
+          map.doc.filename = fname;
+          map.doc.save();
           if( remove_after_save ) {
             remove_tab( null );
           } else {
-            set_tab_label_info( da.get_doc().label, fname );
-            update_title( da );
+            set_tab_label_info( map.doc.label, fname );
+            update_title( map );
             save_tab_state( _nb.page );
             Utils.store_chooser_folder( fname, false );
-            da.grab_focus();
+            map.canvas.grab_focus();
           }
         }
       } catch( Error e ) {}
@@ -1553,14 +1554,14 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Called when the save as button is clicked
   public void do_save_as_file() {
-    var da = get_current_da( "do_save_as_file" );
-    save_file( da, false );
+    var map = get_current_map( "do_save_as_file" );
+    save_file( map, false );
   }
 
   /* Called whenever the node selection changes in the canvas */
-  private void on_current_changed( DrawArea da ) {
-    action_set_enabled( "win.action_zoom_selected", (da.get_current_node() != null) );
-    _focus_btn.active = da.get_focus_mode();
+  private void on_current_changed( MindMap map ) {
+    action_set_enabled( "win.action_zoom_selected", (map.get_current_node() != null) );
+    _focus_btn.active = map.focus_mode;
   }
 
   /*
@@ -1588,8 +1589,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   // save their state before we allow the application to exit.
   private void save_tabs() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
-      da.get_doc().cleanup();
+      var map = get_map( i );
+      map.doc.cleanup();
     }
   }
 
@@ -1606,8 +1607,8 @@ public class MainWindow : Gtk.ApplicationWindow {
         _pane.end_child = _inspector_nb;
         var prop_width = _settings.get_int( "properties-width" );
         _pane.set_position( prop_width );
-        if( get_current_da( "show_properties 1" ) != null ) {
-          get_current_da( "show_properties 2" ).see( true, -300 );
+        if( get_current_map( "show_properties 1" ) != null ) {
+          get_current_map( "show_properties 2" ).canvas.see( true, -300 );
         }
       }
       _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
@@ -1635,7 +1636,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   /* Displays the theme editor pane */
   public void show_theme_editor( bool edit ) {
-    _themer.initialize( get_current_da().get_theme(), edit );
+    _themer.initialize( get_current_map().get_theme(), edit );
     _inspector_nb.page = 1;
   }
 
@@ -1652,7 +1653,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _prop_btn.active       = false;
     _pane.position_set     = false;
     _pane.end_child        = null;
-    get_current_da( "hide_properties" ).grab_focus();
+    get_current_map( "hide_properties" ).canvas.grab_focus();
     _settings.set_boolean( "current-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",     false );
     _settings.set_boolean( "style-properties-shown",   false );
@@ -1677,9 +1678,9 @@ public class MainWindow : Gtk.ApplicationWindow {
   private bool adjust_zoom( ScrollType scroll, double new_value ) {
     var value        = zoom_to_value( new_value );
     var scale_factor = value / 100;
-    var da           = get_current_da( "adjust_zoom" );
-    da.set_scaling_factor( scale_factor );
-    da.queue_draw();
+    var map          = get_current_map( "adjust_zoom" );
+    map.canvas.set_scaling_factor( scale_factor );
+    map.canvas.queue_draw();
     return( false );
   }
 
@@ -1698,11 +1699,11 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Called when the user uses the Control-s keyboard shortcut
   private void action_save() {
-    var da = get_current_da( "action_save" );
-    if( da.get_doc().is_saved() ) {
-      da.get_doc().save();
+    var map = get_current_map( "action_save" );
+    if( map.doc.is_saved() ) {
+      map.doc.save();
     } else {
-      save_file( da, false );
+      save_file( map, false );
     }
   }
 
@@ -1748,37 +1749,40 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Zooms into the image (makes things larger)
   private void action_zoom_in() {
-    var da = get_current_da( "action_zoom_in" );
-    da.zoom_in();
+    var map = get_current_map( "action_zoom_in" );
+    map.canvas.zoom_in();
   }
 
   //-------------------------------------------------------------
   // Zooms out of the image (makes things smaller)
   private void action_zoom_out() {
-    var da = get_current_da( "action_zoom_out" );
-    da.zoom_out();
+    var map = get_current_map( "action_zoom_out" );
+    map.canvas.zoom_out();
   }
 
   //-------------------------------------------------------------
   // Zooms to make all nodes visible within the viewer
   private void action_zoom_fit() {
-    var da = get_current_da( "action_zoom_fit" );
-    da.zoom_to_fit();
-    da.grab_focus();
+    var map = get_current_map( "action_zoom_fit" );
+    map.canvas.zoom_to_fit();
+    map.canvas.grab_focus();
   }
 
-  /* Zooms to make the currently selected node and its tree put into view */
+  //-------------------------------------------------------------
+  // Zooms to make the currently selected node and its tree put
+  // into view.
   private void action_zoom_selected() {
-    var da = get_current_da( "action_zoom_selected" );
-    da.zoom_to_selected();
-    da.grab_focus();
+    var map = get_current_map( "action_zoom_selected" );
+    map.canvas.zoom_to_selected();
+    map.canvas.grab_focus();
   }
 
-  /* Sets the zoom to 100% */
+  //-------------------------------------------------------------
+  // Sets the zoom to 100%.
   private void action_zoom_actual() {
-    var da = get_current_da( "action_zoom_actual" );
-    da.zoom_actual();
-    da.grab_focus();
+    var map = get_current_map( "action_zoom_actual" );
+    map.canvas.zoom_actual();
+    map.canvas.grab_focus();
   }
 
   /* Display matched items to the search within the search popover */
@@ -1796,16 +1800,16 @@ public class MainWindow : Gtk.ApplicationWindow {
     search_opts[SearchOptions.NONTASKS]    = _search_nontasks.active;
     _search_items.clear();
     var all_tabs = _settings.get_boolean( "search-opt-all-tabs" );
-    var current  = get_current_da( "on_search_change" );
+    var current  = get_current_map( "on_search_change" );
     var text     = _search_entry.get_text().casefold();
     var name     = all_tabs ? get_tab_label_name( _nb.page ) : "";
     if( text == "" ) return;
-    current.get_match_items( name, text, search_opts, ref _search_items );
+    current.model.get_match_items( name, text, search_opts, ref _search_items );
     if( all_tabs ) {
       for( int i=0; i<_nb.get_n_pages(); i++ ) {
-        var da = get_da( i );
-        if( da != current ) {
-          da.get_match_items( get_tab_label_name( i ), text, search_opts, ref _search_items );
+        var map = get_map( i );
+        if( map != current ) {
+          map.model.get_match_items( get_tab_label_name( i ), text, search_opts, ref _search_items );
         }
       }
     }
@@ -1822,31 +1826,31 @@ public class MainWindow : Gtk.ApplicationWindow {
     Connection? conn    = null;
     Callout?    callout = null;
     NodeGroup?  group   = null;
-    DrawArea    da      = get_current_da( "on_search_clicked" );
+    var         map     = get_current_map( "on_search_clicked" );
     _search_items.get_iter( out it, path );
     _search_items.get( it, 2, &node, 3, &conn, 4, &callout, 5, &group, 6, &tabname, -1 );
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       if( get_tab_label_name( i ) == tabname ) {
-        da = get_da( i );
+        map = get_map( i );
         _nb.page = i;
         break;
       }
     }
     if( node != null ) {
-      da.set_current_node( node );
-      da.see();
+      map.set_current_node( node );
+      map.canvas.see();
     } else if( conn != null ) {
-      da.set_current_connection( conn );
-      da.see();
+      map.set_current_connection( conn );
+      map.canvas.see();
     } else if( callout != null ) {
-      da.set_current_callout( callout );
-      da.see();
+      map.set_current_callout( callout );
+      map.canvas.see();
     } else if( group != null ) {
-      da.set_current_group( group );
-      da.see();
+      map.set_current_group( group );
+      map.canvas.see();
     }
     _search.closed();
-    da.grab_focus();
+    map.canvas.grab_focus();
   }
 
   //-------------------------------------------------------------
@@ -1867,7 +1871,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Exports the model to the printer
   private void action_print() {
     var print = new ExportPrint();
-    print.print( get_current_da( "action_print" ), this );
+    print.print( get_current_map( "action_print" ), this );
   }
 
   //-------------------------------------------------------------
@@ -1883,17 +1887,17 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     var builder = new Builder.from_resource( "/com/github/phase1geo/minder/shortcuts.ui" );
     var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
-    var da      = get_current_da();
+    var map     = get_current_map();
 
     win.transient_for = this;
     win.view_name     = null;
 
     /* Display the most relevant information based on the current state */
-    if( da.is_node_editable() || da.is_connection_editable() ) {
+    if( map.is_node_editable() || map.is_connection_editable() ) {
       win.section_name = "text-editing";
-    } else if( da.is_node_selected() ) {
+    } else if( map.is_node_selected() ) {
       win.section_name = "node";
-    } else if( da.is_connection_selected() ) {
+    } else if( map.is_connection_selected() ) {
       win.section_name = "connection";
     } else {
       win.section_name = "general";
@@ -1987,14 +1991,14 @@ public class MainWindow : Gtk.ApplicationWindow {
     doc->set_root_element( root );
 
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var       da   = get_da( i );
+      var       map  = get_map( i );
       Xml.Node* node = new Xml.Node( null, "tab" );
-      node->new_prop( "path",  da.get_doc().filename );
-      node->new_prop( "saved", da.get_doc().is_saved().to_string() );
-      node->new_prop( "origin-x", da.origin_x.to_string() );
-      node->new_prop( "origin-y", da.origin_y.to_string() );
-      node->new_prop( "scale", da.sfactor.to_string() );
-      node->new_prop( "braindump", da.braindump_shown.to_string() );
+      node->new_prop( "path",      map.doc.filename );
+      node->new_prop( "saved",     map.doc.is_saved().to_string() );
+      node->new_prop( "origin-x",  map.canvas.origin_x.to_string() );
+      node->new_prop( "origin-y",  map.canvas.origin_y.to_string() );
+      node->new_prop( "scale",     map.canvas.sfactor.to_string() );
+      node->new_prop( "braindump", map.model.braindump_shown.to_string() );
       root->add_child( node );
     }
 
@@ -2036,22 +2040,22 @@ public class MainWindow : Gtk.ApplicationWindow {
           var origin_y  = it->get_prop( "origin-y" );
           var sfactor   = it->get_prop( "scale" );
           var braindump = it->get_prop( "braindump" );
-          var da = add_tab( fname, TabAddReason.LOAD );
+          var map       = add_tab( fname, TabAddReason.LOAD );
           if( origin_x != null ) {
-            da.origin_x = int.parse( origin_x );
+            map.canvas.origin_x = int.parse( origin_x );
           }
           if( origin_y != null ) {
-            da.origin_y = int.parse( origin_y );
+            map.canvas.origin_y = int.parse( origin_y );
           }
           if( sfactor != null ) {
-            da.sfactor = double.parse( sfactor );
-            change_scale( da.sfactor );
+            map.canvas.sfactor = double.parse( sfactor );
+            change_scale( map.canvas.sfactor );
           }
           if( braindump != null ) {
-            da.braindump_shown = bool.parse( braindump );
+            map.model.braindump_shown = bool.parse( braindump );
           }
-          da.get_doc().load_filename( fname, bool.parse( saved ) );
-          if( da.get_doc().load() ) {
+          map.doc.load_filename( fname, bool.parse( saved ) );
+          if( map.doc.load() ) {
             tabs++;
           }
         } else {

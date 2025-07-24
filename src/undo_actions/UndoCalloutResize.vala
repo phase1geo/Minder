@@ -27,7 +27,8 @@ public class UndoCalloutResize : UndoItem {
   double  _old_width;
   double  _new_width;
 
-  /* Constructor for a callout size change */
+  //-------------------------------------------------------------
+  // Constructor for a callout size change.
   public UndoCalloutResize( Callout c, int old_width ) {
     base( _( "callout resize" ) );
     _callout   = c;
@@ -35,18 +36,20 @@ public class UndoCalloutResize : UndoItem {
     _new_width = c.total_width;
   }
 
-  /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Undoes a node name change.
+  public override void undo( MindMap map ) {
     _callout.resize( _old_width - _new_width );
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
-  /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Redoes a node name change.
+  public override void redo( MindMap map ) {
     _callout.resize( _new_width - _old_width );
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

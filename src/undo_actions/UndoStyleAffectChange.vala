@@ -26,11 +26,11 @@ public class UndoStyleAffectChange : UndoStyleChange {
   private GenericArray<Style> _styles;
 
   /* Constructor for a style affect change */
-  public UndoStyleAffectChange( StyleAffects affects, Style style, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleAffectChange( StyleAffects affects, Style style, MindMap map ) {
+    base( affects, map );
     _styles = new GenericArray<Style>();
     _styles.add( style );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

@@ -124,33 +124,40 @@ public class Callout : Object {
   }
   public double alpha { set; get; default = 1.0; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public Callout( Node node ) {
     _node = node;
-    _text = new CanvasText.with_text( node.da, _( "Callout" ) );
+    _text = new CanvasText.with_text( node.map, _( "Callout" ) );
     _text.resized.connect( position_text_from_ct );
     _style = new Style();
     set_parsers();
   }
 
-  /* Adds the valid parsers */
+  //-------------------------------------------------------------
+  // Adds the valid parsers.
   public void set_parsers() {
-    _text.text.add_parser( _node.da.markdown_parser );
-    _text.text.add_parser( _node.da.url_parser );
-    _text.text.add_parser( _node.da.unicode_parser );
+    _text.text.add_parser( _node.map.markdown_parser );
+    _text.text.add_parser( _node.map.url_parser );
+    _text.text.add_parser( _node.map.unicode_parser );
   }
 
-  /* Returns true if the callout should be drawn below the node; otherwise, we draw it to the right of the node */
+  //-------------------------------------------------------------
+  // Returns true if the callout should be drawn below the node;
+  // otherwise, we draw it to the right of the node.
   private bool is_below_node() {
     return( _node.side.horizontal() );
   }
 
-  /* Called if the text has been changed from the CanvasText perspective */
+  //-------------------------------------------------------------
+  // Called if the text has been changed from the CanvasText
+  // perspective.
   private void position_text_from_ct() {
     position_text( true );
   }
 
-  /* Called whenever the text changes the size of the callout */
+  //-------------------------------------------------------------
+  // Called whenever the text changes the size of the callout.
   public void position_text( bool call_resized ) {
 
     var margin  = _node.style.node_margin ?? 0;
@@ -196,14 +203,16 @@ public class Callout : Object {
 
   }
 
-  /* Returns true if the given coordinates are within this callout */
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates are within this callout.
   public bool contains( double x, double y ) {
     double cx, cy, cw, ch;
     bbox( out cx, out cy, out cw, out ch );
     return( Utils.is_within_bounds( x, y, cx, cy, cw, ch ) );
   }
 
-  /* Returns true if the pixel coordinates is within the resizer */
+  //-------------------------------------------------------------
+  // Returns true if the pixel coordinates is within the resizer.
   public bool is_within_resizer( double x, double y ) {
     if( mode == CalloutMode.SELECTED ) {
       double rx, ry, rw, rh;
@@ -213,13 +222,22 @@ public class Callout : Object {
     return( false );
   }
 
-  /* Resizes the width (and potentially height) */
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates lies within the callout
+  // text.
+  public bool is_within_title( double x, double y ) {
+    return( (_text != null) && _text.is_within( x, y ) );
+  }
+
+  //-------------------------------------------------------------
+  // Resizes the width (and potentially height).
   public void resize( double diff ) {
     diff = _node.resizer_on_left() ? (0 - diff) : diff;
     _text.resize( diff );
   }
 
-  /* Saves the callout information in XML format */
+  //-------------------------------------------------------------
+  // Saves the callout information in XML format.
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "callout" );
     node->add_child( _text.save( "text" ) );
@@ -227,13 +245,15 @@ public class Callout : Object {
     return( node );
   }
 
-  /* Loads the style information from the given XML node */
+  //-------------------------------------------------------------
+  // Loads the style information from the given XML node.
   private void load_style( Xml.Node* n ) {
     _style.load_node( n );
     _text.set_font( _style.callout_font.get_family(), (_style.callout_font.get_size() / Pango.SCALE) );
   }
 
-  /* Loads the callback information from XML format */
+  //-------------------------------------------------------------
+  // Loads the callback information from XML format.
   public void load( Xml.Node* node ) {
 
     /* Make sure the style has a default value */
@@ -250,7 +270,8 @@ public class Callout : Object {
 
   }
 
-  /* Draws this callout to the screen */
+  //-------------------------------------------------------------
+  // Draws this callout to the screen.
   public void draw( Context ctx, Theme theme, bool exporting ) {
 
     if( _mode == CalloutMode.HIDDEN ) return;

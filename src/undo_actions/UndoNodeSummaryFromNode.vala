@@ -34,23 +34,23 @@ public class UndoNodeSummaryFromNode : UndoItem {
   }
 
   /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     var parent = _sn.last_node().parent;
     var index  = _sn.last_node().index() + 1;
     _sn.detach_all();
     _n.attach( parent, index, null, false );
-    da.set_current_node( _n );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_node( _n );
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     _n.detach( _n.side );
     _sn.attach_all();
-    da.set_current_node( _sn );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_node( _sn );
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

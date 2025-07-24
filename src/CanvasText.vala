@@ -28,23 +28,23 @@ using Pango;
 public class CanvasText : Object {
 
   /* Member variables */
-  private DrawArea       _da;
-  private double         _posx         = 0.0;
-  private double         _posy         = 0.0;
-  private FormattedText  _text;
-  private bool           _edit         = false;
-  private int            _cursor       = 0;   /* Location of the cursor when editing */
-  private int            _column       = 0;   /* Character column to use when moving vertically */
-  private Pango.Layout   _pango_layout = null;
-  private Pango.Layout   _line_layout  = null;
-  private int            _selstart     = 0;
-  private int            _selend       = 0;
-  private int            _selanchor    = 0;
-  private double         _max_width    = 200;
-  private double         _width        = 0;
-  private double         _height       = 0;
-  private bool           _debug        = false;
-  private int            _font_size    = 12;
+  private MindMap       _map;
+  private double        _posx         = 0.0;
+  private double        _posy         = 0.0;
+  private FormattedText _text;
+  private bool          _edit         = false;
+  private int           _cursor       = 0;   /* Location of the cursor when editing */
+  private int           _column       = 0;   /* Character column to use when moving vertically */
+  private Pango.Layout  _pango_layout = null;
+  private Pango.Layout  _line_layout  = null;
+  private int           _selstart     = 0;
+  private int           _selend       = 0;
+  private int           _selanchor    = 0;
+  private double        _max_width    = 200;
+  private double        _width        = 0;
+  private double        _height       = 0;
+  private bool          _debug        = false;
+  private int           _font_size    = 12;
 
   /* Signals */
   public signal void resized();
@@ -59,18 +59,18 @@ public class CanvasText : Object {
   }
   public double posx {
     get {
-      return( _posx + _da.origin_x );
+      return( _posx + _map.origin_x );
     }
     set {
-      _posx = value - _da.origin_x;
+      _posx = value - _map.origin_x;
     }
   }
   public double posy {
     get {
-      return( _posy + _da.origin_y );
+      return( _posy + _map.origin_y );
     } 
     set {
-      _posy = value - _da.origin_y;
+      _posy = value - _map.origin_y;
     }
   }
   public double width  {
@@ -127,13 +127,13 @@ public class CanvasText : Object {
   }
 
   /* Default constructor */
-  public CanvasText( DrawArea da ) {
+  public CanvasText( MindMap map ) {
     int int_max_width = (int)_max_width;
-    _da           = da;
-    _text         = new FormattedText( da );
+    _map          = map;
+    _text         = new FormattedText( map );
     _text.changed.connect( text_changed );
-    _line_layout  = da.create_pango_layout( "M" );
-    _pango_layout = da.create_pango_layout( null );
+    _line_layout  = map.canvas.create_pango_layout( "M" );
+    _pango_layout = map.canvas.create_pango_layout( null );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
@@ -141,13 +141,13 @@ public class CanvasText : Object {
   }
 
   /* Constructor initializing string */
-  public CanvasText.with_text( DrawArea da, string txt ) {
+  public CanvasText.with_text( MindMap map, string txt ) {
     int int_max_width = (int)_max_width;
-    _da           = da;
-    _text         = new FormattedText.with_text( da, txt );
+    _map          = map;
+    _text         = new FormattedText.with_text( map, txt );
     _text.changed.connect( text_changed );
-    _line_layout  = da.create_pango_layout( "M" );
-    _pango_layout = da.create_pango_layout( txt );
+    _line_layout  = map.canvas.create_pango_layout( "M" );
+    _pango_layout = map.canvas.create_pango_layout( txt );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
@@ -930,11 +930,11 @@ public class CanvasText : Object {
   }
 
   /* Returns a populated FormattedText instance containing the selected text range */
-  public FormattedText? get_selected_formatted_text( DrawArea da ) {
+  public FormattedText? get_selected_formatted_text( MindMap map ) {
     if( _selstart != _selend ) {
       var spos = text.text.index_of_nth_char( _selstart );
       var epos = text.text.index_of_nth_char( _selend );
-      return( new FormattedText.copy_range( da, text, spos, epos ) );
+      return( new FormattedText.copy_range( map, text, spos, epos ) );
     }
     return( null );
   }

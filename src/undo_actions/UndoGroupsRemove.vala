@@ -35,24 +35,24 @@ public class UndoGroupsRemove : UndoItem {
   }
 
   /* Undoes a connection change */
-  public override void undo( DrawArea da ) {
-    da.get_selections().clear();
+  public override void undo( MindMap map ) {
+    map.selected.clear();
     for( int i=0; i<_groups.length; i++ ) {
-      da.groups.add_group( _groups.index( i ) );
-      da.get_selections().add_group( _groups.index( i ) );
+      map.groups.add_group( _groups.index( i ) );
+      map.selected.add_group( _groups.index( i ) );
     }
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Redoes a connection change */
-  public override void redo( DrawArea da ) {
-    da.get_selections().clear();
+  public override void redo( MindMap map ) {
+    map.selected.clear();
     for( int i=0; i<_groups.length; i++ ) {
-      da.groups.remove_group( _groups.index( i ) );
+      map.groups.remove_group( _groups.index( i ) );
     }
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

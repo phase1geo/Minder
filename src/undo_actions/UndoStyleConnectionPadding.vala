@@ -25,11 +25,11 @@ public class UndoStyleConnectionPadding : UndoStyleChange {
 
   GenericArray<int> _values;
 
-  public UndoStyleConnectionPadding( StyleAffects affects, int padding, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleConnectionPadding( StyleAffects affects, int padding, MindMap map ) {
+    base( affects, map );
     _values = new GenericArray<int>();
     _values.add( padding );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

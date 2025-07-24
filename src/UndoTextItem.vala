@@ -54,9 +54,9 @@ public class UndoTextItem : UndoItem {
   }
 
   /* Performs an undo of the text item */
-  public virtual void undo_text( DrawArea da, CanvasText ct ) {}
+  public virtual void undo_text( MindMap map, CanvasText ct ) {}
 
   /* Performs a redo of the text item */
-  public virtual void redo_text( DrawArea da, CanvasText ct ) {}
+  public virtual void redo_text( MindMap map, CanvasText ct ) {}
 
 }

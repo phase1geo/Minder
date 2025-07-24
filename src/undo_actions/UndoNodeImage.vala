@@ -36,21 +36,21 @@ public class UndoNodeImage : UndoItem {
   }
 
   /* Changes the node image, adjusts the layout and updates the UI */
-  private void change( DrawArea da, NodeImage? img ) {
-    _node.set_image( da.image_manager, img );
-    da.queue_draw();
-    da.current_changed( da );
-    da.auto_save();
+  private void change( MindMap map, NodeImage? img ) {
+    _node.set_image( map.image_manager, img );
+    map.queue_draw();
+    map.current_changed( map );
+    map.auto_save();
   }
 
   /* Undoes a node image change */
-  public override void undo( DrawArea da ) {
-    change( da, _old_image );
+  public override void undo( MindMap map ) {
+    change( map, _old_image );
   }
 
   /* Redoes a node image change */
-  public override void redo( DrawArea da ) {
-    change( da, _new_image );
+  public override void redo( MindMap map ) {
+    change( map, _new_image );
   }
 
 }

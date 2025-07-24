@@ -38,7 +38,8 @@ public class UndoNodesCut : UndoItem {
   Array<Connection>      _conns;
   Array<UndoNodeGroups?> _groups;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoNodesCut( Array<Node> nodes, Array<Connection> conns, Array<UndoNodeGroups?> groups ) {
     base( _( "cut nodes" ) );
     _nodes = new Array<NodeInfo>();
@@ -49,36 +50,34 @@ public class UndoNodesCut : UndoItem {
     _groups = groups;
   }
 
-  /* Undoes a node deletion */
-  public override void undo( DrawArea da ) {
-    da.get_selections().clear();
+  //-------------------------------------------------------------
+  // Undoes a node deletion.
+  public override void undo( MindMap map ) {
+    map.selected.clear();
     for( int i=0; i<_nodes.length; i++ ) {
       var ni = _nodes.index( i );
       ni.node.attach_only( ni.parent, ni.index );
-      da.get_selections().add_node( ni.node );
+      map.selected.add_node( ni.node );
     }
-    for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().add_connection( _conns.index( i ) );
-    }
-    da.groups.apply_undos( _groups );
-    da.queue_draw();
-    da.auto_save();
+    map.connections.add_connections( _conns );
+    map.groups.apply_undos( _groups );
+    map.queue_draw();
+    map.auto_save();
   }
 
-  /* Redoes a node deletion */
-  public override void redo( DrawArea da ) {
-    MinderClipboard.copy_nodes( da );
-    da.get_selections().clear();
+  //-------------------------------------------------------------
+  // Redoes a node deletion.
+  public override void redo( MindMap map ) {
+    MinderClipboard.copy_nodes( map );
+    map.selected.clear();
     for( int i=0; i<_nodes.length; i++ ) {
       UndoNodeGroups? tmp_group = null;
       _nodes.index( i ).node.delete_only();
-      da.groups.remove_node( _nodes.index( i ).node, ref tmp_group );
+      map.groups.remove_node( _nodes.index( i ).node, ref tmp_group );
     }
-    for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().remove_connection( _conns.index( i ), false );
-    }
-    da.queue_draw();
-    da.auto_save();
+    map.connections.remove_connections( _conns, false );
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

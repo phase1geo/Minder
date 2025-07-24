@@ -38,17 +38,17 @@ public class UndoTextTagAdd : UndoTextItem {
   }
 
   /* Causes the stored item to be put into the before state */
-  public override void undo_text( DrawArea da, CanvasText ct ) {
+  public override void undo_text( MindMap map, CanvasText ct ) {
     ct.text.remove_tag( tag, start, end );
     ct.set_cursor_only( start_cursor );
-    da.queue_draw();
+    map.queue_draw();
   }
 
   /* Causes the stored item to be put into the after state */
-  public override void redo_text( DrawArea da, CanvasText ct ) {
+  public override void redo_text( MindMap map, CanvasText ct ) {
     ct.text.add_tag( tag, start, end, parsed, extra );
     ct.set_cursor_only( end_cursor );
-    da.queue_draw();
+    map.queue_draw();
   }
 
   /* Merges the given item with the current one */

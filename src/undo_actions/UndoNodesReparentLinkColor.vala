@@ -42,24 +42,24 @@ public class UndoNodesReparentLinkColor : UndoItem {
   }
 
   /* Undoes a node link color change */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).link_color_root = _old_values.index( i );
       if( _old_values.index( i ) ) {
         _nodes.index( i ).link_color = _old_colors.index( i );
       }
     }
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Redoes a node link color change */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).link_color_root = false;
     }
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

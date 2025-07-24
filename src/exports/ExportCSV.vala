@@ -27,14 +27,14 @@ public class ExportCSV : Export {
   }
 
   /* Exports the given drawing area to the file of the given name */
-  public override bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, MindMap map ) {
     var  file   = File.new_for_path( fname );
     bool retval = true;
     try {
       var os     = file.replace( null, false, FileCreateFlags.NONE );
-      int levels = levels( da );
+      int levels = levels( map );
       export_levels( os, levels );
-      export_top_nodes( os, da, levels );
+      export_top_nodes( os, map, levels );
     } catch( Error e ) {
       retval = false;
     }
@@ -54,8 +54,8 @@ public class ExportCSV : Export {
     }
   }
 
-  private int levels( DrawArea da ) {
-    var nodes      = da.get_nodes();
+  private int levels( MindMap map ) {
+    var nodes      = map.get_nodes();
     int max_levels = 0;
     for( int i=0; i<nodes.length; i++ ) {
       int levels = child_levels( nodes.index( i ) );
@@ -94,11 +94,11 @@ public class ExportCSV : Export {
   }
 
   /* Draws each of the top-level nodes */
-  private void export_top_nodes( FileOutputStream os, DrawArea da, int levels ) {
+  private void export_top_nodes( FileOutputStream os, MindMap map, int levels ) {
 
     try {
 
-      var nodes = da.get_nodes();
+      var nodes = map.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
         string title = stringify( nodes.index( i ).name.text.text ) + "," + stringify( nodes.index( i ).note );
         for( int j=0; j<(levels - 1); j++ ) {

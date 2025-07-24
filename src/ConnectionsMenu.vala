@@ -23,17 +23,18 @@ using Gtk;
 
 public class ConnectionsMenu {
 
-  private DrawArea    _da;
+  private MindMap     _map;
   private PopoverMenu _popover;
 
   private const GLib.ActionEntry action_entries[] = {
     { "action_delete", action_delete },
   };
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public ConnectionsMenu( Gtk.Application app, DrawArea da ) {
 
-    _da = da;
+    _map = da.map;
 
     var del_menu = new GLib.Menu();
     del_menu.append( _( "Delete" ), "conns.action_delete" );
@@ -42,12 +43,12 @@ public class ConnectionsMenu {
     menu.append_section( null, del_menu );
 
     _popover = new PopoverMenu.from_model( menu );
-    _popover.set_parent( _da );
+    _popover.set_parent( da );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();
     actions.add_action_entries( action_entries, this );
-    _da.insert_action_group( "conns", actions );
+    da.insert_action_group( "conns", actions );
 
     // Add keyboard shortcuts
     app.set_accels_for_action( "conns.action_delete", { "Delete" } );
@@ -65,9 +66,10 @@ public class ConnectionsMenu {
 
   }
 
-  /* Deletes the current node */
+  //-------------------------------------------------------------
+  // Deletes the current node.
   private void action_delete() {
-    _da.delete_connections();
+    _map.model.delete_connections();
   }
 
 }

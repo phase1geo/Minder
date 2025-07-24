@@ -34,12 +34,10 @@ public struct UndoNodeGroups {
 
 public class NodeGroups {
 
-  private DrawArea         _da;
   private Array<NodeGroup> _groups;
 
   /* Default constructor */
-  public NodeGroups( DrawArea da ) {
-    _da     = da;
+  public NodeGroups() {
     _groups = new Array<NodeGroup>();
   }
 
@@ -170,11 +168,12 @@ public class NodeGroups {
     }
   }
 
-  /* Loads the given group information */
-  public void load( DrawArea da, Xml.Node* g, Array<NodeGroup>? groups, Array<Node> nodes ) {
+  //-------------------------------------------------------------
+  // Loads the given group information.
+  public void load( MindMap map, Xml.Node* g, Array<NodeGroup>? groups, Array<Node> nodes ) {
     for( Xml.Node* it = g->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "group") ) {
-        var group = new NodeGroup.from_xml( da, it, nodes );
+        var group = new NodeGroup.from_xml( map, it, nodes );
         if( groups != null ) {
           groups.append_val( group );
         }
@@ -183,7 +182,8 @@ public class NodeGroups {
     }
   }
 
-  /* Draws a group around the stored set of nodes from this structure */
+  //-------------------------------------------------------------
+  // Draws a group around the stored set of nodes from this structure.
   public void draw_all( Context ctx, Theme theme, bool exporting ) {
     for( int i=0; i<_groups.length; i++ ) {
       _groups.index( i ).draw( ctx, theme, exporting );

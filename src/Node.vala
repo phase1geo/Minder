@@ -82,37 +82,37 @@ public enum NodeSide {
 
 public class NodeBounds {
 
-  private DrawArea _da;
-  private double   _x = 0.0;
-  private double   _y = 0.0;
+  private MindMap _map;
+  private double  _x = 0.0;
+  private double  _y = 0.0;
 
   public double x {
     get {
-      return( _x + _da.origin_x );
+      return( _x + _map.origin_x );
     }
     set {
-      _x = (value - _da.origin_x);
+      _x = (value - _map.origin_x);
     }
   }
   public double y {
     get {
-      return( _y + _da.origin_y );
+      return( _y + _map.origin_y );
     }
     set {
-      _y = (value - _da.origin_y);
+      _y = (value - _map.origin_y);
     }
   }
   public double width  { set; get; default = 0.0; }
   public double height { set; get; default = 0.0; }
 
   /* Default constructor */
-  public NodeBounds( DrawArea da ) {
-    _da = da;
+  public NodeBounds( MindMap map ) {
+    _map = map;
   }
 
   /* Constructor with bounds information */
-  public NodeBounds.with_bounds( DrawArea da, double x, double y, double w, double h ) {
-    _da         = da;
+  public NodeBounds.with_bounds( MindMap map, double x, double y, double w, double h ) {
+    _map        = map;
     this.x      = x;
     this.y      = y;
     this.width  = w;
@@ -126,7 +126,7 @@ public class NodeBounds {
 
   /* Copies the given node bounds to this instance */
   public void copy_from( NodeBounds nb ) {
-    _da         = nb._da;
+    _map        = nb._map;
     this.x      = nb.x;
     this.y      = nb.y;
     this.width  = nb.width;
@@ -153,7 +153,7 @@ public class NodeBounds {
 
   /* Returns a string version of this instance */
   public string to_string() {
-    return( "da: %s, x: %g, y: %g, w: %g, h: %g".printf( (_da != null).to_string(), x, y, width, height ) );
+    return( "map: %s, x: %g, y: %g, w: %g, h: %g".printf( (_map != null).to_string(), x, y, width, height ) );
   }
 
 }
@@ -194,7 +194,7 @@ public struct NodeTaskInfo {
 public class Node : Object {
 
   /* Member variables */
-  private   DrawArea     _da;
+  private   MindMap      _map;
   protected int          _id;
   private   CanvasText   _name;
   private   string       _note         = "";
@@ -233,9 +233,9 @@ public class Node : Object {
   public signal void resized( double diffw, double diffh );
 
   /* Properties */
-  public DrawArea da {
+  public MindMap map {
     get {
-      return( _da );
+      return( _map );
     }
   }
   public CanvasText name {
@@ -248,11 +248,11 @@ public class Node : Object {
   }
   public double posx {
     get {
-      return( _posx + _da.origin_x );
+      return( _posx + _map.origin_x );
     }
     set {
       double diff = (value - posx);
-      _posx = value - _da.origin_x;
+      _posx = value - _map.origin_x;
       update_tree_bbox( diff, 0 );
       position_text();
       if( diff != 0 ) {
@@ -262,11 +262,11 @@ public class Node : Object {
   }
   public double posy {
     get {
-      return( _posy + _da.origin_y );
+      return( _posy + _map.origin_y );
     }
     set {
       double diff = (value - posy);
-      _posy = value - _da.origin_y;
+      _posy = value - _map.origin_y;
       update_tree_bbox( 0, diff );
       position_text();
       if( diff != 0 ) {
@@ -292,7 +292,7 @@ public class Node : Object {
     set {
       if( _mode != value ) {
         if( _mode == NodeMode.EDITABLE ) {
-          if( _da.settings.get_boolean( "auto-parse-embedded-urls" ) ) {
+          if( _map.settings.get_boolean( "auto-parse-embedded-urls" ) ) {
             // TBD - _urls.parse_embedded_urls( name );
           }
         }
@@ -473,7 +473,7 @@ public class Node : Object {
     set {
       _linked_node = value;
       if( _linked_node != null ) {
-        _linked_node.normalize( _da );
+        _linked_node.normalize( _map );
       }
       update_size();
     }
@@ -544,49 +544,49 @@ public class Node : Object {
   }
 
   /* Default constructor */
-  public Node( DrawArea da, Layout? layout ) {
-    _da        = da;
-    _id        = da.next_node_id;
+  public Node( MindMap map, Layout? layout ) {
+    _map       = map;
+    _id        = map.next_node_id;
     _children  = new Array<Node>();
-    _tree_bbox = new NodeBounds( da );
+    _tree_bbox = new NodeBounds( map );
     _layout    = layout;
-    _name      = new CanvasText( da );
+    _name      = new CanvasText( map );
     _name.resized.connect( position_text_and_update_size );
     set_parsers();
   }
 
   /* Constructor initializing string */
-  public Node.with_name( DrawArea da, string n, Layout? layout ) {
-    _da        = da;
-    _id        = da.next_node_id;
+  public Node.with_name( MindMap map, string n, Layout? layout ) {
+    _map       = map;
+    _id        = map.next_node_id;
     _children  = new Array<Node>();
-    _tree_bbox = new NodeBounds( da );
+    _tree_bbox = new NodeBounds( map );
     _layout    = layout;
-    _name      = new CanvasText.with_text( da, n );
+    _name      = new CanvasText.with_text( map, n );
     _name.resized.connect( position_text_and_update_size );
     set_parsers();
   }
 
   /* Constructor from an XML node */
-  public Node.from_xml( DrawArea da, Layout? layout, Xml.Node* n, bool isroot, Node? sibling_parent, ref Array<Node> siblings ) {
-    _da        = da;
+  public Node.from_xml( MindMap map, Layout? layout, Xml.Node* n, bool isroot, Node? sibling_parent, ref Array<Node> siblings ) {
+    _map       = map;
     _children  = new Array<Node>();
-    _tree_bbox = new NodeBounds( da );
+    _tree_bbox = new NodeBounds( map );
     _layout    = layout;
-    _name      = new CanvasText.with_text( da, "" );
+    _name      = new CanvasText.with_text( map, "" );
     _name.resized.connect( position_text_and_update_size );
     set_parsers();
     siblings.append_val( this );
-    load( da, n, isroot, sibling_parent, ref siblings );
+    load( map, n, isroot, sibling_parent, ref siblings );
   }
 
   /* Copies an existing node to this node */
-  public Node.copy( DrawArea da, Node n, ImageManager im ) {
-    _da        = da;
-    _id        = da.next_node_id;
+  public Node.copy( MindMap map, Node n, ImageManager im ) {
+    _map       = map;
+    _id        = map.next_node_id;
     _children  = n._children;
-    _tree_bbox = new NodeBounds( da );
-    _name      = new CanvasText( da );
+    _tree_bbox = new NodeBounds( map );
+    _name      = new CanvasText( map );
     copy_variables( n, im );
     _name.resized.connect( position_text_and_update_size );
     set_parsers();
@@ -596,29 +596,29 @@ public class Node : Object {
     }
   }
 
-  public Node.copy_only( DrawArea da, Node n, ImageManager im ) {
-    _da        = da;
-    _id        = da.next_node_id;
+  public Node.copy_only( MindMap map, Node n, ImageManager im ) {
+    _map       = map;
+    _id        = map.next_node_id;
     _children  = new Array<Node>();
-    _tree_bbox = new NodeBounds( da );
-    _name      = new CanvasText( da );
+    _tree_bbox = new NodeBounds( map );
+    _name      = new CanvasText( map );
     copy_variables( n, im );
   }
 
   /* Copies an existing node tree to this node */
-  public Node.copy_tree( DrawArea da, Node n, ImageManager im ) {
-    _da        = da;
+  public Node.copy_tree( MindMap map, Node n, ImageManager im ) {
+    _map       = map;
     _id        = n.id();
     _children  = new Array<Node>();
-    _tree_bbox = new NodeBounds( da );
-    _name      = new CanvasText( da );
+    _tree_bbox = new NodeBounds( map );
+    _name      = new CanvasText( map );
     copy_variables( n, im );
     _name.resized.connect( position_text_and_update_size );
     set_parsers();
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
     for( int i=0; i<n._children.length; i++ ) {
-      Node child = new Node.copy_tree( da, n._children.index( i ), im );
+      Node child = new Node.copy_tree( map, n._children.index( i ), im );
       child.parent = this;
       _children.append_val( child );
     }
@@ -626,10 +626,10 @@ public class Node : Object {
 
   /* Adds the valid parsers */
   public void set_parsers() {
-    _name.text.add_parser( _da.markdown_parser );
-    // _name.text.add_parser( _da.tagger_parser );
-    _name.text.add_parser( _da.url_parser );
-    _name.text.add_parser( _da.unicode_parser );
+    _name.text.add_parser( _map.markdown_parser );
+    // _name.text.add_parser( _map.tagger_parser );
+    _name.text.add_parser( _map.url_parser );
+    _name.text.add_parser( _map.unicode_parser );
   }
 
   /* Copies just the variables of the node, minus the children nodes */
@@ -666,9 +666,9 @@ public class Node : Object {
     return( _id );
   }
 
-  /* Reassign this node's and all child node's ID from the DrawArea */
+  /* Reassign this node's and all child node's ID from the mindmap */
   public void reassign_ids() {
-    _id = _da.next_node_id;
+    _id = _map.next_node_id;
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).reassign_ids();
     }
@@ -729,7 +729,7 @@ public class Node : Object {
   public void update_sequence_num() {
     if( parent.sequence ) {
       if( _sequence_num == null ) {
-        _sequence_num = new SequenceNum( _da );
+        _sequence_num = new SequenceNum( _map );
         _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
       }
       var seq_type = SequenceNumType.NUM;
@@ -1214,6 +1214,13 @@ public class Node : Object {
     return( false );
   }
 
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates are within the node title
+  // text.
+  public virtual bool is_within_title( double x, double y ) {
+    return( (_name != null) && (_name.is_within( x, y ) ) );
+  }
+
   /* Finds the node which contains the given pixel coordinates */
   public virtual Node? contains( double x, double y, Node? n ) {
     if( (this != n) && (is_within_node( x, y ) || is_within_fold_area( x, y )) ) {
@@ -1400,11 +1407,11 @@ public class Node : Object {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           case "node" :
-            var node = new Node.from_xml( _da, _layout, it, false, this, ref nodes );
+            var node = new Node.from_xml( _map, _layout, it, false, this, ref nodes );
             node.attach( this, -1, null );
             break;
           case "summary-node" :
-            var node = new SummaryNode.from_xml( _da, _layout, it, ref nodes );
+            var node = new SummaryNode.from_xml( _map, _layout, it, ref nodes );
             node.attach_nodes( sibling_parent, siblings, false, null );
             siblings.remove_range( 0, siblings.length );
             break;
@@ -1454,14 +1461,14 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, Node? sibling_parent, ref Array<Node> siblings ) {
+  public virtual void load( MindMap map, Xml.Node* n, bool isroot, Node? sibling_parent, ref Array<Node> siblings ) {
 
     _loaded = false;
 
     string? i = n->get_prop( "id" );
     if( i != null ) {
       _id = int.parse( i );
-      da.next_node_id = _id;
+      map.next_node_id = _id;
     }
 
     string? x = n->get_prop( "posx" );
@@ -1540,7 +1547,7 @@ public class Node : Object {
     if( (x == null) && (y == null) ) {
       string? l = n->get_prop( "layout" );
       if( l != null ) {
-        layout = da.layouts.get_layout( l );
+        layout = map.layouts.get_layout( l );
       }
       _loaded = true;
     }
@@ -1553,7 +1560,7 @@ public class Node : Object {
         switch( it->name ) {
           case "nodename"   :  load_name( it );  break;
           case "nodenote"   :  load_note( it );  break;
-          case "nodeimage"  :  load_image( da.image_manager, it );  break;
+          case "nodeimage"  :  load_image( map.image_manager, it );  break;
           case "nodelink"   :  load_node_link( it );  break;
           case "style"      :  load_style( it );  break;
           case "callout"    :  load_callout( it );  break;
@@ -1577,7 +1584,7 @@ public class Node : Object {
     if( (x != null) || (y != null) ) {
       string? l = n->get_prop( "layout" );
       if( l != null ) {
-        layout = da.layouts.get_layout( l );
+        layout = map.layouts.get_layout( l );
       }
     }
 
@@ -1586,7 +1593,7 @@ public class Node : Object {
       for( int j=0; j<_children.length; j++ ) {
         var child = _children.index( j );
         if( !child._link_color_set ) {
-          child.link_color_child = da.get_theme().next_color();
+          child.link_color_child = map.get_theme().next_color();
         }
       }
     }
@@ -1666,87 +1673,6 @@ public class Node : Object {
 
     return( node );
 
-  }
-
-  /* Main method for importing an OPML <outline> into a node */
-  public void import_opml( DrawArea da, Xml.Node* parent, int node_id, ref Array<int>? expand_state, Theme theme ) {
-
-    /* Get the node name */
-    string? n = parent->get_prop( "text" );
-    if( n != null ) {
-      name.text.insert_text( 0, n );
-    }
-
-    /* Get the task information */
-    string? t = parent->get_prop( "checked" );
-    if( t != null ) {
-      _task_count = 1;
-      _task_done  = bool.parse( t ) ? 1 : 0;
-      propagate_task_info_up( _task_count, _task_done );
-    }
-
-    /* Get the note information */
-    string? o = parent->get_prop( "note" );
-    if( o != null ) {
-      note = o;
-    }
-
-    /* Load the style */
-    style.copy( StyleInspector.styles.get_global_style() );
-
-    /* Figure out if this node is folded */
-    if( expand_state != null ) {
-      folded = true;
-      for( int i=0; i<expand_state.length; i++ ) {
-        if( expand_state.index( i ) == node_id ) {
-          folded = false;
-          expand_state.remove_index( i );
-          break;
-        }
-      }
-    }
-
-    node_id++;
-
-    /* Parse the child nodes */
-    for( Xml.Node* it2 = parent->children; it2 != null; it2 = it2->next ) {
-      if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "outline") ) {
-        var child = new Node( da, layout );
-        child.import_opml( da, it2, node_id, ref expand_state, theme );
-        child.attach( this, -1, theme );
-      }
-    }
-
-    /* Calculate the tree size */
-    tree_bbox = layout.bbox( this, -1, "import_opml" );
-    tree_size = side.horizontal() ? tree_bbox.height : tree_bbox.width;
-
-  }
-
-  /* Main method to export a node tree as OPML */
-  public void export_opml( Xml.Node* parent, ref int node_id, ref Array<int> expand_state ) {
-    parent->add_child( export_opml_node( ref node_id, ref expand_state ) );
-  }
-
-  /* Traverses the node tree exporting XML nodes in OPML format */
-  private Xml.Node* export_opml_node( ref int node_id, ref Array<int> expand_state ) {
-    Xml.Node* node = new Xml.Node( null, "outline" );
-    node->new_prop( "text", name.text.text );
-    if( is_task() ) {
-      bool checked = _task_done > 0;
-      node->new_prop( "checked", checked.to_string() );
-    }
-    if( note != "" ) {
-      node->new_prop( "note", note );
-    }
-    if( (_children.length > 1) && !folded ) {
-      expand_state.append_val( node_id );
-    }
-    node_id++;
-    for( int i=0; i<_children.length; i++ ) {
-      node->add_child( _children.index( i ).export_opml_node( ref node_id, ref expand_state ) );
-    }
-    return( node );
   }
 
   /* Sets the resizable property on the node image, if it exists. */
@@ -2026,7 +1952,7 @@ public class Node : Object {
       var our_summary   = summary_node();
 
       if( (other_index + 1) == our_index ) {
-        da.animator.add_nodes( da.get_nodes(), "swap_with_sibling" );
+        map.canvas.animator.add_nodes( map.get_nodes(), "swap_with_sibling" );
         detach( side );
         if( our_summary != null ) {
           our_summary.remove_node( this );
@@ -2037,13 +1963,13 @@ public class Node : Object {
           other_summary.add_node( this );
         }
         our_parent.last_selected_child = this;
-        da.undo_buffer.add_item( new UndoNodeMove( this, side, our_index, our_summary ) );
-        da.animator.animate();
+        map.undo_buffer.add_item( new UndoNodeMove( this, side, our_index, our_summary ) );
+        map.canvas.animator.animate();
         return( true );
 
       } else if( (our_index + 1) == other_index ) {
         var other_side = other.side;
-        da.animator.add_nodes( da.get_nodes(), "swap_with_sibling" );
+        map.canvas.animator.add_nodes( map.get_nodes(), "swap_with_sibling" );
         other.detach( other_side );
         if( other_summary != null ) {
           other_summary.remove_node( other );
@@ -2053,8 +1979,8 @@ public class Node : Object {
         if( our_summary != null ) {
           our_summary.add_node( other );
         }
-        da.undo_buffer.add_item( new UndoNodeMove( other, other_side, other_index, other_summary ) );
-        da.animator.animate();
+        map.undo_buffer.add_item( new UndoNodeMove( other, other_side, other_index, other_summary ) );
+        map.canvas.animator.animate();
         return( true );
       }
 
@@ -2077,14 +2003,14 @@ public class Node : Object {
       var parent_idx  = parent.index();
 
       if( add_undo ) {
-        da.undo_buffer.add_item( new UndoNodeUnclify( this ) );
+        map.undo_buffer.add_item( new UndoNodeUnclify( this ) );
       }
 
-      da.animator.add_nodes( da.get_nodes(), "make_sibling_of_grandparent" );
+      map.canvas.animator.add_nodes( map.get_nodes(), "make_sibling_of_grandparent" );
       detach( side );
       attach( grandparent, parent_idx, null );
 
-      da.animator.animate();
+      map.canvas.animator.animate();
 
       return( true );
 
@@ -2105,16 +2031,16 @@ public class Node : Object {
       var idx          = index();
       var num_children = (int)_children.length;
 
-      da.animator.add_nodes( da.get_nodes(), "make_children_siblings" );
+      map.canvas.animator.add_nodes( map.get_nodes(), "make_children_siblings" );
       for( int i=(num_children - 1); i>=0; i-- ) {
         var child = _children.index( i );
         child.detach( child.side );
         child.attach( parent, idx, null );
       }
       if( add_undo ) {
-        da.undo_buffer.add_item( new UndoNodeReparent( this, idx, idx + num_children ) );
+        map.undo_buffer.add_item( new UndoNodeReparent( this, idx, idx + num_children ) );
       }
-      da.animator.animate();
+      map.canvas.animator.animate();
 
       return( true );
 
@@ -2209,9 +2135,9 @@ public class Node : Object {
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).parent   = null;
         _children.index( i ).attached = false;
-        _da.get_nodes().append_val( _children.index( i ) );
+        _map.get_nodes().append_val( _children.index( i ) );
       }
-      _da.remove_root_node( this );
+      _map.model.remove_root_node( this );
     } else {
       int idx = index();
       propagate_task_info_up( (0 - _task_count), (0 - _task_done) );
@@ -2239,7 +2165,7 @@ public class Node : Object {
     for( int i=0; i<children().length; i++ ) {
       var child = children().index( i );
       if( child.is_root() ) {
-        _da.remove_root_node( child );
+        _map.model.remove_root_node( child );
       } else {
         child.detach( child.side );
       }

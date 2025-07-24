@@ -29,9 +29,9 @@ public class UndoTextBuffer : UndoBuffer {
   public bool        do_undo   { set; get; default = true; }
 
   /* Default constructor */
-  public UndoTextBuffer( DrawArea da ) {
-    base( da );
-    orig = new CanvasText( da );
+  public UndoTextBuffer( MindMap map ) {
+    base( map );
+    orig = new CanvasText( map );
   }
 
   /*
@@ -106,7 +106,7 @@ public class UndoTextBuffer : UndoBuffer {
   public override void undo() {
     if( undoable() ) {
       UndoItem item = _undo_buffer.index( _undo_buffer.length - 1 );
-      (item as UndoTextItem).undo_text( _da, ct );
+      (item as UndoTextItem).undo_text( _map, ct );
       _undo_buffer.remove_index( _undo_buffer.length - 1 );
       _redo_buffer.append_val( item );
       mergeable = false;
@@ -118,7 +118,7 @@ public class UndoTextBuffer : UndoBuffer {
   public override void redo() {
     if( redoable() ) {
       UndoItem item = _redo_buffer.index( _redo_buffer.length - 1 );
-      (item as UndoTextItem).redo_text( _da, ct );
+      (item as UndoTextItem).redo_text( _map, ct );
       _redo_buffer.remove_index( _redo_buffer.length - 1 );
       _undo_buffer.append_val( item );
       mergeable = false;

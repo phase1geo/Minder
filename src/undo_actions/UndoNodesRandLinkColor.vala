@@ -41,22 +41,22 @@ public class UndoNodesRandLinkColor : UndoItem {
     }
   }
 
-  private void change( DrawArea da, Array<RGBA?> colors ) {
+  private void change( MindMap map, Array<RGBA?> colors ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).link_color = colors.index( i );
     }
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Undoes a node link color change */
-  public override void undo( DrawArea da ) {
-    change( da, _old_colors );
+  public override void undo( MindMap map ) {
+    change( map, _old_colors );
   }
 
   /* Redoes a node link color change */
-  public override void redo( DrawArea da ) {
-    change( da, _new_colors );
+  public override void redo( MindMap map ) {
+    change( map, _new_colors );
   }
 
 }

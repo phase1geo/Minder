@@ -30,39 +30,38 @@ public class ExportPlantUML : Export {
   }
 
   /* Exports the given drawing area to the file of the given name */
-  public override bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, MindMap map ) {
     var  file   = File.new_for_path( fname );
     bool retval = true;
     try {
       var os = file.replace( null, false, FileCreateFlags.NONE );
-      export_top_nodes( os, da );
+      export_top_nodes( os, map );
     } catch( Error e ) {
       retval = false;
     }
     return( retval );
   }
 
-  private void export_header( FileOutputStream os, DrawArea da ) {
+  private void export_header( FileOutputStream os, MindMap map ) {
     var start = "@startmindmap\n";
     os.write( start.data );
   }
 
-  private void export_footer( FileOutputStream os, DrawArea da ) {
+  private void export_footer( FileOutputStream os, MindMap map ) {
     var start = "@endmindmap\n\n";
     os.write( start.data );
-
   }
 
   /* Draws each of the top-level nodes */
-  private void export_top_nodes( FileOutputStream os, DrawArea da ) {
+  private void export_top_nodes( FileOutputStream os, MindMap map ) {
 
     try {
 
-      var nodes = da.get_nodes();
+      var nodes = map.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
-        export_header( os, da );
+        export_header( os, map );
         export_node( os, nodes.index( i ), 1 );
-        export_footer( os, da );
+        export_footer( os, map );
       }
 
     } catch( Error e ) {
@@ -117,7 +116,7 @@ public class ExportPlantUML : Export {
   //----------------------------------------------------------------------------
 
   /* Imports a PlantUML document */
-  public override bool import( string fname, DrawArea da ) {
+  public override bool import( string fname, MindMap map ) {
 
     try {
 
@@ -130,10 +129,10 @@ public class ExportPlantUML : Export {
       var str = dis.read_upto( "\0", 1, out len ) + "\0";
 
       /* Import the text */
-      import_doc( str, da );
+      import_doc( str, map );
 
-      da.queue_draw();
-      da.auto_save();
+      map.queue_draw();
+      map.auto_save();
 
     } catch( IOError err ) {
       return( false );
@@ -144,7 +143,7 @@ public class ExportPlantUML : Export {
     return( true );
   }
 
-  private void import_doc( string str, DrawArea da ) {
+  private void import_doc( string str, MindMap map ) {
 
     var lines = str.split( "\n" );
     var parse = false;
@@ -173,7 +172,7 @@ public class ExportPlantUML : Export {
         } else if( line.chomp() == "left side" ) {
           side = NodeSide.LEFT;
         } else if( node_re.match( line, 0, out matches ) ) {
-          import_node( da, matches, side, ref last_node );
+          import_node( map, matches, side, ref last_node );
         }
       }
     }
@@ -181,7 +180,7 @@ public class ExportPlantUML : Export {
   }
 
   /* Imports the given node information and adds the new node to the mind map */
-  private void import_node( DrawArea da, MatchInfo matches, NodeSide side, ref Node? last_node ) {
+  private void import_node( MindMap map, MatchInfo matches, NodeSide side, ref Node? last_node ) {
 
     var li    = matches.fetch( 1 );
     var color = matches.fetch( 2 );
@@ -205,25 +204,25 @@ public class ExportPlantUML : Export {
     /* Create node with the leftover text */
     switch( depth ) {
       case 1 :
-        last_node = da.create_root_node( text );
+        last_node = map.model.create_root_node( text );
         break;
       case 2 :
         if( last_node != null ) {
-          last_node = da.create_main_node( last_node.get_root(), side, text );
+          last_node = map.model.create_main_node( last_node.get_root(), side, text );
         }
         break;
       default :
         if( last_node != null ) {
           var last_depth = last_node.get_level() + 1;
           if( (last_depth + 1) == depth ) {
-            last_node = da.create_child_node( last_node, text );
+            last_node = map.model.create_child_node( last_node, text );
           } else if( last_depth == depth ) {
-            last_node = da.create_sibling_node( last_node, true, text );
+            last_node = map.model.create_sibling_node( last_node, true, text );
           } else if( last_depth > depth ) {
             for( int i=0; i<(last_depth - depth); i++ ) {
               last_node = last_node.parent;
             }
-            last_node = da.create_sibling_node( last_node, true, text );
+            last_node = map.model.create_sibling_node( last_node, true, text );
           }
         }
         break;

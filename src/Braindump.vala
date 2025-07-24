@@ -163,7 +163,7 @@ public class Braindump : Box {
     });
 
     drag.drag_end.connect((d, del) => {
-      if( _win.get_current_da().attach_node == null ) {
+      if( _win.get_current_map().model.attach_node == null ) {
         _ideas.insert( label, _current_index );
       } else {
         ideas_changed( BraindumpChangeType.REMOVE, _current_index.to_string() );
@@ -179,7 +179,7 @@ public class Braindump : Box {
     
     Pango.Rectangle log, ink;
 
-    var theme = _win.get_current_da().get_theme();
+    var theme = _win.get_current_map().model.get_theme();
 
     var layout = label.create_pango_layout( text );
     layout.set_wrap( Pango.WrapMode.WORD_CHAR );

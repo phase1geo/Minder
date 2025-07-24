@@ -498,7 +498,7 @@ public class FormattedText {
   }
 
   private class CodeInfo : TagAttr {
-    public CodeInfo( DrawArea da ) {
+    public CodeInfo() {
       attrs.append_val( attr_family_new( "Monospace" ) );
     }
     public override TextTag text_tag( string? extra ) {
@@ -718,19 +718,19 @@ public class FormattedText {
   }
 
   /* Default copy constructor */
-  public FormattedText( DrawArea da ) {
-    initialize( da );
+  public FormattedText( MindMap map ) {
+    initialize( map );
   }
 
   /* Copy contructor with a string */
-  public FormattedText.with_text( DrawArea da, string txt ) {
-    initialize( da );
+  public FormattedText.with_text( MindMap map, string txt ) {
+    initialize( map );
     _text = txt;
   }
 
   /* Copies the selected portion of the given FormattedText instance to this instance */
-  public FormattedText.copy_range( DrawArea da, FormattedText text, int start, int end ) {
-    initialize( da );
+  public FormattedText.copy_range( MindMap map, FormattedText text, int start, int end ) {
+    initialize( map );
     _text = text.text.slice( start, end );
     var tags = text.get_tags_in_range( start, end );
     for( int i=0; i<tags.length; i++ ) {
@@ -740,8 +740,8 @@ public class FormattedText {
   }
 
   /* Creates a copy of the given text and removes all of the syntax characters */
-  public FormattedText.copy_clean( DrawArea da, FormattedText other ) {
-    initialize( da );
+  public FormattedText.copy_clean( MindMap map, FormattedText other ) {
+    initialize( map );
     _text = other._text;
     for( int i=0; i<FormatTag.LENGTH-3; i++ ) {
       _formats[i].copy( other._formats[i] );
@@ -754,15 +754,15 @@ public class FormattedText {
   }
 
   /* Initializes this instance */
-  private void initialize( DrawArea da ) {
+  private void initialize( MindMap map ) {
     if( _attr_tags == null ) {
-      var theme = da.get_theme();
+      var theme = map.model.get_theme();
       _attr_tags = new TagAttr[FormatTag.LENGTH];
       _attr_tags[FormatTag.BOLD]       = new BoldInfo();
       _attr_tags[FormatTag.ITALICS]    = new ItalicsInfo();
       _attr_tags[FormatTag.UNDERLINE]  = new UnderlineInfo();
       _attr_tags[FormatTag.STRIKETHRU] = new StrikeThruInfo();
-      _attr_tags[FormatTag.CODE]       = new CodeInfo( da );
+      _attr_tags[FormatTag.CODE]       = new CodeInfo();
       _attr_tags[FormatTag.SUB]        = new SubInfo();
       _attr_tags[FormatTag.SUPER]      = new SuperInfo();
       _attr_tags[FormatTag.HEADER]     = new HeaderInfo();

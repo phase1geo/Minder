@@ -29,11 +29,11 @@ public class ExportSVG : Export {
   }
 
   /* Default constructor */
-  public override bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, MindMap map ) {
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
-    da.document_rectangle( out x, out y, out w, out h );
+    map.model.document_rectangle( out x, out y, out w, out h );
 
     /* Create the drawing surface */
     var surface = new SvgSurface( fname, ((int)w + 20), ((int)h + 20) );
@@ -45,7 +45,7 @@ public class ExportSVG : Export {
     context.translate( (10 - x), (10 - y) );
 
     /* Recreate the image */
-    da.draw_all( context, true );
+    map.model.draw_all( context, true, false );
 
     /* Draw the page to the PDF file */
     context.show_page();

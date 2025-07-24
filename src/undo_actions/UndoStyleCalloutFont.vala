@@ -27,14 +27,14 @@ public class UndoStyleCalloutFont : UndoStyleChange {
   GenericArray<FontDescription> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleCalloutFont( StyleAffects affects, string family, int size, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleCalloutFont( StyleAffects affects, string family, int size, MindMap map ) {
+    base( affects, map );
     var callout_font = new FontDescription();
     callout_font.set_family( family );
     callout_font.set_size( size );
     _values = new GenericArray<FontDescription>();
     _values.add( callout_font );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

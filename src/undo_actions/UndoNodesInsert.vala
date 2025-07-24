@@ -33,13 +33,13 @@ public class UndoNodesInsert : UndoItem {
   private Array<InsertedNode?> _nodes;
 
   /* Default constructor */
-  public UndoNodesInsert( DrawArea da, Array<Node> nodes ) {
+  public UndoNodesInsert( MindMap map, Array<Node> nodes ) {
     base( _( "insert nodes" ) );
     _nodes = new Array<InsertedNode?>();
     for( int i=0; i<nodes.length; i++ ) {
       var node = nodes.index( i );
       if( node.parent == null ) {
-        _nodes.append_val( { null, node, da.root_index( node ), false } );
+        _nodes.append_val( { null, node, map.model.root_index( node ), false } );
       } else {
         _nodes.append_val( { node.parent, node, node.index(), node.parent.folded } );
       }
@@ -47,11 +47,11 @@ public class UndoNodesInsert : UndoItem {
   }
 
   /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
       if( node.parent == null ) {
-        da.remove_root( node.index );
+        map.model.remove_root( node.index );
       } else {
         if( node.parent_folded ) {
           node.parent.folded = true;
@@ -59,25 +59,25 @@ public class UndoNodesInsert : UndoItem {
         node.n.detach( node.n.side );
       }
     }
-    da.set_current_node( null );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_node( null );
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
       if( node.parent == null ) {
-        da.add_root( node.n, node.index );
+        map.model.add_root( node.n, node.index );
       } else {
         node.parent.folded = node.parent_folded;
         node.n.attach( node.parent, node.index, null );
       }
     }
-    da.set_current_node( _nodes.index( 0 ).n );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_node( _nodes.index( 0 ).n );
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

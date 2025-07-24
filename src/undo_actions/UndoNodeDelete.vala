@@ -29,7 +29,8 @@ public class UndoNodeDelete : UndoItem {
   Array<Connection> _conns;
   UndoNodeGroups?   _groups;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoNodeDelete( Node n, int index, Array<Connection> conns, UndoNodeGroups? groups ) {
     base( _( "delete node" ) );
     _node   = n;
@@ -39,38 +40,40 @@ public class UndoNodeDelete : UndoItem {
     _groups = groups;
   }
 
-  /* Undoes a node deletion */
-  public override void undo( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Undoes a node deletion.
+  public override void undo( MindMap map ) {
     if( _parent == null ) {
-      da.add_root( _node, _index );
+      map.model.add_root( _node, _index );
     } else {
       _node.attached = true;
       _node.attach_init( _parent, _index );
     }
-    da.set_current_node( _node );
+    map.set_current_node( _node );
     for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().add_connection( _conns.index( i ) );
+      map.connections.add_connection( _conns.index( i ) );
     }
-    da.groups.apply_undo( _groups );
-    da.queue_draw();
-    da.auto_save();
+    map.groups.apply_undo( _groups );
+    map.queue_draw();
+    map.auto_save();
   }
 
-  /* Redoes a node deletion */
-  public override void redo( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Redoes a node deletion.
+  public override void redo( MindMap map ) {
     UndoNodeGroups? tmp_groups = null;
     if( _parent == null ) {
-      da.remove_root( _index );
+      map.model.remove_root( _index );
     } else {
       _node.detach( _node.side );
     }
-    da.set_current_node( null );
+    map.set_current_node( null );
     for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().remove_connection( _conns.index( i ), false );
+      map.connections.remove_connection( _conns.index( i ), false );
     }
-    da.groups.remove_node( _node, ref tmp_groups );
-    da.queue_draw();
-    da.auto_save();
+    map.groups.remove_node( _node, ref tmp_groups );
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

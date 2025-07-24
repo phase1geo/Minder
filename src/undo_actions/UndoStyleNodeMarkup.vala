@@ -26,11 +26,11 @@ public class UndoStyleNodeMarkup : UndoStyleChange {
   GenericArray<bool> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleNodeMarkup( StyleAffects affects, bool node_markup, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleNodeMarkup( StyleAffects affects, bool node_markup, MindMap map ) {
+    base( affects, map );
     _values = new GenericArray<bool>();
     _values.add( node_markup );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

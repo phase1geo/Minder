@@ -24,13 +24,13 @@ using Gdk;
 
 public class QuickEntry : Gtk.Window {
 
-  private DrawArea         _da;
+  private MindMap          _map;
   private TextView         _entry;
   private Button           _apply;
   private Array<NodeHier?> _node_stack = null;
   private ExportText       _export;
 
-  public QuickEntry( DrawArea da, bool replace, GLib.Settings settings ) {
+  public QuickEntry( MindMap map, bool replace, GLib.Settings settings ) {
 
     /* Configure the window */
     default_width   = 500;
@@ -38,11 +38,11 @@ public class QuickEntry : Gtk.Window {
     modal           = true;
     deletable       = false;
     title           = _( "Quick Entry" );
-    transient_for   = da.win;
+    transient_for   = map.win;
 
     /* Initialize member variables */
-    _da     = da;
-    _export = (ExportText)da.win.exports.get_by_name( "text" );
+    _map    = map;
+    _export = (ExportText)map.win.exports.get_by_name( "text" );
 
     /* Add window elements */
     var box = new Box( Orientation.VERTICAL, 0 );
@@ -147,7 +147,7 @@ public class QuickEntry : Gtk.Window {
           help_node1.add_css_class( "highlighted" );
         }
       });
-      if( !da.is_node_selected() ) _apply.set_sensitive( false );
+      if( !_map.is_node_selected() ) _apply.set_sensitive( false );
     } else {
       _apply = new Button.with_label( _( "Insert" ) ) {
         halign = Align.END
@@ -243,7 +243,7 @@ public class QuickEntry : Gtk.Window {
 
     if( _node_stack == null ) {
       _node_stack = new Array<NodeHier>();
-      if( !_export.parse_text( _da, _entry.buffer.text, _da.settings.get_int( "quick-entry-spaces-per-tab" ), _node_stack ) ) {
+      if( !_export.parse_text( _map, _entry.buffer.text, _map.settings.get_int( "quick-entry-spaces-per-tab" ), _node_stack ) ) {
         _node_stack = null;
       }
     }
@@ -290,12 +290,12 @@ public class QuickEntry : Gtk.Window {
       var node_str = "";
 
       var uri        = ((File)val).get_uri();
-      var node_image = new NodeImage.from_uri( _da.image_manager, uri, 200 );
-      node_info.node.set_image( _da.image_manager, node_image );
+      var node_image = new NodeImage.from_uri( _map.image_manager, uri, 200 );
+      node_info.node.set_image( _map.image_manager, node_image );
       if( node_str != "" ) {
         node_str += "\n";
       }
-      node_str += _export.export_node( _da, node_info.node, string.nfill( node_info.spaces, ' ' ) );
+      node_str += _export.export_node( _map, node_info.node, string.nfill( node_info.spaces, ' ' ) );
 
       /* Perform the text substitution */
       _entry.buffer.get_iter_at_line( out first, node_info.first_line );
@@ -546,29 +546,29 @@ public class QuickEntry : Gtk.Window {
   /* Inserts the specified nodes into the given drawing area */
   private bool handle_insert() {
     var nodes  = new Array<Node>();
-    var node   = _da.get_current_node();
-    _export.import_text( _entry.buffer.text, _da.settings.get_int( "quick-entry-spaces-per-tab" ), _da, false, nodes );
+    var node   = _map.get_current_node();
+    _export.import_text( _entry.buffer.text, _map.settings.get_int( "quick-entry-spaces-per-tab" ), _map, false, nodes );
     if( nodes.length == 0 ) return( false );
-    _da.undo_buffer.add_item( new UndoNodesInsert( _da, nodes ) );
-    _da.set_current_node( nodes.index( 0 ) );
-    _da.queue_draw();
-    _da.auto_save();
-    _da.see();
+    _map.undo_buffer.add_item( new UndoNodesInsert( _map, nodes ) );
+    _map.set_current_node( nodes.index( 0 ) );
+    _map.queue_draw();
+    _map.auto_save();
+    _map.canvas.see();
     return( true );
   }
 
   /* Replaces the specified nodes into the given drawing area */
   private bool handle_replace() {
     var nodes  = new Array<Node>();;
-    var node   = _da.get_current_node();
+    var node   = _map.get_current_node();
     var parent = node.parent;
-    _export.import_text( _entry.buffer.text, _da.settings.get_int( "quick-entry-spaces-per-tab" ), _da, true, nodes );
+    _export.import_text( _entry.buffer.text, _map.settings.get_int( "quick-entry-spaces-per-tab" ), _map, true, nodes );
     if( nodes.length == 0 ) return( false );
-    _da.undo_buffer.add_item( new UndoNodesReplace( node, nodes ) );
-    _da.set_current_node( nodes.index( 0 ) );
-    _da.queue_draw();
-    _da.auto_save();
-    _da.see();
+    _map.undo_buffer.add_item( new UndoNodesReplace( node, nodes ) );
+    _map.set_current_node( nodes.index( 0 ) );
+    _map.queue_draw();
+    _map.auto_save();
+    _map.canvas.see();
     return( true );
   }
 

@@ -30,7 +30,8 @@ public class UndoNodePaste : UndoItem {
   private Array<Connection> _conns;
   private Array<NodeGroup>  _groups;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoNodePaste( Array<Node> nodes, Array<Connection> conns, Array<NodeGroup> groups ) {
     base( _( "paste node" ) );
     _nodes   = nodes;
@@ -45,36 +46,38 @@ public class UndoNodePaste : UndoItem {
     }
   }
 
-  /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data.
+  public override void undo( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).detach( _nodes.index( i ).side );
     }
     for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().remove_connection( _conns.index( i ), false );
+      map.connections.remove_connection( _conns.index( i ), false );
     }
     for( int i=0; i<_groups.length; i++ ) {
-      da.groups.remove_group( _groups.index( i ) );
+      map.groups.remove_group( _groups.index( i ) );
     }
-    da.set_current_node( null );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_node( null );
+    map.queue_draw();
+    map.auto_save();
   }
 
-  /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Performs a redo operation.
+  public override void redo( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).attach( _parents.index( i ), _indices.index( i ), null );
     }
     for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().add_connection( _conns.index( i ) );
+      map.connections.add_connection( _conns.index( i ) );
     }
     for( int i=0; i<_groups.length; i++ ) {
-      da.groups.add_group( _groups.index( i ) );
+      map.groups.add_group( _groups.index( i ) );
     }
-    da.set_current_node( _nodes.index( 0 ) );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_node( _nodes.index( 0 ) );
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

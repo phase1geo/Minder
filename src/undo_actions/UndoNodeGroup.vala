@@ -31,20 +31,20 @@ public class UndoNodeGroup : UndoItem {
     _node = n;
   }
 
-  public void toggle( DrawArea da ) {
+  public void toggle( MindMap map ) {
     _node.group = !_node.group;
-    da.queue_draw();
-    da.changed();
+    map.queue_draw();
+    map.changed();
   }
   
   /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
-    toggle( da );
+  public override void undo( MindMap map ) {
+    toggle( map );
   }
 
   /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
-    toggle( da );
+  public override void redo( MindMap map ) {
+    toggle( map );
   }
 
 }

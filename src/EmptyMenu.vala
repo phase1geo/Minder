@@ -23,7 +23,7 @@ using Gtk;
 
 public class EmptyMenu {
 
-  private DrawArea    _da;
+  private MindMap     _map;
   private PopoverMenu _popover;
 
   private const GLib.ActionEntry action_entries[] = {
@@ -36,7 +36,7 @@ public class EmptyMenu {
   /* Default constructor */
   public EmptyMenu( Gtk.Application app, DrawArea da ) {
 
-    _da = da;
+    _map = da.map;
 
     var edit_menu = new GLib.Menu();
     edit_menu.append( _( "Paste" ), "empty.action_paste" );
@@ -54,12 +54,12 @@ public class EmptyMenu {
     menu.append_section( null, sel_menu );
 
     _popover = new PopoverMenu.from_model( menu );
-    _popover.set_parent( _da );
+    _popover.set_parent( da );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();
     actions.add_action_entries( action_entries, this );
-    _da.insert_action_group( "empty", actions );
+    da.insert_action_group( "empty", actions );
 
     // Add keyboard shortcuts
     app.set_accels_for_action( "empty.action_paste",            { "<Control>y" } );
@@ -83,36 +83,36 @@ public class EmptyMenu {
 
   /* Returns true if there is a currently selected connection */
   private bool connection_selected() {
-    return( _da.get_current_connection() != null );
+    return( _map.get_current_connection() != null );
   }
 
   /* Called when the menu is popped up */
   private void on_popup() {
 
-    _da.action_set_enabled( "empty.action_paste",            _da.node_pasteable() );
-    _da.action_set_enabled( "empty.action_add_root_node",    !connection_selected() );
-    _da.action_set_enabled( "empty.action_select_root_node", _da.root_selectable() );
+    _map.canvas.action_set_enabled( "empty.action_paste",            _map.model.node_pasteable() );
+    _map.canvas.action_set_enabled( "empty.action_add_root_node",    !connection_selected() );
+    _map.canvas.action_set_enabled( "empty.action_select_root_node", _map.root_selectable() );
 
   }
 
   /* Pastes node tree as root from clipboard */
   private void action_paste() {
-    _da.do_paste( false );
+    _map.canvas.do_paste( false );
   }
 
   /* Creates a new root node */
   private void action_add_root_node() {
-    _da.add_root_node();
+    _map.model.add_root_node();
   }
 
   /* Adds top-level nodes via the quick entry facility */
   private void action_add_quick_entry() {
-    _da.handle_control_E();
+    _map.canvas.handle_control_E();
   }
 
   /* Selects the current root node */
   private void action_select_root_node() {
-    _da.select_root_node();
+    _map.select_root_node();
   }
 
 }

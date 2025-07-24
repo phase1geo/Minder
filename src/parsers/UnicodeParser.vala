@@ -21,21 +21,23 @@
 
 public class UnicodeParser : TextParser {
 
-  private DrawArea _da;
+  private MindMap _map;
 
-  /* Default constructor */
-  public UnicodeParser( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Default constructor
+  public UnicodeParser( MindMap map ) {
 
     base( "Unicode" );
 
-    _da = da;
+    _map = map;
 
     add_regex( "\\\\([a-zA-Z0-9_\\^\\(\\){}!+-=~:\\`'\".<>-]*)", handle_code );
     add_regex( "\\s", handle_nocode );
 
   }
 
-  /* Highlights the given tag */
+  //-------------------------------------------------------------
+  // Highlights the given tag.
   private void handle_code( FormattedText text, MatchInfo match ) {
 
     var tag = get_text( match, 0 );
@@ -44,10 +46,10 @@ public class UnicodeParser : TextParser {
     add_tag( text, match, 0, FormatTag.TAG, tag );
 
     /* If the FormattedText item matches the currently edited */
-    if( _da.get_current_node() != null ) {
-      handle_code_for_ct( _da.get_current_node().name, text, match, tag );
-    } else if( _da.get_current_callout() != null ) {
-      handle_code_for_ct( _da.get_current_callout().text, text, match, tag );
+    if( _map.is_node_selected() ) {
+      handle_code_for_ct( _map.get_current_node().name, text, match, tag );
+    } else if( _map.is_callout_selected() ) {
+      handle_code_for_ct( _map.get_current_callout().text, text, match, tag );
     }
 
   }
@@ -58,17 +60,17 @@ public class UnicodeParser : TextParser {
       match.fetch_pos( 0, out start, out end );
       var cursor = ct.cursor;
       if( (start <= cursor) && (cursor <= end) ) {
-        _da.show_auto_completion( _da.win.unicoder.get_matches( tag ), start, end );
+        _map.canvas.show_auto_completion( _map.win.unicoder.get_matches( tag ), start, end );
       }
     }
   }
 
   /* Handles hiding the auto-completion window */
   private void handle_nocode( FormattedText text, MatchInfo match ) {
-    if( _da.get_current_node() != null ) {
-      handle_nocode_for_ct( _da.get_current_node().name, text, match );
-    } else if( _da.get_current_callout() != null ) {
-      handle_nocode_for_ct( _da.get_current_callout().text, text, match );
+    if( _map.is_node_selected() ) {
+      handle_nocode_for_ct( _map.get_current_node().name, text, match );
+    } else if( _map.is_callout_selected() ) {
+      handle_nocode_for_ct( _map.get_current_callout().text, text, match );
     }
   }
 
@@ -77,7 +79,7 @@ public class UnicodeParser : TextParser {
       int start, end;
       match.fetch_pos( 0, out start, out end );
       if( ct.cursor == start ) {
-        _da.hide_auto_completion();
+        _map.canvas.hide_auto_completion();
       }
     }
   }

@@ -24,7 +24,7 @@ using Gtk;
 public class MapInspector : Box {
 
   private MainWindow    _win;
-  private DrawArea?     _da             = null;
+  private MindMap?      _map            = null;
   private GLib.Settings _settings;
   private ModeButtons   _layout;
   private Grid?         _theme_grid     = null;
@@ -43,6 +43,8 @@ public class MapInspector : Box {
   // This signal can be called by outside code to force icons to be updated
   public signal void update_icons();
 
+  //-------------------------------------------------------------
+  // Default constructor.
   public MapInspector( MainWindow win, GLib.Settings settings ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
@@ -74,35 +76,36 @@ public class MapInspector : Box {
 
   }
 
-  /* Listen for any changes to the current tab in the main window */
-  private void tab_changed( DrawArea? da ) {
-    if( _da != null ) {
-      _da.loaded.disconnect( update_theme_layout );
-      _da.current_changed.disconnect( current_changed );
+  //-------------------------------------------------------------
+  // Listen for any changes to the current tab in the main window.
+  private void tab_changed( MindMap? map ) {
+    if( _map != null ) {
+      _map.loaded.disconnect( update_theme_layout );
+      _map.current_changed.disconnect( current_changed );
     }
-    if( da != null ) {
-      da.loaded.connect( update_theme_layout );
-      da.current_changed.connect( current_changed );
+    if( map != null ) {
+      map.loaded.connect( update_theme_layout );
+      map.current_changed.connect( current_changed );
     }
-    _da = da;
-    _da.animator.enable        = _settings.get_boolean( "enable-animations" );
-    _da.get_connections().hide = _settings.get_boolean( "hide-connections" );
-    _hide_callouts.set_active( _da.hide_callouts );
-    _da.set_theme( _da.get_theme(), false );
+    _map = map;
+    _map.canvas.animator.enable = _settings.get_boolean( "enable-animations" );
+    _map.model.connections.hide = _settings.get_boolean( "hide-connections" );
+    _hide_callouts.set_active( _map.model.hide_callouts );
+    _map.model.set_theme( _map.get_theme(), false );
     update_theme_layout();
   }
 
-  /*
-   Called whenever the preferences change values.  We will update the displayed
-   themes based on the hide setting.
-  */
+  //-------------------------------------------------------------
+  // Called whenever the preferences change values.  We will
+  // update the displayed themes based on the hide setting.
   private void settings_changed( string key ) {
     switch( key ) {
       case "hide-themes-not-matching-visual-style" :  update_themes();  break;
     }
   }
 
-  /* Add the connection show/hide UI */
+  //-------------------------------------------------------------
+  // Add the connection show/hide UI.
   private void add_connection_ui() {
 
     var lbl = new Label( Utils.make_title( _( "Hide connections" ) ) ) {
@@ -128,15 +131,18 @@ public class MapInspector : Box {
 
   }
 
-  /* Called whenever the hide connections switch is changed within the inspector */
+  //-------------------------------------------------------------
+  // Called whenever the hide connections switch is changed within
+  // the inspector.
   private void hide_connections_changed() {
-    _da.set_current_connection( null );
-    _da.get_connections().hide = !_da.get_connections().hide;
-    _settings.set_boolean( "hide-connections", _da.get_connections().hide );
-    _da.queue_draw();
+    _map.set_current_connection( null );
+    _map.connections.hide = !_map.connections.hide;
+    _settings.set_boolean( "hide-connections", _map.connections.hide );
+    _map.queue_draw();
   }
 
-  /* Add the callout show/hide UI */
+  //-------------------------------------------------------------
+  // Add the callout show/hide UI.
   private void add_callout_ui() {
 
     var lbl = new Label( Utils.make_title( _( "Hide callouts" ) ) ) {
@@ -162,13 +168,16 @@ public class MapInspector : Box {
 
   }
 
-  /* Called whenever the hide connections switch is changed within the inspector */
+  //-------------------------------------------------------------
+  // Called whenever the hide connections switch is changed within
+  // the inspector.
   private void hide_callouts_changed() {
-    _da.hide_callouts = !_da.hide_callouts;
-    _da.queue_draw();
+    _map.model.hide_callouts = !_map.model.hide_callouts;
+    _map.queue_draw();
   }
 
-  /* Add link color rotation UI */
+  //-------------------------------------------------------------
+  // Add link color rotation UI.
   private void add_link_color_ui() {
 
     var lbl = new Label( Utils.make_title( _( "Rotate main branch colors" ) ) ) {
@@ -196,13 +205,16 @@ public class MapInspector : Box {
 
   }
 
-  /* Called whenever the rotate color switch is changed within the inspector */
+  //-------------------------------------------------------------
+  // Called whenever the rotate color switch is changed within the
+  // inspector.
   private void rotate_colors_changed() {
-    _da.get_theme().rotate = !_da.get_theme().rotate;
-    _settings.set_boolean( "rotate-main-link-colors", _da.get_theme().rotate );
+    _map.get_theme().rotate = !_map.get_theme().rotate;
+    _settings.set_boolean( "rotate-main-link-colors", _map.get_theme().rotate );
   }
 
-  /* Adds the layout UI */
+  //-------------------------------------------------------------
+  // Adds the layout UI.
   private void add_layout_ui() {
 
     var layouts     = new Layouts();
@@ -248,20 +260,22 @@ public class MapInspector : Box {
   private void set_layout( int index ) {
 
     var names = new Array<string>();
-    _da.layouts.get_names( ref names );
+    _map.layouts.get_names( ref names );
 
     if( index < names.length ) {
       var name   = names.index( index );
-      var layout = _da.layouts.get_layout( name );
-      var node   = _da.get_current_node();
-      _da.set_layout( name, ((node == null) ? null : node.get_root()) );
+      var layout = _map.layouts.get_layout( name );
+      var node   = _map.get_current_node();
+      _map.model.set_layout( name, ((node == null) ? null : node.get_root()) );
       _balance.set_sensitive( layout.balanceable );
       _alignment_revealer.reveal_child = (name == _( "Manual" ));
     }
 
   }
 
-  /* Adds alignment buttons when multiple nodes are selected in manual layout mode */
+  //-------------------------------------------------------------
+  // Adds alignment buttons when multiple nodes are selected in
+  // manual layout mode.
   private void add_alignmen_ui() {
 
     /* Create the modebutton to select the current layout */
@@ -275,42 +289,42 @@ public class MapInspector : Box {
       tooltip_markup = Utils.tooltip_with_accel( _( "Align left side of selected nodes" ), "bracketleft" )
     };
     _hleft.clicked.connect(() => {
-      NodeAlign.align_left( _da, _da.get_selected_nodes() );
+      NodeAlign.align_left( _map, _map.get_selected_nodes() );
     });
 
     _hcenter = new Button.from_icon_name( "align-horizontal-center-symbolic" ) {
       tooltip_markup = Utils.tooltip_with_accel( _( "Align horizontal center of selected nodes" ), "bar" )
     };
     _hcenter.clicked.connect(() => {
-      NodeAlign.align_hcenter( _da, _da.get_selected_nodes() );
+      NodeAlign.align_hcenter( _map, _map.get_selected_nodes() );
     });
 
     _hright = new Button.from_icon_name( "align-horizontal-right-symbolic" ) {
       tooltip_markup = Utils.tooltip_with_accel( _( "Align right side of selected nodes" ), "bracketright" )
     };
     _hright.clicked.connect(() => {
-      NodeAlign.align_right( _da, _da.get_selected_nodes() );
+      NodeAlign.align_right( _map, _map.get_selected_nodes() );
     });
 
     _vtop = new Button.from_icon_name( "align-vertical-top-symbolic" ) {
       tooltip_markup = Utils.tooltip_with_accel( _( "Align top side of selected nodes" ), "minus" )
     };
     _vtop.clicked.connect(() => {
-      NodeAlign.align_top( _da, _da.get_selected_nodes() );
+      NodeAlign.align_top( _map, _map.get_selected_nodes() );
     });
 
     _vcenter = new Button.from_icon_name( "align-vertical-center-symbolic" ) {
       tooltip_markup = Utils.tooltip_with_accel( _( "Align vertical center of selected nodes" ), "equal" )
     };
     _vcenter.clicked.connect(() => {
-      NodeAlign.align_vcenter( _da, _da.get_selected_nodes() );
+      NodeAlign.align_vcenter( _map, _map.get_selected_nodes() );
     });
 
     _vbottom = new Button.from_icon_name( "align-vertical-bottom-symbolic" ) {
       tooltip_markup = Utils.tooltip_with_accel( _( "Align bottom side of selected nodes" ), "underscore" )
     };
     _vbottom.clicked.connect(() => {
-      NodeAlign.align_bottom( _da, _da.get_selected_nodes() );
+      NodeAlign.align_bottom( _map, _map.get_selected_nodes() );
     });
 
     var toolbar = new Box( Orientation.HORIZONTAL, 5 );
@@ -335,9 +349,10 @@ public class MapInspector : Box {
 
   }
 
-  /* Updates the state of the node alignment buttons */
+  //-------------------------------------------------------------
+  // Updates the state of the node alignment buttons.
   private void update_node_alignment() {
-    var enable_alignment = _da.nodes_alignable();
+    var enable_alignment = _map.model.nodes_alignable();
     _hleft.set_sensitive( enable_alignment );
     _hcenter.set_sensitive( enable_alignment );
     _hright.set_sensitive( enable_alignment );
@@ -346,7 +361,8 @@ public class MapInspector : Box {
     _vbottom.set_sensitive( enable_alignment );
   }
 
-  /* Adds the themes UI */
+  //-------------------------------------------------------------
+  // Adds the themes UI.
   private void add_theme_ui() {
 
     /* Create the UI */
@@ -388,7 +404,8 @@ public class MapInspector : Box {
 
   }
 
-  /* Adds the bottom button frame */
+  //-------------------------------------------------------------
+  // Adds the bottom button frame.
   private void add_button_ui() {
 
     var grid = new Grid() {
@@ -402,21 +419,21 @@ public class MapInspector : Box {
       tooltip_text = _( "Balance Nodes" )
     };
     _balance.clicked.connect(() => {
-      _da.balance_nodes( true, true );
+      _map.model.balance_nodes( true, true );
     });
 
     _fold_completed = new Button.from_icon_name( "minder-fold-completed-light-symbolic" ) {
       tooltip_text = _( "Fold Completed Tasks" )
     };
     _fold_completed.clicked.connect(() => {
-      _da.fold_completed_tasks();
+      _map.model.fold_completed_tasks();
     });
 
     _unfold_all = new Button.from_icon_name( "minder-unfold-light-symbolic" ) {
       tooltip_text = _( "Unfold All Nodes" )
     };
     _unfold_all.clicked.connect(() => {
-      _da.unfold_all_nodes();
+      _map.model.unfold_all_nodes();
     });
 
     update_icons.connect(() => {
@@ -434,7 +451,8 @@ public class MapInspector : Box {
 
   }
 
-  /* Updates the theme box widget with the current list of themes */
+  //-------------------------------------------------------------
+  // Updates the theme box widget with the current list of themes.
   private void update_themes() {
 
     /* Clear the contents of the theme box */
@@ -471,7 +489,7 @@ public class MapInspector : Box {
         item.add_controller( click );
         click.pressed.connect((n_press, x, y) => {
           select_theme( name );
-          _da.set_theme( theme, true );
+          _map.model.set_theme( theme, true );
           if( theme.custom && (n_press == 2) ) {
             edit_current_theme();
           }
@@ -482,17 +500,18 @@ public class MapInspector : Box {
     }
 
     /* Make sure that the current theme is selected */
-    if( _da != null ) {
-      select_theme( _da.get_theme_name() );
+    if( _map != null ) {
+      select_theme( _map.get_theme().name );
     }
 
   }
 
-  /* Sets the map inspector UI to match the given layout name */
+  //-------------------------------------------------------------
+  // Sets the map inspector UI to match the given layout name.
   private void select_layout( string name ) {
 
     var names = new Array<string>();
-    _da.layouts.get_names( ref names );
+    _map.layouts.get_names( ref names );
 
     for( int i=0; i<names.length; i++ ) {
       if( name == names.index( i ) ) {
@@ -502,14 +521,15 @@ public class MapInspector : Box {
     }
 
     /* Set the sensitivity of the Balance Nodes button */
-    _balance.set_sensitive( _da.layouts.get_layout( name ).balanceable );
+    _balance.set_sensitive( _map.layouts.get_layout( name ).balanceable );
 
     /* Make sure that alignment tools are shown when manual layout is selected */
     _alignment_revealer.reveal_child = (name == _( "Manual" ));
 
   }
 
-  /* Returns the label to use for the given theme by name */
+  //-------------------------------------------------------------
+  // Returns the label to use for the given theme by name.
   private string theme_label( string name ) {
     var theme = _win.themes.get_theme( name );
     if( theme.temporary ) {
@@ -518,7 +538,8 @@ public class MapInspector : Box {
     return( theme.label );
   }
 
-  /* Makes sure that only the given theme is selected in the UI */
+  //-------------------------------------------------------------
+  // Makes sure that only the given theme is selected in the UI.
   private void select_theme( string name ) {
 
     var names    = new Array<string>();
@@ -556,32 +577,37 @@ public class MapInspector : Box {
 
   }
 
+  //-------------------------------------------------------------
+  // Updates the current theme.
   private void update_theme_layout() {
 
     /* Make sure the current theme is selected */
-    select_theme( _da.get_theme_name() );
+    select_theme( _map.get_theme().name );
 
     /* Initialize the button states */
     current_changed();
 
   }
 
-  /* Displays the current theme editor */
+  //-------------------------------------------------------------
+  // Displays the current theme editor.
   private void create_custom_theme() {
     _win.show_theme_editor( false );
   }
 
-  /* Displays the current theme editor */
+  //-------------------------------------------------------------
+  // Displays the current theme editor.
   private void edit_current_theme() {
     _win.show_theme_editor( true );
   }
 
-  /* Called whenever the current item is changed */
+  //-------------------------------------------------------------
+  // Called whenever the current item is changed.
   private void current_changed() {
 
-    Node? current         = _da.get_current_node();
-    var   foldable        = _da.completed_tasks_foldable();
-    var   unfoldable      = _da.unfoldable();
+    Node? current         = _map.get_current_node();
+    var   foldable        = _map.model.completed_tasks_foldable();
+    var   unfoldable      = _map.model.unfoldable();
     bool  layout_selected = false;
 
     /* Select the layout that corresponds with the current tree */
@@ -589,14 +615,14 @@ public class MapInspector : Box {
       if( layout_selected = (current.layout != null) ) {
         select_layout( current.layout.name );
       }
-    } else if( _da.get_nodes().length > 0 ) {
-      if( layout_selected = (_da.get_nodes().index( 0 ).layout != null) ) {
-        select_layout( _da.get_nodes().index( 0 ).layout.name );
+    } else if( _map.get_nodes().length > 0 ) {
+      if( layout_selected = (_map.get_nodes().index( 0 ).layout != null) ) {
+        select_layout( _map.get_nodes().index( 0 ).layout.name );
       }
     }
 
     if( !layout_selected ) {
-      select_layout( _da.layouts.get_default().name );
+      select_layout( _map.layouts.get_default().name );
     }
 
     /* Update the sensitivity of the buttons */
@@ -608,7 +634,8 @@ public class MapInspector : Box {
 
   }
 
-  /* Grabs input focus on the first UI element */
+  //-------------------------------------------------------------
+  // Grabs input focus on the first UI element.
   public void grab_first() {
     _layout.grab_focus();
   }

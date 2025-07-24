@@ -74,13 +74,13 @@ public class TextCompletionItem {
 
 public class TextCompletion {
 
-  private DrawArea     _da;
-  private CanvasText   _ct;
-  private ListBox      _list;
-  private bool         _shown     = false;
-  private int          _size      = 0;
-  private int          _start_pos = 0;
-  private int          _end_pos   = 0;
+  private MindMap    _map;
+  private CanvasText _ct;
+  private ListBox    _list;
+  private bool       _shown     = false;
+  private int        _size      = 0;
+  private int        _start_pos = 0;
+  private int        _end_pos   = 0;
 
   public bool shown {
     get {
@@ -89,8 +89,8 @@ public class TextCompletion {
   }
 
   /* Default constructor */
-  public TextCompletion( DrawArea da ) {
-    _da   = da;
+  public TextCompletion( MindMap map ) {
+    _map  = map;
     _list = new ListBox() {
       selection_mode = SelectionMode.BROWSE,
       halign         = Align.START,
@@ -109,7 +109,7 @@ public class TextCompletion {
     }
 
     /* Get the maximum number of items that we will display */
-    var max_items = _da.win.settings.get_int( "max-auto-completion-items" );
+    var max_items = _map.settings.get_int( "max-auto-completion-items" );
 
     /* Remember the text positions that will be replaced */
     _ct        = ct;
@@ -122,10 +122,10 @@ public class TextCompletion {
     ct.get_cursor_pos( out x, out ytop, out ybot );
 
     /* Calculate the position of the widget */
-    var lbl_height = _da.win.get_label_height();
+    var lbl_height = _map.win.get_label_height();
     var height     = _size * (lbl_height + 10);
     int win_top, win_bottom;
-    _da.get_window_ys( out win_top, out win_bottom );
+    _map.canvas.get_window_ys( out win_top, out win_bottom );
     var below = (ybot + (max_items * (lbl_height + 10))) <= win_bottom;
 
     /* Set the position */
@@ -151,7 +151,7 @@ public class TextCompletion {
 
     /* If the list isn't being shown, show it */
     if( !_shown ) {
-      var overlay = (Overlay)_da.get_parent();
+      var overlay = (Overlay)_map.canvas.get_parent();
       overlay.add_overlay( _list );
     }
 
@@ -195,9 +195,9 @@ public class TextCompletion {
     var box   = (Box)row.get_child();
     var value = TextCompletionItem.get_text( box );
     if( _start_pos == _end_pos ) {
-      _ct.insert( value, _da.undo_text );
+      _ct.insert( value, _map.undo_text );
     } else {
-      _ct.replace( _start_pos, _end_pos, value, _da.undo_text );
+      _ct.replace( _start_pos, _end_pos, value, _map.undo_text );
     }
     hide();
   }

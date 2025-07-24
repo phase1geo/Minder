@@ -26,11 +26,11 @@ public class UndoStyleConnectionTextAlign : UndoStyleChange {
   GenericArray<Pango.Alignment> _values;
 
   /* Constructor for a node text alignment change */
-  public UndoStyleConnectionTextAlign( StyleAffects affects, Pango.Alignment text_align, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleConnectionTextAlign( StyleAffects affects, Pango.Alignment text_align, MindMap map ) {
+    base( affects, map );
     _values = new GenericArray<Pango.Alignment>();
     _values.add( text_align );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

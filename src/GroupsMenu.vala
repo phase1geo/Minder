@@ -23,7 +23,7 @@ using Gtk;
 
 public class GroupsMenu {
 
-  private DrawArea    _da;
+  private MindMap     _map;
   private PopoverMenu _popover;
 
   private const GLib.ActionEntry action_entries[] = {
@@ -38,7 +38,7 @@ public class GroupsMenu {
   /* Default constructor */
   public GroupsMenu( Gtk.Application app, DrawArea da ) {
 
-    _da = da;
+    _map = da.map;
 
     var del_menu = new GLib.Menu();
     del_menu.append( _( "Delete" ), "groups.action_delete_groups" );
@@ -61,12 +61,12 @@ public class GroupsMenu {
     menu.append_section( null, sel_menu );
 
     _popover = new PopoverMenu.from_model( menu );
-    _popover.set_parent( _da );
+    _popover.set_parent( da );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();
     actions.add_action_entries( action_entries, this );
-    _da.insert_action_group( "groups", actions );
+    da.insert_action_group( "groups", actions );
 
     // Add keyboard shortcuts
     app.set_accels_for_action( "groups.action_delete_groups", { "Delete" } );
@@ -91,42 +91,42 @@ public class GroupsMenu {
   /* Called when the menu is popped up */
   private void on_popup() {
 
-    var groups = _da.get_selected_groups();
+    var groups = _map.get_selected_groups();
     var num    = groups.length;
 
     /* Set the menu sensitivity */
-    _da.action_set_enabled( "groups.action_merge_groups", (num > 1) );
+    _map.canvas.action_set_enabled( "groups.action_merge_groups", (num > 1) );
 
   }
 
   /* Deletes the current group */
   private void action_delete_groups() {
-    _da.remove_groups();
+    _map.model.remove_groups();
   }
 
   /* Merges two or more groups into a single group */
   private void action_merge_groups() {
-    _da.add_group();
+    _map.model.add_group();
   }
 
   /* Edits the group note */
   private void action_edit_note() {
-    _da.show_properties( "current", PropertyGrab.NOTE );
+    _map.show_properties( "current", PropertyGrab.NOTE );
   }
 
   /* Allows the user to change the color of the selected groups */
   private void action_change_color() {
-    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
+    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _map.win );
     color_picker.color_activated.connect((color) => {
-      _da.change_group_color( color );
+      _map.model.change_group_color( color );
     });
     color_picker.present();
   }
 
   /* Selects the top-most nodes in each selected node group */
   private void action_select_main() {
-    var groups   = _da.get_selected_groups();
-    var selected = _da.get_selections();
+    var groups   = _map.get_selected_groups();
+    var selected = _map.selected;
     for( int i=0; i<groups.length; i++ ) {
       var nodes = groups.index( i ).nodes;
       for( int j=0; j<nodes.length; j++ ) {
@@ -138,8 +138,8 @@ public class GroupsMenu {
 
   /* Selects all of the nodes within the group */
   private void action_select_all() {
-    var groups   = _da.get_selected_groups();
-    var selected = _da.get_selections();
+    var groups   = _map.get_selected_groups();
+    var selected = _map.selected;
     for( int i=0; i<groups.length; i++ ) {
       var nodes = groups.index( i ).nodes;
       for( int j=0; j<nodes.length; j++ ) {

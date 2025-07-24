@@ -28,29 +28,29 @@ public class UndoConnectionTitle : UndoItem {
   private CanvasText _orig_text;
 
   /* Constructor for a node name change */
-  public UndoConnectionTitle( DrawArea da, Connection conn, CanvasText orig_text ) {
+  public UndoConnectionTitle( MindMap map, Connection conn, CanvasText orig_text ) {
     base( _( "connection title change" ) );
     _conn      = conn;
-    _text      = new CanvasText( da );
-    _orig_text = new CanvasText( da );
+    _text      = new CanvasText( map );
+    _orig_text = new CanvasText( map );
     _text.copy( conn.title );
     _orig_text.copy( orig_text );
   }
 
   /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     _conn.title.copy( _orig_text );
-    da.queue_draw();
-    da.current_changed( da );
-    da.auto_save();
+    map.queue_draw();
+    map.current_changed( map );
+    map.auto_save();
   }
 
   /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     _conn.title.copy( _text );
-    da.queue_draw();
-    da.current_changed( da );
-    da.auto_save();
+    map.queue_draw();
+    map.current_changed( map );
+    map.auto_save();
   }
 
 }

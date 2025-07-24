@@ -24,10 +24,10 @@ using Gdk;
 
 public class UrlEditor : Box {
 
-  private DrawArea _da;
-  private bool     _add = true;
-  private Entry    _entry;
-  private Button   _apply;
+  private MindMap _map;
+  private bool    _add = true;
+  private Entry   _entry;
+  private Button  _apply;
 
   public signal void open();
   public signal void close();
@@ -37,7 +37,7 @@ public class UrlEditor : Box {
 
     Object( orientation: Orientation.VERTICAL, spacing: 5 );
 
-    _da = da;
+    _map = da.map;
 
     var lbl   = new Label( _( "URL" ) + ":" );
     _entry = new Entry() {
@@ -85,10 +85,10 @@ public class UrlEditor : Box {
   /* Returns the current canvas text to operate on */
   private CanvasText? current_text() {
     CanvasText? ct = null;
-    if( _da.get_current_node() != null ) {
-      ct = _da.get_current_node().name;
-    } else if( _da.get_current_callout() != null ) {
-      ct = _da.get_current_callout().text;
+    if( _map.get_current_node() != null ) {
+      ct = _map.get_current_node().name;
+    } else if( _map.get_current_callout() != null ) {
+      ct = _map.get_current_callout().text;
     }
     return( ct );
   }
@@ -106,36 +106,36 @@ public class UrlEditor : Box {
    popover entry.
   */
   private void set_url() {
-    var node     = _da.get_current_node();
-    var callout  = _da.get_current_callout();
+    var node     = _map.get_current_node();
+    var callout  = _map.get_current_callout();
     var ct       = current_text();
     var selected = false;
     if( node != null ) {
       selected = node.mode == NodeMode.CURRENT;
       if( selected ) {
-        _da.set_node_mode( node, NodeMode.EDITABLE );
+        _map.model.set_node_mode( node, NodeMode.EDITABLE );
       }
     } else if( callout != null ) {
       selected = callout.mode == CalloutMode.SELECTED;
       if( selected ) {
-        _da.set_callout_mode( callout, CalloutMode.EDITABLE );
+        _map.model.set_callout_mode( callout, CalloutMode.EDITABLE );
       }
     }
     if( ct != null ) {
       if( !_add ) {
-        ct.remove_tag( FormatTag.URL, _da.undo_text );
+        ct.remove_tag( FormatTag.URL, _map.undo_text );
       }
-      ct.add_tag( FormatTag.URL, _entry.text, false, _da.undo_text );
+      ct.add_tag( FormatTag.URL, _entry.text, false, _map.undo_text );
       ct.clear_selection();
       if( selected ) {
         if( node != null ) {
-          _da.set_node_mode( node, NodeMode.CURRENT );
+          _map.model.set_node_mode( node, NodeMode.CURRENT );
         } else if( callout != null ) {
-          _da.set_callout_mode( callout, CalloutMode.SELECTED );
+          _map.model.set_callout_mode( callout, CalloutMode.SELECTED );
         }
       }
-      _da.queue_draw();
-      _da.auto_save();
+      _map.queue_draw();
+      _map.auto_save();
     }
   }
 
@@ -168,32 +168,32 @@ public class UrlEditor : Box {
   /* Removes the current URLs from the given node */
   public void remove_url() {
     var ct       = current_text();
-    var node     = _da.get_current_node();
-    var callout  = _da.get_current_callout();
+    var node     = _map.get_current_node();
+    var callout  = _map.get_current_callout();
     var selected = false;
     if( node != null ) {
       selected = node.mode == NodeMode.CURRENT;
       if( selected ) {
-        _da.set_node_mode( node, NodeMode.EDITABLE );
+        _map.model.set_node_mode( node, NodeMode.EDITABLE );
       }
     } else if( callout != null ) {
       selected = callout.mode == CalloutMode.SELECTED;
       if( selected ) {
-        _da.set_callout_mode( callout, CalloutMode.EDITABLE );
+        _map.model.set_callout_mode( callout, CalloutMode.EDITABLE );
       }
     }
     if( ct != null ) {
-      ct.remove_tag( FormatTag.URL, _da.undo_text );
+      ct.remove_tag( FormatTag.URL, _map.undo_text );
       ct.clear_selection();
       if( selected ) {
         if( node != null ) {
-          _da.set_node_mode( node, NodeMode.CURRENT );
+          _map.model.set_node_mode( node, NodeMode.CURRENT );
         } else if( callout != null ) {
-          _da.set_callout_mode( callout, CalloutMode.SELECTED );
+          _map.model.set_callout_mode( callout, CalloutMode.SELECTED );
         }
       }
-      _da.queue_draw();
-      _da.auto_save();
+      _map.queue_draw();
+      _map.auto_save();
     }
   }
 

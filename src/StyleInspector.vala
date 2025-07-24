@@ -44,7 +44,7 @@ public enum StyleAffects {
 
 public class StyleInspector : Box {
 
-  private DrawArea?        _da = null;
+  private MindMap?         _map = null;
   private GLib.Settings    _settings;
   private Revealer         _branch_radius_revealer;
   private Scale            _branch_radius;
@@ -132,14 +132,14 @@ public class StyleInspector : Box {
   }
 
   /* Listen for any changes to the current tab in the main window */
-  private void tab_changed( DrawArea? da ) {
-    if( _da != null ) {
-      _da.current_changed.disconnect( handle_current_changed );
+  private void tab_changed( MindMap? map ) {
+    if( _map != null ) {
+      _map.current_changed.disconnect( handle_current_changed );
     }
-    if( da != null ) {
-      da.current_changed.connect( handle_current_changed );
+    if( map != null ) {
+      map.current_changed.connect( handle_current_changed );
     }
-    _da = da;
+    _map = map;
     handle_ui_changed();
   }
 
@@ -244,7 +244,7 @@ public class StyleInspector : Box {
     var link_types = styles.get_link_types();
     if( index < link_types.length ) {
       var link_type = link_types.index( _link_types.selected );
-      _da.undo_buffer.add_item( new UndoStyleLinkType( _affects, link_type, _da ) );
+      _map.undo_buffer.add_item( new UndoStyleLinkType( _affects, link_type, _map ) );
     }
   }
 
@@ -282,12 +282,12 @@ public class StyleInspector : Box {
     if( intval > 40 ) {
       return( false );
     }
-    var margin = new UndoStyleBranchRadius( _affects, intval, _da );
+    var margin = new UndoStyleBranchRadius( _affects, intval, _map );
     if( _change_add ) {
-      _da.undo_buffer.add_item( margin );
+      _map.undo_buffer.add_item( margin );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( margin );
+      _map.undo_buffer.replace_item( margin );
     }
     return( false );
   }
@@ -322,12 +322,12 @@ public class StyleInspector : Box {
     if( intval > 150 ) {
       return( false );
     }
-    var margin = new UndoStyleBranchMargin( _affects, intval, _da );
+    var margin = new UndoStyleBranchMargin( _affects, intval, _map );
     if( _change_add ) {
-      _da.undo_buffer.add_item( margin );
+      _map.undo_buffer.add_item( margin );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( margin );
+      _map.undo_buffer.replace_item( margin );
     }
     return( false );
   }
@@ -386,7 +386,7 @@ public class StyleInspector : Box {
     };
 
     _link_dash.changed.connect((index) => {
-      _da.undo_buffer.add_item( new UndoStyleLinkDash( _affects, dashes.index( index ), _da ) );
+      _map.undo_buffer.add_item( new UndoStyleLinkDash( _affects, dashes.index( index ), _map ) );
     });
 
     update_icons.connect(() => {
@@ -447,12 +447,12 @@ public class StyleInspector : Box {
   private bool link_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
     var int_value  = (int)value;
-    var link_width = new UndoStyleLinkWidth( _affects, int_value, _da );
+    var link_width = new UndoStyleLinkWidth( _affects, int_value, _map );
     if( _change_add ) {
-      _da.undo_buffer.add_item( link_width );
+      _map.undo_buffer.add_item( link_width );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( link_width );
+      _map.undo_buffer.replace_item( link_width );
     }
     return( false );
   }
@@ -484,7 +484,7 @@ public class StyleInspector : Box {
   private void link_arrow_changed() {
     if( !_ignore ) {
       bool val = _link_arrow.get_active();
-      _da.undo_buffer.add_item( new UndoStyleLinkArrow( _affects, val, _da ) );
+      _map.undo_buffer.add_item( new UndoStyleLinkArrow( _affects, val, _map ) );
     }
   }
 
@@ -574,7 +574,7 @@ public class StyleInspector : Box {
   private void set_node_border( int index ) {
     var node_borders = styles.get_node_borders();
     if( index < node_borders.length ) {
-      _da.undo_buffer.add_item( new UndoStyleNodeBorder( _affects, node_borders.index( index ), _da ) );
+      _map.undo_buffer.add_item( new UndoStyleNodeBorder( _affects, node_borders.index( index ), _map ) );
     }
   }
 
@@ -615,12 +615,12 @@ public class StyleInspector : Box {
   /* Called whenever the user changes the link width value */
   private bool node_borderwidth_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
-    var borderwidth = new UndoStyleNodeBorderwidth( _affects, intval, _da );
+    var borderwidth = new UndoStyleNodeBorderwidth( _affects, intval, _map );
     if( _change_add ) {
-      _da.undo_buffer.add_item( borderwidth );
+      _map.undo_buffer.add_item( borderwidth );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( borderwidth );
+      _map.undo_buffer.replace_item( borderwidth );
     }
     return( false );
   }
@@ -653,7 +653,7 @@ public class StyleInspector : Box {
   private void node_fill_changed() {
     if( !_ignore ) {
       bool val = _node_fill.get_active();
-      _da.undo_buffer.add_item( new UndoStyleNodeFill( _affects, val, _da ) );
+      _map.undo_buffer.add_item( new UndoStyleNodeFill( _affects, val, _map ) );
     }
   }
 
@@ -688,12 +688,12 @@ public class StyleInspector : Box {
     if( intval > 20 ) {
       return( false );
     }
-    var margin = new UndoStyleNodeMargin( _affects, intval, _da );
+    var margin = new UndoStyleNodeMargin( _affects, intval, _map );
     if( _change_add ) {
-      _da.undo_buffer.add_item( margin );
+      _map.undo_buffer.add_item( margin );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( margin );
+      _map.undo_buffer.replace_item( margin );
     }
     return( false );
   }
@@ -729,12 +729,12 @@ public class StyleInspector : Box {
     if( intval > 20 ) {
       return( false );
     }
-    var padding = new UndoStyleNodePadding( _affects, intval, _da );
+    var padding = new UndoStyleNodePadding( _affects, intval, _map );
     if( _change_add ) {
-      _da.undo_buffer.add_item( padding );
+      _map.undo_buffer.add_item( padding );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( padding );
+      _map.undo_buffer.replace_item( padding );
     }
     return( false );
   }
@@ -768,7 +768,7 @@ public class StyleInspector : Box {
     _node_font.notify["font_desc"].connect(() => {
       var family = _node_font.font_desc.get_family();
       var size   = _node_font.font_desc.get_size();
-      _da.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _da ) );
+      _map.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _map ) );
     });
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -812,9 +812,9 @@ public class StyleInspector : Box {
   // Sets the node text alignment value.
   private void set_node_text_align( int index ) {
     switch( index ) {
-      case 0 :  _da.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.LEFT,   _da ) );  break;
-      case 1 :  _da.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.CENTER, _da ) );  break;
-      case 2 :  _da.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.RIGHT,  _da ) );  break;
+      case 0 :  _map.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.LEFT,   _map ) );  break;
+      case 1 :  _map.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.CENTER, _map ) );  break;
+      case 2 :  _map.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.RIGHT,  _map ) );  break;
     }
   }
 
@@ -836,7 +836,7 @@ public class StyleInspector : Box {
     _node_width.value_changed.connect(() => {
       if( !_ignore ) {
         var width = (int)_node_width.get_value();
-        _da.undo_buffer.replace_item( new UndoStyleNodeWidth( _affects, width, _da ) );
+        _map.undo_buffer.replace_item( new UndoStyleNodeWidth( _affects, width, _map ) );
       }
     });
 
@@ -878,7 +878,7 @@ public class StyleInspector : Box {
   private void node_markup_changed() {
     if( _ignore ) {
       var val = _node_markup.get_active();
-      _da.undo_buffer.add_item( new UndoStyleNodeMarkup( _affects, val, _da ) );
+      _map.undo_buffer.add_item( new UndoStyleNodeMarkup( _affects, val, _map ) );
     }
   }
 
@@ -944,7 +944,7 @@ public class StyleInspector : Box {
     };
 
     _conn_dash.changed.connect((index) => {
-      _da.undo_buffer.add_item( new UndoStyleConnectionDash( _affects, dashes.index( index ), _da ) );
+      _map.undo_buffer.add_item( new UndoStyleConnectionDash( _affects, dashes.index( index ), _map ) );
     });
 
     update_icons.connect(() => {
@@ -983,7 +983,7 @@ public class StyleInspector : Box {
     };
 
     _conn_arrow.changed.connect((index) => {
-      _da.undo_buffer.add_item( new UndoStyleConnectionArrow( _affects, arrows[index], _da ) );
+      _map.undo_buffer.add_item( new UndoStyleConnectionArrow( _affects, arrows[index], _map ) );
     });
 
     update_icons.connect(() => {
@@ -1044,12 +1044,12 @@ public class StyleInspector : Box {
   private bool connection_line_width_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 8 ) intval = 8;
-    var width = new UndoStyleConnectionLineWidth( _affects, intval, _da );
+    var width = new UndoStyleConnectionLineWidth( _affects, intval, _map );
     if( _change_add ) {
-      _da.undo_buffer.add_item( width );
+      _map.undo_buffer.add_item( width );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( width );
+      _map.undo_buffer.replace_item( width );
     }
     return( false );
   }
@@ -1086,12 +1086,12 @@ public class StyleInspector : Box {
     if( intval > 20 ) {
       return( false );
     }
-    var padding = new UndoStyleConnectionPadding( _affects, intval, _da );
+    var padding = new UndoStyleConnectionPadding( _affects, intval, _map );
     if( _change_add ) {
-      _da.undo_buffer.add_item( padding );
+      _map.undo_buffer.add_item( padding );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( padding );
+      _map.undo_buffer.replace_item( padding );
     }
     return( false );
   }
@@ -1125,7 +1125,7 @@ public class StyleInspector : Box {
     _conn_font.notify["font_desc"].connect(() => {
       var family = _node_font.font_desc.get_family();
       var size   = _node_font.font_desc.get_size();
-      _da.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _da ) );
+      _map.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _map ) );
     });
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1169,9 +1169,9 @@ public class StyleInspector : Box {
   // Sets the connection text alignment value.
   private void set_connection_text_align( int index ) {
     switch( index ) {
-      case 0 :  _da.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, Pango.Alignment.LEFT,   _da ) );  break;
-      case 1 :  _da.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, Pango.Alignment.CENTER, _da ) );  break;
-      case 2 :  _da.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, Pango.Alignment.RIGHT,  _da ) );  break;
+      case 0 :  _map.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, Pango.Alignment.LEFT,   _map ) );  break;
+      case 1 :  _map.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, Pango.Alignment.CENTER, _map ) );  break;
+      case 2 :  _map.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, Pango.Alignment.RIGHT,  _map ) );  break;
     }
   }
 
@@ -1192,7 +1192,7 @@ public class StyleInspector : Box {
     _conn_twidth.value_changed.connect(() => {
       if( !_ignore ) {
         var width = (int)_conn_twidth.get_value();
-        _da.undo_buffer.replace_item( new UndoStyleConnectionTitleWidth( _affects, width, _da ) );
+        _map.undo_buffer.replace_item( new UndoStyleConnectionTitleWidth( _affects, width, _map ) );
       }
     });
 
@@ -1278,7 +1278,7 @@ public class StyleInspector : Box {
     _callout_font.notify["font_desc"].connect(() => {
       var family = _node_font.font_desc.get_family();
       var size   = _node_font.font_desc.get_size();
-      _da.undo_buffer.add_item( new UndoStyleCalloutFont( _affects, family, size, _da ) );
+      _map.undo_buffer.add_item( new UndoStyleCalloutFont( _affects, family, size, _map ) );
     });
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1322,9 +1322,9 @@ public class StyleInspector : Box {
   // Sets the callout text alignment value.
   private void set_callout_text_align( int index ) {
     switch( index ) {
-      case 0 :  _da.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, Pango.Alignment.LEFT,   _da ) );  break;
-      case 1 :  _da.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, Pango.Alignment.CENTER, _da ) );  break;
-      case 2 :  _da.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, Pango.Alignment.RIGHT,  _da ) );  break;
+      case 0 :  _map.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, Pango.Alignment.LEFT,   _map ) );  break;
+      case 1 :  _map.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, Pango.Alignment.CENTER, _map ) );  break;
+      case 2 :  _map.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, Pango.Alignment.RIGHT,  _map ) );  break;
     }
   }
 
@@ -1360,12 +1360,12 @@ public class StyleInspector : Box {
     if( intval > 20 ) {
       return( false );
     }
-    var padding = new UndoStyleCalloutPadding( _affects, intval, _da );
+    var padding = new UndoStyleCalloutPadding( _affects, intval, _map );
     if( _change_add ) {
-      _da.undo_buffer.add_item( padding );
+      _map.undo_buffer.add_item( padding );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( padding );
+      _map.undo_buffer.replace_item( padding );
     }
     return( false );
   }
@@ -1402,12 +1402,12 @@ public class StyleInspector : Box {
     if( intval > 30 ) {
       return( false );
     }
-    var pwidth = new UndoStyleCalloutPointerWidth( _affects, intval, _da );
+    var pwidth = new UndoStyleCalloutPointerWidth( _affects, intval, _map );
     if( _change_add ) {
-      _da.undo_buffer.add_item( pwidth );
+      _map.undo_buffer.add_item( pwidth );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( pwidth );
+      _map.undo_buffer.replace_item( pwidth );
     }
     return( false );
   }
@@ -1444,19 +1444,19 @@ public class StyleInspector : Box {
     if( intval > 100 ) {
       return( false );
     }
-    var plength = new UndoStyleCalloutPointerLength( _affects, intval, _da );
+    var plength = new UndoStyleCalloutPointerLength( _affects, intval, _map );
     if( _change_add ) {
-      _da.undo_buffer.add_item( plength );
+      _map.undo_buffer.add_item( plength );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( plength );
+      _map.undo_buffer.replace_item( plength );
     }
     return( false );
   }
 
   /* Sets the affects value and save the change to the settings */
   private void set_affects( StyleAffects affects ) {
-    var selected         = _da.get_selections();
+    var selected         = _map.selected;
     _affects             = affects;
     _affects_label.label = affects.label();
     switch( _affects ) {
@@ -1518,16 +1518,16 @@ public class StyleInspector : Box {
     bool sensitive = false;
     switch( _affects ) {
       case StyleAffects.ALL :
-        for( int i=0; i<_da.get_nodes().length; i++ ) {
-          if( !_da.get_nodes().index( i ).is_leaf() ) {
+        for( int i=0; i<_map.get_nodes().length; i++ ) {
+          if( !_map.get_nodes().index( i ).is_leaf() ) {
             sensitive = true;
             break;
           }
         }
         break;
       case StyleAffects.SELECTED_NODES :
-        for( int i=0; i<_da.get_selected_nodes().length; i++ ) {
-          if( _da.get_selected_nodes().index( i ).children().length > 0 ) {
+        for( int i=0; i<_map.get_selected_nodes().length; i++ ) {
+          if( _map.get_selected_nodes().index( i ).children().length > 0 ) {
             sensitive = true;
             break;
           }
@@ -1673,19 +1673,19 @@ public class StyleInspector : Box {
 
   /* Called whenever the current node changes */
   private void handle_current_changed() {
-    if( _da.get_current_node() != null ) {
-      update_ui_with_style( _da.get_current_node().style );
-    } else if( _da.get_current_connection() != null ) {
-      update_ui_with_style( _da.get_current_connection().style );
-    } else if( _da.get_current_callout() != null ) {
-      update_ui_with_style( _da.get_current_callout().style );
+    if( _map.get_current_node() != null ) {
+      update_ui_with_style( _map.get_current_node().style );
+    } else if( _map.get_current_connection() != null ) {
+      update_ui_with_style( _map.get_current_connection().style );
+    } else if( _map.get_current_callout() != null ) {
+      update_ui_with_style( _map.get_current_callout().style );
     }
     handle_ui_changed();
   }
 
   /* Called whenever the current node or connection changes */
   private void handle_ui_changed() {
-    var selected = _da.get_selections();
+    var selected = _map.selected;
     if( selected.num_nodes() > 0 ) {
       set_affects( StyleAffects.SELECTED_NODES );
     } else if( selected.num_connections() > 0 ) {

@@ -32,19 +32,19 @@ public class UndoConnectionDelete : UndoItem {
   }
 
   /* Undoes a connection change */
-  public override void undo( DrawArea da ) {
-    da.get_connections().add_connection( _connection );
-    da.set_current_connection( _connection );
-    da.queue_draw();
-    da.auto_save();
+  public override void undo( MindMap map ) {
+    map.connections.add_connection( _connection );
+    map.set_current_connection( _connection );
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Redoes a connection change */
-  public override void redo( DrawArea da ) {
-    da.get_connections().remove_connection( _connection, false );
-    da.set_current_connection( null );
-    da.queue_draw();
-    da.auto_save();
+  public override void redo( MindMap map ) {
+    map.connections.remove_connection( _connection, false );
+    map.set_current_connection( null );
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

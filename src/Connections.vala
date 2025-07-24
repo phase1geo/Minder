@@ -33,19 +33,22 @@ public class Connections {
 
   public bool hide { set; get; default = false; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public Connections() {
     _connections = new Array<Connection>();
   }
 
-  /* Removes all connections */
+  //-------------------------------------------------------------
+  // Removes all connections.
   public void clear_all_connections() {
     _connections.remove_range( 0, _connections.length );
   }
 
-  /* Adds the given connection */
+  //-------------------------------------------------------------
+  // Adds the given connection being sure not to add a connection
+  // that already exists.
   public void add_connection( Connection conn ) {
-    /* Don't add the connection if it has already been added */
     for( int i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ) == conn ) {
         return;
@@ -54,7 +57,16 @@ public class Connections {
     _connections.append_val( conn );
   }
 
-  /* Removes the given connection */
+  //-------------------------------------------------------------
+  // Adds an array of connections.
+  public void add_connections( Array<Connection> conns ) {
+    for( int i=0; i<conns.length; i++ ) {
+      add_connection( conns.index( i ) );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Removes the given connection.
   public bool remove_connection( Connection conn, bool disconnect ) {
     for( uint i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ) == conn ) {
@@ -67,6 +79,14 @@ public class Connections {
       }
     }
     return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Removes an array of connections
+  public void remove_connections( Array<Connection> conns, bool disconnect ) {
+    for( int i=0; i<conns.length; i++ ) {
+      remove_connection( conns.index( i ), disconnect );
+    }
   }
 
   /* Complete the stored connections */
@@ -160,7 +180,9 @@ public class Connections {
     return( null );
   }
 
-  /* Returns the associated connection if the given point is within the drag handle */
+  //-------------------------------------------------------------
+  // Returns the associated connection if the given point is
+  // within the drag handle.
   public Connection? within_drag_handle( double x, double y ) {
     if( !hide ) {
       for( int i=0; i<_connections.length; i++ ) {
@@ -169,6 +191,41 @@ public class Connections {
         }
       }
     }
+    return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the associated connection and its component that is
+  // within the given X,Y coordinates.
+  public Connection? within( double x, double y, out MapItemComponent component ) {
+    if( !hide ) {
+      for( int i=0; i<_connections.length; i++ ) {
+        var conn = _connections.index( i );
+        if( conn.on_curve( x, y ) ) {
+          component = MapItemComponent.CURVE;
+          return( conn );
+        } else if( conn.within_title_box( x, y ) ) {
+          if( conn.within_title( x, y ) ) {
+            component = MapItemComponent.TITLE;
+          } else if( conn.within_note( x, y ) ) {
+            component = MapItemComponent.NOTE;
+          } else if( conn.within_sticker( x, y ) ) {
+            component = MapItemComponent.STICKER;
+          } else {
+            component = MapItemComponent.TITLE_BOX;
+          }
+          return( conn );
+        } else if( conn.within_drag_handle( x, y ) ) {
+          component = MapItemComponent.DRAG_HANDLE;
+          return( conn );
+        } else if( conn.within_from_handle( x, y ) ) {
+          component = MapItemComponent.FROM_HANDLE;
+        } else if( conn.within_to_handle( x, y ) ) {
+          component = MapItemComponent.TO_HANDLE;
+        }
+      }
+    }
+    component = MapItemComponent.NONE;
     return( null );
   }
 
@@ -202,11 +259,11 @@ public class Connections {
   }
 
   /* Loads the listed connections from the given XML data */
-  public void load( DrawArea da, Xml.Node* node, Array<Connection>? conns, Array<Node> nodes ) {
+  public void load( MindMap map, Xml.Node* node, Array<Connection>? conns, Array<Node> nodes ) {
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "connection" ) {
-          var conn = new Connection.from_xml( da, it, nodes );
+          var conn = new Connection.from_xml( map, it, nodes );
           if( conns != null ) {
             conns.append_val( conn );
           }
