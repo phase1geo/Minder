@@ -96,6 +96,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private Exports           _exports;
   private UnicodeInsert     _unicoder;
   private Braindump         _brain;
+  private Shortcuts         _shortcuts;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_new",            action_new },
@@ -156,6 +157,11 @@ public class MainWindow : Gtk.ApplicationWindow {
   public Braindump braindump {
     get {
       return( _brain );
+    }
+  }
+  public Shortcuts shortcuts {
+    get {
+      return( _shortcuts );
     }
   }
 
@@ -340,6 +346,9 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     // Set the window size based on gsettings
     set_window_size();
+
+    // Load the user shortcuts
+    _shortcuts = new Shortcuts();
 
   }
 

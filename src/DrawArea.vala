@@ -1137,7 +1137,7 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Displays the contextual menu based on what is currently
   // selected.
-  private void show_contextual_menu( double x, double y ) {
+  public void show_contextual_menu( double x, double y ) {
 
     var current_node    = _map.selected.current_node();
     var current_conn    = _map.selected.current_connection();
@@ -2517,11 +2517,11 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   //-------------------------------------------------------------
-  // Returns true if the following key was found to be pressed
-  // (regardless of keyboard layout).
-  private bool has_key( uint[] kvs, uint key ) {
+  // Returns true if our keycode matches the input keycode from
+  // the user.
+  private bool has_key( uint[] kvs, uint keycode ) {
     foreach( uint kv in kvs ) {
-      if( kv == key ) return( true );
+      if( kv == keycode ) return( true );
     }
     return( false );
   }
@@ -2806,7 +2806,7 @@ public class DrawArea : Gtk.DrawingArea {
   // Handles a key press/release of the control key.  Checks to
   // see if the current cursor is over a URL.  If it is, sets the
   // cursor appropriately.
-  private void handle_control( bool pressed ) {
+  public void handle_control( bool pressed ) {
     var tag = FormatTag.LENGTH;
     var url = "";
     MapItemComponent component;
