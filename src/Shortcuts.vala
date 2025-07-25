@@ -48,7 +48,6 @@ public enum MapState {
   // Returns true if the given state matches that required for the
   // given command.
   public static bool matches( MapState state, KeyCommand command ) {
-    stdout.printf( "state: %s, command: %s\n", state.to_string(), command.to_string() );
     if( (state == MapState.NODE) && command.for_node() ) {
       return( true );
     } else if( (state == MapState.CONNECTION) && command.for_connection() ) {
@@ -68,7 +67,7 @@ public enum MapState {
 
 public class Shortcuts {
 
-  private class Shortcut {
+  public class Shortcut {
 
     public uint           keycode { get; private set; default = Key.a; }
     public bool           control { get; private set; default = false; }
@@ -118,11 +117,31 @@ public class Shortcuts {
     //-------------------------------------------------------------
     // Returns true if this shortcut matches the given match values
     public bool matches( uint[] kvs, ModifierType mods, MapState state ) {
+      var cm = (bool)(mods & ModifierType.CONTROL_MASK);
+      var sm = (bool)(mods & ModifierType.SHIFT_MASK);
+      var am = (bool)(mods & ModifierType.ALT_MASK);
       return( (this.control == (bool)(mods & ModifierType.CONTROL_MASK)) &&
               (this.shift   == (bool)(mods & ModifierType.SHIFT_MASK))   &&
               (this.alt     == (bool)(mods & ModifierType.ALT_MASK))     &&
               has_key( kvs ) &&
               MapState.matches( state, this.command ) );
+    }
+
+    //-------------------------------------------------------------
+    // Returns the Gtk4 accelerator for this shortcut.
+    public string get_accelerator() {
+      var accel = "";
+      if( control ) {
+        accel += "<Control>";
+      }
+      if( shift ) {
+        accel += "<Shift>";
+      }
+      if( alt ) {
+        accel += "<Alt>";
+      }
+      accel += keyval_name( keycode );
+      return( accel );
     }
 
     //-------------------------------------------------------------
@@ -181,10 +200,13 @@ public class Shortcuts {
   //-------------------------------------------------------------
   // Clears the shortcut for the given command, if it exists.
   // Called by the shortcut preferences class.
-  public void clear_shortcut( KeyCommand command ) {
+  public void clear_shortcut( KeyCommand command, bool auto_save = true ) {
     for( int i=0; i<_shortcuts.length; i++ ) {
       if( _shortcuts.index( i ).command == command ) {
         _shortcuts.remove_index( i );
+        if( auto_save ) {
+          save();
+        }
         return;
       }
     }
@@ -194,8 +216,22 @@ public class Shortcuts {
   // Sets the shortcut for the given command.  Called by the
   // shortcut preferences class.
   public void set_shortcut( KeyCommand command, uint keycode, bool control, bool shift, bool alt ) {
-    clear_shortcut( command );  // TODO - This is probably not going to be necessary
+    clear_shortcut( command, false );  // TODO - This is probably not going to be necessary
     add_shortcut( keycode, control, shift, alt, command );
+    save();
+  }
+
+  //-------------------------------------------------------------
+  // Returns the shortcut associated with the given command in the
+  // current map state.  If none is found, returns null.
+  public Shortcut? get_shortcut( MindMap map, KeyCommand command ) {
+    var map_state = MapState.get_state( map );
+    for( int i=0; i<_shortcuts.length; i++ ) {
+      if( (_shortcuts.index( i ).command == command) && MapState.matches( map_state, command ) ) {
+        return( _shortcuts.index( i ) );
+      }
+    }
+    return( null ); 
   }
 
   //-------------------------------------------------------------
@@ -224,7 +260,6 @@ public class Shortcuts {
 
     for( int i=0; i<_shortcuts.length; i++ ) {
       if( _shortcuts.index( i ).matches( kvs, mods, state ) ) {
-        stdout.printf( "Shortcut %d matches\n", i );
         _shortcuts.index( i ).func( map );
         return( true );
       }
@@ -336,22 +371,22 @@ public class Shortcuts {
     add_shortcut( Key.Return,       false, true,  false, KeyCommand.DO_NOTHING );  // "shift-return" );
     add_shortcut( Key.Tab,          false, false, false, KeyCommand.DO_NOTHING );  // "tab" );
     add_shortcut( Key.Tab,          false, true,  false, KeyCommand.DO_NOTHING );  // "shift-tab" );
-    add_shortcut( Key.Right,        false, false, false, KeyCommand.DO_NOTHING );  // "right" );
+    add_shortcut( Key.Right,        false, false, false, KeyCommand.EDIT_CURSOR_CHAR_NEXT );
+    add_shortcut( Key.Right,        false, false, false, KeyCommand.NODE_SELECT_RIGHT );
     add_shortcut( Key.Right,        false, false, true,  KeyCommand.DO_NOTHING );  // "alt-right" );
-    add_shortcut( Key.Right,        false, true,  false, KeyCommand.DO_NOTHING );  // "shift-right" );
-    add_shortcut( Key.Right,        false, true,  true,  KeyCommand.DO_NOTHING );  // "shift-alt-right" );
-    add_shortcut( Key.Left,         false, false, false, KeyCommand.DO_NOTHING );  // "left" );
+    add_shortcut( Key.Right,        false, true,  false, KeyCommand.EDIT_SELECT_CHAR_NEXT );
+    add_shortcut( Key.Left,         false, false, false, KeyCommand.EDIT_CURSOR_CHAR_PREV );
+    add_shortcut( Key.Left,         false, false, false, KeyCommand.NODE_SELECT_LEFT );
     add_shortcut( Key.Left,         false, false, true,  KeyCommand.DO_NOTHING );  // "alt-left" );
-    add_shortcut( Key.Left,         false, true,  false, KeyCommand.DO_NOTHING );  // "shift-left" );
-    add_shortcut( Key.Left,         false, true,  true,  KeyCommand.DO_NOTHING );  // "shift-alt-left" );
-    add_shortcut( Key.Up,           false, false, false, KeyCommand.DO_NOTHING );  // "up" );
+    add_shortcut( Key.Left,         false, true,  false, KeyCommand.EDIT_SELECT_CHAR_PREV );
+    add_shortcut( Key.Up,           false, false, false, KeyCommand.EDIT_CURSOR_UP );
+    add_shortcut( Key.Up,           false, false, false, KeyCommand.NODE_SELECT_UP );
     add_shortcut( Key.Up,           false, false, true,  KeyCommand.DO_NOTHING );  // "alt-up" );
-    add_shortcut( Key.Up,           false, true,  false, KeyCommand.DO_NOTHING );  // "shift-up" );
-    add_shortcut( Key.Up,           false, true,  true,  KeyCommand.DO_NOTHING );  // "shift-alt-up" );
-    add_shortcut( Key.Down,         false, false, false, KeyCommand.DO_NOTHING );  // "down" );
+    add_shortcut( Key.Up,           false, true,  false, KeyCommand.EDIT_SELECT_UP );
+    add_shortcut( Key.Down,         false, false, false, KeyCommand.EDIT_CURSOR_DOWN );
+    add_shortcut( Key.Down,         false, false, false, KeyCommand.NODE_SELECT_DOWN );
     add_shortcut( Key.Down,         false, false, true,  KeyCommand.DO_NOTHING );  // "alt-down" );
-    add_shortcut( Key.Down,         false, true,  false, KeyCommand.DO_NOTHING );  // "shift-down" );
-    add_shortcut( Key.Down,         false, true,  true,  KeyCommand.DO_NOTHING );  // "shift-alt-down" );
+    add_shortcut( Key.Down,         false, true,  false, KeyCommand.EDIT_SELECT_DOWN );
     add_shortcut( Key.Page_Up,      false, false, false, KeyCommand.DO_NOTHING );  // "page-up" );
     add_shortcut( Key.Page_Down,    false, false, false, KeyCommand.DO_NOTHING );  // "page-down" );
     add_shortcut( Key.Control_L,    false, false, false, KeyCommand.CONTROL_PRESSED );

@@ -2554,7 +2554,6 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     // Attempt to execute a keyboard shortcut
-    stdout.printf( "keycode: %u\n", keycode );
     if( _win.shortcuts.execute( _map, keycode, state ) ) {
       return( true );
 

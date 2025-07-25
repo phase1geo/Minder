@@ -86,12 +86,20 @@ public enum KeyCommand {
   EDIT_INSERT_EMOJI,
   EDIT_REMOVE_WORD_NEXT,
   EDIT_REMOVE_WORD_PREV,
+  EDIT_CURSOR_CHAR_NEXT,
+  EDIT_CURSOR_CHAR_PREV,
+  EDIT_CURSOR_UP,
+  EDIT_CURSOR_DOWN,
   EDIT_CURSOR_WORD_NEXT,
   EDIT_CURSOR_WORD_PREV,
   EDIT_CURSOR_START,
   EDIT_CURSOR_END,
   EDIT_CURSOR_LINESTART,
   EDIT_CURSOR_LINEEND,
+  EDIT_SELECT_CHAR_NEXT,
+  EDIT_SELECT_CHAR_PREV,
+  EDIT_SELECT_UP,
+  EDIT_SELECT_DOWN,
   EDIT_SELECT_WORD_NEXT,
   EDIT_SELECT_WORD_PREV,
   EDIT_SELECT_START_UP,
@@ -161,12 +169,20 @@ public enum KeyCommand {
       case EDIT_INSERT_EMOJI         :  return( "edit-insert-emoji" );
       case EDIT_REMOVE_WORD_NEXT     :  return( "edit-remove-word-next" );
       case EDIT_REMOVE_WORD_PREV     :  return( "edit-remove-word-prev" );
+      case EDIT_CURSOR_CHAR_NEXT     :  return( "edit-cursor-char-next" );
+      case EDIT_CURSOR_CHAR_PREV     :  return( "edit-cursor-char-prev" );
+      case EDIT_CURSOR_UP            :  return( "edit-cursor-up" );
+      case EDIT_CURSOR_DOWN          :  return( "edit-cursor-down" );
       case EDIT_CURSOR_WORD_NEXT     :  return( "edit-cursor-word-next" );
       case EDIT_CURSOR_WORD_PREV     :  return( "edit-cursor-word-prev" );
       case EDIT_CURSOR_START         :  return( "edit-cursor-start" );
       case EDIT_CURSOR_END           :  return( "edit-cursor-end" );
       case EDIT_CURSOR_LINESTART     :  return( "edit-cursor-linestart" );
       case EDIT_CURSOR_LINEEND       :  return( "edit-cursor-lineend" );
+      case EDIT_SELECT_CHAR_NEXT     :  return( "edit-select-char-next" );
+      case EDIT_SELECT_CHAR_PREV     :  return( "edit-select-char-prev" );
+      case EDIT_SELECT_UP            :  return( "edit-select-up" );
+      case EDIT_SELECT_DOWN          :  return( "edit-select-down" );
       case EDIT_SELECT_WORD_NEXT     :  return( "edit-select-word-next" );
       case EDIT_SELECT_WORD_PREV     :  return( "edit-select-word-prev" );
       case EDIT_SELECT_START_UP      :  return( "edit-select-start_up" );
@@ -238,12 +254,20 @@ public enum KeyCommand {
       case "edit-insert-emoji"         :  return( EDIT_INSERT_EMOJI );
       case "edit-remove-word-next"     :  return( EDIT_REMOVE_WORD_NEXT );
       case "edit-remove-word-prev"     :  return( EDIT_REMOVE_WORD_PREV );
+      case "edit-cursor-char-next"     :  return( EDIT_CURSOR_CHAR_NEXT );
+      case "edit-cursor-char-prev"     :  return( EDIT_CURSOR_CHAR_PREV );
+      case "edit-cursor-up"            :  return( EDIT_CURSOR_UP );
+      case "edit-cursor-down"          :  return( EDIT_CURSOR_DOWN );
       case "edit-cursor-word-next"     :  return( EDIT_CURSOR_WORD_NEXT );
       case "edit-cursor-word-prev"     :  return( EDIT_CURSOR_WORD_PREV );
       case "edit-cursor-start"         :  return( EDIT_CURSOR_START );
       case "edit-cursor-end"           :  return( EDIT_CURSOR_END );
       case "edit-cursor-linestart"     :  return( EDIT_CURSOR_LINESTART );
       case "edit-cursor-lineend"       :  return( EDIT_CURSOR_LINEEND );
+      case "edit-select-char-next"     :  return( EDIT_SELECT_CHAR_NEXT );
+      case "edit-select-char-prev"     :  return( EDIT_SELECT_CHAR_PREV );
+      case "edit-select-up"            :  return( EDIT_SELECT_UP );
+      case "edit-select-down"          :  return( EDIT_SELECT_DOWN );
       case "edit-select-word-next"     :  return( EDIT_SELECT_WORD_NEXT );
       case "edit-select-word-prev"     :  return( EDIT_SELECT_WORD_PREV );
       case "edit-select-start-up"      :  return( EDIT_SELECT_START_UP );
@@ -319,12 +343,20 @@ public enum KeyCommand {
       case EDIT_INSERT_EMOJI         :  return( _( "Insert emoji" ) );
       case EDIT_REMOVE_WORD_NEXT     :  return( _( "Remove next word" ) );
       case EDIT_REMOVE_WORD_PREV     :  return( _( "Remove previous word" ) );
+      case EDIT_CURSOR_CHAR_NEXT     :  return( _( "Move cursor to next character" ) );
+      case EDIT_CURSOR_CHAR_PREV     :  return( _( "Move cursor to previous character" ) );
+      case EDIT_CURSOR_UP            :  return( _( "Move cursor up one line" ) );
+      case EDIT_CURSOR_DOWN          :  return( _( "Move cursor down one line" ) );
       case EDIT_CURSOR_WORD_NEXT     :  return( _( "Move cursor to beginning of next word" ) );
       case EDIT_CURSOR_WORD_PREV     :  return( _( "Move cursor to beginning of previous word" ) );
       case EDIT_CURSOR_START         :  return( _( "Move cursor to start of text" ) );
       case EDIT_CURSOR_END           :  return( _( "Move cursor to end of text" ) );
       case EDIT_CURSOR_LINESTART     :  return( _( "Move cursor to start of current line" ) );
       case EDIT_CURSOR_LINEEND       :  return( _( "Move cursor to end of current line" ) );
+      case EDIT_SELECT_CHAR_NEXT     :  return( _( "Add next character to current selection" ) );
+      case EDIT_SELECT_CHAR_PREV     :  return( _( "Add previous character to current selection" ) );
+      case EDIT_SELECT_UP            :  return( _( "Add line up to current selection" ) );
+      case EDIT_SELECT_DOWN          :  return( _( "Add line down to current selection" ) );
       case EDIT_SELECT_WORD_NEXT     :  return( _( "Add next word to current selection" ) );
       case EDIT_SELECT_WORD_PREV     :  return( _( "Add previous word to current selection" ) );
       case EDIT_SELECT_START_UP      :  return( _( "Add start of text to current selection (Control-Up)" ) );
@@ -396,12 +428,20 @@ public enum KeyCommand {
       case EDIT_INSERT_EMOJI         :  return( edit_insert_emoji );
       case EDIT_REMOVE_WORD_NEXT     :  return( edit_remove_word_next );
       case EDIT_REMOVE_WORD_PREV     :  return( edit_remove_word_previous );
+      case EDIT_CURSOR_CHAR_NEXT     :  return( edit_cursor_char_next );
+      case EDIT_CURSOR_CHAR_PREV     :  return( edit_cursor_char_previous );
+      case EDIT_CURSOR_UP            :  return( edit_cursor_up );
+      case EDIT_CURSOR_DOWN          :  return( edit_cursor_down );
       case EDIT_CURSOR_WORD_NEXT     :  return( edit_cursor_word_next );
       case EDIT_CURSOR_WORD_PREV     :  return( edit_cursor_word_previous );
       case EDIT_CURSOR_START         :  return( edit_cursor_to_start );
       case EDIT_CURSOR_END           :  return( edit_cursor_to_end );
       case EDIT_CURSOR_LINESTART     :  return( edit_cursor_to_linestart );
       case EDIT_CURSOR_LINEEND       :  return( edit_cursor_to_lineend );
+      case EDIT_SELECT_CHAR_NEXT     :  return( edit_select_char_next );
+      case EDIT_SELECT_CHAR_PREV     :  return( edit_select_char_previous );
+      case EDIT_SELECT_UP            :  return( edit_select_up );
+      case EDIT_SELECT_DOWN          :  return( edit_select_down );
       case EDIT_SELECT_WORD_NEXT     :  return( edit_select_word_next );
       case EDIT_SELECT_WORD_PREV     :  return( edit_select_word_previous );
       case EDIT_SELECT_START_UP      :  return( edit_select_start_up );
@@ -815,6 +855,10 @@ public enum KeyCommand {
     var text = get_canvas_text( map );
     if( text != null ) {
       switch( dir ) {
+        case "char-next" :  text.move_cursor( 1 );                break;
+        case "char-prev" :  text.move_cursor( -1 );               break;
+        case "up"        :  text.move_cursor_vertically( -1 );    break;
+        case "down"      :  text.move_cursor_vertically( 1 );     break;
         case "word-next" :  text.move_cursor_by_word( 1 );        break;
         case "word-prev" :  text.move_cursor_by_word( -1 );       break;
         case "start"     :  text.move_cursor_to_start();          break;
@@ -833,6 +877,10 @@ public enum KeyCommand {
     var text = get_canvas_text( map );
     if( text != null ) {
       switch( dir ) {
+        case "char-next"  :  text.selection_by_char( 1 );              break;
+        case "char-prev"  :  text.selection_by_char( -1 );             break;
+        case "up"         :  text.selection_vertically( -1 );          break;
+        case "down"       :  text.selection_vertically( 1 );           break;
         case "word-next"  :  text.selection_by_word( 1 );              break;
         case "word-prev"  :  text.selection_by_word( -1 );             break;
         case "start-up"   :  text.selection_to_start( false );         break;
@@ -880,6 +928,22 @@ public enum KeyCommand {
     }
   }
 
+  public static void edit_cursor_char_next( MindMap map ) {
+    edit_cursor( map, "char-next" );
+  }
+
+  public static void edit_cursor_char_previous( MindMap map ) {
+    edit_cursor( map, "char-prev" );
+  }
+
+  public static void edit_cursor_up( MindMap map ) {
+    edit_cursor( map, "up" );
+  }
+
+  public static void edit_cursor_down( MindMap map ) {
+    edit_cursor( map, "down" );
+  }
+
   public static void edit_cursor_word_next( MindMap map ) {
     edit_cursor( map, "word-next" );
   }
@@ -902,6 +966,22 @@ public enum KeyCommand {
 
   public static void edit_cursor_to_lineend( MindMap map ) {
     edit_cursor( map, "lineend" );
+  }
+
+  public static void edit_select_char_next( MindMap map ) {
+    edit_selection( map, "char-next" );
+  }
+
+  public static void edit_select_char_previous( MindMap map ) {
+    edit_selection( map, "char-prev" );
+  }
+
+  public static void edit_select_up( MindMap map ) {
+    edit_selection( map, "up" );
+  }
+
+  public static void edit_select_down( MindMap map ) {
+    edit_selection( map, "down" );
   }
 
   public static void edit_select_word_next( MindMap map ) {
