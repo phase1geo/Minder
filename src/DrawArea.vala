@@ -2113,7 +2113,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   //-------------------------------------------------------------
   // Handles the emoji insertion process for the given text item
-  private void insert_emoji( CanvasText text ) {
+  public void insert_emoji( CanvasText text ) {
     int x, ytop, ybot;
     text.get_cursor_pos( out x, out ytop, out ybot );
     Gdk.Rectangle rect = {x, (ytop + ((ybot - ytop) / 2)), 1, 1};
@@ -2552,6 +2552,21 @@ public class DrawArea : Gtk.DrawingArea {
         _alt = true;
         break;
     }
+
+    // Attempt to execute a keyboard shortcut
+    stdout.printf( "keycode: %u\n", keycode );
+    if( _win.shortcuts.execute( _map, keycode, state ) ) {
+      return( true );
+
+    // If anyone is being edited, just insert the key value
+    } else if( _map.is_node_editable() || _map.is_connection_editable() || _map.is_callout_editable() ) {
+      _im_context.filter_keypress( _key_controller.get_current_event() );
+      return( false );
+    }
+
+    return( true );
+
+    // TODO - THE REST OF THIS CODE SHOULD NOW BE OBSOLETE
 
     /* Figure out which modifiers were used */
     var control         = (bool)(state & ModifierType.CONTROL_MASK);

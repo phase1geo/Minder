@@ -47,15 +47,15 @@ public enum MapState {
   //-------------------------------------------------------------
   // Returns true if the given state matches that required for the
   // given command.
-  public static bool matches( MapState state, string command ) {
-    var any = command.has_prefix( "any-" );
-    if( (state == MapState.NODE) && (command.has_prefix( "node-" ) || any) ) {
+  public static bool matches( MapState state, KeyCommand command ) {
+    stdout.printf( "state: %s, command: %s\n", state.to_string(), command.to_string() );
+    if( (state == MapState.NODE) && command.for_node() ) {
       return( true );
-    } else if( (state == MapState.CONNECTION) && (command.has_prefix( "connection-" ) || any) ) {
+    } else if( (state == MapState.CONNECTION) && command.for_connection() ) {
       return( true );
-    } else if( (state == MapState.CALLOUT) && (command.has_prefix( "callout-" ) || any) ) {
+    } else if( (state == MapState.CALLOUT) && command.for_callout() ) {
       return( true );
-    } else if( (state == MapState.EDITING) && command.has_prefix( "edit-" ) ) {
+    } else if( (state == MapState.EDITING) && command.for_editing() ) {
       return( true );
     } else if( state == MapState.NONE ) {
       return( true );
@@ -70,20 +70,22 @@ public class Shortcuts {
 
   private class Shortcut {
 
-    public uint   keycode { get; private set; default = Key.a; }
-    public bool   control { get; private set; default = false; }
-    public bool   shift   { get; private set; default = false; }
-    public bool   alt     { get; private set; default = false; }
-    public string command { get; private set; default = "none"; }
+    public uint           keycode { get; private set; default = Key.a; }
+    public bool           control { get; private set; default = false; }
+    public bool           shift   { get; private set; default = false; }
+    public bool           alt     { get; private set; default = false; }
+    public KeyCommand     command { get; private set; }
+    public KeyCommandFunc func    { get; private set; }  // We store the function for speed
 
     //-------------------------------------------------------------
     // Default constructor.
-    public Shortcut( uint keycode, bool control, bool shift, bool alt, string command ) {
+    public Shortcut( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
       this.keycode = keycode;
       this.control = control;
       this.shift   = shift;
       this.alt     = alt;
       this.command = command;
+      this.func    = command.get_func();
     }
 
     //-------------------------------------------------------------
@@ -105,7 +107,7 @@ public class Shortcuts {
     //-------------------------------------------------------------
     // Returns true if this shortcut matches the given values exactly.
     // TODO - The command should only compare the prefixes.
-    public bool equals( uint keycode, bool control, bool shift, bool alt, string command ) {
+    public bool equals( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
       return( (keycode == this.keycode) &&
               (control == this.control) &&
               (shift   == this.shift)   &&
@@ -132,7 +134,7 @@ public class Shortcuts {
       node->set_prop( "control", control.to_string() );
       node->set_prop( "shift",   shift.to_string() );
       node->set_prop( "alt",     alt.to_string() );
-      node->set_prop( "command", command );
+      node->set_prop( "command", command.to_string() );
       return( node );
     }
 
@@ -157,21 +159,20 @@ public class Shortcuts {
       }
       var cmd = node->get_prop( "command" );
       if( cmd != null ) {
-        command = cmd;
+        command = KeyCommand.parse( cmd );
+        func    = command.get_func();
       }
     }
 
   }
 
   private Array<Shortcut> _shortcuts;
-  private KeyCommands     _commands;
 
   //-------------------------------------------------------------
   // Default constructor
   public Shortcuts() {
 
     _shortcuts = new Array<Shortcut>();
-    _commands  = new KeyCommands();
 
     load();
 
@@ -180,7 +181,7 @@ public class Shortcuts {
   //-------------------------------------------------------------
   // Clears the shortcut for the given command, if it exists.
   // Called by the shortcut preferences class.
-  public void clear_shortcut( string command ) {
+  public void clear_shortcut( KeyCommand command ) {
     for( int i=0; i<_shortcuts.length; i++ ) {
       if( _shortcuts.index( i ).command == command ) {
         _shortcuts.remove_index( i );
@@ -192,14 +193,14 @@ public class Shortcuts {
   //-------------------------------------------------------------
   // Sets the shortcut for the given command.  Called by the
   // shortcut preferences class.
-  public void set_shortcut( string command, uint keycode, bool control, bool shift, bool alt ) {
+  public void set_shortcut( KeyCommand command, uint keycode, bool control, bool shift, bool alt ) {
     clear_shortcut( command );  // TODO - This is probably not going to be necessary
     add_shortcut( keycode, control, shift, alt, command );
   }
 
   //-------------------------------------------------------------
   // Checks to see if the given shortcut is already mapped.
-  public bool shortcut_exists( uint keycode, bool control, bool shift, bool alt, string command ) {
+  public bool shortcut_exists( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
     for( int i=0; i<_shortcuts.length; i++ ) {
       if( _shortcuts.index( i ).equals( keycode, control, shift, alt, command ) ) {
         return( true );
@@ -223,7 +224,8 @@ public class Shortcuts {
 
     for( int i=0; i<_shortcuts.length; i++ ) {
       if( _shortcuts.index( i ).matches( kvs, mods, state ) ) {
-        _commands.execute( map, _shortcuts.index( i ).command );
+        stdout.printf( "Shortcut %d matches\n", i );
+        _shortcuts.index( i ).func( map );
         return( true );
       }
     }
@@ -285,7 +287,7 @@ public class Shortcuts {
 
   //-------------------------------------------------------------
   // Adds a single shortcut to the list of shortcuts.
-  private void add_shortcut( uint keycode, bool control, bool shift, bool alt, string command ) {
+  private void add_shortcut( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
     var shortcut = new Shortcut( keycode, control, shift, alt, command );
     _shortcuts.append_val( shortcut );
   }
@@ -297,115 +299,115 @@ public class Shortcuts {
 
     // TODO - Cleanup command names
 
-    add_shortcut( Key.c,         true, false, false, "copy" );
-    add_shortcut( Key.x,         true, false, false, "cut" );
-    add_shortcut( Key.v,         true, false, false, "paste-insert" );
-    add_shortcut( Key.v,         true, true,  false, "paste-replace" );
-    add_shortcut( Key.Return,    true, false, false, "insert-newline" );
-    add_shortcut( Key.BackSpace, true, false, false, "backspace-word" );
-    add_shortcut( Key.Delete,    true, false, false, "delete-word" );
-    add_shortcut( Key.Tab,       true, false, false, "insert-tab" );
-    add_shortcut( Key.Right,     true, true,  false, "select-word-right" );
-    add_shortcut( Key.Right,     true, false, false, "move-word-right" );
-    add_shortcut( Key.Left,      true, true,  false, "select-word-left" );
-    add_shortcut( Key.Left,      true, false, false, "move-word-left" );
-    add_shortcut( Key.Up,        true, true,  false, "select-to-start" );
-    add_shortcut( Key.Up,        true, false, false, "move-to-start" );
-    add_shortcut( Key.Down,      true, true,  false, "select-to-end" );
-    add_shortcut( Key.Down,      true, false, false, "move-to-end" );
-    add_shortcut( Key.Home,      true, true,  false, "select-to-linestart" );
-    add_shortcut( Key.Home,      true, false, false, "move-to-linestart" );
-    add_shortcut( Key.End,       true, true,  false, "select-to-lineend" );
-    add_shortcut( Key.End,       true, false, false, "move-to-lineend" );
-    add_shortcut( Key.a,         true, false, false, "select-all" );
-    add_shortcut( Key.a,         true, true,  false, "deselect-all" );
-    add_shortcut( Key.period,    true, false, false, "insert-emoji" );
-    add_shortcut( Key.e,         true, true,  false, "quick-entry-insert" );
-    add_shortcut( Key.k,         true, false, false, "add-url" );
-    add_shortcut( Key.k,         true, true,  false, "remove-url" );
-    add_shortcut( Key.r,         true, true,  false, "quick-entry-replace" );
-    add_shortcut( Key.w,         true, false, false, "close-map" );
-    add_shortcut( Key.y,         true, false, false, "paste-node-link" );
+    add_shortcut( Key.c,            true, false, false, KeyCommand.DO_NOTHING );  // "copy" );
+    add_shortcut( Key.x,            true, false, false, KeyCommand.DO_NOTHING );  // "cut" );
+    add_shortcut( Key.v,            true, false, false, KeyCommand.DO_NOTHING );  // "paste-insert" );
+    add_shortcut( Key.v,            true, true,  false, KeyCommand.DO_NOTHING );  // "paste-replace" );
+    add_shortcut( Key.Return,       true, false, false, KeyCommand.EDIT_INSERT_NEWLINE );
+    add_shortcut( Key.BackSpace,    true, false, false, KeyCommand.EDIT_REMOVE_WORD_PREV );
+    add_shortcut( Key.Delete,       true, false, false, KeyCommand.EDIT_REMOVE_WORD_NEXT );
+    add_shortcut( Key.Tab,          true, false, false, KeyCommand.EDIT_INSERT_TAB );
+    add_shortcut( Key.Right,        true, true,  false, KeyCommand.EDIT_SELECT_WORD_NEXT );
+    add_shortcut( Key.Right,        true, false, false, KeyCommand.EDIT_CURSOR_WORD_NEXT );
+    add_shortcut( Key.Left,         true, true,  false, KeyCommand.EDIT_SELECT_WORD_PREV );
+    add_shortcut( Key.Left,         true, false, false, KeyCommand.EDIT_CURSOR_WORD_PREV );
+    add_shortcut( Key.Up,           true, true,  false, KeyCommand.EDIT_SELECT_START_UP );
+    add_shortcut( Key.Up,           true, false, false, KeyCommand.EDIT_CURSOR_START );
+    add_shortcut( Key.Down,         true, true,  false, KeyCommand.EDIT_SELECT_END_DOWN );
+    add_shortcut( Key.Down,         true, false, false, KeyCommand.EDIT_CURSOR_END );
+    add_shortcut( Key.Home,         true, true,  false, KeyCommand.EDIT_SELECT_START_HOME );
+    add_shortcut( Key.Home,         true, false, false, KeyCommand.EDIT_CURSOR_LINESTART );
+    add_shortcut( Key.End,          true, true,  false, KeyCommand.EDIT_SELECT_END_END );
+    add_shortcut( Key.End,          true, false, false, KeyCommand.EDIT_CURSOR_LINEEND );
+    add_shortcut( Key.a,            true, false, false, KeyCommand.EDIT_SELECT_ALL );
+    add_shortcut( Key.a,            true, true,  false, KeyCommand.EDIT_SELECT_NONE );
+    add_shortcut( Key.period,       true, false, false, KeyCommand.EDIT_INSERT_EMOJI );
+    add_shortcut( Key.e,            true, true,  false, KeyCommand.DO_NOTHING );  // "quick-entry-insert" );
+    add_shortcut( Key.k,            true, false, false, KeyCommand.DO_NOTHING );  // "add-url" );
+    add_shortcut( Key.k,            true, true,  false, KeyCommand.DO_NOTHING );  // "remove-url" );
+    add_shortcut( Key.r,            true, true,  false, KeyCommand.DO_NOTHING );  // "quick-entry-replace" );
+    add_shortcut( Key.w,            true, false, false, KeyCommand.DO_NOTHING );  // "close-map" );
+    add_shortcut( Key.y,            true, false, false, KeyCommand.DO_NOTHING );  // "paste-node-link" );
 
-    add_shortcut( Key.BackSpace, false, false, false, "backspace" );
-    add_shortcut( Key.Delete,    false, false, false, "delete" );
-    add_shortcut( Key.Escape,    false, false, false, "escape" );
-    add_shortcut( Key.Return,    false, false, false, "return" );
-    add_shortcut( Key.Return,    false, true,  false, "shift-return" );
-    add_shortcut( Key.Tab,       false, false, false, "tab" );
-    add_shortcut( Key.Tab,       false, true,  false, "shift-tab" );
-    add_shortcut( Key.Right,     false, false, false, "right" );
-    add_shortcut( Key.Right,     false, false, true,  "alt-right" );
-    add_shortcut( Key.Right,     false, true,  false, "shift-right" );
-    add_shortcut( Key.Right,     false, true,  true,  "shift-alt-right" );
-    add_shortcut( Key.Left,      false, false, false, "left" );
-    add_shortcut( Key.Left,      false, false, true,  "alt-left" );
-    add_shortcut( Key.Left,      false, true,  false, "shift-left" );
-    add_shortcut( Key.Left,      false, true,  true,  "shift-alt-left" );
-    add_shortcut( Key.Up,        false, false, false, "up" );
-    add_shortcut( Key.Up,        false, false, true,  "alt-up" );
-    add_shortcut( Key.Up,        false, true,  false, "shift-up" );
-    add_shortcut( Key.Up,        false, true,  true,  "shift-alt-up" );
-    add_shortcut( Key.Down,      false, false, false, "down" );
-    add_shortcut( Key.Down,      false, false, true,  "alt-down" );
-    add_shortcut( Key.Down,      false, true,  false, "shift-down" );
-    add_shortcut( Key.Down,      false, true,  true,  "shift-alt-down" );
-    add_shortcut( Key.Page_Up,   false, false, false, "page-up" );
-    add_shortcut( Key.Page_Down, false, false, false, "page-down" );
-    add_shortcut( Key.Control_L, false, false, false, "control-pressed" );
-    add_shortcut( Key.Control_R, false, false, false, "control-pressed" );
-    add_shortcut( Key.F10,       false, true,  false, "show-contextual-menu" );
-    add_shortcut( Key.Menu,      false, false, false, "show-contextual-menu" );
+    add_shortcut( Key.BackSpace,    false, false, false, KeyCommand.DO_NOTHING );  // "backspace" );
+    add_shortcut( Key.Delete,       false, false, false, KeyCommand.DO_NOTHING );  // "delete" );
+    add_shortcut( Key.Escape,       false, false, false, KeyCommand.DO_NOTHING );  // "escape" );
+    add_shortcut( Key.Return,       false, false, false, KeyCommand.DO_NOTHING );  // "return" );
+    add_shortcut( Key.Return,       false, true,  false, KeyCommand.DO_NOTHING );  // "shift-return" );
+    add_shortcut( Key.Tab,          false, false, false, KeyCommand.DO_NOTHING );  // "tab" );
+    add_shortcut( Key.Tab,          false, true,  false, KeyCommand.DO_NOTHING );  // "shift-tab" );
+    add_shortcut( Key.Right,        false, false, false, KeyCommand.DO_NOTHING );  // "right" );
+    add_shortcut( Key.Right,        false, false, true,  KeyCommand.DO_NOTHING );  // "alt-right" );
+    add_shortcut( Key.Right,        false, true,  false, KeyCommand.DO_NOTHING );  // "shift-right" );
+    add_shortcut( Key.Right,        false, true,  true,  KeyCommand.DO_NOTHING );  // "shift-alt-right" );
+    add_shortcut( Key.Left,         false, false, false, KeyCommand.DO_NOTHING );  // "left" );
+    add_shortcut( Key.Left,         false, false, true,  KeyCommand.DO_NOTHING );  // "alt-left" );
+    add_shortcut( Key.Left,         false, true,  false, KeyCommand.DO_NOTHING );  // "shift-left" );
+    add_shortcut( Key.Left,         false, true,  true,  KeyCommand.DO_NOTHING );  // "shift-alt-left" );
+    add_shortcut( Key.Up,           false, false, false, KeyCommand.DO_NOTHING );  // "up" );
+    add_shortcut( Key.Up,           false, false, true,  KeyCommand.DO_NOTHING );  // "alt-up" );
+    add_shortcut( Key.Up,           false, true,  false, KeyCommand.DO_NOTHING );  // "shift-up" );
+    add_shortcut( Key.Up,           false, true,  true,  KeyCommand.DO_NOTHING );  // "shift-alt-up" );
+    add_shortcut( Key.Down,         false, false, false, KeyCommand.DO_NOTHING );  // "down" );
+    add_shortcut( Key.Down,         false, false, true,  KeyCommand.DO_NOTHING );  // "alt-down" );
+    add_shortcut( Key.Down,         false, true,  false, KeyCommand.DO_NOTHING );  // "shift-down" );
+    add_shortcut( Key.Down,         false, true,  true,  KeyCommand.DO_NOTHING );  // "shift-alt-down" );
+    add_shortcut( Key.Page_Up,      false, false, false, KeyCommand.DO_NOTHING );  // "page-up" );
+    add_shortcut( Key.Page_Down,    false, false, false, KeyCommand.DO_NOTHING );  // "page-down" );
+    add_shortcut( Key.Control_L,    false, false, false, KeyCommand.CONTROL_PRESSED );
+    add_shortcut( Key.Control_R,    false, false, false, KeyCommand.CONTROL_PRESSED );
+    add_shortcut( Key.F10,          false, true,  false, KeyCommand.SHOW_CONTEXTUAL_MENU );
+    add_shortcut( Key.Menu,         false, false, false, KeyCommand.SHOW_CONTEXTUAL_MENU );
 
-    add_shortcut( Key.minus,        false, false, false, "node-align-top" );
-    add_shortcut( Key.equal,        false, false, false, "node-align-vcenter" );
-    add_shortcut( Key.z,            false, true,  false, "zoom-in" );
-    add_shortcut( Key.bracketleft,  false, false, false, "node-align-left" );
-    add_shortcut( Key.bracketright, false, false, false, "node-align-right" );
-    add_shortcut( Key.underscore,   false, true,  false, "node-align-bottom" );
-    add_shortcut( Key.a,            false, false, false, "node-select-parent" );
-    add_shortcut( Key.d,            false, false, false, "node-select-children" );
-    add_shortcut( Key.f,            false, false, false, "node-toggle-folds-shallow" );
-    add_shortcut( Key.f,            false, true,  false, "node-toggle-folds-deep" );
-    add_shortcut( Key.g,            false, false, false, "node-add-group" );
-    add_shortcut( Key.l,            false, true,  false, "node-change-link-color" );
-    add_shortcut( Key.m,            false, false, false, "node-select-root" );
-    add_shortcut( Key.r,            false, false, false, "redo-action" );
-    add_shortcut( Key.t,            false, false, false, "node-change-task" );
-    add_shortcut( Key.u,            false, false, false, "undo-action" );
-    add_shortcut( Key.z,            false, false, false, "zoom-out" );
-    add_shortcut( Key.bar,          false, true,  false, "node-align-hcenter" );
-    add_shortcut( Key.numbersign,   false, true,  false, "node-toggle-sequence" );
-    add_shortcut( Key.x,            false, false, false, "node-create-connection" );
-    add_shortcut( Key.y,            false, false, false, "node-toggle-links" );
-    add_shortcut( Key.e,            false, true,  false, "show-properties-note" );
-    add_shortcut( Key.i,            false, false, false, "show-properties-first" );
-    add_shortcut( Key.e,            false, false, false, "any-editable" );
-    add_shortcut( Key.s,            false, false, false, "show-selected" );
+    add_shortcut( Key.minus,        false, false, false, KeyCommand.NODE_ALIGN_TOP );
+    add_shortcut( Key.equal,        false, false, false, KeyCommand.NODE_ALIGN_VCENTER );
+    add_shortcut( Key.z,            false, true,  false, KeyCommand.ZOOM_IN );
+    add_shortcut( Key.bracketleft,  false, false, false, KeyCommand.NODE_ALIGN_LEFT );
+    add_shortcut( Key.bracketright, false, false, false, KeyCommand.NODE_ALIGN_RIGHT );
+    add_shortcut( Key.underscore,   false, true,  false, KeyCommand.NODE_ALIGN_BOTTOM );
+    add_shortcut( Key.a,            false, false, false, KeyCommand.NODE_SELECT_PARENT );
+    add_shortcut( Key.d,            false, false, false, KeyCommand.NODE_SELECT_CHILDREN );
+    add_shortcut( Key.f,            false, false, false, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW );
+    add_shortcut( Key.f,            false, true,  false, KeyCommand.NODE_TOGGLE_FOLDS_DEEP );
+    add_shortcut( Key.g,            false, false, false, KeyCommand.NODE_ADD_GROUP );
+    add_shortcut( Key.l,            false, true,  false, KeyCommand.NODE_CHANGE_LINK_COLOR );
+    add_shortcut( Key.m,            false, false, false, KeyCommand.NODE_SELECT_ROOT );
+    add_shortcut( Key.r,            false, false, false, KeyCommand.REDO_ACTION );
+    add_shortcut( Key.t,            false, false, false, KeyCommand.NODE_CHANGE_TASK );
+    add_shortcut( Key.u,            false, false, false, KeyCommand.UNDO_ACTION );
+    add_shortcut( Key.z,            false, false, false, KeyCommand.ZOOM_OUT );
+    add_shortcut( Key.bar,          false, true,  false, KeyCommand.NODE_ALIGN_HCENTER );
+    add_shortcut( Key.numbersign,   false, true,  false, KeyCommand.NODE_TOGGLE_SEQUENCE );
+    add_shortcut( Key.x,            false, false, false, KeyCommand.NODE_ADD_CONNECTION );
+    add_shortcut( Key.y,            false, false, false, KeyCommand.NODE_TOGGLE_LINKS );
+    add_shortcut( Key.e,            false, true,  false, KeyCommand.EDIT_NOTE );
+    add_shortcut( Key.i,            false, false, false, KeyCommand.SHOW_CURRENT_SIDEBAR );
+    add_shortcut( Key.e,            false, false, false, KeyCommand.EDIT_SELECTED );
+    add_shortcut( Key.s,            false, false, false, KeyCommand.SHOW_SELECTED );
 
-    add_shortcut( Key.o,            false, true,  false, "callout-select-node" );
+    add_shortcut( Key.o,            false, true,  false, KeyCommand.CALLOUT_SELECT_NODE );
 
-    add_shortcut( Key.f,            false, false, false, "connection-select-from-node" );
-    add_shortcut( Key.n,            false, false, false, "connection-select-next" );
-    add_shortcut( Key.p,            false, false, false, "connection-select-previous" );
-    add_shortcut( Key.t,            false, false, false, "connection-select-to-node" );
+    add_shortcut( Key.f,            false, false, false, KeyCommand.CONNECTION_SELECT_FROM );
+    add_shortcut( Key.n,            false, false, false, KeyCommand.CONNECTION_SELECT_NEXT );
+    add_shortcut( Key.p,            false, false, false, KeyCommand.CONNECTION_SELECT_PREV );
+    add_shortcut( Key.t,            false, false, false, KeyCommand.CONNECTION_SELECT_TO );
 
-    add_shortcut( Key.c,            false, true,  false, "node-center" );
-    add_shortcut( Key.d,            false, true,  false, "node-select-tree" );
-    add_shortcut( Key.i,            false, true,  false, "node-add-image" );
-    add_shortcut( Key.o,            false, true,  false, "node-select-callout" );
-    add_shortcut( Key.s,            false, true,  false, "node-sort-alphabetically" );
-    add_shortcut( Key.x,            false, true,  false, "node-select-connection" );
-    add_shortcut( Key.y,            false, true,  false, "node-select-linked-node" );
-    add_shortcut( Key.c,            false, false, false, "node-select-child-node" );
-    add_shortcut( Key.h,            false, false, false, "node-select-left" );
-    add_shortcut( Key.j,            false, false, false, "node-select-down" );
-    add_shortcut( Key.k,            false, false, false, "node-select-up" );
-    add_shortcut( Key.l,            false, false, false, "node-select-right" );
-    add_shortcut( Key.n,            false, false, false, "node-select-sibling-next" );
-    add_shortcut( Key.o,            false, false, false, "node-add-callout" );
-    add_shortcut( Key.p,            false, false, false, "node-select-sibling-previous" );
-    add_shortcut( Key.x,            false, false, false, "node-start-connection" );
+    add_shortcut( Key.c,            false, true,  false, KeyCommand.NODE_CENTER );
+    add_shortcut( Key.d,            false, true,  false, KeyCommand.NODE_SELECT_TREE );
+    add_shortcut( Key.i,            false, true,  false, KeyCommand.NODE_ADD_IMAGE );
+    add_shortcut( Key.o,            false, true,  false, KeyCommand.NODE_SELECT_CALLOUT );
+    add_shortcut( Key.s,            false, true,  false, KeyCommand.NODE_SORT_ALPHABETICALLY );
+    add_shortcut( Key.x,            false, true,  false, KeyCommand.NODE_SELECT_CONNECTION );
+    add_shortcut( Key.y,            false, true,  false, KeyCommand.NODE_SELECT_LINKED );
+    add_shortcut( Key.c,            false, false, false, KeyCommand.NODE_SELECT_CHILD );
+    add_shortcut( Key.h,            false, false, false, KeyCommand.NODE_SELECT_LEFT );
+    add_shortcut( Key.j,            false, false, false, KeyCommand.NODE_SELECT_DOWN );
+    add_shortcut( Key.k,            false, false, false, KeyCommand.NODE_SELECT_UP );
+    add_shortcut( Key.l,            false, false, false, KeyCommand.NODE_SELECT_RIGHT );
+    add_shortcut( Key.n,            false, false, false, KeyCommand.NODE_SELECT_SIBLING_NEXT );
+    add_shortcut( Key.o,            false, false, false, KeyCommand.NODE_ADD_CALLOUT );
+    add_shortcut( Key.p,            false, false, false, KeyCommand.NODE_SELECT_SIBLING_PREV );
+    add_shortcut( Key.x,            false, false, false, KeyCommand.NODE_ADD_CONNECTION );
 
     // Save the shortcuts to the save file
     save();

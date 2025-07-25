@@ -587,11 +587,7 @@ public class NodeMenu {
   }
 
   public void action_change_link_color() {
-    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _map.win );
-    color_picker.color_activated.connect((color) => {
-      _map.model.change_current_link_color( color );
-    });
-    color_picker.present();
+    _map.change_current_link_color();
   }
 
   private void action_randomize_link_color() {
