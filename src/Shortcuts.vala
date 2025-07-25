@@ -65,125 +65,126 @@ public enum MapState {
 
 }
 
-public class Shortcuts {
+public class Shortcut {
 
-  public class Shortcut {
+  public uint           keycode { get; private set; default = Key.a; }
+  public bool           control { get; private set; default = false; }
+  public bool           shift   { get; private set; default = false; }
+  public bool           alt     { get; private set; default = false; }
+  public KeyCommand     command { get; private set; }
+  public KeyCommandFunc func    { get; private set; }  // We store the function for speed
 
-    public uint           keycode { get; private set; default = Key.a; }
-    public bool           control { get; private set; default = false; }
-    public bool           shift   { get; private set; default = false; }
-    public bool           alt     { get; private set; default = false; }
-    public KeyCommand     command { get; private set; }
-    public KeyCommandFunc func    { get; private set; }  // We store the function for speed
-
-    //-------------------------------------------------------------
-    // Default constructor.
-    public Shortcut( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
-      this.keycode = keycode;
-      this.control = control;
-      this.shift   = shift;
-      this.alt     = alt;
-      this.command = command;
-      this.func    = command.get_func();
-    }
-
-    //-------------------------------------------------------------
-    // Constructor from XML.
-    public Shortcut.from_xml( Xml.Node* node ) {
-      load( node );
-    }
-
-    //-------------------------------------------------------------
-    // Returns true if our keycode matches the input keycode from
-    // the user.
-    private bool has_key( uint[] kvs ) {
-      foreach( uint kv in kvs ) {
-        if( kv == this.keycode ) return( true );
-      }
-      return( false );
-    }
-
-    //-------------------------------------------------------------
-    // Returns true if this shortcut matches the given values exactly.
-    // TODO - The command should only compare the prefixes.
-    public bool equals( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
-      return( (keycode == this.keycode) &&
-              (control == this.control) &&
-              (shift   == this.shift)   &&
-              (alt     == this.alt)     &&
-              (command == this.command) );
-    }
-
-    //-------------------------------------------------------------
-    // Returns true if this shortcut matches the given match values
-    public bool matches( uint[] kvs, ModifierType mods, MapState state ) {
-      var cm = (bool)(mods & ModifierType.CONTROL_MASK);
-      var sm = (bool)(mods & ModifierType.SHIFT_MASK);
-      var am = (bool)(mods & ModifierType.ALT_MASK);
-      return( (this.control == (bool)(mods & ModifierType.CONTROL_MASK)) &&
-              (this.shift   == (bool)(mods & ModifierType.SHIFT_MASK))   &&
-              (this.alt     == (bool)(mods & ModifierType.ALT_MASK))     &&
-              has_key( kvs ) &&
-              MapState.matches( state, this.command ) );
-    }
-
-    //-------------------------------------------------------------
-    // Returns the Gtk4 accelerator for this shortcut.
-    public string get_accelerator() {
-      var accel = "";
-      if( control ) {
-        accel += "<Control>";
-      }
-      if( shift ) {
-        accel += "<Shift>";
-      }
-      if( alt ) {
-        accel += "<Alt>";
-      }
-      accel += keyval_name( keycode );
-      return( accel );
-    }
-
-    //-------------------------------------------------------------
-    // Saves the contents of this shortcut to an XML node and returns
-    // it.
-    public Xml.Node* save() {
-      Xml.Node* node = new Xml.Node( null, "shortcut" );
-      node->set_prop( "key",     keycode.to_string() );
-      node->set_prop( "control", control.to_string() );
-      node->set_prop( "shift",   shift.to_string() );
-      node->set_prop( "alt",     alt.to_string() );
-      node->set_prop( "command", command.to_string() );
-      return( node );
-    }
-
-    //-------------------------------------------------------------
-    // Loads this shortcut from an XML node.
-    private void load( Xml.Node* node ) {
-      var k = node->get_prop( "key" );
-      if( k != null ) {
-        keycode = uint.parse( k );
-      }
-      var c = node->get_prop( "control" );
-      if( c != null ) {
-        control = bool.parse( c );
-      }
-      var s = node->get_prop( "shift" );
-      if( s != null ) {
-        shift = bool.parse( s );
-      }
-      var a = node->get_prop( "alt" );
-      if( a != null ) {
-        alt = bool.parse( a );
-      }
-      var cmd = node->get_prop( "command" );
-      if( cmd != null ) {
-        command = KeyCommand.parse( cmd );
-        func    = command.get_func();
-      }
-    }
-
+  //-------------------------------------------------------------
+  // Default constructor.
+  public Shortcut( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
+    this.keycode = keycode;
+    this.control = control;
+    this.shift   = shift;
+    this.alt     = alt;
+    this.command = command;
+    this.func    = command.get_func();
   }
+
+  //-------------------------------------------------------------
+  // Constructor from XML.
+  public Shortcut.from_xml( Xml.Node* node ) {
+    load( node );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if our keycode matches the input keycode from
+  // the user.
+  private bool has_key( uint[] kvs ) {
+    foreach( uint kv in kvs ) {
+      if( kv == this.keycode ) return( true );
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this shortcut matches the given values exactly.
+  // TODO - The command should only compare the prefixes.
+  public bool equals( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
+    return( (keycode == this.keycode) &&
+            (control == this.control) &&
+            (shift   == this.shift)   &&
+            (alt     == this.alt)     &&
+            (command == this.command) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this shortcut matches the given match values
+  public bool matches( uint[] kvs, ModifierType mods, MapState state ) {
+    var cm = (bool)(mods & ModifierType.CONTROL_MASK);
+    var sm = (bool)(mods & ModifierType.SHIFT_MASK);
+    var am = (bool)(mods & ModifierType.ALT_MASK);
+    return( (this.control == (bool)(mods & ModifierType.CONTROL_MASK)) &&
+            (this.shift   == (bool)(mods & ModifierType.SHIFT_MASK))   &&
+            (this.alt     == (bool)(mods & ModifierType.ALT_MASK))     &&
+            has_key( kvs ) &&
+            MapState.matches( state, this.command ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the Gtk4 accelerator for this shortcut.
+  public string get_accelerator() {
+    var accel = "";
+    if( control ) {
+      accel += "<Control>";
+    }
+    if( shift ) {
+      accel += "<Shift>";
+    }
+    if( alt ) {
+      accel += "<Alt>";
+    }
+    accel += keyval_name( keycode );
+    return( accel );
+  }
+
+  //-------------------------------------------------------------
+  // Saves the contents of this shortcut to an XML node and returns
+  // it.
+  public Xml.Node* save() {
+    Xml.Node* node = new Xml.Node( null, "shortcut" );
+    node->set_prop( "key",     keycode.to_string() );
+    node->set_prop( "control", control.to_string() );
+    node->set_prop( "shift",   shift.to_string() );
+    node->set_prop( "alt",     alt.to_string() );
+    node->set_prop( "command", command.to_string() );
+    return( node );
+  }
+
+  //-------------------------------------------------------------
+  // Loads this shortcut from an XML node.
+  private void load( Xml.Node* node ) {
+    var k = node->get_prop( "key" );
+    if( k != null ) {
+      keycode = uint.parse( k );
+    }
+    var c = node->get_prop( "control" );
+    if( c != null ) {
+      control = bool.parse( c );
+    }
+    var s = node->get_prop( "shift" );
+    if( s != null ) {
+      shift = bool.parse( s );
+    }
+    var a = node->get_prop( "alt" );
+    if( a != null ) {
+      alt = bool.parse( a );
+    }
+    var cmd = node->get_prop( "command" );
+    if( cmd != null ) {
+      command = KeyCommand.parse( cmd );
+      func    = command.get_func();
+    }
+  }
+
+}
+
+
+public class Shortcuts {
 
   private Array<Shortcut> _shortcuts;
 
