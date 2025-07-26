@@ -2554,7 +2554,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     // Attempt to execute a keyboard shortcut
-    if( _win.shortcuts.execute( _map, keycode, state ) ) {
+    if( _win.shortcuts.execute( _map, keyval, keycode, state ) ) {
       return( true );
 
     // If anyone is being edited, just insert the key value

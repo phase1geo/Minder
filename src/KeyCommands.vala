@@ -70,6 +70,9 @@ public enum KeyCommand {
   NODE_TOGGLE_LINKS,
   NODE_CENTER,
   NODE_SORT_ALPHABETICALLY,
+  NODE_QUICK_ENTRY_INSERT,
+  NODE_QUICK_ENTRY_REPLACE,
+  NODE_PASTE_NODE_LINK,
   NODE_END,
   CONNECTION_START,
   CONNECTION_SELECT_FROM,
@@ -159,6 +162,9 @@ public enum KeyCommand {
       case NODE_TOGGLE_LINKS         :  return( "node-toggle-links" );
       case NODE_CENTER               :  return( "node-center" );
       case NODE_SORT_ALPHABETICALLY  :  return( "node-sort-alphabetically" );
+      case NODE_QUICK_ENTRY_INSERT   :  return( "node-quick-entry-insert" );
+      case NODE_QUICK_ENTRY_REPLACE  :  return( "node-quick-entry-replace" );
+      case NODE_PASTE_NODE_LINK      :  return( "node-paste-node-link" );
       case CONNECTION_SELECT_FROM    :  return( "connection-select-from" );
       case CONNECTION_SELECT_TO      :  return( "connection-select-to" );
       case CONNECTION_SELECT_NEXT    :  return( "connection-select-next" );
@@ -244,6 +250,9 @@ public enum KeyCommand {
       case "node-toggle-links"         :  return( NODE_TOGGLE_LINKS );
       case "node-center"               :  return( NODE_CENTER );
       case "node-sort-alphabetically"  :  return( NODE_SORT_ALPHABETICALLY );
+      case "node-quick-entry-insert"   :  return( NODE_QUICK_ENTRY_INSERT );
+      case "node-quick-entry-replace"  :  return( NODE_QUICK_ENTRY_REPLACE );
+      case "node-paste-node-link"      :  return( NODE_PASTE_NODE_LINK );
       case "connection-select-from"    :  return( CONNECTION_SELECT_FROM );
       case "connection-select-to"      :  return( CONNECTION_SELECT_TO );
       case "connection-select-next"    :  return( CONNECTION_SELECT_NEXT );
@@ -330,6 +339,9 @@ public enum KeyCommand {
       case NODE_TOGGLE_LINKS         :  return( _( "Toggle the node link state" ) );
       case NODE_CENTER               :  return( _( "Center current node in map canvas" ) );
       case NODE_SORT_ALPHABETICALLY  :  return( _( "Sort child nodes of current node alphabetically" ) );
+      case NODE_QUICK_ENTRY_INSERT   :  return( _( "Use quick entry to insert nodes" ) );
+      case NODE_QUICK_ENTRY_REPLACE  :  return( _( "Use quick entry to replace current node" ) );
+      case NODE_PASTE_NODE_LINK      :  return( _( "Paste node link from clipboard into current node" ) );
       case CONNECTION_START          :  return( _( "Connection Commands" ) );
       case CONNECTION_SELECT_FROM    :  return( _( "Select connection source node" ) );
       case CONNECTION_SELECT_TO      :  return( _( "Select connection target node" ) );
@@ -418,6 +430,9 @@ public enum KeyCommand {
       case NODE_TOGGLE_LINKS         :  return( node_toggle_links );
       case NODE_CENTER               :  return( node_center );
       case NODE_SORT_ALPHABETICALLY  :  return( node_sort_alphabetically );
+      case NODE_QUICK_ENTRY_INSERT   :  return( node_quick_entry_insert );
+      case NODE_QUICK_ENTRY_REPLACE  :  return( node_quick_entry_replace );
+      case NODE_PASTE_NODE_LINK      :  return( node_paste_node_link );
       case CONNECTION_SELECT_FROM    :  return( connection_select_from_node );
       case CONNECTION_SELECT_TO      :  return( connection_select_to_node );
       case CONNECTION_SELECT_NEXT    :  return( connection_select_next );
@@ -479,11 +494,21 @@ public enum KeyCommand {
   // or callout selected in the map.
   public bool for_any() {
     switch( this ) {
-      case EDIT_NOTE     :
+      case EDIT_NOTE            :
       case SHOW_CURRENT_SIDEBAR :
-      case EDIT_SELECTED :
-      case SHOW_SELECTED :  return( true );
-      default            :  return( false );
+      case EDIT_SELECTED        :
+      case SHOW_SELECTED        :  return( true );
+      default                   :  return( false );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this command is valid when nothing is selected
+  // in the map.
+  public bool for_none() {
+    switch( this ) {
+      case NODE_QUICK_ENTRY_INSERT :  return( true );
+      default                      :  return( false );
     }
   }
 
@@ -786,6 +811,29 @@ public enum KeyCommand {
   public static void node_sort_alphabetically( MindMap map ) {
     map.model.sort_alphabetically();
   }
+
+  public static void node_quick_entry_insert( MindMap map ) {
+    stdout.printf( "HERE!\n" );
+    var quick_entry = new QuickEntry( map, false, map.settings );
+    quick_entry.preload( "- " );
+  }
+
+  public static void node_quick_entry_replace( MindMap map ) {
+    var quick_entry = new QuickEntry( map, true, map.settings );
+    var export      = (ExportText)map.win.exports.get_by_name( "text" );
+    quick_entry.preload( export.export_node( map, map.get_current_node(), "" ) );
+  }
+
+  public static void node_paste_node_link( MindMap map ) {
+    map.canvas.do_paste_node_link();
+  }
+
+  /*
+    add_shortcut( Key.k,            true, false, false, "add-url" );
+    add_shortcut( Key.k,            true, true,  false, "remove-url" );
+
+    add_shortcut( Key.w,            true, false, false, "close-map" );
+*/
 
   //-------------------------------------------------------------
   // CONNECTION FUNCTIONS

@@ -56,7 +56,7 @@ public enum MapState {
       return( true );
     } else if( (state == MapState.EDITING) && command.for_editing() ) {
       return( true );
-    } else if( state == MapState.NONE ) {
+    } else if( (state == MapState.NONE) && command.for_none() ) {
       return( true );
     } else {
       return( false );
@@ -67,22 +67,22 @@ public enum MapState {
 
 public class Shortcut {
 
-  public uint           keycode { get; private set; default = Key.a; }
-  public bool           control { get; private set; default = false; }
-  public bool           shift   { get; private set; default = false; }
-  public bool           alt     { get; private set; default = false; }
-  public KeyCommand     command { get; private set; }
-  public KeyCommandFunc func    { get; private set; }  // We store the function for speed
+  private uint           _keycode;
+  private bool           _control;
+  private bool           _shift;
+  private bool           _alt;
+  private KeyCommand     _command;
+  private KeyCommandFunc _func;
 
   //-------------------------------------------------------------
   // Default constructor.
   public Shortcut( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
-    this.keycode = keycode;
-    this.control = control;
-    this.shift   = shift;
-    this.alt     = alt;
-    this.command = command;
-    this.func    = command.get_func();
+    _keycode = keycode;
+    _control = control;
+    _shift   = shift;
+    _alt     = alt;
+    _command = command;
+    _func    = command.get_func();
   }
 
   //-------------------------------------------------------------
@@ -96,7 +96,7 @@ public class Shortcut {
   // the user.
   private bool has_key( uint[] kvs ) {
     foreach( uint kv in kvs ) {
-      if( kv == this.keycode ) return( true );
+      if( kv == _keycode ) return( true );
     }
     return( false );
   }
@@ -105,40 +105,49 @@ public class Shortcut {
   // Returns true if this shortcut matches the given values exactly.
   // TODO - The command should only compare the prefixes.
   public bool equals( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
-    return( (keycode == this.keycode) &&
-            (control == this.control) &&
-            (shift   == this.shift)   &&
-            (alt     == this.alt)     &&
-            (command == this.command) );
+    return( (_keycode == keycode) &&
+            (_control == control) &&
+            (_shift   == shift)   &&
+            (_alt     == alt)     &&
+            (_command == command) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this shortcut matches the given command.
+  public bool matches_command( KeyCommand command ) {
+    return( _command == command );
   }
 
   //-------------------------------------------------------------
   // Returns true if this shortcut matches the given match values
-  public bool matches( uint[] kvs, ModifierType mods, MapState state ) {
-    var cm = (bool)(mods & ModifierType.CONTROL_MASK);
-    var sm = (bool)(mods & ModifierType.SHIFT_MASK);
-    var am = (bool)(mods & ModifierType.ALT_MASK);
-    return( (this.control == (bool)(mods & ModifierType.CONTROL_MASK)) &&
-            (this.shift   == (bool)(mods & ModifierType.SHIFT_MASK))   &&
-            (this.alt     == (bool)(mods & ModifierType.ALT_MASK))     &&
-            has_key( kvs ) &&
-            MapState.matches( state, this.command ) );
+  public bool matches_keypress( uint[] kvs, bool control, bool shift, bool alt, MapState state ) {
+    return( (_control == control) &&
+            (_shift   == shift)   &&
+            (_alt     == alt)     &&
+            has_key( kvs )        &&
+            MapState.matches( state, _command ) );
+  }
+
+  //-------------------------------------------------------------
+  // Executes the stored function with the given map.
+  public void execute( MindMap map ) {
+    _func( map );
   }
 
   //-------------------------------------------------------------
   // Returns the Gtk4 accelerator for this shortcut.
   public string get_accelerator() {
     var accel = "";
-    if( control ) {
+    if( _control ) {
       accel += "<Control>";
     }
-    if( shift ) {
+    if( _shift ) {
       accel += "<Shift>";
     }
-    if( alt ) {
+    if( _alt ) {
       accel += "<Alt>";
     }
-    accel += keyval_name( keycode );
+    accel += keyval_name( _keycode );
     return( accel );
   }
 
@@ -147,11 +156,11 @@ public class Shortcut {
   // it.
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "shortcut" );
-    node->set_prop( "key",     keycode.to_string() );
-    node->set_prop( "control", control.to_string() );
-    node->set_prop( "shift",   shift.to_string() );
-    node->set_prop( "alt",     alt.to_string() );
-    node->set_prop( "command", command.to_string() );
+    node->set_prop( "key",     _keycode.to_string() );
+    node->set_prop( "control", _control.to_string() );
+    node->set_prop( "shift",   _shift.to_string() );
+    node->set_prop( "alt",     _alt.to_string() );
+    node->set_prop( "command", _command.to_string() );
     return( node );
   }
 
@@ -160,24 +169,24 @@ public class Shortcut {
   private void load( Xml.Node* node ) {
     var k = node->get_prop( "key" );
     if( k != null ) {
-      keycode = uint.parse( k );
+      _keycode = uint.parse( k );
     }
     var c = node->get_prop( "control" );
     if( c != null ) {
-      control = bool.parse( c );
+      _control = bool.parse( c );
     }
     var s = node->get_prop( "shift" );
     if( s != null ) {
-      shift = bool.parse( s );
+      _shift = bool.parse( s );
     }
     var a = node->get_prop( "alt" );
     if( a != null ) {
-      alt = bool.parse( a );
+      _alt = bool.parse( a );
     }
     var cmd = node->get_prop( "command" );
     if( cmd != null ) {
-      command = KeyCommand.parse( cmd );
-      func    = command.get_func();
+      _command = KeyCommand.parse( cmd );
+      _func    = _command.get_func();
     }
   }
 
@@ -203,7 +212,7 @@ public class Shortcuts {
   // Called by the shortcut preferences class.
   public void clear_shortcut( KeyCommand command, bool auto_save = true ) {
     for( int i=0; i<_shortcuts.length; i++ ) {
-      if( _shortcuts.index( i ).command == command ) {
+      if( _shortcuts.index( i ).matches_command( command ) ) {
         _shortcuts.remove_index( i );
         if( auto_save ) {
           save();
@@ -228,7 +237,7 @@ public class Shortcuts {
   public Shortcut? get_shortcut( MindMap map, KeyCommand command ) {
     var map_state = MapState.get_state( map );
     for( int i=0; i<_shortcuts.length; i++ ) {
-      if( (_shortcuts.index( i ).command == command) && MapState.matches( map_state, command ) ) {
+      if( _shortcuts.index( i ).matches_command( command ) && MapState.matches( map_state, command ) ) {
         return( _shortcuts.index( i ) );
       }
     }
@@ -251,17 +260,25 @@ public class Shortcuts {
   // information.  If no shortcut exists, return false to indicate
   // that the calling code should insert the character if we are
   // editing an element in the map.
-  public bool execute( MindMap map, uint keycode, ModifierType mods ) {
+  public bool execute( MindMap map, uint keyval, uint keycode, ModifierType mods ) {
 
-    KeymapKey[] ks    = {};
-    uint[]      kvs   = {};
-    var         state = MapState.get_state( map );
+    KeymapKey[] ks      = {};
+    uint[]      kvs     = {};
+    var         state   = MapState.get_state( map );
+    var         control = (bool)(mods & ModifierType.CONTROL_MASK);
+    var         shift   = (bool)(mods & ModifierType.SHIFT_MASK);
+    var         alt     = (bool)(mods & ModifierType.ALT_MASK);
+
+    /*
+    stdout.printf( "In execute, key: %s, control: %s, shift: %s, alt: %s\n",
+      keyval_name( keyval ), control.to_string(), shift.to_string(), alt.to_string() );
+    */
 
     Display.get_default().map_keycode( keycode, out ks, out kvs );
 
     for( int i=0; i<_shortcuts.length; i++ ) {
-      if( _shortcuts.index( i ).matches( kvs, mods, state ) ) {
-        _shortcuts.index( i ).func( map );
+      if( _shortcuts.index( i ).matches_keypress( kvs, control, shift, alt, state ) ) {
+        _shortcuts.index( i ).execute( map );
         return( true );
       }
     }
@@ -358,12 +375,12 @@ public class Shortcuts {
     add_shortcut( Key.a,            true, false, false, KeyCommand.EDIT_SELECT_ALL );
     add_shortcut( Key.a,            true, true,  false, KeyCommand.EDIT_SELECT_NONE );
     add_shortcut( Key.period,       true, false, false, KeyCommand.EDIT_INSERT_EMOJI );
-    add_shortcut( Key.e,            true, true,  false, KeyCommand.DO_NOTHING );  // "quick-entry-insert" );
+    add_shortcut( Key.e,            true, true,  false, KeyCommand.NODE_QUICK_ENTRY_INSERT );
     add_shortcut( Key.k,            true, false, false, KeyCommand.DO_NOTHING );  // "add-url" );
     add_shortcut( Key.k,            true, true,  false, KeyCommand.DO_NOTHING );  // "remove-url" );
-    add_shortcut( Key.r,            true, true,  false, KeyCommand.DO_NOTHING );  // "quick-entry-replace" );
+    add_shortcut( Key.r,            true, true,  false, KeyCommand.NODE_QUICK_ENTRY_REPLACE );
     add_shortcut( Key.w,            true, false, false, KeyCommand.DO_NOTHING );  // "close-map" );
-    add_shortcut( Key.y,            true, false, false, KeyCommand.DO_NOTHING );  // "paste-node-link" );
+    add_shortcut( Key.y,            true, false, false, KeyCommand.NODE_PASTE_NODE_LINK );
 
     add_shortcut( Key.BackSpace,    false, false, false, KeyCommand.DO_NOTHING );  // "backspace" );
     add_shortcut( Key.Delete,       false, false, false, KeyCommand.DO_NOTHING );  // "delete" );

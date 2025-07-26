@@ -176,8 +176,6 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     _settings = settings;
 
-    var window_x = settings.get_int( "window-x" );
-    var window_y = settings.get_int( "window-y" );
     var window_w = settings.get_int( "window-w" );
     var window_h = settings.get_int( "window-h" );
 
