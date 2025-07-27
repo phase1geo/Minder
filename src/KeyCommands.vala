@@ -25,7 +25,7 @@ public delegate void KeyCommandFunc( MindMap map );
 
 public enum KeyCommand {
   DO_NOTHING,
-  MISCELLANEOUS_START,
+  GENERAL_START,
   CONTROL_PRESSED,
   SHOW_CONTEXTUAL_MENU,
   ZOOM_IN,
@@ -36,7 +36,8 @@ public enum KeyCommand {
   SHOW_CURRENT_SIDEBAR,
   EDIT_SELECTED,
   SHOW_SELECTED,
-  MISCELLANEOUS_END,
+  ESCAPE,
+  GENERAL_END,
   NODE_START,
   NODE_ALIGN_TOP,
   NODE_ALIGN_VCENTER,
@@ -73,20 +74,37 @@ public enum KeyCommand {
   NODE_QUICK_ENTRY_INSERT,
   NODE_QUICK_ENTRY_REPLACE,
   NODE_PASTE_NODE_LINK,
+  NODE_PASTE_REPLACE,
+  NODE_REMOVE,
+  NODE_SWAP_LEFT,
+  NODE_SWAP_RIGHT,
+  NODE_SWAP_UP,
+  NODE_SWAP_DOWN,
   NODE_END,
   CONNECTION_START,
   CONNECTION_SELECT_FROM,
   CONNECTION_SELECT_TO,
   CONNECTION_SELECT_NEXT,
   CONNECTION_SELECT_PREV,
+  CONNECTION_REMOVE,
   CONNECTION_END,
   CALLOUT_START,
   CALLOUT_SELECT_NODE,
+  CALLOUT_REMOVE,
   CALLOUT_END,
+  STICKER_START,
+  STICKER_REMOVE,
+  STICKER_END,
+  GROUP_START,
+  GROUP_REMOVE,
+  GROUP_END,
   EDIT_START,
+  EDIT_ESCAPE,
   EDIT_INSERT_NEWLINE,
   EDIT_INSERT_TAB,
   EDIT_INSERT_EMOJI,
+  EDIT_BACKSPACE,
+  EDIT_DELETE,
   EDIT_REMOVE_WORD_NEXT,
   EDIT_REMOVE_WORD_PREV,
   EDIT_CURSOR_CHAR_NEXT,
@@ -113,6 +131,11 @@ public enum KeyCommand {
   EDIT_SELECT_LINEEND,
   EDIT_SELECT_ALL,
   EDIT_SELECT_NONE,
+  EDIT_ADD_URL,
+  EDIT_REMOVE_URL,
+  EDIT_COPY,
+  EDIT_CUT,
+  EDIT_PASTE,
   EDIT_END;
 
   //-------------------------------------------------------------
@@ -130,6 +153,7 @@ public enum KeyCommand {
       case SHOW_CURRENT_SIDEBAR      :  return( "show-current-sidebar" );
       case EDIT_SELECTED             :  return( "edit-selected" );
       case SHOW_SELECTED             :  return( "show-selected" );
+      case ESCAPE                    :  return( "escape" );
       case NODE_ALIGN_TOP            :  return( "node-align-top" );
       case NODE_ALIGN_VCENTER        :  return( "node-align-vcenter" );
       case NODE_ALIGN_BOTTOM         :  return( "node-align-bottom" );
@@ -165,14 +189,27 @@ public enum KeyCommand {
       case NODE_QUICK_ENTRY_INSERT   :  return( "node-quick-entry-insert" );
       case NODE_QUICK_ENTRY_REPLACE  :  return( "node-quick-entry-replace" );
       case NODE_PASTE_NODE_LINK      :  return( "node-paste-node-link" );
+      case NODE_PASTE_REPLACE        :  return( "node-paste-replace" );
+      case NODE_REMOVE               :  return( "node-remove" );
+      case NODE_SWAP_LEFT            :  return( "node-swap-left" );
+      case NODE_SWAP_RIGHT           :  return( "node-swap-right" );
+      case NODE_SWAP_UP              :  return( "node-swap-up" );
+      case NODE_SWAP_DOWN            :  return( "node-swap-down" );
       case CONNECTION_SELECT_FROM    :  return( "connection-select-from" );
       case CONNECTION_SELECT_TO      :  return( "connection-select-to" );
       case CONNECTION_SELECT_NEXT    :  return( "connection-select-next" );
       case CONNECTION_SELECT_PREV    :  return( "connection-select-prev" );
+      case CONNECTION_REMOVE         :  return( "connection-remove" );
       case CALLOUT_SELECT_NODE       :  return( "callout-select-node" );
+      case CALLOUT_REMOVE            :  return( "callout-remove" );
+      case STICKER_REMOVE            :  return( "sticker-remove" );
+      case GROUP_REMOVE              :  return( "group-remove" );
+      case EDIT_ESCAPE               :  return( "edit-escape" );
       case EDIT_INSERT_NEWLINE       :  return( "edit-insert-newline" );
       case EDIT_INSERT_TAB           :  return( "edit-insert-tab" );
       case EDIT_INSERT_EMOJI         :  return( "edit-insert-emoji" );
+      case EDIT_BACKSPACE            :  return( "edit-backspace" );
+      case EDIT_DELETE               :  return( "edit-delete" );
       case EDIT_REMOVE_WORD_NEXT     :  return( "edit-remove-word-next" );
       case EDIT_REMOVE_WORD_PREV     :  return( "edit-remove-word-prev" );
       case EDIT_CURSOR_CHAR_NEXT     :  return( "edit-cursor-char-next" );
@@ -199,6 +236,11 @@ public enum KeyCommand {
       case EDIT_SELECT_LINEEND       :  return( "edit-select-lineend" );
       case EDIT_SELECT_ALL           :  return( "edit-select-all" );
       case EDIT_SELECT_NONE          :  return( "edit-select-none" );
+      case EDIT_ADD_URL              :  return( "edit-add-url" );
+      case EDIT_REMOVE_URL           :  return( "edit-remove-url" );
+      case EDIT_COPY                 :  return( "edit-copy" );
+      case EDIT_CUT                  :  return( "edit-cut" );
+      case EDIT_PASTE                :  return( "edit-paste" );
       default                        :  stdout.printf( "unhandled: %d\n", this );  assert_not_reached();
     }
   }
@@ -218,6 +260,7 @@ public enum KeyCommand {
       case "show-current-sidebar"      :  return( SHOW_CURRENT_SIDEBAR );
       case "edit-selected"             :  return( EDIT_SELECTED );
       case "show-selected"             :  return( SHOW_SELECTED );
+      case "escape"                    :  return( ESCAPE );
       case "node-align-top"            :  return( NODE_ALIGN_TOP );
       case "node-align-vcenter"        :  return( NODE_ALIGN_VCENTER );
       case "node-align-bottom"         :  return( NODE_ALIGN_BOTTOM );
@@ -253,14 +296,27 @@ public enum KeyCommand {
       case "node-quick-entry-insert"   :  return( NODE_QUICK_ENTRY_INSERT );
       case "node-quick-entry-replace"  :  return( NODE_QUICK_ENTRY_REPLACE );
       case "node-paste-node-link"      :  return( NODE_PASTE_NODE_LINK );
+      case "node-paste-replace"        :  return( NODE_PASTE_REPLACE );
+      case "node-remove"               :  return( NODE_REMOVE );
+      case "node-swap-left"            :  return( NODE_SWAP_LEFT );
+      case "node-swap-right"           :  return( NODE_SWAP_RIGHT );
+      case "node-swap-up"              :  return( NODE_SWAP_UP );
+      case "node-swap-down"            :  return( NODE_SWAP_DOWN );
       case "connection-select-from"    :  return( CONNECTION_SELECT_FROM );
       case "connection-select-to"      :  return( CONNECTION_SELECT_TO );
       case "connection-select-next"    :  return( CONNECTION_SELECT_NEXT );
       case "connection-select-prev"    :  return( CONNECTION_SELECT_PREV );
+      case "connection-remove"         :  return( CONNECTION_REMOVE );
       case "callout-select-node"       :  return( CALLOUT_SELECT_NODE );
+      case "callout-remove"            :  return( CALLOUT_REMOVE );
+      case "sticker-remove"            :  return( STICKER_REMOVE );
+      case "group-remove"              :  return( GROUP_REMOVE );
+      case "edit-escape"               :  return( EDIT_ESCAPE );
       case "edit-insert-newline"       :  return( EDIT_INSERT_NEWLINE );
       case "edit-insert-tab"           :  return( EDIT_INSERT_TAB );
       case "edit-insert-emoji"         :  return( EDIT_INSERT_EMOJI );
+      case "edit-backspace"            :  return( EDIT_BACKSPACE );
+      case "edit-delete"               :  return( EDIT_DELETE );
       case "edit-remove-word-next"     :  return( EDIT_REMOVE_WORD_NEXT );
       case "edit-remove-word-prev"     :  return( EDIT_REMOVE_WORD_PREV );
       case "edit-cursor-char-next"     :  return( EDIT_CURSOR_CHAR_NEXT );
@@ -287,6 +343,11 @@ public enum KeyCommand {
       case "edit-select-lineend"       :  return( EDIT_SELECT_LINEEND );
       case "edit-select_all"           :  return( EDIT_SELECT_ALL );
       case "edit-select-none"          :  return( EDIT_SELECT_NONE );
+      case "edit-add-url"              :  return( EDIT_ADD_URL );
+      case "edit-remove-url"           :  return( EDIT_REMOVE_URL );
+      case "edit-copy"                 :  return( EDIT_COPY );
+      case "edit-cut"                  :  return( EDIT_CUT );
+      case "edit-paste"                :  return( EDIT_PASTE );
       default                          :  return( DO_NOTHING );
     }
   }
@@ -296,7 +357,7 @@ public enum KeyCommand {
   // this key command.
   public string shortcut_label() {
     switch( this ) {
-      case MISCELLANEOUS_START       :  return( _( "Miscellaneous Commands" ) );
+      case GENERAL_START             :  return( _( "General Commands" ) );
       case SHOW_CONTEXTUAL_MENU      :  return( _( "Show contextual menu" ) );
       case ZOOM_IN                   :  return( _( "Zoom in" ) );
       case ZOOM_OUT                  :  return( _( "Zoom out" ) );
@@ -342,6 +403,11 @@ public enum KeyCommand {
       case NODE_QUICK_ENTRY_INSERT   :  return( _( "Use quick entry to insert nodes" ) );
       case NODE_QUICK_ENTRY_REPLACE  :  return( _( "Use quick entry to replace current node" ) );
       case NODE_PASTE_NODE_LINK      :  return( _( "Paste node link from clipboard into current node" ) );
+      case NODE_PASTE_REPLACE        :  return( _( "Replace current node with clipboard content") );
+      case NODE_SWAP_LEFT            :  return( _( "Swap current node with left node" ) );
+      case NODE_SWAP_RIGHT           :  return( _( "Swap current node with right node" ) );
+      case NODE_SWAP_UP              :  return( _( "Swap current node with above node" ) );
+      case NODE_SWAP_DOWN            :  return( _( "Swap current node with below node" ) );
       case CONNECTION_START          :  return( _( "Connection Commands" ) );
       case CONNECTION_SELECT_FROM    :  return( _( "Select connection source node" ) );
       case CONNECTION_SELECT_TO      :  return( _( "Select connection target node" ) );
@@ -379,6 +445,9 @@ public enum KeyCommand {
       case EDIT_SELECT_LINEEND       :  return( _( "Add end of current line to current selection" ) );
       case EDIT_SELECT_ALL           :  return( _( "Select all text" ) );
       case EDIT_SELECT_NONE          :  return( _( "Deselect all text" ) );
+      case EDIT_ADD_URL              :  return( _( "Add URL link at current cursor position" ) );
+      case EDIT_REMOVE_URL           :  return( _( "Remove URL link at current cursor position" ) );
+      case EDIT_PASTE                :  return( _( "Paste nodes or text from clipboard" ) );
       default                        :  assert_not_reached();
     }
   }
@@ -398,6 +467,7 @@ public enum KeyCommand {
       case SHOW_CURRENT_SIDEBAR      :  return( show_current_sidebar );
       case EDIT_SELECTED             :  return( edit_selected );
       case SHOW_SELECTED             :  return( show_selected );
+      case ESCAPE                    :  return( escape );
       case NODE_ALIGN_TOP            :  return( node_align_top );
       case NODE_ALIGN_VCENTER        :  return( node_align_vcenter );
       case NODE_ALIGN_BOTTOM         :  return( node_align_bottom );
@@ -433,14 +503,27 @@ public enum KeyCommand {
       case NODE_QUICK_ENTRY_INSERT   :  return( node_quick_entry_insert );
       case NODE_QUICK_ENTRY_REPLACE  :  return( node_quick_entry_replace );
       case NODE_PASTE_NODE_LINK      :  return( node_paste_node_link );
+      case NODE_PASTE_REPLACE        :  return( node_paste_replace );
+      case NODE_REMOVE               :  return( node_remove );
+      case NODE_SWAP_LEFT            :  return( node_swap_left );
+      case NODE_SWAP_RIGHT           :  return( node_swap_right );
+      case NODE_SWAP_UP              :  return( node_swap_up );
+      case NODE_SWAP_DOWN            :  return( node_swap_down );
       case CONNECTION_SELECT_FROM    :  return( connection_select_from_node );
       case CONNECTION_SELECT_TO      :  return( connection_select_to_node );
       case CONNECTION_SELECT_NEXT    :  return( connection_select_next );
       case CONNECTION_SELECT_PREV    :  return( connection_select_previous );
+      case CONNECTION_REMOVE         :  return( connection_remove );
       case CALLOUT_SELECT_NODE       :  return( callout_select_node );
+      case CALLOUT_REMOVE            :  return( callout_remove );
+      case STICKER_REMOVE            :  return( sticker_remove );
+      case GROUP_REMOVE              :  return( group_remove );
+      case EDIT_ESCAPE               :  return( edit_escape );
       case EDIT_INSERT_NEWLINE       :  return( edit_insert_newline );
       case EDIT_INSERT_TAB           :  return( edit_insert_tab );
       case EDIT_INSERT_EMOJI         :  return( edit_insert_emoji );
+      case EDIT_BACKSPACE            :  return( edit_backspace );
+      case EDIT_DELETE               :  return( edit_delete );
       case EDIT_REMOVE_WORD_NEXT     :  return( edit_remove_word_next );
       case EDIT_REMOVE_WORD_PREV     :  return( edit_remove_word_previous );
       case EDIT_CURSOR_CHAR_NEXT     :  return( edit_cursor_char_next );
@@ -467,39 +550,70 @@ public enum KeyCommand {
       case EDIT_SELECT_LINEEND       :  return( edit_select_lineend );
       case EDIT_SELECT_ALL           :  return( edit_select_all );
       case EDIT_SELECT_NONE          :  return( edit_deselect_all );
-      default                        :  assert_not_reached();
+      case EDIT_ADD_URL              :  return( edit_add_url );
+      case EDIT_REMOVE_URL           :  return( edit_remove_url );
+      case EDIT_COPY                 :  return( edit_copy );
+      case EDIT_CUT                  :  return( edit_cut );
+      case EDIT_PASTE                :  return( edit_paste );
+      default                        :  stdout.printf( "Missed %d\n", this );  assert_not_reached();
     }
   }
 
   //-------------------------------------------------------------
   // Returns true if this command is valid for a node.
   public bool for_node() {
-    return( ((NODE_START < this) && (this < NODE_END)) || for_any() );
+    return(
+      ((NODE_START < this) && (this < NODE_END)) ||
+      (this == EDIT_NOTE) ||
+      (this == SHOW_CURRENT_SIDEBAR) ||
+      (this == EDIT_SELECTED) ||
+      (this == SHOW_SELECTED) ||
+      (this == EDIT_COPY) ||
+      (this == EDIT_CUT)  ||
+      (this == EDIT_PASTE) ||
+      (this == ESCAPE)
+    );
   }
 
   //-------------------------------------------------------------
   // Returns true if this command is valid for a connection.
   public bool for_connection() {
-    return( ((CONNECTION_START < this) && (this < CONNECTION_END)) || for_any() );
+    return(
+      ((CONNECTION_START < this) && (this < CONNECTION_END)) ||
+      (this == EDIT_NOTE) ||
+      (this == SHOW_CURRENT_SIDEBAR) ||
+      (this == EDIT_SELECTED) ||
+      (this == SHOW_SELECTED) ||
+      (this == ESCAPE)
+    );
   }
 
   //-------------------------------------------------------------
   // Returns true if this command is valid for a callout.
   public bool for_callout() {
-    return( ((CALLOUT_START < this) && (this < CALLOUT_END)) || for_any() );
+    return(
+      ((CALLOUT_START < this) && (this < CALLOUT_END)) ||
+      (this == SHOW_CURRENT_SIDEBAR) ||
+      (this == EDIT_SELECTED) ||
+      (this == SHOW_SELECTED) ||
+      (this == ESCAPE)
+    );
   }
 
   //-------------------------------------------------------------
-  // Returns true if this command is valid for any node, connection
-  // or callout selected in the map.
-  public bool for_any() {
-    switch( this ) {
-      case EDIT_NOTE            :
-      case SHOW_CURRENT_SIDEBAR :
-      case EDIT_SELECTED        :
-      case SHOW_SELECTED        :  return( true );
-      default                   :  return( false );
-    }
+  // Returns true if this command is valid for a selected sticker.
+  public bool for_sticker() {
+    return( ((STICKER_START < this) && (this < STICKER_END)) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this command is valid for a selected group.
+  public bool for_group() {
+    return(
+      ((GROUP_START < this) && (this < GROUP_END)) ||
+      (this == EDIT_NOTE) ||
+      (this == SHOW_CURRENT_SIDEBAR)
+    );
   }
 
   //-------------------------------------------------------------
@@ -507,8 +621,11 @@ public enum KeyCommand {
   // in the map.
   public bool for_none() {
     switch( this ) {
-      case NODE_QUICK_ENTRY_INSERT :  return( true );
-      default                      :  return( false );
+      case NODE_QUICK_ENTRY_INSERT :
+      case EDIT_PASTE              :
+        return( true );
+      default :
+        return( false );
     }
   }
 
@@ -522,7 +639,11 @@ public enum KeyCommand {
   // Returns true if this key command is able to have a shortcut
   // associated with it.
   public bool viewable() {
-    return( (this != DO_NOTHING) && (this != CONTROL_PRESSED) && !is_start() && !is_end() );
+    return(
+      (this != DO_NOTHING) &&
+      (this != CONTROL_PRESSED) &&
+      !is_start() && !is_end()
+    );
   }
 
   //-------------------------------------------------------------
@@ -530,7 +651,14 @@ public enum KeyCommand {
   public bool editable() {
     if( viewable() ) {
       switch( this ) {
-        default :  return( true );
+        case ESCAPE         :
+        case NODE_REMOVE    :
+        case EDIT_BACKSPACE :
+        case EDIT_DELETE    :
+        case EDIT_ESCAPE    :
+          return( false );
+        default :
+          return( true );
       }
     }
     return( false );
@@ -540,12 +668,12 @@ public enum KeyCommand {
   // Returns true if this key command is a start of command block.
   public bool is_start() {
     switch( this ) {
-      case MISCELLANEOUS_START :
-      case NODE_START          :
-      case CONNECTION_START    :
-      case CALLOUT_START       :
-      case EDIT_START          :  return( true );
-      default                  :  return( false );
+      case GENERAL_START    :
+      case NODE_START       :
+      case CONNECTION_START :
+      case CALLOUT_START    :
+      case EDIT_START       :  return( true );
+      default               :  return( false );
     }
   }
 
@@ -553,12 +681,12 @@ public enum KeyCommand {
   // Returns true if this key command is an end of command block.
   public bool is_end() {
     switch( this ) {
-      case MISCELLANEOUS_END :
-      case NODE_END          :
-      case CONNECTION_END    :
-      case CALLOUT_END       :
-      case EDIT_END          :  return( true );
-      default                :  return( false );
+      case GENERAL_END    :
+      case NODE_END       :
+      case CONNECTION_END :
+      case CALLOUT_END    :
+      case EDIT_END       :  return( true );
+      default             :  return( false );
     }
   }
 
@@ -634,6 +762,20 @@ public enum KeyCommand {
 
   public static void show_selected( MindMap map ) {
     map.canvas.see();
+  }
+
+  public static void escape( MindMap map ) {
+    if( map.is_connection_connecting() ) {
+      var current = map.get_current_connection();
+      map.connections.remove_connection( current, true );
+      map.selected.remove_connection( current );
+      map.model.set_attach_node( null );
+      map.selected.set_current_node( map.model.last_node );
+      map.canvas.last_connection = null;
+      map.queue_draw();
+    } else {
+      map.canvas.hide_properties();
+    }
   }
 
   //-------------------------------------------------------------
@@ -828,12 +970,87 @@ public enum KeyCommand {
     map.canvas.do_paste_node_link();
   }
 
-  /*
-    add_shortcut( Key.k,            true, false, false, "add-url" );
-    add_shortcut( Key.k,            true, true,  false, "remove-url" );
+  public static void node_paste_replace( MindMap map ) {
+    map.canvas.do_paste( true );
+  }
 
-    add_shortcut( Key.w,            true, false, false, "close-map" );
-*/
+  public static void node_remove( MindMap map ) {
+    if( map.selected.num_nodes() > 1 ) {
+      map.model.delete_nodes();
+    } else {
+      Node? next;
+      var   current = map.get_current_node();
+      if( ((next = map.sibling_node( 1 )) == null) && ((next = map.sibling_node( -1 )) == null) && current.is_root() ) {
+        map.model.delete_node();
+      } else {
+        if( next == null ) {
+          next = current.parent;
+        }
+        map.model.delete_node();
+        if( map.select_node( next ) ) {
+          map.queue_draw();
+        }
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Swaps the current node with the one in the specified direction.
+  private static void node_swap( MindMap map, string dir ) {
+    var current = map.get_current_node();
+    if( current != null ) {
+      Node? other = null;
+      switch( dir ) {
+        case "left"  :  other = map.model.get_node_left( current );   break;
+        case "right" :  other = map.model.get_node_right( current );  break;
+        case "up"    :  other = map.model.get_node_up( current );     break;
+        case "down"  :  other = map.model.get_node_down( current );   break;
+        default      :  return;
+      }
+      if( current.swap_with_sibling( other )   ||
+          current.make_parent_sibling( other ) ||
+          current.make_children_siblings( other ) ) {
+        map.queue_draw();
+        map.auto_save();
+      }
+    }
+  }
+
+  public static void node_swap_left( MindMap map ) {
+    node_swap( map, "left" );
+  }
+
+  public static void node_swap_right( MindMap map ) {
+    node_swap( map, "right" );
+  }
+
+  public static void node_swap_up( MindMap map ) {
+    node_swap( map, "up" );
+  }
+
+  public static void node_swap_down( MindMap map ) {
+    node_swap( map, "down" );
+  }
+
+  private static void select_first_sibling( MindMap map ) {
+    if( map.is_connection_connecting() && (map.model.attach_node != null) ) {
+      map.model.update_connection_by_node( map.model.get_node_pageup( map.model.attach_node ) );
+    } else if( map.is_node_selected() ) {
+      if( map.select_node( map.model.get_node_pageup( map.get_current_node() ) ) ) {
+        map.queue_draw();
+      }
+    }
+  }
+
+  private static void select_last_sibling( MindMap map ) {
+    if( map.is_connection_connecting() && (map.model.attach_node != null) ) {
+      map.model.update_connection_by_node( map.model.get_node_pagedn( map.model.attach_node ) );
+    } else if( map.is_node_selected() ) {
+      if( map.select_node( map.model.get_node_pagedn( map.get_current_node() ) ) ) {
+        map.queue_draw();
+      }
+    }
+  }
 
   //-------------------------------------------------------------
   // CONNECTION FUNCTIONS
@@ -854,11 +1071,37 @@ public enum KeyCommand {
     map.select_connection( -1 );
   }
 
+  public static void connection_remove( MindMap map ) {
+    if( map.get_current_connection() != null ) {
+      map.model.delete_connection();
+    } else {
+      map.model.delete_connections();
+    }
+  }
+
   //-------------------------------------------------------------
   // CALLOUT FUNCTIONS
 
   public static void callout_select_node( MindMap map ) {
     map.select_callout_node();
+  }
+
+  public static void callout_remove( MindMap map ) {
+    map.model.remove_callout();
+  }
+
+  //-------------------------------------------------------------
+  // STICKER FUNCTIONS
+
+  public static void sticker_remove( MindMap map ) {
+    map.model.remove_sticker();
+  }
+
+  //-------------------------------------------------------------
+  // GROUP FUNCTIONS
+
+  public static void group_remove( MindMap map ) {
+    map.model.remove_groups();
   }
 
   //-------------------------------------------------------------
@@ -945,6 +1188,36 @@ public enum KeyCommand {
     }
   }
 
+  public static void edit_escape( MindMap map ) {
+    var text = get_canvas_text( map );
+    if( text != null ) {
+      if( map.canvas.completion.shown ) {
+        map.canvas.completion.hide();
+      } else {
+        var current_node = map.get_current_node();
+        var current_conn = map.get_current_connection();
+        var current_call = map.get_current_callout();
+        map.canvas.im_context.reset();
+        if( current_node != null ) {
+          map.model.set_node_mode( current_node, NodeMode.CURRENT );
+          text_changed( map );
+          map.auto_save();
+        } else if( current_conn != null ) {
+          current_conn.edit_title_end();
+          map.model.set_connection_mode( current_conn, ConnMode.SELECTED );
+          text_changed( map );
+          map.auto_save();
+        } else if( current_conn != null ) {
+          map.model.set_callout_mode( current_call, CalloutMode.SELECTED );
+          text_changed( map );
+          map.auto_save();
+        } else {
+          map.canvas.hide_properties();
+        }
+      }
+    }
+  }
+
   public static void edit_insert_newline( MindMap map ) {
     insert_text( map, "\n" );
   }
@@ -957,6 +1230,22 @@ public enum KeyCommand {
     var text = get_canvas_text( map );
     if( text != null ) {
       map.canvas.insert_emoji( text );
+    }
+  }
+
+  public static void edit_backspace( MindMap map ) {
+    var text = get_canvas_text( map );
+    if( text != null ) {
+      text.backspace( map.undo_text );
+      text_changed( map );
+    }
+  }
+
+  public static void edit_delete( MindMap map ) {
+    var text = get_canvas_text( map );
+    if( text != null ) {
+      text.delete( map.undo_text );
+      text_changed( map );
     }
   }
 
@@ -1072,20 +1361,37 @@ public enum KeyCommand {
     edit_selection( map, "none" );
   }
 
+  public static void edit_add_url( MindMap map ) {
+    map.canvas.url_editor.add_url();
+  }
+
+  public static void edit_remove_url( MindMap map ) {
+    map.canvas.url_editor.remove_url();
+  }
+
+  public static void edit_copy( MindMap map ) {
+    map.model.do_copy();
+  }
+
+  public static void edit_cut( MindMap map ) {
+    map.model.do_cut();
+  }
+
+  public static void edit_paste( MindMap map ) {
+    map.canvas.do_paste( false );
+  }
+
   /*
-    add_shortcut( Key.c,            true, false, false, "copy" );
-    add_shortcut( Key.x,            true, false, false, "cut" );
-    add_shortcut( Key.v,            true, false, false, "paste-insert" );
-    add_shortcut( Key.v,            true, true,  false, "paste-replace" );
-
-    add_shortcut( Key.e,            true, true,  false, "quick-entry-insert" );
-    add_shortcut( Key.r,            true, true,  false, "quick-entry-replace" );
-    add_shortcut( Key.k,            true, false, false, "add-url" );
-    add_shortcut( Key.k,            true, true,  false, "remove-url" );
-
-    add_shortcut( Key.w,            true, false, false, "close-map" );
-
-    add_shortcut( Key.y,            true, false, false, "paste-node-link" );
+    add_shortcut( Key.Return,       false, false, false, KeyCommand.DO_NOTHING );  // "return" );
+    add_shortcut( Key.Return,       false, true,  false, KeyCommand.DO_NOTHING );  // "shift-return" );
+    add_shortcut( Key.Tab,          false, false, false, KeyCommand.DO_NOTHING );  // "tab" );
+    add_shortcut( Key.Tab,          false, true,  false, KeyCommand.DO_NOTHING );  // "shift-tab" );
+    add_shortcut( Key.Right,        false, false, true,  KeyCommand.DO_NOTHING );  // "alt-right" );
+    add_shortcut( Key.Left,         false, false, true,  KeyCommand.DO_NOTHING );  // "alt-left" );
+    add_shortcut( Key.Up,           false, false, true,  KeyCommand.DO_NOTHING );  // "alt-up" );
+    add_shortcut( Key.Down,         false, false, true,  KeyCommand.DO_NOTHING );  // "alt-down" );
+    add_shortcut( Key.Page_Up,      false, false, false, KeyCommand.DO_NOTHING );  // "page-up" );
+    add_shortcut( Key.Page_Down,    false, false, false, KeyCommand.DO_NOTHING );  // "page-down" );
   */
 
 }

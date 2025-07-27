@@ -164,6 +164,11 @@ public class DrawArea : Gtk.DrawingArea {
       return( _tagger );
     }
   }
+  public TextCompletion completion {
+    get {
+      return( _completion );
+    }
+  }
   public Connection? last_connection {
     get {
       return( _last_connection );
@@ -1678,18 +1683,10 @@ public class DrawArea : Gtk.DrawingArea {
   // Called whenever the backspace character is entered in the
   // drawing area.
   private void handle_backspace() {
-    if( _map.is_connection_editable() ) {
-      _map.get_current_connection().title.backspace( _map.undo_text );
-      queue_draw();
-      _map.auto_save();
-    } else if( _map.is_connection_selected() ) {
+    if( _map.is_connection_selected() ) {
       _map.model.delete_connection();
     } else if( _map.selected.num_connections() > 0 ) {
       _map.model.delete_connections();
-    } else if( _map.is_node_editable() ) {
-      _map.selected.current_node().name.backspace( _map.undo_text );
-      queue_draw();
-      _map.auto_save();
     } else if( _map.is_node_selected() ) {
       Node? next;
       var   current = _map.get_current_node();
@@ -1710,10 +1707,6 @@ public class DrawArea : Gtk.DrawingArea {
       _map.model.remove_sticker();
     } else if( _map.selected.num_groups() > 0 ) {
       _map.model.remove_groups();
-    } else if( _map.is_callout_editable() ) {
-      _map.get_current_callout().text.backspace( _map.undo_text );
-      queue_draw();
-      _map.auto_save();
     } else if( _map.is_callout_selected() ) {
       _map.model.remove_callout();
     }

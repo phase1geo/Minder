@@ -26,6 +26,8 @@ public enum MapState {
   NODE,
   CONNECTION,
   CALLOUT,
+  STICKER,
+  GROUP,
   EDITING;
 
   //-------------------------------------------------------------
@@ -37,6 +39,10 @@ public enum MapState {
       return( CONNECTION );
     } else if( map.is_callout_selected() ) {
       return( CALLOUT );
+    } else if( map.is_sticker_selected() ) {
+      return( STICKER );
+    } else if( map.is_group_selected() ) {
+      return( GROUP );
     } else if( map.is_node_editable() || map.is_connection_editable() || map.is_callout_editable() ) {
       return( EDITING );
     } else {
@@ -53,6 +59,10 @@ public enum MapState {
     } else if( (state == MapState.CONNECTION) && command.for_connection() ) {
       return( true );
     } else if( (state == MapState.CALLOUT) && command.for_callout() ) {
+      return( true );
+    } else if( (state == MapState.STICKER) && command.for_sticker() ) {
+      return( true );
+    } else if( (state == MapState.GROUP) && command.for_group() ) {
       return( true );
     } else if( (state == MapState.EDITING) && command.for_editing() ) {
       return( true );
@@ -120,7 +130,7 @@ public class Shortcut {
 
   //-------------------------------------------------------------
   // Returns true if this shortcut matches the given match values
-  public bool matches_keypress( uint[] kvs, bool control, bool shift, bool alt, MapState state ) {
+  public bool matches_keypress( bool control, bool shift, bool alt, uint[] kvs, MapState state ) {
     return( (_control == control) &&
             (_shift   == shift)   &&
             (_alt     == alt)     &&
@@ -265,19 +275,14 @@ public class Shortcuts {
     KeymapKey[] ks      = {};
     uint[]      kvs     = {};
     var         state   = MapState.get_state( map );
-    var         control = (bool)(mods & ModifierType.CONTROL_MASK);
-    var         shift   = (bool)(mods & ModifierType.SHIFT_MASK);
-    var         alt     = (bool)(mods & ModifierType.ALT_MASK);
-
-    /*
-    stdout.printf( "In execute, key: %s, control: %s, shift: %s, alt: %s\n",
-      keyval_name( keyval ), control.to_string(), shift.to_string(), alt.to_string() );
-    */
+    var         control = (mods & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK;
+    var         shift   = (mods & ModifierType.SHIFT_MASK)   == ModifierType.SHIFT_MASK;
+    var         alt     = (mods & ModifierType.ALT_MASK)     == ModifierType.ALT_MASK;
 
     Display.get_default().map_keycode( keycode, out ks, out kvs );
 
     for( int i=0; i<_shortcuts.length; i++ ) {
-      if( _shortcuts.index( i ).matches_keypress( kvs, control, shift, alt, state ) ) {
+      if( _shortcuts.index( i ).matches_keypress( control, shift, alt, kvs, state ) ) {
         _shortcuts.index( i ).execute( map );
         return( true );
       }
@@ -318,6 +323,8 @@ public class Shortcuts {
   // Loads the shortcuts from the shortcuts XML file.
   private void load() {
 
+    create_builtin_shortcuts();
+
     Xml.Doc* doc = Xml.Parser.parse_file( shortcuts_path() );
 
     if( doc == null ) {
@@ -346,16 +353,61 @@ public class Shortcuts {
   }
 
   //-------------------------------------------------------------
+  // Creates the built-in shortcuts (these are not stored in the
+  // shortcuts.xml file)
+  private void create_builtin_shortcuts() {
+
+    add_shortcut( Key.BackSpace,    false, false, false, KeyCommand.EDIT_BACKSPACE );
+    add_shortcut( Key.BackSpace,    false, false, false, KeyCommand.NODE_REMOVE );
+    add_shortcut( Key.BackSpace,    false, false, false, KeyCommand.CONNECTION_REMOVE );
+    add_shortcut( Key.BackSpace,    false, false, false, KeyCommand.CALLOUT_REMOVE );
+    add_shortcut( Key.BackSpace,    false, false, false, KeyCommand.STICKER_REMOVE );
+    add_shortcut( Key.BackSpace,    false, false, false, KeyCommand.GROUP_REMOVE );
+    add_shortcut( Key.Delete,       false, false, false, KeyCommand.EDIT_DELETE );
+    add_shortcut( Key.Delete,       false, false, false, KeyCommand.NODE_REMOVE );
+    add_shortcut( Key.Delete,       false, false, false, KeyCommand.CONNECTION_REMOVE );
+    add_shortcut( Key.Delete,       false, false, false, KeyCommand.CALLOUT_REMOVE );
+    add_shortcut( Key.Delete,       false, false, false, KeyCommand.STICKER_REMOVE );
+    add_shortcut( Key.Delete,       false, false, false, KeyCommand.GROUP_REMOVE );
+    add_shortcut( Key.Escape,       false, false, false, KeyCommand.ESCAPE );
+    add_shortcut( Key.Escape,       false, false, false, KeyCommand.EDIT_ESCAPE );
+
+    add_shortcut( Key.Return,       false, false, false, KeyCommand.DO_NOTHING );  // "return" );
+    add_shortcut( Key.Return,       false, true,  false, KeyCommand.DO_NOTHING );  // "shift-return" );
+    add_shortcut( Key.Tab,          false, false, false, KeyCommand.DO_NOTHING );  // "tab" );
+    add_shortcut( Key.Tab,          false, true,  false, KeyCommand.DO_NOTHING );  // "shift-tab" );
+    add_shortcut( Key.Right,        false, false, false, KeyCommand.EDIT_CURSOR_CHAR_NEXT );
+    add_shortcut( Key.Right,        false, false, false, KeyCommand.NODE_SELECT_RIGHT );
+    add_shortcut( Key.Right,        false, true,  false, KeyCommand.EDIT_SELECT_CHAR_NEXT );
+    add_shortcut( Key.Left,         false, false, false, KeyCommand.EDIT_CURSOR_CHAR_PREV );
+    add_shortcut( Key.Left,         false, false, false, KeyCommand.NODE_SELECT_LEFT );
+    add_shortcut( Key.Left,         false, true,  false, KeyCommand.EDIT_SELECT_CHAR_PREV );
+    add_shortcut( Key.Up,           false, false, false, KeyCommand.EDIT_CURSOR_UP );
+    add_shortcut( Key.Up,           false, false, false, KeyCommand.NODE_SELECT_UP );
+    add_shortcut( Key.Up,           false, false, true,  KeyCommand.NODE_SWAP_UP );
+    add_shortcut( Key.Up,           false, true,  false, KeyCommand.EDIT_SELECT_UP );
+    add_shortcut( Key.Down,         false, false, false, KeyCommand.EDIT_CURSOR_DOWN );
+    add_shortcut( Key.Down,         false, false, false, KeyCommand.NODE_SELECT_DOWN );
+    add_shortcut( Key.Down,         false, false, true,  KeyCommand.NODE_SWAP_DOWN );
+    add_shortcut( Key.Down,         false, true,  false, KeyCommand.EDIT_SELECT_DOWN );
+    add_shortcut( Key.Page_Up,      false, false, false, KeyCommand.DO_NOTHING );  // "page-up" );
+    add_shortcut( Key.Page_Down,    false, false, false, KeyCommand.DO_NOTHING );  // "page-down" );
+    add_shortcut( Key.Control_L,    false, false, false, KeyCommand.CONTROL_PRESSED );
+    add_shortcut( Key.Control_R,    false, false, false, KeyCommand.CONTROL_PRESSED );
+
+  }
+
+  //-------------------------------------------------------------
   // If the shortcuts file is missing, we will create the default
   // set of shortcuts and save them to the save file.
   private void create_default_shortcuts() {
 
     // TODO - Cleanup command names
 
-    add_shortcut( Key.c,            true, false, false, KeyCommand.DO_NOTHING );  // "copy" );
-    add_shortcut( Key.x,            true, false, false, KeyCommand.DO_NOTHING );  // "cut" );
-    add_shortcut( Key.v,            true, false, false, KeyCommand.DO_NOTHING );  // "paste-insert" );
-    add_shortcut( Key.v,            true, true,  false, KeyCommand.DO_NOTHING );  // "paste-replace" );
+    add_shortcut( Key.c,            true, false, false, KeyCommand.EDIT_COPY );
+    add_shortcut( Key.x,            true, false, false, KeyCommand.EDIT_CUT );
+    add_shortcut( Key.v,            true, false, false, KeyCommand.EDIT_PASTE );
+    add_shortcut( Key.v,            true, true,  false, KeyCommand.NODE_PASTE_REPLACE );
     add_shortcut( Key.Return,       true, false, false, KeyCommand.EDIT_INSERT_NEWLINE );
     add_shortcut( Key.BackSpace,    true, false, false, KeyCommand.EDIT_REMOVE_WORD_PREV );
     add_shortcut( Key.Delete,       true, false, false, KeyCommand.EDIT_REMOVE_WORD_NEXT );
@@ -376,39 +428,11 @@ public class Shortcuts {
     add_shortcut( Key.a,            true, true,  false, KeyCommand.EDIT_SELECT_NONE );
     add_shortcut( Key.period,       true, false, false, KeyCommand.EDIT_INSERT_EMOJI );
     add_shortcut( Key.e,            true, true,  false, KeyCommand.NODE_QUICK_ENTRY_INSERT );
-    add_shortcut( Key.k,            true, false, false, KeyCommand.DO_NOTHING );  // "add-url" );
-    add_shortcut( Key.k,            true, true,  false, KeyCommand.DO_NOTHING );  // "remove-url" );
+    add_shortcut( Key.k,            true, false, false, KeyCommand.EDIT_ADD_URL );
+    add_shortcut( Key.k,            true, true,  false, KeyCommand.EDIT_REMOVE_URL );
     add_shortcut( Key.r,            true, true,  false, KeyCommand.NODE_QUICK_ENTRY_REPLACE );
-    add_shortcut( Key.w,            true, false, false, KeyCommand.DO_NOTHING );  // "close-map" );
     add_shortcut( Key.y,            true, false, false, KeyCommand.NODE_PASTE_NODE_LINK );
 
-    add_shortcut( Key.BackSpace,    false, false, false, KeyCommand.DO_NOTHING );  // "backspace" );
-    add_shortcut( Key.Delete,       false, false, false, KeyCommand.DO_NOTHING );  // "delete" );
-    add_shortcut( Key.Escape,       false, false, false, KeyCommand.DO_NOTHING );  // "escape" );
-    add_shortcut( Key.Return,       false, false, false, KeyCommand.DO_NOTHING );  // "return" );
-    add_shortcut( Key.Return,       false, true,  false, KeyCommand.DO_NOTHING );  // "shift-return" );
-    add_shortcut( Key.Tab,          false, false, false, KeyCommand.DO_NOTHING );  // "tab" );
-    add_shortcut( Key.Tab,          false, true,  false, KeyCommand.DO_NOTHING );  // "shift-tab" );
-    add_shortcut( Key.Right,        false, false, false, KeyCommand.EDIT_CURSOR_CHAR_NEXT );
-    add_shortcut( Key.Right,        false, false, false, KeyCommand.NODE_SELECT_RIGHT );
-    add_shortcut( Key.Right,        false, false, true,  KeyCommand.DO_NOTHING );  // "alt-right" );
-    add_shortcut( Key.Right,        false, true,  false, KeyCommand.EDIT_SELECT_CHAR_NEXT );
-    add_shortcut( Key.Left,         false, false, false, KeyCommand.EDIT_CURSOR_CHAR_PREV );
-    add_shortcut( Key.Left,         false, false, false, KeyCommand.NODE_SELECT_LEFT );
-    add_shortcut( Key.Left,         false, false, true,  KeyCommand.DO_NOTHING );  // "alt-left" );
-    add_shortcut( Key.Left,         false, true,  false, KeyCommand.EDIT_SELECT_CHAR_PREV );
-    add_shortcut( Key.Up,           false, false, false, KeyCommand.EDIT_CURSOR_UP );
-    add_shortcut( Key.Up,           false, false, false, KeyCommand.NODE_SELECT_UP );
-    add_shortcut( Key.Up,           false, false, true,  KeyCommand.DO_NOTHING );  // "alt-up" );
-    add_shortcut( Key.Up,           false, true,  false, KeyCommand.EDIT_SELECT_UP );
-    add_shortcut( Key.Down,         false, false, false, KeyCommand.EDIT_CURSOR_DOWN );
-    add_shortcut( Key.Down,         false, false, false, KeyCommand.NODE_SELECT_DOWN );
-    add_shortcut( Key.Down,         false, false, true,  KeyCommand.DO_NOTHING );  // "alt-down" );
-    add_shortcut( Key.Down,         false, true,  false, KeyCommand.EDIT_SELECT_DOWN );
-    add_shortcut( Key.Page_Up,      false, false, false, KeyCommand.DO_NOTHING );  // "page-up" );
-    add_shortcut( Key.Page_Down,    false, false, false, KeyCommand.DO_NOTHING );  // "page-down" );
-    add_shortcut( Key.Control_L,    false, false, false, KeyCommand.CONTROL_PRESSED );
-    add_shortcut( Key.Control_R,    false, false, false, KeyCommand.CONTROL_PRESSED );
     add_shortcut( Key.F10,          false, true,  false, KeyCommand.SHOW_CONTEXTUAL_MENU );
     add_shortcut( Key.Menu,         false, false, false, KeyCommand.SHOW_CONTEXTUAL_MENU );
 
@@ -461,6 +485,10 @@ public class Shortcuts {
     add_shortcut( Key.o,            false, false, false, KeyCommand.NODE_ADD_CALLOUT );
     add_shortcut( Key.p,            false, false, false, KeyCommand.NODE_SELECT_SIBLING_PREV );
     add_shortcut( Key.x,            false, false, false, KeyCommand.NODE_ADD_CONNECTION );
+    add_shortcut( Key.Left,         false, false, true,  KeyCommand.NODE_SWAP_LEFT );
+    add_shortcut( Key.Right,        false, false, true,  KeyCommand.NODE_SWAP_RIGHT );
+    add_shortcut( Key.Up,           false, false, true,  KeyCommand.NODE_SWAP_UP );
+    add_shortcut( Key.Down,         false, false, true,  KeyCommand.NODE_SWAP_DOWN );
 
     // Save the shortcuts to the save file
     save();

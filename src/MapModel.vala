@@ -2139,7 +2139,7 @@ public class MapModel {
     }
   }
 
-  /* Returns the node at the top of the sibling list */
+  /* Returns the node at the bottom of the sibling list */
   public Node? get_node_pagedn( Node node ) {
     if( node.is_root() ) {
       return( (_nodes.length > 0) ? _nodes.index( _nodes.length - 1 ) : null );
