@@ -1182,19 +1182,40 @@ public class MapModel {
 
   //-------------------------------------------------------------
   // Returns the sibling node in the given direction of the current
-  // node.
-  public Node? sibling_node( Node? node, int dir ) {
+  // node.  The direction can be any of the following values:
+  //   - first
+  //   - last
+  //   - next
+  //   - prev
+  public Node? sibling_node( Node? node, string dir, bool wrap = false ) {
     if( node != null ) {
       if( node.is_root() ) {
-        for( int i=0; i<_nodes.length; i++ ) {
-          if( _nodes.index( i ) == node ) {
-            return( (((i + dir) < 0) || ((i + dir) >= _nodes.length)) ? null : _nodes.index( i + dir ) );
+        if( dir == "first" ) {
+          return( _nodes.index( 0 ) );
+        } else if( dir == "last" ) {
+          return( _nodes.index( _nodes.length - 1 ) );
+        } else {
+          var int_dir = (dir == "next") ? 1 : -1;
+          for( int i=0; i<_nodes.length; i++ ) {
+            if( _nodes.index( i ) == node ) {
+              if( (i + int_dir) < 0 ) {
+                return( wrap ? _nodes.index( _nodes.length - 1 ) : null );
+              } else if( (i + int_dir) >= _nodes.length ) {
+                return( wrap ? _nodes.index( 0 ) : null );
+              } else {
+                return( _nodes.index( i + int_dir ) );
+              }
+            }
           }
         }
-      } else if( dir == 1 ) {
-        return( node.parent.next_child( node ) );
+      } else if( dir == "first" ) {
+        return( node.parent.first_child() );
+      } else if( dir == "last" ) {
+        return( node.parent.last_child() );
+      } else if( dir == "next" ) {
+        return( node.parent.next_child( node, wrap ) );
       } else {
-        return( node.parent.prev_child( node ) );
+        return( node.parent.prev_child( node, wrap ) );
       }
     }
     return( null );

@@ -139,6 +139,13 @@ public class Shortcut {
   }
 
   //-------------------------------------------------------------
+  // Returns true if this shortcut can be edited by the user and
+  // needs to be saved to the shortcuts.xml file.
+  public bool editable() {
+    return( _command.editable() );
+  }
+
+  //-------------------------------------------------------------
   // Executes the stored function with the given map.
   public void execute( MindMap map ) {
     _func( map );
@@ -309,7 +316,9 @@ public class Shortcuts {
 
     for( int i=0; i<_shortcuts.length; i++ ) {
       var shortcut = _shortcuts.index( i );
-      root->add_child( shortcut.save() );
+      if( shortcut.editable() ) {
+        root->add_child( shortcut.save() );
+      }
     }
 
     /* Save the file */
@@ -372,10 +381,14 @@ public class Shortcuts {
     add_shortcut( Key.Escape,       false, false, false, KeyCommand.ESCAPE );
     add_shortcut( Key.Escape,       false, false, false, KeyCommand.EDIT_ESCAPE );
 
-    add_shortcut( Key.Return,       false, false, false, KeyCommand.DO_NOTHING );  // "return" );
-    add_shortcut( Key.Return,       false, true,  false, KeyCommand.DO_NOTHING );  // "shift-return" );
-    add_shortcut( Key.Tab,          false, false, false, KeyCommand.DO_NOTHING );  // "tab" );
-    add_shortcut( Key.Tab,          false, true,  false, KeyCommand.DO_NOTHING );  // "shift-tab" );
+    add_shortcut( Key.Return,       false, false, false, KeyCommand.EDIT_RETURN );
+    add_shortcut( Key.Return,       false, false, false, KeyCommand.NODE_ADD_SIBLING_AFTER );
+    add_shortcut( Key.Return,       false, true,  false, KeyCommand.EDIT_SHIFT_RETURN );
+    add_shortcut( Key.Return,       false, true,  false, KeyCommand.NODE_ADD_SIBLING_BEFORE );
+    add_shortcut( Key.Tab,          false, false, false, KeyCommand.EDIT_TAB );
+    add_shortcut( Key.Tab,          false, false, false, KeyCommand.NODE_ADD_CHILD );
+    add_shortcut( Key.Tab,          false, true,  false, KeyCommand.EDIT_SHIFT_TAB );
+    add_shortcut( Key.Tab,          false, true,  false, KeyCommand.NODE_ADD_PARENT );
     add_shortcut( Key.Right,        false, false, false, KeyCommand.EDIT_CURSOR_CHAR_NEXT );
     add_shortcut( Key.Right,        false, false, false, KeyCommand.NODE_SELECT_RIGHT );
     add_shortcut( Key.Right,        false, true,  false, KeyCommand.EDIT_SELECT_CHAR_NEXT );
@@ -390,8 +403,8 @@ public class Shortcuts {
     add_shortcut( Key.Down,         false, false, false, KeyCommand.NODE_SELECT_DOWN );
     add_shortcut( Key.Down,         false, false, true,  KeyCommand.NODE_SWAP_DOWN );
     add_shortcut( Key.Down,         false, true,  false, KeyCommand.EDIT_SELECT_DOWN );
-    add_shortcut( Key.Page_Up,      false, false, false, KeyCommand.DO_NOTHING );  // "page-up" );
-    add_shortcut( Key.Page_Down,    false, false, false, KeyCommand.DO_NOTHING );  // "page-down" );
+    add_shortcut( Key.Page_Up,      false, false, false, KeyCommand.NODE_SELECT_SIBLING_PREV );
+    add_shortcut( Key.Page_Down,    false, false, false, KeyCommand.NODE_SELECT_SIBLING_NEXT );
     add_shortcut( Key.Control_L,    false, false, false, KeyCommand.CONTROL_PRESSED );
     add_shortcut( Key.Control_R,    false, false, false, KeyCommand.CONTROL_PRESSED );
 

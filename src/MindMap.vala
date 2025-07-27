@@ -506,30 +506,9 @@ public class MindMap {
   // Selects the next (dir = 1) or previous (dir = -1) sibling.
   public void select_sibling_node( int dir ) {
     var current = _selected.current_node();
-    if( current != null ) {
-      Array<Node> nodes;
-      int         index = 0;
-      if( current.is_root() ) {
-        nodes = _model.get_nodes();
-        for( int i=0; i<nodes.length; i++ ) {
-          if( nodes.index( i ) == current ) {
-            index = i;
-            break;
-          }
-        }
-      } else {
-        nodes = current.parent.children();
-        index = current.index();
-      }
-      if( (index + dir) < 0 ) {
-        if( select_node( nodes.index( nodes.length - 1 ) ) ) {
-          queue_draw();
-        }
-      } else {
-        if( select_node( nodes.index( (index + dir) % nodes.length ) ) ) {
-          queue_draw();
-        }
-      }
+    var str_dir = (dir == 1) ? "next" : "prev";
+    if( select_node( _model.sibling_node( current, str_dir, true ) ) ) {
+      queue_draw();
     }
   }
 
@@ -935,8 +914,9 @@ public class MindMap {
   //-------------------------------------------------------------
   // Returns the sibling node in the given direction from the
   // currently selected node.
-  public Node? sibling_node( int dir ) {
-    return( _model.sibling_node( get_current_node(), dir ) );
+  public Node? sibling_node( int dir, bool wrap = false ) {
+    var str_dir = (dir == 1) ? "next" : "prev";
+    return( _model.sibling_node( get_current_node(), str_dir, wrap ) );
   }
 
   //-------------------------------------------------------------

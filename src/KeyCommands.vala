@@ -61,6 +61,10 @@ public enum KeyCommand {
   NODE_SELECT_CALLOUT,
   NODE_CHANGE_LINK_COLOR,
   NODE_CHANGE_TASK,
+  NODE_ADD_SIBLING_AFTER,
+  NODE_ADD_SIBLING_BEFORE,
+  NODE_ADD_CHILD,
+  NODE_ADD_PARENT,
   NODE_ADD_IMAGE,
   NODE_ADD_CALLOUT,
   NODE_ADD_GROUP,
@@ -136,6 +140,10 @@ public enum KeyCommand {
   EDIT_COPY,
   EDIT_CUT,
   EDIT_PASTE,
+  EDIT_RETURN,
+  EDIT_SHIFT_RETURN,
+  EDIT_TAB,
+  EDIT_SHIFT_TAB,
   EDIT_END;
 
   //-------------------------------------------------------------
@@ -176,6 +184,10 @@ public enum KeyCommand {
       case NODE_SELECT_CALLOUT       :  return( "node-select-callout" );
       case NODE_CHANGE_LINK_COLOR    :  return( "node-change-link-color" );
       case NODE_CHANGE_TASK          :  return( "node-change-task" );
+      case NODE_ADD_SIBLING_AFTER    :  return( "node-return" );
+      case NODE_ADD_SIBLING_BEFORE   :  return( "node-shift-return" );
+      case NODE_ADD_CHILD            :  return( "node-tab" );
+      case NODE_ADD_PARENT           :  return( "node-shift-tab" );
       case NODE_ADD_IMAGE            :  return( "node-add-image" );
       case NODE_ADD_CALLOUT          :  return( "node-add-callout" );
       case NODE_ADD_GROUP            :  return( "node-add-group" );
@@ -241,6 +253,10 @@ public enum KeyCommand {
       case EDIT_COPY                 :  return( "edit-copy" );
       case EDIT_CUT                  :  return( "edit-cut" );
       case EDIT_PASTE                :  return( "edit-paste" );
+      case EDIT_RETURN               :  return( "edit-return" );
+      case EDIT_SHIFT_RETURN         :  return( "edit-shift-return" );
+      case EDIT_TAB                  :  return( "edit-tab" );
+      case EDIT_SHIFT_TAB            :  return( "edit-shift-tab" );
       default                        :  stdout.printf( "unhandled: %d\n", this );  assert_not_reached();
     }
   }
@@ -283,6 +299,10 @@ public enum KeyCommand {
       case "node-select-callout"       :  return( NODE_SELECT_CALLOUT );
       case "node-change-link-color"    :  return( NODE_CHANGE_LINK_COLOR );
       case "node-change-task"          :  return( NODE_CHANGE_TASK );
+      case "node-return"               :  return( NODE_ADD_SIBLING_AFTER );
+      case "node-shift-return"         :  return( NODE_ADD_SIBLING_BEFORE );
+      case "node-tab"                  :  return( NODE_ADD_CHILD );
+      case "node-shift-tab"            :  return( NODE_ADD_PARENT );
       case "node-add-image"            :  return( NODE_ADD_IMAGE );
       case "node-add-callout"          :  return( NODE_ADD_CALLOUT );
       case "node-add-group"            :  return( NODE_ADD_GROUP );
@@ -348,6 +368,10 @@ public enum KeyCommand {
       case "edit-copy"                 :  return( EDIT_COPY );
       case "edit-cut"                  :  return( EDIT_CUT );
       case "edit-paste"                :  return( EDIT_PASTE );
+      case "edit-return"               :  return( EDIT_RETURN );
+      case "edit-shift-return"         :  return( EDIT_SHIFT_RETURN );
+      case "edit-tab"                  :  return( EDIT_TAB );
+      case "edit-shift-tab"            :  return( EDIT_SHIFT_TAB );
       default                          :  return( DO_NOTHING );
     }
   }
@@ -390,6 +414,10 @@ public enum KeyCommand {
       case NODE_SELECT_CALLOUT       :  return( _( "Select callout of current node" ) );
       case NODE_CHANGE_LINK_COLOR    :  return( _( "Change link color of current node" ) );
       case NODE_CHANGE_TASK          :  return( _( "Change task status of current node" ) );
+      case NODE_ADD_SIBLING_AFTER    :  return( _( "Add sibling node after current node" ) );
+      case NODE_ADD_SIBLING_BEFORE   :  return( _( "Add sibling node before current node" ) );
+      case NODE_ADD_CHILD            :  return( _( "Add child node to current node" ) );
+      case NODE_ADD_PARENT           :  return( _( "Add parent node to current node" ) );
       case NODE_ADD_IMAGE            :  return( _( "Add/Change image of current node" ) );
       case NODE_ADD_CALLOUT          :  return( _( "Add callout to current node" ) );
       case NODE_ADD_GROUP            :  return( _( "Add group for current node and its subtree" ) );
@@ -490,6 +518,10 @@ public enum KeyCommand {
       case NODE_SELECT_CALLOUT       :  return( node_select_callout );
       case NODE_CHANGE_LINK_COLOR    :  return( node_change_link_color );
       case NODE_CHANGE_TASK          :  return( node_change_task );
+      case NODE_ADD_SIBLING_AFTER    :  return( node_return );
+      case NODE_ADD_SIBLING_BEFORE   :  return( node_shift_return );
+      case NODE_ADD_CHILD            :  return( node_tab );
+      case NODE_ADD_PARENT           :  return( node_shift_tab );
       case NODE_ADD_IMAGE            :  return( node_add_image );
       case NODE_ADD_CALLOUT          :  return( node_add_callout );
       case NODE_ADD_GROUP            :  return( node_add_group );
@@ -555,6 +587,10 @@ public enum KeyCommand {
       case EDIT_COPY                 :  return( edit_copy );
       case EDIT_CUT                  :  return( edit_cut );
       case EDIT_PASTE                :  return( edit_paste );
+      case EDIT_RETURN               :  return( edit_return );
+      case EDIT_SHIFT_RETURN         :  return( edit_shift_return );
+      case EDIT_TAB                  :  return( edit_tab );
+      case EDIT_SHIFT_TAB            :  return( edit_shift_tab );
       default                        :  stdout.printf( "Missed %d\n", this );  assert_not_reached();
     }
   }
@@ -584,7 +620,9 @@ public enum KeyCommand {
       (this == SHOW_CURRENT_SIDEBAR) ||
       (this == EDIT_SELECTED) ||
       (this == SHOW_SELECTED) ||
-      (this == ESCAPE)
+      (this == ESCAPE) ||
+      (this == NODE_ADD_SIBLING_AFTER) ||
+      (this == NODE_ADD_SIBLING_BEFORE)
     );
   }
 
@@ -622,6 +660,8 @@ public enum KeyCommand {
   public bool for_none() {
     switch( this ) {
       case NODE_QUICK_ENTRY_INSERT :
+      case NODE_ADD_SIBLING_AFTER  :
+      case NODE_ADD_SIBLING_BEFORE :
       case EDIT_PASTE              :
         return( true );
       default :
@@ -651,11 +691,19 @@ public enum KeyCommand {
   public bool editable() {
     if( viewable() ) {
       switch( this ) {
-        case ESCAPE         :
-        case NODE_REMOVE    :
-        case EDIT_BACKSPACE :
-        case EDIT_DELETE    :
-        case EDIT_ESCAPE    :
+        case ESCAPE            :
+        case NODE_REMOVE       :
+        case EDIT_BACKSPACE    :
+        case EDIT_DELETE       :
+        case EDIT_ESCAPE       :
+        case EDIT_RETURN       :
+        case EDIT_SHIFT_RETURN :
+        case EDIT_TAB          :
+        case EDIT_SHIFT_TAB    :
+        case NODE_ADD_SIBLING_AFTER  :
+        case NODE_ADD_SIBLING_BEFORE :
+        case NODE_ADD_CHILD    :
+        case NODE_ADD_PARENT   :
           return( false );
         default :
           return( true );
@@ -817,12 +865,46 @@ public enum KeyCommand {
     }
   }
 
+  //-------------------------------------------------------------
+  // Returns the node relative to the current node for the given
+  // direction.
+  private static Node? get_node_by_direction( MindMap map, Node current, string dir ) {
+    switch( dir ) {
+      case "root"          :  return( current.get_root() );
+      case "parent"        :  return( current.parent ?? current );
+      case "child"         :  return( current.last_selected_child ?? current.children().index( 0 ) );
+      case "sibling-next"  :  return( map.model.sibling_node( current, "next",  true ) );
+      case "sibling-prev"  :  return( map.model.sibling_node( current, "prev",  true ) );
+      case "sibling-first" :  return( map.model.sibling_node( current, "first", true ) );
+      case "sibling-last"  :  return( map.model.sibling_node( current, "last",  true ) );
+      case "left"          :  return( map.model.get_node_left( current ) );
+      case "right"         :  return( map.model.get_node_right( current ) );
+      case "up"            :  return( map.model.get_node_up( current ) );
+      case "down"          :  return( map.model.get_node_down( current ) );
+      default              :  return( null );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Changes the selected node based on the given direction.  If we
+  // are connecting a connection, move the attach node based on the
+  // given direction instead.
+  private static void node_select( MindMap map, string dir ) {
+    if( map.is_connection_connecting() && (map.model.attach_node != null) ) {
+      map.model.update_connection_by_node( get_node_by_direction( map, map.model.attach_node, dir ) );
+    } else if( map.is_node_selected() ) {
+      if( map.select_node( get_node_by_direction( map, map.get_current_node(), dir ) ) ) {
+        map.queue_draw();
+      }
+    }
+  }
+
   public static void node_select_root( MindMap map ) {
-    map.select_root_node();
+    node_select( map, "root" );
   }
 
   public static void node_select_parent( MindMap map ) {
-    map.select_parent_nodes();
+    node_select( map, "parent" );
   }
 
   public static void node_select_children( MindMap map ) {
@@ -830,7 +912,7 @@ public enum KeyCommand {
   }
 
   public static void node_select_child( MindMap map ) {
-    map.select_child_node();
+    node_select( map, "child" );
   }
 
   public static void node_select_tree( MindMap map ) {
@@ -838,43 +920,35 @@ public enum KeyCommand {
   }
 
   public static void node_select_sibling_next( MindMap map ) {
-    map.select_sibling_node( 1 );
+    node_select( map, "sibling-next" );
   }
 
   public static void node_select_sibling_previous( MindMap map ) {
-    map.select_sibling_node( -1 );
+    node_select( map, "sibling-prev" );
   }
 
   public static void node_select_left( MindMap map ) {
-    var current   = map.get_current_node();
-    var left_node = map.model.get_node_left( current );
-    if( map.select_node( left_node ) ) {
-      map.queue_draw();
-    }
+    node_select( map, "left" );
   }
 
   public static void node_select_right( MindMap map ) {
-    var current    = map.get_current_node();
-    var right_node = map.model.get_node_right( current );
-    if( map.select_node( right_node ) ) {
-      map.queue_draw();
-    }
+    node_select( map, "right" );
   }
 
   public static void node_select_up( MindMap map ) {
-    var current = map.get_current_node();
-    var up_node = map.model.get_node_up( current );
-    if( map.select_node( up_node ) ) {
-      map.queue_draw();
-    }
+    node_select( map, "up" );
   }
 
   public static void node_select_down( MindMap map ) {
-    var current   = map.get_current_node();
-    var down_node = map.model.get_node_down( current );
-    if( map.select_node( down_node ) ) {
-      map.queue_draw();
-    }
+    node_select( map, "down" );
+  }
+
+  private static void node_select_first_sibling( MindMap map ) {
+    node_select( map, "sibling-first" );
+  }
+
+  private static void node_select_last_sibling( MindMap map ) {
+    node_select( map, "sibling-last" );
   }
 
   public static void node_select_linked( MindMap map ) {
@@ -906,6 +980,53 @@ public enum KeyCommand {
         map.model.change_current_task( true, false );
       }
     }
+  }
+
+  //-------------------------------------------------------------
+  // Helper function that handles a press of the return key when
+  // a node is selected (or is attached to a connecting connection).
+  private static void node_return_helper( MindMap map, bool shift ) {
+    if( map.is_connection_connecting() && (map.model.attach_node != null) ) {
+      map.model.end_connection( map.model.attach_node );
+    } else if( map.is_node_selected() ) {
+      if( !map.get_current_node().is_root() ) {
+        map.model.add_sibling_node( shift );
+      } else if( shift ) {
+        map.model.add_connected_node();
+      } else {
+        map.model.add_root_node();
+      }
+    } else if( map.selected.num_nodes() == 0 ) {
+      map.model.add_root_node();
+    }
+  }
+
+  public static void node_return( MindMap map ) {
+    node_return_helper( map, false );
+  }
+
+  public static void node_shift_return( MindMap map ) {
+    node_return_helper( map, true );
+  }
+
+  private static void node_tab_helper( MindMap map, bool shift ) {
+    if( map.is_node_selected() ) {
+      if( shift ) {
+        map.model.add_parent_node();
+      } else {
+        map.model.add_child_node();
+      }
+    } else if( map.selected.num_nodes() > 1 ) {
+      // map.model.add_summary_node_from_selected();
+    }
+  }
+
+  public static void node_tab( MindMap map ) {
+    node_tab_helper( map, false );
+  }
+
+  public static void node_shift_tab( MindMap map ) {
+    node_tab_helper( map, true );
   }
 
   public static void node_add_image( MindMap map ) {
@@ -1030,26 +1151,6 @@ public enum KeyCommand {
 
   public static void node_swap_down( MindMap map ) {
     node_swap( map, "down" );
-  }
-
-  private static void select_first_sibling( MindMap map ) {
-    if( map.is_connection_connecting() && (map.model.attach_node != null) ) {
-      map.model.update_connection_by_node( map.model.get_node_pageup( map.model.attach_node ) );
-    } else if( map.is_node_selected() ) {
-      if( map.select_node( map.model.get_node_pageup( map.get_current_node() ) ) ) {
-        map.queue_draw();
-      }
-    }
-  }
-
-  private static void select_last_sibling( MindMap map ) {
-    if( map.is_connection_connecting() && (map.model.attach_node != null) ) {
-      map.model.update_connection_by_node( map.model.get_node_pagedn( map.model.attach_node ) );
-    } else if( map.is_node_selected() ) {
-      if( map.select_node( map.model.get_node_pagedn( map.get_current_node() ) ) ) {
-        map.queue_draw();
-      }
-    }
   }
 
   //-------------------------------------------------------------
@@ -1381,17 +1482,72 @@ public enum KeyCommand {
     map.canvas.do_paste( false );
   }
 
-  /*
-    add_shortcut( Key.Return,       false, false, false, KeyCommand.DO_NOTHING );  // "return" );
-    add_shortcut( Key.Return,       false, true,  false, KeyCommand.DO_NOTHING );  // "shift-return" );
-    add_shortcut( Key.Tab,          false, false, false, KeyCommand.DO_NOTHING );  // "tab" );
-    add_shortcut( Key.Tab,          false, true,  false, KeyCommand.DO_NOTHING );  // "shift-tab" );
-    add_shortcut( Key.Right,        false, false, true,  KeyCommand.DO_NOTHING );  // "alt-right" );
-    add_shortcut( Key.Left,         false, false, true,  KeyCommand.DO_NOTHING );  // "alt-left" );
-    add_shortcut( Key.Up,           false, false, true,  KeyCommand.DO_NOTHING );  // "alt-up" );
-    add_shortcut( Key.Down,         false, false, true,  KeyCommand.DO_NOTHING );  // "alt-down" );
-    add_shortcut( Key.Page_Up,      false, false, false, KeyCommand.DO_NOTHING );  // "page-up" );
-    add_shortcut( Key.Page_Down,    false, false, false, KeyCommand.DO_NOTHING );  // "page-down" );
-  */
+  private static void edit_return_helper( MindMap map, bool shift ) {
+    if( map.canvas.completion.shown ) {
+      map.canvas.completion.select();
+      map.queue_draw();
+    }
+    var current_node = map.get_current_node();
+    if( current_node != null ) {
+      map.model.set_node_mode( current_node, NodeMode.CURRENT );
+      if( map.settings.get_boolean( "new-node-from-edit" ) ) {
+        if( !current_node.is_root() ) {
+          map.model.add_sibling_node( shift );
+        } else {
+          map.model.add_root_node();
+        }
+      } else {
+        text_changed( map );
+        map.auto_save();
+      }
+      return;
+    }
+    var current_conn = map.get_current_connection();
+    if( current_conn != null ) {
+      current_conn.edit_title_end();
+      map.model.set_connection_mode( current_conn, ConnMode.SELECTED );
+      text_changed( map );
+      map.auto_save();
+      return;
+    }
+    var current_call = map.get_current_callout();
+    if( current_call != null ) {
+      map.model.set_callout_mode( current_call, CalloutMode.SELECTED );
+      text_changed( map );
+      return;
+    }
+  }
+
+  public static void edit_return( MindMap map ) {
+    edit_return_helper( map, false );
+  }
+
+  public static void edit_shift_return( MindMap map ) {
+    edit_return_helper( map, true );
+  }
+
+  private static void edit_tab_helper( MindMap map, bool shift ) {
+    if( map.is_node_editable() ) {
+      var current = map.get_current_node();
+      map.model.set_node_mode( current, NodeMode.CURRENT );
+      if( map.settings.get_boolean( "new-node-from-edit" ) ) {
+        if( shift ) {
+          map.model.add_parent_node();
+        } else {
+          map.model.add_child_node();
+        }
+      } else {
+        text_changed( map );
+      }
+    }
+  }
+
+  public static void edit_tab( MindMap map ) {
+    edit_tab_helper( map, false );
+  }
+
+  public static void edit_shift_tab( MindMap map ) {
+    edit_tab_helper( map, true );
+  }
 
 }
