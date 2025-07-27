@@ -53,6 +53,7 @@ public class Preferences : Gtk.Dialog {
     };
     stack.add_titled( create_behavior(),   "behavior",   _( "Behavior" ) );
     stack.add_titled( create_appearance(), "appearance", _( "Appearance" ) );
+    stack.add_titled( create_shortcuts(),  "shortcuts",  _( "Shortcuts" ) );
 
     var switcher = new StackSwitcher() {
       halign = Align.CENTER,
@@ -138,7 +139,40 @@ public class Preferences : Gtk.Dialog {
 
   }
 
-  /* Creates label */
+  private ScrolledWindow create_shortcuts() {
+
+    var grid = new Grid() {
+      column_spacing = 12,
+      row_spacing    = 6
+    };
+
+    var row = 0;
+    for( int i=0; i<KeyCommand.NUM; i++ ) {
+      var command = (KeyCommand)i;
+      if( command.viewable() ) {
+        if( command.is_start() ) {
+          grid.attach( make_label( command.shortcut_label() ), 0, row, 3 );
+        } else {
+          grid.attach( make_label( "  " ), 0, row );
+          grid.attach( make_label( command.shortcut_label() ), 1, row );
+          grid.attach( make_shortcut( command ), 2, row );
+        }
+        row++;
+      }
+    }
+
+    var sw = new ScrolledWindow() {
+      vscrollbar_policy = PolicyType.ALWAYS,
+      hscrollbar_policy = PolicyType.NEVER,
+      child = grid
+    };
+
+    return( sw );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates label
   private Label make_label( string label ) {
     var w = new Label( label ) {
       halign = Align.END
@@ -147,7 +181,8 @@ public class Preferences : Gtk.Dialog {
     return( w );
   }
 
-  /* Creates switch */
+  //-------------------------------------------------------------
+  // Creates switch
   private Switch make_switch( string setting ) {
     var w = new Switch() {
       halign = Align.START,
@@ -157,19 +192,34 @@ public class Preferences : Gtk.Dialog {
     return( w );
   }
 
+  //-------------------------------------------------------------
+  // Creates spinner widget.
   private SpinButton make_spinner( string setting, int min_value, int max_value, int step ) {
     var w = new SpinButton.with_range( min_value, max_value, step );
     Minder.settings.bind( setting, w, "value", SettingsBindFlags.DEFAULT );
     return( w );
   }
 
-  /* Creates an information image */
+  //-------------------------------------------------------------
+  // Creates an information image.
   private Image make_info( string detail ) {
     var w = new Image.from_icon_name( "dialog-information-symbolic" ) {
       halign       = Align.START,
       tooltip_text = detail
     };
     return( w );
+  }
+
+  //-------------------------------------------------------------
+  // Creates a shortcut widget.  When entered, allows the shortcut
+  // to be created/modified.
+  private Entry make_shortcut( KeyCommand command ) {
+    var shortcut = _win.shortcuts.get_shortcut( command );
+    var e = new Entry() {
+      text             = (shortcut != null) ? shortcut.get_accelerator() : "",
+      placeholder_text = (shortcut == null) ? _( "Click to set" )        : ""
+    };
+    return( e );
   }
 
   //-------------------------------------------------------------

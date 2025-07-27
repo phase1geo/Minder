@@ -251,10 +251,9 @@ public class Shortcuts {
   //-------------------------------------------------------------
   // Returns the shortcut associated with the given command in the
   // current map state.  If none is found, returns null.
-  public Shortcut? get_shortcut( MindMap map, KeyCommand command ) {
-    var map_state = MapState.get_state( map );
+  public Shortcut? get_shortcut( KeyCommand command ) {
     for( int i=0; i<_shortcuts.length; i++ ) {
-      if( _shortcuts.index( i ).matches_command( command ) && MapState.matches( map_state, command ) ) {
+      if( _shortcuts.index( i ).matches_command( command ) ) {
         return( _shortcuts.index( i ) );
       }
     }
@@ -414,8 +413,6 @@ public class Shortcuts {
   // If the shortcuts file is missing, we will create the default
   // set of shortcuts and save them to the save file.
   private void create_default_shortcuts() {
-
-    // TODO - Cleanup command names
 
     add_shortcut( Key.c,            true, false, false, KeyCommand.EDIT_COPY );
     add_shortcut( Key.x,            true, false, false, KeyCommand.EDIT_CUT );

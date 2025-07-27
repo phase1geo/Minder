@@ -24,7 +24,7 @@ using Gee;
 public delegate void KeyCommandFunc( MindMap map );
 
 public enum KeyCommand {
-  DO_NOTHING,
+  DO_NOTHING,  // 0
   GENERAL_START,
   CONTROL_PRESSED,
   SHOW_CONTEXTUAL_MENU,
@@ -34,7 +34,7 @@ public enum KeyCommand {
   REDO_ACTION,
   EDIT_NOTE,
   SHOW_CURRENT_SIDEBAR,
-  EDIT_SELECTED,
+  EDIT_SELECTED,  // 10
   SHOW_SELECTED,
   ESCAPE,
   GENERAL_END,
@@ -44,7 +44,7 @@ public enum KeyCommand {
   NODE_ALIGN_BOTTOM,
   NODE_ALIGN_LEFT,
   NODE_ALIGN_HCENTER,
-  NODE_ALIGN_RIGHT,
+  NODE_ALIGN_RIGHT,  // 20
   NODE_SELECT_ROOT,
   NODE_SELECT_PARENT,
   NODE_SELECT_CHILDREN,
@@ -54,7 +54,7 @@ public enum KeyCommand {
   NODE_SELECT_SIBLING_PREV,
   NODE_SELECT_LEFT,
   NODE_SELECT_RIGHT,
-  NODE_SELECT_UP,
+  NODE_SELECT_UP,  // 30
   NODE_SELECT_DOWN,
   NODE_SELECT_LINKED,
   NODE_SELECT_CONNECTION,
@@ -64,7 +64,7 @@ public enum KeyCommand {
   NODE_ADD_SIBLING_AFTER,
   NODE_ADD_SIBLING_BEFORE,
   NODE_ADD_CHILD,
-  NODE_ADD_PARENT,
+  NODE_ADD_PARENT,  // 40
   NODE_ADD_IMAGE,
   NODE_ADD_CALLOUT,
   NODE_ADD_GROUP,
@@ -74,7 +74,7 @@ public enum KeyCommand {
   NODE_TOGGLE_SEQUENCE,
   NODE_TOGGLE_LINKS,
   NODE_CENTER,
-  NODE_SORT_ALPHABETICALLY,
+  NODE_SORT_ALPHABETICALLY,  // 50
   NODE_QUICK_ENTRY_INSERT,
   NODE_QUICK_ENTRY_REPLACE,
   NODE_PASTE_NODE_LINK,
@@ -84,7 +84,7 @@ public enum KeyCommand {
   NODE_SWAP_RIGHT,
   NODE_SWAP_UP,
   NODE_SWAP_DOWN,
-  NODE_END,
+  NODE_END,  // 60
   CONNECTION_START,
   CONNECTION_SELECT_FROM,
   CONNECTION_SELECT_TO,
@@ -94,7 +94,7 @@ public enum KeyCommand {
   CONNECTION_END,
   CALLOUT_START,
   CALLOUT_SELECT_NODE,
-  CALLOUT_REMOVE,
+  CALLOUT_REMOVE,  // 70
   CALLOUT_END,
   STICKER_START,
   STICKER_REMOVE,
@@ -104,7 +104,7 @@ public enum KeyCommand {
   GROUP_END,
   EDIT_START,
   EDIT_ESCAPE,
-  EDIT_INSERT_NEWLINE,
+  EDIT_INSERT_NEWLINE,  // 80
   EDIT_INSERT_TAB,
   EDIT_INSERT_EMOJI,
   EDIT_BACKSPACE,
@@ -114,7 +114,7 @@ public enum KeyCommand {
   EDIT_CURSOR_CHAR_NEXT,
   EDIT_CURSOR_CHAR_PREV,
   EDIT_CURSOR_UP,
-  EDIT_CURSOR_DOWN,
+  EDIT_CURSOR_DOWN,  // 90
   EDIT_CURSOR_WORD_NEXT,
   EDIT_CURSOR_WORD_PREV,
   EDIT_CURSOR_START,
@@ -124,7 +124,7 @@ public enum KeyCommand {
   EDIT_SELECT_CHAR_NEXT,
   EDIT_SELECT_CHAR_PREV,
   EDIT_SELECT_UP,
-  EDIT_SELECT_DOWN,
+  EDIT_SELECT_DOWN,  // 100
   EDIT_SELECT_WORD_NEXT,
   EDIT_SELECT_WORD_PREV,
   EDIT_SELECT_START_UP,
@@ -134,7 +134,7 @@ public enum KeyCommand {
   EDIT_SELECT_LINESTART,
   EDIT_SELECT_LINEEND,
   EDIT_SELECT_ALL,
-  EDIT_SELECT_NONE,
+  EDIT_SELECT_NONE,  // 110
   EDIT_ADD_URL,
   EDIT_REMOVE_URL,
   EDIT_COPY,
@@ -144,7 +144,8 @@ public enum KeyCommand {
   EDIT_SHIFT_RETURN,
   EDIT_TAB,
   EDIT_SHIFT_TAB,
-  EDIT_END;
+  EDIT_END,  // 120
+  NUM;
 
   //-------------------------------------------------------------
   // Returns the string version of this key command.
@@ -476,7 +477,7 @@ public enum KeyCommand {
       case EDIT_ADD_URL              :  return( _( "Add URL link at current cursor position" ) );
       case EDIT_REMOVE_URL           :  return( _( "Remove URL link at current cursor position" ) );
       case EDIT_PASTE                :  return( _( "Paste nodes or text from clipboard" ) );
-      default                        :  assert_not_reached();
+      default                        :  stdout.printf( "label: %d\n", this );  assert_not_reached();
     }
   }
 
@@ -682,7 +683,23 @@ public enum KeyCommand {
     return(
       (this != DO_NOTHING) &&
       (this != CONTROL_PRESSED) &&
-      !is_start() && !is_end()
+      (this != ESCAPE) &&
+      (this != EDIT_ESCAPE) &&
+      (this != EDIT_BACKSPACE) &&
+      (this != EDIT_DELETE) &&
+      (this != EDIT_COPY) &&
+      (this != EDIT_CUT) &&
+      (this != EDIT_PASTE) &&
+      (this != EDIT_RETURN) &&
+      (this != EDIT_SHIFT_RETURN) &&
+      (this != EDIT_TAB) &&
+      (this != EDIT_SHIFT_TAB) &&
+      (this != NODE_REMOVE) &&
+      (this != CONNECTION_REMOVE) &&
+      (this != CALLOUT_REMOVE) &&
+      ((this < STICKER_START) || (STICKER_END < this)) &&
+      ((this < GROUP_START) || (GROUP_END < this)) &&
+      !is_end()
     );
   }
 
@@ -720,6 +737,8 @@ public enum KeyCommand {
       case NODE_START       :
       case CONNECTION_START :
       case CALLOUT_START    :
+      case STICKER_START    :
+      case GROUP_START      :
       case EDIT_START       :  return( true );
       default               :  return( false );
     }
@@ -733,6 +752,8 @@ public enum KeyCommand {
       case NODE_END       :
       case CONNECTION_END :
       case CALLOUT_END    :
+      case STICKER_END    :
+      case GROUP_END      :
       case EDIT_END       :  return( true );
       default             :  return( false );
     }
