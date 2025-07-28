@@ -40,3 +40,11 @@
 .titled {
   font-weight: bold;
 }
+
+.shortcut-unselected {
+  border: 2px solid transparent;
+}
+
+.shortcut-selected {
+  border: 2px solid grey;
+}

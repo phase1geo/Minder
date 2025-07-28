@@ -698,8 +698,7 @@ public enum KeyCommand {
       (this != CONNECTION_REMOVE) &&
       (this != CALLOUT_REMOVE) &&
       ((this < STICKER_START) || (STICKER_END < this)) &&
-      ((this < GROUP_START) || (GROUP_END < this)) &&
-      !is_end()
+      ((this < GROUP_START) || (GROUP_END < this))
     );
   }
 

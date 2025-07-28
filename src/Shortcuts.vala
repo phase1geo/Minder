@@ -169,6 +169,26 @@ public class Shortcut {
   }
 
   //-------------------------------------------------------------
+  // Returns a string with the shortcut string to display in the
+  // preferences label.
+  public string get_label() {
+    string[] lbl = {};
+    unichar  uc  = keyval_to_unicode( _keycode );
+    string   str = "";
+    if( _control ) {
+      lbl += "Ctrl";
+    }
+    if( _shift ) {
+      lbl += "Shift";
+    }
+    if( _alt ) {
+      lbl += "Alt";
+    }
+    lbl += uc.isprint() ? uc.to_string().up() : keyval_name( _keycode );
+    return( string.joinv( "+", lbl ) );
+  }
+
+  //-------------------------------------------------------------
   // Saves the contents of this shortcut to an XML node and returns
   // it.
   public Xml.Node* save() {
