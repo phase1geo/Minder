@@ -22,10 +22,13 @@
 using Gtk;
 using Gdk;
 
-public class Preferences : Gtk.Dialog {
+public class Preferences : Gtk.Window {
 
   private MainWindow _win;
   private MenuButton _theme_mb;
+  private string     _shortcut_inst_start_str;
+  private string     _shortcut_inst_edit_str;
+  private Label      _shortcut_instructions;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_set_default_theme", action_set_default_theme, "s" },
@@ -36,7 +39,6 @@ public class Preferences : Gtk.Dialog {
   public Preferences( MainWindow win ) {
 
     Object(
-      deletable: false,
       resizable: false,
       title: _("Preferences"),
       transient_for: win
@@ -65,15 +67,7 @@ public class Preferences : Gtk.Dialog {
     box.append( switcher );
     box.append( stack );
 
-    get_content_area().append( box );
-
-    /* Create close button at bottom of window */
-    var close_button = new Button.with_label( _( "Close" ) );
-    close_button.clicked.connect(() => {
-      destroy();
-    });
-
-    add_action_widget( close_button, 0 );
+    child = box;
 
   }
 
@@ -140,7 +134,7 @@ public class Preferences : Gtk.Dialog {
 
   }
 
-  private ScrolledWindow create_shortcuts() {
+  private Box create_shortcuts() {
 
     var grid = new Grid() {
       column_spacing  = 12,
@@ -175,9 +169,22 @@ public class Preferences : Gtk.Dialog {
       overlay_scrolling = false,
       child = grid
     };
-    sw.set_size_request( 600, 600 );
+    sw.set_size_request( -1, 600 );
 
-    return( sw );
+    _shortcut_inst_start_str = _( "Double-click to edit shortcut.  Select + Delete to remove shortcut." );
+    _shortcut_inst_edit_str  = _( "Escape to cancel.  Press key combination to set." );
+
+    _shortcut_instructions = new Label( _shortcut_inst_start_str ) {
+      halign  = Align.END,
+      hexpand = true,
+      margin_bottom = 20
+    };
+
+    var box = new Box( Orientation.VERTICAL, 5 );
+    box.append( _shortcut_instructions );
+    box.append( sw );
+
+    return( box );
 
   }
 
@@ -221,91 +228,158 @@ public class Preferences : Gtk.Dialog {
   }
 
   //-------------------------------------------------------------
-  // Creates a shortcut widget.  When entered, allows the shortcut
-  // to be created/modified.
-  /*
-  private Entry make_shortcut( KeyCommand command ) {
-    var shortcut = _win.shortcuts.get_shortcut( command );
-    var e = new Entry() {
-      text             = (shortcut != null) ? shortcut.get_label() : "",
-      placeholder_text = (shortcut == null) ? _( "Click to set" )  : ""
-    };
-    return( e );
-  }
-*/
-
+  // Creates a shortcut widget to display and interact with the
+  // current shortcut.
   private Stack make_shortcut( KeyCommand command ) {
 
+    var disabled = _( "Disabled" );
+    var enter    = _( "Enter shortcut" );
     var shortcut = _win.shortcuts.get_shortcut( command );
+
     var sl = new ShortcutLabel( (shortcut != null) ? shortcut.get_accelerator() : "" ) {
       halign    = Align.START,
       can_focus = command.editable(),
       focusable = command.editable()
     };
+    sl.add_css_class( "shortcut-unselected" );
 
-    var nl = new Label( _( "Disabled" ) ) {
-      halign    = Align.START,
-      can_focus = true,
-      focusable = true
+    var sl_focus = new EventControllerFocus();
+    var sl_key   = new EventControllerKey();
+    var sl_click = new GestureClick() {
+      button = Gdk.BUTTON_PRIMARY
     };
+
+    sl.add_controller( sl_focus );
+    sl.add_controller( sl_key );
+    sl.add_controller( sl_click );
+
+    var nl = new EditableLabel( disabled ) {
+      halign    = Align.START,
+      editable  = false,
+      can_focus = command.editable(),
+      focusable = command.editable()
+    };
+    nl.add_css_class( "shortcut-unselected" );
+
+    var nl_focus = new EventControllerFocus();
+    var nl_key   = new EventControllerKey();
+    var nl_click = new GestureClick() {
+      button = Gdk.BUTTON_PRIMARY
+    };
+
+    nl.add_controller( nl_focus );
+    nl.add_controller( nl_key );
+    nl.add_controller( nl_click );
 
     var stack = new Stack();
     stack.add_named( sl, "set" );
     stack.add_named( nl, "unset" );
-    stack.add_css_class( "shortcut-unselected" );
     stack.visible_child_name = (shortcut != null) ? "set" : "unset";
 
-    var focus = new EventControllerFocus();
-    var key   = new EventControllerKey();
-    var click = new GestureClick() {
-      button = Gdk.BUTTON_PRIMARY
-    };
-
-    stack.add_controller( focus );
-    stack.add_controller( key );
-    stack.add_controller( click );
-
-    focus.enter.connect(() => {
-      stack.add_css_class( "shortcut-selected" );
-      nl.label = _( "Enter shortcut" );
-      stack.visible_child_name = "unset";
-    });
-    focus.leave.connect(() => {
-      stack.remove_css_class( "shortcut-selected" );
-      if( stack.visible_child_name == "unset" ) {
-        nl.label = _( "Disabled" );
-      }
+    sl_focus.enter.connect(() => {
+      sl.add_css_class( "shortcut-selected" );
     });
 
-    click.pressed.connect((n_press, x, y) => {
-      stack.grab_focus();
+    sl_focus.leave.connect(() => {
+      sl.remove_css_class( "shortcut-selected" );
     });
 
-    key.key_pressed.connect((keyval, keycode, state) => {
-      if( keyval == Key.Escape ) {
-        if( shortcut != null ) {
-          sl.accelerator = shortcut.get_accelerator();
-          stack.visible_child_name = "set";
-        } else {
-          nl.label = _( "Disabled" );
-          stack.visible_child_name = "unset";
-        }
-      } else if( (keyval == Key.Delete) || (keyval == Key.BackSpace) ) {
-        nl.label = _( "Enter shortcut" );
+    sl_click.pressed.connect((n_press, x, y) => {
+      sl.grab_focus();
+      if( n_press == 2 ) {
+        nl.text = enter;
+        _shortcut_instructions.label = _shortcut_inst_edit_str;
         stack.visible_child_name = "unset";
+        nl.grab_focus();
       }
-      var control = (bool)((state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK);
-      var shift   = (bool)((state & ModifierType.SHIFT_MASK)   == ModifierType.SHIFT_MASK);
-      var alt     = (bool)((state & ModifierType.ALT_MASK)     == ModifierType.ALT_MASK);
-      if( !_win.shortcuts.shortcut_exists( keyval, control, shift, alt, command ) ) {
-        _win.shortcuts.set_shortcut( command, keyval, control, shift, alt );
-        var sc = _win.shortcuts.get_shortcut( command );
-        sl.accelerator = sc.get_accelerator();
+    });
+
+    sl_key.key_pressed.connect((keyval, keycode, state) => {
+      if( (keyval == Key.Delete) || (keyval == Key.BackSpace) ) {
+        _win.shortcuts.clear_shortcut( command );
+        shortcut = null;
+        nl.text  = disabled;
+        stack.visible_child_name = "unset";
+        nl.grab_focus();
+        return( true );
+      } else if( keyval == Key.Return ) {
+        nl.text = enter;
+        _shortcut_instructions.label = _shortcut_inst_edit_str;
+        stack.visible_child_name = "unset";
+        nl.grab_focus();
+        return( true );
       }
-      return( true );
+      return( false );
+    });
+
+    nl_focus.enter.connect(() => {
+      nl.add_css_class( "shortcut-selected" );
+    });
+
+    nl_focus.leave.connect(() => {
+      nl.remove_css_class( "shortcut-selected" );
+      if( nl.text == enter ) {
+        if( shortcut != null ) {
+          stack.visible_child_name = "set";
+          sl.grab_focus();
+        } else {
+          nl.text = disabled;
+        }
+        _shortcut_instructions.label = _shortcut_inst_start_str;
+      }
+    });
+
+    nl_click.pressed.connect((n_press, x, y) => {
+      nl.grab_focus();
+      if( n_press == 2 ) {
+        nl.text = enter;
+        _shortcut_instructions.label = _shortcut_inst_edit_str;
+      }
+    });
+
+    nl_key.key_pressed.connect((keyval, keycode, state) => {
+      if( nl.text == disabled ) {
+        if( keyval == Key.Return ) {
+          nl.text = enter;
+          _shortcut_instructions.label = _shortcut_inst_edit_str;
+          return( true );
+        }
+      } else {
+        if( (keyval == Key.Delete) || (keyval == Key.BackSpace) ) {
+          _win.shortcuts.clear_shortcut( command );
+          shortcut = null;
+          nl.text = disabled;
+          _shortcut_instructions.label = _shortcut_inst_start_str;
+        } else if( keyval == Key.Escape ) {
+          if( shortcut != null ) {
+            stack.visible_child_name = "set";
+            sl.grab_focus();
+          } else {
+            nl.text = disabled;
+          }
+          _shortcut_instructions.label = _shortcut_inst_start_str;
+        } else if( (keyval != Key.Control_L) && (keyval != Key.Control_R) &&
+                   (keyval != Key.Shift_L)   && (keyval != Key.Shift_L)   &&
+                   (keyval != Key.Alt_L)     && (keyval != Key.Alt_R)  && (keyval != 0) ) {
+          var control = (bool)((state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK);
+          var shift   = (bool)((state & ModifierType.SHIFT_MASK)   == ModifierType.SHIFT_MASK);
+          var alt     = (bool)((state & ModifierType.ALT_MASK)     == ModifierType.ALT_MASK);
+          if( !_win.shortcuts.shortcut_exists( keyval, control, shift, alt, command ) ) {
+            shortcut = new Shortcut( keyval, control, shift, alt, command );
+            _win.shortcuts.set_shortcut( shortcut );
+            sl.accelerator = shortcut.get_accelerator();
+            stack.visible_child_name = "set";
+            sl.grab_focus();
+            _shortcut_instructions.label = _shortcut_inst_start_str;
+          }
+        }
+        return( true );
+      }
+      return( false );
     });
 
     return( stack );
+
   }
 
   private Separator make_separator() {

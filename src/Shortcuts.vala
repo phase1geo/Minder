@@ -123,6 +123,17 @@ public class Shortcut {
   }
 
   //-------------------------------------------------------------
+  // Returns true if this shortcut matches the contents of the provided
+  // shortcut.
+  public bool matches_shortcut( Shortcut shortcut ) {
+    return( (_keycode == shortcut._keycode) &&
+            (_control == shortcut._control) &&
+            (_shift   == shortcut._shift)   &&
+            (_alt     == shortcut._alt)     &&
+            (_command == shortcut._command) );
+  }
+
+  //-------------------------------------------------------------
   // Returns true if this shortcut matches the given command.
   public bool matches_command( KeyCommand command ) {
     return( _command == command );
@@ -233,13 +244,18 @@ public class Shortcut {
 public class Shortcuts {
 
   private Array<Shortcut> _shortcuts;
+  private Array<Shortcut> _defaults;
 
   //-------------------------------------------------------------
   // Default constructor
   public Shortcuts() {
 
     _shortcuts = new Array<Shortcut>();
+    _defaults  = new Array<Shortcut>();
 
+    create_default_shortcuts();
+
+    add_builtin_shortcuts();
     load();
 
   }
@@ -247,13 +263,11 @@ public class Shortcuts {
   //-------------------------------------------------------------
   // Clears the shortcut for the given command, if it exists.
   // Called by the shortcut preferences class.
-  public void clear_shortcut( KeyCommand command, bool auto_save = true ) {
+  public void clear_shortcut( KeyCommand command ) {
     for( int i=0; i<_shortcuts.length; i++ ) {
       if( _shortcuts.index( i ).matches_command( command ) ) {
         _shortcuts.remove_index( i );
-        if( auto_save ) {
-          save();
-        }
+        save();
         return;
       }
     }
@@ -262,9 +276,8 @@ public class Shortcuts {
   //-------------------------------------------------------------
   // Sets the shortcut for the given command.  Called by the
   // shortcut preferences class.
-  public void set_shortcut( KeyCommand command, uint keycode, bool control, bool shift, bool alt ) {
-    clear_shortcut( command, false );  // TODO - This is probably not going to be necessary
-    add_shortcut( keycode, control, shift, alt, command );
+  public void set_shortcut( Shortcut shortcut ) {
+    _shortcuts.append_val( shortcut );
     save();
   }
 
@@ -278,6 +291,19 @@ public class Shortcuts {
       }
     }
     return( null ); 
+  }
+
+  //-------------------------------------------------------------
+  // Returns the default shortcut associated with the given
+  // keycommand and return it.  If it cannot be found, return
+  // null.
+  public Shortcut? get_default_shortcut( KeyCommand command ) {
+    for( int i=0; i<_defaults.length; i++ ) {
+      if( _defaults.index( i ).matches_command( command ) ) {
+        return( _defaults.index( i ) );
+      }
+    }
+    return( null );
   }
 
   //-------------------------------------------------------------
@@ -351,12 +377,10 @@ public class Shortcuts {
   // Loads the shortcuts from the shortcuts XML file.
   private void load() {
 
-    create_builtin_shortcuts();
-
     Xml.Doc* doc = Xml.Parser.parse_file( shortcuts_path() );
 
     if( doc == null ) {
-      create_default_shortcuts();
+      add_default_shortcuts();
       return;
     }
 
@@ -381,9 +405,28 @@ public class Shortcuts {
   }
 
   //-------------------------------------------------------------
+  // Creates a shortcut from the given information and adds it to the
+  // list of default shortcuts.
+  private void add_default( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
+    var shortcut = new Shortcut( keycode, control, shift, alt, command );
+    _defaults.append_val( shortcut );
+  }
+
+  //-------------------------------------------------------------
+  // Adds all of the default shortcuts to the shortcuts array.
+  // This will be called internally if the shortcuts.xml file
+  // does not exist.
+  private void add_default_shortcuts() {
+    for( int i=0; i<_defaults.length; i++ ) {
+      _shortcuts.append_val( _defaults.index( i ) );
+    }
+    save();
+  }
+
+  //-------------------------------------------------------------
   // Creates the built-in shortcuts (these are not stored in the
-  // shortcuts.xml file)
-  private void create_builtin_shortcuts() {
+  // shortcuts.xml file and therefore cannot be changed by the user)
+  private void add_builtin_shortcuts() {
 
     add_shortcut( Key.BackSpace,    false, false, false, KeyCommand.EDIT_BACKSPACE );
     add_shortcut( Key.BackSpace,    false, false, false, KeyCommand.NODE_REMOVE );
@@ -434,94 +477,91 @@ public class Shortcuts {
   // set of shortcuts and save them to the save file.
   private void create_default_shortcuts() {
 
-    add_shortcut( Key.c,            true, false, false, KeyCommand.EDIT_COPY );
-    add_shortcut( Key.x,            true, false, false, KeyCommand.EDIT_CUT );
-    add_shortcut( Key.v,            true, false, false, KeyCommand.EDIT_PASTE );
-    add_shortcut( Key.v,            true, true,  false, KeyCommand.NODE_PASTE_REPLACE );
-    add_shortcut( Key.Return,       true, false, false, KeyCommand.EDIT_INSERT_NEWLINE );
-    add_shortcut( Key.BackSpace,    true, false, false, KeyCommand.EDIT_REMOVE_WORD_PREV );
-    add_shortcut( Key.Delete,       true, false, false, KeyCommand.EDIT_REMOVE_WORD_NEXT );
-    add_shortcut( Key.Tab,          true, false, false, KeyCommand.EDIT_INSERT_TAB );
-    add_shortcut( Key.Right,        true, true,  false, KeyCommand.EDIT_SELECT_WORD_NEXT );
-    add_shortcut( Key.Right,        true, false, false, KeyCommand.EDIT_CURSOR_WORD_NEXT );
-    add_shortcut( Key.Left,         true, true,  false, KeyCommand.EDIT_SELECT_WORD_PREV );
-    add_shortcut( Key.Left,         true, false, false, KeyCommand.EDIT_CURSOR_WORD_PREV );
-    add_shortcut( Key.Up,           true, true,  false, KeyCommand.EDIT_SELECT_START_UP );
-    add_shortcut( Key.Up,           true, false, false, KeyCommand.EDIT_CURSOR_START );
-    add_shortcut( Key.Down,         true, true,  false, KeyCommand.EDIT_SELECT_END_DOWN );
-    add_shortcut( Key.Down,         true, false, false, KeyCommand.EDIT_CURSOR_END );
-    add_shortcut( Key.Home,         true, true,  false, KeyCommand.EDIT_SELECT_START_HOME );
-    add_shortcut( Key.Home,         true, false, false, KeyCommand.EDIT_CURSOR_LINESTART );
-    add_shortcut( Key.End,          true, true,  false, KeyCommand.EDIT_SELECT_END_END );
-    add_shortcut( Key.End,          true, false, false, KeyCommand.EDIT_CURSOR_LINEEND );
-    add_shortcut( Key.a,            true, false, false, KeyCommand.EDIT_SELECT_ALL );
-    add_shortcut( Key.a,            true, true,  false, KeyCommand.EDIT_SELECT_NONE );
-    add_shortcut( Key.period,       true, false, false, KeyCommand.EDIT_INSERT_EMOJI );
-    add_shortcut( Key.e,            true, true,  false, KeyCommand.NODE_QUICK_ENTRY_INSERT );
-    add_shortcut( Key.k,            true, false, false, KeyCommand.EDIT_ADD_URL );
-    add_shortcut( Key.k,            true, true,  false, KeyCommand.EDIT_REMOVE_URL );
-    add_shortcut( Key.r,            true, true,  false, KeyCommand.NODE_QUICK_ENTRY_REPLACE );
-    add_shortcut( Key.y,            true, false, false, KeyCommand.NODE_PASTE_NODE_LINK );
+    add_default( Key.c,            true, false, false, KeyCommand.EDIT_COPY );
+    add_default( Key.x,            true, false, false, KeyCommand.EDIT_CUT );
+    add_default( Key.v,            true, false, false, KeyCommand.EDIT_PASTE );
+    add_default( Key.v,            true, true,  false, KeyCommand.NODE_PASTE_REPLACE );
+    add_default( Key.Return,       true, false, false, KeyCommand.EDIT_INSERT_NEWLINE );
+    add_default( Key.BackSpace,    true, false, false, KeyCommand.EDIT_REMOVE_WORD_PREV );
+    add_default( Key.Delete,       true, false, false, KeyCommand.EDIT_REMOVE_WORD_NEXT );
+    add_default( Key.Tab,          true, false, false, KeyCommand.EDIT_INSERT_TAB );
+    add_default( Key.Right,        true, true,  false, KeyCommand.EDIT_SELECT_WORD_NEXT );
+    add_default( Key.Right,        true, false, false, KeyCommand.EDIT_CURSOR_WORD_NEXT );
+    add_default( Key.Left,         true, true,  false, KeyCommand.EDIT_SELECT_WORD_PREV );
+    add_default( Key.Left,         true, false, false, KeyCommand.EDIT_CURSOR_WORD_PREV );
+    add_default( Key.Up,           true, true,  false, KeyCommand.EDIT_SELECT_START_UP );
+    add_default( Key.Up,           true, false, false, KeyCommand.EDIT_CURSOR_START );
+    add_default( Key.Down,         true, true,  false, KeyCommand.EDIT_SELECT_END_DOWN );
+    add_default( Key.Down,         true, false, false, KeyCommand.EDIT_CURSOR_END );
+    add_default( Key.Home,         true, true,  false, KeyCommand.EDIT_SELECT_START_HOME );
+    add_default( Key.Home,         true, false, false, KeyCommand.EDIT_CURSOR_LINESTART );
+    add_default( Key.End,          true, true,  false, KeyCommand.EDIT_SELECT_END_END );
+    add_default( Key.End,          true, false, false, KeyCommand.EDIT_CURSOR_LINEEND );
+    add_default( Key.a,            true, false, false, KeyCommand.EDIT_SELECT_ALL );
+    add_default( Key.a,            true, true,  false, KeyCommand.EDIT_SELECT_NONE );
+    add_default( Key.period,       true, false, false, KeyCommand.EDIT_INSERT_EMOJI );
+    add_default( Key.e,            true, true,  false, KeyCommand.NODE_QUICK_ENTRY_INSERT );
+    add_default( Key.k,            true, false, false, KeyCommand.EDIT_ADD_URL );
+    add_default( Key.k,            true, true,  false, KeyCommand.EDIT_REMOVE_URL );
+    add_default( Key.r,            true, true,  false, KeyCommand.NODE_QUICK_ENTRY_REPLACE );
+    add_default( Key.y,            true, false, false, KeyCommand.NODE_PASTE_NODE_LINK );
 
-    add_shortcut( Key.F10,          false, true,  false, KeyCommand.SHOW_CONTEXTUAL_MENU );
-    add_shortcut( Key.Menu,         false, false, false, KeyCommand.SHOW_CONTEXTUAL_MENU );
+    add_default( Key.F10,          false, true,  false, KeyCommand.SHOW_CONTEXTUAL_MENU );
+    add_default( Key.Menu,         false, false, false, KeyCommand.SHOW_CONTEXTUAL_MENU );
 
-    add_shortcut( Key.minus,        false, false, false, KeyCommand.NODE_ALIGN_TOP );
-    add_shortcut( Key.equal,        false, false, false, KeyCommand.NODE_ALIGN_VCENTER );
-    add_shortcut( Key.z,            false, true,  false, KeyCommand.ZOOM_IN );
-    add_shortcut( Key.bracketleft,  false, false, false, KeyCommand.NODE_ALIGN_LEFT );
-    add_shortcut( Key.bracketright, false, false, false, KeyCommand.NODE_ALIGN_RIGHT );
-    add_shortcut( Key.underscore,   false, true,  false, KeyCommand.NODE_ALIGN_BOTTOM );
-    add_shortcut( Key.a,            false, false, false, KeyCommand.NODE_SELECT_PARENT );
-    add_shortcut( Key.d,            false, false, false, KeyCommand.NODE_SELECT_CHILDREN );
-    add_shortcut( Key.f,            false, false, false, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW );
-    add_shortcut( Key.f,            false, true,  false, KeyCommand.NODE_TOGGLE_FOLDS_DEEP );
-    add_shortcut( Key.g,            false, false, false, KeyCommand.NODE_ADD_GROUP );
-    add_shortcut( Key.l,            false, true,  false, KeyCommand.NODE_CHANGE_LINK_COLOR );
-    add_shortcut( Key.m,            false, false, false, KeyCommand.NODE_SELECT_ROOT );
-    add_shortcut( Key.r,            false, false, false, KeyCommand.REDO_ACTION );
-    add_shortcut( Key.t,            false, false, false, KeyCommand.NODE_CHANGE_TASK );
-    add_shortcut( Key.u,            false, false, false, KeyCommand.UNDO_ACTION );
-    add_shortcut( Key.z,            false, false, false, KeyCommand.ZOOM_OUT );
-    add_shortcut( Key.bar,          false, true,  false, KeyCommand.NODE_ALIGN_HCENTER );
-    add_shortcut( Key.numbersign,   false, true,  false, KeyCommand.NODE_TOGGLE_SEQUENCE );
-    add_shortcut( Key.x,            false, false, false, KeyCommand.NODE_ADD_CONNECTION );
-    add_shortcut( Key.y,            false, false, false, KeyCommand.NODE_TOGGLE_LINKS );
-    add_shortcut( Key.e,            false, true,  false, KeyCommand.EDIT_NOTE );
-    add_shortcut( Key.i,            false, false, false, KeyCommand.SHOW_CURRENT_SIDEBAR );
-    add_shortcut( Key.e,            false, false, false, KeyCommand.EDIT_SELECTED );
-    add_shortcut( Key.s,            false, false, false, KeyCommand.SHOW_SELECTED );
+    add_default( Key.minus,        false, false, false, KeyCommand.NODE_ALIGN_TOP );
+    add_default( Key.equal,        false, false, false, KeyCommand.NODE_ALIGN_VCENTER );
+    add_default( Key.z,            false, true,  false, KeyCommand.ZOOM_IN );
+    add_default( Key.bracketleft,  false, false, false, KeyCommand.NODE_ALIGN_LEFT );
+    add_default( Key.bracketright, false, false, false, KeyCommand.NODE_ALIGN_RIGHT );
+    add_default( Key.underscore,   false, true,  false, KeyCommand.NODE_ALIGN_BOTTOM );
+    add_default( Key.a,            false, false, false, KeyCommand.NODE_SELECT_PARENT );
+    add_default( Key.d,            false, false, false, KeyCommand.NODE_SELECT_CHILDREN );
+    add_default( Key.f,            false, false, false, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW );
+    add_default( Key.f,            false, true,  false, KeyCommand.NODE_TOGGLE_FOLDS_DEEP );
+    add_default( Key.g,            false, false, false, KeyCommand.NODE_ADD_GROUP );
+    add_default( Key.l,            false, true,  false, KeyCommand.NODE_CHANGE_LINK_COLOR );
+    add_default( Key.m,            false, false, false, KeyCommand.NODE_SELECT_ROOT );
+    add_default( Key.r,            false, false, false, KeyCommand.REDO_ACTION );
+    add_default( Key.t,            false, false, false, KeyCommand.NODE_CHANGE_TASK );
+    add_default( Key.u,            false, false, false, KeyCommand.UNDO_ACTION );
+    add_default( Key.z,            false, false, false, KeyCommand.ZOOM_OUT );
+    add_default( Key.bar,          false, true,  false, KeyCommand.NODE_ALIGN_HCENTER );
+    add_default( Key.numbersign,   false, true,  false, KeyCommand.NODE_TOGGLE_SEQUENCE );
+    add_default( Key.x,            false, false, false, KeyCommand.NODE_ADD_CONNECTION );
+    add_default( Key.y,            false, false, false, KeyCommand.NODE_TOGGLE_LINKS );
+    add_default( Key.e,            false, true,  false, KeyCommand.EDIT_NOTE );
+    add_default( Key.i,            false, false, false, KeyCommand.SHOW_CURRENT_SIDEBAR );
+    add_default( Key.e,            false, false, false, KeyCommand.EDIT_SELECTED );
+    add_default( Key.s,            false, false, false, KeyCommand.SHOW_SELECTED );
 
-    add_shortcut( Key.o,            false, true,  false, KeyCommand.CALLOUT_SELECT_NODE );
+    add_default( Key.o,            false, true,  false, KeyCommand.CALLOUT_SELECT_NODE );
 
-    add_shortcut( Key.f,            false, false, false, KeyCommand.CONNECTION_SELECT_FROM );
-    add_shortcut( Key.n,            false, false, false, KeyCommand.CONNECTION_SELECT_NEXT );
-    add_shortcut( Key.p,            false, false, false, KeyCommand.CONNECTION_SELECT_PREV );
-    add_shortcut( Key.t,            false, false, false, KeyCommand.CONNECTION_SELECT_TO );
+    add_default( Key.f,            false, false, false, KeyCommand.CONNECTION_SELECT_FROM );
+    add_default( Key.n,            false, false, false, KeyCommand.CONNECTION_SELECT_NEXT );
+    add_default( Key.p,            false, false, false, KeyCommand.CONNECTION_SELECT_PREV );
+    add_default( Key.t,            false, false, false, KeyCommand.CONNECTION_SELECT_TO );
 
-    add_shortcut( Key.c,            false, true,  false, KeyCommand.NODE_CENTER );
-    add_shortcut( Key.d,            false, true,  false, KeyCommand.NODE_SELECT_TREE );
-    add_shortcut( Key.i,            false, true,  false, KeyCommand.NODE_ADD_IMAGE );
-    add_shortcut( Key.o,            false, true,  false, KeyCommand.NODE_SELECT_CALLOUT );
-    add_shortcut( Key.s,            false, true,  false, KeyCommand.NODE_SORT_ALPHABETICALLY );
-    add_shortcut( Key.x,            false, true,  false, KeyCommand.NODE_SELECT_CONNECTION );
-    add_shortcut( Key.y,            false, true,  false, KeyCommand.NODE_SELECT_LINKED );
-    add_shortcut( Key.c,            false, false, false, KeyCommand.NODE_SELECT_CHILD );
-    add_shortcut( Key.h,            false, false, false, KeyCommand.NODE_SELECT_LEFT );
-    add_shortcut( Key.j,            false, false, false, KeyCommand.NODE_SELECT_DOWN );
-    add_shortcut( Key.k,            false, false, false, KeyCommand.NODE_SELECT_UP );
-    add_shortcut( Key.l,            false, false, false, KeyCommand.NODE_SELECT_RIGHT );
-    add_shortcut( Key.n,            false, false, false, KeyCommand.NODE_SELECT_SIBLING_NEXT );
-    add_shortcut( Key.o,            false, false, false, KeyCommand.NODE_ADD_CALLOUT );
-    add_shortcut( Key.p,            false, false, false, KeyCommand.NODE_SELECT_SIBLING_PREV );
-    add_shortcut( Key.x,            false, false, false, KeyCommand.NODE_ADD_CONNECTION );
-    add_shortcut( Key.Left,         false, false, true,  KeyCommand.NODE_SWAP_LEFT );
-    add_shortcut( Key.Right,        false, false, true,  KeyCommand.NODE_SWAP_RIGHT );
-    add_shortcut( Key.Up,           false, false, true,  KeyCommand.NODE_SWAP_UP );
-    add_shortcut( Key.Down,         false, false, true,  KeyCommand.NODE_SWAP_DOWN );
-
-    // Save the shortcuts to the save file
-    save();
+    add_default( Key.c,            false, true,  false, KeyCommand.NODE_CENTER );
+    add_default( Key.d,            false, true,  false, KeyCommand.NODE_SELECT_TREE );
+    add_default( Key.i,            false, true,  false, KeyCommand.NODE_ADD_IMAGE );
+    add_default( Key.o,            false, true,  false, KeyCommand.NODE_SELECT_CALLOUT );
+    add_default( Key.s,            false, true,  false, KeyCommand.NODE_SORT_ALPHABETICALLY );
+    add_default( Key.x,            false, true,  false, KeyCommand.NODE_SELECT_CONNECTION );
+    add_default( Key.y,            false, true,  false, KeyCommand.NODE_SELECT_LINKED );
+    add_default( Key.c,            false, false, false, KeyCommand.NODE_SELECT_CHILD );
+    add_default( Key.h,            false, false, false, KeyCommand.NODE_SELECT_LEFT );
+    add_default( Key.j,            false, false, false, KeyCommand.NODE_SELECT_DOWN );
+    add_default( Key.k,            false, false, false, KeyCommand.NODE_SELECT_UP );
+    add_default( Key.l,            false, false, false, KeyCommand.NODE_SELECT_RIGHT );
+    add_default( Key.n,            false, false, false, KeyCommand.NODE_SELECT_SIBLING_NEXT );
+    add_default( Key.o,            false, false, false, KeyCommand.NODE_ADD_CALLOUT );
+    add_default( Key.p,            false, false, false, KeyCommand.NODE_SELECT_SIBLING_PREV );
+    add_default( Key.x,            false, false, false, KeyCommand.NODE_ADD_CONNECTION );
+    add_default( Key.Left,         false, false, true,  KeyCommand.NODE_SWAP_LEFT );
+    add_default( Key.Right,        false, false, true,  KeyCommand.NODE_SWAP_RIGHT );
+    add_default( Key.Up,           false, false, true,  KeyCommand.NODE_SWAP_UP );
+    add_default( Key.Down,         false, false, true,  KeyCommand.NODE_SWAP_DOWN );
 
   }
 
