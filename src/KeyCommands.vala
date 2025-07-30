@@ -135,7 +135,9 @@ public enum KeyCommand {
   EDIT_SELECT_LINEEND,
   EDIT_SELECT_ALL,
   EDIT_SELECT_NONE,  // 110
+  EDIT_OPEN_URL,
   EDIT_ADD_URL,
+  EDIT_EDIT_URL,
   EDIT_REMOVE_URL,
   EDIT_COPY,
   EDIT_CUT,
@@ -249,7 +251,9 @@ public enum KeyCommand {
       case EDIT_SELECT_LINEEND       :  return( "edit-select-lineend" );
       case EDIT_SELECT_ALL           :  return( "edit-select-all" );
       case EDIT_SELECT_NONE          :  return( "edit-select-none" );
+      case EDIT_OPEN_URL             :  return( "edit-open-url" );
       case EDIT_ADD_URL              :  return( "edit-add-url" );
+      case EDIT_EDIT_URL             :  return( "edit-edit-url" );
       case EDIT_REMOVE_URL           :  return( "edit-remove-url" );
       case EDIT_COPY                 :  return( "edit-copy" );
       case EDIT_CUT                  :  return( "edit-cut" );
@@ -364,7 +368,9 @@ public enum KeyCommand {
       case "edit-select-lineend"       :  return( EDIT_SELECT_LINEEND );
       case "edit-select_all"           :  return( EDIT_SELECT_ALL );
       case "edit-select-none"          :  return( EDIT_SELECT_NONE );
+      case "edit-open-url"             :  return( EDIT_OPEN_URL );
       case "edit-add-url"              :  return( EDIT_ADD_URL );
+      case "edit-edit-url"             :  return( EDIT_EDIT_URL );
       case "edit-remove-url"           :  return( EDIT_REMOVE_URL );
       case "edit-copy"                 :  return( EDIT_COPY );
       case "edit-cut"                  :  return( EDIT_CUT );
@@ -474,7 +480,9 @@ public enum KeyCommand {
       case EDIT_SELECT_LINEEND       :  return( _( "Add end of current line to current selection" ) );
       case EDIT_SELECT_ALL           :  return( _( "Select all text" ) );
       case EDIT_SELECT_NONE          :  return( _( "Deselect all text" ) );
+      case EDIT_OPEN_URL             :  return( _( "Open URL link at current cursor position" ) );
       case EDIT_ADD_URL              :  return( _( "Add URL link at current cursor position" ) );
+      case EDIT_EDIT_URL             :  return( _( "Change URL link at current cursor position" ) );
       case EDIT_REMOVE_URL           :  return( _( "Remove URL link at current cursor position" ) );
       case EDIT_PASTE                :  return( _( "Paste nodes or text from clipboard" ) );
       default                        :  stdout.printf( "label: %d\n", this );  assert_not_reached();
@@ -583,7 +591,9 @@ public enum KeyCommand {
       case EDIT_SELECT_LINEEND       :  return( edit_select_lineend );
       case EDIT_SELECT_ALL           :  return( edit_select_all );
       case EDIT_SELECT_NONE          :  return( edit_deselect_all );
+      case EDIT_OPEN_URL             :  return( edit_open_url );
       case EDIT_ADD_URL              :  return( edit_add_url );
+      case EDIT_EDIT_URL             :  return( edit_edit_url );
       case EDIT_REMOVE_URL           :  return( edit_remove_url );
       case EDIT_COPY                 :  return( edit_copy );
       case EDIT_CUT                  :  return( edit_cut );
@@ -1229,20 +1239,6 @@ public enum KeyCommand {
   // EDITING FUNCTIONS
 
   //-------------------------------------------------------------
-  // Private method that returns the canvas text of the current
-  // item being edited.  If nothing is being edited, returns null.
-  private static CanvasText? get_canvas_text( MindMap map ) {
-    if( map.is_node_editable() ) {
-      return( map.get_current_node().name );
-    } else if( map.is_connection_editable() ) {
-      return( map.get_current_connection().title );
-    } else if( map.is_callout_editable() ) {
-      return( map.get_current_callout().text );
-    }
-    return( null );
-  }
-
-  //-------------------------------------------------------------
   // Helper function that should be called whenever text changes
   // while editing.
   private static void text_changed( MindMap map ) {
@@ -1254,7 +1250,7 @@ public enum KeyCommand {
   // Helper function that will insert a given string into the
   // current text context.
   private static void insert_text( MindMap map, string str ) {
-    var text = get_canvas_text( map );
+    var text = map.get_current_text();
     if( text != null ) {
       text.insert( str, map.undo_text );
       text_changed( map );
@@ -1264,7 +1260,7 @@ public enum KeyCommand {
   //-------------------------------------------------------------
   // Helper function that moves the cursor in a given direction.
   private static void edit_cursor( MindMap map, string dir ) {
-    var text = get_canvas_text( map );
+    var text = map.get_current_text();
     if( text != null ) {
       switch( dir ) {
         case "char-next" :  text.move_cursor( 1 );                break;
@@ -1286,7 +1282,7 @@ public enum KeyCommand {
   //-------------------------------------------------------------
   // Helper function that changes the selection in a given direction.
   private static void edit_selection( MindMap map, string dir ) {
-    var text = get_canvas_text( map );
+    var text = map.get_current_text();
     if( text != null ) {
       switch( dir ) {
         case "char-next"  :  text.selection_by_char( 1 );              break;
@@ -1310,7 +1306,7 @@ public enum KeyCommand {
   }
 
   public static void edit_escape( MindMap map ) {
-    var text = get_canvas_text( map );
+    var text = map.get_current_text();
     if( text != null ) {
       if( map.canvas.completion.shown ) {
         map.canvas.completion.hide();
@@ -1348,14 +1344,14 @@ public enum KeyCommand {
   }
 
   public static void edit_insert_emoji( MindMap map ) {
-    var text = get_canvas_text( map );
+    var text = map.get_current_text();
     if( text != null ) {
       map.canvas.insert_emoji( text );
     }
   }
 
   public static void edit_backspace( MindMap map ) {
-    var text = get_canvas_text( map );
+    var text = map.get_current_text();
     if( text != null ) {
       text.backspace( map.undo_text );
       text_changed( map );
@@ -1363,7 +1359,7 @@ public enum KeyCommand {
   }
 
   public static void edit_delete( MindMap map ) {
-    var text = get_canvas_text( map );
+    var text = map.get_current_text();
     if( text != null ) {
       text.delete( map.undo_text );
       text_changed( map );
@@ -1371,7 +1367,7 @@ public enum KeyCommand {
   }
 
   public static void edit_remove_word_previous( MindMap map ) {
-    var text = get_canvas_text( map );
+    var text = map.get_current_text();
     if( text != null ) {
       text.backspace_word( map.undo_text );
       text_changed( map );
@@ -1379,7 +1375,7 @@ public enum KeyCommand {
   }
 
   public static void edit_remove_word_next( MindMap map ) {
-    var text = get_canvas_text( map );
+    var text = map.get_current_text();
     if( text != null ) {
       text.delete_word( map.undo_text );
       text_changed( map );
@@ -1482,8 +1478,22 @@ public enum KeyCommand {
     edit_selection( map, "none" );
   }
 
+  public static void edit_open_url( MindMap map ) {
+    var text = map.get_current_text();
+    if( text != null ) {
+      int cursor, selstart, selend;
+      text.get_cursor_info( out cursor, out selstart, out selend );
+      var links = text.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
+      Utils.open_url( links.index( 0 ).extra );
+    }
+  }
+
   public static void edit_add_url( MindMap map ) {
     map.canvas.url_editor.add_url();
+  }
+
+  public static void edit_edit_url( MindMap map ) {
+    map.canvas.url_editor.edit_url();
   }
 
   public static void edit_remove_url( MindMap map ) {

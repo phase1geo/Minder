@@ -2,6 +2,7 @@ sources += files(
     'About.vala',
     'Animator.vala',
     'Application.vala',
+    'BaseMenu.vala',
     'Bezier.vala',
     'Braindump.vala',
     'Callout.vala',

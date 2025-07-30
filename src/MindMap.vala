@@ -376,6 +376,21 @@ public class MindMap {
   //-------------------------------------------------------------
 
   //-------------------------------------------------------------
+  // Returns the current CanvasText being edited.  If we are not
+  // editing, returns null.
+  public CanvasText? get_current_text() {
+    if( is_node_editable() ) {
+      return( get_current_node().name );
+    } else if( is_connection_editable() ) {
+      return( get_current_connection().title );
+    } else if( is_callout_editable() ) {
+      return( get_current_callout().text );
+    } else {
+      return( null );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Returns the current node.
   public Node? get_current_node() {
     return( _selected.current_node() );

@@ -21,47 +21,33 @@
 
 using Gtk;
 
-public class TextMenu {
+public class TextMenu : BaseMenu {
 
-  private MindMap     _map;
   private PopoverMenu _popover;
   private bool        _clear_selection = false;
-
-  private const GLib.ActionEntry action_entries[] = {
-    { "action_copy",         action_copy },
-    { "action_cut",          action_cut },
-    { "action_paste",        action_paste },
-    { "action_insert_emoji", action_insert_emoji },
-    { "action_open_link",    action_open_link },
-    { "action_add_link",     action_add_link },
-    { "action_edit_link",    action_edit_link },
-    { "action_remove_link",  action_remove_link },
-    { "action_restore_link", action_restore_link },
-  };
 
   //-------------------------------------------------------------
   // Default constructor
   public TextMenu( Gtk.Application app, DrawArea da ) {
 
-    _map = da.map;
+    base( app, da, "text" );
 
     // Add the menu items to the menu
     var edit_menu = new GLib.Menu();
-    edit_menu.append( _( "Copy" ),  "text.action_copy" );
-    edit_menu.append( _( "Cut" ),   "text.action_cut" );
-    edit_menu.append( _( "Paste" ), "text.action_paste" );
+    append_menu_item( edit_menu, KeyCommand.EDIT_COPY,   _( "Copy" ) );
+    append_menu_item( edit_menu, KeyCommand.EDIT_CUT,    _( "Cut" ) );
+    append_menu_item( edit_menu, KeyCommand.EDIT_PASTE,  _( "Paste" ) );
 
     var emoji_menu = new GLib.Menu();
-    emoji_menu.append( _( "Insert Emoji" ), "text.action_insert_emoji" );
+    append_menu_item( emoji_menu, KeyCommand.EDIT_INSERT_EMOJI, _( "Insert Emoji" ) );
 
     var open_menu = new GLib.Menu();
-    open_menu.append( _( "Open Link" ), "text.action_open_link" );
+    append_menu_item( open_menu, KeyCommand.EDIT_OPEN_URL, _( "Open Link" ) );
 
     var other_menu = new GLib.Menu();
-    other_menu.append( _( "Add Link" ),     "text.action_add_link" );
-    other_menu.append( _( "Edit Link" ),    "text.action_edit_link" );
-    other_menu.append( _( "Remove Link" ),  "text.action_remove_link" );
-    other_menu.append( _( "Restore Link" ), "text.action_restore_link" );
+    append_menu_item( other_menu, KeyCommand.EDIT_ADD_URL,    _( "Add Link" ) );
+    append_menu_item( other_menu, KeyCommand.EDIT_EDIT_URL,   _( "Edit Link" ) );
+    append_menu_item( other_menu, KeyCommand.EDIT_REMOVE_URL, _( "Remove Link" ) );
 
     var menu = new GLib.Menu();
     menu.append_section( null, edit_menu );
@@ -73,6 +59,7 @@ public class TextMenu {
     _popover.set_parent( da );
     _popover.closed.connect( on_popdown );
 
+    /*
     // Add the menu actions
     var actions = new SimpleActionGroup();
     actions.add_action_entries( action_entries, this );
@@ -86,6 +73,7 @@ public class TextMenu {
     app.set_accels_for_action( "text.action_add_link",     { "<Control>k" } );
     app.set_accels_for_action( "text.action_edit_link",    { "<Control>k" } );
     app.set_accels_for_action( "text.action_remove_link",  { "<Control><Shift>k" } );
+    */
 
   }
 
@@ -106,96 +94,67 @@ public class TextMenu {
   //-------------------------------------------------------------
   // Hides the menu.
   public void hide() {
-
-    // Hides the menu
     _popover.popdown();
-
   }
 
-  /* Copies the selected text to the clipboard */
+  //-------------------------------------------------------------
+  // Copies the selected text to the clipboard
   private void action_copy() {
-    _map.model.copy_selected_text();
+    map.model.copy_selected_text();
   }
 
-  /* Copies the selected text to the clipboard and removes the text */
+  //-------------------------------------------------------------
+  // Copies the selected text to the clipboard and removes the text
   private void action_cut() {
-    _map.model.cut_selected_text();
+    map.model.cut_selected_text();
   }
 
-  /*
-   Pastes text in the clipboard to the current location of the cursor, replacing
-   any selected text.
-  */
+  //-------------------------------------------------------------
+  // Pastes text in the clipboard to the current location of the
+  // cursor, replacing any selected text.
   private void action_paste() {
-    MinderClipboard.paste( _map, false );
+    MinderClipboard.paste( map, false );
   }
 
-  /*
-   Displays the emoji selection window to allow the user to insert an emoji
-   character at the current cursor location.
-  */
+  //-------------------------------------------------------------
+  // Displays the emoji selection window to allow the user to
+  // insert an emoji character at the current cursor location.
   private void action_insert_emoji() {
-    _map.canvas.handle_control_period();
+    map.canvas.handle_control_period();
   }
 
-  /* Opens the first link found */
+  //-------------------------------------------------------------
+  // Opens the first link found
   private void action_open_link() {
-
-    CanvasText? ct = null;
-
-    if( _map.is_node_editable() ) {
-      ct = _map.get_current_node().name;
-    } else if( _map.is_callout_editable() ) {
-      ct = _map.get_current_callout().text;
-    }
-
-    if( ct != null ) {
+    var text = map.get_current_text();
+    if( text != null ) {
       int cursor, selstart, selend;
-      ct.get_cursor_info( out cursor, out selstart, out selend );
-      var links = ct.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
+      text.get_cursor_info( out cursor, out selstart, out selend );
+      var links = text.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
       Utils.open_url( links.index( 0 ).extra );
     }
-
   }
 
-  /*
-   Adds a link to text that is currently selected.  This item should not be
-   allowed if there is either nothing selected or the current selection overlaps
-   text that currently has a link associated with it.
-  */
+  //-------------------------------------------------------------
+  // Adds a link to text that is currently selected.  This item
+  // should not be allowed if there is either nothing selected or
+  // the current selection overlaps text that currently has a
+  // link associated with it.
   private void action_add_link() {
-    _map.canvas.url_editor.add_url();
+    map.canvas.url_editor.add_url();
   }
 
-  /* Allows the user to remove the link located at the current cursor */
+  //-------------------------------------------------------------
+  // Allows the user to remove the link located at the current
+  // cursor.
   private void action_remove_link() {
-    _map.canvas.url_editor.remove_url();
+    map.canvas.url_editor.remove_url();
   }
 
-  /* Allows the user to edit the associated link. */
+  //-------------------------------------------------------------
+  // Allows the user to edit the associated link.
   private void action_edit_link() {
-    _map.canvas.url_editor.edit_url();
-  }
-
-  /* Restores an embedded link that was previously removed */
-  private void action_restore_link() {
-
-    CanvasText? ct = null;
-
-    if( _map.is_node_editable() ) {
-      ct = _map.get_current_node().name;
-    } else if( _map.is_callout_editable() ) {
-      ct = _map.get_current_callout().text;
-    }
-
-    if( ct != null ) {
-      int cursor, selstart, selend;
-      ct.get_cursor_info( out cursor, out selstart, out selend );
-    // TBD - node.urls.restore_link( cursor );
-      ct.clear_selection();
-      _map.auto_save();
-    }
-
+    map.canvas.url_editor.edit_url();
   }
 
   /*
@@ -204,81 +163,57 @@ public class TextMenu {
   */
   private void on_popup() {
 
-    var node    = _map.get_current_node();
-    var callout = _map.get_current_callout();
-
-    /* Set the menu sensitivity */
-    _map.canvas.action_set_enabled( "text.action_copy",  copy_or_cut_possible() );
-    _map.canvas.action_set_enabled( "text.action_cut",   copy_or_cut_possible() );
-    _map.canvas.action_set_enabled( "text.action_paste", paste_possible() );
-
-    /* Initialize the visible attribute */
-    _map.canvas.action_set_enabled( "text.action_open_link",    false );
-    _map.canvas.action_set_enabled( "text.action_add_link",     false );
-    _map.canvas.action_set_enabled( "text.action_edit_link",    false );
-    _map.canvas.action_set_enabled( "text.action_delete_link",  false );
-    _map.canvas.action_set_enabled( "text.action_restore_link", false );
-    _clear_selection = false;
-
-    CanvasText? ct = null;
-
-    if( _map.is_node_editable() ) {
-      ct = _map.get_current_node().name;
-    } else if( _map.is_callout_editable() ) {
-      ct = _map.get_current_callout().text;
-    }
-
-    if( ct != null ) {
+    var text = map.get_current_text();
+    if( text != null ) {
 
       int cursor, selstart, selend;
-      ct.get_cursor_info( out cursor, out selstart, out selend );
+      text.get_cursor_info( out cursor, out selstart, out selend );
 
-      var links    = ct.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
-      var link     = (links.length > 0) ? links.index( 0 ) : null;
-      var selected = (selstart != selend);
+      var links = text.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
+      var link  = (links.length > 0) ? links.index( 0 ) : null;
+
       var valid    = (link != null);
+      var selected = (selstart != selend);
+      var embedded = (links.length > 0) && (link.extra == text.text.text.slice( link.start, link.end ));
 
-      /* If we have found a link, select it */
       if( !selected ) {
-        ct.change_selection( link.start, link.end );
+        text.change_selection( link.start, link.end );
       }
 
-      var embedded = (links.length > 0) && (link.extra == ct.text.text.slice( link.start, link.end ));
-      var ignore   = false;
-
-      // embedded ignore   RESULT
-      // -------- ------   ------
-      //    0       0       add, del, edit
-      //    0       1       add, del, edit
-      //    1       0       del
-      //    1       1       rest
-
-      // Set view of all link menus
-      _map.canvas.action_set_enabled( "text.action_open_link",    (valid && !ignore) );
-      _map.canvas.action_set_enabled( "text.action_add_link",     (!embedded && !ignore && _map.model.add_link_possible( ct )) );
-      _map.canvas.action_set_enabled( "text.action_edit_link",    (valid && !selected && !embedded) );
-      _map.canvas.action_set_enabled( "text.action_delete_link",  (valid && !selected && (!embedded || !ignore)) );
-      _map.canvas.action_set_enabled( "text.action_restore_link", (valid && !selected && embedded && ignore) );
+      set_enabled( KeyCommand.EDIT_OPEN_URL,   valid );
+      set_enabled( KeyCommand.EDIT_ADD_URL,    (!embedded && map.model.add_link_possible( text )) );
+      set_enabled( KeyCommand.EDIT_EDIT_URL,   (valid && !selected && !embedded) );
+      set_enabled( KeyCommand.EDIT_REMOVE_URL, (valid && !selected) );
 
       _clear_selection = valid && !selected;
 
+    } else {
+
+      set_enabled( KeyCommand.EDIT_OPEN_URL,   false );
+      set_enabled( KeyCommand.EDIT_ADD_URL,    false );
+      set_enabled( KeyCommand.EDIT_EDIT_URL,   false );
+      set_enabled( KeyCommand.EDIT_REMOVE_URL, false );
+
+      _clear_selection = false;
+
     }
+
+    /* Set the menu sensitivity */
+    var copy_or_cut = copy_or_cut_possible();
+    set_enabled( KeyCommand.EDIT_COPY,  copy_or_cut );
+    set_enabled( KeyCommand.EDIT_CUT,   copy_or_cut );
+    set_enabled( KeyCommand.EDIT_PASTE, paste_possible() );
 
   }
 
   /* Called when the menu is poppped down */
   private void on_popdown() {
-
     if( _clear_selection ) {
-      var node    = _map.get_current_node();
-      var callout = _map.get_current_callout();
-      if( node != null ) {
-        node.name.clear_selection();
-      } else if( callout != null ) {
-        callout.text.clear_selection();
+      var text = map.get_current_text();
+      if( text != null ) {
+        text.clear_selection();
       }
     }
-
   }
 
   /*
@@ -286,19 +221,13 @@ public class TextMenu {
   */
   private bool copy_or_cut_possible() {
 
-    var node     = _map.get_current_node();
-    var conn     = _map.get_current_connection();
-    var callout  = _map.get_current_callout();
-    int cursor   = 0;
-    int selstart = 0;
-    int selend   = 0;
+    var text     = map.get_current_text();
+    var cursor   = 0;
+    var selstart = 0;
+    var selend   = 0;
 
-    if( node != null ) {
-      node.name.get_cursor_info( out cursor, out selstart, out selend );
-    } else if( conn != null ) {
-      conn.title.get_cursor_info( out cursor, out selstart, out selend );
-    } else if( callout != null ) {
-      callout.text.get_cursor_info( out cursor, out selstart, out selend );
+    if( text != null ) {
+      text.get_cursor_info( out cursor, out selstart, out selend );
     }
 
     return( selstart != selend );

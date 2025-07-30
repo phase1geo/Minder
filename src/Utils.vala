@@ -25,14 +25,15 @@ using Cairo;
 
 public class Utils {
 
-  /* Creates the given directory (and all parent directories) with appropriate permissions */
+  //-------------------------------------------------------------
+  // Creates the given directory (and all parent directories) with
+  // appropriate permissions
   public static bool create_dir( string path ) {
     return( DirUtils.create_with_parents( path, 0755 ) == 0 );
   }
 
-  /*
-   Returns a regular expression useful for parsing clickable URLs.
-  */
+  //-------------------------------------------------------------
+  // Returns a regular expression useful for parsing clickable URLs.
   public static string url_re() {
     string[] res = {
       "mailto:.+@[a-z0-9-]+\\.[a-z0-9.-]+",
@@ -42,35 +43,37 @@ public class Utils {
     return( "(" + string.joinv( "|",res ) + ")" );
   }
 
-  /*
-   Helper function for converting an RGBA color value to a stringified color
-   that can be used by a markup parser.
-  */
+  //-------------------------------------------------------------
+  // Helper function for converting an RGBA color value to a
+  // stringified color that can be used by a markup parser.
   public static string color_from_rgba( RGBA rgba ) {
     return( "#%02x%02x%02x".printf( (int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255) ) );
   }
 
-  /* Returns the RGBA color for the given color value */
+  //-------------------------------------------------------------
+  // Returns the RGBA color for the given color value
   public static RGBA color_from_string( string value ) {
     RGBA c = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
     c.parse( value );
     return( c );
   }
 
-  /* Sets the context source color to the given color value */
+  //-------------------------------------------------------------
+  // Sets the context source color to the given color value
   public static void set_context_color( Context ctx, RGBA color ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
   }
 
-  /*
-   Sets the context source color to the given color value overriding the
-   alpha value with the given value.
-  */
+  //-------------------------------------------------------------
+  // Sets the context source color to the given color value
+  // overriding the alpha value with the given value.
   public static void set_context_color_with_alpha( Context ctx, RGBA color, double alpha ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
   }
 
-  /* Returns the red, green and blue color values that are needed by the Pango color attributes */
+  //-------------------------------------------------------------
+  // Returns the red, green and blue color values that are needed
+  // by the Pango color attributes
   public static void get_attribute_color( RGBA color, out uint16 red, out uint16 green, out uint16 blue ) {
     var maxval = 65535;
     red   = (uint16)(color.red   * maxval);
@@ -78,38 +81,38 @@ public class Utils {
     blue  = (uint16)(color.blue  * maxval);
   }
 
-  /*
-   Checks the given string to see if it is a match to the given pattern.  If
-   it is, the matching portion of the string appended to the list of matches.
-
-   See : https://valadoc.org/glib-2.0/string.substring.html
-  */
+  //-------------------------------------------------------------
+  // Checks the given string to see if it is a match to the given
+  // pattern.  If it is, the matching portion of the string
+  // appended to the list of matches.
+  //
+  // See : https://valadoc.org/glib-2.0/string.substring.html
   public static string match_string( string pattern, string value) {
-      int pattern_byte_idx = value.casefold().index_of( pattern );
-      if( pattern_byte_idx != -1 ) {
-        unichar  c = 0;
-        int i = 0;
-        int current_index = pattern_byte_idx;
-        while (value.get_prev_char(ref current_index, out c) && i < 10) {
-          i++;
-        }
-        int start = i < 10 ? 0 : current_index;
-        i = 0;
-        current_index = pattern_byte_idx + pattern.length;
-        while (value.get_next_char(ref current_index, out c) && i < 10) {
-          i++;
-        }
-        int end = i < 10 ? -1 : current_index - ( pattern_byte_idx + pattern.length );
-        string str = (start > 0 ? "..." : "") +
-        value.substring(start, pattern_byte_idx - start) +
-        "<u>" + pattern + "</u>" +
-        value.substring(pattern_byte_idx + pattern.length);
-        return str;
+    int pattern_byte_idx = value.casefold().index_of( pattern );
+    if( pattern_byte_idx != -1 ) {
+      unichar  c = 0;
+      int i = 0;
+      int current_index = pattern_byte_idx;
+      while (value.get_prev_char(ref current_index, out c) && i < 10) {
+        i++;
       }
+      int start = i < 10 ? 0 : current_index;
+      i = 0;
+      current_index = pattern_byte_idx + pattern.length;
+      while (value.get_next_char(ref current_index, out c) && i < 10) {
+        i++;
+      }
+      int end = i < 10 ? -1 : current_index - ( pattern_byte_idx + pattern.length );
+      string str = (start > 0 ? "..." : "") +
+        value.substring(start, pattern_byte_idx - start) + "<u>" + pattern + "</u>" +
+        value.substring(pattern_byte_idx + pattern.length);
+      return str;
+    }
     return "";
   }
 
-  /* Returns the rootname of the given filename */
+  //-------------------------------------------------------------
+  // Returns the rootname of the given filename
   public static string rootname( string filename ) {
     var basename = GLib.Path.get_basename( filename );
     var parts    = basename.split( "." );
@@ -120,12 +123,15 @@ public class Utils {
     }
   }
 
-  /* Returns true if the given coordinates are within the specified bounds */
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates are within the specified
+  // bounds
   public static bool is_within_bounds( double x, double y, double bx, double by, double bw, double bh ) {
     return( (bx < x) && (x < (bx + bw)) && (by < y) && (y < (by + bh)) );
   }
 
-  /* Returns a string that is suitable to use as an inspector title */
+  //-------------------------------------------------------------
+  // Returns a string that is suitable to use as an inspector title
   public static string make_title( string str ) {
     return( "<b>" + str + "</b>" );
   }

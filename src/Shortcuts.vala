@@ -84,6 +84,12 @@ public class Shortcut {
   private KeyCommand     _command;
   private KeyCommandFunc _func;
 
+  public KeyCommand command {
+    get {
+      return( _command );
+    }
+  }
+
   //-------------------------------------------------------------
   // Default constructor.
   public Shortcut( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
@@ -245,6 +251,8 @@ public class Shortcuts {
 
   private Array<Shortcut> _shortcuts;
   private Array<Shortcut> _defaults;
+
+  public signal void shortcut_changed( KeyCommand command, Shortcut? shortcut );
 
   //-------------------------------------------------------------
   // Default constructor
