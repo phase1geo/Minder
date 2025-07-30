@@ -24,6 +24,8 @@ public class BaseMenu {
   private Gtk.Application _app;
   private MindMap         _map;
   private string          _group_name;
+  private Gtk.PopoverMenu _popover;
+  private GLib.Menu       _menu;
   private const GLib.ActionEntry _action_entries[] = {
     { "action_run_command", action_run_command, "i" }
   };
@@ -31,6 +33,11 @@ public class BaseMenu {
   public MindMap map {
     get {
       return( _map );
+    }
+  }
+  protected GLib.Menu menu {
+    get {
+      return( _menu );
     }
   }
 
@@ -49,6 +56,41 @@ public class BaseMenu {
     actions.add_action_entries( _action_entries, this );
     canvas.insert_action_group( _group_name, actions );
 
+    _menu = new GLib.Menu();
+
+    _popover = new Gtk.PopoverMenu.from_model( _menu );
+    _popover.set_parent( canvas );
+    _popover.closed.connect( on_popdown );
+
+  }
+
+  //-------------------------------------------------------------
+  // Called when the menu is just about to be shown.  Use this
+  // to set the enabled values of menu items.
+  protected virtual void on_popup() {}
+
+  //-------------------------------------------------------------
+  // Called when the menu is being hidden.
+  protected virtual void on_popdown() {}
+
+  //-------------------------------------------------------------
+  // Shows the menu at the given location.
+  public void show( double x, double y ) {
+
+    // Set the menu state
+    on_popup();
+
+    // Display the popover at the given location
+    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
+    _popover.pointing_to = rect;
+    _popover.popup();
+
+  }
+
+  //-------------------------------------------------------------
+  // Hides the menu.
+  public void hide() {
+    _popover.popdown();
   }
 
   //-------------------------------------------------------------

@@ -23,7 +23,6 @@ using Gtk;
 
 public class TextMenu : BaseMenu {
 
-  private PopoverMenu _popover;
   private bool        _clear_selection = false;
 
   //-------------------------------------------------------------
@@ -55,10 +54,6 @@ public class TextMenu : BaseMenu {
     menu.append_section( null, open_menu );
     menu.append_section( null, other_menu );
 
-    _popover = new PopoverMenu.from_model( menu );
-    _popover.set_parent( da );
-    _popover.closed.connect( on_popdown );
-
     /*
     // Add the menu actions
     var actions = new SimpleActionGroup();
@@ -75,26 +70,6 @@ public class TextMenu : BaseMenu {
     app.set_accels_for_action( "text.action_remove_link",  { "<Control><Shift>k" } );
     */
 
-  }
-
-  //-------------------------------------------------------------
-  // Shows the menu at the given location.
-  public void show( double x, double y ) {
-
-    // Set the menu state
-    on_popup();
-
-    // Display the popover at the given location
-    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
-    _popover.pointing_to = rect;
-    _popover.popup();
-
-  }
-
-  //-------------------------------------------------------------
-  // Hides the menu.
-  public void hide() {
-    _popover.popdown();
   }
 
   //-------------------------------------------------------------
@@ -161,7 +136,7 @@ public class TextMenu : BaseMenu {
    Called when this menu is about to be displayed.  Allows the menu items to
    get set to contextually relevant states.
   */
-  private void on_popup() {
+  protected override void on_popup() {
 
     var text = map.get_current_text();
     if( text != null ) {
@@ -207,7 +182,7 @@ public class TextMenu : BaseMenu {
   }
 
   /* Called when the menu is poppped down */
-  private void on_popdown() {
+  protected override void on_popdown() {
     if( _clear_selection ) {
       var text = map.get_current_text();
       if( text != null ) {
