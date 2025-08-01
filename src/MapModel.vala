@@ -1612,8 +1612,16 @@ public class MapModel {
     }
     var current_node = _map.selected.current_node();
     if( current_node != null ) {
-      _map.undo_buffer.add_item( new UndoNodeStickerRemove( current_node ) );
+      _map.add_undo( new UndoNodeStickerRemove( current_node ) );
       current_node.sticker = null;
+      queue_draw();
+      auto_save();
+      return;
+    }
+    var current_conn = _map.selected.current_connection();
+    if( current_conn != null ) {
+      _map.add_undo( new UndoConnectionStickerRemove( current_conn ) );
+      current_conn.sticker = null;
       queue_draw();
       auto_save();
       return;

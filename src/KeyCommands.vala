@@ -36,6 +36,7 @@ public enum KeyCommand {
   SHOW_CURRENT_SIDEBAR,
   EDIT_SELECTED,
   SHOW_SELECTED,
+  REMOVE_STICKER_SELECTED,
   ESCAPE,
   GENERAL_END,
   NODE_START,
@@ -70,7 +71,6 @@ public enum KeyCommand {
   NODE_ADD_PARENT,
   NODE_CHANGE_IMAGE,
   NODE_REMOVE_IMAGE,
-  NODE_REMOVE_STICKER,
   NODE_TOGGLE_CALLOUT,
   NODE_ADD_GROUP,
   NODE_ADD_CONNECTION,
@@ -172,6 +172,7 @@ public enum KeyCommand {
       case SHOW_CURRENT_SIDEBAR      :  return( "show-current-sidebar" );
       case EDIT_SELECTED             :  return( "edit-selected" );
       case SHOW_SELECTED             :  return( "show-selected" );
+      case REMOVE_STICKER_SELECTED   :  return( "remove-sticker-selected" );
       case ESCAPE                    :  return( "escape" );
       case NODE_ALIGN_TOP            :  return( "node-align-top" );
       case NODE_ALIGN_VCENTER        :  return( "node-align-vcenter" );
@@ -204,7 +205,6 @@ public enum KeyCommand {
       case NODE_ADD_PARENT           :  return( "node-shift-tab" );
       case NODE_CHANGE_IMAGE         :  return( "node-change-image" );
       case NODE_REMOVE_IMAGE         :  return( "node-remove-image" );
-      case NODE_REMOVE_STICKER       :  return( "node-remove-sticker" );
       case NODE_TOGGLE_CALLOUT       :  return( "node-toggle-callout" );
       case NODE_ADD_GROUP            :  return( "node-add-group" );
       case NODE_ADD_CONNECTION       :  return( "node-add-connection" );
@@ -297,6 +297,7 @@ public enum KeyCommand {
       case "show-current-sidebar"      :  return( SHOW_CURRENT_SIDEBAR );
       case "edit-selected"             :  return( EDIT_SELECTED );
       case "show-selected"             :  return( SHOW_SELECTED );
+      case "remove-sticker-selected"   :  return( REMOVE_STICKER_SELECTED );
       case "escape"                    :  return( ESCAPE );
       case "node-align-top"            :  return( NODE_ALIGN_TOP );
       case "node-align-vcenter"        :  return( NODE_ALIGN_VCENTER );
@@ -329,7 +330,6 @@ public enum KeyCommand {
       case "node-shift-tab"            :  return( NODE_ADD_PARENT );
       case "node-change-image"         :  return( NODE_CHANGE_IMAGE );
       case "node-remove-image"         :  return( NODE_REMOVE_IMAGE );
-      case "node_remove_sticker"       :  return( NODE_REMOVE_STICKER );
       case "node-toggle-callout"       :  return( NODE_TOGGLE_CALLOUT );
       case "node-add-group"            :  return( NODE_ADD_GROUP );
       case "node-add-connection"       :  return( NODE_ADD_CONNECTION );
@@ -422,6 +422,7 @@ public enum KeyCommand {
       case SHOW_CURRENT_SIDEBAR      :  return( _( "Show current tab in sidebar" ) );
       case EDIT_SELECTED             :  return( _( "Edit currently selected item" ) );
       case SHOW_SELECTED             :  return( _( "Show currently selected item" ) );
+      case REMOVE_STICKER_SELECTED   :  return( _( "Remove sticker from current node or connection" ) );
       case NODE_START                :  return( _( "Node Commands" ) );
       case NODE_ALIGN_TOP            :  return( _( "Align selected node top edges" ) );
       case NODE_ALIGN_VCENTER        :  return( _( "Align selected node vertical centers" ) );
@@ -454,7 +455,6 @@ public enum KeyCommand {
       case NODE_ADD_PARENT           :  return( _( "Add parent node to current node" ) );
       case NODE_CHANGE_IMAGE         :  return( _( "Add/Edit image of current node" ) );
       case NODE_REMOVE_IMAGE         :  return( _( "Remove image from current node" ) );
-      case NODE_REMOVE_STICKER       :  return( _( "Remove sticker from current node" ) );
       case NODE_TOGGLE_CALLOUT       :  return( _( "Add/Remove callout for current node" ) );
       case NODE_ADD_GROUP            :  return( _( "Add group for current node and its subtree" ) );
       case NODE_ADD_CONNECTION       :  return( _( "Start creation of connection from current node" ) );
@@ -536,6 +536,7 @@ public enum KeyCommand {
       case SHOW_CURRENT_SIDEBAR      :  return( show_current_sidebar );
       case EDIT_SELECTED             :  return( edit_selected );
       case SHOW_SELECTED             :  return( show_selected );
+      case REMOVE_STICKER_SELECTED   :  return( remove_sticker_selected );
       case ESCAPE                    :  return( escape );
       case NODE_ALIGN_TOP            :  return( node_align_top );
       case NODE_ALIGN_VCENTER        :  return( node_align_vcenter );
@@ -568,7 +569,6 @@ public enum KeyCommand {
       case NODE_ADD_PARENT           :  return( node_shift_tab );
       case NODE_CHANGE_IMAGE         :  return( node_change_image );
       case NODE_REMOVE_IMAGE         :  return( node_remove_image );
-      case NODE_REMOVE_STICKER       :  return( node_remove_sticker );
       case NODE_TOGGLE_CALLOUT       :  return( node_toggle_callout );
       case NODE_ADD_GROUP            :  return( node_add_group );
       case NODE_ADD_CONNECTION       :  return( node_add_connection );
@@ -655,6 +655,7 @@ public enum KeyCommand {
       (this == SHOW_CURRENT_SIDEBAR) ||
       (this == EDIT_SELECTED) ||
       (this == SHOW_SELECTED) ||
+      (this == REMOVE_STICKER_SELECTED) ||
       (this == EDIT_COPY) ||
       (this == EDIT_CUT)  ||
       (this == EDIT_PASTE) ||
@@ -671,6 +672,7 @@ public enum KeyCommand {
       (this == SHOW_CURRENT_SIDEBAR) ||
       (this == EDIT_SELECTED) ||
       (this == SHOW_SELECTED) ||
+      (this == REMOVE_STICKER_SELECTED) ||
       (this == ESCAPE) ||
       (this == NODE_ADD_SIBLING_AFTER) ||
       (this == NODE_ADD_SIBLING_BEFORE)
@@ -880,6 +882,10 @@ public enum KeyCommand {
 
   public static void show_selected( MindMap map ) {
     map.canvas.see();
+  }
+
+  public static void remove_sticker_selected( MindMap map ) {
+    map.model.remove_sticker();
   }
 
   public static void escape( MindMap map ) {
@@ -1124,10 +1130,6 @@ public enum KeyCommand {
 
   public static void node_remove_image( MindMap map ) {
     map.model.delete_current_image();
-  }
-
-  public static void node_remove_sticker( MindMap map ) {
-    map.model.remove_sticker();
   }
 
   public static void node_toggle_callout( MindMap map ) {

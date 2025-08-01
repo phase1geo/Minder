@@ -50,7 +50,7 @@ public class NodeMenu : BaseMenu {
     append_menu_item( _change_submenu, KeyCommand.EDIT_NOTE,           _( "Edit Note" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_TASK,    _( "Add Task" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_IMAGE,   _( "Add Image" ) );
-    append_menu_item( _change_submenu, KeyCommand.NODE_REMOVE_STICKER, _( "Remove Sticker" ) );
+    append_menu_item( _change_submenu, KeyCommand.REMOVE_STICKER_SELECTED, _( "Remove Sticker" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_LINKS,   _( "Add Node Link" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_ADD_CONNECTION, _( "Add Connection" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_ADD_GROUP,      _( "Add Group" ) );
@@ -274,7 +274,7 @@ public class NodeMenu : BaseMenu {
     set_enabled( KeyCommand.NODE_SELECT_PARENT,        map.parent_selectable() );
     set_enabled( KeyCommand.NODE_SELECT_LINKED,        node_has_link() );
     set_enabled( KeyCommand.NODE_SELECT_CALLOUT,       node_has_callout() );
-    set_enabled( KeyCommand.NODE_REMOVE_STICKER,       (current.sticker != null) );
+    set_enabled( KeyCommand.REMOVE_STICKER_SELECTED,   (current.sticker != null) );
     set_enabled( KeyCommand.NODE_ADD_SIBLING_AFTER,    !current.is_summary() );
 
   }
