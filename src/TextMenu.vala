@@ -56,69 +56,8 @@ public class TextMenu : BaseMenu {
   }
 
   //-------------------------------------------------------------
-  // Copies the selected text to the clipboard
-  private void action_copy() {
-    map.model.copy_selected_text();
-  }
-
-  //-------------------------------------------------------------
-  // Copies the selected text to the clipboard and removes the text
-  private void action_cut() {
-    map.model.cut_selected_text();
-  }
-
-  //-------------------------------------------------------------
-  // Pastes text in the clipboard to the current location of the
-  // cursor, replacing any selected text.
-  private void action_paste() {
-    MinderClipboard.paste( map, false );
-  }
-
-  //-------------------------------------------------------------
-  // Displays the emoji selection window to allow the user to
-  // insert an emoji character at the current cursor location.
-  private void action_insert_emoji() {
-    map.canvas.handle_control_period();
-  }
-
-  //-------------------------------------------------------------
-  // Opens the first link found
-  private void action_open_link() {
-    var text = map.get_current_text();
-    if( text != null ) {
-      int cursor, selstart, selend;
-      text.get_cursor_info( out cursor, out selstart, out selend );
-      var links = text.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
-      Utils.open_url( links.index( 0 ).extra );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Adds a link to text that is currently selected.  This item
-  // should not be allowed if there is either nothing selected or
-  // the current selection overlaps text that currently has a
-  // link associated with it.
-  private void action_add_link() {
-    map.canvas.url_editor.add_url();
-  }
-
-  //-------------------------------------------------------------
-  // Allows the user to remove the link located at the current
-  // cursor.
-  private void action_remove_link() {
-    map.canvas.url_editor.remove_url();
-  }
-
-  //-------------------------------------------------------------
-  // Allows the user to edit the associated link.
-  private void action_edit_link() {
-    map.canvas.url_editor.edit_url();
-  }
-
-  /*
-   Called when this menu is about to be displayed.  Allows the menu items to
-   get set to contextually relevant states.
-  */
+  // Called when this menu is about to be displayed.  Allows the
+  // menu items to get set to contextually relevant states.
   protected override void on_popup() {
 
     var text = map.get_current_text();
@@ -164,7 +103,8 @@ public class TextMenu : BaseMenu {
 
   }
 
-  /* Called when the menu is poppped down */
+  //-------------------------------------------------------------
+  // Called when the menu is poppped down.
   protected override void on_popdown() {
     if( _clear_selection ) {
       var text = map.get_current_text();
@@ -174,9 +114,8 @@ public class TextMenu : BaseMenu {
     }
   }
 
-  /*
-   We can copy or cut text if it is selected.
-  */
+  //-------------------------------------------------------------
+  // We can copy or cut text if it is selected.
   private bool copy_or_cut_possible() {
 
     var text     = map.get_current_text();
@@ -192,7 +131,8 @@ public class TextMenu : BaseMenu {
 
   }
 
-  /* Returns true if there is text in the clipboard to paste */
+  //-------------------------------------------------------------
+  // Returns true if there is text in the clipboard to paste.
   private bool paste_possible() {
     return( MinderClipboard.text_pasteable() );
   }

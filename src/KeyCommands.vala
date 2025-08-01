@@ -926,6 +926,8 @@ public enum KeyCommand {
       if( map.select_node( get_node_by_direction( map, map.get_current_node(), dir ) ) ) {
         map.queue_draw();
       }
+    } else {
+      map.select_root_node();
     }
   }
 
@@ -1106,7 +1108,6 @@ public enum KeyCommand {
   }
 
   public static void node_quick_entry_insert( MindMap map ) {
-    stdout.printf( "HERE!\n" );
     var quick_entry = new QuickEntry( map, false, map.settings );
     quick_entry.preload( "- " );
   }
@@ -1489,7 +1490,6 @@ public enum KeyCommand {
   }
 
   public static void edit_add_url( MindMap map ) {
-    stdout.printf( "In edit_add_url\n" );
     map.canvas.url_editor.add_url();
   }
 

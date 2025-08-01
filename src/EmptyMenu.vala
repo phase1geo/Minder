@@ -21,98 +21,39 @@
 
 using Gtk;
 
-public class EmptyMenu {
+public class EmptyMenu : BaseMenu {
 
   private MindMap     _map;
   private PopoverMenu _popover;
 
-  private const GLib.ActionEntry action_entries[] = {
-    { "action_paste",            action_paste },
-    { "action_add_root_node",    action_add_root_node },
-    { "action_add_quick_entry",  action_add_quick_entry },
-    { "action_select_root_node", action_select_root_node },
-  };
-
   /* Default constructor */
   public EmptyMenu( Gtk.Application app, DrawArea da ) {
 
-    _map = da.map;
+    base( app, da, "empty" );
 
     var edit_menu = new GLib.Menu();
-    edit_menu.append( _( "Paste" ), "empty.action_paste" );
+    append_menu_item( edit_menu, KeyCommand.EDIT_PASTE, _( "Paste" ) );
 
     var add_menu = new GLib.Menu();
-    add_menu.append( _( "Add Root Node" ),              "empty.action_add_root_node" );
-    add_menu.append( _( "Add Nodes With Quick Entry" ), "empty.action_add_quick_entry" );
+    append_menu_item( add_menu, KeyCommand.NODE_ADD_SIBLING_AFTER, _( "Add Root Node" ) );
+    append_menu_item( add_menu, KeyCommand.NODE_QUICK_ENTRY_INSERT, _( "Add Nodes With Quick Entry" ) );
 
     var sel_menu = new GLib.Menu();
-    sel_menu.append( _( "Select First Root Node" ), "empty.action_select_root_node" );
+    append_menu_item( sel_menu, KeyCommand.NODE_SELECT_ROOT, _( "Select First Root Node" ) );
 
-    var menu = new GLib.Menu();
     menu.append_section( null, edit_menu );
     menu.append_section( null, add_menu );
     menu.append_section( null, sel_menu );
 
-    _popover = new PopoverMenu.from_model( menu );
-    _popover.set_parent( da );
-
-    // Add the menu actions
-    var actions = new SimpleActionGroup();
-    actions.add_action_entries( action_entries, this );
-    da.insert_action_group( "empty", actions );
-
-    // Add keyboard shortcuts
-    app.set_accels_for_action( "empty.action_paste",            { "<Control>y" } );
-    app.set_accels_for_action( "empty.action_add_root_node",    { "Return" } );
-    app.set_accels_for_action( "empty.action_add_quick_entry",  { "<Control><Shift>e" } );
-    app.set_accels_for_action( "empty.action_select_root_node", { "m" } );
-
-  }
-
-  public void show( double x, double y ) {
-
-    // Handle action state
-    on_popup();
-
-    // Display the popover at the given location
-    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
-    _popover.pointing_to = rect;
-    _popover.popup();
-
-  }
-
-  /* Returns true if there is a currently selected connection */
-  private bool connection_selected() {
-    return( _map.get_current_connection() != null );
   }
 
   /* Called when the menu is popped up */
-  private void on_popup() {
+  protected override void on_popup() {
 
-    _map.canvas.action_set_enabled( "empty.action_paste",            _map.model.node_pasteable() );
-    _map.canvas.action_set_enabled( "empty.action_add_root_node",    !connection_selected() );
-    _map.canvas.action_set_enabled( "empty.action_select_root_node", _map.root_selectable() );
+    set_enabled( KeyCommand.EDIT_PASTE,             map.model.node_pasteable() );
+    set_enabled( KeyCommand.NODE_ADD_SIBLING_AFTER, (map.get_current_connection() == null) );
+    set_enabled( KeyCommand.NODE_SELECT_ROOT,       map.root_selectable() );
 
-  }
-
-  /* Pastes node tree as root from clipboard */
-  private void action_paste() {
-    _map.canvas.do_paste( false );
-  }
-
-  /* Creates a new root node */
-  private void action_add_root_node() {
-    _map.model.add_root_node();
-  }
-
-  /* Adds top-level nodes via the quick entry facility */
-  private void action_add_quick_entry() {
-    _map.canvas.handle_control_E();
-  }
-
-  /* Selects the current root node */
-  private void action_select_root_node() {
-    _map.select_root_node();
   }
 
 }
