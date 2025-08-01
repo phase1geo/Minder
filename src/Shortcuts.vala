@@ -566,7 +566,7 @@ public class Shortcuts {
 
     add_default( Key.c,            false, true,  false, KeyCommand.NODE_CENTER );
     add_default( Key.d,            false, true,  false, KeyCommand.NODE_SELECT_TREE );
-    add_default( Key.i,            false, true,  false, KeyCommand.NODE_ADD_IMAGE );
+    add_default( Key.i,            false, true,  false, KeyCommand.NODE_CHANGE_IMAGE );
     add_default( Key.o,            false, true,  false, KeyCommand.NODE_SELECT_CALLOUT );
     add_default( Key.s,            false, true,  false, KeyCommand.NODE_SORT_ALPHABETICALLY );
     add_default( Key.x,            false, true,  false, KeyCommand.NODE_SELECT_CONNECTION );
@@ -577,7 +577,7 @@ public class Shortcuts {
     add_default( Key.k,            false, false, false, KeyCommand.NODE_SELECT_UP );
     add_default( Key.l,            false, false, false, KeyCommand.NODE_SELECT_RIGHT );
     add_default( Key.n,            false, false, false, KeyCommand.NODE_SELECT_SIBLING_NEXT );
-    add_default( Key.o,            false, false, false, KeyCommand.NODE_ADD_CALLOUT );
+    add_default( Key.o,            false, false, false, KeyCommand.NODE_TOGGLE_CALLOUT );
     add_default( Key.p,            false, false, false, KeyCommand.NODE_SELECT_SIBLING_PREV );
     add_default( Key.x,            false, false, false, KeyCommand.NODE_ADD_CONNECTION );
     add_default( Key.Left,         false, false, true,  KeyCommand.NODE_SWAP_LEFT );

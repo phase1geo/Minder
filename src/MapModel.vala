@@ -724,6 +724,14 @@ public class MapModel {
   //-------------------------------------------------------------
 
   //-------------------------------------------------------------
+  // Returns true if the current node has a callout currently
+  // associated with it.
+  public bool node_has_callout() {
+    var current = _map.get_current_node();
+    return( (current != null) && (current.callout != null) );
+  }
+
+  //-------------------------------------------------------------
   // Adds a callout to the currently selected node
   public void add_callout() {
     var current = _map.selected.current_node();
@@ -1590,15 +1598,26 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
-  // Deletes the currently selected sticker.
+  // Deletes the currently selected sticker (whether the sticker
+  // is alone or connected to a node).
   public void remove_sticker() {
-    var current = _map.selected.current_sticker();
-    if( current == null ) return;
-    _map.add_undo( new UndoStickerRemove( current ) );
-    _stickers.remove_sticker( current );
-    _map.selected.remove_sticker( current );
-    queue_draw();
-    auto_save();
+    var current_sticker = _map.selected.current_sticker();
+    if( current_sticker != null ) {
+      _map.add_undo( new UndoStickerRemove( current_sticker ) );
+      _stickers.remove_sticker( current_sticker );
+      _map.selected.remove_sticker( current_sticker );
+      queue_draw();
+      auto_save();
+      return;
+    }
+    var current_node = _map.selected.current_node();
+    if( current_node != null ) {
+      _map.undo_buffer.add_item( new UndoNodeStickerRemove( current_node ) );
+      current_node.sticker = null;
+      queue_draw();
+      auto_save();
+      return;
+    }
   }
 
   //-------------------------------------------------------------

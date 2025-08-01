@@ -2744,7 +2744,7 @@ public class DrawArea : Gtk.DrawingArea {
     else if(  shift && has_key( kvs, Key.e ) )    { show_properties( "current", PropertyGrab.NOTE ); }
     else if(  shift && has_key( kvs, Key.f ) )    { _map.model.toggle_fold( current, true ); }
     else if(  shift && has_key( kvs, Key.i ) )    { _map.model.add_current_image(); }
-    else if(  shift && has_key( kvs, Key.l ) )    { _node_menu.action_change_link_color(); }
+    else if(  shift && has_key( kvs, Key.l ) )    { stdout.printf( "NOTHING" ); }
     else if(  shift && has_key( kvs, Key.o ) )    { _map.select_callout(); }
     else if(  shift && has_key( kvs, Key.s ) )    { _map.model.sort_alphabetically(); }
     else if(  shift && has_key( kvs, Key.x ) )    { _map.select_attached_connection(); }

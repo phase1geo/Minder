@@ -23,9 +23,6 @@ using Gtk;
 
 public class EmptyMenu : BaseMenu {
 
-  private MindMap     _map;
-  private PopoverMenu _popover;
-
   /* Default constructor */
   public EmptyMenu( Gtk.Application app, DrawArea da ) {
 

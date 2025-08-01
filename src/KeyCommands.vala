@@ -24,7 +24,7 @@ using Gee;
 public delegate void KeyCommandFunc( MindMap map );
 
 public enum KeyCommand {
-  DO_NOTHING,  // 0
+  DO_NOTHING,
   GENERAL_START,
   CONTROL_PRESSED,
   SHOW_CONTEXTUAL_MENU,
@@ -34,7 +34,7 @@ public enum KeyCommand {
   REDO_ACTION,
   EDIT_NOTE,
   SHOW_CURRENT_SIDEBAR,
-  EDIT_SELECTED,  // 10
+  EDIT_SELECTED,
   SHOW_SELECTED,
   ESCAPE,
   GENERAL_END,
@@ -44,7 +44,7 @@ public enum KeyCommand {
   NODE_ALIGN_BOTTOM,
   NODE_ALIGN_LEFT,
   NODE_ALIGN_HCENTER,
-  NODE_ALIGN_RIGHT,  // 20
+  NODE_ALIGN_RIGHT,
   NODE_SELECT_ROOT,
   NODE_SELECT_PARENT,
   NODE_SELECT_CHILDREN,
@@ -54,19 +54,24 @@ public enum KeyCommand {
   NODE_SELECT_SIBLING_PREV,
   NODE_SELECT_LEFT,
   NODE_SELECT_RIGHT,
-  NODE_SELECT_UP,  // 30
+  NODE_SELECT_UP,
   NODE_SELECT_DOWN,
   NODE_SELECT_LINKED,
   NODE_SELECT_CONNECTION,
   NODE_SELECT_CALLOUT,
   NODE_CHANGE_LINK_COLOR,
+  NODE_RANDOMIZE_LINK_COLOR,
+  NODE_REPARENT_LINK_COLOR,
   NODE_CHANGE_TASK,
+  NODE_ADD_ROOT,
   NODE_ADD_SIBLING_AFTER,
   NODE_ADD_SIBLING_BEFORE,
   NODE_ADD_CHILD,
-  NODE_ADD_PARENT,  // 40
-  NODE_ADD_IMAGE,
-  NODE_ADD_CALLOUT,
+  NODE_ADD_PARENT,
+  NODE_CHANGE_IMAGE,
+  NODE_REMOVE_IMAGE,
+  NODE_REMOVE_STICKER,
+  NODE_TOGGLE_CALLOUT,
   NODE_ADD_GROUP,
   NODE_ADD_CONNECTION,
   NODE_TOGGLE_FOLDS_SHALLOW,
@@ -74,17 +79,20 @@ public enum KeyCommand {
   NODE_TOGGLE_SEQUENCE,
   NODE_TOGGLE_LINKS,
   NODE_CENTER,
-  NODE_SORT_ALPHABETICALLY,  // 50
+  NODE_SORT_ALPHABETICALLY,
+  NODE_SORT_RANDOMLY,
   NODE_QUICK_ENTRY_INSERT,
   NODE_QUICK_ENTRY_REPLACE,
   NODE_PASTE_NODE_LINK,
   NODE_PASTE_REPLACE,
   NODE_REMOVE,
+  NODE_REMOVE_ONLY,
+  NODE_DETACH,
   NODE_SWAP_LEFT,
   NODE_SWAP_RIGHT,
   NODE_SWAP_UP,
   NODE_SWAP_DOWN,
-  NODE_END,  // 60
+  NODE_END,
   CONNECTION_START,
   CONNECTION_SELECT_FROM,
   CONNECTION_SELECT_TO,
@@ -94,7 +102,7 @@ public enum KeyCommand {
   CONNECTION_END,
   CALLOUT_START,
   CALLOUT_SELECT_NODE,
-  CALLOUT_REMOVE,  // 70
+  CALLOUT_REMOVE,
   CALLOUT_END,
   STICKER_START,
   STICKER_REMOVE,
@@ -104,7 +112,7 @@ public enum KeyCommand {
   GROUP_END,
   EDIT_START,
   EDIT_ESCAPE,
-  EDIT_INSERT_NEWLINE,  // 80
+  EDIT_INSERT_NEWLINE,
   EDIT_INSERT_TAB,
   EDIT_INSERT_EMOJI,
   EDIT_BACKSPACE,
@@ -114,7 +122,7 @@ public enum KeyCommand {
   EDIT_CURSOR_CHAR_NEXT,
   EDIT_CURSOR_CHAR_PREV,
   EDIT_CURSOR_UP,
-  EDIT_CURSOR_DOWN,  // 90
+  EDIT_CURSOR_DOWN,
   EDIT_CURSOR_WORD_NEXT,
   EDIT_CURSOR_WORD_PREV,
   EDIT_CURSOR_START,
@@ -124,7 +132,7 @@ public enum KeyCommand {
   EDIT_SELECT_CHAR_NEXT,
   EDIT_SELECT_CHAR_PREV,
   EDIT_SELECT_UP,
-  EDIT_SELECT_DOWN,  // 100
+  EDIT_SELECT_DOWN,
   EDIT_SELECT_WORD_NEXT,
   EDIT_SELECT_WORD_PREV,
   EDIT_SELECT_START_UP,
@@ -134,7 +142,7 @@ public enum KeyCommand {
   EDIT_SELECT_LINESTART,
   EDIT_SELECT_LINEEND,
   EDIT_SELECT_ALL,
-  EDIT_SELECT_NONE,  // 110
+  EDIT_SELECT_NONE,
   EDIT_OPEN_URL,
   EDIT_ADD_URL,
   EDIT_EDIT_URL,
@@ -146,7 +154,7 @@ public enum KeyCommand {
   EDIT_SHIFT_RETURN,
   EDIT_TAB,
   EDIT_SHIFT_TAB,
-  EDIT_END,  // 120
+  EDIT_END,
   NUM;
 
   //-------------------------------------------------------------
@@ -186,13 +194,18 @@ public enum KeyCommand {
       case NODE_SELECT_CONNECTION    :  return( "node-select-connection" );
       case NODE_SELECT_CALLOUT       :  return( "node-select-callout" );
       case NODE_CHANGE_LINK_COLOR    :  return( "node-change-link-color" );
+      case NODE_RANDOMIZE_LINK_COLOR :  return( "node-randomize-link-color" );
+      case NODE_REPARENT_LINK_COLOR  :  return( "node-reparent-link-color" );
       case NODE_CHANGE_TASK          :  return( "node-change-task" );
+      case NODE_ADD_ROOT             :  return( "node-add-root" );
       case NODE_ADD_SIBLING_AFTER    :  return( "node-return" );
       case NODE_ADD_SIBLING_BEFORE   :  return( "node-shift-return" );
       case NODE_ADD_CHILD            :  return( "node-tab" );
       case NODE_ADD_PARENT           :  return( "node-shift-tab" );
-      case NODE_ADD_IMAGE            :  return( "node-add-image" );
-      case NODE_ADD_CALLOUT          :  return( "node-add-callout" );
+      case NODE_CHANGE_IMAGE         :  return( "node-change-image" );
+      case NODE_REMOVE_IMAGE         :  return( "node-remove-image" );
+      case NODE_REMOVE_STICKER       :  return( "node-remove-sticker" );
+      case NODE_TOGGLE_CALLOUT       :  return( "node-toggle-callout" );
       case NODE_ADD_GROUP            :  return( "node-add-group" );
       case NODE_ADD_CONNECTION       :  return( "node-add-connection" );
       case NODE_TOGGLE_FOLDS_SHALLOW :  return( "node-toggle-folds-shallow" );
@@ -201,11 +214,14 @@ public enum KeyCommand {
       case NODE_TOGGLE_LINKS         :  return( "node-toggle-links" );
       case NODE_CENTER               :  return( "node-center" );
       case NODE_SORT_ALPHABETICALLY  :  return( "node-sort-alphabetically" );
+      case NODE_SORT_RANDOMLY        :  return( "node-sort-randomly" );
       case NODE_QUICK_ENTRY_INSERT   :  return( "node-quick-entry-insert" );
       case NODE_QUICK_ENTRY_REPLACE  :  return( "node-quick-entry-replace" );
       case NODE_PASTE_NODE_LINK      :  return( "node-paste-node-link" );
       case NODE_PASTE_REPLACE        :  return( "node-paste-replace" );
       case NODE_REMOVE               :  return( "node-remove" );
+      case NODE_REMOVE_ONLY          :  return( "node-remove-only" );
+      case NODE_DETACH               :  return( "node-detach" );
       case NODE_SWAP_LEFT            :  return( "node-swap-left" );
       case NODE_SWAP_RIGHT           :  return( "node-swap-right" );
       case NODE_SWAP_UP              :  return( "node-swap-up" );
@@ -303,13 +319,18 @@ public enum KeyCommand {
       case "node-select-connection"    :  return( NODE_SELECT_CONNECTION );
       case "node-select-callout"       :  return( NODE_SELECT_CALLOUT );
       case "node-change-link-color"    :  return( NODE_CHANGE_LINK_COLOR );
+      case "node-randomize-link-color" :  return( NODE_RANDOMIZE_LINK_COLOR );
+      case "node-reparent-link-color"  :  return( NODE_REPARENT_LINK_COLOR );
       case "node-change-task"          :  return( NODE_CHANGE_TASK );
+      case "node-add-root"             :  return( NODE_ADD_ROOT );
       case "node-return"               :  return( NODE_ADD_SIBLING_AFTER );
       case "node-shift-return"         :  return( NODE_ADD_SIBLING_BEFORE );
       case "node-tab"                  :  return( NODE_ADD_CHILD );
       case "node-shift-tab"            :  return( NODE_ADD_PARENT );
-      case "node-add-image"            :  return( NODE_ADD_IMAGE );
-      case "node-add-callout"          :  return( NODE_ADD_CALLOUT );
+      case "node-change-image"         :  return( NODE_CHANGE_IMAGE );
+      case "node-remove-image"         :  return( NODE_REMOVE_IMAGE );
+      case "node_remove_sticker"       :  return( NODE_REMOVE_STICKER );
+      case "node-toggle-callout"       :  return( NODE_TOGGLE_CALLOUT );
       case "node-add-group"            :  return( NODE_ADD_GROUP );
       case "node-add-connection"       :  return( NODE_ADD_CONNECTION );
       case "node-toggle-folds-shallow" :  return( NODE_TOGGLE_FOLDS_SHALLOW );
@@ -318,11 +339,14 @@ public enum KeyCommand {
       case "node-toggle-links"         :  return( NODE_TOGGLE_LINKS );
       case "node-center"               :  return( NODE_CENTER );
       case "node-sort-alphabetically"  :  return( NODE_SORT_ALPHABETICALLY );
+      case "node-sort-randomly"        :  return( NODE_SORT_RANDOMLY );
       case "node-quick-entry-insert"   :  return( NODE_QUICK_ENTRY_INSERT );
       case "node-quick-entry-replace"  :  return( NODE_QUICK_ENTRY_REPLACE );
       case "node-paste-node-link"      :  return( NODE_PASTE_NODE_LINK );
       case "node-paste-replace"        :  return( NODE_PASTE_REPLACE );
       case "node-remove"               :  return( NODE_REMOVE );
+      case "node-remove-only"          :  return( NODE_REMOVE_ONLY );
+      case "node-detach"               :  return( NODE_DETACH );
       case "node-swap-left"            :  return( NODE_SWAP_LEFT );
       case "node-swap-right"           :  return( NODE_SWAP_RIGHT );
       case "node-swap-up"              :  return( NODE_SWAP_UP );
@@ -420,13 +444,18 @@ public enum KeyCommand {
       case NODE_SELECT_CONNECTION    :  return( _( "Select connection of current node" ) );
       case NODE_SELECT_CALLOUT       :  return( _( "Select callout of current node" ) );
       case NODE_CHANGE_LINK_COLOR    :  return( _( "Change link color of current node" ) );
+      case NODE_RANDOMIZE_LINK_COLOR :  return( _( "Randomize the current node link color" ) );
+      case NODE_REPARENT_LINK_COLOR  :  return( _( "Set current node link color to match parent node" ) );
       case NODE_CHANGE_TASK          :  return( _( "Change task status of current node" ) );
+      case NODE_ADD_ROOT             :  return( _( "Add root node" ) );
       case NODE_ADD_SIBLING_AFTER    :  return( _( "Add sibling node after current node" ) );
       case NODE_ADD_SIBLING_BEFORE   :  return( _( "Add sibling node before current node" ) );
       case NODE_ADD_CHILD            :  return( _( "Add child node to current node" ) );
       case NODE_ADD_PARENT           :  return( _( "Add parent node to current node" ) );
-      case NODE_ADD_IMAGE            :  return( _( "Add/Change image of current node" ) );
-      case NODE_ADD_CALLOUT          :  return( _( "Add callout to current node" ) );
+      case NODE_CHANGE_IMAGE         :  return( _( "Add/Edit image of current node" ) );
+      case NODE_REMOVE_IMAGE         :  return( _( "Remove image from current node" ) );
+      case NODE_REMOVE_STICKER       :  return( _( "Remove sticker from current node" ) );
+      case NODE_TOGGLE_CALLOUT       :  return( _( "Add/Remove callout for current node" ) );
       case NODE_ADD_GROUP            :  return( _( "Add group for current node and its subtree" ) );
       case NODE_ADD_CONNECTION       :  return( _( "Start creation of connection from current node" ) );
       case NODE_TOGGLE_FOLDS_SHALLOW :  return( _( "Toggle folding of current node" ) );
@@ -435,10 +464,13 @@ public enum KeyCommand {
       case NODE_TOGGLE_LINKS         :  return( _( "Toggle the node link state" ) );
       case NODE_CENTER               :  return( _( "Center current node in map canvas" ) );
       case NODE_SORT_ALPHABETICALLY  :  return( _( "Sort child nodes of current node alphabetically" ) );
+      case NODE_SORT_RANDOMLY        :  return( _( "Sort child nodes of current node randomly" ) );
       case NODE_QUICK_ENTRY_INSERT   :  return( _( "Use quick entry to insert nodes" ) );
       case NODE_QUICK_ENTRY_REPLACE  :  return( _( "Use quick entry to replace current node" ) );
       case NODE_PASTE_NODE_LINK      :  return( _( "Paste node link from clipboard into current node" ) );
       case NODE_PASTE_REPLACE        :  return( _( "Replace current node with clipboard content") );
+      case NODE_REMOVE_ONLY          :  return( _( "Remove selected node only (leave subtree)" ) );
+      case NODE_DETACH               :  return( _( "Detaches current node and its subtree" ) );
       case NODE_SWAP_LEFT            :  return( _( "Swap current node with left node" ) );
       case NODE_SWAP_RIGHT           :  return( _( "Swap current node with right node" ) );
       case NODE_SWAP_UP              :  return( _( "Swap current node with above node" ) );
@@ -526,13 +558,18 @@ public enum KeyCommand {
       case NODE_SELECT_CONNECTION    :  return( node_select_connection );
       case NODE_SELECT_CALLOUT       :  return( node_select_callout );
       case NODE_CHANGE_LINK_COLOR    :  return( node_change_link_color );
+      case NODE_RANDOMIZE_LINK_COLOR :  return( node_randomize_link_color );
+      case NODE_REPARENT_LINK_COLOR  :  return( node_reparent_link_color );
       case NODE_CHANGE_TASK          :  return( node_change_task );
+      case NODE_ADD_ROOT             :  return( node_add_root );
       case NODE_ADD_SIBLING_AFTER    :  return( node_return );
       case NODE_ADD_SIBLING_BEFORE   :  return( node_shift_return );
       case NODE_ADD_CHILD            :  return( node_tab );
       case NODE_ADD_PARENT           :  return( node_shift_tab );
-      case NODE_ADD_IMAGE            :  return( node_add_image );
-      case NODE_ADD_CALLOUT          :  return( node_add_callout );
+      case NODE_CHANGE_IMAGE         :  return( node_change_image );
+      case NODE_REMOVE_IMAGE         :  return( node_remove_image );
+      case NODE_REMOVE_STICKER       :  return( node_remove_sticker );
+      case NODE_TOGGLE_CALLOUT       :  return( node_toggle_callout );
       case NODE_ADD_GROUP            :  return( node_add_group );
       case NODE_ADD_CONNECTION       :  return( node_add_connection );
       case NODE_TOGGLE_FOLDS_SHALLOW :  return( node_toggle_folds_shallow );
@@ -541,11 +578,14 @@ public enum KeyCommand {
       case NODE_TOGGLE_LINKS         :  return( node_toggle_links );
       case NODE_CENTER               :  return( node_center );
       case NODE_SORT_ALPHABETICALLY  :  return( node_sort_alphabetically );
+      case NODE_SORT_RANDOMLY        :  return( node_sort_randomly );
       case NODE_QUICK_ENTRY_INSERT   :  return( node_quick_entry_insert );
       case NODE_QUICK_ENTRY_REPLACE  :  return( node_quick_entry_replace );
       case NODE_PASTE_NODE_LINK      :  return( node_paste_node_link );
       case NODE_PASTE_REPLACE        :  return( node_paste_replace );
       case NODE_REMOVE               :  return( node_remove );
+      case NODE_REMOVE_ONLY          :  return( node_remove_only_selected );
+      case NODE_DETACH               :  return( node_detach );
       case NODE_SWAP_LEFT            :  return( node_swap_left );
       case NODE_SWAP_RIGHT           :  return( node_swap_right );
       case NODE_SWAP_UP              :  return( node_swap_up );
@@ -999,6 +1039,14 @@ public enum KeyCommand {
     map.change_current_link_color();
   }
 
+  public static void node_randomize_link_color( MindMap map ) {
+    map.model.randomize_current_link_color();
+  }
+
+  public static void node_reparent_link_color( MindMap map ) {
+    map.model.reparent_current_link_color();
+  }
+
   public static void node_change_task( MindMap map ) {
     var current = map.get_current_node();
     if( current != null ) {
@@ -1012,6 +1060,10 @@ public enum KeyCommand {
         map.model.change_current_task( true, false );
       }
     }
+  }
+
+  public static void node_add_root( MindMap map ) {
+    map.model.add_root_node();
   }
 
   //-------------------------------------------------------------
@@ -1061,12 +1113,29 @@ public enum KeyCommand {
     node_tab_helper( map, true );
   }
 
-  public static void node_add_image( MindMap map ) {
-    map.model.add_current_image();
+  public static void node_change_image( MindMap map ) {
+    var current = map.get_current_node();
+    if( (current != null) && (current.image != null) ) {
+      map.model.edit_current_image();
+    } else {
+      map.model.add_current_image();
+    }
   }
 
-  public static void node_add_callout( MindMap map ) {
-    map.model.add_callout();
+  public static void node_remove_image( MindMap map ) {
+    map.model.delete_current_image();
+  }
+
+  public static void node_remove_sticker( MindMap map ) {
+    map.model.remove_sticker();
+  }
+
+  public static void node_toggle_callout( MindMap map ) {
+    if (map.model.node_has_callout() ) {
+      map.model.remove_callout();
+    } else {
+      map.model.add_callout();
+    }
   }
 
   public static void node_add_group( MindMap map ) {
@@ -1107,6 +1176,10 @@ public enum KeyCommand {
     map.model.sort_alphabetically();
   }
 
+  public static void node_sort_randomly( MindMap map ) {
+    map.model.sort_randomly();
+  }
+
   public static void node_quick_entry_insert( MindMap map ) {
     var quick_entry = new QuickEntry( map, false, map.settings );
     quick_entry.preload( "- " );
@@ -1144,6 +1217,14 @@ public enum KeyCommand {
         }
       }
     }
+  }
+
+  public static void node_remove_only_selected( MindMap map ) {
+    map.model.delete_nodes();
+  }
+
+  public static void node_detach( MindMap map ) {
+    map.model.detach();
   }
 
   //-------------------------------------------------------------

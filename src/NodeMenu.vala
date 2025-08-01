@@ -21,101 +21,56 @@
 
 using Gtk;
 
-public class NodeMenu {
+public class NodeMenu : BaseMenu {
 
-  private MindMap     _map;
-  private GLib.Menu   _edit_menu;
-  private GLib.Menu   _change_submenu;
-  private PopoverMenu _popover;
+  private GLib.Menu _edit_menu;
+  private GLib.Menu _change_submenu;
 
-  private const GLib.ActionEntry action_entries[] = {
-    { "action_copy",                         action_copy },
-    { "action_cut",                          action_cut },
-    { "action_paste",                        action_paste },
-    { "action_replace",                      action_replace },
-    { "action_delete_node",                  action_delete_node },
-    { "action_delete_node_only",             action_delete_node_only },
-    { "action_change_link_color",            action_change_link_color },
-    { "action_randomize_link_color",         action_randomize_link_color },
-    { "action_reparent_link_color",          action_reparent_link_color },
-    { "action_edit_node",                    action_edit_node },
-    { "action_edit_note",                    action_edit_note },
-    { "action_change_task",                  action_change_task },
-    { "action_change_image",                 action_change_image },
-    { "action_remove_sticker",               action_remove_sticker },
-    { "action_change_link",                  action_change_link },
-    { "action_add_connection",               action_add_connection },
-    { "action_add_group",                    action_add_group },
-    { "action_add_callout",                  action_add_callout },
-    { "action_fold_node",                    action_fold_node },
-    { "action_toggle_sequence",              action_toggle_sequence },
-    { "action_add_root_node",                action_add_root_node },
-    { "action_add_parent_node",              action_add_parent_node },
-    { "action_add_child_node",               action_add_child_node },
-    { "action_add_sibling_node",             action_add_sibling_node },
-    { "action_quick_entry_insert",           action_quick_entry_insert },
-    { "action_quick_entry_replace",          action_quick_entry_replace },
-    // { "action_convert_to_summary_node", action_convert_to_summary_node },
-    { "action_select_root_node",             action_select_root_node },
-    { "action_select_next_sibling_node",     action_select_next_sibling_node },
-    { "action_select_previous_sibling_node", action_select_previous_sibling_node },
-    { "action_select_child_node",            action_select_child_node },
-    { "action_select_child_nodes",           action_select_child_nodes },
-    { "action_select_node_tree",             action_select_node_tree },
-    { "action_select_parent_nodes",          action_select_parent_nodes },
-    { "action_select_linked_node",           action_select_linked_node },
-    { "action_select_connection",            action_select_connection },
-    { "action_select_callout",               action_select_callout },
-    { "action_center_current_node",          action_center_current_node },
-    { "action_sort_alphabetically",          action_sort_alphabetically },
-    { "action_sort_randomly",                action_sort_randomly },
-    { "action_detach_node",                  action_detach_node },
-  };
-
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public NodeMenu( Gtk.Application app, DrawArea da ) {
 
-    _map = da.map;
+    base( app, da, "node" );
 
     _edit_menu = new GLib.Menu();
-    _edit_menu.append( _( "Copy" ),                   "node.action_copy" );
-    _edit_menu.append( _( "Cut" ),                    "node.action_cut" );
-    _edit_menu.append( _( "Paste" ),                  "node.action_paste" );
-    _edit_menu.append( _( "Paste and Replace Node" ), "node.action_replace" );
-    _edit_menu.append( _( "Delete" ),                 "node.action_delete_node" );
-    _edit_menu.append( _( "Delete Single Node" ),     "node.action_delete_node_only" );
+    append_menu_item( _edit_menu, KeyCommand.EDIT_COPY,          _( "Copy" ) );
+    append_menu_item( _edit_menu, KeyCommand.EDIT_CUT,           _( "Cut" ) );
+    append_menu_item( _edit_menu, KeyCommand.EDIT_PASTE,         _( "Paste" ) );
+    append_menu_item( _edit_menu, KeyCommand.NODE_PASTE_REPLACE, _( "Paste and Replace Node" ) );
+    append_menu_item( _edit_menu, KeyCommand.NODE_REMOVE,        _( "Delete" ) );
+    append_menu_item( _edit_menu, KeyCommand.NODE_REMOVE_ONLY,   _( "Delete Single Node" ) );
 
     var color_menu = new GLib.Menu();
-    color_menu.append( _( "Set to color…" ),    "node.action_change_link_color" );
-    color_menu.append( _( "Randomize color" ),  "node.action_randomize_link_color" );
-    color_menu.append( _( "Use parent color" ), "node.action_reparent_link_color" );
+    append_menu_item( color_menu, KeyCommand.NODE_CHANGE_LINK_COLOR,    _( "Set to color…" ) );
+    append_menu_item( color_menu, KeyCommand.NODE_RANDOMIZE_LINK_COLOR, _( "Randomize color" ) );
+    append_menu_item( color_menu, KeyCommand.NODE_REPARENT_LINK_COLOR,  _( "Use parent color" ) );
 
     _change_submenu = new GLib.Menu();
-    _change_submenu.append( _( "Edit Text…" ),      "node.action_edit_node" );
-    _change_submenu.append( _( "Edit Note" ),       "node.action_edit_note" );
-    _change_submenu.append( _( "Add Task" ),        "node.action_change_task" );
-    _change_submenu.append( _( "Add Image" ),       "node.action_change_image" );
-    _change_submenu.append( _( "Remove Sticker" ),  "node.action_remove_sticker" );
-    _change_submenu.append( _( "Add Node Link" ),   "node.action_change_link" );
-    _change_submenu.append( _( "Add Connection" ),  "node.action_add_connection" );
-    _change_submenu.append( _( "Add Group" ),       "node.action_add_group" );
-    _change_submenu.append( _( "Add Callout" ),     "node.action_add_callout" );
+    append_menu_item( _change_submenu, KeyCommand.EDIT_SELECTED,       _( "Edit Text…" ) );
+    append_menu_item( _change_submenu, KeyCommand.EDIT_NOTE,           _( "Edit Note" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_TASK,    _( "Add Task" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_IMAGE,   _( "Add Image" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_REMOVE_STICKER, _( "Remove Sticker" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_LINKS,   _( "Add Node Link" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_ADD_CONNECTION, _( "Add Connection" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_ADD_GROUP,      _( "Add Group" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_CALLOUT, _( "Add Callout" ) );
     _change_submenu.append_submenu( _( "Link Color" ), color_menu );
-    _change_submenu.append( _( "Fold Children" ),   "node.action_fold_node" );
-    _change_submenu.append( _( "Toggle Sequence" ), "node.action_toggle_sequence" );
+    append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, _( "Fold Children" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_SEQUENCE,      _( "Toggle Sequence" ) );
 
     var change_menu = new GLib.Menu();
     change_menu.append_submenu( _( "Change Node" ), _change_submenu );
 
     var add_submenu = new GLib.Menu();
-    add_submenu.append( _( "Add Root Node" ),    "node.action_add_root_node" );
-    add_submenu.append( _( "Add Parent Node" ),  "node.action_add_parent_node" );
-    add_submenu.append( _( "Add Child Node" ),   "node.action_add_child_node" );
-    add_submenu.append( _( "Add Sibling Node" ), "node.action_add_sibling_node" );
+    append_menu_item( add_submenu, KeyCommand.NODE_ADD_ROOT,          _( "Add Root Node" ) );
+    append_menu_item( add_submenu, KeyCommand.NODE_ADD_PARENT,        _( "Add Parent Node" ) );
+    append_menu_item( add_submenu, KeyCommand.NODE_ADD_CHILD,         _( "Add Child Node" ) );
+    append_menu_item( add_submenu, KeyCommand.NODE_ADD_SIBLING_AFTER, _( "Add Sibling Node" ) );
 
     var quick_menu = new GLib.Menu();
-    quick_menu.append( _( "Insert Nodes" ),  "node.action_quick_entry_insert" );
-    quick_menu.append( _( "Replace Nodes" ), "node.action_quick_entry_replace" );
+    append_menu_item( quick_menu, KeyCommand.NODE_QUICK_ENTRY_INSERT,  _( "Insert Nodes" ) );
+    append_menu_item( quick_menu, KeyCommand.NODE_QUICK_ENTRY_REPLACE, _( "Replace Nodes" ) );
 
     var add_menu = new GLib.Menu();
     add_menu.append_submenu( _( "Add Node" ), add_submenu );
@@ -123,18 +78,18 @@ public class NodeMenu {
     add_menu.append_submenu( _( "Quick Entry" ), quick_menu );
 
     var sel_node_menu = new GLib.Menu();
-    sel_node_menu.append( _( "Root Node" ),             "node.action_select_root_node" );
-    sel_node_menu.append( _( "Next Sibling Node" ),     "node.action_select_next_sibling_node" );
-    sel_node_menu.append( _( "Previous Sibling Node" ), "node.action_select_previous_sibling_node" );
-    sel_node_menu.append( _( "Child Node" ),            "node.action_select_child_node" );
-    sel_node_menu.append( _( "Child Nodes" ),           "node.action_select_child_nodes" );
-    sel_node_menu.append( _( "Subtree" ),               "node.action_select_node_tree" );
-    sel_node_menu.append( _( "Parent Node" ),           "node.action_select_parent_nodes" );
-    sel_node_menu.append( _( "Linked Node" ),           "node.action_select_linked_node" );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_ROOT,         _( "Root Node" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_SIBLING_NEXT, _( "Next Sibling Node" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_SIBLING_PREV, _( "Previous Sibling Node" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_CHILD,        _( "Child Node" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_CHILDREN,     _( "Child Nodes" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_TREE,         _( "Subtree" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_PARENT,       _( "Parent Node" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_LINKED,       _( "Linked Node" ) );
 
     var sel_other_menu = new GLib.Menu();
-    sel_other_menu.append( _( "Connection" ), "node.action_select_connection" );
-    sel_other_menu.append( _( "Callout" ),    "node.action_select_callout" );
+    append_menu_item( sel_other_menu, KeyCommand.NODE_SELECT_CONNECTION, _( "Connection" ) );
+    append_menu_item( sel_other_menu, KeyCommand.NODE_SELECT_CALLOUT,    _( "Callout" ) );
 
     var sel_submenu = new GLib.Menu();
     sel_submenu.append_section( null, sel_node_menu );
@@ -142,19 +97,18 @@ public class NodeMenu {
 
     var sel_menu = new GLib.Menu();
     sel_menu.append_submenu( _( "Select" ), sel_submenu );
-    sel_menu.append( _( "Center Current Node" ), "node.action_center_current_node" );
+    append_menu_item( sel_menu, KeyCommand.NODE_CENTER, _( "Center Current Node" ) );
 
     var sort_submenu = new GLib.Menu();
-    sort_submenu.append( _( "Alphabetically" ), "node.action_sort_alphabetically" );
-    sort_submenu.append( _( "Randomize" ),      "node.action_sort_randomly" );
+    append_menu_item( sort_submenu, KeyCommand.NODE_SORT_ALPHABETICALLY, _( "Alphabetically" ) );
+    append_menu_item( sort_submenu, KeyCommand.NODE_SORT_RANDOMLY,       _( "Randomly" ) );
 
     var sort_menu = new GLib.Menu();
     sort_menu.append_submenu( _( "Sort Children" ), sort_submenu );
 
     var detach_menu = new GLib.Menu();
-    detach_menu.append( _( "Detach" ), "node.action_detach_node" );
+    append_menu_item( detach_menu, KeyCommand.NODE_DETACH, _( "Detach" ) );
 
-    var menu = new GLib.Menu();
     menu.append_section( null, _edit_menu );
     menu.append_section( null, change_menu );
     menu.append_section( null, add_menu );
@@ -162,130 +116,91 @@ public class NodeMenu {
     menu.append_section( null, sort_menu );
     menu.append_section( null, detach_menu );
 
-    _popover = new PopoverMenu.from_model( menu );
-    _popover.set_parent( da );
-
-    // Add the menu actions
-    var actions = new SimpleActionGroup();
-    actions.add_action_entries( action_entries, this );
-    da.insert_action_group( "node", actions );
-
-    // Add keyboard shortcuts
-    app.set_accels_for_action( "node.action_copy",                { "<Control>c" } );
-    app.set_accels_for_action( "node.action_cut",                 { "<Control>x" } );
-    app.set_accels_for_action( "node.action_paste",               { "<Control>v" } );
-    app.set_accels_for_action( "node.action_replace",             { "<Control><Shift>v" } );
-    app.set_accels_for_action( "node.action_delete",              { "Delete" } );
-    app.set_accels_for_action( "node.action_edit_node",           { "e" } );
-    app.set_accels_for_action( "node.action_edit_note",           { "<Shift>e" } );
-    app.set_accels_for_action( "node.action_change_task",         { "t" } );
-    app.set_accels_for_action( "node.action_change_image",        { "<Shift>i" } );
-    app.set_accels_for_action( "node.action_change_link",         { "y" } );
-    app.set_accels_for_action( "node.action_add_connection",      { "x" } );
-    app.set_accels_for_action( "node.action_add_group",           { "g" } );
-    app.set_accels_for_action( "node.action_add_callout",         { "o" } );
-    app.set_accels_for_action( "node.action_change_link_color",   { "<Shift>l" } );
-    app.set_accels_for_action( "node.action_fold_node",           { "f" } );
-    app.set_accels_for_action( "node.action_toggle_sequence",     { "numbersign" } );
-    app.set_accels_for_action( "node.action_add_child_node",      { "Tab" } );
-    app.set_accels_for_action( "node.action_add_sibling_node",    { "Return" } );
-    // app.set_accels_for_action( "node.action_convert_to_summary_node", { "<Shift>Tab" } );
-    app.set_accels_for_action( "node.action_quick_entry_insert",  { "<Control><Shift>e" } );
-    app.set_accels_for_action( "node.action_quick_entry_replace", { "<Control><Shift>r" } );
-    app.set_accels_for_action( "node.action_select_root_node",             { "m" } );
-    app.set_accels_for_action( "node.action_select_next_sibling_node",     { "n" } );
-    app.set_accels_for_action( "node.action_select_previous_sibling_node", { "p" } );
-    app.set_accels_for_action( "node.action_select_child_node",            { "c" } );
-    app.set_accels_for_action( "node.action_select_child_nodes",           { "d" } );
-    app.set_accels_for_action( "node.action_select_node_tree",             { "<Shift>d" } );
-    app.set_accels_for_action( "node.action_select_parent_nodes",          { "a" } );
-    app.set_accels_for_action( "node.action_select_linked_node",           { "<Shift>y" } );
-    app.set_accels_for_action( "node.action_select_connection",            { "<Shift>x" } );
-    app.set_accels_for_action( "node.action_select_callout",               { "<Shift>o" } );
-    app.set_accels_for_action( "node.action_center_current_node",          { "<Shift>c" } );
-
   }
 
   //-------------------------------------------------------------
-  // Shows this menu at the given location.
-  public void show( double x, double y ) {
-
-    // Handle menu state
-    on_popup( _map.canvas );
-
-    // Display the popover at the given location
-    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
-    _popover.pointing_to = rect;
-    _popover.popup();
-
-  }
-
-  /* Returns true if the currently selected node is a task */
+  // Returns true if the currently selected node is a task
   private bool node_is_task() {
-    Node? current = _map.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && current.task_enabled() );
   }
 
-  /* Returns true if the currently selected node task is marked as done */
+  //-------------------------------------------------------------
+  // Returns true if the currently selected node task is marked
+  // as done.
   private bool node_task_is_done() {
-    Node? current = _map.get_current_node();
+    Node? current = map.get_current_node();
     return( node_is_task() && current.task_done() );
   }
 
-  /* Returns true if a note is associated with the currently selected node */
+  //-------------------------------------------------------------
+  // Returns true if a note is associated with the currently
+  // selected node.
   private bool node_has_note() {
-    Node? current = _map.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && (current.note != "") );
   }
 
-  /* Returns true if an image is associated with the currently selected node */
+  //-------------------------------------------------------------
+  // Returns true if an image is associated with the currently
+  // selected node.
   private bool node_has_image() {
-    Node? current = _map.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && (current.image != null) );
   }
 
-  /* Returns true if an node link is associated with the currently selected node */
+  //-------------------------------------------------------------
+  // Returns true if an node link is associated with the currently
+  // selected node.
   private bool node_has_link() {
-    Node? current = _map.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && (current.linked_node != null) );
   }
 
-  /* Returns true if a callout is associated with the currently selected node */
+  //-------------------------------------------------------------
+  // Returns true if a callout is associated with the currently
+  // selected node.
   private bool node_has_callout() {
-    var current = _map.get_current_node();
-    return( (current != null) && (current.callout != null) );
+    return( map.model.node_has_callout() );
   }
 
-  /* Returns true if there is a currently selected node that is foldable */
+  //-------------------------------------------------------------
+  // Returns true if there is a currently selected node that is
+  // foldable.
   private bool node_foldable() {
-    Node? current = _map.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && !current.is_leaf() );
   }
 
-  /* Returns true if there are two or more nodes in the map and one is selected */
+  //-------------------------------------------------------------
+  // Returns true if there are two or more nodes in the map and
+  // one is selected.
   private bool node_linkable() {
-    Node? current = _map.get_current_node();
-    return( (current != null) && (!current.is_root() || (_map.get_nodes().length > 1)) );
+    Node? current = map.get_current_node();
+    return( (current != null) && (!current.is_root() || (map.get_nodes().length > 1)) );
   }
 
-  /* Returns true if the currently selected node can have a parent node added */
+  //-------------------------------------------------------------
+  // Returns true if the currently selected node can have a parent
+  // node added.
   private bool node_parentable() {
-    Node? current = _map.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && !current.is_root() );
   }
 
-  /* Returns true if the currently selected node has more than one child node */
+  //-------------------------------------------------------------
+  // Returns true if the currently selected node has more than
+  // one child node.
   private bool node_sortable() {
-    Node? current = _map.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && (current.children().length > 1) );
   }
 
-  /*
-   Returns true if there is a currently selected node that is currently
-   folded.
-  */
+  //-------------------------------------------------------------
+  // Returns true if there is a currently selected node that is
+  // currently folded.
   private bool node_is_folded() {
-    Node? current = _map.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && current.folded );
   }
 
@@ -297,10 +212,11 @@ public class NodeMenu {
     menu.insert( pos, new_name, action );
   }
 
-  /* Called when the menu is popped up */
-  private void on_popup( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Called when the menu is popped up.
+  protected override void on_popup() {
 
-    var current = _map.get_current_node();
+    var current = map.get_current_node();
 
     // Set the menu item labels
     var task_lbl    = node_is_task()   ?
@@ -312,290 +228,63 @@ public class NodeMenu {
     var callout_lbl = node_has_callout() ? _( "Remove Callout" ) : _( "Add Callout" );
     var img_lbl     = node_has_image()   ? _( "Remove Image" )   : _( "Add Image" );
 
-    change_menu( _change_submenu, 2,  task_lbl,    "node.action_change_task" );
-    change_menu( _change_submenu, 3,  img_lbl,     "node.action_change_image" );
-    change_menu( _change_submenu, 5,  link_lbl,    "node.action_change_link" );
-    change_menu( _change_submenu, 8,  callout_lbl, "node.action_add_callout" );
-    change_menu( _change_submenu, 10, fold_lbl,    "node.action_fold_node" );
+    change_menu_item_label( _change_submenu, KeyCommand.NODE_CHANGE_TASK,          task_lbl );
+    change_menu_item_label( _change_submenu, KeyCommand.NODE_CHANGE_IMAGE,         img_lbl );
+    change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_LINKS,         link_lbl );
+    change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_CALLOUT,       callout_lbl );
+    change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, fold_lbl );
+
+    set_enabled( KeyCommand.EDIT_PASTE, true );
+    set_enabled( KeyCommand.NODE_PASTE_REPLACE, true );
 
     // Set the paste and replace text
     if( MinderClipboard.node_pasteable() ) {
-      change_menu( _edit_menu, 2, _( "Paste Node As Child" ), "node.action_paste" );
-      change_menu( _edit_menu, 3, _( "Paste and Replace Node" ), "node.action_replace" );
+      change_menu_item_label( _edit_menu, KeyCommand.EDIT_PASTE,         _( "Paste Node As Child" ) );
+      change_menu_item_label( _edit_menu, KeyCommand.NODE_PASTE_REPLACE, _( "Paste and Replace Node" ) );
     } else if( MinderClipboard.image_pasteable() ) {
-      change_menu( _edit_menu, 2, _( "Paste Image As Child Node" ), "node.action_paste" );
-      change_menu( _edit_menu, 3, _( "Paste and Replace Node Image" ), "node.action_replace" );
+      change_menu_item_label( _edit_menu, KeyCommand.EDIT_PASTE,         _( "Paste Image As Child Node" ) );
+      change_menu_item_label( _edit_menu, KeyCommand.NODE_PASTE_REPLACE, _( "Paste and Replace Node Image" ) );
     } else if( MinderClipboard.text_pasteable() ) {
-      change_menu( _edit_menu, 2, _( "Paste Text As Child Node" ), "node.action_paste" );
-      change_menu( _edit_menu, 3, _( "Paste and Replace Node Text" ), "node.action_replace" );
+      change_menu_item_label( _edit_menu, KeyCommand.EDIT_PASTE,         _( "Paste Text As Child Node" ) );
+      change_menu_item_label( _edit_menu, KeyCommand.NODE_PASTE_REPLACE, _( "Paste and Replace Node Text" ) );
     } else {
-      change_menu( _edit_menu, 2, _( "Paste" ), "node.action_paste" );
-      change_menu( _edit_menu, 3, _( "Paste and Replace Node" ), "node.action_replace" );
-      da.action_set_enabled( "node.action_paste",   false );
-      da.action_set_enabled( "node.action_replace", false );
+      change_menu_item_label( _edit_menu, KeyCommand.EDIT_PASTE,         _( "Paste" ) );
+      change_menu_item_label( _edit_menu, KeyCommand.NODE_PASTE_REPLACE, _( "Paste and Replace Node" ) );
+      set_enabled( KeyCommand.EDIT_PASTE, false );
+      set_enabled( KeyCommand.NODE_PASTE_REPLACE, false );
     }
 
     /* Set the menu sensitivity */
-    da.action_set_enabled( "node.action_paste", true );
-    da.action_set_enabled( "node.action_replace", true );
-    da.action_set_enabled( "node.action_add_connection", !_map.model.connections.hide );
-    da.action_set_enabled( "node.action_add_parent_node", node_parentable() );
-    da.action_set_enabled( "node.action_change_link_color",    !current.is_root() );
-    da.action_set_enabled( "node.action_randomize_link_color", !current.is_root() );
-    da.action_set_enabled( "node.action_reparent_link_color",  (!current.is_root() && !current.main_branch() && current.link_color_root) );
-    da.action_set_enabled( "node.action_fold_node", node_foldable() );
-    da.action_set_enabled( "node.action_toggle_sequence", _map.model.sequences_togglable() );
-    da.action_set_enabled( "node.action_change_link", node_linkable() );
-    da.action_set_enabled( "node.action_detach_node", _map.model.detachable() );
-    da.action_set_enabled( "node.action_sort_alphabetically", node_sortable() );
-    da.action_set_enabled( "node.action_sort_randomly",       node_sortable() );
-    da.action_set_enabled( "node.action_select_root_node", _map.root_selectable() );
-    da.action_set_enabled( "node.action_select_next_sibling_node", _map.model.sibling_exists( current ) );
-    da.action_set_enabled( "node.action_select_previous_sibling_node", _map.model.sibling_exists( current ) );
-    da.action_set_enabled( "node.action_select_child_node", _map.children_selectable() );
-    da.action_set_enabled( "node.action_select_parent_node", _map.parent_selectable() );
-    da.action_set_enabled( "node.action_select_linked_node", node_has_link() );
-    da.action_set_enabled( "node.action_select_callout", node_has_callout() );
-    da.action_set_enabled( "node.action_remove_sticker", (current.sticker != null) );
-    da.action_set_enabled( "node.action_add_sibling_node", !current.is_summary() );
-    da.action_set_enabled( "node.action_convert_to_summary_node", _map.model.node_summarizable() );
+    set_enabled( KeyCommand.NODE_ADD_CONNECTION,       !map.model.connections.hide );
+    set_enabled( KeyCommand.NODE_ADD_PARENT,           node_parentable() );
+    set_enabled( KeyCommand.NODE_CHANGE_LINK_COLOR,    !current.is_root() );
+    set_enabled( KeyCommand.NODE_RANDOMIZE_LINK_COLOR, !current.is_root() );
+    set_enabled( KeyCommand.NODE_REPARENT_LINK_COLOR,  (!current.is_root() && !current.main_branch() && current.link_color_root) );
+    set_enabled( KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, node_foldable() );
+    set_enabled( KeyCommand.NODE_TOGGLE_SEQUENCE,      map.model.sequences_togglable() );
+    set_enabled( KeyCommand.NODE_TOGGLE_LINKS,         node_linkable() );
+    set_enabled( KeyCommand.NODE_DETACH,               map.model.detachable() );
+    set_enabled( KeyCommand.NODE_SORT_ALPHABETICALLY,  node_sortable() );
+    set_enabled( KeyCommand.NODE_SORT_RANDOMLY,        node_sortable() );
+    set_enabled( KeyCommand.NODE_SELECT_ROOT,          map.root_selectable() );
+    set_enabled( KeyCommand.NODE_SELECT_SIBLING_NEXT,  map.model.sibling_exists( current ) );
+    set_enabled( KeyCommand.NODE_SELECT_SIBLING_PREV,  map.model.sibling_exists( current ) );
+    set_enabled( KeyCommand.NODE_SELECT_CHILD,         map.children_selectable() );
+    set_enabled( KeyCommand.NODE_SELECT_CHILDREN,      map.children_selectable() );
+    set_enabled( KeyCommand.NODE_SELECT_PARENT,        map.parent_selectable() );
+    set_enabled( KeyCommand.NODE_SELECT_LINKED,        node_has_link() );
+    set_enabled( KeyCommand.NODE_SELECT_CALLOUT,       node_has_callout() );
+    set_enabled( KeyCommand.NODE_REMOVE_STICKER,       (current.sticker != null) );
+    set_enabled( KeyCommand.NODE_ADD_SIBLING_AFTER,    !current.is_summary() );
 
-  }
-
-  /* Copies the current node to the clipboard */
-  private void action_copy() {
-    _map.model.do_copy();
-  }
-
-  /* Cuts the current node to the clipboard */
-  private void action_cut() {
-    _map.model.do_cut();
   }
 
   /*
-   Pastes the node stored in the clipboard as either a root node (if no
-   node is currently selected) or attaches it to the currently selected
-   node.
-  */
-  private void action_paste() {
-    _map.canvas.do_paste( false );
-  }
-
-  /*
-   Replaces the node's text, image or entire node with the contents stored
-   in the clipboard.
-  */
-  private void action_replace() {
-    _map.canvas.do_paste( true );
-  }
-
-  /* Deletes the current node */
-  private void action_delete_node() {
-    _map.model.delete_node();
-  }
-
-  /* Deletes just the node that is selected */
-  private void action_delete_node_only() {
-    _map.model.delete_nodes();
-  }
-
-  /* Displays the sidebar to edit the node properties */
-  private void action_edit_node() {
-    var current = _map.get_current_node();
-    _map.model.set_node_mode( current, NodeMode.EDITABLE );
-    _map.queue_draw();
-  }
-
-  /* Changes the task status of the currently selected node */
-  private void action_change_task() {
-    if( node_is_task() ) {
-      if( node_task_is_done() ) {
-        _map.model.change_current_task( false, false );
-      } else {
-        _map.model.change_current_task( true, true );
-      }
-    } else {
-      _map.model.change_current_task( true, false );
-    }
-    _map.current_changed( _map );
-  }
-
-  /* Changes the note status of the currently selected node */
-  private void action_edit_note() {
-    _map.show_properties( "current", PropertyGrab.NOTE );
-  }
-
-  /* Changes the image of the currently selected node */
-  private void action_change_image() {
-    if( node_has_image() ) {
-      _map.model.delete_current_image();
-    } else {
-      _map.model.add_current_image();
-    }
-    _map.current_changed( _map );
-  }
-
-  /* Removes the sticker from the node */
-  private void action_remove_sticker() {
-    var current = _map.get_current_node();
-    _map.undo_buffer.add_item( new UndoNodeStickerRemove( current ) );
-    current.sticker = null;
-    _map.queue_draw();
-    _map.auto_save();
-  }
-
-  /* Changes the node link of the currently selected node */
-  private void action_change_link() {
-    if( node_has_link() ) {
-      _map.model.delete_links();
-    } else {
-      _map.model.start_connection( false, true );
-    }
-  }
-
-  /* Changes the connection of the currently selected node */
-  private void action_add_connection() {
-    _map.model.start_connection( false, false );
-  }
-
-  /* Creates a group from the currently selected node */
-  private void action_add_group() {
-    _map.model.add_group();
-  }
-
-  /* Adds a callback to the currently selected node */
-  private void action_add_callout() {
-    if( node_has_callout() ) {
-      _map.model.remove_callout();
-    } else {
-      _map.model.add_callout();
-    }
-  }
-
-  /* Fold the currently selected node */
-  private void action_fold_node() {
-    _map.model.change_current_fold( !node_is_folded() );
-  }
-
   //-------------------------------------------------------------
-  // Toggles the sequence indicator of the current node
-  private void action_toggle_sequence() {
-    _map.model.toggle_sequence();
-  }
-
-  /* Creates a new root node */
-  private void action_add_root_node() {
-    _map.model.add_root_node();
-  }
-
-  /* Creates a new parent node for the current node */
-  private void action_add_parent_node() {
-    _map.model.add_parent_node();
-  }
-
-  /* Creates a new child node from the current node */
-  private void action_add_child_node() {
-    _map.model.add_child_node();
-  }
-
-  /* Creates a sibling node of the current node */
-  private void action_add_sibling_node() {
-    _map.model.add_sibling_node( false );
-  }
-
-  /* Converts the current node into a summary node */
+  // Converts the current node into a summary node.
   private void action_convert_to_summary_node() {
-    _map.model.add_summary_node_from_current();
+    map.model.add_summary_node_from_current();
   }
-
-  /* Show the quick entry insert window */
-  private void action_quick_entry_insert() {
-    _map.canvas.handle_control_E();
-  }
-
-  /* Show the quick entry replace window */
-  private void action_quick_entry_replace() {
-    _map.canvas.handle_control_R();
-  }
-
-  /* Detaches the currently selected node and make it a root node */
-  private void action_detach_node() {
-    _map.model.detach();
-  }
-
-  /* Selects the current root node */
-  private void action_select_root_node() {
-    _map.select_root_node();
-  }
-
-  /* Selects the next sibling node of the current node */
-  private void action_select_next_sibling_node() {
-    _map.select_sibling_node( 1 );
-  }
-
-  /* Selects the previous sibling node of the current node */
-  private void action_select_previous_sibling_node() {
-    _map.select_sibling_node( -1 );
-  }
-
-  /* Selects the first child node of the current node */
-  private void action_select_child_node() {
-    _map.select_child_node();
-  }
-
-  /* Selects all of the child nodes of the current node */
-  private void action_select_child_nodes() {
-    _map.select_child_nodes();
-  }
-
-  /* Selects all of the descendant nodes of the current node */
-  private void action_select_node_tree() {
-    _map.select_node_tree();
-  }
-
-  /* Selects the parent node of the current node */
-  private void action_select_parent_nodes() {
-    _map.select_parent_nodes();
-  }
-
-  /* Selects the node the current node is linked to */
-  private void action_select_linked_node() {
-    _map.select_linked_node();
-  }
-
-  /* Selects the one of the connections attached to the current node */
-  private void action_select_connection() {
-    _map.select_attached_connection();
-  }
-
-  /* Selects the associated callout */
-  private void action_select_callout() {
-    _map.select_callout();
-  }
-
-  /* Centers the current node */
-  private void action_center_current_node() {
-    _map.canvas.center_current_node();
-  }
-
-  private void action_sort_alphabetically() {
-    _map.model.sort_alphabetically();
-  }
-
-  private void action_sort_randomly() {
-    _map.model.sort_randomly();
-  }
-
-  public void action_change_link_color() {
-    _map.change_current_link_color();
-  }
-
-  private void action_randomize_link_color() {
-    _map.model.randomize_current_link_color();
-  }
-
-  private void action_reparent_link_color() {
-    _map.model.reparent_current_link_color();
-  }
+  */
 
 }

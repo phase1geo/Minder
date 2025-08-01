@@ -121,6 +121,20 @@ public class BaseMenu {
   }
 
   //-------------------------------------------------------------
+  // Changes the
+  protected void change_menu_item_label( GLib.Menu menu, KeyCommand command, string label ) {
+    var detailed_action = detailed_name( command );
+    for( int i=0; i<menu.get_n_items(); i++ ) {
+      var variant = menu.get_item_attribute_value( i, GLib.Menu.ATTRIBUTE_ACTION, null );
+      if( (variant != null) && (variant.get_string() == detailed_action) ) {
+        menu.remove( i );
+        menu.insert( i, label, detailed_name( command ) );
+        return;
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
   // Sets the action enable for the given command to the given value.
   protected void set_enabled( KeyCommand command, bool enable ) {
     var action = _group.lookup_action( command.to_string() );

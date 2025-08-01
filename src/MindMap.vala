@@ -762,6 +762,7 @@ public class MindMap {
   public void select_callout_node() {
     if( is_callout_selected() ) {
       set_current_node( get_current_callout().node );
+      _selected.clear_callouts( false );
     }
   }
 
