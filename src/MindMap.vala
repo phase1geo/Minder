@@ -695,7 +695,9 @@ public class MindMap {
     if( c != null ) {
       _selected.set_current_connection( c );
       c.from_node.last_selected_connection = c;
-      c.to_node.last_selected_connection   = c;
+      if( c.to_node != null ) {
+        c.to_node.last_selected_connection = c;
+      }
     } else {
       _selected.clear_connections();
     }

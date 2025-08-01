@@ -21,55 +21,19 @@
 
 using Gtk;
 
-public class ConnectionsMenu {
-
-  private MindMap     _map;
-  private PopoverMenu _popover;
-
-  private const GLib.ActionEntry action_entries[] = {
-    { "action_delete", action_delete },
-  };
+public class ConnectionsMenu : BaseMenu {
 
   //-------------------------------------------------------------
   // Default constructor.
   public ConnectionsMenu( Gtk.Application app, DrawArea da ) {
 
-    _map = da.map;
+    base( app, da, "conns" );
 
     var del_menu = new GLib.Menu();
-    del_menu.append( _( "Delete" ), "conns.action_delete" );
+    append_menu_item( del_menu, KeyCommand.CONNECTION_REMOVE, _( "Delete" ) );
 
-    var menu = new GLib.Menu();
     menu.append_section( null, del_menu );
 
-    _popover = new PopoverMenu.from_model( menu );
-    _popover.set_parent( da );
-
-    // Add the menu actions
-    var actions = new SimpleActionGroup();
-    actions.add_action_entries( action_entries, this );
-    da.insert_action_group( "conns", actions );
-
-    // Add keyboard shortcuts
-    app.set_accels_for_action( "conns.action_delete", { "Delete" } );
-
-  }
-
-  //-------------------------------------------------------------
-  // Shows the callout popup menu at the given location.
-  public void show( double x, double y ) {
-
-    /* Display the popover at the given location */
-    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
-    _popover.pointing_to = rect;
-    _popover.popup();
-
-  }
-
-  //-------------------------------------------------------------
-  // Deletes the current node.
-  private void action_delete() {
-    _map.model.delete_connections();
   }
 
 }
