@@ -21,14 +21,12 @@
 
 public class BaseMenu {
 
-  private Gtk.Application _app;
-  private MindMap         _map;
-  private string          _group_name;
-  private Gtk.PopoverMenu _popover;
-  private GLib.Menu       _menu;
-  private const GLib.ActionEntry _action_entries[] = {
-    { "action_run_command", action_run_command, "i" }
-  };
+  private Gtk.Application   _app;
+  private MindMap           _map;
+  private string            _group_name;
+  private SimpleActionGroup _group;
+  private Gtk.PopoverMenu   _popover;
+  private GLib.Menu         _menu;
 
   public MindMap map {
     get {
@@ -49,15 +47,17 @@ public class BaseMenu {
     _app        = app;
     _group_name = group;
 
+    // Handle any updates to shortcuts in the menu
     map.win.shortcuts.shortcut_changed.connect( handle_shortcut_change );
 
     // Create and add the action group to the mindmap canvas
-    var actions = new SimpleActionGroup();
-    actions.add_action_entries( _action_entries, this );
-    canvas.insert_action_group( _group_name, actions );
+    _group = new SimpleActionGroup();
+    canvas.insert_action_group( _group_name, _group );
 
+    // Create the main menu
     _menu = new GLib.Menu();
 
+    // Create the popover for the menu
     _popover = new Gtk.PopoverMenu.from_model( _menu );
     _popover.set_parent( canvas );
     _popover.closed.connect( on_popdown );
@@ -96,7 +96,7 @@ public class BaseMenu {
   //-------------------------------------------------------------
   // Returns the detailed action name for the given command.
   private string detailed_name( KeyCommand command ) {
-    return( "%s.action_run_command(%d)".printf( _group_name, (int)command ) );
+    return( "%s.%s".printf( _group_name, command.to_string() ) );
   }
 
   //-------------------------------------------------------------
@@ -104,6 +104,14 @@ public class BaseMenu {
   protected void append_menu_item( GLib.Menu menu, KeyCommand command, string label ) {
 
     menu.append( label, detailed_name( command ) );
+ 
+    // Create action to execute
+    var action = new SimpleAction( command.to_string(), null );
+    action.activate.connect((v) => {
+      var func = command.get_func();
+      func( map );
+    });
+    _group.add_action( action );
 
     var shortcut = _map.win.shortcuts.get_shortcut( command );
     if( shortcut != null ) {
@@ -115,17 +123,23 @@ public class BaseMenu {
   //-------------------------------------------------------------
   // Sets the action enable for the given command to the given value.
   protected void set_enabled( KeyCommand command, bool enable ) {
-    map.canvas.action_set_enabled( detailed_name( command ), enable );
+    var action = _group.lookup_action( command.to_string() );
+    if( action != null ) {
+      (action as SimpleAction).set_enabled( enable );
+    }
   }
 
   //-------------------------------------------------------------
   // Handles any changes to the shortcuts manager and updates the
   // affected accelerator.
   private void handle_shortcut_change( KeyCommand command, Shortcut? shortcut ) {
-    if( shortcut == null ) {
-      shortcut_removed( command );
-    } else {
-      shortcut_added( shortcut );
+    var action =_group.lookup_action( command.to_string() );
+    if( action != null ) {
+      if( shortcut == null ) {
+        shortcut_removed( command );
+      } else {
+        shortcut_added( shortcut );
+      }
     }
   }
 
@@ -140,16 +154,6 @@ public class BaseMenu {
   private void shortcut_added( Shortcut shortcut ) {
     _app.set_accels_for_action( detailed_name( shortcut.command ), { shortcut.get_accelerator() } );
 
-  }
-
-  //-------------------------------------------------------------
-  // Runs the keycommand function associated with the given variant.
-  private void action_run_command( SimpleAction action, Variant? variant ) {
-    if( variant != null ) {
-      var command = (KeyCommand)variant.get_int32();
-      var func    = command.get_func();
-      func( _map );
-    }
   }
 
 }

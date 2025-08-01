@@ -258,6 +258,8 @@ public class Shortcuts {
   // Default constructor
   public Shortcuts() {
 
+    stdout.printf( "In shortcuts constructor\n" );
+
     _shortcuts = new Array<Shortcut>();
     _defaults  = new Array<Shortcut>();
 
@@ -269,15 +271,25 @@ public class Shortcuts {
   }
 
   //-------------------------------------------------------------
-  // Clears the shortcut for the given command, if it exists.
-  // Called by the shortcut preferences class.
-  public void clear_shortcut( KeyCommand command ) {
+  // Removes the shortcut associated with the given command.  Returns
+  // true if the shortcut is found and removed.
+  private bool remove_shortcut( KeyCommand command ) {
     for( int i=0; i<_shortcuts.length; i++ ) {
       if( _shortcuts.index( i ).matches_command( command ) ) {
         _shortcuts.remove_index( i );
-        save();
-        return;
+        return( true );
       }
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Clears the shortcut for the given command, if it exists.
+  // Called by the shortcut preferences class.
+  public void clear_shortcut( KeyCommand command ) {
+    if( remove_shortcut( command ) ) {
+      shortcut_changed( command, null );
+      save();
     }
   }
 
@@ -285,7 +297,9 @@ public class Shortcuts {
   // Sets the shortcut for the given command.  Called by the
   // shortcut preferences class.
   public void set_shortcut( Shortcut shortcut ) {
+    remove_shortcut( shortcut.command );
     _shortcuts.append_val( shortcut );
+    shortcut_changed( shortcut.command, shortcut );
     save();
   }
 

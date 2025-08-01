@@ -23,7 +23,7 @@ using Gtk;
 
 public class TextMenu : BaseMenu {
 
-  private bool        _clear_selection = false;
+  private bool _clear_selection = false;
 
   //-------------------------------------------------------------
   // Default constructor
@@ -48,27 +48,10 @@ public class TextMenu : BaseMenu {
     append_menu_item( other_menu, KeyCommand.EDIT_EDIT_URL,   _( "Edit Link" ) );
     append_menu_item( other_menu, KeyCommand.EDIT_REMOVE_URL, _( "Remove Link" ) );
 
-    var menu = new GLib.Menu();
     menu.append_section( null, edit_menu );
     menu.append_section( null, emoji_menu );
     menu.append_section( null, open_menu );
     menu.append_section( null, other_menu );
-
-    /*
-    // Add the menu actions
-    var actions = new SimpleActionGroup();
-    actions.add_action_entries( action_entries, this );
-    da.insert_action_group( "text", actions );
-
-    // Add keyboard shortcuts
-    app.set_accels_for_action( "text.action_copy",         { "<Control>c" } );
-    app.set_accels_for_action( "text.action_cut",          { "<Control>x" } );
-    app.set_accels_for_action( "text.action_paste",        { "<Control>v" } );
-    app.set_accels_for_action( "text.action_insert_emoji", { "<Control>period" } );
-    app.set_accels_for_action( "text.action_add_link",     { "<Control>k" } );
-    app.set_accels_for_action( "text.action_edit_link",    { "<Control>k" } );
-    app.set_accels_for_action( "text.action_remove_link",  { "<Control><Shift>k" } );
-    */
 
   }
 
@@ -151,7 +134,7 @@ public class TextMenu : BaseMenu {
       var selected = (selstart != selend);
       var embedded = (links.length > 0) && (link.extra == text.text.text.slice( link.start, link.end ));
 
-      if( !selected ) {
+      if( valid && !selected ) {
         text.change_selection( link.start, link.end );
       }
 

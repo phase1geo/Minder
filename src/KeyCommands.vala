@@ -1489,6 +1489,7 @@ public enum KeyCommand {
   }
 
   public static void edit_add_url( MindMap map ) {
+    stdout.printf( "In edit_add_url\n" );
     map.canvas.url_editor.add_url();
   }
 

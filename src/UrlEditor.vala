@@ -22,24 +22,20 @@
 using Gtk;
 using Gdk;
 
-public class UrlEditor : Box {
+public class UrlEditor {
 
   private MindMap _map;
+  private Popover _popover;
   private bool    _add = true;
   private Entry   _entry;
   private Button  _apply;
 
-  public signal void open();
-  public signal void close();
-
   /* Default constructor */
   public UrlEditor( DrawArea da ) {
 
-    Object( orientation: Orientation.VERTICAL, spacing: 5 );
-
     _map = da.map;
 
-    var lbl   = new Label( _( "URL" ) + ":" );
+    var lbl = new Label( _( "URL" ) + ":" );
     _entry = new Entry() {
       width_chars   = 50,
       input_purpose = InputPurpose.URL
@@ -54,43 +50,47 @@ public class UrlEditor : Box {
     ebox.append( _entry );
 
     _apply = new Button.with_label( _( "Apply" ) ) {
-      halign = Align.END
+      halign = Align.END,
+      sensitive = false
     };
     _apply.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
     _apply.clicked.connect(() => {
       set_url();
-      close();
+      _popover.popdown();
     });
 
     var cancel = new Button.with_label( _( "Cancel" ) ) {
-      halign = Align.END
+      halign = Align.END,
+      hexpand = true
     };
     cancel.clicked.connect(() => {
-      var ct = current_text();
+      var ct = _map.get_current_text();
       if( ct != null ) {
         ct.clear_selection();
       }
-      close();
+      _popover.popdown();
     });
 
     var bbox = new Box( Orientation.HORIZONTAL, 5 );
-    bbox.append( _apply );
     bbox.append( cancel );
+    bbox.append( _apply );
 
-    append( ebox );
-    append( bbox );
+    var box = new Box( Orientation.VERTICAL, 5 ) {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
+    box.append( ebox );
+    box.append( bbox );
 
-  }
+    // Popover
+    _popover = new Popover() {
+      position = PositionType.TOP,
+      child = box
+    };
+    _popover.set_parent( da );
 
-  /* Returns the current canvas text to operate on */
-  private CanvasText? current_text() {
-    CanvasText? ct = null;
-    if( _map.get_current_node() != null ) {
-      ct = _map.get_current_node().name;
-    } else if( _map.get_current_callout() != null ) {
-      ct = _map.get_current_callout().text;
-    }
-    return( ct );
   }
 
   /*
@@ -106,14 +106,20 @@ public class UrlEditor : Box {
    popover entry.
   */
   private void set_url() {
-    var node     = _map.get_current_node();
-    var callout  = _map.get_current_callout();
-    var ct       = current_text();
+    var node       = _map.get_current_node();
+    var connection = _map.get_current_connection();
+    var callout    = _map.get_current_callout();
+    var ct         = _map.get_current_text();
     var selected = false;
     if( node != null ) {
       selected = node.mode == NodeMode.CURRENT;
       if( selected ) {
         _map.model.set_node_mode( node, NodeMode.EDITABLE );
+      }
+    } else if( connection != null ) {
+      selected = connection.mode == ConnMode.SELECTED;
+      if( selected ) {
+        _map.model.set_connection_mode( connection, ConnMode.EDITABLE );
       }
     } else if( callout != null ) {
       selected = callout.mode == CalloutMode.SELECTED;
@@ -142,7 +148,7 @@ public class UrlEditor : Box {
   /* Called when we want to add a URL to the currently selected text of the given node. */
   public void add_url() {
 
-    var ct = current_text();
+    var ct = _map.get_current_text();
 
     int selstart, selend, cursor;
     ct.get_cursor_info( out cursor, out selstart, out selend );
@@ -158,16 +164,14 @@ public class UrlEditor : Box {
     _add = true;
     set_url_from_clipboard();
 
-    Idle.add(() => {
-      open();
-      return( false );
-    });
+    _popover.pointing_to = rect;
+    _popover.popup();
 
   }
 
   /* Removes the current URLs from the given node */
   public void remove_url() {
-    var ct       = current_text();
+    var ct       = _map.get_current_text();
     var node     = _map.get_current_node();
     var callout  = _map.get_current_callout();
     var selected = false;
@@ -219,7 +223,7 @@ public class UrlEditor : Box {
   /* Called when we want to edit the URL of the current node */
   public void edit_url() {
 
-    var ct = current_text();
+    var ct = _map.get_current_text();
 
     int selstart, selend, cursor;
     ct.get_cursor_info( out cursor, out selstart, out selend );
@@ -237,7 +241,8 @@ public class UrlEditor : Box {
     _entry.text = links.index( 0 ).extra;
     _apply.set_sensitive( true );
 
-    open();
+    _popover.pointing_to = rect;
+    _popover.popup();
 
   }
 
