@@ -108,7 +108,11 @@ public enum KeyCommand {
   STICKER_REMOVE,
   STICKER_END,
   GROUP_START,
+  GROUP_CHANGE_COLOR,
+  GROUP_MERGE,
   GROUP_REMOVE,
+  GROUP_SELECT_MAIN,
+  GROUP_SELECT_ALL,
   GROUP_END,
   EDIT_START,
   EDIT_ESCAPE,
@@ -234,7 +238,11 @@ public enum KeyCommand {
       case CALLOUT_SELECT_NODE       :  return( "callout-select-node" );
       case CALLOUT_REMOVE            :  return( "callout-remove" );
       case STICKER_REMOVE            :  return( "sticker-remove" );
+      case GROUP_CHANGE_COLOR        :  return( "group-change-color" );
+      case GROUP_MERGE               :  return( "group-merge" );
       case GROUP_REMOVE              :  return( "group-remove" );
+      case GROUP_SELECT_MAIN         :  return( "group-select-main" );
+      case GROUP_SELECT_ALL          :  return( "group-select-all" );
       case EDIT_ESCAPE               :  return( "edit-escape" );
       case EDIT_INSERT_NEWLINE       :  return( "edit-insert-newline" );
       case EDIT_INSERT_TAB           :  return( "edit-insert-tab" );
@@ -359,7 +367,11 @@ public enum KeyCommand {
       case "callout-select-node"       :  return( CALLOUT_SELECT_NODE );
       case "callout-remove"            :  return( CALLOUT_REMOVE );
       case "sticker-remove"            :  return( STICKER_REMOVE );
+      case "group-change-color"        :  return( GROUP_CHANGE_COLOR );
+      case "group-merge"               :  return( GROUP_MERGE );
       case "group-remove"              :  return( GROUP_REMOVE );
+      case "group-select-main"         :  return( GROUP_SELECT_MAIN );
+      case "group-select-all"          :  return( GROUP_SELECT_ALL );
       case "edit-escape"               :  return( EDIT_ESCAPE );
       case "edit-insert-newline"       :  return( EDIT_INSERT_NEWLINE );
       case "edit-insert-tab"           :  return( EDIT_INSERT_TAB );
@@ -482,6 +494,10 @@ public enum KeyCommand {
       case CONNECTION_SELECT_PREV    :  return( _( "Select previous connection in map" ) );
       case CALLOUT_START             :  return( _( "Callout Commands" ) );
       case CALLOUT_SELECT_NODE       :  return( _( "Select callout node" ) );
+      case GROUP_CHANGE_COLOR        :  return( _( "Change the color of the current group" ) );
+      case GROUP_MERGE               :  return( _( "Merge current groups into single group" ) );
+      case GROUP_SELECT_MAIN         :  return( _( "Select main node(s) of current group(s)" ) );
+      case GROUP_SELECT_ALL          :  return( _( "Selects all nodes within current group(s)" ) );
       case EDIT_START                :  return( _( "Text Editing Commands" ) );
       case EDIT_INSERT_NEWLINE       :  return( _( "Insert newline character" ) );
       case EDIT_INSERT_TAB           :  return( _( "Insert TAB character" ) );
@@ -598,7 +614,11 @@ public enum KeyCommand {
       case CALLOUT_SELECT_NODE       :  return( callout_select_node );
       case CALLOUT_REMOVE            :  return( callout_remove );
       case STICKER_REMOVE            :  return( sticker_remove );
+      case GROUP_CHANGE_COLOR        :  return( group_change_color );
+      case GROUP_MERGE               :  return( group_merge );
       case GROUP_REMOVE              :  return( group_remove );
+      case GROUP_SELECT_MAIN         :  return( group_select_main );
+      case GROUP_SELECT_ALL          :  return( group_select_all );
       case EDIT_ESCAPE               :  return( edit_escape );
       case EDIT_INSERT_NEWLINE       :  return( edit_insert_newline );
       case EDIT_INSERT_TAB           :  return( edit_insert_tab );
@@ -1315,8 +1335,28 @@ public enum KeyCommand {
   //-------------------------------------------------------------
   // GROUP FUNCTIONS
 
+  public static void group_change_color( MindMap map ) {
+    var color_picker = new Gtk.ColorChooserDialog( _( "Select a group color" ), map.win );
+    color_picker.color_activated.connect((color) => {
+      map.model.change_group_color( color );
+    });
+    color_picker.present();
+  }
+
+  public static void group_merge( MindMap map ) {
+    map.model.add_group();
+  }
+
   public static void group_remove( MindMap map ) {
     map.model.remove_groups();
+  }
+
+  public static void group_select_main( MindMap map ) {
+    map.group_select_main();
+  }
+
+  public static void group_select_all( MindMap map ) {
+    map.group_select_all();
   }
 
   //-------------------------------------------------------------

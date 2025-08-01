@@ -829,6 +829,32 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
+  // Selects the main node(s) of the current groups.
+  public void group_select_main() {
+    var groups = get_selected_groups();
+    for( int i=0; i<groups.length; i++ ) {
+      var nodes = groups.index( i ).nodes;
+      for( int j=0; j<nodes.length; j++ ) {
+        selected.add_node( nodes.index( j ), false );
+      }
+    }
+    selected.clear_groups();
+  }
+
+  //-------------------------------------------------------------
+  // Selecta all of the nodes within the selected groups.
+  public void group_select_all() {
+    var groups   = get_selected_groups();
+    for( int i=0; i<groups.length; i++ ) {
+      var nodes = groups.index( i ).nodes;
+      for( int j=0; j<nodes.length; j++ ) {
+        selected.add_node_tree( nodes.index( j ), false );
+      }
+    }
+    selected.clear_groups();
+  }
+
+  //-------------------------------------------------------------
   // Returns the array of selected groups
   public Array<NodeGroup> get_selected_groups() {
     return( _selected.groups() );
