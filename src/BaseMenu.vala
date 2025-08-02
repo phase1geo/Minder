@@ -121,7 +121,7 @@ public class BaseMenu {
   }
 
   //-------------------------------------------------------------
-  // Changes the
+  // Changes the menu label to the given string for the given command.
   protected void change_menu_item_label( GLib.Menu menu, KeyCommand command, string label ) {
     var detailed_action = detailed_name( command );
     for( int i=0; i<menu.get_n_items(); i++ ) {

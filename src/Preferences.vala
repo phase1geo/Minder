@@ -169,13 +169,13 @@ public class Preferences : Gtk.Window {
       overlay_scrolling = false,
       child = grid
     };
-    sw.set_size_request( -1, 600 );
+    sw.set_size_request( -1, 500 );
 
     _shortcut_inst_start_str = _( "Double-click to edit shortcut.  Select + Delete to remove shortcut." );
     _shortcut_inst_edit_str  = _( "Escape to cancel.  Press key combination to set." );
 
     _shortcut_instructions = new Label( _shortcut_inst_start_str ) {
-      halign  = Align.END,
+      halign  = Align.CENTER,
       hexpand = true,
       margin_bottom = 20
     };
@@ -232,7 +232,7 @@ public class Preferences : Gtk.Window {
   // current shortcut.
   private Stack make_shortcut( KeyCommand command ) {
 
-    var disabled = _( "Disabled" );
+    var disabled = _( "None" );
     var enter    = _( "Enter shortcut" );
     var shortcut = _win.shortcuts.get_shortcut( command );
 

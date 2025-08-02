@@ -494,6 +494,7 @@ public enum KeyCommand {
       case CONNECTION_SELECT_PREV    :  return( _( "Select previous connection in map" ) );
       case CALLOUT_START             :  return( _( "Callout Commands" ) );
       case CALLOUT_SELECT_NODE       :  return( _( "Select callout node" ) );
+      case GROUP_START               :  return( _( "Group Commands" ) );
       case GROUP_CHANGE_COLOR        :  return( _( "Change the color of the current group" ) );
       case GROUP_MERGE               :  return( _( "Merge current groups into single group" ) );
       case GROUP_SELECT_MAIN         :  return( _( "Select main node(s) of current group(s)" ) );
@@ -770,7 +771,7 @@ public enum KeyCommand {
       (this != CONNECTION_REMOVE) &&
       (this != CALLOUT_REMOVE) &&
       ((this < STICKER_START) || (STICKER_END < this)) &&
-      ((this < GROUP_START) || (GROUP_END < this))
+      (this != GROUP_REMOVE)
     );
   }
 
