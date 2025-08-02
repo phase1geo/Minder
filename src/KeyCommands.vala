@@ -871,11 +871,11 @@ public enum KeyCommand {
   }
 
   public static void edit_note( MindMap map ) {
-    map.canvas.show_properties( "current", PropertyGrab.NOTE ); 
+    map.show_properties( "current", PropertyGrab.NOTE ); 
   }
 
   public static void show_current_sidebar( MindMap map ) {
-    map.canvas.show_properties( "current", PropertyGrab.FIRST );
+    map.show_properties( "current", PropertyGrab.FIRST );
   }
 
   public static void edit_selected( MindMap map ) {
@@ -918,7 +918,7 @@ public enum KeyCommand {
       map.canvas.last_connection = null;
       map.queue_draw();
     } else {
-      map.canvas.hide_properties();
+      map.hide_properties();
     }
   }
 
@@ -1218,11 +1218,11 @@ public enum KeyCommand {
   }
 
   public static void node_paste_node_link( MindMap map ) {
-    map.canvas.do_paste_node_link();
+    map.do_paste_node_link();
   }
 
   public static void node_paste_replace( MindMap map ) {
-    map.canvas.do_paste( true );
+    map.do_paste( true );
   }
 
   public static void node_remove( MindMap map ) {
@@ -1457,7 +1457,7 @@ public enum KeyCommand {
           text_changed( map );
           map.auto_save();
         } else {
-          map.canvas.hide_properties();
+          map.hide_properties();
         }
       }
     }
@@ -1637,7 +1637,7 @@ public enum KeyCommand {
   }
 
   public static void edit_paste( MindMap map ) {
-    map.canvas.do_paste( false );
+    map.do_paste( false );
   }
 
   private static void edit_return_helper( MindMap map, bool shift ) {

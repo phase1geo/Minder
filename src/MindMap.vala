@@ -210,8 +210,6 @@ public class MindMap {
     _canvas.current_changed.connect( handle_current_changed );
     _canvas.scale_changed.connect( handle_scale_changed );
     _canvas.scroll_changed.connect( handle_scroll_changed );
-    _canvas.show_properties.connect( handle_show_properties );
-    _canvas.hide_properties.connect( handle_hide_properties );
 
     _doc.save_state_changed.connect( handle_save_state_changed );
 
@@ -266,18 +264,6 @@ public class MindMap {
   // Handles any changes to the scroll position for the mind map.
   private void handle_scroll_changed() {
     scroll_changed();
-  }
-
-  //-------------------------------------------------------------
-  // Handles any requests to show the properties sidebar.
-  private void handle_show_properties( string? tab, PropertyGrab grab_type ) {
-    show_properties( tab, grab_type );
-  }
-
-  //-------------------------------------------------------------
-  // Handles any requests to hide the properties sidebar.
-  private void handle_hide_properties() {
-    hide_properties();
   }
 
   //-------------------------------------------------------------
@@ -942,6 +928,24 @@ public class MindMap {
   // Adds an undoable text operation to the undo buffer.
   public void add_text_undo( UndoTextItem item ) {
     _undo_buffer.add_item( item );
+  }
+
+  //-------------------------------------------------------------
+  // CLIPBOARD
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Pastes the contents of the clipboard into the current node.
+  public void do_paste( bool shift ) {
+    MinderClipboard.paste( this, shift );
+  }
+
+  //-------------------------------------------------------------
+  // Paste the current node as a node link in the current node.
+  public void do_paste_node_link() {
+    if( MinderClipboard.node_pasteable() ) {
+      MinderClipboard.paste_node_link( this );
+    }
   }
 
   //-------------------------------------------------------------
