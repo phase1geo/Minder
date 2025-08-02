@@ -258,8 +258,6 @@ public class Shortcuts {
   // Default constructor
   public Shortcuts() {
 
-    stdout.printf( "In shortcuts constructor\n" );
-
     _shortcuts = new Array<Shortcut>();
     _defaults  = new Array<Shortcut>();
 

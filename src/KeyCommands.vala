@@ -1165,7 +1165,11 @@ public enum KeyCommand {
   }
 
   public static void node_add_connection( MindMap map ) {
-    map.model.start_connection( true, false );
+    if( map.selected.num_nodes() == 2 ) {
+      map.model.create_connection();
+    } else {
+      map.model.start_connection( true, false );
+    }
   }
 
   public static void node_toggle_folds_shallow( MindMap map ) {

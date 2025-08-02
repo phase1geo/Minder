@@ -2655,7 +2655,7 @@ public class DrawArea : Gtk.DrawingArea {
       else if( !shift && has_key( kvs, Key.f ) )            { _map.model.toggle_folds( false ); }
       else if(  shift && has_key( kvs, Key.f ) )            { _map.model.toggle_folds( true ); }
       else if( !shift && has_key( kvs, Key.g ) )            { _map.model.add_group(); }
-      else if(  shift && has_key( kvs, Key.l ) )            { _nodes_menu.action_change_link_colors(); }
+      else if(  shift && has_key( kvs, Key.l ) )            {}
       else if( !shift && has_key( kvs, Key.m ) )            { _map.select_root_node(); }
       else if( !shift && has_key( kvs, Key.r ) )            { if( _map.undo_buffer.redoable() ) _map.undo_buffer.redo(); }
       else if( !shift && has_key( kvs, Key.t ) )            { _map.model.change_selected_tasks(); }
