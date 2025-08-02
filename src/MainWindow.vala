@@ -96,6 +96,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private Exports           _exports;
   private UnicodeInsert     _unicoder;
   private Braindump         _brain;
+  private Shortcuts         _shortcuts;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_new",            action_new },
@@ -158,6 +159,11 @@ public class MainWindow : Gtk.ApplicationWindow {
       return( _brain );
     }
   }
+  public Shortcuts shortcuts {
+    get {
+      return( _shortcuts );
+    }
+  }
 
   public delegate void OverwriteFunc( bool overwrite );
 
@@ -170,8 +176,6 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     _settings = settings;
 
-    var window_x = settings.get_int( "window-x" );
-    var window_y = settings.get_int( "window-y" );
     var window_w = settings.get_int( "window-w" );
     var window_h = settings.get_int( "window-h" );
 
@@ -340,6 +344,9 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     // Set the window size based on gsettings
     set_window_size();
+
+    // Load the user shortcuts
+    _shortcuts = new Shortcuts();
 
   }
 

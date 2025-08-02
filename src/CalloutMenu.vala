@@ -21,67 +21,23 @@
 
 using Gtk;
 
-public class CalloutMenu {
-
-  private MindMap     _map;
-  private PopoverMenu _popover;
-
-  private const GLib.ActionEntry action_entries[] = {
-    { "action_delete",      action_delete },
-    { "action_select_node", action_select_node },
-  };
+public class CalloutMenu : BaseMenu {
 
   //-------------------------------------------------------------
   // Default constructor
   public CalloutMenu( Gtk.Application app, DrawArea da ) {
 
-    _map = da.map;
+    base( app, da, "callout" );
 
     var del_menu = new GLib.Menu();
-    del_menu.append( _( "Delete" ), "callout.action_delete" );
+    append_menu_item( del_menu, KeyCommand.EDIT_DELETE, _( "Delete" ) );
 
     var sel_menu = new GLib.Menu();
-    sel_menu.append( _( "Select Node" ), "callout.action_select_node" );
+    append_menu_item( sel_menu, KeyCommand.CALLOUT_SELECT_NODE, _( "Select Node" ) );
 
-    var menu = new GLib.Menu();
     menu.append_section( null, del_menu );
     menu.append_section( null, sel_menu );
 
-    _popover = new PopoverMenu.from_model( menu );
-    _popover.set_parent( da );
-
-    // Add the menu actions
-    var actions = new SimpleActionGroup();
-    actions.add_action_entries( action_entries, this );
-    da.insert_action_group( "callout", actions );
-
-    // Add keyboard shortcuts
-    app.set_accels_for_action( "callout.action_delete", { "Delete" } );
-    app.set_accels_for_action( "callout.action_select_node", { "<Shift>o" } );
-
-  }
-
-  //-------------------------------------------------------------
-  // Shows the callout popup menu at the given location.
-  public void show( double x, double y ) {
-
-    /* Display the popover at the given location */
-    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
-    _popover.pointing_to = rect;
-    _popover.popup();
-
-  }
-
-  //-------------------------------------------------------------
-  // Deletes the current callout.
-  private void action_delete() {
-    _map.model.remove_callout();
-  }
-
-  //-------------------------------------------------------------
-  // Selects the node associated with the current callout.
-  private void action_select_node() {
-    _map.select_callout_node();
   }
 
 }

@@ -210,8 +210,6 @@ public class MindMap {
     _canvas.current_changed.connect( handle_current_changed );
     _canvas.scale_changed.connect( handle_scale_changed );
     _canvas.scroll_changed.connect( handle_scroll_changed );
-    _canvas.show_properties.connect( handle_show_properties );
-    _canvas.hide_properties.connect( handle_hide_properties );
 
     _doc.save_state_changed.connect( handle_save_state_changed );
 
@@ -266,18 +264,6 @@ public class MindMap {
   // Handles any changes to the scroll position for the mind map.
   private void handle_scroll_changed() {
     scroll_changed();
-  }
-
-  //-------------------------------------------------------------
-  // Handles any requests to show the properties sidebar.
-  private void handle_show_properties( string? tab, PropertyGrab grab_type ) {
-    show_properties( tab, grab_type );
-  }
-
-  //-------------------------------------------------------------
-  // Handles any requests to hide the properties sidebar.
-  private void handle_hide_properties() {
-    hide_properties();
   }
 
   //-------------------------------------------------------------
@@ -374,6 +360,21 @@ public class MindMap {
   //-------------------------------------------------------------
   // NODE SELECTION METHODS
   //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Returns the current CanvasText being edited.  If we are not
+  // editing, returns null.
+  public CanvasText? get_current_text() {
+    if( is_node_editable() ) {
+      return( get_current_node().name );
+    } else if( is_connection_editable() ) {
+      return( get_current_connection().title );
+    } else if( is_callout_editable() ) {
+      return( get_current_callout().text );
+    } else {
+      return( null );
+    }
+  }
 
   //-------------------------------------------------------------
   // Returns the current node.
@@ -506,30 +507,9 @@ public class MindMap {
   // Selects the next (dir = 1) or previous (dir = -1) sibling.
   public void select_sibling_node( int dir ) {
     var current = _selected.current_node();
-    if( current != null ) {
-      Array<Node> nodes;
-      int         index = 0;
-      if( current.is_root() ) {
-        nodes = _model.get_nodes();
-        for( int i=0; i<nodes.length; i++ ) {
-          if( nodes.index( i ) == current ) {
-            index = i;
-            break;
-          }
-        }
-      } else {
-        nodes = current.parent.children();
-        index = current.index();
-      }
-      if( (index + dir) < 0 ) {
-        if( select_node( nodes.index( nodes.length - 1 ) ) ) {
-          queue_draw();
-        }
-      } else {
-        if( select_node( nodes.index( (index + dir) % nodes.length ) ) ) {
-          queue_draw();
-        }
-      }
+    var str_dir = (dir == 1) ? "next" : "prev";
+    if( select_node( _model.sibling_node( current, str_dir, true ) ) ) {
+      queue_draw();
     }
   }
 
@@ -701,7 +681,9 @@ public class MindMap {
     if( c != null ) {
       _selected.set_current_connection( c );
       c.from_node.last_selected_connection = c;
-      c.to_node.last_selected_connection   = c;
+      if( c.to_node != null ) {
+        c.to_node.last_selected_connection = c;
+      }
     } else {
       _selected.clear_connections();
     }
@@ -768,6 +750,7 @@ public class MindMap {
   public void select_callout_node() {
     if( is_callout_selected() ) {
       set_current_node( get_current_callout().node );
+      _selected.clear_callouts( false );
     }
   }
 
@@ -829,6 +812,32 @@ public class MindMap {
   // Sets the current selected group to the specified group
   public void set_current_group( NodeGroup? g ) {
     _selected.set_current_group( g );
+  }
+
+  //-------------------------------------------------------------
+  // Selects the main node(s) of the current groups.
+  public void group_select_main() {
+    var groups = get_selected_groups();
+    for( int i=0; i<groups.length; i++ ) {
+      var nodes = groups.index( i ).nodes;
+      for( int j=0; j<nodes.length; j++ ) {
+        selected.add_node( nodes.index( j ), false );
+      }
+    }
+    selected.clear_groups();
+  }
+
+  //-------------------------------------------------------------
+  // Selecta all of the nodes within the selected groups.
+  public void group_select_all() {
+    var groups   = get_selected_groups();
+    for( int i=0; i<groups.length; i++ ) {
+      var nodes = groups.index( i ).nodes;
+      for( int j=0; j<nodes.length; j++ ) {
+        selected.add_node_tree( nodes.index( j ), false );
+      }
+    }
+    selected.clear_groups();
   }
 
   //-------------------------------------------------------------
@@ -922,6 +931,24 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
+  // CLIPBOARD
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Pastes the contents of the clipboard into the current node.
+  public void do_paste( bool shift ) {
+    MinderClipboard.paste( this, shift );
+  }
+
+  //-------------------------------------------------------------
+  // Paste the current node as a node link in the current node.
+  public void do_paste_node_link() {
+    if( MinderClipboard.node_pasteable() ) {
+      MinderClipboard.paste_node_link( this );
+    }
+  }
+
+  //-------------------------------------------------------------
   // NODE FUNCTIONS
   //-------------------------------------------------------------
 
@@ -935,8 +962,19 @@ public class MindMap {
   //-------------------------------------------------------------
   // Returns the sibling node in the given direction from the
   // currently selected node.
-  public Node? sibling_node( int dir ) {
-    return( _model.sibling_node( get_current_node(), dir ) );
+  public Node? sibling_node( int dir, bool wrap = false ) {
+    var str_dir = (dir == 1) ? "next" : "prev";
+    return( _model.sibling_node( get_current_node(), str_dir, wrap ) );
+  }
+
+  //-------------------------------------------------------------
+  // Display a color picker to change the color of the current link.
+  public void change_current_link_color() {
+    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _win );
+    color_picker.color_activated.connect((color) => {
+      _model.change_current_link_color( color );
+    });
+    color_picker.present();
   }
 
   //-------------------------------------------------------------

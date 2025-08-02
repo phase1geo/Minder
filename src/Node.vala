@@ -1917,23 +1917,25 @@ public class Node : Object {
   }
 
   /* Returns the sibling node relative to this node */
-  private Node? get_sibling( int dir ) {
+  private Node? get_sibling( int dir, bool wrap ) {
     var index = index() + dir;
-    if( (index < 0) || (index >= parent.children().length) ) {
-      return( null );
+    if( index < 0 ) {
+      return( wrap ? parent.children().index( parent.children().length - 1 ) : null );
+    } else if( index >= parent.children().length ) {
+      return( wrap ? parent.children().index( 0 ) : null );
     } else {
       return( parent.children().index( index ) );
     }
   }
 
   /* Returns the previous sibling node relative to this node */
-  public Node? previous_sibling() {
-    return( get_sibling( -1 ) );
+  public Node? previous_sibling( bool wrap = false ) {
+    return( get_sibling( -1, wrap ) );
   }
 
   /* Returns the previous sibling node relative to this node */
-  public Node? next_sibling() {
-    return( get_sibling( 1 ) );
+  public Node? next_sibling( bool wrap = false ) {
+    return( get_sibling( 1, wrap ) );
   }
 
   /*
@@ -2263,21 +2265,27 @@ public class Node : Object {
   }
 
   /* Returns a reference to the next child after the specified child of this node */
-  public virtual Node? next_child( Node n ) {
+  public virtual Node? next_child( Node n, bool wrap = false ) {
     int idx = n.index();
-    if( (idx != -1) && ((idx + 1) < _children.length) ) {
+    if( idx == -1 ) {
+      return( null );
+    } else if( (idx + 1) < _children.length ) {
       return( _children.index( idx + 1 ) );
+    } else {
+      return( wrap ? _children.index( 0 ) : null );
     }
-    return( null );
   }
 
   /* Returns a reference to the next child after the specified child of this node */
-  public virtual Node? prev_child( Node n ) {
+  public virtual Node? prev_child( Node n, bool wrap = false ) {
     int idx = n.index();
-    if( (idx != -1) && (idx > 0) ) {
+    if( idx == -1 ) {
+      return( null );
+    } else if( idx > 0 ) {
       return( _children.index( idx - 1 ) );
+    } else {
+      return( wrap ? _children.index( _children.length - 1 ) : null );
     }
-    return( null );
   }
 
   /* Propagates task information toward the leaf nodes */

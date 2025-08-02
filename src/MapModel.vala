@@ -724,6 +724,14 @@ public class MapModel {
   //-------------------------------------------------------------
 
   //-------------------------------------------------------------
+  // Returns true if the current node has a callout currently
+  // associated with it.
+  public bool node_has_callout() {
+    var current = _map.get_current_node();
+    return( (current != null) && (current.callout != null) );
+  }
+
+  //-------------------------------------------------------------
   // Adds a callout to the currently selected node
   public void add_callout() {
     var current = _map.selected.current_node();
@@ -1182,19 +1190,40 @@ public class MapModel {
 
   //-------------------------------------------------------------
   // Returns the sibling node in the given direction of the current
-  // node.
-  public Node? sibling_node( Node? node, int dir ) {
+  // node.  The direction can be any of the following values:
+  //   - first
+  //   - last
+  //   - next
+  //   - prev
+  public Node? sibling_node( Node? node, string dir, bool wrap = false ) {
     if( node != null ) {
       if( node.is_root() ) {
-        for( int i=0; i<_nodes.length; i++ ) {
-          if( _nodes.index( i ) == node ) {
-            return( (((i + dir) < 0) || ((i + dir) >= _nodes.length)) ? null : _nodes.index( i + dir ) );
+        if( dir == "first" ) {
+          return( _nodes.index( 0 ) );
+        } else if( dir == "last" ) {
+          return( _nodes.index( _nodes.length - 1 ) );
+        } else {
+          var int_dir = (dir == "next") ? 1 : -1;
+          for( int i=0; i<_nodes.length; i++ ) {
+            if( _nodes.index( i ) == node ) {
+              if( (i + int_dir) < 0 ) {
+                return( wrap ? _nodes.index( _nodes.length - 1 ) : null );
+              } else if( (i + int_dir) >= _nodes.length ) {
+                return( wrap ? _nodes.index( 0 ) : null );
+              } else {
+                return( _nodes.index( i + int_dir ) );
+              }
+            }
           }
         }
-      } else if( dir == 1 ) {
-        return( node.parent.next_child( node ) );
+      } else if( dir == "first" ) {
+        return( node.parent.first_child() );
+      } else if( dir == "last" ) {
+        return( node.parent.last_child() );
+      } else if( dir == "next" ) {
+        return( node.parent.next_child( node, wrap ) );
       } else {
-        return( node.parent.prev_child( node ) );
+        return( node.parent.prev_child( node, wrap ) );
       }
     }
     return( null );
@@ -1569,15 +1598,34 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
-  // Deletes the currently selected sticker.
+  // Deletes the currently selected sticker (whether the sticker
+  // is alone or connected to a node).
   public void remove_sticker() {
-    var current = _map.selected.current_sticker();
-    if( current == null ) return;
-    _map.add_undo( new UndoStickerRemove( current ) );
-    _stickers.remove_sticker( current );
-    _map.selected.remove_sticker( current );
-    queue_draw();
-    auto_save();
+    var current_sticker = _map.selected.current_sticker();
+    if( current_sticker != null ) {
+      _map.add_undo( new UndoStickerRemove( current_sticker ) );
+      _stickers.remove_sticker( current_sticker );
+      _map.selected.remove_sticker( current_sticker );
+      queue_draw();
+      auto_save();
+      return;
+    }
+    var current_node = _map.selected.current_node();
+    if( current_node != null ) {
+      _map.add_undo( new UndoNodeStickerRemove( current_node ) );
+      current_node.sticker = null;
+      queue_draw();
+      auto_save();
+      return;
+    }
+    var current_conn = _map.selected.current_connection();
+    if( current_conn != null ) {
+      _map.add_undo( new UndoConnectionStickerRemove( current_conn ) );
+      current_conn.sticker = null;
+      queue_draw();
+      auto_save();
+      return;
+    }
   }
 
   //-------------------------------------------------------------
@@ -2139,7 +2187,7 @@ public class MapModel {
     }
   }
 
-  /* Returns the node at the top of the sibling list */
+  /* Returns the node at the bottom of the sibling list */
   public Node? get_node_pagedn( Node node ) {
     if( node.is_root() ) {
       return( (_nodes.length > 0) ? _nodes.index( _nodes.length - 1 ) : null );
