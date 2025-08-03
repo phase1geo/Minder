@@ -26,139 +26,185 @@ public delegate void KeyCommandFunc( MindMap map );
 public enum KeyCommand {
   DO_NOTHING,
   GENERAL_START,
-  CONTROL_PRESSED,
-  SHOW_CONTEXTUAL_MENU,
-  ZOOM_IN,
-  ZOOM_OUT,
-  UNDO_ACTION,
-  REDO_ACTION,
-  EDIT_NOTE,
-  SHOW_CURRENT_SIDEBAR,
-  EDIT_SELECTED,
-  SHOW_SELECTED,
-  REMOVE_STICKER_SELECTED,
-  ESCAPE,
+    FILE_START,
+    FILE_END,
+    TAB_START,
+    TAB_END,
+    UNDO_START,
+      UNDO_ACTION,
+      REDO_ACTION,
+    UNDO_END,
+    ZOOM_START,  // 10
+      ZOOM_IN,
+      ZOOM_OUT,
+    ZOOM_END,
+    SIDEBAR_START,
+      SHOW_CURRENT_SIDEBAR,
+    SIDEBAR_END,
+    MISCELLANEOUS_START,
+      SHOW_CONTEXTUAL_MENU,
+      EDIT_NOTE,
+      EDIT_SELECTED,  // 20
+      SHOW_SELECTED,
+      REMOVE_STICKER_SELECTED,
+    MISCELLANEOUS_END,
+    CONTROL_PRESSED,
+    ESCAPE,
   GENERAL_END,
   NODE_START,
-  NODE_ALIGN_TOP,
-  NODE_ALIGN_VCENTER,
-  NODE_ALIGN_BOTTOM,
-  NODE_ALIGN_LEFT,
-  NODE_ALIGN_HCENTER,
-  NODE_ALIGN_RIGHT,
-  NODE_SELECT_ROOT,
-  NODE_SELECT_PARENT,
-  NODE_SELECT_CHILDREN,
-  NODE_SELECT_CHILD,
-  NODE_SELECT_TREE,
-  NODE_SELECT_SIBLING_NEXT,
-  NODE_SELECT_SIBLING_PREV,
-  NODE_SELECT_LEFT,
-  NODE_SELECT_RIGHT,
-  NODE_SELECT_UP,
-  NODE_SELECT_DOWN,
-  NODE_SELECT_LINKED,
-  NODE_SELECT_CONNECTION,
-  NODE_SELECT_CALLOUT,
-  NODE_CHANGE_LINK_COLOR,
-  NODE_RANDOMIZE_LINK_COLOR,
-  NODE_REPARENT_LINK_COLOR,
-  NODE_CHANGE_TASK,
-  NODE_ADD_ROOT,
-  NODE_ADD_SIBLING_AFTER,
-  NODE_ADD_SIBLING_BEFORE,
-  NODE_ADD_CHILD,
-  NODE_ADD_PARENT,
-  NODE_CHANGE_IMAGE,
-  NODE_REMOVE_IMAGE,
-  NODE_TOGGLE_CALLOUT,
-  NODE_ADD_GROUP,
-  NODE_ADD_CONNECTION,
-  NODE_TOGGLE_FOLDS_SHALLOW,
-  NODE_TOGGLE_FOLDS_DEEP,
-  NODE_TOGGLE_SEQUENCE,
-  NODE_TOGGLE_LINKS,
-  NODE_CENTER,
-  NODE_SORT_ALPHABETICALLY,
-  NODE_SORT_RANDOMLY,
-  NODE_QUICK_ENTRY_INSERT,
-  NODE_QUICK_ENTRY_REPLACE,
-  NODE_PASTE_NODE_LINK,
-  NODE_PASTE_REPLACE,
-  NODE_REMOVE,
-  NODE_REMOVE_ONLY,
-  NODE_DETACH,
-  NODE_SWAP_LEFT,
-  NODE_SWAP_RIGHT,
-  NODE_SWAP_UP,
-  NODE_SWAP_DOWN,
+    NODE_EXIST_START,
+      NODE_ADD_ROOT,
+      NODE_ADD_SIBLING_AFTER,  // 30
+      NODE_ADD_SIBLING_BEFORE,
+      NODE_ADD_CHILD,
+      NODE_ADD_PARENT,
+      NODE_QUICK_ENTRY_INSERT,
+      NODE_QUICK_ENTRY_REPLACE,
+      NODE_REMOVE,
+      NODE_REMOVE_ONLY,
+    NODE_EXIST_END,
+    NODE_CLIPBOARD_START,
+      NODE_PASTE_NODE_LINK,  // 40
+      NODE_PASTE_REPLACE,
+    NODE_CLIPBOARD_END,
+    NODE_VIEW_START,
+      NODE_CENTER,
+    NODE_VIEW_END,
+    NODE_CHANGE_START,
+      NODE_CHANGE_TASK,
+      NODE_CHANGE_IMAGE,
+      NODE_REMOVE_IMAGE,
+      NODE_CHANGE_LINK_COLOR,  // 50
+      NODE_RANDOMIZE_LINK_COLOR,
+      NODE_REPARENT_LINK_COLOR,
+      NODE_TOGGLE_FOLDS_SHALLOW,
+      NODE_TOGGLE_FOLDS_DEEP,
+      NODE_TOGGLE_LINKS,
+      NODE_ADD_GROUP,
+      NODE_ADD_CONNECTION,
+      NODE_TOGGLE_CALLOUT,
+      NODE_TOGGLE_SEQUENCE,
+    NODE_CHANGE_END,  // 60
+    NODE_SELECT_START,
+      NODE_SELECT_ROOT,
+      NODE_SELECT_PARENT,
+      NODE_SELECT_SIBLING_NEXT,
+      NODE_SELECT_SIBLING_PREV,
+      NODE_SELECT_CHILD,
+      NODE_SELECT_CHILDREN,
+      NODE_SELECT_TREE,
+      NODE_SELECT_DOWN,
+      NODE_SELECT_UP,  // 70
+      NODE_SELECT_RIGHT,
+      NODE_SELECT_LEFT,
+      NODE_SELECT_LINKED,
+      NODE_SELECT_CALLOUT,
+      NODE_SELECT_CONNECTION,
+    NODE_SELECT_END,
+    NODE_MOVE_START,
+      NODE_SWAP_RIGHT,
+      NODE_SWAP_LEFT,
+      NODE_SWAP_UP,  // 80
+      NODE_SWAP_DOWN,
+      NODE_SORT_ALPHABETICALLY,
+      NODE_SORT_RANDOMLY,
+      NODE_DETACH,
+    NODE_MOVE_END,
+    NODE_ALIGN_START,
+      NODE_ALIGN_TOP,
+      NODE_ALIGN_VCENTER,
+      NODE_ALIGN_BOTTOM,
+      NODE_ALIGN_LEFT,  // 90
+      NODE_ALIGN_HCENTER,
+      NODE_ALIGN_RIGHT,
+    NODE_ALIGN_END,
   NODE_END,
-  CONNECTION_START,
-  CONNECTION_SELECT_FROM,
-  CONNECTION_SELECT_TO,
-  CONNECTION_SELECT_NEXT,
-  CONNECTION_SELECT_PREV,
-  CONNECTION_REMOVE,
-  CONNECTION_END,
   CALLOUT_START,
-  CALLOUT_SELECT_NODE,
-  CALLOUT_REMOVE,
+    CALLOUT_SELECT_NODE,
+    CALLOUT_REMOVE,
   CALLOUT_END,
-  STICKER_START,
-  STICKER_REMOVE,
+  CONNECTION_START,
+    CONNECTION_EXIST_START,  // 100
+      CONNECTION_REMOVE,
+    CONNECTION_EXIST_END,
+    CONNECTION_SELECT_START,
+      CONNECTION_SELECT_FROM,
+      CONNECTION_SELECT_TO,
+      CONNECTION_SELECT_NEXT,
+      CONNECTION_SELECT_PREV,
+    CONNECTION_SELECT_END,
+  CONNECTION_END,
+  STICKER_START,  // 110
+    STICKER_REMOVE,
   STICKER_END,
   GROUP_START,
-  GROUP_CHANGE_COLOR,
-  GROUP_MERGE,
-  GROUP_REMOVE,
-  GROUP_SELECT_MAIN,
-  GROUP_SELECT_ALL,
+    GROUP_CHANGE_START,
+      GROUP_CHANGE_COLOR,
+      GROUP_MERGE,
+      GROUP_REMOVE,
+    GROUP_CHANGE_END,
+    GROUP_SELECT_START,
+      GROUP_SELECT_MAIN,  // 120
+      GROUP_SELECT_ALL,
+    GROUP_SELECT_END,
   GROUP_END,
   EDIT_START,
-  EDIT_ESCAPE,
-  EDIT_INSERT_NEWLINE,
-  EDIT_INSERT_TAB,
-  EDIT_INSERT_EMOJI,
-  EDIT_BACKSPACE,
-  EDIT_DELETE,
-  EDIT_REMOVE_WORD_NEXT,
-  EDIT_REMOVE_WORD_PREV,
-  EDIT_CURSOR_CHAR_NEXT,
-  EDIT_CURSOR_CHAR_PREV,
-  EDIT_CURSOR_UP,
-  EDIT_CURSOR_DOWN,
-  EDIT_CURSOR_WORD_NEXT,
-  EDIT_CURSOR_WORD_PREV,
-  EDIT_CURSOR_START,
-  EDIT_CURSOR_END,
-  EDIT_CURSOR_LINESTART,
-  EDIT_CURSOR_LINEEND,
-  EDIT_SELECT_CHAR_NEXT,
-  EDIT_SELECT_CHAR_PREV,
-  EDIT_SELECT_UP,
-  EDIT_SELECT_DOWN,
-  EDIT_SELECT_WORD_NEXT,
-  EDIT_SELECT_WORD_PREV,
-  EDIT_SELECT_START_UP,
-  EDIT_SELECT_START_HOME,
-  EDIT_SELECT_END_DOWN,
-  EDIT_SELECT_END_END,
-  EDIT_SELECT_LINESTART,
-  EDIT_SELECT_LINEEND,
-  EDIT_SELECT_ALL,
-  EDIT_SELECT_NONE,
-  EDIT_OPEN_URL,
-  EDIT_ADD_URL,
-  EDIT_EDIT_URL,
-  EDIT_REMOVE_URL,
-  EDIT_COPY,
-  EDIT_CUT,
-  EDIT_PASTE,
-  EDIT_RETURN,
-  EDIT_SHIFT_RETURN,
-  EDIT_TAB,
-  EDIT_SHIFT_TAB,
-  EDIT_END,
+    EDIT_TEXT_START,
+      EDIT_INSERT_NEWLINE,
+      EDIT_INSERT_TAB,
+      EDIT_INSERT_EMOJI,
+      EDIT_ESCAPE,
+      EDIT_BACKSPACE,  // 130
+      EDIT_DELETE,
+      EDIT_REMOVE_WORD_NEXT,
+      EDIT_REMOVE_WORD_PREV,
+    EDIT_TEXT_END,
+    EDIT_CLIPBOARD_START,
+      EDIT_COPY,
+      EDIT_CUT,
+      EDIT_PASTE,
+    EDIT_CLIPBOARD_END,
+    EDIT_URL_START,  // 140
+      EDIT_OPEN_URL,
+      EDIT_ADD_URL,
+      EDIT_EDIT_URL,
+      EDIT_REMOVE_URL,
+    EDIT_URL_END,
+    EDIT_CURSOR_START,
+      EDIT_CURSOR_CHAR_NEXT,
+      EDIT_CURSOR_CHAR_PREV,
+      EDIT_CURSOR_UP,
+      EDIT_CURSOR_DOWN,  // 150
+      EDIT_CURSOR_WORD_NEXT,
+      EDIT_CURSOR_WORD_PREV,
+      EDIT_CURSOR_FIRST,
+      EDIT_CURSOR_LAST,
+      EDIT_CURSOR_LINESTART,
+      EDIT_CURSOR_LINEEND,
+    EDIT_CURSOR_END,
+    EDIT_SELECT_START,
+      EDIT_SELECT_CHAR_NEXT,
+      EDIT_SELECT_CHAR_PREV,  // 160
+      EDIT_SELECT_UP,
+      EDIT_SELECT_DOWN,
+      EDIT_SELECT_WORD_NEXT,
+      EDIT_SELECT_WORD_PREV,
+      EDIT_SELECT_START_UP,
+      EDIT_SELECT_START_HOME,
+      EDIT_SELECT_END_DOWN,
+      EDIT_SELECT_END_END,
+      EDIT_SELECT_LINESTART,
+      EDIT_SELECT_LINEEND,  // 170
+      EDIT_SELECT_ALL,
+      EDIT_SELECT_NONE,
+    EDIT_SELECT_END,
+    EDIT_MISC_START,
+      EDIT_RETURN,
+      EDIT_SHIFT_RETURN,
+      EDIT_TAB,
+      EDIT_SHIFT_TAB,
+    EDIT_MISC_END,
+  EDIT_END,  // 180
   NUM;
 
   //-------------------------------------------------------------
@@ -257,8 +303,8 @@ public enum KeyCommand {
       case EDIT_CURSOR_DOWN          :  return( "edit-cursor-down" );
       case EDIT_CURSOR_WORD_NEXT     :  return( "edit-cursor-word-next" );
       case EDIT_CURSOR_WORD_PREV     :  return( "edit-cursor-word-prev" );
-      case EDIT_CURSOR_START         :  return( "edit-cursor-start" );
-      case EDIT_CURSOR_END           :  return( "edit-cursor-end" );
+      case EDIT_CURSOR_FIRST         :  return( "edit-cursor-first" );
+      case EDIT_CURSOR_LAST          :  return( "edit-cursor-last" );
       case EDIT_CURSOR_LINESTART     :  return( "edit-cursor-linestart" );
       case EDIT_CURSOR_LINEEND       :  return( "edit-cursor-lineend" );
       case EDIT_SELECT_CHAR_NEXT     :  return( "edit-select-char-next" );
@@ -386,8 +432,8 @@ public enum KeyCommand {
       case "edit-cursor-down"          :  return( EDIT_CURSOR_DOWN );
       case "edit-cursor-word-next"     :  return( EDIT_CURSOR_WORD_NEXT );
       case "edit-cursor-word-prev"     :  return( EDIT_CURSOR_WORD_PREV );
-      case "edit-cursor-start"         :  return( EDIT_CURSOR_START );
-      case "edit-cursor-end"           :  return( EDIT_CURSOR_END );
+      case "edit-cursor-first"         :  return( EDIT_CURSOR_FIRST );
+      case "edit-cursor-last"          :  return( EDIT_CURSOR_LAST );
       case "edit-cursor-linestart"     :  return( EDIT_CURSOR_LINESTART );
       case "edit-cursor-lineend"       :  return( EDIT_CURSOR_LINEEND );
       case "edit-select-char-next"     :  return( EDIT_SELECT_CHAR_NEXT );
@@ -424,24 +470,53 @@ public enum KeyCommand {
   // this key command.
   public string shortcut_label() {
     switch( this ) {
-      case GENERAL_START             :  return( _( "General Commands" ) );
-      case SHOW_CONTEXTUAL_MENU      :  return( _( "Show contextual menu" ) );
-      case ZOOM_IN                   :  return( _( "Zoom in" ) );
-      case ZOOM_OUT                  :  return( _( "Zoom out" ) );
+      case GENERAL_START             :  return( _( "General" ) );
+      case FILE_START                :  return( _( "File Commands" ) );
+      case TAB_START                 :  return( _( "Tab Commands" ) );
+      case UNDO_START                :  return( _( "Undo/Redo Commands" ) );
       case UNDO_ACTION               :  return( _( "Undo last action" ) );
       case REDO_ACTION               :  return( _( "Redo last undone action" ) );
-      case EDIT_NOTE                 :  return( _( "Edit note of current item" ) );
+      case ZOOM_START                :  return( _( "Zoom Commands" ) );
+      case ZOOM_IN                   :  return( _( "Zoom in" ) );
+      case ZOOM_OUT                  :  return( _( "Zoom out" ) );
+      case SIDEBAR_START             :  return( _( "Sidebar Commands" ) );
       case SHOW_CURRENT_SIDEBAR      :  return( _( "Show current tab in sidebar" ) );
+      case MISCELLANEOUS_START       :  return( _( "Miscellaneous Commands" ) );
+      case SHOW_CONTEXTUAL_MENU      :  return( _( "Show contextual menu" ) );
+      case EDIT_NOTE                 :  return( _( "Edit note of current item" ) );
       case EDIT_SELECTED             :  return( _( "Edit currently selected item" ) );
       case SHOW_SELECTED             :  return( _( "Show currently selected item" ) );
       case REMOVE_STICKER_SELECTED   :  return( _( "Remove sticker from current node or connection" ) );
-      case NODE_START                :  return( _( "Node Commands" ) );
-      case NODE_ALIGN_TOP            :  return( _( "Align selected node top edges" ) );
-      case NODE_ALIGN_VCENTER        :  return( _( "Align selected node vertical centers" ) );
-      case NODE_ALIGN_BOTTOM         :  return( _( "Align selected node bottom edges" ) );
-      case NODE_ALIGN_LEFT           :  return( _( "Align selected node left edges" ) );
-      case NODE_ALIGN_HCENTER        :  return( _( "Align selected node horizontal centers" ) );
-      case NODE_ALIGN_RIGHT          :  return( _( "Align selected node right edges" ) );
+      case NODE_START                :  return( _( "Node" ) );
+      case NODE_EXIST_START          :  return( _( "Creation/Deletion Commands" ) );
+      case NODE_ADD_ROOT             :  return( _( "Add root node" ) );
+      case NODE_ADD_SIBLING_AFTER    :  return( _( "Add sibling node after current node" ) );
+      case NODE_ADD_SIBLING_BEFORE   :  return( _( "Add sibling node before current node" ) );
+      case NODE_ADD_CHILD            :  return( _( "Add child node to current node" ) );
+      case NODE_ADD_PARENT           :  return( _( "Add parent node to current node" ) );
+      case NODE_QUICK_ENTRY_INSERT   :  return( _( "Use quick entry to insert nodes" ) );
+      case NODE_QUICK_ENTRY_REPLACE  :  return( _( "Use quick entry to replace current node" ) );
+      case NODE_REMOVE_ONLY          :  return( _( "Remove selected node only (leave subtree)" ) );
+      case NODE_CLIPBOARD_START      :  return( _( "Clipboard Commands" ) );
+      case NODE_PASTE_NODE_LINK      :  return( _( "Paste node link from clipboard into current node" ) );
+      case NODE_PASTE_REPLACE        :  return( _( "Replace current node with clipboard content") );
+      case NODE_VIEW_START           :  return( _( "View Commands" ) );
+      case NODE_CENTER               :  return( _( "Center current node in map canvas" ) );
+      case NODE_CHANGE_START         :  return( _( "Change Commands" ) );
+      case NODE_CHANGE_TASK          :  return( _( "Change task status of current node" ) );
+      case NODE_CHANGE_IMAGE         :  return( _( "Add/Edit image of current node" ) );
+      case NODE_REMOVE_IMAGE         :  return( _( "Remove image from current node" ) );
+      case NODE_CHANGE_LINK_COLOR    :  return( _( "Change link color of current node" ) );
+      case NODE_RANDOMIZE_LINK_COLOR :  return( _( "Randomize the current node link color" ) );
+      case NODE_REPARENT_LINK_COLOR  :  return( _( "Set current node link color to match parent node" ) );
+      case NODE_TOGGLE_FOLDS_SHALLOW :  return( _( "Toggle folding of current node" ) );
+      case NODE_TOGGLE_FOLDS_DEEP    :  return( _( "Toggle folding of current node subtree" ) );
+      case NODE_TOGGLE_LINKS         :  return( _( "Toggle the node link state" ) );
+      case NODE_ADD_GROUP            :  return( _( "Add group for current node and its subtree" ) );
+      case NODE_ADD_CONNECTION       :  return( _( "Start creation of connection from current node" ) );
+      case NODE_TOGGLE_CALLOUT       :  return( _( "Add/Remove callout for current node" ) );
+      case NODE_TOGGLE_SEQUENCE      :  return( _( "Toggle sequence state of children of current node" ) );
+      case NODE_SELECT_START         :  return( _( "Selection Commands" ) );
       case NODE_SELECT_ROOT          :  return( _( "Select root node of current node" ) );
       case NODE_SELECT_PARENT        :  return( _( "Select parent node of current node" ) );
       case NODE_SELECT_CHILDREN      :  return( _( "Select all child nodes of current node" ) );
@@ -456,65 +531,62 @@ public enum KeyCommand {
       case NODE_SELECT_LINKED        :  return( _( "Select linked node of current node" ) );
       case NODE_SELECT_CONNECTION    :  return( _( "Select connection of current node" ) );
       case NODE_SELECT_CALLOUT       :  return( _( "Select callout of current node" ) );
-      case NODE_CHANGE_LINK_COLOR    :  return( _( "Change link color of current node" ) );
-      case NODE_RANDOMIZE_LINK_COLOR :  return( _( "Randomize the current node link color" ) );
-      case NODE_REPARENT_LINK_COLOR  :  return( _( "Set current node link color to match parent node" ) );
-      case NODE_CHANGE_TASK          :  return( _( "Change task status of current node" ) );
-      case NODE_ADD_ROOT             :  return( _( "Add root node" ) );
-      case NODE_ADD_SIBLING_AFTER    :  return( _( "Add sibling node after current node" ) );
-      case NODE_ADD_SIBLING_BEFORE   :  return( _( "Add sibling node before current node" ) );
-      case NODE_ADD_CHILD            :  return( _( "Add child node to current node" ) );
-      case NODE_ADD_PARENT           :  return( _( "Add parent node to current node" ) );
-      case NODE_CHANGE_IMAGE         :  return( _( "Add/Edit image of current node" ) );
-      case NODE_REMOVE_IMAGE         :  return( _( "Remove image from current node" ) );
-      case NODE_TOGGLE_CALLOUT       :  return( _( "Add/Remove callout for current node" ) );
-      case NODE_ADD_GROUP            :  return( _( "Add group for current node and its subtree" ) );
-      case NODE_ADD_CONNECTION       :  return( _( "Start creation of connection from current node" ) );
-      case NODE_TOGGLE_FOLDS_SHALLOW :  return( _( "Toggle folding of current node" ) );
-      case NODE_TOGGLE_FOLDS_DEEP    :  return( _( "Toggle folding of current node subtree" ) );
-      case NODE_TOGGLE_SEQUENCE      :  return( _( "Toggle sequence state of children of current node" ) );
-      case NODE_TOGGLE_LINKS         :  return( _( "Toggle the node link state" ) );
-      case NODE_CENTER               :  return( _( "Center current node in map canvas" ) );
-      case NODE_SORT_ALPHABETICALLY  :  return( _( "Sort child nodes of current node alphabetically" ) );
-      case NODE_SORT_RANDOMLY        :  return( _( "Sort child nodes of current node randomly" ) );
-      case NODE_QUICK_ENTRY_INSERT   :  return( _( "Use quick entry to insert nodes" ) );
-      case NODE_QUICK_ENTRY_REPLACE  :  return( _( "Use quick entry to replace current node" ) );
-      case NODE_PASTE_NODE_LINK      :  return( _( "Paste node link from clipboard into current node" ) );
-      case NODE_PASTE_REPLACE        :  return( _( "Replace current node with clipboard content") );
-      case NODE_REMOVE_ONLY          :  return( _( "Remove selected node only (leave subtree)" ) );
-      case NODE_DETACH               :  return( _( "Detaches current node and its subtree" ) );
-      case NODE_SWAP_LEFT            :  return( _( "Swap current node with left node" ) );
+      case NODE_MOVE_START           :  return( _( "Move Commands" ) );
       case NODE_SWAP_RIGHT           :  return( _( "Swap current node with right node" ) );
+      case NODE_SWAP_LEFT            :  return( _( "Swap current node with left node" ) );
       case NODE_SWAP_UP              :  return( _( "Swap current node with above node" ) );
       case NODE_SWAP_DOWN            :  return( _( "Swap current node with below node" ) );
+      case NODE_SORT_ALPHABETICALLY  :  return( _( "Sort child nodes of current node alphabetically" ) );
+      case NODE_SORT_RANDOMLY        :  return( _( "Sort child nodes of current node randomly" ) );
+      case NODE_DETACH               :  return( _( "Detaches current node and its subtree" ) );
+      case NODE_ALIGN_START          :  return( _( "Alignment Commands" ) );
+      case NODE_ALIGN_TOP            :  return( _( "Align selected node top edges" ) );
+      case NODE_ALIGN_VCENTER        :  return( _( "Align selected node vertical centers" ) );
+      case NODE_ALIGN_BOTTOM         :  return( _( "Align selected node bottom edges" ) );
+      case NODE_ALIGN_LEFT           :  return( _( "Align selected node left edges" ) );
+      case NODE_ALIGN_HCENTER        :  return( _( "Align selected node horizontal centers" ) );
+      case NODE_ALIGN_RIGHT          :  return( _( "Align selected node right edges" ) );
+      case CALLOUT_START             :  return( _( "Callout Commands" ) );
+      case CALLOUT_SELECT_NODE       :  return( _( "Select callout node" ) );
       case CONNECTION_START          :  return( _( "Connection Commands" ) );
+      case CONNECTION_SELECT_START   :  return( _( "Selection Commands" ) );
       case CONNECTION_SELECT_FROM    :  return( _( "Select connection source node" ) );
       case CONNECTION_SELECT_TO      :  return( _( "Select connection target node" ) );
       case CONNECTION_SELECT_NEXT    :  return( _( "Select next connection in map" ) );
       case CONNECTION_SELECT_PREV    :  return( _( "Select previous connection in map" ) );
-      case CALLOUT_START             :  return( _( "Callout Commands" ) );
-      case CALLOUT_SELECT_NODE       :  return( _( "Select callout node" ) );
       case GROUP_START               :  return( _( "Group Commands" ) );
+      case GROUP_CHANGE_START        :  return( _( "Change Commands" ) );
       case GROUP_CHANGE_COLOR        :  return( _( "Change the color of the current group" ) );
       case GROUP_MERGE               :  return( _( "Merge current groups into single group" ) );
+      case GROUP_SELECT_START        :  return( _( "Selection Commands" ) );
       case GROUP_SELECT_MAIN         :  return( _( "Select main node(s) of current group(s)" ) );
       case GROUP_SELECT_ALL          :  return( _( "Selects all nodes within current group(s)" ) );
       case EDIT_START                :  return( _( "Text Editing Commands" ) );
+      case EDIT_TEXT_START           :  return( _( "Insertion/Deletion Commands" ) );
       case EDIT_INSERT_NEWLINE       :  return( _( "Insert newline character" ) );
       case EDIT_INSERT_TAB           :  return( _( "Insert TAB character" ) );
       case EDIT_INSERT_EMOJI         :  return( _( "Insert emoji" ) );
       case EDIT_REMOVE_WORD_NEXT     :  return( _( "Remove next word" ) );
       case EDIT_REMOVE_WORD_PREV     :  return( _( "Remove previous word" ) );
+      case EDIT_CLIPBOARD_START      :  return( _( "Clipboard Commands" ) );
+      case EDIT_PASTE                :  return( _( "Paste nodes or text from clipboard" ) );
+      case EDIT_URL_START            :  return( _( "URL Commands" ) );
+      case EDIT_OPEN_URL             :  return( _( "Open URL link at current cursor position" ) );
+      case EDIT_ADD_URL              :  return( _( "Add URL link at current cursor position" ) );
+      case EDIT_EDIT_URL             :  return( _( "Change URL link at current cursor position" ) );
+      case EDIT_REMOVE_URL           :  return( _( "Remove URL link at current cursor position" ) );
+      case EDIT_CURSOR_START         :  return( _( "Cursor Commands" ) );
       case EDIT_CURSOR_CHAR_NEXT     :  return( _( "Move cursor to next character" ) );
       case EDIT_CURSOR_CHAR_PREV     :  return( _( "Move cursor to previous character" ) );
       case EDIT_CURSOR_UP            :  return( _( "Move cursor up one line" ) );
       case EDIT_CURSOR_DOWN          :  return( _( "Move cursor down one line" ) );
       case EDIT_CURSOR_WORD_NEXT     :  return( _( "Move cursor to beginning of next word" ) );
       case EDIT_CURSOR_WORD_PREV     :  return( _( "Move cursor to beginning of previous word" ) );
-      case EDIT_CURSOR_START         :  return( _( "Move cursor to start of text" ) );
-      case EDIT_CURSOR_END           :  return( _( "Move cursor to end of text" ) );
+      case EDIT_CURSOR_FIRST         :  return( _( "Move cursor to start of text" ) );
+      case EDIT_CURSOR_LAST          :  return( _( "Move cursor to end of text" ) );
       case EDIT_CURSOR_LINESTART     :  return( _( "Move cursor to start of current line" ) );
       case EDIT_CURSOR_LINEEND       :  return( _( "Move cursor to end of current line" ) );
+      case EDIT_SELECT_START         :  return( _( "Selection Commands" ) );
       case EDIT_SELECT_CHAR_NEXT     :  return( _( "Add next character to current selection" ) );
       case EDIT_SELECT_CHAR_PREV     :  return( _( "Add previous character to current selection" ) );
       case EDIT_SELECT_UP            :  return( _( "Add line up to current selection" ) );
@@ -529,11 +601,6 @@ public enum KeyCommand {
       case EDIT_SELECT_LINEEND       :  return( _( "Add end of current line to current selection" ) );
       case EDIT_SELECT_ALL           :  return( _( "Select all text" ) );
       case EDIT_SELECT_NONE          :  return( _( "Deselect all text" ) );
-      case EDIT_OPEN_URL             :  return( _( "Open URL link at current cursor position" ) );
-      case EDIT_ADD_URL              :  return( _( "Add URL link at current cursor position" ) );
-      case EDIT_EDIT_URL             :  return( _( "Change URL link at current cursor position" ) );
-      case EDIT_REMOVE_URL           :  return( _( "Remove URL link at current cursor position" ) );
-      case EDIT_PASTE                :  return( _( "Paste nodes or text from clipboard" ) );
       default                        :  stdout.printf( "label: %d\n", this );  assert_not_reached();
     }
   }
@@ -634,8 +701,8 @@ public enum KeyCommand {
       case EDIT_CURSOR_DOWN          :  return( edit_cursor_down );
       case EDIT_CURSOR_WORD_NEXT     :  return( edit_cursor_word_next );
       case EDIT_CURSOR_WORD_PREV     :  return( edit_cursor_word_previous );
-      case EDIT_CURSOR_START         :  return( edit_cursor_to_start );
-      case EDIT_CURSOR_END           :  return( edit_cursor_to_end );
+      case EDIT_CURSOR_FIRST         :  return( edit_cursor_to_start );
+      case EDIT_CURSOR_LAST          :  return( edit_cursor_to_end );
       case EDIT_CURSOR_LINESTART     :  return( edit_cursor_to_linestart );
       case EDIT_CURSOR_LINEEND       :  return( edit_cursor_to_lineend );
       case EDIT_SELECT_CHAR_NEXT     :  return( edit_select_char_next );
@@ -770,7 +837,9 @@ public enum KeyCommand {
       (this != NODE_REMOVE) &&
       (this != CONNECTION_REMOVE) &&
       (this != CALLOUT_REMOVE) &&
+      ((this < CONNECTION_EXIST_START) || (CONNECTION_EXIST_END < this)) &&
       ((this < STICKER_START) || (STICKER_END < this)) &&
+      ((this < EDIT_MISC_START) || (EDIT_MISC_END < this)) &&
       (this != GROUP_REMOVE)
     );
   }
@@ -803,7 +872,7 @@ public enum KeyCommand {
 
   //-------------------------------------------------------------
   // Returns true if this key command is a start of command block.
-  public bool is_start() {
+  public bool is_section_start() {
     switch( this ) {
       case GENERAL_START    :
       case NODE_START       :
@@ -818,7 +887,7 @@ public enum KeyCommand {
 
   //-------------------------------------------------------------
   // Returns true if this key command is an end of command block.
-  public bool is_end() {
+  public bool is_section_end() {
     switch( this ) {
       case GENERAL_END    :
       case NODE_END       :
@@ -828,6 +897,74 @@ public enum KeyCommand {
       case GROUP_END      :
       case EDIT_END       :  return( true );
       default             :  return( false );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given key command is a section group
+  // start indicator.
+  public bool is_group_start() {
+    switch( this ) {
+      case FILE_START              :
+      case TAB_START               :
+      case UNDO_START              :
+      case ZOOM_START              :
+      case SIDEBAR_START           :
+      case MISCELLANEOUS_START     :
+      case NODE_EXIST_START        :
+      case NODE_CLIPBOARD_START    :
+      case NODE_VIEW_START         :
+      case NODE_CHANGE_START       :
+      case NODE_SELECT_START       :
+      case NODE_MOVE_START         :
+      case NODE_ALIGN_START        :
+      case CONNECTION_EXIST_START  :
+      case CONNECTION_SELECT_START :
+      case GROUP_CHANGE_START      :
+      case GROUP_SELECT_START      :
+      case EDIT_TEXT_START         :
+      case EDIT_CLIPBOARD_START    :
+      case EDIT_URL_START          :
+      case EDIT_CURSOR_START       :
+      case EDIT_SELECT_START       :
+      case EDIT_MISC_START         :
+        return( true );
+      default :
+        return( false );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given key command is a section group
+  // end indicator.
+  public bool is_group_end() {
+    switch( this ) {
+      case FILE_END              :
+      case TAB_END               :
+      case UNDO_END              :
+      case ZOOM_END              :
+      case SIDEBAR_END           :
+      case MISCELLANEOUS_END     :
+      case NODE_EXIST_END        :
+      case NODE_CLIPBOARD_END    :
+      case NODE_VIEW_END         :
+      case NODE_CHANGE_END       :
+      case NODE_SELECT_END       :
+      case NODE_MOVE_END         :
+      case NODE_ALIGN_END        :
+      case CONNECTION_EXIST_END  :
+      case CONNECTION_SELECT_END :
+      case GROUP_CHANGE_END      :
+      case GROUP_SELECT_END      :
+      case EDIT_TEXT_END         :
+      case EDIT_CLIPBOARD_END    :
+      case EDIT_URL_END          :
+      case EDIT_CURSOR_END       :
+      case EDIT_SELECT_END       :
+      case EDIT_MISC_END         :
+        return( true );
+      default :
+        return( false );
     }
   }
 

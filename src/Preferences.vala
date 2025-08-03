@@ -62,7 +62,8 @@ public class Preferences : Gtk.Window {
 
     var switcher = new StackSwitcher() {
       halign = Align.CENTER,
-      stack  = stack
+      stack  = stack,
+      margin_top = 10
     };
 
     var box = new Box( Orientation.VERTICAL, 0 );
@@ -150,33 +151,59 @@ public class Preferences : Gtk.Window {
     };
 
     var row = 0;
+    var section_end_seen = false;
+    var group_end_seen   = false;
     for( int i=0; i<KeyCommand.NUM; i++ ) {
       var command = (KeyCommand)i;
       if( command.viewable() ) {
-        if( command.is_start() ) {
+        if( command.is_section_start() ) {
+          var box = new Box( Orientation.VERTICAL, 5 );
+          if( section_end_seen ) {
+            box.append( make_separator() );
+          }
+          var l = new Label( "<span size=\"large\" weight=\"bold\">" + command.shortcut_label() + "</span>" ) {
+            halign     = Align.START,
+            use_markup = true
+          };
+          box.append( l );
+          grid.attach( box, 0, row, 4 );
+          group_end_seen = false;
+        } else if( command.is_section_end() ) {
+          section_end_seen = true;
+        } else if( command.is_group_start() ) {
+          var box = new Box( Orientation.VERTICAL, 5 );
+          if( group_end_seen ) {
+            box.append( make_separator() );
+          }
           var l = new Label( Utils.make_title( command.shortcut_label() ) ) {
             halign = Align.START,
             use_markup = true
           };
-          grid.attach( l, 0, row, 3 );
-        } else if( command.is_end() ) {
-          grid.attach( make_separator(), 0, row, 3 );
+          box.append( l );
+          grid.attach( box, 1, row, 3 );
+        } else if( command.is_group_end() ) {
+          group_end_seen = true;
         } else {
-          grid.attach( make_label( "  " ), 0, row );
-          grid.attach( make_label( command.shortcut_label() ), 1, row );
-          grid.attach( make_shortcut( command ), 2, row );
+          var prefix   = make_label( "    " );
+          var label    = make_label( command.shortcut_label() );
+          var shortcut = make_shortcut( command );
+          grid.attach( prefix,   1, row );
+          grid.attach( label,    2, row );
+          grid.attach( shortcut, 3, row );
         }
         row++;
       }
     }
 
     var sw = new ScrolledWindow() {
-      vscrollbar_policy = PolicyType.ALWAYS,
+      vscrollbar_policy = PolicyType.AUTOMATIC,
       hscrollbar_policy = PolicyType.NEVER,
       overlay_scrolling = false,
+      hexpand           = true,
+      margin_top = 20,
       child = grid
     };
-    sw.set_size_request( -1, 500 );
+    sw.set_size_request( 400, 500 );
 
     _shortcut_inst_start_str = _( "Double-click to edit shortcut.  Select + Delete to remove shortcut." );
     _shortcut_inst_edit_str  = _( "Escape to cancel.  Press key combination to set." );
@@ -196,24 +223,99 @@ public class Preferences : Gtk.Window {
     menu.append_section( null, default_menu );
     menu.append_section( null, clear_menu );
 
+    var search_btn = new Button.from_icon_name( "system-search-symbolic" );
+    var search = new SearchEntry() {
+      halign           = Align.FILL,
+      placeholder_text = _( "Search commands" ),
+      visible          = false,
+      tooltip_text     = _( "Search shortcuts" )
+    };
+
+    var search_key = new EventControllerKey();
+    search.add_controller( search_key );
+
+    search.search_changed.connect(() => {
+      update_search_results( grid, search.text );
+      grid.row_homogeneous = (search.text == "");
+    });
+
+    search_btn.clicked.connect(() => {
+      search.visible = !search.visible;
+      search.text    = "";
+      search.grab_focus();
+    });
+
+    search_key.key_pressed.connect((keyval, keycode, state) => {
+      if( keyval == Gdk.Key.Escape ) {
+        search.visible = false;
+        search.text    = "";
+        search_btn.grab_focus();
+        return( true );
+      }
+      return( false );
+    });
+
     var more = new MenuButton() {
       halign     = Align.END,
       icon_name  = "view-more-symbolic",
       menu_model = menu
     };
 
-    var hbox = new Box( Orientation.HORIZONTAL, 5 ) {
-      margin_bottom = 20
-    };
+    var hbox = new Box( Orientation.HORIZONTAL, 5 );
     hbox.append( _shortcut_instructions );
+    hbox.append( search_btn );
     hbox.append( more );
 
     var box = new Box( Orientation.VERTICAL, 5 );
     box.append( hbox );
+    box.append( search );
     box.append( sw );
 
     return( box );
 
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever the search results match.  Updates the shortcut list.
+  private void update_search_results( Grid grid, string text ) {
+    Widget? current_section = null;
+    Widget? current_group   = null;
+    var row = 0;
+    for( int i=0; i<KeyCommand.NUM; i++ ) {
+      var command = (KeyCommand)i;
+      if( command.viewable() ) {
+        if( command.is_section_start() ) {
+          current_section = grid.get_child_at( 0, row );
+          assert( current_section != null );
+          if( current_section != null ) {
+            current_section.visible = false;
+          }
+        } else if( command.is_group_start() ) {
+          current_group = grid.get_child_at( 1, row );
+          assert( current_group != null );
+          if( current_group != null ) {
+            current_group.visible = false;
+          }
+        } else if( !command.is_section_end() && !command.is_group_end() ) {
+          var matched = (text == "") || command.shortcut_label().down().contains( text.down() );
+          if( matched ) {
+            if( current_section != null ) {
+              current_section.visible = matched;
+            }
+            if( current_group != null ) {
+              current_group.visible = matched;
+            }
+          }
+          for( int j=1; j<4; j++ ) {
+            var w = grid.get_child_at( j, row );
+            if( w != null ) {
+              w.visible = matched;
+            }
+          }
+        }
+        row++;
+      }
+    }
   }
 
   //-------------------------------------------------------------
@@ -404,23 +506,6 @@ public class Preferences : Gtk.Window {
         return( true );
       }
       return( false );
-    });
-
-    // Finally, handle any changes from the shortcuts manager itself
-    _win.shortcuts.shortcut_changed.connect((cmd, scut) => {
-      if( cmd == command ) {
-        if( scut != null ) {
-          if( (shortcut == null) || !scut.matches_shortcut( shortcut ) ) {
-            shortcut = scut;
-            sl.accelerator = shortcut.get_accelerator();
-            stack.visible_child_name = "set";
-          }
-        } else if( shortcut != null ) {
-          shortcut = null;
-          nl.text = disabled;
-          stack.visible_child_name = "unset";
-        }
-      }
     });
 
     return( stack );

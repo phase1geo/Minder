@@ -532,9 +532,9 @@ public class Shortcuts {
     add_default( Key.Left,         true, true,  false, KeyCommand.EDIT_SELECT_WORD_PREV );
     add_default( Key.Left,         true, false, false, KeyCommand.EDIT_CURSOR_WORD_PREV );
     add_default( Key.Up,           true, true,  false, KeyCommand.EDIT_SELECT_START_UP );
-    add_default( Key.Up,           true, false, false, KeyCommand.EDIT_CURSOR_START );
+    add_default( Key.Up,           true, false, false, KeyCommand.EDIT_CURSOR_FIRST );
     add_default( Key.Down,         true, true,  false, KeyCommand.EDIT_SELECT_END_DOWN );
-    add_default( Key.Down,         true, false, false, KeyCommand.EDIT_CURSOR_END );
+    add_default( Key.Down,         true, false, false, KeyCommand.EDIT_CURSOR_LAST );
     add_default( Key.Home,         true, true,  false, KeyCommand.EDIT_SELECT_START_HOME );
     add_default( Key.Home,         true, false, false, KeyCommand.EDIT_CURSOR_LINESTART );
     add_default( Key.End,          true, true,  false, KeyCommand.EDIT_SELECT_END_END );
