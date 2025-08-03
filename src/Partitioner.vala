@@ -72,7 +72,7 @@ public class Partitioner : Object {
 
   /* Partitions the given root node */
   public void partition_node( Node root ) {
-    if( root.children().length > 2 ) {
+    if( root.children().length > 1 ) {
       var data = new SList<PartNode>();
       for( int i=0; i<root.children().length; i++ ) {
         var node = root.children().index( i );
