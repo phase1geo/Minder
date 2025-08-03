@@ -198,11 +198,19 @@ public class NodeImage {
 
     if( !resizable ) return;
 
+    if( (crop_w <= 0) || (crop_h <= 0) || (width <= 0) ) {
+      return;
+    }
+
     var scale      = (width * 1.0) / crop_w;
     var int_crop_h = (int)(crop_h * scale);
 
     var tmp = new Pixbuf.subpixbuf( _orig, crop_x, crop_y, crop_w, crop_h );
-    _buf = tmp.scale_simple( width, int_crop_h, InterpType.BILINEAR );
+    if( (tmp == null) || (int_crop_h <= 0) ) {
+      return;
+    }
+
+    _buf = tmp.scale_simple( width, int_crop_h, InterpType.BILINEAR ) ?? _buf;
 
   }
 
