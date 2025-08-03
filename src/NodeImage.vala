@@ -192,11 +192,42 @@ public class NodeImage {
 
     if( !resizable ) return;
 
+    // Validate crop dimensions to prevent division by zero and invalid scaling
+    if( crop_w <= 0 || crop_h <= 0 ) {
+      stderr.printf( "Warning: Invalid crop dimensions (w=%d, h=%d), skipping resize\n", crop_w, crop_h );
+      return;
+    }
+
+    // Ensure target width is positive
+    if( width <= 0 ) {
+      stderr.printf( "Warning: Invalid target width (%d), skipping resize\n", width );
+      return;
+    }
+
     var scale = (width * 1.0) / crop_w;
     var buf   = pixbuf_get_from_surface( _surface, crop_x, crop_y, crop_w, crop_h );
+    
+    // Validate the extracted pixbuf
+    if( buf == null ) {
+      stderr.printf( "Warning: Failed to extract pixbuf from surface, skipping resize\n" );
+      return;
+    }
+    
     var int_crop_h = (int)(crop_h * scale);
+    
+    // Ensure scaled height is valid for GdkPixbuf
+    if( int_crop_h <= 0 ) {
+      stderr.printf( "Warning: Calculated height (%d) invalid, using minimum height of 1\n", int_crop_h );
+      int_crop_h = 1;
+    }
 
-    _buf = buf.scale_simple( width, int_crop_h, InterpType.BILINEAR );
+    // Perform the scaling with validated parameters
+    var scaled_buf = buf.scale_simple( width, int_crop_h, InterpType.BILINEAR );
+    if( scaled_buf != null ) {
+      _buf = scaled_buf;
+    } else {
+      stderr.printf( "Error: GdkPixbuf scaling failed, keeping original buffer\n" );
+    }
 
   }
 
