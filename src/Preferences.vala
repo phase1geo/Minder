@@ -31,7 +31,9 @@ public class Preferences : Gtk.Window {
   private Label      _shortcut_instructions;
 
   private const GLib.ActionEntry[] action_entries = {
-    { "action_set_default_theme", action_set_default_theme, "s" },
+    { "action_set_default_theme",    action_set_default_theme, "s" },
+    { "action_clear_all_shortcuts",  action_clear_all_shortcuts },
+    { "action_set_minder_shortcuts", action_set_minder_shortcuts },
   };
 
   //-------------------------------------------------------------
@@ -68,6 +70,11 @@ public class Preferences : Gtk.Window {
     box.append( stack );
 
     child = box;
+
+    // Set the stage for menu actions
+    var actions = new SimpleActionGroup ();
+    actions.add_action_entries( action_entries, this );
+    insert_action_group( "prefs", actions );
 
   }
 
@@ -177,11 +184,32 @@ public class Preferences : Gtk.Window {
     _shortcut_instructions = new Label( _shortcut_inst_start_str ) {
       halign  = Align.CENTER,
       hexpand = true,
-      margin_bottom = 20
     };
 
+    var default_menu = new GLib.Menu();
+    default_menu.append( _( "Set Minder Defaults" ), "prefs.action_set_minder_shortcuts" );
+
+    var clear_menu = new GLib.Menu();
+    clear_menu.append( _( "Clear All Shortcuts" ), "prefs.action_clear_all_shortcuts" );
+
+    var menu = new GLib.Menu();
+    menu.append_section( null, default_menu );
+    menu.append_section( null, clear_menu );
+
+    var more = new MenuButton() {
+      halign     = Align.END,
+      icon_name  = "view-more-symbolic",
+      menu_model = menu
+    };
+
+    var hbox = new Box( Orientation.HORIZONTAL, 5 ) {
+      margin_bottom = 20
+    };
+    hbox.append( _shortcut_instructions );
+    hbox.append( more );
+
     var box = new Box( Orientation.VERTICAL, 5 );
-    box.append( _shortcut_instructions );
+    box.append( hbox );
     box.append( sw );
 
     return( box );
@@ -378,6 +406,23 @@ public class Preferences : Gtk.Window {
       return( false );
     });
 
+    // Finally, handle any changes from the shortcuts manager itself
+    _win.shortcuts.shortcut_changed.connect((cmd, scut) => {
+      if( cmd == command ) {
+        if( scut != null ) {
+          if( (shortcut == null) || !scut.matches_shortcut( shortcut ) ) {
+            shortcut = scut;
+            sl.accelerator = shortcut.get_accelerator();
+            stack.visible_child_name = "set";
+          }
+        } else if( shortcut != null ) {
+          shortcut = null;
+          nl.text = disabled;
+          stack.visible_child_name = "unset";
+        }
+      }
+    });
+
     return( stack );
 
   }
@@ -420,6 +465,30 @@ public class Preferences : Gtk.Window {
       Minder.settings.set_string( "default-theme", name );
       _theme_mb.label = _win.themes.get_theme( name ).label;
     }
+  }
+
+  //-------------------------------------------------------------
+  // Clears all of the shortcuts so that the user can set things
+  // up from scratch.
+  private void action_clear_all_shortcuts() {
+    Utils.create_confirmation_dialog(
+      this, _( "Clear all shortcuts?" ), _( "Current shortcut settings will be lost" ),
+      () => {
+        _win.shortcuts.clear_all_shortcuts();
+      }
+    );
+  }
+
+  //-------------------------------------------------------------
+  // Resets all shortcuts to match the default shortcuts for Minder.
+  private void action_set_minder_shortcuts() {
+    Utils.create_confirmation_dialog(
+      this, _( "Use Minder Default Shortcuts?" ), _( "Current shortcut settings will be lost" ),
+      () => {
+        _win.shortcuts.restore_default_shortcuts();
+        _win.shortcuts.save();
+      }
+    );
   }
 
 }

@@ -23,6 +23,8 @@ using Gtk;
 using Gdk;
 using Cairo;
 
+public delegate void ConfirmationDialogFunc();
+
 public class Utils {
 
   //-------------------------------------------------------------
@@ -136,13 +138,16 @@ public class Utils {
     return( "<b>" + str + "</b>" );
   }
 
-  /* Returns a string that is used to display a tooltip with displayed accelerator */
+  //-------------------------------------------------------------
+  // Returns a string that is used to display a tooltip with
+  // displayed accelerator.
   public static string tooltip_with_accel( string tooltip, string accel ) {
     string[] accels = {accel};
     return( Granite.markup_accel_tooltip( accels, tooltip ) );
   }
 
-  /* Opens the given URL in the proper external default application */
+  //-------------------------------------------------------------
+  // Opens the given URL in the proper external default application
   public static void open_url( string url ) {
     try {
       AppInfo.launch_default_for_uri( url, null );
@@ -151,7 +156,8 @@ public class Utils {
     }
   }
 
-  /* Prepares the given note string for use in a markup tooltip */
+  //-------------------------------------------------------------
+  // Prepares the given note string for use in a markup tooltip.
   public static string prepare_note_markup( string note ) {
     var str = markdown_to_html( note );  // .replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
     // stdout.printf( "---------------\n%s--------------\n", str );
@@ -216,7 +222,8 @@ public class Utils {
     return( str.replace( "\n\n\n", "\n\n" ) );
   }
 
-  /* Converts the given Markdown into HTML */
+  //-------------------------------------------------------------
+  // Converts the given Markdown into HTML.
   public static string markdown_to_html( string md, string? tag = null ) {
     string html;
 #if MD30
@@ -243,7 +250,9 @@ public class Utils {
     }
   }
 
-  /* Returns the line height of the first line of the given pango layout */
+  //-------------------------------------------------------------
+  // Returns the line height of the first line of the given pango
+  // layout.
   public static double get_line_height( Pango.Layout layout ) {
     int height;
     var line = layout.get_line_readonly( 0 );
@@ -258,7 +267,8 @@ public class Utils {
     return( height / Pango.SCALE );
   }
 
-  /* Searches for the beginning or ending word */
+  //-------------------------------------------------------------
+  // Searches for the beginning or ending word.
   public static int find_word( string str, int cursor, bool wordstart ) {
     try {
       MatchInfo match_info;
@@ -273,12 +283,14 @@ public class Utils {
     return( -1 );
   }
 
-  /* Returns true if the given string is a valid URL */
+  //-------------------------------------------------------------
+  // Returns true if the given string is a valid URL.
   public static bool is_url( string str ) {
     return( Regex.match_simple( url_re(), str ) );
   }
 
-  /* Returns true if the given file is read-only */
+  //-------------------------------------------------------------
+  // Returns true if the given file is read-only.
   public static bool is_read_only( string fname ) {
     var file = File.new_for_path( fname );
     var src  = new GtkSource.File();
@@ -287,6 +299,9 @@ public class Utils {
     return( src.is_readonly() );
   }
 
+  //-------------------------------------------------------------
+  // Sets the default folder in the given file dialog to the
+  // last directory used.
   public static void set_chooser_folder( FileDialog dialog ) {
     var dir = Minder.settings.get_string( "last-directory" );
     if( dir != "" ) {
@@ -295,6 +310,8 @@ public class Utils {
     }
   }
 
+  //-------------------------------------------------------------
+  // Stores the last used directory in GLib settings.
   public static void store_chooser_folder( string file, bool is_dir ) {
     var dir = is_dir ? file : GLib.Path.get_dirname( file );
     Minder.settings.set_string( "last-directory", dir );
@@ -411,6 +428,40 @@ public class Utils {
   public static bool use_dark_mode( Widget w ) {
     var color = Utils.color_from_rgba( Granite.contrasting_foreground_color( w.get_color() ) );
     return( color == "#000000" );
+  }
+
+  //-------------------------------------------------------------
+  // Creates a confirmation dialog window.  If the user accepts
+  // message, executes function.
+  public static void create_confirmation_dialog( Gtk.Window win, string message, string detail, ConfirmationDialogFunc confirm_func ) {
+
+    var dialog = new Granite.MessageDialog.with_image_from_icon_name(
+      message,
+      detail,
+      "dialog-warning",
+      ButtonsType.NONE
+    );
+
+    var no = new Button.with_label( _( "No" ) );
+    dialog.add_action_widget( no, ResponseType.CANCEL );
+
+    var yes = new Button.with_label( _( "Yes" ) );
+    yes.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    dialog.add_action_widget( yes, ResponseType.ACCEPT );
+
+    dialog.set_transient_for( win );
+    dialog.set_default_response( ResponseType.CANCEL );
+    dialog.set_title( "" );
+
+    dialog.response.connect((id) => {
+      if( id == ResponseType.ACCEPT ) {
+        confirm_func();
+      }
+      dialog.close();
+    });
+
+    dialog.present();
+
   }
 
 }

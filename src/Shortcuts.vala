@@ -292,6 +292,17 @@ public class Shortcuts {
   }
 
   //-------------------------------------------------------------
+  // Clears all of the shortcuts
+  public void clear_all_shortcuts() {
+    for( int i=0; i<KeyCommand.NUM; i++ ) {
+      var command = (KeyCommand)i;
+      if( remove_shortcut( command ) ) {
+        shortcut_changed( command, null );
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
   // Sets the shortcut for the given command.  Called by the
   // shortcut preferences class.
   public void set_shortcut( Shortcut shortcut ) {
@@ -401,6 +412,7 @@ public class Shortcuts {
 
     if( doc == null ) {
       add_default_shortcuts();
+      save();
       return;
     }
 
@@ -436,17 +448,27 @@ public class Shortcuts {
   // Adds all of the default shortcuts to the shortcuts array.
   // This will be called internally if the shortcuts.xml file
   // does not exist.
-  private void add_default_shortcuts() {
+  public void add_default_shortcuts() {
     for( int i=0; i<_defaults.length; i++ ) {
       _shortcuts.append_val( _defaults.index( i ) );
     }
-    save();
+  }
+
+  //-------------------------------------------------------------
+  // Restores all of the default shortcuts
+  public void restore_default_shortcuts() {
+    clear_all_shortcuts();
+    add_builtin_shortcuts();
+    add_default_shortcuts();
+    for( int i=0; i<_shortcuts.length; i++ ) {
+      shortcut_changed( _shortcuts.index( i ).command, _shortcuts.index( i ) );
+    }
   }
 
   //-------------------------------------------------------------
   // Creates the built-in shortcuts (these are not stored in the
   // shortcuts.xml file and therefore cannot be changed by the user)
-  private void add_builtin_shortcuts() {
+  public void add_builtin_shortcuts() {
 
     add_shortcut( Key.BackSpace,    false, false, false, KeyCommand.EDIT_BACKSPACE );
     add_shortcut( Key.BackSpace,    false, false, false, KeyCommand.NODE_REMOVE );
