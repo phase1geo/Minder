@@ -1892,7 +1892,9 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Displays the shortcuts cheatsheet
   private void action_shortcuts() {
 
-    var builder = new Builder.from_resource( "/com/github/phase1geo/minder/shortcuts.ui" );
+    var ui_str  = shortcuts.get_ui_string();
+    var builder = new Builder.from_string( ui_str, ui_str.length );
+    // var builder = new Builder.from_resource( "/com/github/phase1geo/minder/shortcuts.ui" );
     var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
     var map     = get_current_map();
 
@@ -1901,11 +1903,15 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     /* Display the most relevant information based on the current state */
     if( map.is_node_editable() || map.is_connection_editable() ) {
-      win.section_name = "text-editing";
+      win.section_name = "editing";
     } else if( map.is_node_selected() ) {
       win.section_name = "node";
     } else if( map.is_connection_selected() ) {
       win.section_name = "connection";
+    } else if( map.is_callout_selected() ) {
+      win.section_name = "callout";
+    } else if( map.is_group_selected() ) {
+      win.section_name = "group";
     } else {
       win.section_name = "general";
     }

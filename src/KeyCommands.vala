@@ -212,6 +212,7 @@ public enum KeyCommand {
   public string to_string() {
     switch( this ) {
       case DO_NOTHING                :  return( "none" );
+      case GENERAL_START             :  return( "general" );
       case CONTROL_PRESSED           :  return( "control" );
       case SHOW_CONTEXTUAL_MENU      :  return( "show-contextual_menu" );
       case ZOOM_IN                   :  return( "zoom-in" );
@@ -224,6 +225,7 @@ public enum KeyCommand {
       case SHOW_SELECTED             :  return( "show-selected" );
       case REMOVE_STICKER_SELECTED   :  return( "remove-sticker-selected" );
       case ESCAPE                    :  return( "escape" );
+      case NODE_START                :  return( "node" );
       case NODE_ALIGN_TOP            :  return( "node-align-top" );
       case NODE_ALIGN_VCENTER        :  return( "node-align-vcenter" );
       case NODE_ALIGN_BOTTOM         :  return( "node-align-bottom" );
@@ -276,19 +278,24 @@ public enum KeyCommand {
       case NODE_SWAP_RIGHT           :  return( "node-swap-right" );
       case NODE_SWAP_UP              :  return( "node-swap-up" );
       case NODE_SWAP_DOWN            :  return( "node-swap-down" );
+      case CONNECTION_START          :  return( "connection" );
       case CONNECTION_SELECT_FROM    :  return( "connection-select-from" );
       case CONNECTION_SELECT_TO      :  return( "connection-select-to" );
       case CONNECTION_SELECT_NEXT    :  return( "connection-select-next" );
       case CONNECTION_SELECT_PREV    :  return( "connection-select-prev" );
       case CONNECTION_REMOVE         :  return( "connection-remove" );
+      case CALLOUT_START             :  return( "callout" );
       case CALLOUT_SELECT_NODE       :  return( "callout-select-node" );
       case CALLOUT_REMOVE            :  return( "callout-remove" );
+      case STICKER_START             :  return( "sticker" );
       case STICKER_REMOVE            :  return( "sticker-remove" );
+      case GROUP_START               :  return( "group" );
       case GROUP_CHANGE_COLOR        :  return( "group-change-color" );
       case GROUP_MERGE               :  return( "group-merge" );
       case GROUP_REMOVE              :  return( "group-remove" );
       case GROUP_SELECT_MAIN         :  return( "group-select-main" );
       case GROUP_SELECT_ALL          :  return( "group-select-all" );
+      case EDIT_START                :  return( "editing" );
       case EDIT_ESCAPE               :  return( "edit-escape" );
       case EDIT_INSERT_NEWLINE       :  return( "edit-insert-newline" );
       case EDIT_INSERT_TAB           :  return( "edit-insert-tab" );
@@ -546,22 +553,22 @@ public enum KeyCommand {
       case NODE_ALIGN_LEFT           :  return( _( "Align selected node left edges" ) );
       case NODE_ALIGN_HCENTER        :  return( _( "Align selected node horizontal centers" ) );
       case NODE_ALIGN_RIGHT          :  return( _( "Align selected node right edges" ) );
-      case CALLOUT_START             :  return( _( "Callout Commands" ) );
+      case CALLOUT_START             :  return( _( "Callout" ) );
       case CALLOUT_SELECT_NODE       :  return( _( "Select callout node" ) );
-      case CONNECTION_START          :  return( _( "Connection Commands" ) );
+      case CONNECTION_START          :  return( _( "Connection" ) );
       case CONNECTION_SELECT_START   :  return( _( "Selection Commands" ) );
       case CONNECTION_SELECT_FROM    :  return( _( "Select connection source node" ) );
       case CONNECTION_SELECT_TO      :  return( _( "Select connection target node" ) );
       case CONNECTION_SELECT_NEXT    :  return( _( "Select next connection in map" ) );
       case CONNECTION_SELECT_PREV    :  return( _( "Select previous connection in map" ) );
-      case GROUP_START               :  return( _( "Group Commands" ) );
+      case GROUP_START               :  return( _( "Group" ) );
       case GROUP_CHANGE_START        :  return( _( "Change Commands" ) );
       case GROUP_CHANGE_COLOR        :  return( _( "Change the color of the current group" ) );
       case GROUP_MERGE               :  return( _( "Merge current groups into single group" ) );
       case GROUP_SELECT_START        :  return( _( "Selection Commands" ) );
       case GROUP_SELECT_MAIN         :  return( _( "Select main node(s) of current group(s)" ) );
       case GROUP_SELECT_ALL          :  return( _( "Selects all nodes within current group(s)" ) );
-      case EDIT_START                :  return( _( "Text Editing Commands" ) );
+      case EDIT_START                :  return( _( "Text Editing" ) );
       case EDIT_TEXT_START           :  return( _( "Insertion/Deletion Commands" ) );
       case EDIT_INSERT_NEWLINE       :  return( _( "Insert newline character" ) );
       case EDIT_INSERT_TAB           :  return( _( "Insert TAB character" ) );

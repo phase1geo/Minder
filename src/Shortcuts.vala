@@ -607,4 +607,162 @@ public class Shortcuts {
 
   }
 
+  private Xml.Node* make_property( string name, string value, string? translatable = null ) {
+    Xml.Node* node = new Xml.Node( null, "property" );
+    node->set_prop( "name", name );
+    if( translatable != null ) {
+      node->set_prop( "translatable", translatable );
+    }
+    node->set_content( value );
+    return( node );
+  }
+
+  private Xml.Node* make_object( string klass, string? id = null ) {
+    Xml.Node* node = new Xml.Node( null, "object" );
+    node->set_prop( "class", klass );
+    if( id != null ) {
+      node->set_prop( "id", id );
+    }
+    return( node );
+  }
+
+  private Xml.Node* make_child() {
+    Xml.Node* node = new Xml.Node( null, "child" );
+    return( node );
+  }
+
+  //-------------------------------------------------------------
+  // Creates a section for the shortcuts UI output.
+  private Xml.Node* make_base_section( string name, string title, out Xml.Node* obj ) {
+    Xml.Node* node = make_child();
+    obj = make_object( "GtkShortcutsSection" );
+    obj->add_child( make_property( "section-name", name ) );
+    obj->add_child( make_property( "title", title, "yes" ) );
+    obj->add_child( make_property( "visible", "1" ) );
+    node->add_child( obj );
+    return( node );
+  }
+
+  private Xml.Node* make_section( KeyCommand command, out Xml.Node* obj ) {
+    return( make_base_section( command.to_string(), command.shortcut_label(), out obj ) );
+  }
+
+  //-------------------------------------------------------------
+  // Creates a group for the shortcuts UI output.
+  private Xml.Node* make_base_group( string title, out Xml.Node* obj ) {
+    Xml.Node* node = make_child();
+    obj = make_object( "GtkShortcutsGroup" );
+    obj->add_child( make_property( "title", title, "yes" ) );
+    obj->add_child( make_property( "visible", "1" ) );
+    node->add_child( obj );
+    return( node );
+  }
+
+  private Xml.Node* make_group( KeyCommand command, out Xml.Node* obj ) {
+    return( make_base_group( command.shortcut_label(), out obj ) );
+  }
+
+  //-------------------------------------------------------------
+  // Creates a shortcut for the shortcuts UI output.
+  private Xml.Node* make_shortcut( Shortcut shortcut ) {
+    Xml.Node* node = make_child();
+    Xml.Node* obj  = make_object( "GtkShortcutsShortcut" );
+    obj->add_child( make_property( "title", shortcut.command.shortcut_label(), "yes" ) );
+    obj->add_child( make_property( "accelerator", shortcut.get_accelerator() ) );
+    obj->add_child( make_property( "visible", "1" ) );
+    node->add_child( obj );
+    return( node );
+  }
+
+  //-------------------------------------------------------------
+  // Creates a shortcut for a mouse event.
+  private Xml.Node* make_mouse_shortcut( string title, string subtitle ) {
+    Xml.Node* node = make_child();
+    Xml.Node* obj  = make_object( "GtkShortcutsShortcut" );
+    obj->add_child( make_property( "title", title, "yes" ) );
+    obj->add_child( make_property( "subtitle", subtitle, "yes" ) );
+    obj->add_child( make_property( "visible", "1" ) );
+    node->add_child( obj );
+    return( node );
+  }
+
+  //-------------------------------------------------------------
+  // Generates the shortcuts UI string.
+  public string get_ui_string() {
+
+    Xml.Doc*  doc   = new Xml.Doc( "1.0" );
+    Xml.Node* root  = new Xml.Node( null, "interface" );
+
+    doc->set_root_element( root );
+
+    root->set_prop( "domain", "com.github.phase1geo.minder" );
+
+    var window = make_object( "GtkShortcutsWindow", "shortcuts" );
+    root->add_child( window );
+
+    window->add_child( make_property( "modal", "0" ) );
+    window->add_child( make_property( "resizable", "0" ) );
+    window->add_child( make_property( "title", "Minder Shortcuts", "yes" ) );
+    window->add_child( make_property( "section-name", "global" ) );
+    window->add_child( make_property( "view-name", "file" ) );
+
+    Xml.Node* section = null;
+    Xml.Node* group   = null;
+
+    for( int i=0; i<KeyCommand.NUM; i++ ) {
+      var command = (KeyCommand)i;
+      if( command.viewable() ) {
+        if( command.is_section_start() ) {
+          window->add_child( make_section( command, out section ) );
+        } else if( command.is_group_start() ) {
+          section->add_child( make_group( command, out group ) );
+        } else if( !command.is_section_start() && !command.is_section_end() ) {
+          var shortcut = get_shortcut( command );
+          if( shortcut != null ) {
+            group->add_child( make_shortcut( shortcut ) );
+          }
+        }
+      }
+    }
+
+    // We will need to manually add the mouse events
+    window->add_child( make_base_section( "mouse", _( "Mouse Events" ), out section ) );
+
+    section->add_child( make_base_group( _( "General" ), out group ) );
+    group->add_child( make_mouse_shortcut( _( "Show Contextual Menu" ), _( "[Right-click when item is selected]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Edit Image" ), _( "[Double left-click image]" ) ) );
+
+    section->add_child( make_base_group( _( "Canvas Movement" ), out group ) );
+    group->add_child( make_mouse_shortcut( _( "Pan Canvas" ), _( "[Middle-click + Drag / Alt + Motion]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Scroll Vertically" ), _( "[Scrollwheel up/down]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Scroll Horizontally" ), _( "[Scrollwhile left/right]" ) ) );
+
+    section->add_child( make_base_group( _( "Item Selection" ), out group ) );
+    group->add_child( make_mouse_shortcut( _( "Select Single Item" ), _( "[Left-click on item]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Select Child Nodes" ), _( "[Control + Left-click on parent node]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Select Node Tree/Subtree" ), _( "[Control + Double left-click on parent node" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Select All Nodes at Same Depth Level" ), _( "[Control + Triple left-click on node]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Block Selection" ), _( "[Left-click + Drag]" ) ) );
+
+    section->add_child( make_base_group( _( "Item Selection Toggle" ), out group ) );
+    group->add_child( make_mouse_shortcut( _( "Toggle Selection of Item" ), _( "[Shift + Left-click on item]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Toggle Selection of Child Nodes" ), _( "[Shift + Control + Left-click on item]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Toggle Selection of Node Tree/Subtree" ), _( "[Shift + Control + Double left-click on parent node]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Toggle Selection of All Nodes at Same Depth Level" ), _( "Shift + Control + Triple-click on node]" ) ) );
+
+    section->add_child( make_base_group( _( "Text Selection" ), out group ) );
+    group->add_child( make_mouse_shortcut( _( "Set Cursor Insert Point" ), _( "[Left-click in text]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Select Current Word" ), _( "[Double left-click on word]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Select all text" ), _( "[Triple left-click text]" ) ) );
+
+    var dump_str = "";
+    doc->dump_memory_format( out dump_str );
+    delete doc;
+
+    // stdout.printf( "dump_str:\n%s\n", dump_str );
+
+    return( dump_str );
+
+  }
+
 }
