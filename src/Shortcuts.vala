@@ -706,20 +706,30 @@ public class Shortcuts {
     window->add_child( make_property( "section-name", "global" ) );
     window->add_child( make_property( "view-name", "file" ) );
 
-    Xml.Node* section = null;
-    Xml.Node* group   = null;
+    Xml.Node* section  = null;
+    Xml.Node* group    = null;
+    var       commands = 0;
 
     for( int i=0; i<KeyCommand.NUM; i++ ) {
       var command = (KeyCommand)i;
       if( command.viewable() ) {
         if( command.is_section_start() ) {
+          if( (group != null) && (commands == 0) ) {
+            group->add_child( make_mouse_shortcut( _( "No Commands Listed" ), "" ) );
+          }
           window->add_child( make_section( command, out section ) );
+          group = null;
         } else if( command.is_group_start() ) {
+          if( (group != null) && (commands == 0) ) {
+            group->add_child( make_mouse_shortcut( _( "No Commands Listed" ), "" ) );
+          }
+          commands = 0;
           section->add_child( make_group( command, out group ) );
         } else if( !command.is_section_start() && !command.is_section_end() ) {
           var shortcut = get_shortcut( command );
           if( shortcut != null ) {
             group->add_child( make_shortcut( shortcut ) );
+            commands++;
           }
         }
       }
