@@ -147,7 +147,7 @@ public class BaseMenu {
   // Handles any changes to the shortcuts manager and updates the
   // affected accelerator.
   private void handle_shortcut_change( KeyCommand command, Shortcut? shortcut ) {
-    var action =_group.lookup_action( command.to_string() );
+    var action = _group.lookup_action( command.to_string() );
     if( action != null ) {
       if( shortcut == null ) {
         shortcut_removed( command );

@@ -49,6 +49,18 @@ public enum SearchOptions {
   NUM
 }
 
+public class ShortcutTooltip {
+  private Widget _widget;
+  private string _label;
+  public ShortcutTooltip( Widget w, string l ) {
+    _widget = w;
+    _label  = l;
+  }
+  public void set_tooltip( Shortcut? shortcut ) {
+    _widget.tooltip_markup = (shortcut == null) ? _label : Utils.tooltip_with_accel( _label, shortcut.get_accelerator() );
+  }
+}
+
 public class MainWindow : Gtk.ApplicationWindow {
 
   private GLib.Settings     _settings;
@@ -97,37 +109,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   private UnicodeInsert     _unicoder;
   private Braindump         _brain;
   private Shortcuts         _shortcuts;
-
-  private const GLib.ActionEntry[] action_entries = {
-    { "action_new",            action_new },
-    { "action_open",           action_open },
-    { "action_save",           action_save },
-    { "action_save_as",        action_save_as },
-    { "action_open_directory", do_open_directory },
-    { "action_quit",           action_quit },
-    { "action_undo",           action_undo },
-    { "action_redo",           action_redo },
-    { "action_zoom_in",        action_zoom_in },
-    { "action_zoom_out",       action_zoom_out },
-    { "action_zoom_fit",       action_zoom_fit },
-    { "action_zoom_selected",  action_zoom_selected },
-    { "action_zoom_actual",    action_zoom_actual },
-  //  { "action_export",        action_export },
-    { "action_print",          action_print },
-    { "action_prefs",          action_prefs },
-    { "action_shortcuts",      action_shortcuts },
-    { "action_show_current",   action_show_current },
-    { "action_show_style",     action_show_style },
-    { "action_show_stickers",  action_show_stickers },
-    { "action_show_map",       action_show_map },
-    { "action_next_tab",       action_next_tab },
-    { "action_prev_tab",       action_prev_tab },
-    { "action_about",          action_about },
-    { "action_braindump",      action_braindump },
-    { "action_focus",          action_focus },
-    { "action_find",           action_find },
-    { "action_close_current_tab", action_close_current_tab }
-  };
+  private SimpleActionGroup _actions;
+  private Gee.HashMap<KeyCommand,ShortcutTooltip> _shortcut_widgets;
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
 
@@ -192,13 +175,15 @@ public class MainWindow : Gtk.ApplicationWindow {
     // Set the default window size to the last session size
     set_default_size( window_w, window_h );
 
-    /* Set the stage for menu actions */
-    var actions = new SimpleActionGroup ();
-    actions.add_action_entries( action_entries, this );
-    insert_action_group( "win", actions );
+    // Load the user shortcuts
+    _shortcuts = new Shortcuts();
+    _shortcuts.shortcut_changed.connect( shortcut_changed );
 
-    /* Add keyboard shortcuts */
-    add_keyboard_shortcuts( app );
+    _shortcut_widgets = new Gee.HashMap<KeyCommand, ShortcutTooltip>();
+
+    // Set the stage for menu actions
+    _actions = new SimpleActionGroup ();
+    insert_action_group( "win", _actions );
 
     /* Create the notebook */
     _nb = new Notebook() {
@@ -211,6 +196,11 @@ public class MainWindow : Gtk.ApplicationWindow {
     _nb.switch_page.connect( tab_switched );
     _nb.page_reordered.connect( tab_reordered );
     _nb.page_removed.connect( tab_removed );
+
+    // Set shortcuts until we have a tab menu
+    set_action_for_command( KeyCommand.TAB_GOTO_NEXT );
+    set_action_for_command( KeyCommand.TAB_GOTO_PREV );
+    set_action_for_command( KeyCommand.TAB_CLOSE_CURRENT );
 
     // Create the braindump pane
     _brain = new Braindump( this ) {
@@ -236,36 +226,33 @@ public class MainWindow : Gtk.ApplicationWindow {
     content.append( _brain );
 
     /* Create title toolbar */
-    var new_btn = new Button.from_icon_name( get_icon_name( "document-new" ) ) {
-      tooltip_markup = Utils.tooltip_with_accel( _( "New File" ), "<Control>n" ),
-    };
-    new_btn.clicked.connect( do_new_file );
+    var new_btn = new Button.from_icon_name( get_icon_name( "document-new" ) );
+    register_widget_for_shortcut( new_btn, KeyCommand.FILE_NEW, _( "New File" ) );
+    new_btn.clicked.connect(() => { execute_command( KeyCommand.FILE_NEW ); });
     _header.pack_start( new_btn );
 
-    var open_btn = new Button.from_icon_name( get_icon_name( "document-open" ) ) {
-      tooltip_markup = Utils.tooltip_with_accel( _( "Open File" ), "<Control>o" )
-    };
-    open_btn.clicked.connect( do_open_file );
+    var open_btn = new Button.from_icon_name( get_icon_name( "document-open" ) );
+    register_widget_for_shortcut( open_btn, KeyCommand.FILE_OPEN, _( "Open File" ) );
+    open_btn.clicked.connect(() => { execute_command( KeyCommand.FILE_OPEN ); });
     _header.pack_start( open_btn );
 
-    var save_btn = new Button.from_icon_name( get_icon_name( "document-save-as" ) ) {
-      tooltip_markup = Utils.tooltip_with_accel( _( "Save File As" ), "<Control><Shift>s" )
-    };
-    save_btn.clicked.connect( do_save_as_file );
+    var save_btn = new Button.from_icon_name( get_icon_name( "document-save-as" ) );
+    register_widget_for_shortcut( save_btn, KeyCommand.FILE_SAVE_AS, _( "Save File As" ) );
+    save_btn.clicked.connect(() => { execute_command( KeyCommand.FILE_SAVE_AS ); });
     _header.pack_start( save_btn );
 
     _undo_btn = new Button.from_icon_name( get_icon_name( "edit-undo" ) ) {
-      tooltip_markup = Utils.tooltip_with_accel( _( "Undo" ), "<Control>z" ),
-      sensitive      = false
+      sensitive = false
     };
-    _undo_btn.clicked.connect( do_undo );
+    register_widget_for_shortcut( _undo_btn, KeyCommand.UNDO_ACTION, _( "Undo" ) );
+    _undo_btn.clicked.connect(() => { execute_command( KeyCommand.UNDO_ACTION ); });
     _header.pack_start( _undo_btn );
 
     _redo_btn = new Button.from_icon_name( get_icon_name( "edit-redo" ) ) {
-      tooltip_markup = Utils.tooltip_with_accel( _( "Redo" ), "<Control><Shift>z" ),
-      sensitive      = false
+      sensitive = false
     };
-    _redo_btn.clicked.connect( do_redo );
+    register_widget_for_shortcut( _redo_btn, KeyCommand.REDO_ACTION, _( "Redo" ) );
+    _redo_btn.clicked.connect(() => { execute_command( KeyCommand.REDO_ACTION ); });
     _header.pack_start( _redo_btn );
 
     /* Create unicode inserter */
@@ -342,11 +329,11 @@ public class MainWindow : Gtk.ApplicationWindow {
       return( false );
     });
 
+    // Set shortcut to quit
+    set_action_for_command( KeyCommand.QUIT );
+
     // Set the window size based on gsettings
     set_window_size();
-
-    // Load the user shortcuts
-    _shortcuts = new Shortcuts();
 
   }
 
@@ -690,40 +677,6 @@ public class MainWindow : Gtk.ApplicationWindow {
     lbl.label = label;
   }
 
-  /* Adds keyboard shortcuts for the menu actions */
-  private void add_keyboard_shortcuts( Gtk.Application app ) {
-
-    app.set_accels_for_action( "win.action_new",               { "<Control>n" } );
-    app.set_accels_for_action( "win.action_open",              { "<Control>o" } );
-    app.set_accels_for_action( "win.action_save",              { "<Control>s" } );
-    app.set_accels_for_action( "win.action_save_as",           { "<Control><Shift>s" } );
-    app.set_accels_for_action( "win.action_open_directory",    { "<Control><Shift>o" } );
-    app.set_accels_for_action( "win.action_quit",              { "<Control>q" } );
-    app.set_accels_for_action( "win.action_undo",              { "<Control>z" } );
-    app.set_accels_for_action( "win.action_redo",              { "<Control><Shift>z" } );
-    app.set_accels_for_action( "win.action_zoom_actual",       { "<Control>0" } );
-    app.set_accels_for_action( "win.action_zoom_fit",          { "<Control>1" } );
-    app.set_accels_for_action( "win.action_zoom_selected",     { "<Control>2" } );
-    app.set_accels_for_action( "win.action_zoom_in",           { "<Control>plus" } );
-    app.set_accels_for_action( "win.action_zoom_in",           { "<Control>equal" } );
-    app.set_accels_for_action( "win.action_zoom_out",          { "<Control>minus" } );
-    app.set_accels_for_action( "win.action_export",            { "<Control>e" } );
-    app.set_accels_for_action( "win.action_print",             { "<Control>p" } );
-    app.set_accels_for_action( "win.action_prefs",             { "<Control>comma" } );
-    app.set_accels_for_action( "win.action_shortcuts",         { "<Control>question" } );
-    app.set_accels_for_action( "win.action_show_current",      { "<Control>6" } );
-    app.set_accels_for_action( "win.action_show_style",        { "<Control>7" } );
-    app.set_accels_for_action( "win.action_show_stickers",     { "<Control>8" } );
-    app.set_accels_for_action( "win.action_show_map",          { "<Control>9" } );
-    app.set_accels_for_action( "win.action_next_tab",          { "<Control>Tab" } );
-    app.set_accels_for_action( "win.action_prev_tab",          { "<Control><Shift>Tab" } );
-    app.set_accels_for_action( "win.action_braindump",         { "<Control><Shift>b" } );
-    app.set_accels_for_action( "win.action_focus",             { "<Control><Shift>f" } );
-    app.set_accels_for_action( "win.action_find",              { "<Control>f" } );
-    app.set_accels_for_action( "win.action_close_current_tab", { "<Control>w" } );
-
-  }
-
   /* Adds the zoom functionality */
   private void add_zoom_button() {
 
@@ -734,9 +687,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     scale_menu.append_item( zoom_item );
 
     var fit_menu = new GLib.Menu();
-    fit_menu.append( _( "Zoom to Fit" ),                    "win.action_zoom_fit" );
-    fit_menu.append( _( "Zoom to Fit Selected Node Tree" ), "win.action_zoom_selected" );
-    fit_menu.append( _( "Zoom to Actual Size" ),            "win.action_zoom_actual" );
+    append_menu_item( fit_menu, KeyCommand.ZOOM_FIT,      _( "Zoom to Fit" ) );
+    append_menu_item( fit_menu, KeyCommand.ZOOM_SELECTED, _( "Zoom to Fit Selected Node Tree" ) );
+    append_menu_item( fit_menu, KeyCommand.ZOOM_ACTUAL,   _( "Zoom to Actual Size" ) );
 
     var menu = new GLib.Menu();
     menu.append_section( null, scale_menu );
@@ -757,17 +710,17 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     _zoom_in = new Button.from_icon_name( "zoom-in-symbolic" ) {
       has_frame = false,
-      can_focus = false,
-      tooltip_markup = Utils.tooltip_with_accel( _( "Zoom In" ), "<Control>plus" )
+      can_focus = false
     };
-    _zoom_in.clicked.connect( action_zoom_in );
+    register_widget_for_shortcut( _zoom_in, KeyCommand.ZOOM_IN, _( "Zoom In" ) );
+    _zoom_in.clicked.connect(() => { execute_command( KeyCommand.ZOOM_IN ); });
 
     _zoom_out = new Button.from_icon_name( "zoom-out-symbolic" ) {
       has_frame = false,
-      can_focus = false,
-      tooltip_markup = Utils.tooltip_with_accel( _( "Zoom Out" ), "<Control>minus" )
+      can_focus = false
     };
-    _zoom_out.clicked.connect( action_zoom_out );
+    register_widget_for_shortcut( _zoom_out, KeyCommand.ZOOM_OUT, _( "Zoom Out" ) );
+    _zoom_out.clicked.connect(() => { execute_command( KeyCommand.ZOOM_OUT ); });
 
     var zoom_box = new Box( Orientation.HORIZONTAL, 5 );
     zoom_box.append( _zoom_out );
@@ -880,11 +833,10 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     /* Create the menu button */
     _search_btn = new MenuButton() {
-      icon_name      = (on_elementary ? "minder-search" : "edit-find-symbolic"),
-      tooltip_markup = Utils.tooltip_with_accel( _( "Search" ), "<Control>f" ),
-      popover        = _search
+      icon_name = (on_elementary ? "minder-search" : "edit-find-symbolic"),
+      popover   = _search
     };
-    // TODO - _search_btn.clicked.connect( on_search_change );
+    register_widget_for_shortcut( _search_btn, KeyCommand.SHOW_FIND, _( "Search" ) );
     _header.pack_end( _search_btn );
 
   }
@@ -1023,7 +975,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     export_menu.append_item( export_item );
 
     var print_menu = new GLib.Menu();
-    print_menu.append( _( "Print…" ), "win.action_print" );
+    append_menu_item( print_menu, KeyCommand.FILE_PRINT, _( "Print…" ) );
 
     var menu = new GLib.Menu();
     menu.append_section( null, export_menu );
@@ -1040,7 +992,6 @@ public class MainWindow : Gtk.ApplicationWindow {
       margin_end   = 5
     };
     _exporter.export_done.connect(() => {
-      stdout.printf( "export_done\n" );
       popover.popdown();
     });
 
@@ -1061,9 +1012,9 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void add_braindump_button() {
 
     _brain_btn = new ToggleButton() {
-      icon_name      = "minder-braindump-light-symbolic",
-      tooltip_markup = Utils.tooltip_with_accel( _( "Brain Dump" ), "<Control><Shift>b" ),
+      icon_name = "minder-braindump-light-symbolic",
     };
+    register_widget_for_shortcut( _brain_btn, KeyCommand.TOGGLE_BRAINDUMP, _( "Brain Dump" ) );
 
     _brain_btn.clicked.connect((e) => {
       set_braindump_ui( !_brain.visible );
@@ -1099,9 +1050,9 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void add_focus_button() {
 
     _focus_btn = new ToggleButton() {
-      icon_name      = (on_elementary ? "minder-focus" : "media-optical-symbolic"),
-      tooltip_markup = Utils.tooltip_with_accel( _( "Focus Mode" ), "<Control><Shift>f" )
+      icon_name = (on_elementary ? "minder-focus" : "media-optical-symbolic")
     };
+    register_widget_for_shortcut( _focus_btn, KeyCommand.TOGGLE_FOCUS_MODE, _( "Focus Mode" ) );
 
     _focus_btn.clicked.connect((e) => {
       var map = get_current_map();
@@ -1121,23 +1072,15 @@ public class MainWindow : Gtk.ApplicationWindow {
     GLib.Menu menu;
 
     var misc_menu = new GLib.Menu();
-    misc_menu.append( _( "Preferences" ),          "win.action_prefs" );
-    misc_menu.append( _( "Shortcuts Cheatsheet" ), "win.action_shortcuts" );
+    append_menu_item( misc_menu, KeyCommand.SHOW_PREFERENCES, _( "Preferences" ) );
+    append_menu_item( misc_menu, KeyCommand.SHOW_SHORTCUTS,   _( "Shortcuts Cheatsheet" ) );
 
-    if( on_elementary ) {
+    var about_menu = new GLib.Menu();
+    append_menu_item( about_menu, KeyCommand.SHOW_ABOUT, _( "About Minder" ) );
 
-      menu = misc_menu;
-
-    } else {
-
-      var about_menu = new GLib.Menu();
-      about_menu.append( _( "About Minder" ), "win.action_about" );
-
-      menu = new GLib.Menu();
-      menu.append_section( null, misc_menu );
-      menu.append_section( null, about_menu );
-
-    }
+    menu = new GLib.Menu();
+    menu.append_section( null, misc_menu );
+    menu.append_section( null, about_menu );
 
     /* Create the menu button */
     var misc_btn = new MenuButton() {
@@ -1190,7 +1133,13 @@ public class MainWindow : Gtk.ApplicationWindow {
       }
     });
 
-    /* Handle the enable-ui-animations value */
+    // Set shortcuts
+    set_action_for_command( KeyCommand.SHOW_CURRENT_SIDEBAR );
+    set_action_for_command( KeyCommand.SHOW_STYLE_SIDEBAR );
+    set_action_for_command( KeyCommand.SHOW_STICKER_SIDEBAR );
+    set_action_for_command( KeyCommand.SHOW_MAP_SIDEBAR );
+
+    // Handle the enable-ui-animations value
     setting_changed_ui_animations();
 
     var sb = new StackSwitcher() {
@@ -1211,7 +1160,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     _themer = new ThemeEditor( this );
 
-    /* Create the inspector sidebar */
+    // Create the inspector sidebar
     _inspector_nb = new Notebook() {
       show_tabs = false
     };
@@ -1224,7 +1173,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Handles an escape key press in the inspector widget to hide
   // the sidebar.
   private bool stack_keypress( uint keyval, uint keycode, ModifierType state ) {
-    if( keyval == 65307 ) {  /* Escape key pressed */
+    if( keyval == Key.Escape ) {
       hide_properties();
       return( true );
     }
@@ -1483,9 +1432,9 @@ public class MainWindow : Gtk.ApplicationWindow {
   // state of the undo and redo buffer buttons.
   public void do_buffer_changed( UndoBuffer buf ) {
     _undo_btn.set_sensitive( buf.undoable() );
-    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buf.undo_tooltip(), "<Control>z" ) );
+    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buf.undo_tooltip(), get_accelerator( KeyCommand.UNDO_ACTION ) ) );
     _redo_btn.set_sensitive( buf.redoable() );
-    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buf.redo_tooltip(), "<Control><Shift>z" ) );
+    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buf.redo_tooltip(), get_accelerator( KeyCommand.REDO_ACTION ) ) );
   }
 
   //-------------------------------------------------------------
@@ -1601,7 +1550,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
   }
 
-  /* Displays the node properties panel for the current node */
+  //-------------------------------------------------------------
+  // Displays the node properties panel for the current node
   private void show_properties( string? tab, PropertyGrab grab_type ) {
     if( !_inspector_nb.get_mapped() || ((tab != null) && (_stack.visible_child_name != tab)) ) {
       _prop_btn.icon_name    = _prop_hide;
@@ -1965,19 +1915,19 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Toggles the braindump toggle button
-  private void action_braindump() {
+  public void toggle_braindump() {
     _brain_btn.clicked();
   }
 
   //-------------------------------------------------------------
   // Toggles the focus toggle button
-  private void action_focus() {
+  public void toggle_focus_mode() {
     _focus_btn.clicked();
   }
 
   //-------------------------------------------------------------
   // Toggles the find toggle button
-  private void action_find() {
+  public void show_find() {
     _search_btn.activate();
   }
 
@@ -2115,6 +2065,84 @@ public class MainWindow : Gtk.ApplicationWindow {
       notification.set_priority( priority );
       app.send_notification( "com.github.phase1geo.minder", notification );
     }
+  }
+
+  //-------------------------------------------------------------
+  // SHORTCUT HANDLING
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Adds and action for the given command.
+  private void set_action_for_command( KeyCommand command ) {
+
+    // Create action to execute
+    var action = new SimpleAction( command.to_string(), null );
+    action.activate.connect((v) => {
+      var func = command.get_func();
+      func( get_current_map() );
+    });
+    _actions.add_action( action );
+
+    var shortcut = shortcuts.get_shortcut( command );
+    if( shortcut != null ) {
+      application.set_accels_for_action( "win.%s".printf( command.to_string() ), { shortcut.get_accelerator() } );
+    }
+
+    if( _shortcut_widgets.has_key( command ) ) {
+      _shortcut_widgets.get( command ).set_tooltip( shortcut );
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Appends a command with the given command to the specified menu.
+  private void append_menu_item( GLib.Menu menu, KeyCommand command, string label ) {
+    menu.append( label, "win.%s".printf( command.to_string() ) );
+    set_action_for_command( command );
+  }
+
+  //-------------------------------------------------------------
+  // Updates registers for shortcuts
+  private void register_widget_for_shortcut( Gtk.Widget w, KeyCommand command, string label ) {
+    var tooltip = new ShortcutTooltip( w, label );
+    _shortcut_widgets.set( command, tooltip );
+    set_action_for_command( command );
+  }
+
+  //-------------------------------------------------------------
+  // Handles any changes to shortcuts.  If a shortcut is used by
+  // the main window, update the shortcut and associated tooltips.
+  private void shortcut_changed( KeyCommand command, Shortcut? shortcut ) {
+    var action = _actions.lookup_action( command.to_string() );
+    if( action != null ) {
+      var detail_name = "win.%s".printf( command.to_string() );
+      if( shortcut == null ) {
+        application.set_accels_for_action( detail_name, {} );
+      } else {
+        application.set_accels_for_action( detail_name, { shortcut.get_accelerator() } );
+      }
+      if( _shortcut_widgets.has_key( command ) ) {
+        _shortcut_widgets.get( command ).set_tooltip( shortcut );
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the shortcut accelerator associated with the given
+  // key command.
+  private string get_accelerator( KeyCommand command ) {
+    var shortcut = shortcuts.get_shortcut( command );
+    if( shortcut != null ) {
+      return( shortcut.get_accelerator() );
+    }
+    return( "" );
+  }
+
+  //-------------------------------------------------------------
+  // Execute command.
+  private void execute_command( KeyCommand command ) {
+    var func = command.get_func();
+    func( get_current_map() );
   }
 
 }

@@ -519,6 +519,34 @@ public class Shortcuts {
   // set of shortcuts and save them to the save file.
   private void create_default_shortcuts() {
 
+    add_default( Key.n,            true, false, false, KeyCommand.FILE_NEW );
+    add_default( Key.o,            true, false, false, KeyCommand.FILE_OPEN );
+    add_default( Key.o,            true, true,  false, KeyCommand.FILE_OPEN_DIR );
+    add_default( Key.s,            true, false, false, KeyCommand.FILE_SAVE );
+    add_default( Key.s,            true, true,  false, KeyCommand.FILE_SAVE_AS );
+    add_default( Key.q,            true, false, false, KeyCommand.QUIT );
+    add_default( Key.z,            true, false, false, KeyCommand.UNDO_ACTION );
+    add_default( Key.z,            true, true,  false, KeyCommand.REDO_ACTION );
+    add_default( Key.@0,           true, false, false, KeyCommand.ZOOM_ACTUAL );
+    add_default( Key.@1,           true, false, false, KeyCommand.ZOOM_FIT );
+    add_default( Key.@2,           true, false, false, KeyCommand.ZOOM_SELECTED );
+    add_default( Key.plus,         true, false, false, KeyCommand.ZOOM_IN );
+    add_default( Key.equal,        true, false, false, KeyCommand.ZOOM_IN );
+    add_default( Key.minus,        true, false, false, KeyCommand.ZOOM_OUT );
+    add_default( Key.p,            true, false, false, KeyCommand.FILE_PRINT );
+    add_default( Key.comma,        true, false, false, KeyCommand.SHOW_PREFERENCES );
+    add_default( Key.question,     true, false, false, KeyCommand.SHOW_SHORTCUTS );
+    add_default( Key.@6,           true, false, false, KeyCommand.SHOW_CURRENT_SIDEBAR );
+    add_default( Key.@7,           true, false, false, KeyCommand.SHOW_STYLE_SIDEBAR );
+    add_default( Key.@8,           true, false, false, KeyCommand.SHOW_STICKER_SIDEBAR );
+    add_default( Key.@9,           true, false, false, KeyCommand.SHOW_MAP_SIDEBAR );
+    add_default( Key.Tab,          true, false, false, KeyCommand.TAB_GOTO_NEXT );
+    add_default( Key.Tab,          true, true,  false, KeyCommand.TAB_GOTO_PREV );
+    add_default( Key.b,            true, true,  false, KeyCommand.TOGGLE_BRAINDUMP );
+    add_default( Key.f,            true, true,  false, KeyCommand.TOGGLE_FOCUS_MODE );
+    add_default( Key.f,            true, false, false, KeyCommand.SHOW_FIND );
+    add_default( Key.w,            true, false, false, KeyCommand.TAB_CLOSE_CURRENT );
+
     add_default( Key.c,            true, false, false, KeyCommand.EDIT_COPY );
     add_default( Key.x,            true, false, false, KeyCommand.EDIT_CUT );
     add_default( Key.v,            true, false, false, KeyCommand.EDIT_PASTE );
