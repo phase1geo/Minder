@@ -2103,7 +2103,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Updates registers for shortcuts
-  private void register_widget_for_shortcut( Gtk.Widget w, KeyCommand command, string label ) {
+  public void register_widget_for_shortcut( Gtk.Widget w, KeyCommand command, string label ) {
     var tooltip = new ShortcutTooltip( w, label );
     _shortcut_widgets.set( command, tooltip );
     set_action_for_command( command );
@@ -2140,7 +2140,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Execute command.
-  private void execute_command( KeyCommand command ) {
+  public void execute_command( KeyCommand command ) {
     var func = command.get_func();
     func( get_current_map() );
   }

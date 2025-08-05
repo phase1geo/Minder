@@ -34,7 +34,7 @@ public enum KeyCommand {
       FILE_SAVE_AS,
       FILE_PRINT,
     FILE_END,
-    TAB_START,
+    TAB_START,  // 10
       TAB_GOTO_NEXT,
       TAB_GOTO_PREV,
       TAB_CLOSE_CURRENT,
@@ -43,8 +43,8 @@ public enum KeyCommand {
       UNDO_ACTION,
       REDO_ACTION,
     UNDO_END,
-    ZOOM_START,  // 10
-      ZOOM_IN,
+    ZOOM_START,
+      ZOOM_IN,  // 20
       ZOOM_OUT,
       ZOOM_FIT,
       ZOOM_SELECTED,
@@ -54,8 +54,13 @@ public enum KeyCommand {
       SHOW_CURRENT_SIDEBAR,
       SHOW_STYLE_SIDEBAR,
       SHOW_STICKER_SIDEBAR,
-      SHOW_MAP_SIDEBAR,
+      SHOW_MAP_SIDEBAR,  // 30
     SIDEBAR_END,
+    MAP_START,
+      BALANCE_NODES,
+      FOLD_COMPLETED_TASKS,
+      UNFOLD_ALL_NODES,
+    MAP_END,
     MISCELLANEOUS_START,
       SHOW_PREFERENCES,
       SHOW_SHORTCUTS,
@@ -255,6 +260,9 @@ public enum KeyCommand {
       case SHOW_STYLE_SIDEBAR        :  return( "show-style-sidebar" );
       case SHOW_STICKER_SIDEBAR      :  return( "show-sticker-sidebar" );
       case SHOW_MAP_SIDEBAR          :  return( "show-map-sidebar" );
+      case BALANCE_NODES             :  return( "balance-nodes" );
+      case FOLD_COMPLETED_TASKS      :  return( "fold-completed-tasks" );
+      case UNFOLD_ALL_NODES          :  return( "unfold-all-nodes" );
       case SHOW_PREFERENCES          :  return( "show-preferences" );
       case SHOW_SHORTCUTS            :  return( "show-shortcuts" );
       case SHOW_CONTEXTUAL_MENU      :  return( "show-contextual_menu" );
@@ -412,6 +420,9 @@ public enum KeyCommand {
       case "show-style-sidebar"        :  return( SHOW_STYLE_SIDEBAR );
       case "show-sticker-sidebar"      :  return( SHOW_STICKER_SIDEBAR );
       case "show-map-sidebar"          :  return( SHOW_MAP_SIDEBAR );
+      case "balance-nodes"             :  return( BALANCE_NODES );
+      case "fold-completed-tasks"      :  return( FOLD_COMPLETED_TASKS );
+      case "unfold-all-nodes"          :  return( UNFOLD_ALL_NODES );
       case "show-preferences"          :  return( SHOW_PREFERENCES );
       case "show-shortcuts"            :  return( SHOW_SHORTCUTS );
       case "show-contextual-menu"      :  return( SHOW_CONTEXTUAL_MENU );
@@ -569,6 +580,10 @@ public enum KeyCommand {
       case SHOW_STYLE_SIDEBAR        :  return( _( "Show style tab in sidebar" ) );
       case SHOW_STICKER_SIDEBAR      :  return( _( "Show sticker tab in sidebar" ) );
       case SHOW_MAP_SIDEBAR          :  return( _( "Show map tab in sidebar" ) );
+      case MAP_START                 :  return( _( "Map Commands" ) );
+      case BALANCE_NODES             :  return( _( "Balance nodes in vertical/horizontal layouts" ) );
+      case FOLD_COMPLETED_TASKS      :  return( _( "Fold all completed tasks" ) );
+      case UNFOLD_ALL_NODES          :  return( _( "Unfold all folded nodes" ) );
       case MISCELLANEOUS_START       :  return( _( "Miscellaneous Commands" ) );
       case SHOW_PREFERENCES          :  return( _( "Show preferences window" ) );
       case SHOW_SHORTCUTS            :  return( _( "Show shortcuts cheatsheet" ) );
@@ -725,6 +740,9 @@ public enum KeyCommand {
       case SHOW_STYLE_SIDEBAR        :  return( show_style_sidebar );
       case SHOW_STICKER_SIDEBAR      :  return( show_sticker_sidebar );
       case SHOW_MAP_SIDEBAR          :  return( show_map_sidebar );
+      case BALANCE_NODES             :  return( balance_nodes );
+      case FOLD_COMPLETED_TASKS      :  return( fold_completed_tasks );
+      case UNFOLD_ALL_NODES          :  return( unfold_all_nodes );
       case SHOW_PREFERENCES          :  return( show_preferences );
       case SHOW_SHORTCUTS            :  return( show_shortcuts );
       case SHOW_CONTEXTUAL_MENU      :  return( show_contextual_menu );
@@ -1028,6 +1046,7 @@ public enum KeyCommand {
       case UNDO_START              :
       case ZOOM_START              :
       case SIDEBAR_START           :
+      case MAP_START               :
       case MISCELLANEOUS_START     :
       case NODE_EXIST_START        :
       case NODE_CLIPBOARD_START    :
@@ -1063,6 +1082,7 @@ public enum KeyCommand {
       case ZOOM_END              :
       case SIDEBAR_END           :
       case MISCELLANEOUS_END     :
+      case MAP_END               :
       case NODE_EXIST_END        :
       case NODE_CLIPBOARD_END    :
       case NODE_VIEW_END         :
@@ -1189,6 +1209,18 @@ public enum KeyCommand {
 
   public static void show_map_sidebar( MindMap map ) {
     map.show_properties( "map", PropertyGrab.FIRST );
+  }
+
+  public static void balance_nodes( MindMap map ) {
+    map.model.balance_nodes( true, true );
+  }
+
+  public static void fold_completed_tasks( MindMap map ) {
+    map.model.fold_completed_tasks();
+  }
+
+  public static void unfold_all_nodes( MindMap map ) {
+    map.model.unfold_all_nodes();
   }
 
   public static void show_preferences( MindMap map ) {

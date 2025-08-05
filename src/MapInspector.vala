@@ -285,47 +285,29 @@ public class MapInspector : Box {
     };
 
     /* Create the alignment buttons */
-    _hleft = new Button.from_icon_name( "align-horizontal-left-symbolic" ) {
-      tooltip_markup = Utils.tooltip_with_accel( _( "Align left side of selected nodes" ), "bracketleft" )
-    };
-    _hleft.clicked.connect(() => {
-      NodeAlign.align_left( _map, _map.get_selected_nodes() );
-    });
+    _hleft = new Button.from_icon_name( "align-horizontal-left-symbolic" );
+    _win.register_widget_for_shortcut( _hleft, KeyCommand.NODE_ALIGN_LEFT, _( "Align left side of selected nodes" ) );
+    _hleft.clicked.connect(() => { _win.execute_command( KeyCommand.NODE_ALIGN_LEFT ); });
 
-    _hcenter = new Button.from_icon_name( "align-horizontal-center-symbolic" ) {
-      tooltip_markup = Utils.tooltip_with_accel( _( "Align horizontal center of selected nodes" ), "bar" )
-    };
-    _hcenter.clicked.connect(() => {
-      NodeAlign.align_hcenter( _map, _map.get_selected_nodes() );
-    });
+    _hcenter = new Button.from_icon_name( "align-horizontal-center-symbolic" );
+    _win.register_widget_for_shortcut( _hcenter, KeyCommand.NODE_ALIGN_HCENTER, _( "Align horizontal center of selected nodes" ) );
+    _hcenter.clicked.connect(() => { _win.execute_command( KeyCommand.NODE_ALIGN_HCENTER ); });
 
-    _hright = new Button.from_icon_name( "align-horizontal-right-symbolic" ) {
-      tooltip_markup = Utils.tooltip_with_accel( _( "Align right side of selected nodes" ), "bracketright" )
-    };
-    _hright.clicked.connect(() => {
-      NodeAlign.align_right( _map, _map.get_selected_nodes() );
-    });
+    _hright = new Button.from_icon_name( "align-horizontal-right-symbolic" );
+    _win.register_widget_for_shortcut( _hright, KeyCommand.NODE_ALIGN_RIGHT, _( "Align right side of selected nodes" ) );
+    _hright.clicked.connect(() => { _win.execute_command( KeyCommand.NODE_ALIGN_RIGHT ); });
 
-    _vtop = new Button.from_icon_name( "align-vertical-top-symbolic" ) {
-      tooltip_markup = Utils.tooltip_with_accel( _( "Align top side of selected nodes" ), "minus" )
-    };
-    _vtop.clicked.connect(() => {
-      NodeAlign.align_top( _map, _map.get_selected_nodes() );
-    });
+    _vtop = new Button.from_icon_name( "align-vertical-top-symbolic" );
+    _win.register_widget_for_shortcut( _vtop, KeyCommand.NODE_ALIGN_TOP, _( "Align top side of selected nodes" ) );
+    _vtop.clicked.connect(() => { _win.execute_command( KeyCommand.NODE_ALIGN_TOP ); });
 
-    _vcenter = new Button.from_icon_name( "align-vertical-center-symbolic" ) {
-      tooltip_markup = Utils.tooltip_with_accel( _( "Align vertical center of selected nodes" ), "equal" )
-    };
-    _vcenter.clicked.connect(() => {
-      NodeAlign.align_vcenter( _map, _map.get_selected_nodes() );
-    });
+    _vcenter = new Button.from_icon_name( "align-vertical-center-symbolic" );
+    _win.register_widget_for_shortcut( _vcenter, KeyCommand.NODE_ALIGN_VCENTER, _( "Align vertical center of selected nodes" ) );
+    _vcenter.clicked.connect(() => { _win.execute_command( KeyCommand.NODE_ALIGN_VCENTER ); });
 
-    _vbottom = new Button.from_icon_name( "align-vertical-bottom-symbolic" ) {
-      tooltip_markup = Utils.tooltip_with_accel( _( "Align bottom side of selected nodes" ), "underscore" )
-    };
-    _vbottom.clicked.connect(() => {
-      NodeAlign.align_bottom( _map, _map.get_selected_nodes() );
-    });
+    _vbottom = new Button.from_icon_name( "align-vertical-bottom-symbolic" );
+    _win.register_widget_for_shortcut( _vbottom, KeyCommand.NODE_ALIGN_BOTTOM, _( "Align bottom side of selected nodes" ) );
+    _vbottom.clicked.connect(() => { _win.execute_command( KeyCommand.NODE_ALIGN_BOTTOM ); });
 
     var toolbar = new Box( Orientation.HORIZONTAL, 5 );
     toolbar.append( _hleft );
@@ -415,26 +397,17 @@ public class MapInspector : Box {
       row_spacing        = 5
     };
 
-    _balance = new Button.from_icon_name( "minder-balance-light-symbolic" ) {
-      tooltip_text = _( "Balance Nodes" )
-    };
-    _balance.clicked.connect(() => {
-      _map.model.balance_nodes( true, true );
-    });
+    _balance = new Button.from_icon_name( "minder-balance-light-symbolic" );
+    _win.register_widget_for_shortcut( _balance, KeyCommand.BALANCE_NODES, _( "Balance Nodes" ) );
+    _balance.clicked.connect(() => { _win.execute_command( KeyCommand.BALANCE_NODES ); });
 
-    _fold_completed = new Button.from_icon_name( "minder-fold-completed-light-symbolic" ) {
-      tooltip_text = _( "Fold Completed Tasks" )
-    };
-    _fold_completed.clicked.connect(() => {
-      _map.model.fold_completed_tasks();
-    });
+    _fold_completed = new Button.from_icon_name( "minder-fold-completed-light-symbolic" );
+    _win.register_widget_for_shortcut( _fold_completed, KeyCommand.FOLD_COMPLETED_TASKS, _( "Fold Completed Tasks" ) );
+    _fold_completed.clicked.connect(() => { _win.execute_command( KeyCommand.FOLD_COMPLETED_TASKS ); });
 
-    _unfold_all = new Button.from_icon_name( "minder-unfold-light-symbolic" ) {
-      tooltip_text = _( "Unfold All Nodes" )
-    };
-    _unfold_all.clicked.connect(() => {
-      _map.model.unfold_all_nodes();
-    });
+    _unfold_all = new Button.from_icon_name( "minder-unfold-light-symbolic" );
+    _win.register_widget_for_shortcut( _unfold_all, KeyCommand.UNFOLD_ALL_NODES, _( "Unfold All Nodes" ) );
+    _unfold_all.clicked.connect(() => { _win.execute_command( KeyCommand.UNFOLD_ALL_NODES ); });
 
     update_icons.connect(() => {
       var dark = Utils.use_dark_mode( _balance );
