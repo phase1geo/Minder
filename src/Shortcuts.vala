@@ -33,18 +33,18 @@ public enum MapState {
   //-------------------------------------------------------------
   // Returns the state from the given MindMap
   public static MapState get_state( MindMap map ) {
-    if( map.is_node_selected() ) {
-      return( NODE );
-    } else if( map.is_connection_selected() ) {
-      return( CONNECTION );
-    } else if( map.is_callout_selected() ) {
-      return( CALLOUT );
-    } else if( map.is_sticker_selected() ) {
-      return( STICKER );
-    } else if( map.is_group_selected() ) {
-      return( GROUP );
-    } else if( map.is_node_editable() || map.is_connection_editable() || map.is_callout_editable() ) {
+    if( map.is_node_editable() || map.is_connection_editable() || map.is_callout_editable() ) {
       return( EDITING );
+    } else if( map.selected.num_nodes() > 0 ) {
+      return( NODE );
+    } else if( map.selected.num_connections() > 0 ) {
+      return( CONNECTION );
+    } else if( map.selected.num_callouts() > 0 ) {
+      return( CALLOUT );
+    } else if( map.selected.num_stickers() > 0 ) {
+      return( STICKER );
+    } else if( map.selected.num_groups() > 0 ) {
+      return( GROUP );
     } else {
       return( NONE );
     }
@@ -175,7 +175,7 @@ public class Shortcut {
     if( _control ) {
       accel += "<Control>";
     }
-    if( _shift ) {
+    if( _shift && !keyval_is_lower( _keycode ) ) {
       accel += "<Shift>";
     }
     if( _alt ) {
@@ -354,6 +354,8 @@ public class Shortcuts {
   // that the calling code should insert the character if we are
   // editing an element in the map.
   public bool execute( MindMap map, uint keyval, uint keycode, ModifierType mods ) {
+
+    // stdout.printf( "In shortcuts.execute, keyval: %s, mods: %s\n", keyval_name( keyval ), mods.to_string() );
 
     KeymapKey[] ks      = {};
     uint[]      kvs     = {};
@@ -796,8 +798,6 @@ public class Shortcuts {
     var dump_str = "";
     doc->dump_memory_format( out dump_str );
     delete doc;
-
-    // stdout.printf( "dump_str:\n%s\n", dump_str );
 
     return( dump_str );
 

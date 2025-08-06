@@ -286,27 +286,27 @@ public class MapInspector : Box {
 
     /* Create the alignment buttons */
     _hleft = new Button.from_icon_name( "align-horizontal-left-symbolic" );
-    _win.register_widget_for_shortcut( _hleft, KeyCommand.NODE_ALIGN_LEFT, _( "Align left side of selected nodes" ) );
+    _win.register_widget_for_tooltip( _hleft, KeyCommand.NODE_ALIGN_LEFT, _( "Align left edges" ) );
     _hleft.clicked.connect(() => { _win.execute_command( KeyCommand.NODE_ALIGN_LEFT ); });
 
     _hcenter = new Button.from_icon_name( "align-horizontal-center-symbolic" );
-    _win.register_widget_for_shortcut( _hcenter, KeyCommand.NODE_ALIGN_HCENTER, _( "Align horizontal center of selected nodes" ) );
+    _win.register_widget_for_tooltip( _hcenter, KeyCommand.NODE_ALIGN_HCENTER, _( "Align horizontal centers" ) );
     _hcenter.clicked.connect(() => { _win.execute_command( KeyCommand.NODE_ALIGN_HCENTER ); });
 
     _hright = new Button.from_icon_name( "align-horizontal-right-symbolic" );
-    _win.register_widget_for_shortcut( _hright, KeyCommand.NODE_ALIGN_RIGHT, _( "Align right side of selected nodes" ) );
+    _win.register_widget_for_tooltip( _hright, KeyCommand.NODE_ALIGN_RIGHT, _( "Align right edges" ) );
     _hright.clicked.connect(() => { _win.execute_command( KeyCommand.NODE_ALIGN_RIGHT ); });
 
     _vtop = new Button.from_icon_name( "align-vertical-top-symbolic" );
-    _win.register_widget_for_shortcut( _vtop, KeyCommand.NODE_ALIGN_TOP, _( "Align top side of selected nodes" ) );
+    _win.register_widget_for_tooltip( _vtop, KeyCommand.NODE_ALIGN_TOP, _( "Align top edges" ) );
     _vtop.clicked.connect(() => { _win.execute_command( KeyCommand.NODE_ALIGN_TOP ); });
 
     _vcenter = new Button.from_icon_name( "align-vertical-center-symbolic" );
-    _win.register_widget_for_shortcut( _vcenter, KeyCommand.NODE_ALIGN_VCENTER, _( "Align vertical center of selected nodes" ) );
+    _win.register_widget_for_tooltip( _vcenter, KeyCommand.NODE_ALIGN_VCENTER, _( "Align vertical centers" ) );
     _vcenter.clicked.connect(() => { _win.execute_command( KeyCommand.NODE_ALIGN_VCENTER ); });
 
     _vbottom = new Button.from_icon_name( "align-vertical-bottom-symbolic" );
-    _win.register_widget_for_shortcut( _vbottom, KeyCommand.NODE_ALIGN_BOTTOM, _( "Align bottom side of selected nodes" ) );
+    _win.register_widget_for_tooltip( _vbottom, KeyCommand.NODE_ALIGN_BOTTOM, _( "Align bottom edges" ) );
     _vbottom.clicked.connect(() => { _win.execute_command( KeyCommand.NODE_ALIGN_BOTTOM ); });
 
     var toolbar = new Box( Orientation.HORIZONTAL, 5 );

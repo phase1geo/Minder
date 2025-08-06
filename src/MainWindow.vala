@@ -2088,10 +2088,6 @@ public class MainWindow : Gtk.ApplicationWindow {
       application.set_accels_for_action( "win.%s".printf( command.to_string() ), { shortcut.get_accelerator() } );
     }
 
-    if( _shortcut_widgets.has_key( command ) ) {
-      _shortcut_widgets.get( command ).set_tooltip( shortcut );
-    }
-
   }
 
   //-------------------------------------------------------------
@@ -2102,10 +2098,21 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
-  // Updates registers for shortcuts
-  public void register_widget_for_shortcut( Gtk.Widget w, KeyCommand command, string label ) {
+  // Registers a widget when only a tooltip label update
+  // is needed.
+  public void register_widget_for_tooltip( Gtk.Widget w, KeyCommand command, string label ) {
     var tooltip = new ShortcutTooltip( w, label );
     _shortcut_widgets.set( command, tooltip );
+    var shortcut = shortcuts.get_shortcut( command );
+    if( shortcut != null ) {
+      tooltip.set_tooltip( shortcut );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Updates registers for shortcuts
+  public void register_widget_for_shortcut( Gtk.Widget w, KeyCommand command, string label ) {
+    register_widget_for_tooltip( w, command, label );
     set_action_for_command( command );
   }
 
@@ -2121,9 +2128,9 @@ public class MainWindow : Gtk.ApplicationWindow {
       } else {
         application.set_accels_for_action( detail_name, { shortcut.get_accelerator() } );
       }
-      if( _shortcut_widgets.has_key( command ) ) {
-        _shortcut_widgets.get( command ).set_tooltip( shortcut );
-      }
+    }
+    if( _shortcut_widgets.has_key( command ) ) {
+      _shortcut_widgets.get( command ).set_tooltip( shortcut );
     }
   }
 
