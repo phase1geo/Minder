@@ -491,16 +491,20 @@ public class Preferences : Gtk.Window {
         } else if( (keyval != Key.Control_L) && (keyval != Key.Control_R) &&
                    (keyval != Key.Shift_L)   && (keyval != Key.Shift_L)   &&
                    (keyval != Key.Alt_L)     && (keyval != Key.Alt_R)  && (keyval != 0) ) {
-          var control = (bool)((state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK);
-          var shift   = (bool)((state & ModifierType.SHIFT_MASK)   == ModifierType.SHIFT_MASK);
-          var alt     = (bool)((state & ModifierType.ALT_MASK)     == ModifierType.ALT_MASK);
-          if( !_win.shortcuts.shortcut_exists( keyval, control, shift, alt, command ) ) {
-            shortcut = new Shortcut( keyval, control, shift, alt, command );
+          var control  = (bool)((state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK);
+          var shift    = (bool)((state & ModifierType.SHIFT_MASK)   == ModifierType.SHIFT_MASK);
+          var alt      = (bool)((state & ModifierType.ALT_MASK)     == ModifierType.ALT_MASK);
+          var conflict = _win.shortcuts.shortcut_conflicts_with( keyval, control, shift, alt, command );
+          var scut     = new Shortcut( keyval, control, shift, alt, command );
+          if( conflict == null ) {
+            shortcut = scut;
             _win.shortcuts.set_shortcut( shortcut );
             sl.accelerator = shortcut.get_accelerator();
             stack.visible_child_name = "set";
             sl.grab_focus();
             _shortcut_instructions.label = _shortcut_inst_start_str;
+          } else {
+            show_conflict_dialog( scut, conflict );
           }
         }
         return( true );
@@ -512,6 +516,33 @@ public class Preferences : Gtk.Window {
 
   }
 
+  //-------------------------------------------------------------
+  // Displays a dialog to display the reason for the shortcut
+  // conflict.
+  private void show_conflict_dialog( Shortcut attempt, Shortcut conflict ) {
+
+    var dialog = new Granite.MessageDialog.with_image_from_icon_name(
+      _( "Unable to set new shortcut due to conflicts" ),
+      _( "%s conflicts with '%s'" ).printf(
+        Granite.accel_to_string( attempt.get_accelerator() ),
+        conflict.command.shortcut_label()
+      ),
+      "dialog-error"
+    ) {
+      modal = true,
+      transient_for = this
+    };
+
+    dialog.response.connect((id) => {
+      dialog.close();
+    });
+
+    dialog.present();
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates a horizontal separator.
   private Separator make_separator() {
     var s = new Separator( Orientation.HORIZONTAL );
     return( s );

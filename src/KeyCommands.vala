@@ -953,6 +953,38 @@ public enum KeyCommand {
   }
 
   //-------------------------------------------------------------
+  // Returns a string ID for the map state this this command
+  // targets.
+  private string target_id() {
+    if( for_node() ) {
+      return( "0" );
+    } else if( for_connection() ) {
+      return( "1" );
+    } else if( for_callout() ) {
+      return( "2" );
+    } else if( for_group() ) {
+      return( "3" );
+    } else if( for_sticker() ) {
+      return( "4" );
+    } else if( for_editing() ) {
+      return( "5" );
+    } else if( for_none() ) {
+      return( "6" );
+    } else {
+      return( "0123456" );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the this command and the other command
+  // are targetting the same map state.
+  public bool target_matches( KeyCommand command ) {
+    var mine   = target_id();
+    var theirs = command.target_id();
+    return( mine.contains( theirs ) || theirs.contains( mine ) );
+  }
+
+  //-------------------------------------------------------------
   // Returns true if this key command is able to have a shortcut
   // associated with it.
   public bool viewable() {

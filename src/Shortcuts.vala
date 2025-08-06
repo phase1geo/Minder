@@ -119,13 +119,15 @@ public class Shortcut {
 
   //-------------------------------------------------------------
   // Returns true if this shortcut matches the given values exactly.
-  // TODO - The command should only compare the prefixes.
-  public bool equals( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
-    return( (_keycode == keycode) &&
-            (_control == control) &&
-            (_shift   == shift)   &&
-            (_alt     == alt)     &&
-            (_command == command) );
+  public bool conflicts_with( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
+    return(
+      (_keycode == keycode) &&
+      (_control == control) &&
+      (_shift   == shift)   &&
+      (_alt     == alt)     &&
+      (_command != command) &&
+      _command.target_matches( command )
+    );
   }
 
   //-------------------------------------------------------------
@@ -175,7 +177,7 @@ public class Shortcut {
     if( _control ) {
       accel += "<Control>";
     }
-    if( _shift && !keyval_is_lower( _keycode ) ) {
+    if( _shift && (!keyval_is_lower( _keycode ) || !keyval_is_upper( _keycode )) ) {
       accel += "<Shift>";
     }
     if( _alt ) {
@@ -339,13 +341,13 @@ public class Shortcuts {
 
   //-------------------------------------------------------------
   // Checks to see if the given shortcut is already mapped.
-  public bool shortcut_exists( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
+  public Shortcut? shortcut_conflicts_with( uint keycode, bool control, bool shift, bool alt, KeyCommand command ) {
     for( int i=0; i<_shortcuts.length; i++ ) {
-      if( _shortcuts.index( i ).equals( keycode, control, shift, alt, command ) ) {
-        return( true );
+      if( _shortcuts.index( i ).conflicts_with( keycode, control, shift, alt, command ) ) {
+        return( _shortcuts.index( i ) );
       }
     }
-    return( false );
+    return( null );
   }
 
   //-------------------------------------------------------------
