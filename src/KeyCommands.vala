@@ -57,6 +57,8 @@ public enum KeyCommand {
       SHOW_MAP_SIDEBAR,  // 30
     SIDEBAR_END,
     MAP_START,
+      TOGGLE_CONNECTIONS,
+      TOGGLE_CALLOUTS,
       BALANCE_NODES,
       FOLD_COMPLETED_TASKS,
       UNFOLD_ALL_NODES,
@@ -260,6 +262,8 @@ public enum KeyCommand {
       case SHOW_STYLE_SIDEBAR        :  return( "show-style-sidebar" );
       case SHOW_STICKER_SIDEBAR      :  return( "show-sticker-sidebar" );
       case SHOW_MAP_SIDEBAR          :  return( "show-map-sidebar" );
+      case TOGGLE_CONNECTIONS        :  return( "toggle-connections" );
+      case TOGGLE_CALLOUTS           :  return( "toggle-callouts" );
       case BALANCE_NODES             :  return( "balance-nodes" );
       case FOLD_COMPLETED_TASKS      :  return( "fold-completed-tasks" );
       case UNFOLD_ALL_NODES          :  return( "unfold-all-nodes" );
@@ -420,6 +424,8 @@ public enum KeyCommand {
       case "show-style-sidebar"        :  return( SHOW_STYLE_SIDEBAR );
       case "show-sticker-sidebar"      :  return( SHOW_STICKER_SIDEBAR );
       case "show-map-sidebar"          :  return( SHOW_MAP_SIDEBAR );
+      case "toggle-connections"        :  return( TOGGLE_CONNECTIONS );
+      case "toggle-callouts"           :  return( TOGGLE_CALLOUTS );
       case "balance-nodes"             :  return( BALANCE_NODES );
       case "fold-completed-tasks"      :  return( FOLD_COMPLETED_TASKS );
       case "unfold-all-nodes"          :  return( UNFOLD_ALL_NODES );
@@ -581,6 +587,8 @@ public enum KeyCommand {
       case SHOW_STICKER_SIDEBAR      :  return( _( "Show sticker tab in sidebar" ) );
       case SHOW_MAP_SIDEBAR          :  return( _( "Show map tab in sidebar" ) );
       case MAP_START                 :  return( _( "Map Commands" ) );
+      case TOGGLE_CONNECTIONS        :  return( _( "Show/Hide Connections" ) );
+      case TOGGLE_CALLOUTS           :  return( _( "Show/Hide Callouts" ) );
       case BALANCE_NODES             :  return( _( "Balance nodes in vertical/horizontal layouts" ) );
       case FOLD_COMPLETED_TASKS      :  return( _( "Fold all completed tasks" ) );
       case UNFOLD_ALL_NODES          :  return( _( "Unfold all folded nodes" ) );
@@ -740,6 +748,8 @@ public enum KeyCommand {
       case SHOW_STYLE_SIDEBAR        :  return( show_style_sidebar );
       case SHOW_STICKER_SIDEBAR      :  return( show_sticker_sidebar );
       case SHOW_MAP_SIDEBAR          :  return( show_map_sidebar );
+      case TOGGLE_CONNECTIONS        :  return( toggle_connections );
+      case TOGGLE_CALLOUTS           :  return( toggle_callouts );
       case BALANCE_NODES             :  return( balance_nodes );
       case FOLD_COMPLETED_TASKS      :  return( fold_completed_tasks );
       case UNFOLD_ALL_NODES          :  return( unfold_all_nodes );
@@ -1241,6 +1251,17 @@ public enum KeyCommand {
 
   public static void show_map_sidebar( MindMap map ) {
     map.show_properties( "map", PropertyGrab.FIRST );
+  }
+
+  public static void toggle_connections( MindMap map ) {
+    stdout.printf( "In toggle connections\n" );
+    map.model.connections.hide = !map.model.connections.hide;
+    map.queue_draw();
+  }
+
+  public static void toggle_callouts( MindMap map ) {
+    map.model.hide_callouts = !map.model.hide_callouts;
+    map.queue_draw();
   }
 
   public static void balance_nodes( MindMap map ) {

@@ -31,6 +31,7 @@ public class MapInspector : Box {
   private Button?       _balance        = null;
   private Button?       _fold_completed = null;
   private Button?       _unfold_all     = null;
+  private Switch        _hide_connections;
   private Switch        _hide_callouts;
   private Button        _hleft;
   private Button        _hcenter;
@@ -55,9 +56,8 @@ public class MapInspector : Box {
     // Create the interface
     add_connection_ui();
     add_callout_ui();
-    add_link_color_ui();
     add_layout_ui();
-    add_alignmen_ui();
+    add_alignment_ui();
     add_theme_ui();
     add_button_ui();
 
@@ -88,10 +88,13 @@ public class MapInspector : Box {
       map.current_changed.connect( current_changed );
     }
     _map = map;
-    _map.canvas.animator.enable = _settings.get_boolean( "enable-animations" );
-    _map.model.connections.hide = _settings.get_boolean( "hide-connections" );
-    _hide_callouts.set_active( _map.model.hide_callouts );
-    _map.model.set_theme( _map.get_theme(), false );
+    if( _map != null ) {
+      _map.canvas.animator.enable = _settings.get_boolean( "enable-animations" );
+      // _map.model.connections.hide = _settings.get_boolean( "hide-connections" );
+      _hide_connections.set_active( _map.model.connections.hide );
+      _hide_callouts.set_active( _map.model.hide_callouts );
+      _map.model.set_theme( _map.get_theme(), false );
+    }
     update_theme_layout();
   }
 
@@ -115,17 +118,17 @@ public class MapInspector : Box {
       use_markup = true
     };
 
-    var hide_connections = new Switch() {
+    _hide_connections = new Switch() {
       halign = Align.END,
       active = _settings.get_boolean( "hide-connections" )
     };
-    hide_connections.notify["active"].connect( hide_connections_changed );
+    _hide_connections.notify["active"].connect( hide_connections_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
       halign = Align.FILL
     };
     box.append( lbl );
-    box.append( hide_connections );
+    box.append( _hide_connections );
 
     append( box );
 
@@ -135,9 +138,8 @@ public class MapInspector : Box {
   // Called whenever the hide connections switch is changed within
   // the inspector.
   private void hide_connections_changed() {
-    _map.set_current_connection( null );
+    _map.selected.clear_connections();
     _map.connections.hide = !_map.connections.hide;
-    _settings.set_boolean( "hide-connections", _map.connections.hide );
     _map.queue_draw();
   }
 
@@ -172,45 +174,9 @@ public class MapInspector : Box {
   // Called whenever the hide connections switch is changed within
   // the inspector.
   private void hide_callouts_changed() {
+    _map.selected.clear_callouts();
     _map.model.hide_callouts = !_map.model.hide_callouts;
     _map.queue_draw();
-  }
-
-  //-------------------------------------------------------------
-  // Add link color rotation UI.
-  private void add_link_color_ui() {
-
-    var lbl = new Label( Utils.make_title( _( "Rotate main branch colors" ) ) ) {
-      halign     = Align.START,
-      hexpand    = true,
-      xalign     = (float)0,
-      use_markup = true
-    };
-
-    var rotate = _settings.get_boolean( "rotate-main-link-colors" );
-
-    var rotate_colors = new Switch() {
-      halign = Align.END,
-      active = rotate
-    };
-    rotate_colors.notify["active"].connect( rotate_colors_changed );
-
-    var box = new Box( Orientation.HORIZONTAL, 0 ) {
-      halign = Align.FILL
-    };
-    box.append( lbl );
-    box.append( rotate_colors );
-
-    append( box );
-
-  }
-
-  //-------------------------------------------------------------
-  // Called whenever the rotate color switch is changed within the
-  // inspector.
-  private void rotate_colors_changed() {
-    _map.get_theme().rotate = !_map.get_theme().rotate;
-    _settings.set_boolean( "rotate-main-link-colors", _map.get_theme().rotate );
   }
 
   //-------------------------------------------------------------
@@ -276,7 +242,7 @@ public class MapInspector : Box {
   //-------------------------------------------------------------
   // Adds alignment buttons when multiple nodes are selected in
   // manual layout mode.
-  private void add_alignmen_ui() {
+  private void add_alignment_ui() {
 
     /* Create the modebutton to select the current layout */
     var lbl = new Label( Utils.make_title( _( "Node Alignment" ) ) ) {
@@ -613,4 +579,4 @@ public class MapInspector : Box {
     _layout.grab_focus();
   }
 
-}
+} 

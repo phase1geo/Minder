@@ -109,6 +109,10 @@ public class Preferences : Gtk.Window {
     grid.attach( make_switch( "select-on-hover" ), 1, 5 );
     grid.attach( make_info( _( "If enabled, selects items when mouse cursor hovers over the item." ) ), 3, 5 );
 
+    grid.attach( make_label( _( "Rotate main branch link colors" ) ), 0, 6 );
+    grid.attach( make_switch( "rotate-main-link-colors" ), 1, 6 );
+    grid.attach( make_info( _( "If enabled, causes a new color to be used whenever a main branch is created" ) ), 3, 6 );
+
     return( grid );
 
   }

@@ -54,22 +54,22 @@ public enum MapState {
   // Returns true if the given state matches that required for the
   // given command.
   public static bool matches( MapState state, KeyCommand command ) {
-    if( (state == MapState.NODE) && command.for_node() ) {
-      return( true );
-    } else if( (state == MapState.CONNECTION) && command.for_connection() ) {
-      return( true );
-    } else if( (state == MapState.CALLOUT) && command.for_callout() ) {
-      return( true );
-    } else if( (state == MapState.STICKER) && command.for_sticker() ) {
-      return( true );
-    } else if( (state == MapState.GROUP) && command.for_group() ) {
-      return( true );
-    } else if( (state == MapState.EDITING) && command.for_editing() ) {
-      return( true );
-    } else if( (state == MapState.NONE) && command.for_none() ) {
-      return( true );
+    if( command.for_node() ) {
+      return( state == MapState.NODE );
+    } else if( command.for_connection() ) {
+      return( state == MapState.CONNECTION );
+    } else if( command.for_callout() ) {
+      return( state == MapState.CALLOUT );
+    } else if( command.for_sticker() ) {
+      return( state == MapState.STICKER );
+    } else if( command.for_group() ) {
+      return( state == MapState.GROUP );
+    } else if( command.for_editing() ) {
+      return( state == MapState.EDITING );
+    } else if( command.for_none() ) {
+      return( state == MapState.NONE );
     } else {
-      return( false );
+      return( true );  // Any will always be allowed
     }
   }
 
@@ -357,14 +357,17 @@ public class Shortcuts {
   // editing an element in the map.
   public bool execute( MindMap map, uint keyval, uint keycode, ModifierType mods ) {
 
-    // stdout.printf( "In shortcuts.execute, keyval: %s, mods: %s\n", keyval_name( keyval ), mods.to_string() );
-
     KeymapKey[] ks      = {};
     uint[]      kvs     = {};
     var         state   = MapState.get_state( map );
     var         control = (mods & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK;
     var         shift   = (mods & ModifierType.SHIFT_MASK)   == ModifierType.SHIFT_MASK;
     var         alt     = (mods & ModifierType.ALT_MASK)     == ModifierType.ALT_MASK;
+
+    /*
+    stdout.printf( "In shortcuts.execute, keyval: %s, mods: %s %s %s\n",
+      keyval_name( keyval ), control.to_string(), shift.to_string(), alt.to_string() );
+    */
 
     Display.get_default().map_keycode( keycode, out ks, out kvs );
 
