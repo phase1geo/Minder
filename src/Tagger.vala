@@ -29,18 +29,21 @@ public class Tagger {
   private HashMap<string,int>  _tags;
   private Gtk.SearchEntry      _entry;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public Tagger( DrawArea da ) {
     _map  = da.map;
     _tags = new HashMap<string,int>();
   }
 
-  /* Loads the tags prior to edits being made */
+  //-------------------------------------------------------------
+  // Loads the tags prior to edits being made
   public void preedit_load_tags( FormattedText text ) {
     _pre_tags = text.get_extras_for_tag( FormatTag.TAG );
   }
 
-  /* Updates the stored list of tags in use. */
+  //-------------------------------------------------------------
+  // Updates the stored list of tags in use.
   public void postedit_load_tags( FormattedText text ) {
     var tags = text.get_extras_for_tag( FormatTag.TAG );
     var it   = tags.map_iterator();
@@ -63,7 +66,8 @@ public class Tagger {
     }
   }
 
-  /* Gets the list of matching keys */
+  //-------------------------------------------------------------
+  // Gets the list of matching keys
   public GLib.List<TextCompletionItem> get_matches( string partial ) {
     var it = _tags.map_iterator();
     var matches = new GLib.List<TextCompletionItem>();
@@ -78,7 +82,8 @@ public class Tagger {
     return( matches );
   }
 
-  /* Returns the XML version of this class for saving purposes */
+  //-------------------------------------------------------------
+  // Returns the XML version of this class for saving purposes
   public Xml.Node* save() {
     Xml.Node* tags = new Xml.Node( null, "tags" );
     var it = _tags.map_iterator();
@@ -91,7 +96,8 @@ public class Tagger {
     return( tags );
   }
 
-  /* Loads the tag information from the XML save file */
+  //-------------------------------------------------------------
+  // Loads the tag information from the XML save file
   public void load( Xml.Node* tags ) {
     for( Xml.Node* it = tags->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tag") ) {
@@ -104,7 +110,8 @@ public class Tagger {
     }
   }
 
-  /* Creates the UI for selecting/creating tags */
+  //-------------------------------------------------------------
+  // Creates the UI for selecting/creating tags
   public void show_add_ui() {
 
     var    name = _map.get_current_node().name;

@@ -26,17 +26,20 @@ public class TextCompletionItem {
   public string label { get; private set; default = ""; }
   public string alt   { get; private set; default = ""; }
 
+  //-------------------------------------------------------------
   // Constructor
   public TextCompletionItem( string label ) {
     this.label = label;
   }
 
+  //-------------------------------------------------------------
   // Constructor
   public TextCompletionItem.with_alt( string label, string alt ) {
     this.label = label;
     this.alt   = alt;
   }
 
+  //-------------------------------------------------------------
   // Creates the row for the listbox
   public Box create_row() {
     var box = new Box( Orientation.HORIZONTAL, 0 );
@@ -88,7 +91,8 @@ public class TextCompletion {
     }
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public TextCompletion( MindMap map ) {
     _map  = map;
     _list = new ListBox() {
@@ -99,7 +103,8 @@ public class TextCompletion {
     _list.row_activated.connect( activate_row );
   }
 
-  /* Displays the auto-completion text with the given list */
+  //-------------------------------------------------------------
+  // Displays the auto-completion text with the given list
   public void show( CanvasText ct, List<TextCompletionItem> list, int start, int end ) {
 
     /* If there is nothing to show, hide the contents */
@@ -159,14 +164,16 @@ public class TextCompletion {
 
   }
 
-  /* Hides the auto-completion box */
+  //-------------------------------------------------------------
+  // Hides the auto-completion box
   public void hide() {
     if( !_shown ) return;
     _list.unparent();
     _shown = false;
   }
 
-  /* Moves the selection down by one row */
+  //-------------------------------------------------------------
+  // Moves the selection down by one row
   public void down() {
     if( !_shown ) return;
     var row = _list.get_selected_row();
@@ -175,7 +182,8 @@ public class TextCompletion {
     }
   }
 
-  /* Moves the selection up by one row */
+  //-------------------------------------------------------------
+  // Moves the selection up by one row
   public void up() {
     if( !_shown ) return;
     var row = _list.get_selected_row();
@@ -184,13 +192,15 @@ public class TextCompletion {
     }
   }
 
-  /* Substitutes the currently selected entry */
+  //-------------------------------------------------------------
+  // Substitutes the currently selected entry
   public void select() {
     if( !_shown ) return;
     activate_row( _list.get_selected_row() );
   }
 
-  /* Handle a mouse event on the listbox */
+  //-------------------------------------------------------------
+  // Handle a mouse event on the listbox
   private void activate_row( ListBoxRow row ) {
     var box   = (Box)row.get_child();
     var value = TextCompletionItem.get_text( box );
