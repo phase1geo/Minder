@@ -90,7 +90,6 @@ public class MapInspector : Box {
     _map = map;
     if( _map != null ) {
       _map.canvas.animator.enable = _settings.get_boolean( "enable-animations" );
-      // _map.model.connections.hide = _settings.get_boolean( "hide-connections" );
       _hide_connections.set_active( _map.model.connections.hide );
       _hide_callouts.set_active( _map.model.hide_callouts );
       _map.model.set_theme( _map.get_theme(), false );
@@ -120,7 +119,7 @@ public class MapInspector : Box {
 
     _hide_connections = new Switch() {
       halign = Align.END,
-      active = _settings.get_boolean( "hide-connections" )
+      active = false
     };
     _hide_connections.notify["active"].connect( hide_connections_changed );
 
