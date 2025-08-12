@@ -2527,13 +2527,29 @@ public class MapModel {
   //-------------------------------------------------------------
   // Converts the given text string into a node tree and inserts
   // the node tree into the mindmap.
-  private void paste_text_as_node( Node? node, string text ) {
+  public bool insert_text_as_node( Node? node, string text ) {
     var nodes  = new Array<Node>();
     var export = (ExportText)_map.win.exports.get_by_name( "text" );
     export.import_text( text, 0, _map, false, nodes );
+    if( nodes.length == 0 ) return( false );
     _map.add_undo( new UndoNodesInsert( _map, nodes ) );
     queue_draw();
     auto_save();
+    return( true );
+  }
+
+  //-------------------------------------------------------------
+  // Converts the given text string into a node tree and replaces
+  // the current node tree in the mindmap.
+  public bool replace_text_as_node( Node node, string text ) {
+    var nodes = new Array<Node>();
+    var export = (ExportText)_map.win.exports.get_by_name( "text" );
+    export.import_text( text, 0, _map, true, nodes );
+    if( nodes.length == 0 ) return( false );
+    _map.add_undo( new UndoNodesReplace( node, nodes ) );
+    queue_draw();
+    auto_save();
+    return( true );
   }
 
   //-------------------------------------------------------------
@@ -2615,7 +2631,7 @@ public class MapModel {
       } else if( (callout != null) && (callout.mode == CalloutMode.EDITABLE) ) {
         insert_callout_text( callout, text );
       } else if( conn == null ) {
-        paste_text_as_node( node, text );
+        insert_text_as_node( node, text );
       }
     }
   }

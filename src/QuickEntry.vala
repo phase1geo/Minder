@@ -545,31 +545,12 @@ public class QuickEntry : Gtk.Window {
 
   /* Inserts the specified nodes into the given drawing area */
   private bool handle_insert() {
-    var nodes  = new Array<Node>();
-    var node   = _map.get_current_node();
-    _export.import_text( _entry.buffer.text, _map.settings.get_int( "quick-entry-spaces-per-tab" ), _map, false, nodes );
-    if( nodes.length == 0 ) return( false );
-    _map.undo_buffer.add_item( new UndoNodesInsert( _map, nodes ) );
-    _map.set_current_node( nodes.index( 0 ) );
-    _map.queue_draw();
-    _map.auto_save();
-    _map.canvas.see();
-    return( true );
+    return( _map.model.insert_text_as_node( _map.get_current_node(), _entry.buffer.text ) );
   }
 
   /* Replaces the specified nodes into the given drawing area */
   private bool handle_replace() {
-    var nodes  = new Array<Node>();;
-    var node   = _map.get_current_node();
-    var parent = node.parent;
-    _export.import_text( _entry.buffer.text, _map.settings.get_int( "quick-entry-spaces-per-tab" ), _map, true, nodes );
-    if( nodes.length == 0 ) return( false );
-    _map.undo_buffer.add_item( new UndoNodesReplace( node, nodes ) );
-    _map.set_current_node( nodes.index( 0 ) );
-    _map.queue_draw();
-    _map.auto_save();
-    _map.canvas.see();
-    return( true );
+    return( _map.model.replace_text_as_node( _map.get_current_node(), _entry.buffer.text ) );
   }
 
   /* Preloads the text buffer with the given text */
