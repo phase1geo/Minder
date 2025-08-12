@@ -1186,16 +1186,16 @@ public class DrawArea : Gtk.DrawingArea {
   // Handle mouse motion.
   private void on_motion( double x, double y ) {
 
-    /* Clear the hover */
+    // Clear the hover
     if( _select_hover_id > 0 ) {
       Source.remove( _select_hover_id );
       _select_hover_id = 0;
     }
 
-    /* If we have an attachable summary node, clear it */
+    // If we have an attachable summary node, clear it
     _map.model.set_attach_summary( null );
 
-    /* If the node is attached, clear it */
+    // If the node is attached, clear it
     _map.model.set_attach_node( null );
 
     var last_x = _scaled_x;
@@ -1209,10 +1209,10 @@ public class DrawArea : Gtk.DrawingArea {
     var current_callout = _map.get_current_callout();
     var current_group   = _map.get_current_group();
 
-    /* If the mouse button is current pressed, handle it */
+    // If the mouse button is current pressed, handle it
     if( _pressed ) {
 
-      /* If we are holding the middle mouse button while moving, pan the canvas */
+      // If we are holding the middle mouse button while moving, pan the canvas
       if( _press_middle || _alt ) {
         double diff_x = _scaled_x - last_x;
         double diff_y = _scaled_y - last_y;
@@ -1222,7 +1222,7 @@ public class DrawArea : Gtk.DrawingArea {
         return;
       }
   
-      /* If we are dealing with a connection, update it based on its mode */
+      // If we are dealing with a connection, update it based on its mode
       if( current_conn != null ) {
         MapItemComponent component;
         switch( current_conn.mode ) {

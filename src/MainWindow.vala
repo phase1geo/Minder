@@ -445,9 +445,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     on_current_changed( map );
     update_title( map );
     canvas_changed( map );
-    save_tab_state( page_num );
     _brain.set_list( map.model.braindump );
     set_braindump_ui( map.model.braindump_shown );
+    save_tab_state( page_num );
   }
 
   //-------------------------------------------------------------
@@ -1018,6 +1018,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     _brain_btn.clicked.connect((e) => {
       set_braindump_ui( !_brain.visible );
+      save_tab_state( _nb.page );
     });
 
     _header.pack_end( _brain_btn );
@@ -1031,7 +1032,6 @@ public class MainWindow : Gtk.ApplicationWindow {
     var map = get_current_map();
     if( map != null ) {
       map.model.braindump_shown = show;
-      save_tab_state( _nb.page );
     }
 
     _brain.visible    = show;

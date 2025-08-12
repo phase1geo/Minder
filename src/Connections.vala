@@ -201,10 +201,7 @@ public class Connections {
     if( !hide ) {
       for( int i=0; i<_connections.length; i++ ) {
         var conn = _connections.index( i );
-        if( conn.on_curve( x, y ) ) {
-          component = MapItemComponent.CURVE;
-          return( conn );
-        } else if( conn.within_title_box( x, y ) ) {
+        if( conn.within_title_box( x, y ) ) {
           if( conn.within_title( x, y ) ) {
             component = MapItemComponent.TITLE;
           } else if( conn.within_note( x, y ) ) {
@@ -222,6 +219,9 @@ public class Connections {
           component = MapItemComponent.FROM_HANDLE;
         } else if( conn.within_to_handle( x, y ) ) {
           component = MapItemComponent.TO_HANDLE;
+        } else if( conn.on_curve( x, y ) ) {
+          component = MapItemComponent.CURVE;
+          return( conn );
         }
       }
     }
