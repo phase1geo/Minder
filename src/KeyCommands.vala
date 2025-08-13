@@ -996,7 +996,8 @@ public enum KeyCommand {
 
   //-------------------------------------------------------------
   // Returns true if this key command is able to have a shortcut
-  // associated with it.
+  // associated with it.  These should have built-in shortcuts
+  // associated with each of them.
   public bool viewable() {
     return(
       (this != DO_NOTHING) &&
@@ -1004,21 +1005,31 @@ public enum KeyCommand {
       (this != ESCAPE) &&
       (this != EDIT_ESCAPE) &&
       (this != EDIT_BACKSPACE) &&
-      (this != EDIT_DELETE) &&
-      (this != EDIT_COPY) &&
-      (this != EDIT_CUT) &&
-      (this != EDIT_PASTE) &&
-      (this != EDIT_RETURN) &&
-      (this != EDIT_SHIFT_RETURN) &&
-      (this != EDIT_TAB) &&
-      (this != EDIT_SHIFT_TAB) &&
       (this != NODE_REMOVE) &&
-      (this != CONNECTION_REMOVE) &&
       (this != CALLOUT_REMOVE) &&
+      (this != GROUP_REMOVE) &&
+      (this != EDIT_DELETE) &&
+      (this != NODE_ADD_SIBLING_AFTER) &&
+      (this != NODE_ADD_SIBLING_BEFORE) &&
+      (this != NODE_ADD_CHILD) &&
+      (this != NODE_ADD_PARENT) &&
+      (this != EDIT_CURSOR_CHAR_NEXT) &&
+      (this != EDIT_CURSOR_CHAR_PREV) &&
+      (this != EDIT_CURSOR_UP) &&
+      (this != EDIT_CURSOR_DOWN) &&
+      (this != EDIT_SELECT_CHAR_NEXT) &&
+      (this != EDIT_SELECT_CHAR_PREV) &&
+      (this != NODE_SELECT_RIGHT) &&
+      (this != NODE_SELECT_LEFT) &&
+      (this != NODE_SELECT_UP) &&
+      (this != NODE_SELECT_DOWN) &&
+      (this != NODE_SELECT_SIBLING_PREV) &&
+      (this != NODE_SELECT_SIBLING_NEXT) &&
+      (this != NODE_SWAP_UP) &&
+      (this != NODE_SWAP_DOWN) &&
       ((this < CONNECTION_EXIST_START) || (CONNECTION_EXIST_END < this)) &&
       ((this < STICKER_START) || (STICKER_END < this)) &&
-      ((this < EDIT_MISC_START) || (EDIT_MISC_END < this)) &&
-      (this != GROUP_REMOVE)
+      ((this < EDIT_MISC_START) || (EDIT_MISC_END < this))
     );
   }
 
@@ -2098,6 +2109,7 @@ public enum KeyCommand {
   }
 
   public static void edit_paste( MindMap map ) {
+    stdout.printf( "Calling do_paste\n" );
     map.do_paste( false );
   }
 
