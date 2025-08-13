@@ -1707,7 +1707,8 @@ public class MapModel {
       node.side = parent.side;
     }
     if( parent.children().length > 0 ) {
-      node.style = parent.last_child().style;
+      parent.folded = false;
+      node.style    = parent.last_child().style;
     } else {
       node.style = parent.style;
     }
