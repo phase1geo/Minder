@@ -217,8 +217,10 @@ public class Connections {
           return( conn );
         } else if( conn.within_from_handle( x, y ) ) {
           component = MapItemComponent.FROM_HANDLE;
+          return( conn );
         } else if( conn.within_to_handle( x, y ) ) {
           component = MapItemComponent.TO_HANDLE;
+          return( conn );
         } else if( conn.on_curve( x, y ) ) {
           component = MapItemComponent.CURVE;
           return( conn );

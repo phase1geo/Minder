@@ -691,7 +691,7 @@ public class DrawArea : Gtk.DrawingArea {
         _map.model.set_connection_mode( match_conn, ConnMode.ADJUSTING );
       } else {
         _last_connection = new Connection.from_connection( _map, match_conn );
-        match_conn.disconnect_from_node( true );
+        match_conn.disconnect_from_node( component == MapItemComponent.FROM_HANDLE );
       }
       return( true );
     }
