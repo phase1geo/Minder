@@ -1110,6 +1110,7 @@ public class DrawArea : Gtk.DrawingArea {
     ctx.scale( sfactor, sfactor );
     draw_background( ctx );
     _map.model.draw_all( ctx, false, (_pressed && _motion && !_resize) );
+    draw_select_box( ctx );
   }
 
   //-------------------------------------------------------------
