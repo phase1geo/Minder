@@ -1309,7 +1309,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
       }
 
-      if( !_motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within_node( _scaled_x, _scaled_y ) ) {
+      if( _motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within_node( _scaled_x, _scaled_y ) ) {
         if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) ) {
           current_node.set_alpha_only( 0.3 );
         } else {
