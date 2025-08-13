@@ -876,14 +876,9 @@ public class MindMap {
   //-------------------------------------------------------------
   // Selects all of the text in the current node.
   public void select_all() {
-    if( is_connection_editable() ) {
-      _selected.current_connection().title.set_cursor_all( false );
-      queue_draw();
-    } else if( is_node_editable() ) {
-      _selected.current_node().name.set_cursor_all( false );
-      queue_draw();
-    } else if( is_callout_editable() ) {
-      _selected.current_callout().text.set_cursor_all( false );
+    var text = get_current_text();
+    if( text != null ) {
+      text.set_cursor_all( false );
       queue_draw();
     }
   }
@@ -891,18 +886,12 @@ public class MindMap {
   //-------------------------------------------------------------
   // Deselects all of the text in the current node.
   public void deselect_all() {
-    if( is_connection_editable() ) {
-      _selected.current_connection().title.clear_selection();
-      queue_draw();
-    } else if( is_node_editable() ) {
-      _selected.current_node().name.clear_selection();
-      queue_draw();
-    } else if( is_callout_editable() ) {
-      _selected.current_callout().text.clear_selection();
+    var text = get_current_text();
+    if( text != null ) {
+      text.clear_selection();
       queue_draw();
     }
   }
-
 
   //-------------------------------------------------------------
   // UNDO BUFFER

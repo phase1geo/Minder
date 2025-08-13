@@ -2325,23 +2325,15 @@ public class MapModel {
   //-------------------------------------------------------------
   // Copies the currently selected text to the clipboard.
   public void copy_selected_text() {
-    string? value           = null;
-    var     current_node    = _map.selected.current_node();
-    var     current_conn    = _map.selected.current_connection();
-    var     current_callout = _map.selected.current_callout();
-    if( current_node != null ) {
-      value = current_node.name.get_selected_text();
-    } else if( current_conn != null ) {
-      value = current_conn.title.get_selected_text();
-    } else if( current_callout != null ) {
-      value = current_callout.text.get_selected_text();
-    }
-    if( value != null ) {
-      MinderClipboard.copy_text( value );
+    var text = _map.get_current_text();
+    if( text != null ) {
+      MinderClipboard.copy_text( text.get_selected_text() );
     }
   }
 
-  /* Copies either the current node or the currently selected text to the clipboard */
+  //-------------------------------------------------------------
+  // Copies either the current node or the currently selected
+  // text to the clipboard.
   public void do_copy() {
     var current = _map.selected.current_node();
     if( current != null ) {
@@ -2356,7 +2348,9 @@ public class MapModel {
     }
   }
 
-  /* Cuts the current node from the tree and stores it in the clipboard */
+  //-------------------------------------------------------------
+  // Cuts the current node from the tree and stores it in the
+  // clipboard.
   public void cut_node_to_clipboard() {
     var current = _map.get_current_node();
     if( current == null ) return;
@@ -2384,6 +2378,9 @@ public class MapModel {
     auto_save();
   }
 
+  //-------------------------------------------------------------
+  // Copies all of the selected nodes (along with related connection
+  // and group information) and removes them from the clipboard.
   public void cut_selected_nodes_to_clipboard() {
     if( _map.selected.num_nodes() == 0 ) return;
     var nodes = _map.selected.ordered_nodes();
@@ -2403,24 +2400,21 @@ public class MapModel {
     auto_save();
   }
 
-  /* Cuts the current selected text to the clipboard */
+  //-------------------------------------------------------------
+  // Cuts the current selected text to the clipboard.
   public void cut_selected_text() {
-    copy_selected_text();
-    var current_node    = _map.selected.current_node();
-    var current_conn    = _map.selected.current_connection();
-    var current_callout = _map.selected.current_callout();
-    if( current_node != null ) {
-      current_node.name.insert( "", _map.undo_text );
-    } else if( current_conn != null ) {
-      current_conn.title.insert( "", _map.undo_text );
-    } else if( current_callout != null ) {
-      current_callout.text.insert( "", _map.undo_text );
+    var text = _map.get_current_text();
+    if( text != null ) {
+      MinderClipboard.copy_text( text.get_selected_text() );
+      text.insert( "", _map.undo_text );
+      queue_draw();
+      auto_save();
     }
-    queue_draw();
-    auto_save();
   }
 
-  /* Either cuts the current node or cuts the currently selected text */
+  //-------------------------------------------------------------
+  // Either cuts the current node or cuts the currently selected
+  // text.
   public void do_cut() {
     var current = _map.selected.current_node();
     if( current != null ) {
@@ -2501,27 +2495,6 @@ public class MapModel {
     queue_draw();
     current_changed();
     auto_save();
-  }
-
-  //-------------------------------------------------------------
-  // Inserts the given text string into the given node.
-  private void insert_node_text( Node node, string text ) {
-    node.name.insert( text, _map.undo_text );
-    queue_draw();
-  }
-
-  //-------------------------------------------------------------
-  // Inserts the given text string into the given connection.
-  private void insert_connection_text( Connection conn, string text ) {
-    conn.title.insert( text, _map.undo_text );
-    queue_draw();
-  }
-
-  //-------------------------------------------------------------
-  // Inserts the given text string into the given callout.
-  private void insert_callout_text( Callout callout, string text ) {
-    callout.text.insert( text, _map.undo_text );
-    queue_draw();
   }
 
   //-------------------------------------------------------------
@@ -2612,9 +2585,9 @@ public class MapModel {
   //-------------------------------------------------------------
   // Called by the clipboard to paste text.
   public void paste_text( string text, bool shift ) {
-    var node    = _map.selected.current_node();
-    var conn    = _map.selected.current_connection();
-    var callout = _map.selected.current_callout();
+    var node    = _map.get_current_node();
+    var conn    = _map.get_current_connection();
+    var callout = _map.get_current_callout();
     if( shift ) {
       if( (node != null) && (node.mode == NodeMode.CURRENT) ) {
         replace_node_text( node, text );
@@ -2624,12 +2597,10 @@ public class MapModel {
         replace_callout_text( callout, text );
       }
     } else {
-      if( (node != null) && (node.mode == NodeMode.EDITABLE) ) {
-        insert_node_text( node, text );
-      } else if( (conn != null) && (conn.mode == ConnMode.EDITABLE) ) {
-        insert_connection_text( conn, text );
-      } else if( (callout != null) && (callout.mode == CalloutMode.EDITABLE) ) {
-        insert_callout_text( callout, text );
+      var ct = _map.get_current_text();
+      if( ct != null ) {
+        ct.insert( text, _map.undo_text );
+        queue_draw();
       } else if( conn == null ) {
         insert_text_as_node( node, text );
       }

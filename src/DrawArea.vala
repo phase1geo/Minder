@@ -1701,14 +1701,9 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Called in IMContext callback of the same name.
   private bool handle_im_retrieve_surrounding() {
-    if( _map.is_node_editable() ) {
-      retrieve_surrounding_in_text( _map.selected.current_node().name );
-      return( true );
-    } else if( _map.is_connection_editable() ) {
-      retrieve_surrounding_in_text( _map.selected.current_connection().title );
-      return( true );
-    } else if( _map.is_callout_editable() ) {
-      retrieve_surrounding_in_text( _map.selected.current_callout().text );
+    var text = _map.get_current_text();
+    if( text != null ) {
+      retrieve_surrounding_in_text( text );
       return( true );
     }
     return( false );
@@ -1727,14 +1722,9 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Called in IMContext callback of the same name.
   private bool handle_im_delete_surrounding( int offset, int nchars ) {
-    if( _map.is_node_editable() ) {
-      delete_surrounding_in_text( _map.selected.current_node().name, offset, nchars );
-      return( true );
-    } else if( _map.is_connection_editable() ) {
-      delete_surrounding_in_text( _map.selected.current_connection().title, offset, nchars );
-      return( true );
-    } else if( _map.is_callout_editable() ) {
-      delete_surrounding_in_text( _map.selected.current_callout().text, offset, nchars );
+    var text = _map.get_current_text();
+    if( text != null ) {
+      delete_surrounding_in_text( text, offset, nchars );
       return( true );
     }
     return( false );
@@ -2112,10 +2102,9 @@ public class DrawArea : Gtk.DrawingArea {
   // Displays the auto-completion widget with the given list of
   // values.
   public void show_auto_completion( GLib.List<TextCompletionItem> values, int start_pos, int end_pos ) {
-    if( _map.is_node_editable() ) {
-      _completion.show( _map.selected.current_node().name, values, start_pos, end_pos );
-    } else if( _map.is_callout_editable() ) {
-      _completion.show( _map.selected.current_callout().text, values, start_pos, end_pos );
+    var ct = _map.get_current_text();
+    if( ct != null ) {
+      _completion.show( ct, values, start_pos, end_pos );
     } else {
       _completion.hide();
     }
