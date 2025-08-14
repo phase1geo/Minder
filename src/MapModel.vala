@@ -642,10 +642,11 @@ public class MapModel {
   public void toggle_fold( Node n, bool deep ) {
     var fold    = !n.folded;
     var changes = new Array<Node>();
+    _map.canvas.animator.add_node_fold( _nodes, n, fold, deep, "toggle folds" );
     n.set_fold( fold, deep, changes );
     _map.add_undo( new UndoNodeFolds( changes ) );
+    _map.canvas.animator.animate();
     current_changed();
-    queue_draw();
     auto_save();
   }
 

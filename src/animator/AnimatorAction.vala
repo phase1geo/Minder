@@ -26,6 +26,7 @@ public enum AnimationType {
   NODES,
   NODE,
   FADE,
+  FOLD,
   PAN,
   SCALE,
   PANSCALE
