@@ -1435,14 +1435,16 @@ public class MapModel {
 
   //-------------------------------------------------------------
   // Updates the last_match.
-  public void update_last_match( Node? match ) {
+  public bool update_last_match( Node? match ) {
     if( match != _last_match ) {
       if( _last_match != null ) {
         _last_match.show_fold = false;
         queue_draw();
       }
       _last_match = match;
+      return( true );
     }
+    return( false );
   }
 
   //-------------------------------------------------------------

@@ -80,7 +80,7 @@ public class Document : Object {
     if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
       int i = 1;
       do {
-        _filename = GLib.Path.build_filename( dir, _( "unnamed" ) + "%d.mindr".printf( i++ ) );
+        _filename = GLib.Path.build_filename( dir, _( "unnamed" ) + "%d.minder".printf( i++ ) );
       } while( GLib.FileUtils.test( _filename, FileTest.EXISTS ) );
       _from_user = false;
     }
@@ -121,32 +121,64 @@ public class Document : Object {
     return( _from_user );
   }
 
-  /*
-   Searches the given file for a node with the given ID.  If found, returns
-   true along with the title of the node.
-  */
+  //-------------------------------------------------------------
+  // Searches the given file for a node with the given ID.  If
+  // found, returns true along with the title of the node.
   public static bool xml_find( string fname, int id, ref string name ) {
-    Xml.Doc* doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
-    var      found = false;
-    if( doc == null ) {
-      return( false );
+
+    var found = false;
+
+    Archive.Read archive = new Archive.Read();
+    archive.support_filter_gzip();
+    archive.support_format_all();
+
+    /* Open the portable Minder file for reading */
+    if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
+      Xml.Doc* doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
+      if( doc != null ) {
+        found = MapModel.xml_find( doc->get_root_element(), id, ref name );
+        delete doc;
+      }
+      return( found );
     }
-    found = MapModel.xml_find( doc->get_root_element(), id, ref name );
-    delete doc;
+
+    unowned Archive.Entry entry;
+
+    while( archive.next_header( out entry ) == Archive.Result.OK ) {
+      if( entry.pathname() == "map.xml" ) {
+        uint8[] data = new uint8[entry.size()];
+        if( archive.read_data( data ) > 0 ) {
+          var memory = (string)data;
+          Xml.Doc* doc = Xml.Parser.read_memory( memory, memory.length, null, null, Xml.ParserOption.HUGE );
+          if( doc != null ) {
+            found = MapModel.xml_find( doc->get_root_element(), id, ref name );
+            delete doc;
+            break;
+          }
+        }
+      }
+    }
+
+    archive.close();
+
     return( found );
+
   }
 
+  //-------------------------------------------------------------
+  // Reads in the map.xml file and returns the XML document.
   private Xml.Doc* load_raw() {
     return Xml.Parser.read_file( get_map_file(), null, (Xml.ParserOption.HUGE | Xml.ParserOption.NOWARNING) );
   }
 
+  //-------------------------------------------------------------
+  // Reads the stored etag attribute from the given XML document
   private string get_etag( Xml.Doc* doc ) {
     for (Xml.Attr* prop = doc->get_root_element()->properties; prop != null; prop = prop->next) {
       string attr_name = prop->name;
       if( attr_name != "etag" ) {
         continue;
       }
-
       return prop->children->content;
     }
     return "";
@@ -209,10 +241,8 @@ public class Document : Object {
 
     while( archive.next_header( out entry ) == Archive.Result.OK ) {
 
-      /*
-       We will need to modify the entry pathname so the file is written to the
-       proper location.
-      */
+      // We will need to modify the entry pathname so the file is written to the
+      // proper location.
       if( entry.pathname() == "map.xml" ) {
         entry.set_pathname( GLib.Path.build_filename( _temp_dir, entry.pathname() ) );
       } else {
@@ -260,7 +290,7 @@ public class Document : Object {
 
       string file_etag = get_etag( doc );
 
-      /* File was modified! Warn the user */
+      // File was modified! Warn the user
       if( _etag != file_etag ) {
         var now = new DateTime.now_local();
         _map.win.ask_modified_overwrite( _map, (overwrite) => {
@@ -343,8 +373,6 @@ public class Document : Object {
     if( archive.close() != Archive.Result.OK ) {
       error( "Error : %s (%d)", archive.error_string(), archive.errno() );
     }
-
-    stdout.printf( "HERE!!!!\n" );
 
     // Indicate that a save is no longer needed
     save_needed = false;

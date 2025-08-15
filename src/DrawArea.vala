@@ -90,6 +90,7 @@ public class DrawArea : Gtk.DrawingArea {
   private uint                  _select_hover_id = 0;
   private EventControllerKey    _key_controller;
   private EventControllerScroll _scroll;
+  private string?               _node_link_tooltip = null;
 
   public MainWindow win      { private set; get; }
   public Animator   animator { set; get; }
@@ -1370,7 +1371,9 @@ public class DrawArea : Gtk.DrawingArea {
       }
       var match_node = _map.model.get_node_at_position( _scaled_x, _scaled_y, out component );
       if( match_node != null ) {
-        _map.model.update_last_match( match_node );
+        if( _map.model.update_last_match( match_node ) ) {
+          _node_link_tooltip = null;
+        }
         if( (current_conn != null) && ((current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING)) ) {
           _map.model.set_attach_node( match_node );
         } else if( component == MapItemComponent.TASK ) {
@@ -1384,8 +1387,11 @@ public class DrawArea : Gtk.DrawingArea {
             set_tooltip_markup( prepare_folded_count_markup( match_node ) );
           }
         } else if( component == MapItemComponent.NODE_LINK ) {
+          if( _node_link_tooltip == null ) {
+            _node_link_tooltip = Utils.prepare_note_markup( match_node.linked_node.get_tooltip( _map ) );
+          }
           set_cursor_name( pointer_cursor );
-          set_tooltip_markup( Utils.prepare_note_markup( match_node.linked_node.get_tooltip( _map ) ) );
+          set_tooltip_markup( _node_link_tooltip );
         } else if( component == MapItemComponent.RESIZER ) {
           set_cursor_name( "ew-resize" );
           if( match_node.image == null ) {
