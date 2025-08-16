@@ -274,7 +274,7 @@ public class Document : Object {
 
     /* Finally, load the minder file and re-save it */
     load_xml();
-    _map.changed();
+    // _map.changed();
 
     return( true );
 

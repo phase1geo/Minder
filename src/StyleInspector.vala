@@ -876,7 +876,7 @@ public class StyleInspector : Box {
 
   /* Called whenever the node fill status changes */
   private void node_markup_changed() {
-    if( _ignore ) {
+    if( !_ignore ) {
       var val = _node_markup.get_active();
       _map.undo_buffer.add_item( new UndoStyleNodeMarkup( _affects, val, _map ) );
     }

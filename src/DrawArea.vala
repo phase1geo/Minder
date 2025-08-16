@@ -1220,7 +1220,7 @@ public class DrawArea : Gtk.DrawingArea {
         double diff_y = _scaled_y - last_y;
         move_origin( diff_x, diff_y );
         queue_draw();
-        _map.auto_save();
+        // _map.auto_save();
         return;
       }
   
