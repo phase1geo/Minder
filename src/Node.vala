@@ -2164,14 +2164,14 @@ public class Node : Object {
   public virtual void attach_only( Node? prev_parent, int prev_index ) {
     assert( !is_summary() );
     var temp = new Array<Node>();
-    for( int i=0; i<children().length; i++ ) {
+    for( int i=(int)(children().length - 1); i>=0; i-- ) {
       var child = children().index( i );
       if( child.is_root() ) {
         _map.model.remove_root_node( child );
       } else {
         child.detach( child.side );
       }
-      temp.append_val( child );
+      temp.prepend_val( child );
     }
     children().remove_range( 0, children().length );
     for( int i=0; i<temp.length; i++ ) {
