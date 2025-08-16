@@ -72,10 +72,10 @@ public class Document : Object {
 
     _map = map;
 
-    /* Generate unique Etag */
+    // Generate unique Etag
     _etag = generate_etag();
 
-    /* Create the temporary file */
+    // Create the temporary file
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
     if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
       int i = 1;

@@ -352,6 +352,10 @@ public class MindMap {
       return( false );
     });
 
+    // Make sure that we save the document
+    doc.save_xml();
+    doc.save();
+
     // Redraw the canvas
     _canvas.queue_draw();
 
