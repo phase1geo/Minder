@@ -1281,7 +1281,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
         queue_draw();
 
-      /* If we are dealing with a sticker, handle it */
+      // If we are dealing with a sticker, handle it
       } else if( current_sticker != null ) {
         double diffx = _scaled_x - _press_x;
         double diffy = _scaled_y - _press_y;
@@ -1294,7 +1294,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         _map.auto_save();
 
-      /* If we are dealing with a callout, handle it */
+      // If we are dealing with a callout, handle it
       } else if( current_callout != null ) {
         double diffx = _scaled_x - _press_x;
         if( _resize ) {
@@ -1303,8 +1303,8 @@ public class DrawArea : Gtk.DrawingArea {
           _map.auto_save();
         }
 
-      /* Otherwise, we are drawing a selection rectangle */
-      } else if( current_group == null ) {
+      // If we are drawing a selection box, add nodes
+      } else if( (current_group == null) && _select_box.valid ) {
         _select_box.w = (_scaled_x - _select_box.x);
         _select_box.h = (_scaled_y - _select_box.y);
         _map.select_nodes_within_box( _select_box, _shift );
