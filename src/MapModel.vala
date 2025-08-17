@@ -2302,7 +2302,9 @@ public class MapModel {
     delete doc;
   }
 
-  /* Deserialize the node tree, returning the first node as a node link */
+  //-------------------------------------------------------------
+  // Deserialize the node tree, returning the first node as a
+  // node link
   public static NodeLink? deserialize_for_node_link( string str ) {
     Xml.Doc* doc = Xml.Parser.parse_doc( str );
     if( doc == null ) return( null );
@@ -2323,7 +2325,11 @@ public class MapModel {
     nodes  = new Array<Node>();
     conns  = _connections;
     groups = _groups;
-    _map.selected.get_parents( ref nodes );
+    if( _map.selected.num_nodes() == 1 ) {
+      nodes.append_val( _map.get_current_node() );
+    } else {
+      _map.selected.get_subtrees( ref nodes, image_manager );
+    }
   }
 
   //-------------------------------------------------------------
