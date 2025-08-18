@@ -1265,7 +1265,6 @@ public enum KeyCommand {
   }
 
   public static void toggle_connections( MindMap map ) {
-    stdout.printf( "In toggle connections\n" );
     map.model.connections.hide = !map.model.connections.hide;
     map.queue_draw();
   }
@@ -2109,7 +2108,6 @@ public enum KeyCommand {
   }
 
   public static void edit_paste( MindMap map ) {
-    stdout.printf( "Calling do_paste\n" );
     map.do_paste( false );
   }
 

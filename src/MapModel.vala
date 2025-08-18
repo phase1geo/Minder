@@ -2396,6 +2396,7 @@ public class MapModel {
     var nodes = _map.selected.ordered_nodes();
     var conns = new Array<Connection>();
     Array<UndoNodeGroups?> undo_groups = null;
+    // _map.canvas.animator.add_nodes( _nodes, "cut nodes" );
     for( int i=0; i<nodes.length; i++ ) {
       _connections.node_only_deleted( nodes.index( i ), conns );
     }
@@ -2406,6 +2407,7 @@ public class MapModel {
       nodes.index( i ).delete_only();
     }
     _map.selected.clear_nodes();
+    // _map.canvas.animator.animate();
     queue_draw();
     auto_save();
   }
