@@ -27,7 +27,7 @@ public class ExportPNG : Export {
 
   /* Constructor */
   public ExportPNG() {
-    base( "png", _( "PNG" ), { ".png" }, true, false, false );
+    base( "png", _( "PNG" ), { ".png" }, true, false, false, true );
   }
 
   /* Default constructor */
@@ -71,7 +71,13 @@ public class ExportPNG : Export {
     option_keys += "compression";  option_values += value.to_string();
 
     try {
-      pixbuf.savev( fname, "png", option_keys, option_values );
+      if( send_to_clipboard() ) {
+        uint8[] img_data;
+        pixbuf.save_to_bufferv( out img_data, "png", option_keys, option_values );
+        MinderClipboard.copy_image_buffer( img_data );
+      } else {
+        pixbuf.savev( fname, "png", option_keys, option_values );
+      }
     } catch( Error e ) {
       stdout.printf( "Error writing %s: %s\n", name, e.message );
       return( false );

@@ -26,7 +26,7 @@ using Gtk;
 public class ExportImage : Export {
 
   public ExportImage( string type, string label, string[] extensions ) {
-    base( type, label, extensions, true, false, false );
+    base( type, label, extensions, true, false, false, true );
   }
 
   /* Default constructor */
@@ -65,7 +65,13 @@ public class ExportImage : Export {
     }
 
     try {
-      pixbuf.savev( fname, name, option_keys, option_values );
+      if( get_bool( "clipboard" ) ) {
+        uint8[] img_data;
+        pixbuf.save_to_bufferv( out img_data, name, option_keys, option_values );
+        MinderClipboard.copy_image_buffer( img_data );
+      } else {
+        pixbuf.savev( fname, name, option_keys, option_values );
+      }
     } catch( Error e ) {
       stdout.printf( "Error writing %s: %s\n", name, e.message );
       return( false );

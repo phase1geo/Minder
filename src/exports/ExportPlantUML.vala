@@ -26,52 +26,60 @@ public class ExportPlantUML : Export {
 
   /* Constructor */
   public ExportPlantUML() {
-    base( "plant-uml", _( "PlantUML" ), { ".puml" }, true, true, false );
+    base( "plant-uml", _( "PlantUML" ), { ".puml" }, true, true, false, true );
   }
 
   /* Exports the given drawing area to the file of the given name */
   public override bool export( string fname, MindMap map ) {
-    var  file   = File.new_for_path( fname );
-    bool retval = true;
-    try {
-      var os = file.replace( null, false, FileCreateFlags.NONE );
-      export_top_nodes( os, map );
-    } catch( Error e ) {
-      retval = false;
+    var retval = true;
+    if( send_to_clipboard() ) {
+      MinderClipboard.copy_text( export_top_nodes( map ) );
+    } else {
+      var file = File.new_for_path( fname );
+      try {
+        var os = file.replace( null, false, FileCreateFlags.NONE );
+        os.write( export_top_nodes( map ).data );
+      } catch( Error e ) {
+        retval = false;
+      }
     }
     return( retval );
   }
 
-  private void export_header( FileOutputStream os, MindMap map ) {
-    var start = "@startmindmap\n";
-    os.write( start.data );
+  private string export_header( MindMap map ) {
+    return( "@startmindmap\n" );
   }
 
-  private void export_footer( FileOutputStream os, MindMap map ) {
-    var start = "@endmindmap\n\n";
-    os.write( start.data );
+  private string export_footer( MindMap map ) {
+    return( "@endmindmap\n\n" );
   }
 
   /* Draws each of the top-level nodes */
-  private void export_top_nodes( FileOutputStream os, MindMap map ) {
+  private string export_top_nodes( MindMap map ) {
+
+    var retval = "";
 
     try {
 
       var nodes = map.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
-        export_header( os, map );
-        export_node( os, nodes.index( i ), 1 );
-        export_footer( os, map );
+        retval += export_header( map );
+        retval += export_node( nodes.index( i ), 1 );
+        retval += export_footer( map );
       }
 
     } catch( Error e ) {
       // Handle the error
     }
 
+    return( retval );
+
   }
 
   /* Draws the given node and its children to the output stream */
-  private void export_node( FileOutputStream os, Node node, int depth ) {
+  private string export_node( Node node, int depth ) {
+
+    var retval = "";
 
     try {
 
@@ -98,22 +106,25 @@ public class ExportPlantUML : Export {
         title += " ";
       }
 
-      title += node.name.text.text.replace( "\n", "\\n" ) + "\n";
-
-      os.write( title.data );
+      title  += node.name.text.text.replace( "\n", "\\n" ) + "\n";
+      retval += title;
 
       var children = node.children();
       for( int i=0; i<children.length; i++ ) {
-        export_node( os, children.index( i ), (depth + 1) );
+        retval += export_node( children.index( i ), (depth + 1) );
       }
 
     } catch( Error e ) {
       // Handle error
     }
 
+    return( retval );
+
   }
 
-  //----------------------------------------------------------------------------
+  //-------------------------------------------------------------
+  // IMPORT
+  //-------------------------------------------------------------
 
   /* Imports a PlantUML document */
   public override bool import( string fname, MindMap map ) {

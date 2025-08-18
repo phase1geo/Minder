@@ -23,7 +23,7 @@ public class ExportYed : Export {
 
   /* Constructor */
   public ExportYed() {
-    base( "yed", _( "Yed" ), { ".graphml" }, true, false, false );
+    base( "yed", _( "Yed" ), { ".graphml" }, true, false, false, true );
   }
 
   /* Exports the given drawing area to the file of the given name */
@@ -43,7 +43,13 @@ public class ExportYed : Export {
     export_keys( root );
     export_graphs( root, yns, map );
     doc->set_root_element( root );
-    doc->save_format_file( fname, 1 );
+    if( send_to_clipboard() ) {
+      string text = "";
+      doc->dump_memory_format( out text );
+      MinderClipboard.copy_text( text );
+    } else {
+      doc->save_format_file( fname, 1 );
+    }
     delete doc;
     return( true );
   }

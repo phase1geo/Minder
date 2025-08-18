@@ -23,7 +23,7 @@ public class ExportCSV : Export {
 
   /* Constructor */
   public ExportCSV() {
-    base( "csv", _( "CSV" ), { ".csv" }, true, false, false );
+    base( "csv", _( "CSV" ), { ".csv" }, true, false, false, false );
   }
 
   /* Exports the given drawing area to the file of the given name */

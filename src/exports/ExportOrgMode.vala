@@ -26,7 +26,7 @@ public class ExportOrgMode : Export {
   //-------------------------------------------------------------
   // Constructor
   public ExportOrgMode() {
-    base( "org-mode", _( "Org-Mode" ), { ".org" }, true, false, false );
+    base( "org-mode", _( "Org-Mode" ), { ".org" }, true, false, false, true );
   }
 
   //-------------------------------------------------------------
@@ -55,13 +55,17 @@ public class ExportOrgMode : Export {
   //-------------------------------------------------------------
   // Exports the given drawing area to the file of the given name.
   public override bool export( string fname, MindMap map ) {
-    var  file   = File.new_for_path( fname );
     bool retval = true;
-    try {
-      var os = file.replace( null, false, FileCreateFlags.NONE );
-      export_top_nodes( os, map );
-    } catch( Error e ) {
-      retval = false;
+    if( send_to_clipboard() ) {
+      MinderClipboard.copy_text( export_top_nodes( map ) );
+    } else {
+      var file = File.new_for_path( fname );
+      try {
+        var os = file.replace( null, false, FileCreateFlags.NONE );
+        os.write( export_top_nodes( map ).data );
+      } catch( Error e ) {
+        retval = false;
+      }
     }
     return( retval );
   }
@@ -79,21 +83,23 @@ public class ExportOrgMode : Export {
   }
 
   /* Draws each of the top-level nodes */
-  private void export_top_nodes( FileOutputStream os, MindMap map ) {
+  private string export_top_nodes( MindMap map ) {
+
+    var retval = "";
 
     try {
 
       var nodes = map.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
         string title = "* " + nodes.index( i ).name.text.text + "\n\n";
-        os.write( title.data );
+        retval += title;
         if( nodes.index( i ).note != "" ) {
           string note = "\n" + linestart( "" ) + nodes.index( i ).note.replace( "\n", "\n  " );
-          os.write( note.data );
+          retval += note;
         }
         var children = nodes.index( i ).children();
         for( int j=0; j<children.length; j++ ) {
-          export_node( os, children.index( j ), sprefix() );
+          retval += export_node( children.index( j ), sprefix() );
         }
       }
 
@@ -101,10 +107,14 @@ public class ExportOrgMode : Export {
       // Handle the error
     }
 
+    return( retval );
+
   }
 
   /* Draws the given node and its children to the output stream */
-  private void export_node( FileOutputStream os, Node node, string prefix ) {
+  private string export_node( Node node, string prefix ) {
+
+    var retval = "";
 
     try {
 
@@ -118,25 +128,26 @@ public class ExportOrgMode : Export {
         }
       }
 
-      title += node.name.text.text.replace( "\n", wrap( prefix ) ) + "\n";
-
-      os.write( title.data );
+      title  += node.name.text.text.replace( "\n", wrap( prefix ) ) + "\n";
+      retval += title;
 
       if( node.note != "" ) {
         string note = "\n" + linestart( prefix ) + node.note.replace( "\n", "\n" + linestart( prefix ) ) + "\n";
-        os.write( note.data );
+        retval += note;
       }
 
-      os.write( "\n".data );
+      retval += "\n";
 
       var children = node.children();
       for( int i=0; i<children.length; i++ ) {
-        export_node( os, children.index( i ), prefix + sprefix() );
+        retval += export_node( children.index( i ), prefix + sprefix() );
       }
 
     } catch( Error e ) {
       // Handle error
     }
+
+    return( retval );
 
   }
 

@@ -25,7 +25,7 @@ public class ExportPortableMinder : Export {
 
   /* Constructor */
   public ExportPortableMinder() {
-    base( "portable-minder", _( "Portable Minder" ), { ".pminder" }, true, true, false );
+    base( "portable-minder", _( "Portable Minder" ), { ".pminder" }, true, true, false, false );
   }
 
   /*

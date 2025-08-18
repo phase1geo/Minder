@@ -26,7 +26,7 @@ public class ExportFileSystem : Export {
 
   /* Constructor */
   public ExportFileSystem() {
-    base( "fs", _( "File System" ), {"*"}, true, true, true );
+    base( "fs", _( "File System" ), {"*"}, true, true, true, false );
   }
 
   /* Performs export to the given filename */

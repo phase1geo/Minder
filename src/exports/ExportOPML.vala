@@ -24,7 +24,7 @@ public class ExportOPML : Export {
   //-------------------------------------------------------------
   // Constructor
   public ExportOPML() {
-    base( "opml", _( "OPML" ), { ".opml" }, true, true, false );
+    base( "opml", _( "OPML" ), { ".opml" }, true, true, false, true );
   }
 
   //-------------------------------------------------------------
@@ -39,7 +39,13 @@ public class ExportOPML : Export {
     opml->add_child( export_head( Path.get_basename( fname ), expand_state ) );
     opml->add_child( body );
     doc->set_root_element( opml );
-    doc->save_format_file( fname, 1 );
+    if( send_to_clipboard() ) {
+      var text = "";
+      doc->dump_memory_format( out text );
+      MinderClipboard.copy_text( text );
+    } else {
+      doc->save_format_file( fname, 1 );
+    }
     delete doc;
     return( true );
   }

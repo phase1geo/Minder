@@ -76,7 +76,7 @@ public class ExportXMind2021 : Export {
 
   /* Constructor */
   public ExportXMind2021() {
-    base( "xmind-2021", _( "XMind 2021" ), { ".xmind" }, false, true, false );
+    base( "xmind-2021", _( "XMind 2021" ), { ".xmind" }, false, true, false, false );
   }
 
   /* Exports the given drawing area to the file of the given name */

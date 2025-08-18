@@ -78,7 +78,7 @@ public class ExportXMind8 : Export {
   //-------------------------------------------------------------
   // Constructor.
   public ExportXMind8() {
-    base( "xmind-8", _( "XMind 8" ), { ".xmind" }, true, true, false );
+    base( "xmind-8", _( "XMind 8" ), { ".xmind" }, true, true, false, false );
   }
 
   //-------------------------------------------------------------

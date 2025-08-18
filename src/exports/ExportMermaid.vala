@@ -23,24 +23,32 @@ using Gtk;
 
 public class ExportMermaid : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportMermaid() {
-    base( "mermaid", _( "Mermaid" ), { ".mmd" }, true, false, false );
+    base( "mermaid", _( "Mermaid" ), { ".mmd" }, true, false, false, true );
   }
 
-  /* Exports the given drawing area to the file of the given name */
+  //-------------------------------------------------------------
+  // Exports the given drawing area to the file of the given name
   public override bool export( string fname, MindMap map ) {
-    var  file   = File.new_for_path( fname );
-    bool retval = true;
-    try {
-      var os = file.replace( null, false, FileCreateFlags.NONE );
-      if( get_bool( "mindmap" ) ) {
-        export_top_nodes_mindmap( os, map );
-      } else {
-        export_top_nodes_graph( os, map );
+    var retval = true;
+    var text   = "";
+    if( get_bool( "mindmap" ) ) {
+      text = export_top_nodes_mindmap( map );
+    } else {
+      text = export_top_nodes_graph( map );
+    }
+    if( send_to_clipboard() ) {
+      MinderClipboard.copy_text( text );
+    } else {
+      var file = File.new_for_path( fname );
+      try {
+        var os = file.replace( null, false, FileCreateFlags.NONE );
+        os.write( text.data );
+      } catch( Error e ) {
+        retval = false;
       }
-    } catch( Error e ) {
-      retval = false;
     }
     return( retval );
   }
@@ -61,8 +69,11 @@ public class ExportMermaid : Export {
 
   }
 
-  /* Draws each of the top-level nodes */
-  private void export_top_nodes_graph( FileOutputStream os, MindMap map ) {
+  //-------------------------------------------------------------
+  // Draws each of the top-level nodes
+  private string export_top_nodes_graph( MindMap map ) {
+
+    var retval = "";
 
     try {
 
@@ -70,45 +81,51 @@ public class ExportMermaid : Export {
       int link_id = 0;
 
       if( nodes.length == 0 ) {
-        return;
+        return( retval );
       }
 
       string title = "graph " + map_layout_to_direction( nodes.index( 0 ) ) + "\n";
-      os.write( title.data );
+      retval += title;
 
       for( int i=0; i<nodes.length; i++ ) {
-        export_node_graph( os, nodes.index( i ), ref link_id );
+        retval += export_node_graph( nodes.index( i ), ref link_id );
       }
 
     } catch( Error e ) {
       // Handle the error
     }
 
+    return( retval );
+
   }
 
-  private void export_top_nodes_mindmap( FileOutputStream os, MindMap map ) {
+  private string export_top_nodes_mindmap( MindMap map ) {
+
+    var retval = "";
 
     try {
 
       var nodes = map.get_nodes();
       
       if( nodes.length != 1 ) {
-        return;
+        return( retval );
       }
 
       var root     = nodes.index( 0 );
       var children = root.children();
 
       string title = "mindmap\nroot(" + root.name.text.text + ")\n";
-      os.write( title.data );
+      retval += title;
 
       for( int i=0; i<children.length; i++ ) {
-        export_node_mindmap( os, children.index( i ), "  " );
+        retval += export_node_mindmap( children.index( i ), "  " );
       }
 
     } catch( Error e ) {
       // Handle the error
     }
+
+    return( retval );
 
   }
 
@@ -185,8 +202,12 @@ public class ExportMermaid : Export {
 
   }
 
-  /* Draws the given node and its children to the output stream for graph output */
-  private void export_node_graph( FileOutputStream os, Node node, ref int link_id ) {
+  //-------------------------------------------------------------
+  // Draws the given node and its children to the output stream
+  // for graph output
+  private string export_node_graph( Node node, ref int link_id ) {
+
+    var retval = "";
 
     try {
 
@@ -195,7 +216,7 @@ public class ExportMermaid : Export {
 
       if( node.is_root() && (children.length == 0) ) {
         var line = "  " + title + ";\n";
-        os.write( line.data );
+        retval += line;
       } else {
         for( int i=0; i<children.length; i++ ) {
           var link   = make_link( children.index( i ) );
@@ -203,8 +224,8 @@ public class ExportMermaid : Export {
           var nstyle = make_node_style( children.index( i ) );
           var lstyle = make_link_style( children.index( i ), ref link_id );
           var line   = "  " + title + " " + link + " " + ctitle + ";  " + nstyle + ";  " + lstyle + ";\n";
-          os.write( line.data );
-          export_node_graph( os, children.index( i ), ref link_id );
+          retval += line;
+          retval += export_node_graph( children.index( i ), ref link_id );
         }
       }
 
@@ -212,39 +233,50 @@ public class ExportMermaid : Export {
       // Handle error
     }
 
+    return( retval );
+
   }
 
-  /* Draws the given node and its children to the output stream for mindmap output */
-  private void export_node_mindmap( FileOutputStream os, Node node, string prefix ) {
+  //-------------------------------------------------------------
+  // Draws the given node and its children to the output stream
+  // for mindmap output
+  private string export_node_mindmap( Node node, string prefix ) {
+
+    var retval = "";
 
     try {
 
       var title    = prefix + make_title( node ) + "\n";
       var children = node.children();
 
-      os.write( title.data );
+      retval += title;
 
       for( int i=0; i<children.length; i++ ) {
-        export_node_mindmap( os, children.index( i ), prefix + "  " );
+        retval += export_node_mindmap( children.index( i ), prefix + "  " );
       }
 
     } catch( Error e ) {
       // Handle error
     }
 
+    return( retval );
+
   }
 
-  /* Adds settings panel */
+  //-------------------------------------------------------------
+  // Adds settings panel
   public override void add_settings( Grid grid ) {
     add_setting_bool( "mindmap", grid, _( "Use Mermaid Mindmap Format" ), null, false );
   }
 
-  /* Save the settings */
+  //-------------------------------------------------------------
+  // Save the settings
   public override void save_settings( Xml.Node* node ) {
     node->set_prop( "mindmap", get_bool( "mindmap" ).to_string() );
   }
 
-  /* Load the settings */
+  //-------------------------------------------------------------
+  // Load the settings
   public override void load_settings( Xml.Node* node ) {
     var mm = node->get_prop( "mindmap" );
     if( mm != null ) {

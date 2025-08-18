@@ -91,7 +91,8 @@ public class Exporter : Box {
     Minder.settings.set_string( "last-export", export.name );
   }
 
-  /* Add the given export */
+  //-------------------------------------------------------------
+  // Add the given export
   private void add_export( MainWindow win, Export export ) {
 
     /* Add the page */
@@ -104,7 +105,7 @@ public class Exporter : Box {
       row_spacing        = 5,
       column_spacing     = 5
     };
-    export.add_settings( opts );
+    export.add_all_settings( opts );
 
     var label = new Label( "<i>" + _( "Export Options" ) + "</i>" ) {
       use_markup = true
@@ -123,11 +124,9 @@ public class Exporter : Box {
 
   }
 
-  /* Perform the export */
-  public void do_export( MainWindow win ) {
-
-    var name   = _stack.visible_child_name;
-    var export = win.exports.get_by_name( name );
+  //-------------------------------------------------------------
+  // Perform the export to a selected file.
+  public void do_export_to_file( MainWindow win, Export export ) {
 
     var dialog = Utils.make_file_chooser( _( "Export As %s" ).printf( export.label ), _( "Export" ) );
 
@@ -156,6 +155,30 @@ public class Exporter : Box {
         }
       } catch( Error e ) {}
     });
+
+  }
+
+  //-------------------------------------------------------------
+  // Perform the export to the clipboard.
+  public void do_export_to_clipboard( MainWindow win, Export export ) {
+
+    export.export( "", win.get_current_map() );
+    win.notification( _( "Minder Export Completed" ), _( "Copied to clipboard" ) );
+
+  }
+
+  //-------------------------------------------------------------
+  // Perform the export.
+  public void do_export( MainWindow win ) {
+
+    var name   = _stack.visible_child_name;
+    var export = win.exports.get_by_name( name );
+
+    if( export.send_to_clipboard() ) {
+      do_export_to_clipboard( win, export );
+    } else {
+      do_export_to_file( win, export );
+    }
 
   }
 

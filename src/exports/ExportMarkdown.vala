@@ -28,9 +28,10 @@ public class ExportMarkdown : Export {
     public Node node;
   }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportMarkdown() {
-    base( "markdown", _( "Markdown" ), { ".md", ".markdown" }, true, true, false );
+    base( "markdown", _( "Markdown" ), { ".md", ".markdown" }, true, true, false, true );
   }
 
   private bool handle_directory( string fname, out string mdfile, out string imgdir ) {
@@ -55,7 +56,8 @@ public class ExportMarkdown : Export {
     return( true );
   }
 
-  /* Exports the given drawing area to the file of the given name */
+  //-------------------------------------------------------------
+  // Exports the given drawing area to the file of the given name
   public override bool import( string fname, MindMap map ) {
     var file        = File.new_for_path( fname );
     var current_dir = Path.get_dirname( fname );
@@ -81,7 +83,9 @@ public class ExportMarkdown : Export {
     return( true );
   }
 
-  /* Creates a new node from the given information and attaches it to the specified parent node */
+  //-------------------------------------------------------------
+  // Creates a new node from the given information and attaches
+  // it to the specified parent node
   private Node make_node( MindMap map, Node? parent, string bullet, string task, string pre_name, string current_dir, bool attach = true ) {
 
     NodeImage? image = null;
@@ -152,17 +156,20 @@ public class ExportMarkdown : Export {
 
   }
 
-  /* Appends the given string to the name */
+  //-------------------------------------------------------------
+  // Appends the given string to the name
   public void append_name( Node node, string str ) {
     node.name.text.append_text( " " + str.strip() );
   }
 
-  /* Append the given string to the note */
+  //-------------------------------------------------------------
+  // Append the given string to the note
   public void append_note( Node node, string str ) {
     node.note = "%s\n%s".printf( node.note, str ).strip();
   }
 
-  /* Imports a mindmap from the given text */
+  //-------------------------------------------------------------
+  // Imports a mindmap from the given text
   private void import_text( string txt, MindMap map, string current_dir ) {
 
     try {
@@ -249,39 +256,49 @@ public class ExportMarkdown : Export {
 
   }
 
-  /****************************************************************/
+  //-------------------------------------------------------------
+  // EXPORTS
+  //-------------------------------------------------------------
 
-  /* Exports the given drawing area to the file of the given name */
+  //-------------------------------------------------------------
+  // Exports the given drawing area to the file of the given name.
   public override bool export( string fname, MindMap map ) {
-    string filename, imgdir;
-    if( !handle_directory( fname, out filename, out imgdir ) ) return( false );
-    var  file     = File.new_for_path( filename );
-    bool retval   = true;
-    try {
-      var os = file.replace( null, false, FileCreateFlags.NONE );
-      export_top_nodes( os, map, imgdir );
-    } catch( Error e ) {
-      retval = false;
+    bool retval = true;
+    if( send_to_clipboard() ) {
+      MinderClipboard.copy_text( export_top_nodes( map, null ) );
+    } else {
+      string filename, imgdir;
+      if( !handle_directory( fname, out filename, out imgdir ) ) return( false );
+      var file = File.new_for_path( filename );
+      try {
+        var os = file.replace( null, false, FileCreateFlags.NONE );
+        os.write( export_top_nodes( map, imgdir ).data );
+      } catch( Error e ) {
+        retval = false;
+      }
     }
     return( retval );
   }
 
-  /* Draws each of the top-level nodes */
-  private void export_top_nodes( FileOutputStream os, MindMap map, string imgdir ) {
+  //-------------------------------------------------------------
+  // Draws each of the top-level nodes
+  private string export_top_nodes( MindMap map, string? imgdir ) {
+
+    var retval = "";
 
     try {
 
-      var nodes = map.get_nodes();
+      var nodes  = map.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
         var title = "# " + nodes.index( i ).name.text.text + "\n\n";
-        os.write( title.data );
+        retval += title;
         if( nodes.index( i ).note != "" ) {
           var note = "  > " + nodes.index( i ).note.replace( "\n", "\n  > " ) + "\n\n";
-          os.write( note.data );
+          retval += note;
         }
         var children = nodes.index( i ).children();
         for( int j=0; j<children.length; j++ ) {
-          export_node( os, map.image_manager, children.index( j ), imgdir );
+          retval += export_node( map.image_manager, children.index( j ), imgdir );
         }
       }
 
@@ -289,9 +306,12 @@ public class ExportMarkdown : Export {
       // Handle the error
     }
 
+    return( retval );
+
   }
 
-  /* Copies the given image file to the image directory */
+  //-------------------------------------------------------------
+  // Copies the given image file to the image directory
   private bool copy_file( string imgdir, string filename ) {
     var basename = GLib.Path.get_basename( filename );
     var lname    = GLib.Path.build_filename( imgdir, basename );
@@ -305,8 +325,11 @@ public class ExportMarkdown : Export {
     return( true );
   }
 
-  /* Draws the given node and its children to the output stream */
-  private void export_node( FileOutputStream os, ImageManager im, Node node, string imgdir, string prefix = "  " ) {
+  //-------------------------------------------------------------
+  // Draws the given node and its children to the output stream
+  private string export_node( ImageManager im, Node node, string? imgdir, string prefix = "  " ) {
+
+    var retval = "";
 
     try {
 
@@ -320,7 +343,7 @@ public class ExportMarkdown : Export {
         }
       }
 
-      if( (node.image != null) && get_bool( "include-image-links" ) ) {
+      if( (node.image != null) && (imgdir != null) && get_bool( "include-image-links" ) ) {
         var file = im.get_file( node.image.id );
         if( copy_file( imgdir, file ) ) {
           var basename = GLib.Path.get_basename( file );
@@ -330,29 +353,31 @@ public class ExportMarkdown : Export {
         }
       }
 
-      title += node.name.text.text.replace( "\n", prefix + " " ) + "\n";
-
-      os.write( title.data );
+      title  += node.name.text.text.replace( "\n", prefix + " " ) + "\n";
+      retval += title;
 
       if( node.note != "" ) {
         string note = prefix + "  > " + node.note.replace( "\n", "\n" + prefix + "  > " ) + "\n";
-        os.write( note.data );
+        retval += note;
       }
 
-      os.write( "\n".data );
+      retval += "\n";
 
       var children = node.children();
       for( int i=0; i<children.length; i++ ) {
-        export_node( os, im, children.index( i ), imgdir, prefix + "  " );
+        retval += export_node( im, children.index( i ), imgdir, prefix + "  " );
       }
 
     } catch( Error e ) {
       // Handle error
     }
 
+    return( retval );
+
   }
 
-  /* Add the PNG settings */
+  //-------------------------------------------------------------
+  // Add the PNG settings
   public override void add_settings( Grid grid ) {
 
     add_setting_bool( "include-image-links", grid, _( "Include image links" ),
@@ -360,14 +385,16 @@ public class ExportMarkdown : Export {
 
   }
 
-  /* Save the settings */
+  //-------------------------------------------------------------
+  // Save the settings
   public override void save_settings( Xml.Node* node ) {
 
     node->set_prop( "include-image-links", get_bool( "include-image-links" ).to_string() );
 
   }
 
-  /* Load the settings */
+  //-------------------------------------------------------------
+  // Load the settings
   public override void load_settings( Xml.Node* node ) {
 
     var i = node->get_prop( "include-image-links" );
