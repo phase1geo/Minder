@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
 # Automatically generated, 2020.
 # Alexandre Prokoudine <alexandre.prokoudine@gmail.com>, 2021-2022.
+# Maksim Syomochkin <maksim77ster@gmail.com>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-29 21:52-0500\n"
-"PO-Revision-Date: 2024-01-15 06:57+0100\n"
-"Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
+"PO-Revision-Date: 2025-08-18 12:30+0300\n"
+"Last-Translator: Maksim Syomochkin <maksim77ster@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -380,7 +381,7 @@ msgstr "Создаст каталог с файлом Markdown и встроен
 
 #: src/exports/ExportMermaid.vala:26
 msgid "Mermaid"
-msgstr "Русалка"
+msgstr "Mermaid"
 
 #: src/exports/ExportMermaid.vala:46 src/layouts/LayoutVertical.vala:26
 #: src/MapInspector.vala:449
@@ -416,7 +417,7 @@ msgstr "Режим отступа"
 
 #: src/exports/ExportOrgMode.vala:33
 msgid "Export using indentation spaces"
-msgstr "Эекспортировать с отступами пробелами"
+msgstr "Экспортировать с отступами пробелами"
 
 #: src/exports/ExportOutliner.vala:28
 msgid "Outliner"
