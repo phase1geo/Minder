@@ -21,37 +21,46 @@
 
 public class ExportCSV : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportCSV() {
-    base( "csv", _( "CSV" ), { ".csv" }, true, false, false, false );
+    base( "csv", _( "CSV" ), { ".csv" }, true, false, false, true );
   }
 
-  /* Exports the given drawing area to the file of the given name */
+  //-------------------------------------------------------------
+  // Exports the given drawing area to the file of the given name
   public override bool export( string fname, MindMap map ) {
-    var  file   = File.new_for_path( fname );
-    bool retval = true;
-    try {
-      var os     = file.replace( null, false, FileCreateFlags.NONE );
-      int levels = levels( map );
-      export_levels( os, levels );
-      export_top_nodes( os, map, levels );
-    } catch( Error e ) {
-      retval = false;
+    var retval = true;
+    var text   = "";
+    var levels = levels( map );
+    text += export_levels( levels );
+    text += export_top_nodes( map, levels );
+    if( send_to_clipboard() ) {
+      MinderClipboard.copy_text( text );
+    } else {
+      var file = File.new_for_path( fname );
+      try {
+        var os = file.replace( null, false, FileCreateFlags.NONE );
+        os.write( text.data );
+      } catch( Error e ) {
+        retval = false;
+      }
     }
     return( retval );
   }
 
-  private void export_levels( FileOutputStream os, int levels ) {
+  private string export_levels( int levels ) {
+    var str = "";
     try {
-      string str = "level0,note0";
+      str += "level0,note0";
       for( int i=1; i<levels; i++ ) {
         str += ",level" + i.to_string() + ",note" + i.to_string();
       }
       str += "\n";
-      os.write( str.data );
     } catch( Error e ) {
       // Do something with error
     }
+    return( str );
   }
 
   private int levels( MindMap map ) {
@@ -94,7 +103,9 @@ public class ExportCSV : Export {
   }
 
   /* Draws each of the top-level nodes */
-  private void export_top_nodes( FileOutputStream os, MindMap map, int levels ) {
+  private string export_top_nodes( MindMap map, int levels ) {
+
+    var retval = "";
 
     try {
 
@@ -104,11 +115,11 @@ public class ExportCSV : Export {
         for( int j=0; j<(levels - 1); j++ ) {
           title += ",,";
         }
-        title += "\n";
-        os.write( title.data );
+        title  += "\n";
+        retval += title;
         var children = nodes.index( i ).children();
         for( int j=0; j<children.length; j++ ) {
-          export_node( os, children.index( j ), ",,", levels );
+          retval += export_node( children.index( j ), ",,", levels );
         }
       }
 
@@ -116,10 +127,14 @@ public class ExportCSV : Export {
       // Handle the error
     }
 
+    return( retval );
+
   }
 
   /* Draws the given node and its children to the output stream */
-  private void export_node( FileOutputStream os, Node node, string prefix, int levels ) {
+  private string export_node( Node node, string prefix, int levels ) {
+
+    var retval = "";
 
     try {
 
@@ -139,18 +154,19 @@ public class ExportCSV : Export {
         title += ",,";
       }
 
-      title += "\n";
-
-      os.write( title.data );
+      title  += "\n";
+      retval += title;
 
       var children = node.children();
       for( int i=0; i<children.length; i++ ) {
-        export_node( os, children.index( i ), prefix + ",,", levels );
+        retval += export_node( children.index( i ), prefix + ",,", levels );
       }
 
     } catch( Error e ) {
       // Handle error
     }
+
+    return( retval );
 
   }
 
