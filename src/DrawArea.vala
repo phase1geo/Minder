@@ -1613,7 +1613,7 @@ public class DrawArea : Gtk.DrawingArea {
         } else if( current_node.parent != null ) {
           var orig_index   = current_node.index();
           var orig_summary = current_node.summary_node();
-          animator.add_nodes( _map.get_nodes(), "move to position" );
+          animator.add_nodes( _map.get_nodes(), false, "move to position" );
           if( current_node.parent != null ) {
             current_node.parent.clear_summary_extents();
           }

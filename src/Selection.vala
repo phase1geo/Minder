@@ -184,6 +184,20 @@ public class Selection {
   }
 
   //-------------------------------------------------------------
+  // Adds an array of nodes to the current selection.  Returns
+  // true if at least one node was added.
+  public bool add_nodes( Array<Node> nodes, bool signal_change = true ) {
+    var retval = false;
+    for( int i=0; i<nodes.length; i++ ) {
+      retval |= add_node( nodes.index( i ), false );
+    }
+    if( signal_change ) {
+      selection_changed();
+    }
+    return( retval );
+  }
+
+  //-------------------------------------------------------------
   // Adds the children nodes of the current node.
   public bool add_child_nodes( Node node, bool signal_change = true ) {
     var children = node.children();

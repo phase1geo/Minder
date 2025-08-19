@@ -32,7 +32,7 @@ public class AnimatorFade : AnimatorAction {
   public AnimatorFade( DrawArea da, Array<Node> n, bool fade_out, string name = "unnamed" ) {
     base( name, true );
     _num      = n.length;
-    _pos      = new AnimatorPositions( da, n );
+    _pos      = new AnimatorPositions( n, false );
     _callouts = new AnimatorCallouts( da, n, fade_out );
     _fade_out = fade_out;
   }

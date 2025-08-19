@@ -397,7 +397,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     var value = settings.get_boolean( "enable-animations" );
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
-      map.canvas.animator.enable = value;
+      map.animator.enable = value;
     }
   }
 
@@ -519,7 +519,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     map.undo_buffer.buffer_changed.connect( do_buffer_changed );
     map.undo_text.buffer_changed.connect( do_buffer_changed );
     map.theme_changed.connect( on_theme_changed );
-    map.canvas.animator.enable = _settings.get_boolean( "enable-animations" );
+    map.animator.enable = _settings.get_boolean( "enable-animations" );
 
     if( fname != null ) {
       map.doc.load_filename( fname, (reason == TabAddReason.OPEN) );

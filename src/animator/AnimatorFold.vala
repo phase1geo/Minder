@@ -34,7 +34,7 @@ public class AnimatorFold : AnimatorAction {
   public AnimatorFold( DrawArea da, Array<Node> n, Node node, bool fade_out, bool deep, string name = "unnamed" ) {
     base( name, true );
     _num      = n.length;
-    _pos      = new AnimatorPositions( da, n );
+    _pos      = new AnimatorPositions( n, false );
     _node     = new AnimatorNodeAlpha( da, node, fade_out, deep );
     _fade_out = fade_out;
     _deep     = deep;

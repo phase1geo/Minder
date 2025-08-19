@@ -54,6 +54,7 @@ public class UndoNodesCut : UndoItem {
   // Undoes a node deletion.
   public override void undo( MindMap map ) {
     map.selected.clear();
+    map.animator.add_nodes( map.get_nodes(), false, "UndoNodesCut undo" );
     for( int i=0; i<_nodes.length; i++ ) {
       var ni = _nodes.index( i );
       ni.node.attach_only( ni.parent, ni.index );
@@ -61,7 +62,7 @@ public class UndoNodesCut : UndoItem {
     }
     map.connections.add_connections( _conns );
     map.groups.apply_undos( _groups );
-    map.queue_draw();
+    map.animator.animate();
     map.auto_save();
   }
 
@@ -69,6 +70,7 @@ public class UndoNodesCut : UndoItem {
   // Redoes a node deletion.
   public override void redo( MindMap map ) {
     MinderClipboard.copy_nodes( map );
+    map.animator.add_nodes( map.get_nodes(), true, "UndoNodesCut redo" );
     map.selected.clear();
     for( int i=0; i<_nodes.length; i++ ) {
       UndoNodeGroups? tmp_group = null;
@@ -76,7 +78,7 @@ public class UndoNodesCut : UndoItem {
       map.groups.remove_node( _nodes.index( i ).node, ref tmp_group );
     }
     map.connections.remove_connections( _conns, false );
-    map.queue_draw();
+    map.animator.animate();
     map.auto_save();
   }
 

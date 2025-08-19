@@ -89,7 +89,7 @@ public class MapInspector : Box {
     }
     _map = map;
     if( _map != null ) {
-      _map.canvas.animator.enable = _settings.get_boolean( "enable-animations" );
+      _map.animator.enable = _settings.get_boolean( "enable-animations" );
       _hide_connections.set_active( _map.model.connections.hide );
       _hide_callouts.set_active( _map.model.hide_callouts );
       _map.model.set_theme( _map.get_theme(), false );

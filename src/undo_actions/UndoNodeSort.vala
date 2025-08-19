@@ -62,9 +62,9 @@ public class UndoNodeSort : UndoItem {
   //-------------------------------------------------------------
   // Perform the swap.
   private void change( MindMap map, SortNodes nodes ) {
-    map.canvas.animator.add_nodes( map.get_nodes(), "undo sorted nodes" );
+    map.animator.add_nodes( map.get_nodes(), false, "undo sorted nodes" );
     nodes.change( _parent );
-    map.canvas.animator.animate();
+    map.animator.animate();
   }
 
   //-------------------------------------------------------------

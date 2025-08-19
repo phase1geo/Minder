@@ -67,12 +67,12 @@ public class UndoNodesAlign : UndoItem {
   //-------------------------------------------------------------
   // Perform the node alignment change with animation.
   private void change( MindMap map ) {
-    map.canvas.animator.add_nodes( _nodes, "align change" );
+    map.animator.add_nodes( _nodes, false, "align change" );
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
       _info.index( i ).swap_with_node( node );
     }
-    map.canvas.animator.animate();
+    map.animator.animate();
     map.auto_save();
   }
 

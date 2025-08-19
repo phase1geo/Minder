@@ -121,10 +121,10 @@ public class MapModel {
           set_callout_mode( _map.selected.current_callout(), CalloutMode.NONE );
           _map.selected.clear_callouts( false );
         }
-        _map.canvas.animator.add_callouts_fade( _nodes, value, "hide callouts" );
+        _map.animator.add_callouts_fade( _nodes, value, "hide callouts" );
         _hide_callouts = value;
         auto_save();
-        _map.canvas.animator.animate();
+        _map.animator.animate();
       }
     }
   }
@@ -255,7 +255,7 @@ public class MapModel {
       _map.add_undo( new UndoNodeLayout( old_layout, new_layout, root_node ) );
     }
     var old_balanceable = old_layout.balanceable;
-    _map.canvas.animator.add_nodes( _nodes, "set layout" );
+    _map.animator.add_nodes( _nodes, false, "set layout" );
     if( root_node == null ) {
       for( int i=0; i<_nodes.length; i++ ) {
         _nodes.index( i ).layout = new_layout;
@@ -268,7 +268,7 @@ public class MapModel {
     if( !old_balanceable && new_layout.balanceable ) {
       balance_nodes( false, false );
     }
-    _map.canvas.animator.animate();
+    _map.animator.animate();
   }
 
   //-------------------------------------------------------------
@@ -365,8 +365,8 @@ public class MapModel {
     Layout? use_layout = null;
 
     /* Disable animations while we are loading */
-    var animate = _map.canvas.animator.enable;
-    _map.canvas.animator.enable = false;
+    var animate = _map.animator.enable;
+    _map.animator.enable = false;
 
     /* Clear the existing nodes */
     _nodes.remove_range( 0, _nodes.length );
@@ -424,7 +424,7 @@ public class MapModel {
     current_changed();
 
     /* Reset the animator enable */
-    _map.canvas.animator.enable = animate;
+    _map.animator.enable = animate;
 
   }
 
@@ -642,10 +642,10 @@ public class MapModel {
   public void toggle_fold( Node n, bool deep ) {
     var fold    = !n.folded;
     var changes = new Array<Node>();
-    _map.canvas.animator.add_node_fold( _nodes, n, fold, deep, "toggle folds" );
+    _map.animator.add_node_fold( _nodes, n, fold, deep, "toggle folds" );
     n.set_fold( fold, deep, changes );
     _map.add_undo( new UndoNodeFolds( changes ) );
-    _map.canvas.animator.animate();
+    _map.animator.animate();
     current_changed();
     auto_save();
   }
@@ -1977,7 +1977,7 @@ public class MapModel {
     }
     if( (current == null) || !undoable ) {
       if( animate ) {
-        _map.canvas.animator.add_nodes( _nodes, "balance nodes" );
+        _map.animator.add_nodes( _nodes, false, "balance nodes" );
       }
       for( int i=0; i<_nodes.length; i++ ) {
         var partitioner = new Partitioner();
@@ -1985,13 +1985,13 @@ public class MapModel {
       }
     } else {
       if( animate ) {
-        _map.canvas.animator.add_node( root_node, "balance tree" );
+        _map.animator.add_node( root_node, "balance tree" );
       }
       var partitioner = new Partitioner();
       partitioner.partition_node( root_node );
     }
     if( animate ) {
-      _map.canvas.animator.animate();
+      _map.animator.animate();
     }
   }
 
@@ -2367,6 +2367,7 @@ public class MapModel {
     var next_node = _map.next_node_to_select();
     var conns     = new Array<Connection>();
     UndoNodeGroups? undo_groups = null;
+    _map.animator.add_nodes( _nodes, true, "cut nodes" );
     _connections.node_deleted( current, conns );
     _groups.remove_node( current, ref undo_groups );
     MinderClipboard.copy_nodes( _map );
@@ -2384,7 +2385,7 @@ public class MapModel {
     }
     _map.selected.remove_node( current );
     _map.select_node( next_node );
-    queue_draw();
+    _map.animator.animate();
     auto_save();
   }
 
@@ -2396,7 +2397,7 @@ public class MapModel {
     var nodes = _map.selected.ordered_nodes();
     var conns = new Array<Connection>();
     Array<UndoNodeGroups?> undo_groups = null;
-    // _map.canvas.animator.add_nodes( _nodes, "cut nodes" );
+    _map.animator.add_nodes( _nodes, true, "cut nodes" );
     for( int i=0; i<nodes.length; i++ ) {
       _connections.node_only_deleted( nodes.index( i ), conns );
     }
@@ -2407,8 +2408,7 @@ public class MapModel {
       nodes.index( i ).delete_only();
     }
     _map.selected.clear_nodes();
-    // _map.canvas.animator.animate();
-    queue_draw();
+    _map.animator.animate();
     auto_save();
   }
 
@@ -2809,7 +2809,7 @@ public class MapModel {
   private void sort_children( Node parent, CompareFunc<Node> sort_fn ) {
     var children = new SList<Node>();
     _map.add_undo( new UndoNodeSort( parent ) );
-    _map.canvas.animator.add_nodes( _nodes, "sort nodes" );
+    _map.animator.add_nodes( _nodes, false, "sort nodes" );
     for( int i=0; i<parent.children().length; i++ ) {
       children.append( parent.children().index( i ) );
     }
@@ -2820,7 +2820,7 @@ public class MapModel {
     children.@foreach( (child) => {
       child.attach( parent, -1, null, false );
     });
-    _map.canvas.animator.animate();
+    _map.animator.animate();
     auto_save();
   }
 

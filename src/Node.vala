@@ -25,7 +25,8 @@ using Gdk;
 using Cairo;
 using Gee;
 
-/* Enumeration describing the different modes a node can be in */
+//-------------------------------------------------------------
+// Enumeration describing the different modes a node can be in
 public enum NodeMode {
   NONE = 0,    // Specifies that this node is not the current node
   CURRENT,     // Specifies that this node is the current node and is not being edited
@@ -35,7 +36,9 @@ public enum NodeMode {
   DROPPABLE,   // Specifies that this node can receive a dropped item
   HIGHLIGHTED; // Specifies that this node is both selected and being highlighted
 
-  /* Returns true if the mode indicates that this node will be drawn as selected */
+  //-------------------------------------------------------------
+  // Returns true if the mode indicates that this node will be
+  // drawn as selected.
   public bool is_selected() {
     return( (this == CURRENT) || (this == SELECTED) || (this == HIGHLIGHTED) );
   }
@@ -47,7 +50,8 @@ public enum NodeSide {
   RIGHT  = 4,  // Specifies that this node is to the right of the root node
   BOTTOM = 8;  // Specifies that this node is below the root node
 
-  /* Displays the string value of this NodeSide */
+  //-------------------------------------------------------------
+  // Displays the string value of this NodeSide.
   public string to_string() {
     switch( this ) {
       case LEFT   :  return( "left" );
@@ -58,7 +62,8 @@ public enum NodeSide {
     }
   }
 
-  /* Translates a string from to_string() to a NodeSide value */
+  //-------------------------------------------------------------
+  // Translates a string from to_string() to a NodeSide value.
   public static NodeSide parse( string val ) {
     switch( val ) {
       case "left"   :  return( LEFT );
@@ -69,12 +74,14 @@ public enum NodeSide {
     }
   }
 
-  /* Generates the value of the VERTICAL mask value */
+  //-------------------------------------------------------------
+  // Generates the value of the VERTICAL mask value.
   public bool vertical() {
     return( (this == TOP) || (this == BOTTOM) );
   }
 
-  /* Generates the value of the HORIZONTAL mask value */
+  //-------------------------------------------------------------
+  // Generates the value of the HORIZONTAL mask value.
   public bool horizontal() {
     return( (this == LEFT) || (this == RIGHT) );
   }
@@ -105,12 +112,14 @@ public class NodeBounds {
   public double width  { set; get; default = 0.0; }
   public double height { set; get; default = 0.0; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public NodeBounds( MindMap map ) {
     _map = map;
   }
 
-  /* Constructor with bounds information */
+  //-------------------------------------------------------------
+  // Constructor with bounds information.
   public NodeBounds.with_bounds( MindMap map, double x, double y, double w, double h ) {
     _map        = map;
     this.x      = x;
@@ -119,12 +128,14 @@ public class NodeBounds {
     this.height = h;
   }
 
-  /* Copy constructor */
+  //-------------------------------------------------------------
+  // Copy constructor.
   public NodeBounds.copy( NodeBounds nb ) {
     copy_from( nb );
   }
 
-  /* Copies the given node bounds to this instance */
+  //-------------------------------------------------------------
+  // Copies the given node bounds to this instance.
   public void copy_from( NodeBounds nb ) {
     _map        = nb._map;
     this.x      = nb.x;
@@ -133,25 +144,35 @@ public class NodeBounds {
     this.height = nb.height;
   }
 
-  /* Returns true if the given NodeBounds overlap */
+  //-------------------------------------------------------------
+  // Returns true if the given NodeBounds overlap.
   public bool overlaps( NodeBounds other ) {
     return( ((x < (other.x + other.width))  && ((x + width) > other.x)) &&
             ((y < (other.y + other.height)) && ((y + height) > other.y)) );
   }
 
-  /* Returns the X-coordinates of the upper-left corner of this bounds */
+  //-------------------------------------------------------------
+  // Returns the X-coordinates of the upper-left corner of this
+  // bounds.
   public double x1() { return( x ); }
 
-  /* Returns the Y-coordinates of the upper-left corner of this bounds */
+  //-------------------------------------------------------------
+  // Returns the Y-coordinates of the upper-left corner of this
+  // bounds.
   public double y1() { return( y ); }
 
-  /* Returns the X-coordinates of the lower-right corner of this bounds */
+  //-------------------------------------------------------------
+  // Returns the X-coordinates of the lower-right corner of this
+  // bounds.
   public double x2() { return( x + width ); }
 
-  /* Returns the Y-coordinates of the lower-right corner of this bounds */
+  //-------------------------------------------------------------
+  // Returns the Y-coordinates of the lower-right corner of this
+  // bounds.
   public double y2() { return( y + height ); }
 
-  /* Returns a string version of this instance */
+  //-------------------------------------------------------------
+  // Returns a string version of this instance.
   public string to_string() {
     return( "map: %s, x: %g, y: %g, w: %g, h: %g".printf( (_map != null).to_string(), x, y, width, height ) );
   }
@@ -543,7 +564,8 @@ public class Node : Object {
     }
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public Node( MindMap map, Layout? layout ) {
     _map       = map;
     _id        = map.next_node_id;
@@ -555,7 +577,8 @@ public class Node : Object {
     set_parsers();
   }
 
-  /* Constructor initializing string */
+  //-------------------------------------------------------------
+  // Constructor initializing string.
   public Node.with_name( MindMap map, string n, Layout? layout ) {
     _map       = map;
     _id        = map.next_node_id;
@@ -567,7 +590,8 @@ public class Node : Object {
     set_parsers();
   }
 
-  /* Constructor from an XML node */
+  //-------------------------------------------------------------
+  // Constructor from an XML node.
   public Node.from_xml( MindMap map, Layout? layout, Xml.Node* n, bool isroot, Node? sibling_parent, ref Array<Node> siblings ) {
     _map       = map;
     _children  = new Array<Node>();
@@ -580,7 +604,8 @@ public class Node : Object {
     load( map, n, isroot, sibling_parent, ref siblings );
   }
 
-  /* Copies an existing node to this node */
+  //-------------------------------------------------------------
+  // Copies an existing node to this node.
   public Node.copy( MindMap map, Node n, ImageManager im ) {
     _map       = map;
     _id        = map.next_node_id;
@@ -605,7 +630,8 @@ public class Node : Object {
     copy_variables( n, im );
   }
 
-  /* Copies an existing node tree to this node */
+  //-------------------------------------------------------------
+  // Copies an existing node tree to this node.
   public Node.copy_tree( MindMap map, Node n, ImageManager im ) {
     _map       = map;
     _id        = n.id();
@@ -624,7 +650,8 @@ public class Node : Object {
     }
   }
 
-  /* Adds the valid parsers */
+  //-------------------------------------------------------------
+  // Adds the valid parsers.
   public void set_parsers() {
     _name.text.add_parser( _map.markdown_parser );
     // _name.text.add_parser( _map.tagger_parser );
@@ -632,7 +659,9 @@ public class Node : Object {
     _name.text.add_parser( _map.unicode_parser );
   }
 
-  /* Copies just the variables of the node, minus the children nodes */
+  //-------------------------------------------------------------
+  // Copies just the variables of the node, minus the children
+  // nodes.
   public void copy_variables( Node n, ImageManager im ) {
     _width          = n._width;
     _height         = n._height;
@@ -661,12 +690,14 @@ public class Node : Object {
     sequence         = n.sequence;
   }
 
-  /* Returns the associated ID of this node */
+  //-------------------------------------------------------------
+  // Returns the associated ID of this node.
   public int id() {
     return( _id );
   }
 
-  /* Reassign this node's and all child node's ID from the mindmap */
+  //-------------------------------------------------------------
+  // Reassign this node's and all child node's ID from the mindmap.
   public void reassign_ids() {
     _id = _map.next_node_id;
     for( int i=0; i<_children.length; i++ ) {
@@ -674,7 +705,8 @@ public class Node : Object {
     }
   }
 
-  /* Sets the posx value only, leaving the children positions alone */
+  //-------------------------------------------------------------
+  // Sets the posx value only, leaving the children positions alone.
   public void set_posx_only( double value ) {
     var diff = value - _posx;
     _posx = value;
@@ -682,7 +714,9 @@ public class Node : Object {
     position_text();
   }
 
-  /* Sets the posy value only, leaving the children positions alone */
+  //-------------------------------------------------------------
+  // Sets the posy value only, leaving the children positions
+  // alone.
   public void set_posy_only( double value ) {
     var diff = value - _posy;
     _posy = value;
@@ -690,7 +724,8 @@ public class Node : Object {
     position_text();
   }
 
-  /* Sets the alpha value without propagating this to the children */
+  //-------------------------------------------------------------
+  // Sets the alpha value without propagating this to the children.
   public void set_alpha_only( double value ) {
     _alpha = value;
     if( _callout != null ) {
@@ -698,7 +733,8 @@ public class Node : Object {
     }
   }
 
-  /* Updates the alpha value if it is not set to 1.0 */
+  //-------------------------------------------------------------
+  // Updates the alpha value if it is not set to 1.0.
   public void update_alpha( double value ) {
     if( _alpha < 1.0 ) {
       _alpha = value;
@@ -710,14 +746,16 @@ public class Node : Object {
     }
   }
 
-  /* Sets the posx value only, leaving the children positions alone */
+  //-------------------------------------------------------------
+  // Sets the posx value only, leaving the children positions alone.
   public void adjust_posx_only( double value ) {
     _posx += value;
     update_tree_bbox( value, 0 );
     position_text();
   }
 
-  /* Sets the posy value only, leaving the children positions alone */
+  //-------------------------------------------------------------
+  // Sets the posy value only, leaving the children positions alone.
   public void adjust_posy_only( double value ) {
     _posy += value;
     update_tree_bbox( 0, value );
@@ -743,7 +781,9 @@ public class Node : Object {
     position_text_and_update_size();
   }
 
-  /* Clears the summary extents found as grandchildren of this node */
+  //-------------------------------------------------------------
+  // Clears the summary extents found as grandchildren of this
+  // node.
   public virtual void clear_summary_extents() {
     for( int i=0; i<_children.length; i++ ) {
       var node = _children.index( i );
@@ -753,7 +793,8 @@ public class Node : Object {
     }
   }
 
-  /* Sets the summary extents found as grandchildren of this node */
+  //-------------------------------------------------------------
+  // Sets the summary extents found as grandchildren of this node.
   public virtual void set_summary_extents() {
     for( int i=0; i<_children.length; i++ ) {
       var node = _children.index( i );
@@ -763,7 +804,8 @@ public class Node : Object {
     }
   }
 
-  /* Updates the tree_bbox */
+  //-------------------------------------------------------------
+  // Updates the tree_bbox.
   private void update_tree_bbox( double diffx, double diffy ) {
     var nb = tree_bbox;
     nb.x += diffx;
@@ -771,15 +813,17 @@ public class Node : Object {
     tree_bbox = nb;
   }
 
-  /* Called whenever the canvas text is resized */
+  //-------------------------------------------------------------
+  // Called whenever the canvas text is resized.
   private void position_text_and_update_size() {
     position_text();
     update_size();
   }
 
   //-------------------------------------------------------------
-  // Calculates the node size based on the width and height of all of the node elements.
-  // Also returns whether the node width was dictated by the embedded image or not.
+  // Calculates the node size based on the width and height of
+  // all of the node elements.  Also returns whether the node
+  // width was dictated by the embedded image or not.
   private void calculate_node_size( out double width, out double height, out double name_space ) {
 
     var margin       = style.node_margin  ?? 0;
@@ -801,7 +845,8 @@ public class Node : Object {
 
   }
 
-  /* Called whenever the node size is changed */
+  //-------------------------------------------------------------
+  // Called whenever the node size is changed.
   private void update_size() {
 
     if( !_loaded ) return;
@@ -823,7 +868,8 @@ public class Node : Object {
 
   }
 
-  /* Updates the total size which includes the callout */
+  //-------------------------------------------------------------
+  // Updates the total size which includes the callout.
   private void update_total_size() {
 
     if( (_callout == null) || _callout.mode.is_disconnected() ) {
@@ -845,7 +891,8 @@ public class Node : Object {
 
   }
 
-  /* Sets all callouts to the specified mode */
+  //-------------------------------------------------------------
+  // Sets all callouts to the specified mode.
   public void set_callout_modes( CalloutMode mode ) {
     if( _callout != null ) {
       _callout.mode = mode;
@@ -855,7 +902,8 @@ public class Node : Object {
     }
   }
 
-  /* Updates the size of all nodes within this tree */
+  //-------------------------------------------------------------
+  // Updates the size of all nodes within this tree.
   public void update_tree() {
     _name.update_size();
     for( int i=0; i<_children.length; i++ ) {
@@ -863,7 +911,9 @@ public class Node : Object {
     }
   }
 
-  /* Sets the node image to the given value, updating the image manager accordingly. */
+  //-------------------------------------------------------------
+  // Sets the node image to the given value, updating the image
+  // manager accordingly.
   public void set_image( ImageManager im, NodeImage? ni ) {
     if( _image != null ) {
       im.set_valid( _image.id, false );
@@ -875,7 +925,8 @@ public class Node : Object {
     update_size();
   }
 
-  /* Get the level of this node */
+  //-------------------------------------------------------------
+  // Get the level of this node.
   public uint get_level() {
     Node p     = parent;
     uint level = 0;
@@ -886,37 +937,45 @@ public class Node : Object {
     return( level );
   }
 
-  /* Returns true if the node does not have a parent */
+  //-------------------------------------------------------------
+  // Returns true if the node does not have a parent.
   public bool is_root() {
     return( parent == null );
   }
 
-  /* Returns true if this node can be traversed in the hierarchy */
+  //-------------------------------------------------------------
+  // Returns true if this node can be traversed in the hierarchy.
   public bool traversable() {
     return( !is_summarized() || last_summarized() );
   }
 
-  /* Returns if this is a summary node */
+  //-------------------------------------------------------------
+  // Returns if this is a summary node.
   public virtual bool is_summary() {
     return( false );
   }
 
-  /* Returns true if this node is summarized in the mindmap */
+  //-------------------------------------------------------------
+  // Returns true if this node is summarized in the mindmap.
   public virtual bool is_summarized() {
     return( (_children.length == 1) && _children.index( 0 ).is_summary() );
   }
 
-  /* Returns true if this node is the first node of a summary node */
+  //-------------------------------------------------------------
+  // Returns true if this node is the first node of a summary node.
   public virtual bool first_summarized() {
     return( is_summarized() && ((_children.index( 0 ) as SummaryNode).first_node() == this) );
   }
 
-  /* Returns true if this node is the last node of a summary node */
+  //-------------------------------------------------------------
+  // Returns true if this node is the last node of a summary node.
   public virtual bool last_summarized() {
     return( is_summarized() && ((_children.index( 0 ) as SummaryNode).last_node() == this) );
   }
 
-  /* Returns the summary node this node is attached to if it is summarized; otherwise, returns null */
+  //-------------------------------------------------------------
+  // Returns the summary node this node is attached to if it is
+  // summarized; otherwise, returns null.
   public SummaryNode? summary_node() {
     if( is_summarized() ) {
       return( (SummaryNode)children().index( 0 ) );
@@ -924,12 +983,15 @@ public class Node : Object {
     return( null );
   }
 
-  /* Returns true if this node is positioned somewhere between the first and last sibling node in the same parent */
+  //-------------------------------------------------------------
+  // Returns true if this node is positioned somewhere between
+  // the first and last sibling node in the same parent.
   public bool is_between_siblings( Node first, Node last ) {
     return( (first.parent == parent) && (last.parent == parent) && ((first.index() <= index()) && (index() <= last.index())) );
   }
 
-  /* Returns true if this node exists within a group */
+  //-------------------------------------------------------------
+  // Returns true if this node exists within a group.
   public bool is_grouped() {
     var node = this;
     while( node != null ) {
@@ -941,7 +1003,9 @@ public class Node : Object {
     return( false );
   }
 
-  /* Returns the number of groups betwen the current node and the specified ancestor node */
+  //-------------------------------------------------------------
+  // Returns the number of groups betwen the current node and the
+  // specified ancestor node.
   public int groups_between( Node node ) {
     var curr  = this;
     var count = 0;
@@ -952,15 +1016,15 @@ public class Node : Object {
     return( count );
   }
 
-  /*
-   Returns true if this node is a "main branch" which is a node attached
-   directly to the parent.
-  */
+  //-------------------------------------------------------------
+  // Returns true if this node is a "main branch" which is a node
+  // attached directly to the parent.
   public bool main_branch() {
     return( (parent != null) && (parent.parent == null) );
   }
 
-  /* Returns the number of descendants within this node */
+  //-------------------------------------------------------------
+  // Returns the number of descendants within this node.
   public int descendant_count() {
     if( !traversable() ) {
       return( 0 );
@@ -973,22 +1037,26 @@ public class Node : Object {
     }
   }
 
-  /* Returns true if the node is a leaf node */
+  //-------------------------------------------------------------
+  // Returns true if the node is a leaf node.
   public bool is_leaf() {
     return( (parent != null) && (_children.length == 0) );
   }
 
-  /* Returns true if this node is a task */
+  //-------------------------------------------------------------
+  // Returns true if this node is a task.
   public bool is_task() {
     return( (_task_count > 0) && is_leaf() );
   }
 
-  /* Returns true if this task node is complete */
+  //-------------------------------------------------------------
+  // Returns true if this task node is complete.
   public bool is_task_done() {
     return( _task_count == _task_done );
   }
 
-  /* Returns true if this node is a descendant of the given node */
+  //-------------------------------------------------------------
+  // Returns true if this node is a descendant of the given node.
   public bool is_descendant_of( Node node ) {
     Node p = parent;
     while( (p != null) && (p != node) ) {
@@ -997,22 +1065,30 @@ public class Node : Object {
     return( p == node );
   }
 
-  /* Returns true if this tree bounds of this node is left of the given bounds */
+  //-------------------------------------------------------------
+  // Returns true if this tree bounds of this node is left of the
+  // given bounds.
   public bool is_left_of( NodeBounds nb ) {
     return( (tree_bbox.x + tree_bbox.width) < nb.x );
   }
 
-  /* Returns true if this tree bounds of this node is right of the given bounds */
+  //-------------------------------------------------------------
+  // Returns true if this tree bounds of this node is right of
+  // the given bounds.
   public bool is_right_of( NodeBounds nb ) {
     return( tree_bbox.x > (nb.x + nb.width) );
   }
 
-  /* Returns true if this tree bounds of this node is above the given bounds */
+  //-------------------------------------------------------------
+  // Returns true if this tree bounds of this node is above the
+  // given bounds.
   public bool is_above( NodeBounds nb ) {
     return( (tree_bbox.y + tree_bbox.height) < nb.y );
   }
 
-  /* Returns true if this tree bounds of this node is below the given bounds */
+  //-------------------------------------------------------------
+  // Returns true if this tree bounds of this node is below the
+  // given bounds.
   public bool is_below( NodeBounds nb ) {
     return( tree_bbox.y > (nb.y + nb.height) );
   }
@@ -1030,24 +1106,30 @@ public class Node : Object {
     return( _sequence_num != null );
   }
 
-  /* Returns the task completion percentage value */
+  //-------------------------------------------------------------
+  // Returns the task completion percentage value.
   public double task_completion_percentage() {
     return( (_task_done / (_task_count * 1.0)) * 100 );
   }
 
-  /* Returns true if the resizer should be in the upper left */
+  //-------------------------------------------------------------
+  // Returns true if the resizer should be in the upper left.
   public bool resizer_on_left() {
     return( !is_root() && (side == NodeSide.LEFT) );
   }
 
-  /* Returns true if the given cursor coordinates lie within any part of this node */
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lie within any
+  // part of this node.
   public virtual bool is_within( double x, double y ) {
     double bx, by, bw, bh;
     bbox( out bx, out by, out bw, out bh );
     return( Utils.is_within_bounds( x, y, bx, by, bw, bh ) );
   }
 
-  /* Returns true if the given cursor coordinates lies within the node bounding box */
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lies within
+  // the node bounding box.
   public virtual bool is_within_node( double x, double y ) {
     double margin = style.node_margin ?? 0;
     double cx, cy, cw, ch;
@@ -1059,7 +1141,9 @@ public class Node : Object {
     return( Utils.is_within_bounds( x, y, cx, cy, cw, ch ) );
   }
 
-  /* Returns the positional information for where the task item is located (if it exists) */
+  //-------------------------------------------------------------
+  // Returns the positional information for where the task item
+  // is located (if it exists).
   protected virtual void task_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
@@ -1070,7 +1154,9 @@ public class Node : Object {
     h = _task_radius * 2;
   }
 
-  /* Returns the positional information for where the sticker is located (if it exists) */
+  //-------------------------------------------------------------
+  // Returns the positional information for where the sticker is
+  // located (if it exists).
   protected virtual void sticker_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
@@ -1082,7 +1168,9 @@ public class Node : Object {
     h = (_sticker_buf == null) ? 0 : _sticker_buf.height;
   }
 
-  /* Returns the positional information for where the sequence number is located (if it exists) */
+  //-------------------------------------------------------------
+  // Returns the positional information for where the sequence
+  // number is located (if it exists).
   protected virtual void sequence_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
@@ -1095,7 +1183,9 @@ public class Node : Object {
     h = sequence_height();
   }
 
-  /* Returns the positional information for where the linked node indicator is located (if it exists) */
+  //-------------------------------------------------------------
+  // Returns the positional information for where the linked node
+  // indicator is located (if it exists).
   protected virtual void linked_node_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
@@ -1106,7 +1196,9 @@ public class Node : Object {
     h = 11;
   }
 
-  /* Returns the positional information for where the note item is located (if it exists) */
+  //-------------------------------------------------------------
+  // Returns the positional information for where the note item
+  // is located (if it exists).
   protected virtual void note_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
@@ -1117,7 +1209,9 @@ public class Node : Object {
     h = 11;
   }
 
-  /* Returns the positional information of the stored image (if no image exists, the behavior of this method is undefined) */
+  //-------------------------------------------------------------
+  // Returns the positional information of the stored image (if
+  // no image exists, the behavior of this method is undefined).
   protected virtual void image_bbox( out double x, out double y, out double w, out double h ) {
     int margin  = style.node_margin  ?? 0;
     int padding = style.node_padding ?? 0;
@@ -1127,7 +1221,9 @@ public class Node : Object {
     h = (_image == null) ? 0 : _image.height;
   }
 
-  /* Returns the positional information for where the resizer box is located (if it exists) */
+  //-------------------------------------------------------------
+  // Returns the positional information for where the resizer box
+  // is located (if it exists).
   protected virtual void resizer_bbox( out double x, out double y, out double w, out double h ) {
     int margin  = style.node_margin  ?? 0;
     x = resizer_on_left() ? (posx + margin) : (posx + _width - margin - 8);
@@ -1136,10 +1232,9 @@ public class Node : Object {
     h = 8;
   }
 
-  /*
-   Returns true if the given cursor coordinates lies within the task checkbutton
-   area.
-  */
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lies within the
+  // task checkbutton area.
   public virtual bool is_within_task( double x, double y ) {
     if( _task_count > 0 ) {
       double tx, ty, tw, th;
@@ -1149,9 +1244,9 @@ public class Node : Object {
     return( false );
   }
 
-  /*
-   Returns true if the given cursor coordinates lies within the note icon area.
-  */
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lies within the
+  // note icon area.
   public virtual bool is_within_note( double x, double y ) {
     if( note.length > 0 ) {
       double nx, ny, nw, nh;
@@ -1161,9 +1256,9 @@ public class Node : Object {
     return( false );
   }
 
-  /*
-   Returns true if the given cursor coordinates lies within the linked node indicator area.
-  */
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lies within the
+  // linked node indicator area.
   public virtual bool is_within_linked_node( double x, double y ) {
     if( linked_node != null ) {
       double lx, ly, lw, lh;
@@ -1173,7 +1268,9 @@ public class Node : Object {
     return( false );
   }
 
-  /* Returns true if the given cursor coordinates lie within the fold indicator area */
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lie within the
+  // fold indicator area.
   public virtual bool is_within_fold( double x, double y ) {
     if( (_children.length > 0) && !is_summarized() ) {
       double fx, fy, fw, fh;
@@ -1183,7 +1280,9 @@ public class Node : Object {
     return( false );
   }
 
-  /* Returns true if the given cursor coordinates lie within the fold indicator surrounding area */
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lie within the
+  // fold indicator surrounding area.
   public virtual bool is_within_fold_area( double x, double y ) {
     if( (_children.length > 0) && !is_summarized() ) {
       double fx, fy, fw, fh;
@@ -1194,7 +1293,9 @@ public class Node : Object {
     return( false );
   }
 
-  /* Returns true if the given cursor coordinates lie within the image area */
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lie within the
+  // image area.
   public virtual bool is_within_image( double x, double y ) {
     if( _image != null ) {
       double ix, iy, iw, ih;
@@ -1204,7 +1305,9 @@ public class Node : Object {
     return( false );
   }
 
-  /* Returns true if the given cursor coordinates lie within the resizer area */
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lie within the
+  // resizer area.
   public virtual bool is_within_resizer( double x, double y ) {
     if( (mode == NodeMode.CURRENT) || (mode == NodeMode.HIGHLIGHTED) ) {
       double rx, ry, rw, rh;
@@ -1221,7 +1324,8 @@ public class Node : Object {
     return( (_name != null) && (_name.is_within( x, y ) ) );
   }
 
-  /* Finds the node which contains the given pixel coordinates */
+  //-------------------------------------------------------------
+  // Finds the node which contains the given pixel coordinates.
   public virtual Node? contains( double x, double y, Node? n ) {
     if( (this != n) && (is_within_node( x, y ) || is_within_fold_area( x, y )) ) {
       return( this );
@@ -1236,7 +1340,8 @@ public class Node : Object {
     return( null );
   }
 
-  /* Finds the callout which contains the given pixel coordinates */
+  //-------------------------------------------------------------
+  // Finds the callout which contains the given pixel coordinates.
   public virtual Callout? contains_callout( double x, double y ) {
     if( (_callout != null) && !_callout.mode.is_disconnected() && _callout.contains( x, y ) ) {
       return( _callout );
@@ -1252,7 +1357,8 @@ public class Node : Object {
     return( null );
   }
 
-  /* Returns true if this node contains the given node */
+  //-------------------------------------------------------------
+  // Returns true if this node contains the given node.
   public virtual bool contains_node( Node node ) {
     if( node == this ) {
       return( true );
@@ -1266,7 +1372,8 @@ public class Node : Object {
     }
   }
 
-  /* Returns true if the given box intersects with this node box */
+  //-------------------------------------------------------------
+  // Returns true if the given box intersects with this node box.
   public bool intersects_with( Gdk.Rectangle box ) {
     var int_x = (int)posx;
     var int_y = (int)posy;
@@ -1276,7 +1383,9 @@ public class Node : Object {
     return( box.intersect( node_box, null ) );
   }
 
-  /* Adds all nodes within this tree that intersect with the given box */
+  //-------------------------------------------------------------
+  // Adds all nodes within this tree that intersect with the
+  // given box.
   public void select_within_box( Gdk.Rectangle box, Selection select ) {
     if( intersects_with( box ) ) {
       select.add_node( this );
@@ -1286,12 +1395,14 @@ public class Node : Object {
     }
   }
 
-  /* Returns the children nodes of this node */
+  //-------------------------------------------------------------
+  // Returns the children nodes of this node.
   public Array<Node> children() {
     return( _children );
   }
 
-  /* Returns the root node for this node */
+  //-------------------------------------------------------------
+  // Returns the root node for this node.
   public Node get_root() {
     Node n = this;
     Node p = parent;
@@ -1302,7 +1413,8 @@ public class Node : Object {
     return( n );
   }
 
-  /* Returns the child index of this node within its parent */
+  //-------------------------------------------------------------
+  // Returns the child index of this node within its parent.
   public virtual int index() {
     if( !is_root() ) {
       for( int i=0; i<parent.children().length; i++ ) {
@@ -1314,7 +1426,9 @@ public class Node : Object {
     return( -1 );
   }
 
-  /* Returns the number of child nodes that match the given side value */
+  //-------------------------------------------------------------
+  // Returns the number of child nodes that match the given side
+  // value.
   public virtual int side_count( NodeSide side ) {
     int count = 0;
     for( int i=0; i<children().length; i++ ) {
@@ -1325,7 +1439,8 @@ public class Node : Object {
     return( count );
   }
 
-  /* Returns the node side relative to its parent node */
+  //-------------------------------------------------------------
+  // Returns the node side relative to its parent node.
   public NodeSide relative_side() {
     switch( side ) {
       case NodeSide.LEFT  :
@@ -1334,10 +1449,9 @@ public class Node : Object {
     }
   }
 
-  /*
-   Returns a reference to the node with the given ID.  If the ID was
-   not found in this node's tree, returns null.
-  */
+  //-------------------------------------------------------------
+  // Returns a reference to the node with the given ID.  If the
+  // ID was not found in this node's tree, returns null.
   public virtual Node? get_node( int id ) {
     if( _id == id ) {
       return( this );
@@ -1352,7 +1466,8 @@ public class Node : Object {
     return( null );
   }
 
-  /* Loads the name value from the given XML node */
+  //-------------------------------------------------------------
+  // Loads the name value from the given XML node.
   private void load_name( Xml.Node* n ) {
     if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
       name.text.insert_text( 0, n->children->get_content() );
@@ -1362,14 +1477,16 @@ public class Node : Object {
     }
   }
 
-  /* Loads the note value from the given XML node */
+  //-------------------------------------------------------------
+  // Loads the note value from the given XML node.
   private void load_note( Xml.Node* n ) {
     if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
       note = n->children->get_content();
     }
   }
 
-  /* Loads the image information from the given XML node */
+  //-------------------------------------------------------------
+  // Loads the image information from the given XML node.
   private void load_image( ImageManager im, Xml.Node* n ) {
     _image = new NodeImage.from_xml( im, n, style.node_width );
     if( !_image.valid ) {
@@ -1378,12 +1495,14 @@ public class Node : Object {
     }
   }
 
-  /* Loads the node link from the given XML node */
+  //-------------------------------------------------------------
+  // Loads the node link from the given XML node.
   private void load_node_link( Xml.Node* n ) {
     _linked_node = new NodeLink.from_xml( n );
   }
 
-  /* Loads the style information from the given XML node */
+  //-------------------------------------------------------------
+  // Loads the style information from the given XML node.
   private void load_style( Xml.Node* n ) {
     _style.load_node( n );
     _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
@@ -1392,7 +1511,8 @@ public class Node : Object {
     }
   }
 
-  /* Loads the callout information */
+  //-------------------------------------------------------------
+  // Loads the callout information.
   private void load_callout( Xml.Node* n ) {
     if( _callout == null ) {
       callout = new Callout( this );
@@ -1400,7 +1520,8 @@ public class Node : Object {
     callout.load( n );
   }
 
-  /* Loads the child nodes */
+  //-------------------------------------------------------------
+  // Loads the child nodes.
   private void load_nodes( Xml.Node* n, Node? sibling_parent, ref Array<Node> siblings ) {
     var nodes = new Array<Node>();
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
@@ -1420,10 +1541,9 @@ public class Node : Object {
     }
   }
 
-  /*
-   Searches for a node ID matching the given node ID.  If found, returns true
-   along with the plain text title of the found node.
-  */
+  //-------------------------------------------------------------
+  // Searches for a node ID matching the given node ID.  If found,
+  // returns true along with the plain text title of the found node.
   public static bool xml_find( Xml.Node* n, int id, ref string name ) {
 
     bool found = false;
@@ -1460,7 +1580,8 @@ public class Node : Object {
 
   }
 
-  /* Loads the file contents into this instance */
+  //-------------------------------------------------------------
+  // Loads the file contents into this instance.
   public virtual void load( MindMap map, Xml.Node* n, bool isroot, Node? sibling_parent, ref Array<Node> siblings ) {
 
     _loaded = false;
@@ -1610,12 +1731,14 @@ public class Node : Object {
 
   }
 
-  /* Saves the current node */
+  //-------------------------------------------------------------
+  // Saves the current node.
   public virtual void save( Xml.Node* parent ) {
     parent->add_child( save_node() );
   }
 
-  /* Saves the node contents to the given data output stream */
+  //-------------------------------------------------------------
+  // Saves the node contents to the given data output stream.
   protected Xml.Node* save_node() {
 
     Xml.Node* node = new Xml.Node( null, (is_summary() ? "summary-node" : "node") );
@@ -1675,14 +1798,16 @@ public class Node : Object {
 
   }
 
-  /* Sets the resizable property on the node image, if it exists. */
+  //-------------------------------------------------------------
+  // Sets the resizable property on the node image, if it exists.
   public void set_resizable( bool resizable ) {
     if( _image != null ) {
       _image.resizable = resizable;
     }
   }
 
-  /* Resizes the node width by the given amount */
+  //-------------------------------------------------------------
+  // Resizes the node width by the given amount.
   public virtual void resize( double diff ) {
     diff = resizer_on_left() ? (0 - diff) : diff;
     var int_diff = (int)diff;
@@ -1698,7 +1823,8 @@ public class Node : Object {
     _name.resize( diff );
   }
 
-  /* Returns the bounding box for this node */
+  //-------------------------------------------------------------
+  // Returns the bounding box for this node.
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
     if( is_root() || side.vertical() ) {
       x = posx;
@@ -1713,7 +1839,9 @@ public class Node : Object {
     }
   }
 
-  /* Returns the bounding box for the node box itself (this includes everything but the callout) */
+  //-------------------------------------------------------------
+  // Returns the bounding box for the node box itself (this
+  // includes everything but the callout).
   public void node_bbox( out double x, out double y, out double w, out double h ) {
     x = posx;
     y = posy; 
@@ -1721,7 +1849,8 @@ public class Node : Object {
     h = _height;
   }
 
-  /* Returns the bounding box for the fold indicator for this node */
+  //-------------------------------------------------------------
+  // Returns the bounding box for the fold indicator for this node.
   public void fold_bbox( out double x, out double y, out double w, out double h ) {
     double bw, bh;
     node_bbox( out x, out y, out bw, out bh );
@@ -1747,10 +1876,13 @@ public class Node : Object {
     }
   }
 
-  /*
-   Sets the fold for this node to the given value.  Appends this node to
-   the changed list if the folded value changed.
-  */
+  //-------------------------------------------------------------
+  // FOLDING
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Sets the fold for this node to the given value.  Appends
+  // this node to the changed list if the folded value changed.
   public void set_fold( bool value, bool deep, Array<Node>? changed = null ) {
     if( !value && deep ) {
       for( int i=0; i<_children.length; i++ ) {
@@ -1766,16 +1898,16 @@ public class Node : Object {
     }
   }
 
-  /*
-   Sets the fold value of this node only.  This should only be used when we
-   are undo'ing a fold operation.
-  */
+  //-------------------------------------------------------------
+  // Sets the fold value of this node only.  This should only be
+  // used when we are undo'ing a fold operation.
   public void set_fold_only( bool value ) {
     folded = value;
     layout.handle_update_by_fold( this );
   }
 
-  /* Clears all of the folds below the current node */
+  //-------------------------------------------------------------
+  // Clears all of the folds below the current node.
   private void clear_tree_folds( Array<Node>? changed ) {
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).clear_tree_folds( changed );
@@ -1789,7 +1921,9 @@ public class Node : Object {
     }
   }
 
-  /* Returns true if there is at least one node that is foldable due to its tasks being completed. */
+  //-------------------------------------------------------------
+  // Returns true if there is at least one node that is foldable
+  // due to its tasks being completed.
   public bool completed_tasks_foldable() {
     if( !folded && (_task_count > 0) ) {
       if( _task_count == _task_done ) {
@@ -1808,7 +1942,8 @@ public class Node : Object {
     return( false );
   }
 
-  /* Returns true if any node is found to be unfoldable */
+  //-------------------------------------------------------------
+  // Returns true if any node is found to be unfoldable.
   public bool unfoldable() {
     if( folded ) {
       return( true );
@@ -1822,7 +1957,9 @@ public class Node : Object {
     return( false );
   }
 
-  /* Recursively spans node tree folding any nodes which contain fully completed tasks */
+  //-------------------------------------------------------------
+  // Recursively spans node tree folding any nodes which contain
+  // fully completed tasks.
   public void fold_completed_tasks( Array<Node> changed ) {
     if( !folded && (_task_count > 0) ) {
       if( _task_count == _task_done ) {
@@ -1839,42 +1976,52 @@ public class Node : Object {
     }
   }
 
-  /* Returns the width of the sticker */
+  //-------------------------------------------------------------
+  // Returns the width of the sticker.
   public double sticker_width() {
     return( (_sticker_buf != null) ? (_sticker_buf.width + _ipadx) : 0 );
   }
 
-  /* Returns the height of the sticker */
+  //-------------------------------------------------------------
+  // Returns the height of the sticker.
   public double sticker_height() {
     return( (_sticker_buf != null) ? _sticker_buf.height : 0 );
   }
 
-  /* Returns the width of the sequence number */
+  //-------------------------------------------------------------
+  // Returns the width of the sequence number.
   public double sequence_width() {
     return( (_sequence_num != null) ? _sequence_num.width : 0 );
   }
 
-  /* Returns the height of the sequence number */
+  //-------------------------------------------------------------
+  // Returns the height of the sequence number.
   public double sequence_height() {
     return( (_sequence_num != null) ? _sequence_num.height : 0 );
   }
 
-  /* Returns the amount of internal width to draw the task checkbutton */
+  //-------------------------------------------------------------
+  // Returns the amount of internal width to draw the task
+  // checkbutton.
   public double task_width() {
     return( (_task_count > 0) ? ((_task_radius * 2) + _ipadx) : 0 );
   }
 
-  /* Returns the width of the note indicator */
+  //-------------------------------------------------------------
+  // Returns the width of the note indicator.
   public double note_width() {
     return( (note.length > 0) ? (10 + _ipadx) : 0 );
   }
 
-  /* Returns the width of the linked node indicator */
+  //-------------------------------------------------------------
+  // Returns the width of the linked node indicator.
   public double linked_node_width() {
     return( (linked_node != null) ? (10 + _ipadx) : 0 );
   }
 
-  /* Moves this node into the proper position within the parent node */
+  //-------------------------------------------------------------
+  // Moves this node into the proper position within the parent
+  // node.
   public void move_to_position( Node child, NodeSide side, double x, double y ) {
     int   idx           = child.index();
     Node? last_selected = last_selected_child;
@@ -1916,7 +2063,8 @@ public class Node : Object {
     last_selected_child = last_selected;
   }
 
-  /* Returns the sibling node relative to this node */
+  //-------------------------------------------------------------
+  // Returns the sibling node relative to this node.
   private Node? get_sibling( int dir, bool wrap ) {
     var index = index() + dir;
     if( index < 0 ) {
@@ -1928,21 +2076,22 @@ public class Node : Object {
     }
   }
 
-  /* Returns the previous sibling node relative to this node */
+  //-------------------------------------------------------------
+  // Returns the previous sibling node relative to this node.
   public Node? previous_sibling( bool wrap = false ) {
     return( get_sibling( -1, wrap ) );
   }
 
-  /* Returns the previous sibling node relative to this node */
+  //-------------------------------------------------------------
+  // Returns the previous sibling node relative to this node.
   public Node? next_sibling( bool wrap = false ) {
     return( get_sibling( 1, wrap ) );
   }
 
-  /*
-   Checks to see if the given node is a sibling node on the same side.  If it is,
-   swaps the position of the given node with the given node.  Returns true if
-   the nodes are swapped.
-  */
+  //-------------------------------------------------------------
+  // Checks to see if the given node is a sibling node on the
+  // same side.  If it is, swaps the position of the given node
+  // with the given node.  Returns true if the nodes are swapped.
   public bool swap_with_sibling( Node? other ) {
 
     if( (other != null) && !is_summary() && !other.is_summary() && (summary_node() == other.summary_node()) && (other.parent == parent) ) {
@@ -1954,7 +2103,7 @@ public class Node : Object {
       var our_summary   = summary_node();
 
       if( (other_index + 1) == our_index ) {
-        map.canvas.animator.add_nodes( map.get_nodes(), "swap_with_sibling" );
+        map.animator.add_nodes( map.get_nodes(), false, "swap_with_sibling" );
         detach( side );
         if( our_summary != null ) {
           our_summary.remove_node( this );
@@ -1966,12 +2115,12 @@ public class Node : Object {
         }
         our_parent.last_selected_child = this;
         map.undo_buffer.add_item( new UndoNodeMove( this, side, our_index, our_summary ) );
-        map.canvas.animator.animate();
+        map.animator.animate();
         return( true );
 
       } else if( (our_index + 1) == other_index ) {
         var other_side = other.side;
-        map.canvas.animator.add_nodes( map.get_nodes(), "swap_with_sibling" );
+        map.animator.add_nodes( map.get_nodes(), false, "swap_with_sibling" );
         other.detach( other_side );
         if( other_summary != null ) {
           other_summary.remove_node( other );
@@ -1982,7 +2131,7 @@ public class Node : Object {
           our_summary.add_node( other );
         }
         map.undo_buffer.add_item( new UndoNodeMove( other, other_side, other_index, other_summary ) );
-        map.canvas.animator.animate();
+        map.animator.animate();
         return( true );
       }
 
@@ -1992,10 +2141,10 @@ public class Node : Object {
 
   }
 
-  /*
-   Moves the node (and its tree) to be a sibling of its parent located just
-   before its parent node (side will match parent's side).
-  */
+  //-------------------------------------------------------------
+  // Moves the node (and its tree) to be a sibling of its parent
+  // located just before its parent node (side will match parent's
+  // side).
   public bool make_parent_sibling( Node? other, bool add_undo = true ) {
 
     // If the other node matches our parent, perform this operation
@@ -2008,11 +2157,10 @@ public class Node : Object {
         map.undo_buffer.add_item( new UndoNodeUnclify( this ) );
       }
 
-      map.canvas.animator.add_nodes( map.get_nodes(), "make_sibling_of_grandparent" );
+      map.animator.add_nodes( map.get_nodes(), false, "make_sibling_of_grandparent" );
       detach( side );
       attach( grandparent, parent_idx, null );
-
-      map.canvas.animator.animate();
+      map.animator.animate();
 
       return( true );
 
@@ -2022,10 +2170,9 @@ public class Node : Object {
 
   }
 
-  /*
-   Moves all children of the given node to the node's parent, placed just
-   before the parent node.
-  */
+  //-------------------------------------------------------------
+  // Moves all children of the given node to the node's parent,
+  // placed just before the parent node.
   public bool make_children_siblings( Node? potential_child, bool add_undo = true ) {
 
     if( (potential_child != null) && contains_node( potential_child ) ) {
@@ -2033,7 +2180,7 @@ public class Node : Object {
       var idx          = index();
       var num_children = (int)_children.length;
 
-      map.canvas.animator.add_nodes( map.get_nodes(), "make_children_siblings" );
+      map.animator.add_nodes( map.get_nodes(), false, "make_children_siblings" );
       for( int i=(num_children - 1); i>=0; i-- ) {
         var child = _children.index( i );
         child.detach( child.side );
@@ -2042,7 +2189,7 @@ public class Node : Object {
       if( add_undo ) {
         map.undo_buffer.add_item( new UndoNodeReparent( this, idx, idx + num_children ) );
       }
-      map.canvas.animator.animate();
+      map.animator.animate();
 
       return( true );
 
@@ -2052,7 +2199,8 @@ public class Node : Object {
 
   }
 
-  /* Adjusts the position of the text object */
+  //-------------------------------------------------------------
+  // Adjusts the position of the text object.
   private void position_text() {
 
     double node_width, node_height, name_space;
@@ -2082,7 +2230,9 @@ public class Node : Object {
 
   }
 
-  /* If the parent node is moved, we will move ourselves the same amount */
+  //-------------------------------------------------------------
+  // If the parent node is moved, we will move ourselves the same
+  // amount.
   protected void parent_moved( Node parent, double diffx, double diffy ) {
 
     _posx += diffx;
@@ -2097,7 +2247,8 @@ public class Node : Object {
 
   }
 
-  /* Detaches this node from its parent node */
+  //-------------------------------------------------------------
+  // Detaches this node from its parent node.
   public virtual void detach( NodeSide side ) {
 
     assert( !is_summary() );
@@ -2120,18 +2271,18 @@ public class Node : Object {
 
   }
 
-  /* Removes this node from the node tree along with all descendents */
+  //-------------------------------------------------------------
+  // Removes this node from the node tree along with all
+  // descendents.
   public virtual void delete() {
-
     detach( side );
-
   }
 
-  /*
-   Removes only this node from its parent, attaching all children nodes of this node to the
-   parent.  If the parent node does not exist (i.e., this node is a root node, the children
-   nodes will become top-level nodes themselves.
-  */
+  //-------------------------------------------------------------
+  // Removes only this node from its parent, attaching all
+  // children nodes of this node to the parent.  If the parent
+  // node does not exist (i.e., this node is a root node, the
+  // children nodes will become top-level nodes themselves.
   public virtual void delete_only() {
     if( parent == null ) {
       for( int i=0; i<_children.length; i++ ) {
@@ -2160,7 +2311,9 @@ public class Node : Object {
     }
   }
 
-  /* Undoes a delete_only call by reattaching this node to the given parent */
+  //-------------------------------------------------------------
+  // Undoes a delete_only call by reattaching this node to the
+  // given parent.
   public virtual void attach_only( Node? prev_parent, int prev_index ) {
     assert( !is_summary() );
     var temp = new Array<Node>();
@@ -2184,7 +2337,8 @@ public class Node : Object {
     attached = true;
   }
 
-  /* Attaches this node as a child of the given node */
+  //-------------------------------------------------------------
+  // Attaches this node as a child of the given node.
   public virtual void attach( Node parent, int index, Theme? theme, bool set_side = true ) {
     this.parent = parent;
     layout = parent.layout;
@@ -2240,7 +2394,8 @@ public class Node : Object {
     attached = true;
   }
 
-  /* Returns a reference to the first child of this node */
+  //-------------------------------------------------------------
+  // Returns a reference to the first child of this node.
   public virtual Node? first_child( NodeSide? side = null ) {
     if( !folded ) {
       for( int i=0; i<_children.length; i++ ) {
@@ -2252,7 +2407,8 @@ public class Node : Object {
     return( null );
   }
 
-  /* Returns a reference to the last child of this node */
+  //-------------------------------------------------------------
+  // Returns a reference to the last child of this node.
   public virtual Node? last_child( NodeSide? side = null ) {
     if( !folded ) {
       for( int i=((int)_children.length - 1); i>=0; i-- ) {
@@ -2264,7 +2420,9 @@ public class Node : Object {
     return( null );
   }
 
-  /* Returns a reference to the next child after the specified child of this node */
+  //-------------------------------------------------------------
+  // Returns a reference to the next child after the specified
+  // child of this node.
   public virtual Node? next_child( Node n, bool wrap = false ) {
     int idx = n.index();
     if( idx == -1 ) {
@@ -2276,7 +2434,9 @@ public class Node : Object {
     }
   }
 
-  /* Returns a reference to the next child after the specified child of this node */
+  //-------------------------------------------------------------
+  // Returns a reference to the next child after the specified
+  // child of this node.
   public virtual Node? prev_child( Node n, bool wrap = false ) {
     int idx = n.index();
     if( idx == -1 ) {
@@ -2288,7 +2448,12 @@ public class Node : Object {
     }
   }
 
-  /* Propagates task information toward the leaf nodes */
+  //-------------------------------------------------------------
+  // TASKS
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Propagates task information toward the leaf nodes.
   private void propagate_task_info_down( bool? enable, bool? done ) {
     if( is_leaf() ) {
       if( enable != null ) {
@@ -2318,7 +2483,9 @@ public class Node : Object {
     }
   }
 
-  /* Propagates a change in the task_done for this node to all parent nodes */
+  //-------------------------------------------------------------
+  // Propagates a change in the task_done for this node to all
+  // parent nodes.
   private void propagate_task_info_up( int count_adjust, int done_adjust ) {
     Node p = parent;
     while( p != null ) {
@@ -2330,7 +2497,9 @@ public class Node : Object {
     }
   }
 
-  /* Propagates the given task enable information down and up the tree */
+  //-------------------------------------------------------------
+  // Propagates the given task enable information down and up the
+  // tree.
   private void propagate_task_info( bool? enable, bool? done ) {
     int task_count = _task_count;
     int task_done  = _task_done;
@@ -2338,53 +2507,57 @@ public class Node : Object {
     propagate_task_info_up( (_task_count - task_count), (_task_done - task_done) );
   }
 
-  /* Returns true if this node's task indicator is currently enabled */
+  //-------------------------------------------------------------
+  // Returns true if this node's task indicator is currently enabled.
   public bool task_enabled() {
     return( _task_count > 0 );
   }
 
-  /* Returns true if this node's task indicator indicates that it is currently done */
+  //-------------------------------------------------------------
+  // Returns true if this node's task indicator indicates that it
+  // is currently done.
   public bool task_done() {
     return( _task_count == _task_done );
   }
 
-  /* Sets the task enable to the given value */
+  //-------------------------------------------------------------
+  // Sets the task enable to the given value.
   public void enable_task( bool task ) {
     propagate_task_info( task, null );
   }
 
-  /*
-   Sets the task done indicator to the given value (0 or 1) and propagates the
-   change to all parent nodes.
-  */
+  //-------------------------------------------------------------
+  // Sets the task done indicator to the given value (0 or 1) and
+  // propagates the change to all parent nodes.
   public void set_task_done( bool done ) {
     propagate_task_info( null, done );
   }
 
-  /*
-   Toggles the current value of task done and propagates the change to all
-   parent nodes.
-  */
+  //-------------------------------------------------------------
+  // Toggles the current value of task done and propagates the
+  // change to all parent nodes.
   public void toggle_task_done( ref Array<NodeTaskInfo?> changed ) {
     var change = new NodeTaskInfo( task_enabled(), task_done(), this );
     changed.append_val( change );
     set_task_done( _task_done == 0 );
   }
 
-  /*
-   Returns the ancestor node that is folded or returns null if no ancestor nodes
-   are folded.
-  */
+  //-------------------------------------------------------------
+  // MISCELLANEOUS
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Returns the ancestor node that is folded or returns null if
+  // no ancestor nodes are folded.
   public Node? folded_ancestor() {
     var node = parent;
     while( (node != null) && !node.folded ) node = node.parent;
     return( node );
   }
 
-  /*
-   Populates the given ListStore with all nodes that have names that match
-   the given string pattern.
-  */
+  //-------------------------------------------------------------
+  // Populates the given ListStore with all nodes that have names
+  // that match the given string pattern.
   public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     if( search_opts[SearchOptions.NODES] &&
         (((((_task_count == 0) || !is_leaf()) && search_opts[SearchOptions.NONTASKS]) ||
@@ -2423,14 +2596,13 @@ public class Node : Object {
     }
   }
 
-  /*
-   Called when the theme is changed by the user.  Looks up this
-   node's link color in the old theme to see if it is a themed color.
-   If it is, map it to the new theme's color palette.  If the current
-   color is not a theme link color, keep the current color as it
-   was custom set by the user.  Performs this mapping recursively for
-   all descendants.
-  */
+  //-------------------------------------------------------------
+  // Called when the theme is changed by the user.  Looks up this
+  // node's link color in the old theme to see if it is a themed
+  // color.  If it is, map it to the new theme's color palette.
+  // If the current color is not a theme link color, keep the
+  // current color as it was custom set by the user.  Performs
+  // this mapping recursively for all descendants.
   public void update_theme_colors( Theme old_theme, Theme new_theme ) {
     int old_index = old_theme.get_color_index( _link_color );
     if( old_index != -1 ) {
@@ -2442,10 +2614,10 @@ public class Node : Object {
     }
   }
 
-  /*
-   Gathers the information from all stored nodes for positional and link color information.
-   This information is used by the undo/redo functions.
-  */
+  //-------------------------------------------------------------
+  // Gathers the information from all stored nodes for positional
+  // and link color information.  This information is used by the
+  // undo/redo functions.
   public void get_node_info( ref Array<NodeInfo?> info ) {
 
     info.append_val( NodeInfo( _posx, _posy, side, _link_color ) );
@@ -2456,9 +2628,9 @@ public class Node : Object {
 
   }
 
-  /*
-   Restores the give information in the node info array to the node and subnodes.
-  */
+  //-------------------------------------------------------------
+  // Restores the give information in the node info array to the
+  // node and subnodes.
   public void set_node_info( Array<NodeInfo?> info, ref int index ) {
 
     var diffx = info.index( index ).posx - _posx;
@@ -2479,7 +2651,12 @@ public class Node : Object {
 
   }
 
-  /* Returns the link point for this node */
+  //-------------------------------------------------------------
+  // DRAWING
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Returns the link point for this node.
   protected virtual void link_point( out double x, out double y, bool seq = false ) {
     if( is_root() ) {
       x = posx + (_width / 2);
@@ -2530,7 +2707,8 @@ public class Node : Object {
     }
   }
 
-  /* Draws the border around the node */
+  //-------------------------------------------------------------
+  // Draws the border around the node.
   protected void draw_shape( Context ctx, Theme theme, RGBA border_color, bool exporting ) {
 
     double x = posx + style.node_margin;
@@ -2586,7 +2764,8 @@ public class Node : Object {
 
   }
 
-  /* Draws the node image above the note */
+  //-------------------------------------------------------------
+  // Draws the node image above the note.
   protected virtual void draw_image( Cairo.Context ctx, Theme theme ) {
     if( _image != null ) {
       double x, y, w, h;
@@ -2596,7 +2775,8 @@ public class Node : Object {
 
   }
 
-  /* Draws the node font to the screen */
+  //-------------------------------------------------------------
+  // Draws the node font to the screen.
   protected virtual void draw_name( Cairo.Context ctx, Theme theme, bool exporting ) {
 
     int hmargin = 3;
@@ -2629,7 +2809,8 @@ public class Node : Object {
 
   }
 
-  /* Draws the task checkbutton for leaf nodes */
+  //-------------------------------------------------------------
+  // Draws the task checkbutton for leaf nodes.
   protected virtual void draw_leaf_task( Context ctx, RGBA color, RGBA? background ) {
 
     if( _task_count > 0 ) {
@@ -2659,7 +2840,8 @@ public class Node : Object {
 
   }
 
-  /* Draws the task checkbutton for non-leaf nodes */
+  //-------------------------------------------------------------
+  // Draws the task checkbutton for non-leaf nodes.
   protected virtual void draw_acc_task( Context ctx, RGBA color, RGBA? background ) {
 
     if( _task_count > 0 ) {
@@ -2701,7 +2883,8 @@ public class Node : Object {
 
   }
 
-  /* Draws the sticker associated with the node */
+  //-------------------------------------------------------------
+  // Draws the sticker associated with the node.
   protected virtual void draw_sticker( Context ctx, RGBA sel_color, RGBA bg_color ) {
 
     if( _sticker_buf != null ) {
@@ -2760,7 +2943,9 @@ public class Node : Object {
 
   }
 
-  /* Draws the icon indicating that a note is associated with this node */
+  //-------------------------------------------------------------
+  // Draws the icon indicating that a note is associated with
+  // this node.
   protected virtual void draw_common_note( Context ctx, RGBA reg_color, RGBA sel_color, RGBA bg_color ) {
 
     if( note.length > 0 ) {
@@ -2792,6 +2977,8 @@ public class Node : Object {
 
   }
 
+  //-------------------------------------------------------------
+  // Draws the link node indicator.
   protected virtual void draw_link_node( Context ctx, RGBA reg_color, RGBA sel_color, RGBA bg_color ) {
 
     if( linked_node != null ) {
@@ -2827,7 +3014,8 @@ public class Node : Object {
 
   }
 
-  /* Draw the fold indicator */
+  //-------------------------------------------------------------
+  // Draw the fold indicator.
   protected virtual void draw_common_fold( Context ctx, RGBA bg_color, RGBA fg_color ) {
 
     if( (_children.length == 0) || is_summarized() ) return;
@@ -2868,7 +3056,9 @@ public class Node : Object {
 
   }
 
-  /* Draws the attachable highlight border to indicate when a node is attachable */
+  //-------------------------------------------------------------
+  // Draws the attachable highlight border to indicate when a
+  // node is attachable.
   protected virtual void draw_attachable( Context ctx, Theme theme, RGBA? frost_background ) {
 
     if( (mode == NodeMode.ATTACHABLE) || (mode == NodeMode.DROPPABLE) || (mode == NodeMode.HIGHLIGHTED) ) {
@@ -2886,10 +3076,9 @@ public class Node : Object {
 
   }
 
-  /*
-   Draw the link from this node to the parent node (or previous sibling if this is node
-   is part of a sequence).
-  */
+  //-------------------------------------------------------------
+  // Draw the link from this node to the parent node (or previous
+  // sibling if this is node is part of a sequence).
   public virtual void draw_link( Context ctx, Theme theme ) {
 
     double  parent_x, parent_y;
@@ -2983,7 +3172,8 @@ public class Node : Object {
 
   }
 
-  /* Draws arrow point to the "to" node */
+  //-------------------------------------------------------------
+  // Draws arrow point to the "to" node.
   protected virtual void draw_link_arrow( Context ctx, Theme theme, double tailx, double taily, double tipx, double tipy ) {
 
     double extlen[7] = {12, 12, 13, 14, 15, 16, 16};
@@ -3017,7 +3207,8 @@ public class Node : Object {
 
   }
 
-  /* Draw the node resizer area */
+  //-------------------------------------------------------------
+  // Draw the node resizer area.
   protected virtual void draw_resizer( Context ctx, Theme theme, bool exporting ) {
 
     /* Only draw the resizer if we are the current node */
@@ -3039,14 +3230,16 @@ public class Node : Object {
 
   }
 
-  /* Draws the node callout, if one exists */
+  //-------------------------------------------------------------
+  // Draws the node callout, if one exists.
   protected virtual void draw_callout( Context ctx, Theme theme, bool exporting ) {
     if( _callout != null ) {
       _callout.draw( ctx, theme, exporting );
     }
   }
 
-  /* Draws the node on the screen */
+  //-------------------------------------------------------------
+  // Draws the node on the screen.
   public virtual void draw( Context ctx, Theme theme, bool motion, bool exporting ) {
 
     var nodesel_background = theme.get_color( "nodesel_background" );
@@ -3121,10 +3314,10 @@ public class Node : Object {
 
   }
 
-  /*
-   Draws all of the nodes on the same side of the parent.  Draws the nodes such that
-   overlapping links are drawn in a more meaningful way.
-  */
+  //-------------------------------------------------------------
+  // Draws all of the nodes on the same side of the parent.  Draws
+  // the nodes such that overlapping links are drawn in a more
+  // meaningful way.
   private void draw_side_links( Context ctx, Theme theme, int first, int last ) {
     var first_rside = _children.index( first ).relative_side();
     var mid         = first + 1;
@@ -3137,7 +3330,8 @@ public class Node : Object {
     }
   }
 
-  /* Draw all of the node links */
+  //-------------------------------------------------------------
+  // Draw all of the node links.
   public void draw_links( Context ctx, Theme theme ) {
     if( !is_root() ) {
       draw_link( ctx, theme );
@@ -3154,7 +3348,8 @@ public class Node : Object {
     }
   }
 
-  /* Draw this node and all child nodes */
+  //-------------------------------------------------------------
+  // Draw this node and all child nodes.
   public void draw_all( Context ctx, Theme theme, Node? current, bool motion, bool exporting ) {
     if( this != current ) {
       if( !folded && traversable() ) {
@@ -3166,7 +3361,8 @@ public class Node : Object {
     }
   }
 
-  /* Outputs the node's information to standard output */
+  //-------------------------------------------------------------
+  // Outputs the node's information to standard output.
   public void display( bool recursive = false, string prefix = "" ) {
     stdout.printf( "%sNode, name: %s, posx: %g, posy: %g, side: %s, layout: %s\n", prefix, name.text.text, posx, posy, side.to_string(), ((layout == null) ? "Unknown" : layout.name) );
     if( recursive ) {

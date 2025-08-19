@@ -26,24 +26,28 @@ public class AnimatorNodes : AnimatorAction {
   uint                      _num;
   private AnimatorPositions _pos;
 
-  /* Default constructor */
-  public AnimatorNodes( DrawArea da, Array<Node> n, string name = "unnamed" ) {
+  //-------------------------------------------------------------
+  // Default constructor.
+  public AnimatorNodes( DrawArea da, Array<Node> n, bool exclude_selected, string name = "unnamed" ) {
     base( name, true );
-    _num = n.length;
-    _pos = new AnimatorPositions( da, n );
+    _pos = new AnimatorPositions( n, exclude_selected );
+    _num = _pos.length();
   }
 
-  /* Returns the NODES types */
+  //-------------------------------------------------------------
+  // Returns the NODES types.
   public override AnimationType type() {
     return( (_num > 1) ? AnimationType.NODES : AnimationType.NODE );
   }
 
-  /* Captures the end state */
+  //-------------------------------------------------------------
+  // Captures the end state
   public override void capture( DrawArea da ) {
     _pos.gather_new_positions();
   }
 
-  /* Adjusts all of the node positions for the given frame */
+  //-------------------------------------------------------------
+  // Adjusts all of the node positions for the given frame
   public override void adjust( DrawArea da ) {
     double divisor = index / frames;
     index++;

@@ -39,19 +39,19 @@ public class UndoNodeUnclify : UndoItem {
   //-------------------------------------------------------------
   // Performs an undo operation for this data.
   public override void undo( MindMap map ) {
-    map.canvas.animator.add_nodes( map.get_nodes(), "undo_make_parent_sibling" );
+    map.animator.add_nodes( map.get_nodes(), false, "undo_make_parent_sibling" );
     _node.detach( _node.side );
     _node.attach( _parent, _index, null );
-    map.canvas.animator.animate();
+    map.animator.animate();
     map.auto_save();
   }
 
   //-------------------------------------------------------------
   // Performs a redo operation.
   public override void redo( MindMap map ) {
-    map.canvas.animator.add_nodes( map.get_nodes(), "redo_make_parent_sibling" );
+    map.animator.add_nodes( map.get_nodes(), false, "redo_make_parent_sibling" );
     _node.make_parent_sibling( _node.parent, false );
-    map.canvas.animator.animate();
+    map.animator.animate();
     map.auto_save();
   }
 
