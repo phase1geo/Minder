@@ -180,7 +180,14 @@ public class Shortcut {
     if( _control ) {
       accel += "<Control>";
     }
-    if( _shift && (!keyval_is_lower( _keycode ) || !keyval_is_upper( _keycode )) ) {
+    if( _shift &&
+        (!keyval_is_lower( _keycode ) ||
+         !keyval_is_upper( _keycode ) ||
+         (_keycode == Key.Delete)     ||
+         (_keycode == Key.BackSpace)  ||
+         (_keycode == Key.Tab)        ||
+         (_keycode == Key.Return))
+    ) {
       accel += "<Shift>";
     }
     if( _alt ) {
