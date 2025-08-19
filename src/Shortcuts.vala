@@ -484,12 +484,14 @@ public class Shortcuts {
     add_shortcut( Key.Escape,    false, false, false, KeyCommand.EDIT_ESCAPE );
     add_shortcut( Key.BackSpace, false, false, false, KeyCommand.EDIT_BACKSPACE );
     add_shortcut( Key.BackSpace, false, false, false, KeyCommand.NODE_REMOVE );
+    add_shortcut( Key.BackSpace, false, true,  false, KeyCommand.NODE_REMOVE_ONLY );
     add_shortcut( Key.BackSpace, false, false, false, KeyCommand.CONNECTION_REMOVE );
     add_shortcut( Key.BackSpace, false, false, false, KeyCommand.CALLOUT_REMOVE );
     add_shortcut( Key.BackSpace, false, false, false, KeyCommand.STICKER_REMOVE );
     add_shortcut( Key.BackSpace, false, false, false, KeyCommand.GROUP_REMOVE );
     add_shortcut( Key.Delete,    false, false, false, KeyCommand.EDIT_DELETE );
     add_shortcut( Key.Delete,    false, false, false, KeyCommand.NODE_REMOVE );
+    add_shortcut( Key.Delete,    false, true,  false, KeyCommand.NODE_REMOVE_ONLY );
     add_shortcut( Key.Delete,    false, false, false, KeyCommand.CONNECTION_REMOVE );
     add_shortcut( Key.Delete,    false, false, false, KeyCommand.CALLOUT_REMOVE );
     add_shortcut( Key.Delete,    false, false, false, KeyCommand.STICKER_REMOVE );

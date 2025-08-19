@@ -1557,6 +1557,7 @@ public class MapModel {
     Node? next_node = _map.next_node_to_select();
     var   conns     = new Array<Connection>();
     UndoNodeGroups? undo_groups = null;
+    _map.animator.add_nodes( _nodes, true, "delete_node" );
     _connections.node_deleted( current, conns );
     _groups.remove_node( current, ref undo_groups );
     if( current.is_root() ) {
@@ -1576,7 +1577,7 @@ public class MapModel {
     }
     _map.selected.remove_node( current );
     _map.select_node( next_node );
-    queue_draw();
+    _map.animator.animate();
     auto_save();
   }
 
@@ -1587,6 +1588,7 @@ public class MapModel {
     var nodes = _map.selected.ordered_nodes();
     var conns = new Array<Connection>();
     Array<UndoNodeGroups?> undo_groups = null;
+    _map.animator.add_nodes( _nodes, true, "delete_nodes" );
     for( int i=0; i<nodes.length; i++ ) {
       _connections.node_only_deleted( nodes.index( i ), conns );
     }
@@ -1596,7 +1598,7 @@ public class MapModel {
       nodes.index( i ).delete_only();
     }
     _map.selected.clear_nodes();
-    queue_draw();
+    _map.animator.animate();
     auto_save();
   }
 
@@ -1795,11 +1797,12 @@ public class MapModel {
   public void add_parent_node() {
     var current = _map.selected.current_node();
     if( current.is_root() || current.is_summarized() ) return;
-    var node  = create_parent_node( current );
+    _map.animator.add_nodes( _nodes, false, "add_parent_node" );
+    var node = create_parent_node( current );
     _map.add_undo( new UndoNodeAddParent( node, current ) );
     _map.set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );
-    queue_draw();
+    _map.animator.animate();
     see();
     auto_save();
   }
