@@ -2021,8 +2021,8 @@ public class Node : Object {
 
   //-------------------------------------------------------------
   // Moves this node into the proper position within the parent
-  // node.
-  public void move_to_position( Node child, NodeSide side, double x, double y ) {
+  // node.  Returns true if the node is moved to a new position.
+  public bool move_to_position( Node child, NodeSide side, double x, double y ) {
     int   idx           = child.index();
     Node? last_selected = last_selected_child;
     for( int i=0; i<_children.length; i++ ) {
@@ -2035,7 +2035,7 @@ public class Node : Object {
               child.attached = true;
               child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
               last_selected_child = last_selected;
-              return;
+              return( i != (idx + 1) );
             }
             break;
           case NodeSide.TOP :
@@ -2045,7 +2045,7 @@ public class Node : Object {
               child.attached = true;
               child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
               last_selected_child = last_selected;
-              return;
+              return( i != (idx + 1) );
             }
             break;
         }
@@ -2054,13 +2054,14 @@ public class Node : Object {
         child.attached = true;
         child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
         last_selected_child = last_selected;
-        return;
+        return( i != (idx + 1) );
       }
     }
     child.detach( side );
     child.attached = true;
     child.attach( this, -1, null, false );
     last_selected_child = last_selected;
+    return( _children.length != (idx + 1) );
   }
 
   //-------------------------------------------------------------

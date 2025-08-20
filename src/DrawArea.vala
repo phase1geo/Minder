@@ -1157,6 +1157,8 @@ public class DrawArea : Gtk.DrawingArea {
   // Handle button press event
   private void on_press( int n_press, double x, double y, int button ) {
 
+    stdout.printf( "In on_press, x: %g, y: %g\n", x, y );
+
     var scaled_x = scale_value( x );
     var scaled_y = scale_value( y );
 
@@ -1613,6 +1615,7 @@ public class DrawArea : Gtk.DrawingArea {
         } else if( current_node.parent != null ) {
           var orig_index   = current_node.index();
           var orig_summary = current_node.summary_node();
+          var moved        = false;
           animator.add_nodes( _map.get_nodes(), false, "move to position" );
           if( current_node.parent != null ) {
             current_node.parent.clear_summary_extents();
@@ -1620,7 +1623,7 @@ public class DrawArea : Gtk.DrawingArea {
           if( current_node.is_summary() ) {
             (current_node as SummaryNode).nodes_changed( 1, 1 );
           } else {
-            current_node.parent.move_to_position( current_node, _orig_side, scale_value( x ), scale_value( y ) );
+            moved = current_node.parent.move_to_position( current_node, _orig_side, scale_value( x ), scale_value( y ) );
           }
           if( !current_node.is_summarized() && (_map.model.attach_summary != null) ) {
             _map.model.attach_summary.add_node( current_node );
@@ -1629,7 +1632,9 @@ public class DrawArea : Gtk.DrawingArea {
           } else if( current_node.is_summarized() ) {
             current_node.summary_node().node_moved( current_node );
           }
-          _map.add_undo( new UndoNodeMove( current_node, _orig_side, orig_index, orig_summary ) );
+          if( moved ) {
+            _map.add_undo( new UndoNodeMove( current_node, _orig_side, orig_index, orig_summary ) );
+          }
           animator.animate();
 
           /* Clear the attachable summary indicator */
