@@ -862,8 +862,11 @@ public class Node : Object {
     var diffw = _total_width - orig_width;
     var diffh = _total_height - orig_height;
 
-    if( (_layout != null) && ((diffw != 0) || (diffh != 0)) ) {
-      _layout.handle_update_by_edit( this, diffw, diffh );
+    if( (diffw != 0) || (diffh != 0) ) {
+      if( _layout != null ) {
+        _layout.handle_update_by_edit( this, diffw, diffh );
+      }
+      resized( diffw, diffh );
     }
 
   }
