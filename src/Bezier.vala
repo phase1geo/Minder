@@ -63,7 +63,8 @@ public class Bezier {
   private Point        _from;
   private Point        _to;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public Bezier( MindMap map ) {
     _from = new Point( map );
     _to   = new Point( map );
@@ -73,7 +74,8 @@ public class Bezier {
     }
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public Bezier.with_endpoints( MindMap map, double x0, double y0, double x1, double y1 ) {
     _from = new Point( map );
     _to   = new Point( map );
@@ -86,7 +88,8 @@ public class Bezier {
     _points.index( 2 ).set_coordinate( x1, y1 );
   }
 
-  /* Copies to this curve from the given curve */
+  //-------------------------------------------------------------
+  // Copies to this curve from the given curve.
   public void copy( Bezier b ) {
     for( int i=0; i<3; i++ ) {
       _points.index( i ).set_coordinate( b._points.index( i ).x, b._points.index( i ).y );
@@ -96,7 +99,8 @@ public class Bezier {
     _to.set_coordinate( b._to.x, b._to.y );
   }
 
-  /* Returns the point at the given index */
+  //-------------------------------------------------------------
+  // Returns the point at the given index.
   public void get_point( int pindex, out double x, out double y ) {
     x = _points.index( pindex ).x;
     y = _points.index( pindex ).y;
@@ -117,7 +121,8 @@ public class Bezier {
     y = (_points.index( 1 ).y / 2) + (_points.index( 0 ).y / 4) + (_points.index( 2 ).y / 4);
   }
 
-  /* Update the given point */
+  //-------------------------------------------------------------
+  // Update the given point.
   public void set_point( int pindex, double x, double y ) {
     _points.index( pindex ).set_coordinate( x, y );
   }
@@ -128,19 +133,23 @@ public class Bezier {
     set_point( 1, cx, cy );
   }
 
-  /* Returns true if the given t value is within its valid range */
+  //-------------------------------------------------------------
+  // Returns true if the given t value is within its valid range.
   private bool is_t_within_range( double t ) {
     return( (0 <= t) && (t <= 1) );
   }
 
-  /* Aligns the given point, returning a newly allocated one */
+  //-------------------------------------------------------------
+  // Aligns the given point, returning a newly allocated one.
   private void align_point( int pindex, double a, double tx, double ty ) {
     double x = (_points.index( pindex ).x - tx) * cos( a ) - (_points.index( pindex ).y - ty) * sin( a );
     double y = (_points.index( pindex ).x - tx) * sin( a ) + (_points.index( pindex ).y - ty) * cos( a );
     _apoints.index( pindex ).set_coordinate( x, y );
   }
 
-  /* Rotates the curve with the given line to get them into alignment for easier calculations */
+  //-------------------------------------------------------------
+  // Rotates the curve with the given line to get them into
+  // alignment for easier calculations.
   private void align( double lx0, double ly0, double lx1, double ly1 ) {
 
     var tx = lx0;
@@ -153,7 +162,8 @@ public class Bezier {
 
   }
 
-  /* Calculates the roots for the given quadratic curve */
+  //-------------------------------------------------------------
+  // Calculates the roots for the given quadratic curve.
   private void get_roots( double axis, bool axis_is_x, ref Array<double?> roots ) {
 
     double lx0 = axis_is_x ? axis    : 0;
@@ -197,13 +207,15 @@ public class Bezier {
 
   }
 
-  /* Returns true if the given point is within close proximity to this curve */
+  //-------------------------------------------------------------
+  // Returns true if the given point is within close proximity to
+  // this curve.
   public bool within_range( double x, double y ) {
 
     Array<double?> roots     = new Array<double?>();
     double         tolerance = 10;
 
-    /* Let's start by looking at the X axis */
+    // Let's start by looking at the X axis
     get_roots( x, true, ref roots );
 
     if( roots.length > 0 ) {
@@ -215,7 +227,7 @@ public class Bezier {
       }
     }
 
-    /* Let's take a look at the Y axis */
+    // Let's take a look at the Y axis
     roots.remove_range( 0, roots.length );
     get_roots( y, false, ref roots );
 
@@ -230,7 +242,8 @@ public class Bezier {
 
   }
 
-  /* Returns the intersecting point */
+  //-------------------------------------------------------------
+  // Returns the intersecting point.
   public double? get_intersecting_point( double axis, bool axis_is_x, bool from ) {
 
     Array<double?> roots = new Array<double?>();
@@ -263,7 +276,9 @@ public class Bezier {
 
   }
 
-  /* Given the bounds of a box, calculate the connection point to the box and store it locally */
+  //-------------------------------------------------------------
+  // Given the bounds of a box, calculate the connection point to
+  // the box and store it locally.
   public void set_connect_point( bool from, double top, double bottom, double left, double right ) {
 
     double? isect;

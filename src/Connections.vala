@@ -89,12 +89,15 @@ public class Connections {
     }
   }
 
-  /* Complete the stored connections */
+  //-------------------------------------------------------------
+  // Complete the stored connections.
   public void complete_connection( int index, Node to_node ) {
     _connections.index( index ).connect_to( to_node );
   }
 
-  /* Returns the connection that is before or after the given connection */
+  //-------------------------------------------------------------
+  // Returns the connection that is before or after the given
+  // connection.
   public Connection? get_connection( Connection conn, int dir ) {
     if( _connections.length == 1 ) return( null );
     for( int i=0; i<_connections.length; i++ ) {
@@ -106,10 +109,10 @@ public class Connections {
     return( null );
   }
 
-  /*
-   Returns the index'th connection that is attached to the given node; otherwise, returns
-   null if the node does not contain a connection.
-  */
+  //-------------------------------------------------------------
+  // Returns the index'th connection that is attached to the
+  // given node; otherwise, returns null if the node does not
+  // contain a connection.
   public Connection? get_attached_connection( Node node, int index = 0 ) {
     int matches = 0;
     for( int i=0; i<_connections.length; i++ ) {
@@ -120,10 +123,9 @@ public class Connections {
     return( null );
   }
 
-  /*
-   Returns the associated connection if the given point is in proximity to the
-   connection's curve.
-  */
+  //-------------------------------------------------------------
+  // Returns the associated connection if the given point is in
+  // proximity to the connection's curve.
   public Connection? on_curve( double x, double y ) {
     if( !hide ) {
       for( int i=0; i<_connections.length; i++ ) {
@@ -135,10 +137,9 @@ public class Connections {
     return( null );
   }
 
-  /*
-   Returns the associated connection if the given point is within the connection's
-   title box.
-  */
+  //-------------------------------------------------------------
+  // Returns the associated connection if the given point is
+  // within the connection's title box.
   public Connection? within_title_box( double x, double y ) {
     if( !hide ) {
       for( int i=0; i<_connections.length; i++ ) {
@@ -150,10 +151,9 @@ public class Connections {
     return( null );
   }
 
-  /*
-   Returns the associated connection if the given point is within the connection's
-   title text.
-  */
+  //-------------------------------------------------------------
+  // Returns the associated connection if the given point is
+  // within the connection's title text.
   public Connection? within_title( double x, double y ) {
     if( !hide ) {
       for( int i=0; i<_connections.length; i++ ) {
@@ -165,10 +165,10 @@ public class Connections {
     return( null );
   }
 
-  /*
-   Searches the connections for one which is displaying a note at the given
-   coordinates.  If a match is found, return the connection; otherwise, return null.
-  */
+  //-------------------------------------------------------------
+  // Searches the connections for one which is displaying a note
+  // at the given coordinates.  If a match is found, return the
+  // connection; otherwise, return null.
   public Connection? within_note( double x, double y ) {
     if( !hide ) {
       for( int i=0; i<_connections.length; i++ ) {
@@ -231,10 +231,9 @@ public class Connections {
     return( null );
   }
 
-  /*
-   Called whenever a node is deleted in the mind map.  All attached connections
-   also need to be removed.
-  */
+  //-------------------------------------------------------------
+  // Called whenever a node is deleted in the mind map.  All
+  // attached connections also need to be removed.
   public void node_deleted( Node node, Array<Connection> conns ) {
     for( int i=0; i<node.children().length; i++ ) {
       node_deleted( node.children().index( i ), conns );
@@ -247,10 +246,9 @@ public class Connections {
     }
   }
 
-  /*
-   Called whenever a single node is deleted.  All attached connections also need to
-   be removed.
-  */
+  //-------------------------------------------------------------
+  // Called whenever a single node is deleted.  All attached
+  // connections also need to be removed.
   public void node_only_deleted( Node node, Array<Connection> conns ) {
     for( int i=((int)_connections.length - 1); i>=0; i-- ) {
       if( _connections.index( i ).attached_to_node( node ) ) {
@@ -260,7 +258,8 @@ public class Connections {
     }
   }
 
-  /* Loads the listed connections from the given XML data */
+  //-------------------------------------------------------------
+  // Loads the listed connections from the given XML data.
   public void load( MindMap map, Xml.Node* node, Array<Connection>? conns, Array<Node> nodes ) {
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
@@ -275,7 +274,8 @@ public class Connections {
     }
   }
 
-  /* Saves the connection information to the given XML file */
+  //-------------------------------------------------------------
+  // Saves the connection information to the given XML file.
   public void save( Xml.Node* parent ) {
     if( _connections.length > 0 ) {
       Xml.Node* n = new Xml.Node( null, "connections" );
@@ -286,7 +286,9 @@ public class Connections {
     }
   }
 
-  /* Saves the connection information to the given XML node if the connection is fully within the given node tree */
+  //-------------------------------------------------------------
+  // Saves the connection information to the given XML node if
+  // the connection is fully within the given node tree.
   public void save_if_in_node( Xml.Node* parent, Node node, NodeLinks save_links, NodeLinks doc_links ) {
     for( int i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ).from_node.is_descendant_of( node ) && _connections.index( i ).to_node.is_descendant_of( node ) ) {
@@ -296,7 +298,9 @@ public class Connections {
     }
   }
 
-  /* Updates the connection notes of any that connect to the given node */
+  //-------------------------------------------------------------
+  // Updates the connection notes of any that connect to the
+  // given node.
   public void set_links_in_notes( Node node, NodeLinks links, NodeLinks doc_links ) {
     for( int i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ).from_node.is_descendant_of( node ) && _connections.index( i ).to_node.is_descendant_of( node ) ) {
@@ -305,21 +309,26 @@ public class Connections {
     }
   }
 
-  /* Set all of the stored connections to the given style */
+  //-------------------------------------------------------------
+  // Set all of the stored connections to the given style.
   public void set_all_connections_to_style( Style style ) {
     for( int i=0; i<_connections.length; i++ ) {
       _connections.index( i ).style = style;
     }
   }
 
-  /* Searches the connections for ones that match the given pattern and search options */
+  //-------------------------------------------------------------
+  // Searches the connections for ones that match the given
+  // pattern and search options.
   public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     for( int i=0; i<_connections.length; i++ ) {
       _connections.index( i ).get_match_items(tabname, pattern, search_opts, ref matches );
     }
   }
 
-  /* Sets the focus mode to the given value and updates the alpha value of the stored connections */
+  //-------------------------------------------------------------
+  // Sets the focus mode to the given value and updates the alpha
+  // value of the stored connections.
   public void update_alpha() {
     for( int i=0; i<_connections.length; i++ ) {
       double from_alpha = _connections.index( i ).from_node.alpha;
@@ -328,7 +337,9 @@ public class Connections {
     }
   }
 
-  /* Takes the given extents and extends them if the connections go outside of the given extents */
+  //-------------------------------------------------------------
+  // Takes the given extents and extends them if the connections
+  // go outside of the given extents.
   public void add_extents( ref double x1, ref double y1, ref double x2, ref double y2 ) {
     for( int i=0; i<_connections.length; i++ ) {
       var conn = _connections.index( i );
@@ -339,7 +350,8 @@ public class Connections {
     }
   }
 
-  /* Draws all of the connections onto the given context */
+  //-------------------------------------------------------------
+  // Draws all of the connections onto the given context.
   public void draw_all( Cairo.Context ctx, Theme theme, bool exporting ) {
     if( hide ) return;
     for( int i=0; i<_connections.length; i++ ) {

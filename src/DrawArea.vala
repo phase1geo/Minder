@@ -700,14 +700,15 @@ public class DrawArea : Gtk.DrawingArea {
     var current_conn = _map.selected.current_connection();
     
     if( (_map.model.attach_node == null) || (current_conn == null) || !current_conn.mode.is_connecting() ) {
-      if( (match_conn != null) && (component != MapItemComponent.DRAG_HANDLE) ) {
+      var match_node = _map.model.get_node_at_position( scaled_x, scaled_y, out component );
+      if( (match_conn != null) && (component != MapItemComponent.DRAG_HANDLE) &&
+          ((match_node == null) || ((match_node != match_conn.from_node) && (match_node != match_conn.to_node))) ) {
         clear_current_node( false );
         clear_current_sticker( false );
         clear_current_group( false );
         clear_current_callout( false );
         return( set_current_connection_from_position( match_conn, component, scaled_x, scaled_y ) );
       }
-      var match_node = _map.model.get_node_at_position( scaled_x, scaled_y, out component );
       if( match_node != null ) {
         clear_current_connection( false );
         clear_current_sticker( false );
