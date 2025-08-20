@@ -490,7 +490,9 @@ public class Connection : Object {
     dragy += (diffh / 2);
     set_drag_handle( dragx, dragy );
     set_connect_point( _from_node );
-    set_connect_point( _to_node );
+    if( _to_node != null ) {
+      set_connect_point( _to_node );
+    }
   }
 
   //-------------------------------------------------------------
