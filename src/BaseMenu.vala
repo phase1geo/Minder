@@ -110,6 +110,7 @@ public class BaseMenu {
     action.activate.connect((v) => {
       var func = command.get_func();
       func( map );
+      map.canvas.grab_focus();
     });
     _group.add_action( action );
 
