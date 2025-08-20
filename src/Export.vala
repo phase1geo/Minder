@@ -106,11 +106,11 @@ public class Export {
 
     var row = _settings.size * 2;
 
-    var lbl = new Label( Utils.make_title( label ) ) {
-      halign     = Align.START,
-      hexpand    = true,
-      use_markup = true
+    var lbl = new Label( label ) {
+      halign  = Align.START,
+      hexpand = true,
     };
+    lbl.add_css_class( "titled" );
 
     var sw = new Switch() {
       halign = Align.END,
@@ -140,11 +140,11 @@ public class Export {
 
     var row = _settings.size * 2;
 
-    var lbl = new Label( Utils.make_title( label ) ) {
-      halign     = Align.START,
-      hexpand    = true,
-      use_markup = true
+    var lbl = new Label( label ) {
+      halign  = Align.START,
+      hexpand = true,
     };
+    lbl.add_css_class( "titled" );
 
     var scale = new Scale.with_range( Orientation.HORIZONTAL, min, max, step ) {
       halign       = Align.FILL,
@@ -175,10 +175,10 @@ public class Export {
 
     var row = _settings.size * 2;
 
-    var lbl = new Label( Utils.make_title( label ) ) {
-      halign     = Align.START,
-      use_markup = true
+    var lbl = new Label( label ) {
+      halign = Align.START,
     };
+    lbl.add_css_class( "titled" );
 
     var zoom = new ZoomWidget( min, max, step ) {
       value = dflt

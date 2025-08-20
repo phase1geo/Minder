@@ -133,12 +133,6 @@ public class Utils {
   }
 
   //-------------------------------------------------------------
-  // Returns a string that is suitable to use as an inspector title
-  public static string make_title( string str ) {
-    return( "<b>" + str + "</b>" );
-  }
-
-  //-------------------------------------------------------------
   // Returns a string that is used to display a tooltip with
   // displayed accelerator.
   public static string tooltip_with_accel( string tooltip, string accel ) {

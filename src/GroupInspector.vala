@@ -76,10 +76,10 @@ public class GroupInspector : Box {
   // Creates the note widget
   private void create_note( MainWindow win ) {
 
-    Label lbl = new Label( Utils.make_title( _( "Note" ) ) ) {
-      xalign     = (float)0,
-      use_markup = true
+    Label lbl = new Label( _( "Note" ) ) {
+      xalign = (float)0,
     };
+    lbl.add_css_class( "titled" );
 
     _note = new NoteView() {
       vexpand   = true,

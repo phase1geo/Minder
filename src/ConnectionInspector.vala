@@ -82,11 +82,11 @@ public class ConnectionInspector : Box {
   // Creates the connection color widget
   private void create_color() {
 
-    var lbl = new Label( Utils.make_title( _( "Color" ) ) ) {
-      halign     = Align.START,
-      xalign     = (float)0,
-      use_markup = true
+    var lbl = new Label( _( "Color" ) ) {
+      halign = Align.START,
+      xalign = (float)0,
     };
+    lbl.add_css_class( "titled" );
 
     _color = new ColorButton() {
       hexpand = true
@@ -122,11 +122,11 @@ public class ConnectionInspector : Box {
   // Creates the note widget
   private void create_note( MainWindow win ) {
 
-    var lbl = new Label( Utils.make_title( _( "Note" ) ) ) {
+    var lbl = new Label( _( "Note" ) ) {
       valign = Align.START,
       xalign = (float)0,
-      use_markup = true
     };
+    lbl.add_css_class( "titled" );
 
     _note = new NoteView() {
       valign    = Align.FILL,

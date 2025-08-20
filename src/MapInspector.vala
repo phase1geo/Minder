@@ -110,12 +110,12 @@ public class MapInspector : Box {
   // Add the connection show/hide UI.
   private void add_connection_ui() {
 
-    var lbl = new Label( Utils.make_title( _( "Hide connections" ) ) ) {
-      halign     = Align.START,
-      hexpand    = true,
-      xalign     = (float)0,
-      use_markup = true
+    var lbl = new Label( _( "Hide connections" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0,
     };
+    lbl.add_css_class( "titled" );
 
     _hide_connections = new Switch() {
       halign = Align.END,
@@ -146,12 +146,12 @@ public class MapInspector : Box {
   // Add the callout show/hide UI.
   private void add_callout_ui() {
 
-    var lbl = new Label( Utils.make_title( _( "Hide callouts" ) ) ) {
-      halign     = Align.START,
-      hexpand    = true,
-      xalign     = (float)0,
-      use_markup = true
+    var lbl = new Label( _( "Hide callouts" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0,
     };
+    lbl.add_css_class( "titled" );
 
     _hide_callouts = new Switch() {
       halign = Align.END,
@@ -190,12 +190,12 @@ public class MapInspector : Box {
     layouts.get_names( ref names );
 
     /* Create the modebutton to select the current layout */
-    var lbl = new Label( Utils.make_title( _( "Node Layouts" ) ) ) {
-      halign     = Align.START,
-      hexpand    = true,
-      xalign     = (float)0,
-      use_markup = true
+    var lbl = new Label( _( "Node Layouts" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0,
     };
+    lbl.add_css_class( "titled" );
 
     _layout = new ModeButtons() {
       halign = Align.END
@@ -244,10 +244,10 @@ public class MapInspector : Box {
   private void add_alignment_ui() {
 
     /* Create the modebutton to select the current layout */
-    var lbl = new Label( Utils.make_title( _( "Node Alignment" ) ) ) {
-      xalign     = (float)0,
-      use_markup = true
+    var lbl = new Label( _( "Node Alignment" ) ) {
+      xalign = (float)0,
     };
+    lbl.add_css_class( "titled" );
 
     /* Create the alignment buttons */
     _hleft = new Button.from_icon_name( "align-horizontal-left-symbolic" );
@@ -313,11 +313,11 @@ public class MapInspector : Box {
   private void add_theme_ui() {
 
     /* Create the UI */
-    var lbl = new Label( Utils.make_title( _( "Themes" ) ) ) {
+    var lbl = new Label( _( "Themes" ) ) {
       halign = Align.FILL,
       xalign = (float)0,
-      use_markup = true
     };
+    lbl.add_css_class( "titled" );
 
     _theme_grid = new Grid() {
       column_homogeneous = true

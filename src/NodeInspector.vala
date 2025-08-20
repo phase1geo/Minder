@@ -169,11 +169,11 @@ public class NodeInspector : Box {
   /* Creates the sequence UI elements */
   private void create_sequence() {
 
-    var lbl = new Label( Utils.make_title( _( "Sequence" ) ) ) {
-      halign     = Align.START,
-      xalign     = (float)0,
-      use_markup = true
+    var lbl = new Label( _( "Sequence" ) ) {
+      halign = Align.START,
+      xalign = (float)0,
     };
+    lbl.add_css_class( "titled" );
 
     var info = new Image.from_icon_name( "dialog-information-symbolic" ) {
       halign       = Align.START,
@@ -210,12 +210,12 @@ public class NodeInspector : Box {
   */
   private void create_link() {
 
-    var lbl = new Label( Utils.make_title( _( "Color" ) ) ) {
-      halign     = Align.START,
-      hexpand    = true,
-      xalign     = (float)0,
-      use_markup = true
+    var lbl = new Label( _( "Color" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0,
     };
+    lbl.add_css_class( "titled" );
 
     _link_color = new ColorButton() {
       halign = Align.FILL
@@ -242,12 +242,12 @@ public class NodeInspector : Box {
   */
   private void create_color() {
 
-    var lbl = new Label( Utils.make_title( _( "Override Color" ) ) ) {
-      halign     = Align.START,
-      hexpand    = true,
-      xalign     = (float)0,
-      use_markup = true
+    var lbl = new Label( _( "Override Color" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0,
     };
+    lbl.add_css_class( "titled" );
 
     _override = new Switch() {
       halign = Align.END
@@ -301,10 +301,10 @@ public class NodeInspector : Box {
   /* Creates the note widget */
   private void create_note( MainWindow win ) {
 
-    Label lbl = new Label( Utils.make_title( _( "Note" ) ) ) {
-      xalign     = (float)0,
-      use_markup = true
+    var lbl = new Label( _( "Note" ) ) {
+      xalign = (float)0,
     };
+    lbl.add_css_class( "titled" );
 
     _note = new NoteView() {
       valign    = Align.FILL,
@@ -359,11 +359,11 @@ public class NodeInspector : Box {
   /* Creates the add image widget */
   private Box create_image_add() {
 
-    var lbl  = new Label( Utils.make_title( _( "Image" ) ) ) {
-      halign     = Align.FILL,
-      xalign     = (float)0,
-      use_markup = true
+    var lbl = new Label( _( "Image" ) ) {
+      halign = Align.FILL,
+      xalign = (float)0,
     };
+    lbl.add_css_class( "titled" );
 
     var btn = new Button.with_label( _( "Add Image…" ) );
     btn.clicked.connect( image_button_clicked );
@@ -379,12 +379,12 @@ public class NodeInspector : Box {
   /* Creates the edit image widget */
   private Box create_image_edit() {
 
-    var lbl  = new Label( Utils.make_title( _( "Image" ) ) ) {
-      halign     = Align.START,
-      hexpand    = true,
-      xalign     = (float)0,
-      use_markup = true
+    var lbl = new Label( _( "Image" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0,
     };
+    lbl.add_css_class( "titled" );
 
     var btn_edit = new Button.from_icon_name( "document-edit-symbolic" ) {
       halign       = Align.END,

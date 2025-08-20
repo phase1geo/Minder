@@ -169,11 +169,11 @@ public class StickerInspector : Box {
     var fbox = create_icon_box( name );
 
     /* Create expander */
-    var exp = new Expander( Utils.make_title( name ) ) {
-      use_markup = true,
-      expanded   = true,
-      child      = fbox
+    var exp = new Expander( name ) {
+      expanded = true,
+      child    = fbox
     };
+    exp.add_css_class( "titled" );
 
     box.append( exp );
 

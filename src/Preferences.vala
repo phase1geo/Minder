@@ -179,10 +179,11 @@ public class Preferences : Gtk.Window {
           if( group_end_seen ) {
             box.append( make_separator() );
           }
-          var l = new Label( Utils.make_title( command.shortcut_label() ) ) {
+          var l = new Label( command.shortcut_label() ) {
             halign = Align.START,
             use_markup = true
           };
+          l.add_css_class( "titled" );
           box.append( l );
           grid.attach( box, 1, row, 3 );
         } else if( command.is_group_end() ) {

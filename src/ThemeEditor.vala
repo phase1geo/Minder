@@ -49,16 +49,15 @@ public class ThemeEditor : Gtk.Box {
     _btns = new HashMap<string,ColorButton>();
 
     /* Add title */
-    var title = new Label( Utils.make_title( _( "Customize Theme" ) + "\n" ) ) {
-      use_markup = true
-    };
+    var title = new Label( _( "Customize Theme" ) + "\n" );
+    title.add_css_class( "titled" );
     append( title );
 
     /* Add name label */
-    var nlbl = new Label( Utils.make_title( _( "Name" ) + ":" ) ) {
-      xalign     = (float)0,
-      use_markup = true 
+    var nlbl = new Label( _( "Name" ) + ":" ) {
+      xalign = (float)0,
     };
+    nlbl.add_css_class( "titled" );
     _name = new Entry();
     var entry_focus = new EventControllerFocus();
     _name.add_controller( entry_focus );
@@ -93,10 +92,10 @@ public class ThemeEditor : Gtk.Box {
     sw.child.set_size_request( 180, 600 );
     append( sw );
 
-    var color_lbl = new Label( Utils.make_title( _( "Base Colors" ) + "\n" ) ) {
-      xalign     = (float)0,
-      use_markup = true
+    var color_lbl = new Label( _( "Base Colors" ) + "\n" ) {
+      xalign = (float)0,
     };
+    color_lbl.add_css_class( "titled" );
     grid.attach( color_lbl, 0, 0, 2 );
 
     add_color( _( "Background" ),             "background",            grid, 1 );
@@ -124,10 +123,10 @@ public class ThemeEditor : Gtk.Box {
 
     grid.attach( new Label( "" ), 0, row );
 
-    var dark_lbl = new Label( Utils.make_title( _( "Prefer Dark Mode" ) ) ) {
-      xalign     = (float)0,
-      use_markup = true
+    var dark_lbl = new Label( _( "Prefer Dark Mode" ) ) {
+      xalign = (float)0,
     };
+    dark_lbl.add_css_class( "titled" );
 
     _prefer_dark = new Switch() {
       margin_top = 20
@@ -141,10 +140,10 @@ public class ThemeEditor : Gtk.Box {
     grid.attach( _prefer_dark, 1, (row + 1) );
     grid.attach( new Label( "" ), 0, (row + 2) );
 
-    var link_lbl = new Label( Utils.make_title( _( "Link Colors" ) + "\n" ) ) {
-      xalign     = (float)0,
-      use_markup = true
+    var link_lbl = new Label( _( "Link Colors" ) + "\n" ) {
+      xalign = (float)0,
     };
+    link_lbl.add_css_class( "titled" );
     grid.attach( link_lbl, 0, (row + 3), 2 );
 
     /* Add link colors */
