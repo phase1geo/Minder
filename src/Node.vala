@@ -2265,6 +2265,11 @@ public class Node : Object {
       if( parent.last_selected_child == this ) {
         parent.last_selected_child = null;
       }
+      if( parent.sequence ) {
+        for( int i=idx; i<parent.children().length; i++ ) {
+          parent.children().index( i ).update_sequence_num();
+        }
+      }
       _sequence_num = null;
       if( layout != null ) {
         layout.handle_update_by_delete( parent, idx, side, tree_size );
@@ -2309,6 +2314,7 @@ public class Node : Object {
       attached = false;
       for( int i=(int)(_children.length - 1); i>=0; i-- ) {
         moved.disconnect( _children.index( i ).parent_moved );
+        _children.index( i )._sequence_num = null;
         _children.index( i ).attach( parent, idx, null, false );
       }
       parent = null;
