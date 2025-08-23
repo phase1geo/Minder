@@ -2295,8 +2295,9 @@ public class Node : Object {
   public virtual void delete_only() {
     if( parent == null ) {
       for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).parent   = null;
-        _children.index( i ).attached = false;
+        _children.index( i ).parent        = null;
+        _children.index( i ).attached      = false;
+        _children.index( i )._sequence_num = null;
         _map.get_nodes().append_val( _children.index( i ) );
       }
       _map.model.remove_root_node( this );
@@ -2337,14 +2338,19 @@ public class Node : Object {
       temp.prepend_val( child );
     }
     children().remove_range( 0, children().length );
+    if( index() == -1 ) {
+      if( prev_parent == null ) {
+        _map.model.position_root_node( this );
+        _map.model.add_root( this, prev_index );
+      } else {
+        attach_init( prev_parent, prev_index );
+      }
+    }
+    attached = true;
     for( int i=0; i<temp.length; i++ ) {
       var child = temp.index( i );
       child.attach_init( this, -1 );
     }
-    if( index() == -1 ) {
-      attach_init( prev_parent, prev_index );
-    }
-    attached = true;
   }
 
   //-------------------------------------------------------------

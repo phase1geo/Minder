@@ -1330,7 +1330,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     } else {
       dialog.open.begin( this, null, (obj, res) => {
         try {
-          var file = dialog.select_folder.end( res );
+          var file = dialog.open.end( res );
           if( file != null ) {
             open_file( file.get_path(), dir );
             Utils.store_chooser_folder( file.get_path(), dir );

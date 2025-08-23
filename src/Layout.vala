@@ -270,14 +270,18 @@ public class Layout : Object {
 
   /* Returns the side of the given node relative to its root */
   public virtual NodeSide get_side( Node n ) {
-    double rx, ry, rw, rh;
-    double nx, ny, nw, nh;
-    n.get_root().bbox( out rx, out ry, out rw, out rh );
-    n.bbox( out nx, out ny, out nw, out nh );
-    if( n.side.horizontal() ) {
-      return( ((nx + (nw / 2)) > (rx + (rw / 2))) ? NodeSide.RIGHT : NodeSide.LEFT );
+    if( n.is_root() ) {
+      return( n.side );
     } else {
-      return( ((ny + (nh / 2)) > (ry + (rh / 2))) ? NodeSide.BOTTOM : NodeSide.TOP );
+      double rx, ry, rw, rh;
+      double nx, ny, nw, nh;
+      n.get_root().bbox( out rx, out ry, out rw, out rh );
+      n.bbox( out nx, out ny, out nw, out nh );
+      if( n.side.horizontal() ) {
+        return( ((nx + (nw / 2)) > (rx + (rw / 2))) ? NodeSide.RIGHT : NodeSide.LEFT );
+      } else {
+        return( ((ny + (nh / 2)) > (ry + (rh / 2))) ? NodeSide.BOTTOM : NodeSide.TOP );
+      }
     }
   }
 
