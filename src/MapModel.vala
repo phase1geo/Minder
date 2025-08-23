@@ -1585,6 +1585,9 @@ public class MapModel {
   // Deletes all selected nodes.
   public void delete_nodes() {
     if( _map.selected.num_nodes() == 0 ) return;
+    if( _map.selected.num_nodes() == 1 ) {
+      map.model.set_node_mode( map.get_current_node(), NodeMode.SELECTED );
+    }
     var nodes = _map.selected.ordered_nodes();
     var conns = new Array<Connection>();
     Array<UndoNodeGroups?> undo_groups = null;

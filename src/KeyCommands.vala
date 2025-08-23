@@ -1721,9 +1721,6 @@ public enum KeyCommand {
   }
 
   public static void node_remove_only_selected( MindMap map ) {
-    if( map.selected.num_nodes() == 1 ) {
-      map.model.set_node_mode( map.get_current_node(), NodeMode.SELECTED );
-    }
     map.model.delete_nodes();
   }
 

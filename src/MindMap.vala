@@ -825,7 +825,7 @@ public class MindMap {
     for( int i=0; i<groups.length; i++ ) {
       var nodes = groups.index( i ).nodes;
       for( int j=0; j<nodes.length; j++ ) {
-        selected.add_node( nodes.index( j ), false );
+        selected.add_node( nodes.index( j ), false, false );
       }
     }
     selected.clear_groups();

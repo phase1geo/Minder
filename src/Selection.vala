@@ -170,9 +170,9 @@ public class Selection {
   //-------------------------------------------------------------
   // Adds a node to the current selection.  Returns true if the
   // node was added.
-  public bool add_node( Node node, bool signal_change = true ) {
+  public bool add_node( Node node, bool force_selected = false, bool signal_change = true ) {
     if( is_node_selected( node ) || ((node.parent != null) && node.parent.folded) ) return( false );
-    _map.model.set_node_mode( node, ((_nodes.length == 0) ? NodeMode.CURRENT : NodeMode.SELECTED) );
+    _map.model.set_node_mode( node, (((_nodes.length == 0) && !force_selected) ? NodeMode.CURRENT : NodeMode.SELECTED) );
     if( _nodes.length == 1 ) {
       _map.model.set_node_mode( _nodes.index( 0 ), NodeMode.SELECTED );
     }
@@ -189,7 +189,7 @@ public class Selection {
   public bool add_nodes( Array<Node> nodes, bool signal_change = true ) {
     var retval = false;
     for( int i=0; i<nodes.length; i++ ) {
-      retval |= add_node( nodes.index( i ), false );
+      retval |= add_node( nodes.index( i ), false, false );
     }
     if( signal_change ) {
       selection_changed();
@@ -203,7 +203,7 @@ public class Selection {
     var children = node.children();
     var changed  = false;
     for( int i=0; i<children.length; i++ ) {
-      changed |= add_node( children.index( i ), false );
+      changed |= add_node( children.index( i ), false, false );
     }
     if( changed && signal_change ) {
       selection_changed();
@@ -227,7 +227,7 @@ public class Selection {
   // Helper method to add the entire node tree to the selection.
   private bool add_node_tree_helper( Node node ) {
     var children = node.children();
-    var changed  = add_node( node, false );
+    var changed  = add_node( node, false, false );
     for( int i=0; i<children.length; i++ ) {
       changed |= add_node_tree_helper( children.index( i ) );
     }
@@ -251,7 +251,7 @@ public class Selection {
 
   private bool add_nodes_at_level_helper( Node node, uint level, uint curr_level ) {
     if( level == curr_level ) {
-      return( add_node( node, false ) );
+      return( add_node( node, false, false ) );
     } else {
       var children = node.children();
       var changed  = false;
@@ -612,11 +612,11 @@ public class Selection {
   private void ordered_nodes_helper( Array<Node> children, ref Array<Node> nodes ) {
     for( int i=0; i<children.length; i++ ) {
       var node = children.index( i );
-      if( node.traversable() ) {
-        ordered_nodes_helper( node.children(), ref nodes );
-      }
       if( is_node_selected( node ) ) {
         nodes.append_val( node );
+      }
+      if( node.traversable() ) {
+        ordered_nodes_helper( node.children(), ref nodes );
       }
     }
   }

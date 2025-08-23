@@ -21,65 +21,19 @@
 
 using Gtk;
 
-public class UndoNodesCut : UndoItem {
-
-  private class NodeInfo {
-    public Node  node;
-    public Node? parent;
-    public int   index;
-    public NodeInfo( Node n ) {
-      node   = n;
-      parent = n.parent;
-      index  = n.index();
-    }
-  }
-
-  Array<NodeInfo>        _nodes;
-  Array<Connection>      _conns;
-  Array<UndoNodeGroups?> _groups;
+public class UndoNodesCut : UndoNodesDelete {
 
   //-------------------------------------------------------------
   // Default constructor.
   public UndoNodesCut( Array<Node> nodes, Array<Connection> conns, Array<UndoNodeGroups?> groups ) {
-    base( _( "cut nodes" ) );
-    _nodes = new Array<NodeInfo>();
-    for( int i=0; i<nodes.length; i++ ) {
-      _nodes.append_val( new NodeInfo( nodes.index( i ) ) );
-    }
-    _conns  = conns;
-    _groups = groups;
-  }
-
-  //-------------------------------------------------------------
-  // Undoes a node deletion.
-  public override void undo( MindMap map ) {
-    map.selected.clear();
-    map.animator.add_nodes( map.get_nodes(), false, "UndoNodesCut undo" );
-    for( int i=0; i<_nodes.length; i++ ) {
-      var ni = _nodes.index( i );
-      ni.node.attach_only( ni.parent, ni.index );
-      map.selected.add_node( ni.node );
-    }
-    map.connections.add_connections( _conns );
-    map.groups.apply_undos( _groups );
-    map.animator.animate();
-    map.auto_save();
+    base( nodes, conns, groups, _( "cut nodes" ) );
   }
 
   //-------------------------------------------------------------
   // Redoes a node deletion.
   public override void redo( MindMap map ) {
     MinderClipboard.copy_nodes( map );
-    map.animator.add_nodes( map.get_nodes(), true, "UndoNodesCut redo" );
-    map.selected.clear();
-    for( int i=0; i<_nodes.length; i++ ) {
-      UndoNodeGroups? tmp_group = null;
-      _nodes.index( i ).node.delete_only();
-      map.groups.remove_node( _nodes.index( i ).node, ref tmp_group );
-    }
-    map.connections.remove_connections( _conns, false );
-    map.animator.animate();
-    map.auto_save();
+    base.redo( map );
   }
 
 }

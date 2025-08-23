@@ -765,6 +765,7 @@ public class Node : Object {
   //-------------------------------------------------------------
   // Updates the sequence number pango layout.
   public void update_sequence_num() {
+    if( parent == null ) return;
     if( parent.sequence ) {
       if( _sequence_num == null ) {
         _sequence_num = new SequenceNum( _map );
