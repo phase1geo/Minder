@@ -28,13 +28,13 @@ public class Layout : Object {
   public string dark_icon   { protected set; get; default = ""; }
   public bool   balanceable { protected set; get; default = false; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public Layout() {}
 
-  /*
-   Virtual function used to map a node's side to its new side when this
-   layout is applied.
-  */
+  //-------------------------------------------------------------
+  // Virtual function used to map a node's side to its new side
+  // when this layout is applied.
   public virtual NodeSide side_mapping( NodeSide side ) {
     switch( side ) {
       case NodeSide.LEFT   :  return( NodeSide.LEFT );
@@ -45,7 +45,8 @@ public class Layout : Object {
     return( NodeSide.RIGHT );
   }
 
-  /* Initializes the given node based on this layout */
+  //-------------------------------------------------------------
+  // Initializes the given node based on this layout.
   public virtual void initialize( Node parent ) {
     var list = new SList<Node>();
     parent.side = side_mapping( parent.side );
@@ -71,7 +72,8 @@ public class Layout : Object {
     }
   }
 
-  /* Get the bbox for the given parent to the given depth */
+  //-------------------------------------------------------------
+  // Get the bbox for the given parent to the given depth
   public virtual NodeBounds bbox( Node parent, int side_mask, string msg ) {
 
     uint num_children = parent.children().length;
@@ -137,7 +139,8 @@ public class Layout : Object {
 
   }
 
-  /* Updates the tree size */
+  //-------------------------------------------------------------
+  // Updates the tree size
   protected void update_tree_size( Node n ) {
 
     /* Get the node's tree dimensions */
@@ -151,16 +154,14 @@ public class Layout : Object {
 
   }
 
-  /*
-   Calculate the adjustment difference of the given node's tree.
-   If the returned value is positive, it indicates a growth occurred.
-  */
+  //-------------------------------------------------------------
+  // Calculate the adjustment difference of the given node's tree.
+  // If the returned value is positive, it indicates a growth occurred.
   public double get_adjust( Node parent ) {
 
-    /*
-     If this is a summary node, if its tree size is less than or equal to its summarized node extents, return 0; otherwise,
-     return the difference between our tree_size and the extent size.
-    */
+    // If this is a summary node, if its tree size is less than or equal to its
+    // summarized node extents, return 0; otherwise, return the difference
+    // between our tree_size and the extent size.
     if( parent.is_summary() ) {
 
       double xy1, xy2;
@@ -181,7 +182,8 @@ public class Layout : Object {
 
   }
 
-  /* Adjusts the given tree by the given amount */
+  //-------------------------------------------------------------
+  // Adjusts the given tree by the given amount
   public virtual void adjust_tree( Node parent, int child_index, int side_mask, double amount ) {
 
     for( int i=0; i<parent.children().length; i++ ) {
@@ -204,7 +206,8 @@ public class Layout : Object {
 
   }
 
-  /* Adjust the entire tree */
+  //-------------------------------------------------------------
+  // Adjust the entire tree
   public virtual void adjust_tree_all( Node n, NodeBounds p, double amount, string msg ) {
 
     var parent = n.parent;
@@ -230,7 +233,9 @@ public class Layout : Object {
 
   }
 
-  /* Recursively sets the side property of this node and all children nodes */
+  //-------------------------------------------------------------
+  // Recursively sets the side property of this node and all
+  // children nodes.
   public virtual void propagate_side( Node parent, NodeSide side ) {
 
     if( !parent.traversable() ) return;
@@ -268,7 +273,8 @@ public class Layout : Object {
 
   }
 
-  /* Returns the side of the given node relative to its root */
+  //-------------------------------------------------------------
+  // Returns the side of the given node relative to its root.
   public virtual NodeSide get_side( Node n ) {
     if( n.is_root() ) {
       return( n.side );
@@ -285,7 +291,8 @@ public class Layout : Object {
     }
   }
 
-  /* Sets the side values of the given node */
+  //-------------------------------------------------------------
+  // Sets the side values of the given node.
   public virtual void set_side( Node current ) {
     if( !current.is_root() ) {
       NodeSide side = get_side( current );
@@ -296,7 +303,8 @@ public class Layout : Object {
     }
   }
 
-  /* Adjusts the gap between the parent and child nodes */
+  //-------------------------------------------------------------
+  // Adjusts the gap between the parent and child nodes.
   public void apply_margin( Node n ) {
     if( n.parent == null ) return;
     double px, py, pw, ph;
@@ -322,7 +330,8 @@ public class Layout : Object {
     }
   }
 
-  /* Updates the layout when necessary when a node is edited */
+  //-------------------------------------------------------------
+  // Updates the layout when necessary when a node is edited.
   public virtual void handle_update_by_edit( Node n, double diffw, double diffh ) {
     double adjust = 0 - (get_adjust( n ) / 2);
     if( n.side.horizontal() ) {
@@ -375,17 +384,20 @@ public class Layout : Object {
     adjust_tree_all( n, n.tree_bbox, adjust, "by_edit" );
   }
 
-  /* Called when a node's fold indicator changes */
+  //-------------------------------------------------------------
+  // Called when a node's fold indicator changes.
   public virtual void handle_update_by_fold( Node n ) {
     adjust_tree_all( n, n.tree_bbox, (0 - (get_adjust( n ) / 2)), "by_fold" );
   }
 
-  /* Returns the adjustment value */
+  //-------------------------------------------------------------
+  // Returns the adjustment value.
   protected virtual double get_insert_adjust( Node child ) {
     return( child.tree_size / 2 );
   }
 
-  /* Called when we are inserting a node within a parent */
+  //-------------------------------------------------------------
+  // Called when we are inserting a node within a parent.
   public virtual void handle_update_by_insert( Node parent, Node child, int pos ) {
 
     double ox, oy, ow, oh;
@@ -399,7 +411,7 @@ public class Layout : Object {
     apply_margin( child );
     adjust = get_insert_adjust( child );
 
-    /* If we are adding a summary node, get the summary node extent and place ourselves in the middle */
+    // If we are adding a summary node, get the summary node extent and place ourselves in the middle
     if( child.is_summary() ) {
       double xy1, xy2;
       (child as SummaryNode).get_extents( out xy1, out xy2 );
@@ -409,10 +421,8 @@ public class Layout : Object {
         child.posx = xy1 + (((xy2 - xy1) / 2) - (ow / 2));
       }
 
-    /*
-     If we are the only child on our side, place ourselves on the same plane as the
-     parent node
-    */
+    // If we are the only child on our side, place ourselves on the same plane as the
+    // parent node
     } else if( parent.side_count( child.side ) == 1 ) {
       double px, py, pw, ph;
       parent.bbox( out px, out py, out pw, out ph );
@@ -422,10 +432,8 @@ public class Layout : Object {
         child.posx = px + ((pw / 2) - (ow / 2));
       }
 
-    /*
-     If we are at the end of the list of children with the matching side as ours,
-     place ourselves just below the next to last sibling.
-    */
+    // If we are at the end of the list of children with the matching side as ours,
+    // place ourselves just below the next to last sibling.
     } else if( ((pos + 1) == parent.children().length) || (parent.children().index( pos + 1 ).side != child.side) ) {
       var sb = bbox( parent.children().index( pos - 1 ), child.side, "insert a" );
       if( child.side.horizontal() ) {
@@ -434,7 +442,7 @@ public class Layout : Object {
         child.posx = (sb.x + sb.width + (ox - cb.x)) - adjust;
       }
 
-    /* Otherwise, place ourselves just above the next sibling */
+    // Otherwise, place ourselves just above the next sibling
     } else {
       var sb = bbox( parent.children().index( pos + 1 ), child.side, "insert b" );
       if( child.side.horizontal() ) {
@@ -448,12 +456,14 @@ public class Layout : Object {
 
   }
 
-  /* Called to layout the leftover children of a parent node when a node is deleted */
+  //-------------------------------------------------------------
+  // Called to layout the leftover children of a parent node when
+  // a node is deleted.
   public virtual void handle_update_by_delete( Node parent, int index, NodeSide side, double size ) {
 
     double adjust = size / 2;
 
-    /* Adjust the parent's descendants */
+    // Adjust the parent's descendants
     for( int i=0; i<parent.children().length; i++ ) {
       Node n = parent.children().index( i );
       if( n.side == side ) {
@@ -466,12 +476,14 @@ public class Layout : Object {
       }
     }
 
-    /* Adjust the rest of the tree */
+    // Adjust the rest of the tree
     adjust_tree_all( parent, parent.tree_bbox, (0 - (get_adjust( parent ) / 2)), "by_delete" );
 
   }
 
-  /* Positions the given root node based on the position of the last node */
+  //-------------------------------------------------------------
+  // Positions the given root node based on the position of the
+  // last node.
   public virtual void position_root( Node last, Node n ) {
     var nb = last.tree_bbox;
     n.posx = last.posx;
