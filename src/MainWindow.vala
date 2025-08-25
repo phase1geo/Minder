@@ -266,6 +266,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     add_zoom_button();
     add_focus_button();
     add_braindump_button();
+    add_debug_button();
 
     /* Create the panel so that we can resize */
     _pane = new Paned( Orientation.HORIZONTAL ) {
@@ -1042,6 +1043,21 @@ public class MainWindow : Gtk.ApplicationWindow {
     } else if( map != null ) {
       map.canvas.grab_focus();
     }
+
+  }
+
+  //-------------------------------------------------------------
+  // In debug mode, this button
+  private void add_debug_button() {
+
+    if( !Minder.debug ) return;
+
+    var btn = new Button.from_icon_name( "media-playback-start-symbolic" );
+    btn.clicked.connect(() => {
+      Minder.debug_advance = true;
+    });
+
+    _header.pack_end( btn );
 
   }
 

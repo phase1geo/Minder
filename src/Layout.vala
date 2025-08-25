@@ -88,7 +88,8 @@ public class Layout : Object {
 
     if( (num_children != 0) && !parent.folded && !parent.is_summarized() ) {
       for( int i=0; i<parent.children().length; i++ ) {
-        if( ((parent.children().index( i ).side & side_mask) != 0) ) {
+        var child = parent.children().index( i );
+        if( (child.parent == parent) && ((child.side & side_mask) != 0) ) {
           var cb = parent.children().index( i ).tree_bbox;
           nb.x  = (nb.x < cb.x) ? nb.x : cb.x;
           nb.y  = (nb.y < cb.y) ? nb.y : cb.y;
