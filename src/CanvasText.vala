@@ -750,7 +750,7 @@ public class CanvasText : Object {
       var str  = text.text.slice( spos, epos );
       var tags = text.get_tags_in_range( spos, epos );
       set_cursor_only( _selstart );
-      change_selection( null, _selstart, "backspace" );
+      change_selection( null, _selstart, "backspace 1" );
       text.remove_text( spos, (epos - spos) );
       undo_buffer.add_delete( spos, str, tags, cur );
     } else if( _cursor > 0 ) {
@@ -759,6 +759,7 @@ public class CanvasText : Object {
       var str  = text.text.slice( spos, epos );
       var tags = text.get_tags_in_range( spos, epos );
       set_cursor_only( _cursor - 1 );
+      change_selection( (_cursor - 1), (_cursor - 1), "backspace 2" );
       text.remove_text( spos, (epos - spos) );
       undo_buffer.add_delete( spos, str, tags, cur );
     }
