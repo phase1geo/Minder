@@ -65,18 +65,18 @@ public class Animator : Object {
   }
 
   //-------------------------------------------------------------
-  // Animates a fade in/out on the given set of callouts
-  public void add_callouts_fade( Array<Node> n, bool fade_out, string name ) {
-    if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.FADE) ) {
-      _actions.push_tail( new AnimatorFade( _da, n, fade_out, name ) );
+  // Animates a fold of the given set of nodes
+  public void add_nodes_fold( Array<Node> n, Array<Node> nodes, bool deep, string name ) {
+    if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.FOLD) ) {
+      _actions.push_tail( new AnimatorFold( _da, n, nodes, deep, name ) );
     }
   }
 
   //-------------------------------------------------------------
-  // Animates a fold of the given set of nodes
-  public void add_node_fold( Array<Node> n, Node node, bool fade_out, bool deep, string name ) {
-    if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.FOLD) ) {
-      _actions.push_tail( new AnimatorFold( _da, n, node, fade_out, deep, name ) );
+  // Animates a fade in/out on the given set of callouts
+  public void add_callouts_fade( Array<Node> n, bool fade_out, string name ) {
+    if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.FADE) ) {
+      _actions.push_tail( new AnimatorFade( _da, n, fade_out, name ) );
     }
   }
 

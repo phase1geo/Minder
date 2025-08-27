@@ -19,25 +19,28 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-using GLib;
+using GLib; 
 
 public class AnimatorFold : AnimatorAction {
 
-  uint                      _num;
-  private AnimatorPositions _pos;
-  private AnimatorNodeAlpha _node;
-  bool                      _fade_out;
-  bool                      _deep;
+  private uint               _num;
+  private AnimatorPositions  _pos;
+  private AnimatorNodesAlpha _nodes;
+  private Array<bool?>       _folds;
+  bool                       _deep;
 
   //-------------------------------------------------------------
   // Default constructor
-  public AnimatorFold( DrawArea da, Array<Node> n, Node node, bool fade_out, bool deep, string name = "unnamed" ) {
+  public AnimatorFold( DrawArea da, Array<Node> n, Array<Node> nodes, bool deep, string name = "unnamed" ) {
     base( name, true );
-    _num      = n.length;
-    _pos      = new AnimatorPositions( n, false );
-    _node     = new AnimatorNodeAlpha( da, node, fade_out, deep );
-    _fade_out = fade_out;
-    _deep     = deep;
+    _num   = n.length;
+    _pos   = new AnimatorPositions( n, false );
+    _folds = new Array<bool?>();
+    for( int i=0; i<nodes.length; i++ ) {
+      _folds.append_val( !nodes.index( i ).folded );
+    }
+    _nodes = new AnimatorNodesAlpha( da, nodes, _folds, deep );
+    _deep  = deep;
   }
 
   //-------------------------------------------------------------
@@ -50,10 +53,12 @@ public class AnimatorFold : AnimatorAction {
   // Captures the end state
   public override void capture( DrawArea da ) {
     _pos.gather_new_positions();
-    if( _fade_out ) {
-      _node.node.folded = !_fade_out;
+    for( int i=0; i<_folds.length; i++ ) {
+      if( _folds.index( i ) ) {
+        _nodes.node( i ).folded = false;
+      }
     }
-    _node.gather_new_node_alpha( _fade_out );
+    _nodes.gather_new_node_alpha( _folds );
   }
 
   //-------------------------------------------------------------
@@ -62,18 +67,21 @@ public class AnimatorFold : AnimatorAction {
     double divisor = index / frames;
     index++;
     for( int i=0; i<_pos.length(); i++ ) {
-      double dx = _pos.new_x( i ) - _pos.old_x( i );
-      double dy = _pos.new_y( i ) - _pos.old_y( i );
-      double x  = _pos.old_x( i ) + (dx * divisor);
-      double y  = _pos.old_y( i ) + (dy * divisor);
+      var dx = _pos.new_x( i ) - _pos.old_x( i );
+      var dy = _pos.new_y( i ) - _pos.old_y( i );
+      var x  = _pos.old_x( i ) + (dx * divisor);
+      var y  = _pos.old_y( i ) + (dy * divisor);
       _pos.node( i ).posx = x;
       _pos.node( i ).posy = y;
       _pos.node( i ).side = _pos.node( i ).layout.get_side( _pos.node( i ) );
     }
-    double dal = _node.new_alpha - _node.old_alpha;
-    double al  = _node.old_alpha + (dal * divisor);
-    for( int i=0; i<_node.node.children().length; i++ ) {
-      _node.node.children().index( i ).alpha = al;
+    for( int i=0; i<_nodes.length(); i++ ) {
+      var dal  = _nodes.new_alpha( i ) - _nodes.old_alpha( i );
+      var al   = _nodes.old_alpha( i ) + (dal * divisor);
+      var node = _nodes.node( i );
+      for( int j=0; j<node.children().length; j++ ) {
+        node.children().index( j ).alpha = al;
+      }
     }
   }
 
@@ -81,8 +89,10 @@ public class AnimatorFold : AnimatorAction {
   // When the animation has completed, set the mode of all
   // callouts to hidden
   public override void on_completion( DrawArea da ) {
-    if( _fade_out ) {
-      _node.node.folded = _fade_out;
+    for( int i=0; i<_folds.length; i++ ) {
+      if( _folds.index( i ) ) {
+        _nodes.node( i ).folded = true;
+      }
     }
   }
 

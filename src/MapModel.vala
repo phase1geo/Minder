@@ -280,12 +280,14 @@ public class MapModel {
     queue_draw();
   }
 
-  /* Returns the list of nodes */
+  //-------------------------------------------------------------
+  // Returns the list of nodes.
   public Array<Node> get_nodes() {
     return( _nodes );
   }
 
-  /* Searches for and returns the node with the specified ID */
+  //-------------------------------------------------------------
+  // Searches for and returns the node with the specified ID.
   public Node? get_node( Array<Node> nodes, int id ) {
     for( int i=0; i<nodes.length; i++ ) {
       Node? node = nodes.index( i ).get_node( id );
@@ -296,7 +298,8 @@ public class MapModel {
     return( null );
   }
 
-  /* Loads the given theme from the list of available options */
+  //-------------------------------------------------------------
+  // Loads the given theme from the list of available options.
   private void load_theme( Xml.Node* n ) {
 
     /* Load the theme */
@@ -327,10 +330,9 @@ public class MapModel {
 
   }
 
-  /*
-   We don't store the layout, but if it is found, we need to initialize the
-   layout information for all nodes to this value.
-  */
+  //-------------------------------------------------------------
+  // We don't store the layout, but if it is found, we need to
+  // initialize the layout information for all nodes to this value.
   private void load_layout( Xml.Node* n, ref Layout? layout ) {
 
     string? name = n->get_prop( "name" );
@@ -628,6 +630,10 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
+  // NODE ATTRIBUTE METHODS
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
   // Toggles the value of the specified node, if possible
   public void toggle_task( Node n ) {
     var changes = new Array<NodeTaskInfo?>();
@@ -638,31 +644,19 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
-  // Toggles the fold for the given node
-  public void toggle_fold( Node n, bool deep ) {
-    var fold    = !n.folded;
-    var changes = new Array<Node>();
-    _map.animator.add_node_fold( _nodes, n, fold, deep, "toggle folds" );
-    n.set_fold( fold, deep, changes );
-    _map.add_undo( new UndoNodeFolds( changes ) );
-    _map.animator.animate();
-    current_changed();
-    auto_save();
-  }
-
-  //-------------------------------------------------------------
   // Toggles the folding of all selected nodes that can be folded
   public void toggle_folds( bool deep = false ) {
     var parents = new Array<Node>();
-    var changes = new Array<Node>();
     _map.selected.get_parents( ref parents );
     if( parents.length > 0 ) {
+      var changes = new Array<Node>();
+      _map.animator.add_nodes_fold( _nodes, parents, deep, "nodes fold" );
       for( int i=0; i<parents.length; i++ ) {
         var node = parents.index( i );
         node.set_fold( !node.folded, deep, changes );
       }
       _map.add_undo( new UndoNodeFolds( changes ) );
-      queue_draw();
+      _map.animator.animate();
       auto_save();
     }
   }
@@ -846,21 +840,6 @@ public class MapModel {
     }
     if( changes.length > 0 ) {
       _map.add_undo( new UndoNodeTasks( changes ) );
-      queue_draw();
-      auto_save();
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Changes the current node's folded state to the given value.
-  // Updates the layout, adds the undo item and redraws the canvas.
-  public void change_current_fold( bool folded, bool deep = false ) {
-    var nodes = _map.selected.nodes();
-    if( nodes.length == 1 ) {
-      var current = nodes.index( 0 );
-      var changes = new Array<Node>();
-      current.set_fold( folded, deep, changes );
-      _map.add_undo( new UndoNodeFolds( changes ) );
       queue_draw();
       auto_save();
     }

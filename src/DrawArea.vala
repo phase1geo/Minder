@@ -459,7 +459,7 @@ public class DrawArea : Gtk.DrawingArea {
         _map.select_linked_node( node );
         return( false );
       case MapItemComponent.FOLD :
-        _map.model.toggle_fold( node, _shift );
+        _map.model.toggle_folds( _shift );
         current_changed( _map );
         return( false );
       case MapItemComponent.RESIZER :
@@ -682,6 +682,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* If we are going to pan the canvas, do it and return */
     if( _press_middle || _alt ) {
+      stdout.printf( "  early return, _press_middle: %s, _alt: %s\n", _press_middle.to_string(), _alt.to_string() );
       return( true );
     }
 
@@ -694,6 +695,7 @@ public class DrawArea : Gtk.DrawingArea {
         _last_connection = new Connection.from_connection( _map, match_conn );
         match_conn.disconnect_from_node( component == MapItemComponent.FROM_HANDLE );
       }
+      stdout.printf( "  clicked on connection drag handle\n" );
       return( true );
     }
 
@@ -703,6 +705,7 @@ public class DrawArea : Gtk.DrawingArea {
       var match_node = _map.model.get_node_at_position( scaled_x, scaled_y, out component );
       if( (match_conn != null) && (component != MapItemComponent.DRAG_HANDLE) &&
           ((match_node == null) || ((match_node != match_conn.from_node) && (match_node != match_conn.to_node))) ) {
+        stdout.printf( "  clicked on connection\n" );
         clear_current_node( false );
         clear_current_sticker( false );
         clear_current_group( false );
@@ -710,6 +713,7 @@ public class DrawArea : Gtk.DrawingArea {
         return( set_current_connection_from_position( match_conn, component, scaled_x, scaled_y ) );
       }
       if( match_node != null ) {
+        stdout.printf( "  clicked on node\n" );
         clear_current_connection( false );
         clear_current_sticker( false );
         clear_current_group( false );
@@ -718,6 +722,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       var match_callout = _map.model.get_callout_at_position( scaled_x, scaled_y, out component );
       if( match_callout != null ) {
+        stdout.printf( "  clicked on callout\n" );
         clear_current_node( false );
         clear_current_connection( false );
         clear_current_sticker( false );
@@ -726,6 +731,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       var match_sticker = _map.model.get_sticker_at_position( scaled_x, scaled_y );
       if( match_sticker != null ) {
+        stdout.printf( "  clicked on sticker\n" );
         clear_current_node( false );
         clear_current_connection( false );
         clear_current_group( false );
@@ -734,12 +740,14 @@ public class DrawArea : Gtk.DrawingArea {
       }
       var match_group = _map.model.get_group_at_position( scaled_x, scaled_y );
       if( match_group != null ) {
+        stdout.printf( "  clicked on group\n" );
         clear_current_node( false );
         clear_current_connection( false );
         clear_current_sticker( false );
         clear_current_callout( false );
         return( set_current_group_from_position( match_group, scaled_x, scaled_y ) );
       }
+      stdout.printf( "  clicked on nothing\n" );
       _select_box.x     = scaled_x;
       _select_box.y     = scaled_y;
       _select_box.valid = true;
@@ -754,6 +762,8 @@ public class DrawArea : Gtk.DrawingArea {
         _map.selected.set_current_node( _map.model.last_node );
       }
     }
+
+    stdout.printf( "  click missed\n" );
 
     return( true );
 

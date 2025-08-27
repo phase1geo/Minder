@@ -521,7 +521,7 @@ public class NodeInspector : Box {
     if( _ignore ) return;
     var current = _map.get_current_node();
     if( current != null ) {
-      _map.model.change_current_fold( !current.folded );
+      _map.model.toggle_folds();
     }
   }
 

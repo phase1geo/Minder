@@ -1648,17 +1648,11 @@ public enum KeyCommand {
   }
 
   public static void node_toggle_folds_shallow( MindMap map ) {
-    var current = map.get_current_node();
-    if( current != null ) {
-      map.model.toggle_fold( current, false );
-    }
+    map.model.toggle_folds( false );
   }
 
   public static void node_toggle_folds_deep( MindMap map ) {
-    var current = map.get_current_node();
-    if( current != null ) {
-      map.model.toggle_fold( current, true );
-    }
+    map.model.toggle_folds( true );
   }
 
   public static void node_toggle_sequence( MindMap map ) {
