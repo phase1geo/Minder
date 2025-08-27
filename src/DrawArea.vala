@@ -1183,7 +1183,7 @@ public class DrawArea : Gtk.DrawingArea {
     var scaled_y = scale_value( y );
 
     handle_right_click( scaled_x, scaled_y );
-    show_contextual_menu( scaled_x, scaled_y );
+    show_contextual_menu( x, y );
 
   }
 
