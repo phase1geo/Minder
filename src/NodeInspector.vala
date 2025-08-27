@@ -45,7 +45,7 @@ public class NodeInspector : Box {
   private Box            _root_color_box;
   private Revealer       _color_reveal;
   private ToggleButton   _resize;
-  private bool           _ignore_changes = false;
+  private bool           _ignore = false;
 
   public signal void update_icons();
 
@@ -91,6 +91,8 @@ public class NodeInspector : Box {
     _sw.width_request = width;
   }
 
+  //-------------------------------------------------------------
+  // Creates a label with text displayed as a title.
   private void create_title() {
 
     var title = new Label( "<big>" + _( "Node" ) + "</big>" ) {
@@ -117,13 +119,7 @@ public class NodeInspector : Box {
     _task = new Switch() {
       halign = Align.END
     };
-
-    var btn = new GestureClick();
-    btn.released.connect((n_press, x, y) => {
-      task_changed();
-    });
-
-    _task.add_controller( btn );
+    _task.notify["active"].connect( task_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
       halign = Align.FILL
@@ -135,7 +131,8 @@ public class NodeInspector : Box {
 
   }
 
-  /* Creates the fold UI elements */
+  //-------------------------------------------------------------
+  // Creates the fold UI elements.
   private void create_fold() {
 
     var lbl = new Label( _( "Fold" ) ) {
@@ -148,13 +145,7 @@ public class NodeInspector : Box {
     _fold = new Switch() {
       halign = Align.END
     };
-
-    var btn = new GestureClick();
-    btn.released.connect((n_press, x, y) => {
-      fold_changed();
-    });
-
-    _fold.add_controller( btn );
+    _fold.notify["active"].connect( fold_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
       halign = Align.FILL
@@ -166,7 +157,8 @@ public class NodeInspector : Box {
 
   }
 
-  /* Creates the sequence UI elements */
+  //-------------------------------------------------------------
+  // Creates the sequence UI elements.
   private void create_sequence() {
 
     var lbl = new Label( _( "Sequence" ) ) {
@@ -184,13 +176,7 @@ public class NodeInspector : Box {
     _sequence = new Switch() {
       halign = Align.END
     };
-
-    var btn = new GestureClick();
-    btn.released.connect((n_press, x, y) => {
-      sequence_changed();
-    });
-
-    _sequence.add_controller( btn );
+    _sequence.notify["active"].connect( sequence_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
       halign = Align.FILL
@@ -203,11 +189,9 @@ public class NodeInspector : Box {
     
   }
 
-
-  /*
-   Allows the user to select a different color for the current link
-   and tree.
-  */
+  //-------------------------------------------------------------
+  // Allows the user to select a different color for the current
+  // link and tree.
   private void create_link() {
 
     var lbl = new Label( _( "Color" ) ) {
@@ -236,10 +220,9 @@ public class NodeInspector : Box {
 
   }
 
-  /*
-   Allows the user to select a different color for the current root
-   node.
-  */
+  //-------------------------------------------------------------
+  // Allows the user to select a different color for the current
+  // root node.
   private void create_color() {
 
     var lbl = new Label( _( "Override Color" ) ) {
@@ -252,13 +235,7 @@ public class NodeInspector : Box {
     _override = new Switch() {
       halign = Align.END
     };
-
-    var btn = new GestureClick();
-    btn.released.connect((n_press, x, y) => {
-      root_color_changed();
-    });
-
-    _override.add_controller( btn );
+    _override.notify["active"].connect( root_color_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
       halign        = Align.FILL,
@@ -298,7 +275,8 @@ public class NodeInspector : Box {
 
   }
 
-  /* Creates the note widget */
+  //-------------------------------------------------------------
+  // Creates the note widget.
   private void create_note( MainWindow win ) {
 
     var lbl = new Label( _( "Note" ) ) {
@@ -341,6 +319,8 @@ public class NodeInspector : Box {
 
   }
 
+  //-------------------------------------------------------------
+  // Creates the image editing UI.
   private void create_image() {
 
     _image_stack = new Stack() {
@@ -356,7 +336,8 @@ public class NodeInspector : Box {
 
   }
 
-  /* Creates the add image widget */
+  //-------------------------------------------------------------
+  // Creates the add image widget.
   private Box create_image_add() {
 
     var lbl = new Label( _( "Image" ) ) {
@@ -376,7 +357,8 @@ public class NodeInspector : Box {
 
   }
 
-  /* Creates the edit image widget */
+  //-------------------------------------------------------------
+  // Creates the edit image widget.
   private Box create_image_edit() {
 
     var lbl = new Label( _( "Image" ) ) {
@@ -447,12 +429,14 @@ public class NodeInspector : Box {
 
   }
 
-  /* Called when the user clicks on the image button */
+  //-------------------------------------------------------------
+  // Called when the user clicks on the image button.
   private void image_button_clicked() {
     _map.model.add_current_image();
   }
 
-  /* Called if the user clicks on the image URI */
+  //-------------------------------------------------------------
+  // Called if the user clicks on the image URI.
   private bool image_link_clicked( string uri ) {
 
     File file = File.new_for_uri( uri );
@@ -474,7 +458,8 @@ public class NodeInspector : Box {
 
   }
 
-  /* Creates the node editing button grid and adds it to the popover */
+  //-------------------------------------------------------------
+  // Creates the node editing button grid and adds it to the popover.
   private void create_buttons() {
 
     var grid = new Grid() {
@@ -519,24 +504,32 @@ public class NodeInspector : Box {
 
   }
 
-  /* Called whenever the task enable switch is changed within the inspector */
+  //-------------------------------------------------------------
+  // Called whenever the task enable switch is changed within the
+  // inspector.
   private void task_changed() {
+    if( _ignore ) return;
     var current = _map.get_current_node();
     if( current != null ) {
       _map.model.change_current_task( !current.task_enabled(), false );
     }
   }
 
-  /* Called whenever the fold switch is changed within the inspector */
+  //-------------------------------------------------------------
+  // Called whenever the fold switch is changed within the inspector.
   private void fold_changed() {
+    if( _ignore ) return;
     var current = _map.get_current_node();
     if( current != null ) {
       _map.model.change_current_fold( !current.folded );
     }
   }
 
-  /* Called whenever the sequence switch is changed within the inspector */
+  //-------------------------------------------------------------
+  // Called whenever the sequence switch is changed within the
+  // inspector.
   private void sequence_changed() {
+    if( _ignore ) return;
     var current = _map.get_current_node();
     if( current != null ) {
       current.sequence = !current.sequence;
@@ -545,11 +538,11 @@ public class NodeInspector : Box {
     }
   }
 
-  /*
-   Called whenever the user chooses to override the root color via
-   this sidebar.  We will show/hide the color changer.
-  */
+  //-------------------------------------------------------------
+  // Called whenever the user chooses to override the root color
+  // via this sidebar.  We will show/hide the color changer.
   private void root_color_changed() {
+    if( _ignore ) return;
     var current = _map.get_current_node();
     if( _color_reveal.reveal_child ) {
       _color_reveal.reveal_child = false;
@@ -564,39 +557,44 @@ public class NodeInspector : Box {
     }
   }
 
-  /*
-   Called whenever the text widget is changed.  Updates the current node
-   and redraws the canvas when needed.
-  */
+  //-------------------------------------------------------------
+  // Called whenever the text widget is changed.  Updates the
+  // current node and redraws the canvas when needed.
   private void note_changed() {
-    if( _ignore_changes ) return;
+    if( _ignore ) return;
     _map.model.change_current_node_note( _note.buffer.text );
   }
 
-  /* Saves the original version of the node's note so that we can */
+  //-------------------------------------------------------------
+  // Saves the original version of the node's note so that we can
   private void note_focus_in() {
     _node      = _map.get_current_node();
     _orig_note = _note.buffer.text;
   }
 
-  /* When the note buffer loses focus, save the note change to the undo buffer */
+  //-------------------------------------------------------------
+  // When the note buffer loses focus, save the note change to
+  // the undo buffer.
   private void note_focus_out() {
     if( (_node != null) && (_node.note != _orig_note) ) {
       _map.add_undo( new UndoNodeNote( _node, _orig_note ) );
     }
   }
 
-  /* When a node link is added, tell the current node */
+  //-------------------------------------------------------------
+  // When a node link is added, tell the current node.
   private int note_node_link_added( NodeLink link, out string text ) {
     return( _map.model.add_note_node_link( link, out text ) );
   }
 
-  /* Handles a click on the node link with the given ID */
+  //-------------------------------------------------------------
+  // Handles a click on the node link with the given ID.
   private void note_node_link_clicked( int id ) {
     _map.model.note_node_link_clicked( id );
   }
 
-  /* Handles a hover over a node link */
+  //-------------------------------------------------------------
+  // Handles a hover over a node link.
   private void note_node_link_hover( int id ) {
     var link = _map.model.node_links.get_node_link( id );
     if( link != null ) {
@@ -604,34 +602,40 @@ public class NodeInspector : Box {
     }
   }
 
-  /* Copies the current node to the clipboard */
+  //-------------------------------------------------------------
+  // Copies the current node to the clipboard.
   private void node_copy() {
     MinderClipboard.copy_nodes( _map );
   }
 
-  /* Cuts the current node to the clipboard */
+  //-------------------------------------------------------------
+  // Cuts the current node to the clipboard.
   private void node_cut() {
     _map.model.cut_node_to_clipboard();
   }
 
-  /* Detaches the current node and makes it a parent node */
+  //-------------------------------------------------------------
+  // Detaches the current node and makes it a parent node.
   private void node_detach() {
     _map.model.detach();
     _detach_btn.set_sensitive( false );
   }
 
-  /* Deletes the current node */
+  //-------------------------------------------------------------
+  // Deletes the current node.
   private void node_delete() {
     _map.model.delete_node();
   }
 
-  /* Grabs the focus on the note widget */
+  //-------------------------------------------------------------
+  // Grabs the focus on the note widget.
   public void grab_note() {
     _note.grab_focus();
     node_changed();
   }
 
-  /* Called whenever the fold switch is changed within the inspector */
+  //-------------------------------------------------------------
+  // Called whenever the fold switch is changed within the inspector
   private void resize_changed() {
     var current = _map.get_current_node();
     if( current != null ) {
@@ -640,7 +644,8 @@ public class NodeInspector : Box {
     }
   }
 
-  /* Called whenever the theme is changed */
+  //-------------------------------------------------------------
+  // Called whenever the theme is changed.
   private void theme_changed( MindMap map ) {
 
     int    num_colors = Theme.num_link_colors();
@@ -659,12 +664,13 @@ public class NodeInspector : Box {
 
   }
 
-  /* Called whenever the user changes the current node in the canvas */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the current node in the canvas.
   private void node_changed() {
 
     Node? current = _map.get_current_node();
 
-    _ignore_changes = true;
+    _ignore = true;
 
     if( current != null ) {
       _task.set_active( current.task_enabled() );
@@ -707,11 +713,12 @@ public class NodeInspector : Box {
       }
     }
 
-    _ignore_changes = false;
+    _ignore = false;
 
   }
 
-  /* Sets the input focus on the first widget in this inspector */
+  //-------------------------------------------------------------
+  // Sets the input focus on the first widget in this inspector
   public void grab_first() {
     _task.grab_focus();
     node_changed();
