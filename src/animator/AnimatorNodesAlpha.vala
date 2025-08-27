@@ -32,7 +32,7 @@ public class AnimatorNodesAlpha : Object {
 
   //-------------------------------------------------------------
   // Default constructor
-  public AnimatorNodesAlpha( DrawArea da, Array<Node> nodes, Array<bool?> fade_out, bool deep ) {
+  public AnimatorNodesAlpha( DrawArea da, Array<Node> nodes, Array<bool?> fade_out ) {
     _old_alpha = new Array<double>();
     _new_alpha = new Array<double>();
     _nodes     = new Array<Node>();

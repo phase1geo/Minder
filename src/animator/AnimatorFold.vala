@@ -27,11 +27,10 @@ public class AnimatorFold : AnimatorAction {
   private AnimatorPositions  _pos;
   private AnimatorNodesAlpha _nodes;
   private Array<bool?>       _folds;
-  bool                       _deep;
 
   //-------------------------------------------------------------
   // Default constructor
-  public AnimatorFold( DrawArea da, Array<Node> n, Array<Node> nodes, bool deep, string name = "unnamed" ) {
+  public AnimatorFold( DrawArea da, Array<Node> n, Array<Node> nodes, string name = "unnamed" ) {
     base( name, true );
     _num   = n.length;
     _pos   = new AnimatorPositions( n, false );
@@ -39,8 +38,7 @@ public class AnimatorFold : AnimatorAction {
     for( int i=0; i<nodes.length; i++ ) {
       _folds.append_val( !nodes.index( i ).folded );
     }
-    _nodes = new AnimatorNodesAlpha( da, nodes, _folds, deep );
-    _deep  = deep;
+    _nodes = new AnimatorNodesAlpha( da, nodes, _folds );
   }
 
   //-------------------------------------------------------------

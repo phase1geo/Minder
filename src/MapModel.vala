@@ -650,7 +650,7 @@ public class MapModel {
     _map.selected.get_parents( ref parents );
     if( parents.length > 0 ) {
       var changes = new Array<Node>();
-      _map.animator.add_nodes_fold( _nodes, parents, deep, "nodes fold" );
+      _map.animator.add_nodes_fold( _nodes, parents, "nodes fold" );
       for( int i=0; i<parents.length; i++ ) {
         var node = parents.index( i );
         node.set_fold( !node.folded, deep, changes );

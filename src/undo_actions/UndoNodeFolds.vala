@@ -39,11 +39,12 @@ public class UndoNodeFolds : UndoItem {
 
   /* Toggles the fold indicators */
   private void change( MindMap map ) {
+    map.animator.add_nodes_fold( map.get_nodes(), _nodes, "undo nodes fold" );
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
       node.set_fold_only( !node.folded );
     }
-    map.queue_draw();
+    map.animator.animate();
     map.current_changed( map );
     map.auto_save();
   }
