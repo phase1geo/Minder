@@ -33,7 +33,6 @@ sources = files()
 subdir('data')
 subdir('po')
 subdir('src')
-subdir('tests')
 
 # Add the math and Markdown libraries
 cc = meson.get_compiler('c')
@@ -67,6 +66,8 @@ dependencies = [
     libmarkdown,
     math_dep
 ]
+
+subdir('tests')
 
 e = executable('com.github.phase1geo.minder',
     sources,

@@ -27,7 +27,7 @@ function test {
     initialize
 
     export DISPLAY=:0
-    ./com.github.phase1geo.minder --run-tests
+    tests/minder-regress
     result=$?
 
     export DISPLAY=":0.0"
@@ -94,10 +94,6 @@ case $1 in
 "test")
     test
     ;;
-"test-run")
-    test
-    ./com.github.phase1geo.minder "${@:2}"
-    ;;
 "uninstall")
     initialize
     sudo ninja uninstall
@@ -117,7 +113,6 @@ case $1 in
     echo "  install-deps      Installs missing build dependencies"
     echo "  run               Builds and runs the application (must run install once before successive calls to this command)"
     echo "  test              Builds and runs testing for the application"
-    echo "  test-run          Builds application, runs testing and if successful application is started"
     echo "  uninstall         Removes the application from the system (requires sudo)"
     echo "  flatpak           Builds and installs the Flatpak version of the application"
     ;;
