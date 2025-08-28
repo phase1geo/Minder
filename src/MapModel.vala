@@ -800,13 +800,16 @@ public class MapModel {
   public void change_current_task( bool enable, bool done ) {
     var nodes = _map.selected.nodes();
     if( nodes.length != 1 ) return;
+    _map.animator.add_nodes( _nodes, false, "change current task" );
     var changes = new Array<NodeTaskInfo?>();
     change_task( nodes.index( 0 ), enable, done, changes );
     if( changes.length > 0 ) {
       _map.add_undo( new UndoNodeTasks( changes ) );
       current_changed();
-      queue_draw();
+      _map.animator.animate();
       auto_save();
+    } else {
+      _map.animator.cancel_last_add();
     }
   }
 

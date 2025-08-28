@@ -32,6 +32,7 @@ public class UndoNodeTasks : UndoItem {
   }
 
   private void update( MindMap map ) {
+    map.animator.add_nodes( map.get_nodes(), false, "UndoNodeTasks update" );
     for( int i=0; i<_task_info.length; i++ ) {
       assert( _task_info.index( i ) != null );
       var node    = _task_info.index( i ).node;
@@ -43,8 +44,8 @@ public class UndoNodeTasks : UndoItem {
       _task_info.index( i ).enabled = enabled;
       _task_info.index( i ).done    = done;
     }
-    map.queue_draw();
     map.current_changed( map );
+    map.animator.animate();
     map.auto_save();
   }
 
