@@ -100,29 +100,33 @@ public class MinderClipboard {
     var clipboard   = Display.get_default().get_clipboard();
     var text_needed = map.is_node_editable() || map.is_connection_editable();
 
-    try {
-      if( clipboard.get_formats().contain_mime_type( NODES_TARGET_NAME ) ) {
-        clipboard.read_async.begin( { NODES_TARGET_NAME }, 0, null, (obj, res) => {
+    if( clipboard.get_formats().contain_mime_type( NODES_TARGET_NAME ) ) {
+      clipboard.read_async.begin( { NODES_TARGET_NAME }, 0, null, (obj, res) => {
+        try {
           string str;
           var stream = clipboard.read_async.end( res, out str );
           var contents = Utils.read_stream( stream );
           map.model.paste_nodes( contents, shift );
-        });
-      } else if( clipboard.get_formats().contain_mime_type( "image/png" ) || !text_needed ) {
-        clipboard.read_texture_async.begin( null, (ob, res) => {
+        } catch( Error e ) {}
+      });
+    } else if( clipboard.get_formats().contain_mime_type( "image/png" ) || !text_needed ) {
+      clipboard.read_texture_async.begin( null, (ob, res) => {
+        try {
           var texture = clipboard.read_texture_async.end( res );
           if( texture != null ) {
             var pixbuf = Utils.texture_to_pixbuf( texture );
             map.model.paste_image( pixbuf, true );
           }
-        });
-      } else if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
-        clipboard.read_text_async.begin( null, (obj, res) => {
+        } catch( Error e ) {}
+      });
+    } else if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
+      clipboard.read_text_async.begin( null, (obj, res) => {
+        try {
           var text = clipboard.read_text_async.end( res );
           map.model.paste_text( text, shift );
-        });
-      }
-    } catch( Error e ) {}
+        } catch( Error e ) {}
+      });
+    }
 
   }
 
