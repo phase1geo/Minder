@@ -247,6 +247,7 @@ public class DrawArea : Gtk.DrawingArea {
     var motion = new EventControllerMotion();
     this.add_controller( motion );
     motion.motion.connect( on_motion );
+    motion.leave.connect( handle_cursor_leave );
 
     _key_controller = new EventControllerKey();
     this.add_controller( _key_controller );
@@ -261,16 +262,19 @@ public class DrawArea : Gtk.DrawingArea {
     this.add_controller( file_drop );
     file_drop.motion.connect( handle_file_drag_motion );
     file_drop.drop.connect( handle_file_drop );
+    file_drop.leave.connect( handle_cursor_leave );
 
     var sticker_drop = new DropTarget( typeof(Picture), Gdk.DragAction.COPY );
     this.add_controller( sticker_drop );
     sticker_drop.motion.connect( handle_sticker_drag_motion );
     sticker_drop.drop.connect( handle_sticker_drop );
+    sticker_drop.leave.connect( handle_cursor_leave );
 
     var text_drop = new DropTarget( typeof(string), Gdk.DragAction.MOVE );
     this.add_controller( text_drop );
     text_drop.motion.connect( handle_text_drag_motion );
     text_drop.drop.connect( handle_text_drop );
+    text_drop.leave.connect( handle_cursor_leave );
 
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
@@ -1455,6 +1459,16 @@ public class DrawArea : Gtk.DrawingArea {
 
     }
 
+  }
+
+  //-------------------------------------------------------------
+  // Called when the cursor leaves the drawing area.  We will clear
+  // the attachment indicators.
+  private void handle_cursor_leave() {
+    _map.model.set_attach_summary( null );
+    _map.model.set_attach_node( null );
+    _map.model.set_attach_connection( null );
+    _map.model.set_attach_sticker( null );
   }
 
   //-------------------------------------------------------------
