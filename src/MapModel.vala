@@ -2547,6 +2547,7 @@ public class MapModel {
     var groups = new Array<NodeGroup>();
     deserialize_for_paste( text, nodes, conns, groups );
     if( nodes.length == 0 ) return;
+    _map.animator.add_nodes( _nodes, false, "paste nodes" );
     if( node == null ) {
       for( int i=0; i<nodes.length; i++ ) {
         position_root_node( nodes.index( i ) );
@@ -2574,7 +2575,7 @@ public class MapModel {
     }
     _map.add_undo( new UndoNodePaste( nodes, conns, groups ) );
     _map.select_node( nodes.index( 0 ) );
-    queue_draw();
+    _map.animator.animate();
     current_changed();
     auto_save();
   }

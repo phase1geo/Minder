@@ -49,6 +49,7 @@ public class UndoNodePaste : UndoItem {
   //-------------------------------------------------------------
   // Performs an undo operation for this data.
   public override void undo( MindMap map ) {
+    map.animator.add_nodes( map.get_nodes(), false, "undo node paste" );
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).detach( _nodes.index( i ).side );
     }
@@ -59,13 +60,14 @@ public class UndoNodePaste : UndoItem {
       map.groups.remove_group( _groups.index( i ) );
     }
     map.set_current_node( null );
-    map.queue_draw();
+    map.animator.animate();
     map.auto_save();
   }
 
   //-------------------------------------------------------------
   // Performs a redo operation.
   public override void redo( MindMap map ) {
+    map.animator.add_nodes( map.get_nodes(), false, "redo node paste" );
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).attach( _parents.index( i ), _indices.index( i ), null );
     }
@@ -76,7 +78,7 @@ public class UndoNodePaste : UndoItem {
       map.groups.add_group( _groups.index( i ) );
     }
     map.set_current_node( _nodes.index( 0 ) );
-    map.queue_draw();
+    map.animator.animate();
     map.auto_save();
   }
 
