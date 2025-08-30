@@ -443,6 +443,7 @@ public class MindMap {
         }
         _canvas.see( animate );
       }
+      _canvas.grab_focus();
       return( true );
     }
     return( false );

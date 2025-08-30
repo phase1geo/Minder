@@ -34,8 +34,9 @@ public class Minder : Gtk.Application {
 
   public  static GLib.Settings settings;
   public  static string        version       = "2.0";
-  public  static bool          debug         = false;
+  public  static bool          debug         = true;
   public  static bool          debug_advance = false;
+  public  static int           debug_count   = 0;
 
   //-------------------------------------------------------------
   // Default constructor
@@ -51,17 +52,6 @@ public class Minder : Gtk.Application {
     startup.connect( start_application );
     command_line.connect( handle_command_line );
 
-  }
-
-  //-------------------------------------------------------------
-  // Called to provide the Timeout.add(...) return value.  Manages
-  // debug_advance.
-  public static bool debug_timeout_return() {
-    if( Minder.debug ) {
-      Minder.debug = false;
-      return( false );
-    }
-    return( true );
   }
 
   //-------------------------------------------------------------

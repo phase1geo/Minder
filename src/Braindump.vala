@@ -28,6 +28,13 @@ public enum BraindumpChangeType {
   CLEAR
 }
 
+public class Idea : Object{
+  public string text { get; set; default = ""; }
+  public Idea( string text ) {
+    this.text = text;
+  }
+}
+
 public class Braindump : Box {
 
   private MainWindow _win;
@@ -146,8 +153,8 @@ public class Braindump : Box {
     drag.set_icon( create_icon( label, text ), 10, 10 );
 
     drag.prepare.connect((x, y) => {
-      var val = new Value( typeof(string) );
-      val.set_string( text );
+      var val = new Value( typeof(Idea) );
+      val.set_object( new Idea( text ) );
       var provider = new ContentProvider.for_value( val );
       return( provider );
     });
@@ -163,11 +170,7 @@ public class Braindump : Box {
     });
 
     drag.drag_end.connect((d, del) => {
-      if( _win.get_current_map().model.attach_node == null ) {
-        _ideas.insert( label, _current_index );
-      } else {
-        ideas_changed( BraindumpChangeType.REMOVE, _current_index.to_string() );
-      }
+      ideas_changed( BraindumpChangeType.REMOVE, _current_index.to_string() );
     });
 
   }

@@ -1055,6 +1055,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     var btn = new Button.from_icon_name( "media-playback-start-symbolic" );
     btn.clicked.connect(() => {
       Minder.debug_advance = true;
+      var map = get_current_map();
+      if( map != null ) {
+        map.canvas.grab_focus();
+      }
     });
 
     _header.pack_end( btn );

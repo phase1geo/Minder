@@ -254,6 +254,10 @@ public class DrawArea : Gtk.DrawingArea {
     _key_controller.key_pressed.connect( on_keypress );
     _key_controller.key_released.connect( on_keyrelease );
 
+    var focus_controller = new EventControllerFocus();
+    this.add_controller( focus_controller );
+    focus_controller.leave.connect( on_focus_leave );
+
     _scroll = new EventControllerScroll( EventControllerScrollFlags.BOTH_AXES );
     this.add_controller( _scroll );
     _scroll.scroll.connect( on_scroll );
@@ -275,6 +279,12 @@ public class DrawArea : Gtk.DrawingArea {
     text_drop.motion.connect( handle_text_drag_motion );
     text_drop.drop.connect( handle_text_drop );
     text_drop.leave.connect( handle_cursor_leave );
+
+    var idea_drop = new DropTarget( typeof(Idea), Gdk.DragAction.MOVE );
+    this.add_controller( idea_drop );
+    idea_drop.motion.connect( handle_idea_drag_motion );
+    idea_drop.drop.connect( handle_idea_drop );
+    idea_drop.leave.connect( handle_cursor_leave );
 
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
@@ -1237,7 +1247,6 @@ public class DrawArea : Gtk.DrawingArea {
         double diff_y = _scaled_y - last_y;
         move_origin( diff_x, diff_y );
         queue_draw();
-        // _map.auto_save();
         return;
       }
   
@@ -1829,6 +1838,16 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   //-------------------------------------------------------------
+  // Called when we lose input focus.  We will close the control,
+  // shift and alt variables since we might not detect when these
+  // keys are released.
+  private void on_focus_leave() {
+    _control = false;
+    _shift   = false;
+    _alt     = false;
+  }
+
+  //-------------------------------------------------------------
   // Handles a key press/release of the control key.  Checks to
   // see if the current cursor is over a URL.  If it is, sets the
   // cursor appropriately.
@@ -1960,6 +1979,57 @@ public class DrawArea : Gtk.DrawingArea {
     return( false );
 
   }
+
+  //-------------------------------------------------------------
+  // Handle any drag operations involving a braindump idea.
+  private Gdk.DragAction handle_idea_drag_motion( double x, double y ) {
+
+    Node       attach_node;
+    Connection attach_conn;
+    Sticker    attach_sticker;
+
+    var scaled_x = scale_value( x );
+    var scaled_y = scale_value( y );
+
+    _map.model.get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
+
+    // Set the attach mode
+    _map.model.set_attach_node( attach_node, NodeMode.DROPPABLE );
+
+    return( Gdk.DragAction.MOVE );
+
+  }
+
+  //-------------------------------------------------------------
+  // Called when an idea is dropped on the DrawArea
+  private bool handle_idea_drop( Value val, double x, double y ) {
+
+    Node node;
+    int  index;
+    var  idea = (Idea)val;
+
+    if( (_map.model.attach_node != null) && (_map.model.attach_node.mode == NodeMode.DROPPABLE) ) {
+      node  = _map.model.create_child_node( _map.model.attach_node, idea.text );
+      index = node.index();
+    } else {
+      node  = _map.model.create_root_node( idea.text );
+      node.posx = scale_value( x );
+      node.posy = scale_value( y );
+      index = (int)(_map.get_nodes().length - 1);
+    }
+
+    _map.add_undo( new UndoNodeInsert( node, index ) );
+
+    if( _map.select_node( node ) ) {
+      queue_draw();
+      see();
+      _map.auto_save();
+    }
+
+    return( true );
+
+  }
+
 
   //-------------------------------------------------------------
   // Called whenever we drag something over the canvas.
