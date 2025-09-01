@@ -119,6 +119,9 @@
   </screenshots>
   <developer id="com.github.phase1geo">
     <name>Trevor Williams</name>
+    <name xml:lang="ru">Trevor Williams</name>
+    <name xml:lang="pt">Trevor Williams</name>
+    <name xml:lang="fr">Trevor Williams</name>
   </developer>
   <url type="homepage">https://github.com/phase1geo/minder/</url>
   <url type="bugtracker">https://github.com/phase1geo/minder/issues/</url>
@@ -158,6 +161,30 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="2.0.0" date="2025-10-30">
+      <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>TBD</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>TBD</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>TBD</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.17.0" date="2024-10-30">
       <description>
         <p>New</p>
