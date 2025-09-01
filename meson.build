@@ -63,6 +63,7 @@ dependencies = [
     dependency('libarchive'),
     dependency('gtksourceview-5'),
     dependency('json-glib-1.0'),
+    dependency('libwebp'),
     libmarkdown,
     math_dep
 ]

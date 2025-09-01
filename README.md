@@ -51,6 +51,8 @@ You will need the following dependencies to build Minder:
 * libmarkdown2-dev
 * libhandy-1-dev
 * libjson-glib-dev
+* libwebp-dev
+* webp-pixbuf-loader`
 
 To install, run `sudo ./app install` and then run the application from your application launcher or from
 the command-line with `./app run`.

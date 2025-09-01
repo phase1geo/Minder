@@ -45,6 +45,7 @@ public class Exports {
     add( new ExportPortableMinder(), save_settings );
     add( new ExportSVG(), save_settings );
     add( new ExportText(), save_settings );
+    add( new ExportWebP(), save_settings );
     add( new ExportXMind8(), save_settings );
     add( new ExportXMind2021(), save_settings );
     add( new ExportYed(), save_settings );
