@@ -1558,8 +1558,12 @@ public class MapModel {
       current.delete();
     }
     _map.selected.remove_node( current );
+    if( !current.is_root() ) {
+      _map.animator.animate();
+    } else {
+      _map.animator.cancel_last_add();
+    }
     _map.select_node( next_node );
-    _map.animator.animate();
     auto_save();
   }
 
@@ -2372,8 +2376,12 @@ public class MapModel {
       current.delete();
     }
     _map.selected.remove_node( current );
+    if( !current.is_root() ) {
+      _map.animator.animate();
+    } else {
+      _map.animator.cancel_last_add();
+    }
     _map.select_node( next_node );
-    _map.animator.animate();
     auto_save();
   }
 
@@ -2577,8 +2585,8 @@ public class MapModel {
       }
     }
     _map.add_undo( new UndoNodePaste( nodes, conns, groups ) );
-    _map.select_node( nodes.index( 0 ) );
     _map.animator.animate();
+    _map.select_node( nodes.index( 0 ) );
     current_changed();
     auto_save();
   }
