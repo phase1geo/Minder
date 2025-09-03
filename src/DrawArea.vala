@@ -1729,6 +1729,7 @@ public class DrawArea : Gtk.DrawingArea {
     var text = _map.get_current_text();
     if( text != null ) {
       text.insert( str, _map.undo_text );
+      see();
       queue_draw();
       return( true );
     }
