@@ -50,9 +50,10 @@ public class Preferences : Gtk.Window {
 
     var stack = new Stack() {
       halign        = Align.FILL,
+      hexpand       = true,
       valign        = Align.FILL,
-      margin_start  = 6,
-      margin_end    = 6,
+      margin_start  = 10,
+      margin_end    = 10,
       margin_bottom = 18,
       margin_top    = 24
     };
@@ -61,8 +62,9 @@ public class Preferences : Gtk.Window {
     stack.add_titled( create_shortcuts(),  "shortcuts",  _( "Shortcuts" ) );
 
     var switcher = new StackSwitcher() {
-      halign = Align.CENTER,
-      stack  = stack,
+      halign  = Align.CENTER,
+      hexpand = true,
+      stack   = stack,
       margin_top = 10
     };
 
@@ -82,6 +84,7 @@ public class Preferences : Gtk.Window {
   private Grid create_behavior() {
 
     var grid = new Grid() {
+      halign = Align.CENTER,
       column_spacing = 12,
       row_spacing    = 6
     };
@@ -120,6 +123,7 @@ public class Preferences : Gtk.Window {
   private Grid create_appearance() {
 
     var grid = new Grid() {
+      halign = Align.CENTER,
       column_spacing = 12,
       row_spacing    = 6
     };
@@ -149,6 +153,7 @@ public class Preferences : Gtk.Window {
   private Box create_shortcuts() {
 
     var grid = new Grid() {
+      halign = Align.CENTER,
       column_spacing  = 12,
       row_spacing     = 6,
       row_homogeneous = true
@@ -180,8 +185,7 @@ public class Preferences : Gtk.Window {
             box.append( make_separator() );
           }
           var l = new Label( command.shortcut_label() ) {
-            halign = Align.START,
-            use_markup = true
+            halign = Align.START
           };
           l.add_css_class( "titled" );
           box.append( l );
@@ -329,7 +333,6 @@ public class Preferences : Gtk.Window {
     var w = new Label( label ) {
       halign = Align.END
     };
-    margin_start = 12;
     return( w );
   }
 
@@ -377,6 +380,7 @@ public class Preferences : Gtk.Window {
       focusable = command.editable()
     };
     sl.add_css_class( "shortcut-unselected" );
+    sl.set_cursor_from_name( "pointer" );
 
     var sl_focus = new EventControllerFocus();
     var sl_key   = new EventControllerKey();
@@ -395,6 +399,7 @@ public class Preferences : Gtk.Window {
       focusable = command.editable()
     };
     nl.add_css_class( "shortcut-unselected" );
+    nl.set_cursor_from_name( "pointer" );
 
     var nl_focus = new EventControllerFocus();
     var nl_key   = new EventControllerKey();
@@ -434,11 +439,13 @@ public class Preferences : Gtk.Window {
         _win.shortcuts.clear_shortcut( command );
         shortcut = null;
         nl.text  = disabled;
+        nl.set_cursor_from_name( "pointer" );
         stack.visible_child_name = "unset";
         nl.grab_focus();
         return( true );
       } else if( keyval == Key.Return ) {
         nl.text = enter;
+        nl.set_cursor_from_name( "text" );
         _shortcut_instructions.label = _shortcut_inst_edit_str;
         stack.visible_child_name = "unset";
         nl.grab_focus();
@@ -459,6 +466,7 @@ public class Preferences : Gtk.Window {
           sl.grab_focus();
         } else {
           nl.text = disabled;
+          nl.set_cursor_from_name( "pointer" );
         }
         _shortcut_instructions.label = _shortcut_inst_start_str;
       }
@@ -468,6 +476,7 @@ public class Preferences : Gtk.Window {
       nl.grab_focus();
       if( n_press == 2 ) {
         nl.text = enter;
+        nl.set_cursor_from_name( "text" );
         _shortcut_instructions.label = _shortcut_inst_edit_str;
       }
     });
@@ -476,6 +485,7 @@ public class Preferences : Gtk.Window {
       if( nl.text == disabled ) {
         if( keyval == Key.Return ) {
           nl.text = enter;
+          nl.set_cursor_from_name( "text" );
           _shortcut_instructions.label = _shortcut_inst_edit_str;
           return( true );
         }
@@ -484,6 +494,7 @@ public class Preferences : Gtk.Window {
           _win.shortcuts.clear_shortcut( command );
           shortcut = null;
           nl.text = disabled;
+          nl.set_cursor_from_name( "pointer" );
           _shortcut_instructions.label = _shortcut_inst_start_str;
         } else if( keyval == Key.Escape ) {
           if( shortcut != null ) {
@@ -491,6 +502,7 @@ public class Preferences : Gtk.Window {
             sl.grab_focus();
           } else {
             nl.text = disabled;
+            nl.set_cursor_from_name( "pointer" );
           }
           _shortcut_instructions.label = _shortcut_inst_start_str;
         } else if( (keyval != Key.Control_L) && (keyval != Key.Control_R) &&
