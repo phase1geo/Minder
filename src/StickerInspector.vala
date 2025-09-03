@@ -299,6 +299,10 @@ public class StickerInspector : Box {
     popover.set_parent( sticker );
     popover.popup();
 
+    sticker.destroy.connect(() => {
+      popover.unparent();
+    });
+
   }
 
   //-------------------------------------------------------------
