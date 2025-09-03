@@ -35,7 +35,8 @@ public class Theme : Object {
   public bool   temporary   { set; get; default = false; }
   public bool   rotate      { set; get; default = true; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public Theme() {
     _colors = new HashMap<string,RGBA?>();
     _colors.set( "background",            null );
@@ -68,12 +69,14 @@ public class Theme : Object {
     _colors.set( "link_color7",           null );
   }
 
-  /* Copy constructor */
+  //-------------------------------------------------------------
+  // Copy constructor
   public Theme.from_theme( Theme theme ) {
     copy( theme );
   }
 
-  /* Copies the given theme to this theme */
+  //-------------------------------------------------------------
+  // Copies the given theme to this theme
   public void copy( Theme theme ) {
     name        = theme.name;
     label       = theme.label;
@@ -88,7 +91,8 @@ public class Theme : Object {
     }
   }
 
-  /* Returns the list of stored theme names */
+  //-------------------------------------------------------------
+  // Returns the list of stored theme names.
   public Array<string> colors() {
     var cs = new Array<string>();
     var it = _colors.map_iterator();
@@ -99,7 +103,8 @@ public class Theme : Object {
     return( cs );
   }
 
-  /* Returns true if the given theme matches the current theme */
+  //-------------------------------------------------------------
+  // Returns true if the given theme matches the current theme
   public bool matches( Theme theme ) {
     if( (name == theme.name) || (label == theme.name) ) {
       if( custom ) {
@@ -117,7 +122,8 @@ public class Theme : Object {
     return( false );
   }
 
-  /* Adds the given color to the list of link colors */
+  //-------------------------------------------------------------
+  // Adds the given color to the list of link colors
   public bool set_color( string name, RGBA color ) {
     if( _colors.has_key( name ) ) {
       _colors.set( name, color );
@@ -126,7 +132,8 @@ public class Theme : Object {
     return( false );
   }
 
-  /* Returns the given color */
+  //-------------------------------------------------------------
+  // Returns the given color
   public RGBA? get_color( string name ) {
     if( _colors.has_key( name ) ) {
       return( _colors.get( name ) );
@@ -134,7 +141,8 @@ public class Theme : Object {
     return( null );
   }
 
-  /* Returns the next available link color index */
+  //-------------------------------------------------------------
+  // Returns the next available link color index.
   public RGBA? next_color() {
     if( index == -1 ) {
       index = 0;
@@ -144,27 +152,29 @@ public class Theme : Object {
     return( link_color( index  ) );
   }
 
-  /* Returns the number of link colors */
+  //-------------------------------------------------------------
+  // Returns the number of link colors.
   public static int num_link_colors() {
     return( 8 );
   }
 
-  /* Returns the color associated with the given index */
+  //-------------------------------------------------------------
+  // Returns the color associated with the given index.
   public RGBA link_color( int index ) {
     return( _colors.get( "link_color%d".printf( index % 8 ) ) );
   }
 
-  /* Returns a randomly selected link color */
+  //-------------------------------------------------------------
+  // Returns a randomly selected link color.
   public RGBA random_link_color() {
     var rand = new Rand();
     return( _colors.get( "link_color%d".printf( rand.int_range( 0, 8 ) ) ) );
   }
 
-  /*
-   Searches the stored link colors for one that matches the given color.
-   If a match is found, returns the index of the stored color.  If no match
-   was found, returns -1.
-  */
+  //-------------------------------------------------------------
+  // Searches the stored link colors for one that matches the
+  // given color.  If a match is found, returns the index of the
+  // stored color.  If no match was found, returns -1.
   public int get_color_index( RGBA color ) {
     string color_str = color.to_string();
     for( int i=0; i<8; i++ ) {
@@ -176,14 +186,17 @@ public class Theme : Object {
     return( -1 );
   }
 
-  /* Returns the RGBA color for the given color value */
+  //-------------------------------------------------------------
+  // Returns the RGBA color for the given color value.
   protected RGBA color_from_string( string value ) {
     return( Utils.color_from_string( value ) );
   }
 
-  /* Returns the CSS provider for this theme */
+  //-------------------------------------------------------------
+  // Returns the CSS provider for this theme.
   public CssProvider get_css_provider( int text_size ) {
     CssProvider provider = new CssProvider();
+    var foreground = Granite.contrasting_foreground_color( get_color( "background" ) );
     try {
       var tv_size  = (text_size == -1) ? ".textfield { font: 1em \"Sans\"; } " :
                                          ".textfield { font: %dpx \"Sans\"; } ".printf( text_size );
@@ -192,6 +205,7 @@ public class Theme : Object {
                      "@define-color colorAccent #603461; " +
                      "@define-color tab_base_color " + get_color( "background" ).to_string() + ";" +
                      tv_size +
+                     ".tab { color: " + Utils.color_from_rgba( foreground ) + "; }" +
                      ".theme-selected { background: #087DFF; } " +
                      ".canvas { background: " + get_color( "background" ).to_string() + "; }" +
                      ".highlighted { background: rgba(255, 255, 129, " + (prefer_dark ? "0.15" : "1.0") + "); }";
@@ -202,12 +216,14 @@ public class Theme : Object {
     return( provider );
   }
 
-  /* Sets the context color based on the theme RGBA color */
+  //-------------------------------------------------------------
+  // Sets the context color based on the theme RGBA color.
   private void set_context_color( Cairo.Context ctx, RGBA color ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
   }
 
-  /* Parses the specified XML node for theme coloring information */
+  //-------------------------------------------------------------
+  // Parses the specified XML node for theme coloring information.
   public bool load( Xml.Node* n ) {
 
     bool contains_data = false;
@@ -220,7 +236,7 @@ public class Theme : Object {
     string? ll = n->get_prop( "label" );
     if( ll != null ) {
       label = ll;
-    } else if( nn != null ) {  /* This is for backwards compatibility */
+    } else if( nn != null ) {  // This is for backwards compatibility
       label = nn;
     }
 
@@ -249,7 +265,9 @@ public class Theme : Object {
 
   }
 
-  /* Returns an XML node containing the contents of this theme color scheme */
+  //-------------------------------------------------------------
+  // Returns an XML node containing the contents of this theme
+  // color scheme.
   public Xml.Node* save() {
 
     Xml.Node* n = new Xml.Node( null, "theme" );
@@ -274,7 +292,8 @@ public class Theme : Object {
 
   }
 
-  /* Creates the icon representation based on the theme's colors */
+  //-------------------------------------------------------------
+  // Creates the icon representation based on the theme's colors
   public Paintable make_icon() {
 
     var    side  = 140;
@@ -293,15 +312,14 @@ public class Theme : Object {
     font_desc.set_family( "Sans" );
     font_desc.set_size( 11 * Pango.SCALE );
 
-    /* Draw the background */
+    // Draw the background
     set_context_color( ctx, get_color( "background" ) );
     ctx.rectangle( 0, 0, side, side );
     ctx.fill();
 
-    /* Create root node text */
+    // Create root node text
     var root_text = Pango.cairo_create_layout( ctx );
     root_text.set_font_description( font_desc );
-    // root_text.set_width( 70 * Pango.SCALE );
     root_text.set_text( _( "Root" ), -1 );
     root_text.get_pixel_size( out width, out height );
 
@@ -313,24 +331,24 @@ public class Theme : Object {
     ypos[1] = ypos[4] = (side / 2);
     ypos[2] = ypos[5] = (side - vspace);
 
-    /* Draw root node */
+    // Draw root node
     set_context_color( ctx, get_color( "root_background" ) );
     ctx.arc( hside, hside, rrad, 0, (2 * Math.PI) );
     ctx.fill();
 
-    /* Add the text */
+    // Add the text
     set_context_color( ctx, get_color( "root_foreground" ) );
     ctx.move_to( (hside - (width / 2)), (hside - (height / 2)) );
     Pango.cairo_show_layout( ctx, root_text );
 
-    /* Draw subnodes */
+    // Draw subnodes
     for( int i=0; i<6; i++ ) {
       set_context_color( ctx, link_color( i ) );
       ctx.arc( ((i < 3) ? hspace : (side - hspace)), ypos[i], nrad, 0, (2 * Math.PI) );
       ctx.fill();
     }
 
-    /* Draw connection */
+    // Draw connection
     set_context_color( ctx, get_color( "connection_background" ) );
     double p[6];
     p[0] = hspace + nrad + 2;

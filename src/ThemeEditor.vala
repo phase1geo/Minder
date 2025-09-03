@@ -33,6 +33,7 @@ public class ThemeEditor : Gtk.Box {
   private HashMap<string,ColorButton> _btns;
   private Switch                      _prefer_dark;
   private Button                      _del;
+  private bool                        _ignore = false;
 
   public ThemeEditor( MainWindow win ) {
 
@@ -132,7 +133,8 @@ public class ThemeEditor : Gtk.Box {
       margin_top = 20
     };
     _prefer_dark.notify["active"].connect((e) => {
-      _theme.prefer_dark = !_theme.prefer_dark;
+      if( _ignore ) return;
+      _theme.prefer_dark = _prefer_dark.active;
       _win.get_current_map().model.set_theme( _theme, true );
     });
 
@@ -221,6 +223,8 @@ public class ThemeEditor : Gtk.Box {
       _theme.name = _theme.label = _win.themes.uniquify_name( _( "Custom" ) + " #1" );
     }
 
+    _ignore = true;
+
     /* Initialize the UI */
     var colors = _theme.colors();
     for( int i=0; i<colors.length; i++ ) {
@@ -229,6 +233,8 @@ public class ThemeEditor : Gtk.Box {
     _name.text = _theme.name;
     _prefer_dark.set_active( _theme.prefer_dark );
     _del.visible = edit && !theme.temporary;
+
+    _ignore = false;
 
   }
 

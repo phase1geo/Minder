@@ -538,6 +538,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       margin_bottom = 5,
       tooltip_text  = map.doc.label
     };
+    tab_label.add_css_class( "tab" );
 
     var tab_close = new Button.from_icon_name( "window-close-symbolic" ) {
       has_frame     = false,
@@ -545,6 +546,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       margin_top    = 5,
       margin_bottom = 5
     };
+    tab_close.add_css_class( "tab" );
 
     var tab_revealer = new Revealer() {
       reveal_child    = true,
