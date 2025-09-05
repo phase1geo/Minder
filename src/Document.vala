@@ -53,7 +53,7 @@ public class Document : Object {
     }
   }
   public bool save_needed { private set; get; default = false; }
-  public bool readonly {
+  public bool read_only {
     get {
       var prev_read_only = _read_only;
       _read_only = Utils.is_read_only( _filename );

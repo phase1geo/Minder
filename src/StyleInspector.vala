@@ -89,6 +89,7 @@ public class StyleInspector : Box {
   public static Styles styles = new Styles();
 
   public signal void update_icons();
+  public signal void editable_changed();
 
   public StyleInspector( MainWindow win, GLib.Settings settings ) {
 
@@ -128,6 +129,7 @@ public class StyleInspector : Box {
 
     /* Listen for changes to the current tab in the main window */
     win.canvas_changed.connect( tab_changed );
+    editable_changed.connect( handle_current_changed );
 
   }
 
@@ -1534,7 +1536,7 @@ public class StyleInspector : Box {
         }
         break;
     }
-    _link_types.set_sensitive( sensitive );
+    _link_types.set_sensitive( sensitive && _map.editable );
   }
 
   private void update_link_types_with_style( Style style ) {
@@ -1558,6 +1560,7 @@ public class StyleInspector : Box {
         break;
       }
     }
+    _link_dash.editable_changed( _map.editable );
   }
 
   private void update_node_borders_with_style( Style style ) {
@@ -1568,6 +1571,7 @@ public class StyleInspector : Box {
         break;
       }
     }
+    _node_borders.editable_changed( _map.editable );
   }
 
   private void update_node_text_align_with_style( Style style ) {
@@ -1577,6 +1581,7 @@ public class StyleInspector : Box {
       case Pango.Alignment.CENTER :  _node_text_align.selected = 1;  break;
       case Pango.Alignment.RIGHT  :  _node_text_align.selected = 2;  break;
     }
+    _node_text_align.editable_changed( _map.editable );
   }
 
   private void update_conn_dashes_with_style( Style style ) {
@@ -1587,6 +1592,7 @@ public class StyleInspector : Box {
         break;
       }
     }
+    _conn_dash.editable_changed( _map.editable );
   }
 
   private void update_conn_arrows_with_style( Style style ) {
@@ -1595,9 +1601,11 @@ public class StyleInspector : Box {
     foreach( var arrow in arrows ) {
       if( arrow == style.connection_arrow ) {
         _conn_arrow.selected = i;
+        break;
       }
       i++;
     }
+    _conn_arrow.editable_changed( _map.editable );
   }
 
   private void update_conn_text_align_with_style( Style style ) {
@@ -1607,6 +1615,7 @@ public class StyleInspector : Box {
       case Pango.Alignment.CENTER :  _conn_text_align.selected = 1;  break;
       case Pango.Alignment.RIGHT  :  _conn_text_align.selected = 2;  break;
     }
+    _conn_text_align.editable_changed( _map.editable );
   }
 
   private void update_callout_text_align_with_style( Style style ) {
@@ -1616,6 +1625,7 @@ public class StyleInspector : Box {
       case Pango.Alignment.CENTER :  _callout_text_align.selected = 1;  break;
       case Pango.Alignment.RIGHT  :  _callout_text_align.selected = 2;  break;
     }
+    _callout_text_align.editable_changed( _map.editable );
   }
 
   //-------------------------------------------------------------
@@ -1640,7 +1650,9 @@ public class StyleInspector : Box {
 
     _ignore = true;
     _branch_margin.set_value( (double)branch_margin );
+    _branch_margin.set_sensitive( _map.editable );
     _branch_radius.set_value( (double)branch_radius );
+    _branch_radius.set_sensitive( _map.editable );
     update_link_types_with_style( style );
     update_link_dashes_with_style( style );
     update_node_borders_with_style( style );
@@ -1650,23 +1662,39 @@ public class StyleInspector : Box {
     update_conn_text_align_with_style( style );
     update_callout_text_align_with_style( style );
     _link_width.set_value( (double)link_width );
+    _link_width.set_sensitive( _map.editable );
     _link_arrow.set_active( (bool)link_arrow );
+    _link_arrow.set_sensitive( _map.editable );
     _node_borderwidth.set_value( (double)node_bw );
+    _node_borderwidth.set_sensitive( _map.editable );
     _node_fill.set_active( (bool)node_fill );
-    _node_fill.set_sensitive( style.node_border.is_fillable() );
+    _node_fill.set_sensitive( style.node_border.is_fillable() && _map.editable );
     _node_margin.set_value( (double)node_margin );
+    _node_margin.set_sensitive( _map.editable );
     _node_padding.set_value( (double)node_padding );
+    _node_padding.set_sensitive( _map.editable );
     _node_font.set_font_features( style.node_font.to_string() );
+    _node_font.set_sensitive( _map.editable );
     _node_width.set_value( (float)node_width );
+    _node_width.set_sensitive( _map.editable );
     _node_markup.set_active( (bool)node_markup );
+    _node_markup.set_sensitive( _map.editable );
     _conn_lwidth.set_value( (double)conn_line_width );
+    _conn_lwidth.set_sensitive( _map.editable );
     _conn_font.set_font_features( style.connection_font.to_string() );
+    _conn_font.set_sensitive( _map.editable );
     _conn_twidth.set_value( style.connection_title_width );
+    _conn_twidth.set_sensitive( _map.editable );
     _conn_padding.set_value( (double)conn_padding );
+    _conn_padding.set_sensitive( _map.editable );
     _callout_font.set_font_features( style.callout_font.to_string() );
+    _callout_font.set_sensitive( _map.editable );
     _callout_padding.set_value( (double)callout_padding );
+    _callout_padding.set_sensitive( _map.editable );
     _callout_ptr_width.set_value( (double)callout_pwidth );
+    _callout_ptr_width.set_sensitive( _map.editable );
     _callout_ptr_length.set_value( (double)callout_plength );
+    _callout_ptr_length.set_sensitive( _map.editable );
     _ignore = false;
 
   }

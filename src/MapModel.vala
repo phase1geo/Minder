@@ -52,7 +52,7 @@ public enum MapItemComponent {
 public class MapModel {
 
   private MindMap       _map;
-  private Node?         _last_node       = null;
+  private Node?         _last_node      = null;
   private Array<Node>   _nodes;
   private Connections   _connections;
   private Stickers      _stickers;
@@ -63,12 +63,13 @@ public class MapModel {
   private Connection?   _attach_conn    = null;
   private Sticker?      _attach_sticker = null;
   private uint?         _auto_save_id   = null;
-  private bool          _debug        = true;
+  private bool          _debug          = true;
   private NodeGroups    _groups;
-  private int           _next_node_id    = -1;
+  private int           _next_node_id   = -1;
   private NodeLinks     _node_links;
-  private bool          _hide_callouts   = false;
+  private bool          _hide_callouts  = false;
   private Array<string> _braindump;
+  private bool          _modifiable     = true;
 
   public Layouts        layouts         { set; get; default = new Layouts(); }
   public ImageManager   image_manager   { set; get; default = new ImageManager(); }
@@ -2663,10 +2664,12 @@ public class MapModel {
   // Perform an automatic save for times when changes may be
   // happening rapidly.
   public void auto_save() {
-    if( _auto_save_id != null ) {
-      Source.remove( _auto_save_id );
+    if( _map.editable ) {
+      if( _auto_save_id != null ) {
+        Source.remove( _auto_save_id );
+      }
+      _auto_save_id = Timeout.add( 200, do_auto_save );
     }
-    _auto_save_id = Timeout.add( 200, do_auto_save );
   }
 
   //-------------------------------------------------------------

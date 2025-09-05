@@ -1192,7 +1192,7 @@ public enum KeyCommand {
   }
 
   public static void file_save( MindMap map ) {
-    if( map.doc.is_saved() ) {
+    if( map.doc.is_saved() && map.editable ) {
       map.doc.save();
     } else {
       map.win.save_file( map, false );
@@ -1221,12 +1221,14 @@ public enum KeyCommand {
   }
 
   public static void undo_action( MindMap map ) {
+    if( !map.editable ) return;
     if( map.undo_buffer.undoable() ) {
       map.undo_buffer.undo();
     }
   }
 
   public static void redo_action( MindMap map ) {
+    if( !map.editable ) return;
     if( map.undo_buffer.redoable() ) {
       map.undo_buffer.redo();
     }
@@ -1279,6 +1281,7 @@ public enum KeyCommand {
   }
 
   public static void balance_nodes( MindMap map ) {
+    if( !map.editable ) return;
     map.model.balance_nodes( true, true );
   }
 
@@ -1337,6 +1340,7 @@ public enum KeyCommand {
   }
 
   public static void toggle_braindump( MindMap map ) {
+    if( !map.editable ) return;
     map.win.toggle_braindump();
   }
 
@@ -1345,10 +1349,12 @@ public enum KeyCommand {
   }
 
   public static void edit_note( MindMap map ) {
+    if( !map.editable ) return;
     map.show_properties( "current", PropertyGrab.NOTE ); 
   }
 
   public static void edit_selected( MindMap map ) {
+    if( !map.editable ) return;
     var current_node = map.get_current_node();
     if( current_node != null ) {
       map.model.set_node_mode( current_node, NodeMode.EDITABLE );
@@ -1375,6 +1381,7 @@ public enum KeyCommand {
   }
 
   public static void remove_sticker_selected( MindMap map ) {
+    if( !map.editable ) return;
     map.model.remove_sticker();
   }
 
@@ -1401,36 +1408,42 @@ public enum KeyCommand {
   // NODE FUNCTIONS
 
   public static void node_align_top( MindMap map ) {
+    if( !map.editable ) return;
     if( map.model.nodes_alignable() ) {
       NodeAlign.align_top( map, map.selected.nodes() );
     }
   }
 
   public static void node_align_vcenter( MindMap map ) {
+    if( !map.editable ) return;
     if( map.model.nodes_alignable() ) {
       NodeAlign.align_vcenter( map, map.selected.nodes() );
     }
   }
 
   public static void node_align_bottom( MindMap map ) {
+    if( !map.editable ) return;
     if( map.model.nodes_alignable() ) {
       NodeAlign.align_bottom( map, map.selected.nodes() );
     }
   }
 
   public static void node_align_left( MindMap map ) {
+    if( !map.editable ) return;
     if( map.model.nodes_alignable() ) {
       NodeAlign.align_left( map, map.selected.nodes() );
     }
   }
 
   public static void node_align_hcenter( MindMap map ) {
+    if( !map.editable ) return;
     if( map.model.nodes_alignable() ) {
       NodeAlign.align_hcenter( map, map.selected.nodes() );
     }
   }
 
   public static void node_align_right( MindMap map ) {
+    if( !map.editable ) return;
     if( map.model.nodes_alignable() ) {
       NodeAlign.align_right( map, map.selected.nodes() );
     }
@@ -1537,18 +1550,22 @@ public enum KeyCommand {
   }
 
   public static void node_change_link_color( MindMap map ) {
+    if( !map.editable ) return;
     map.change_current_link_color();
   }
 
   public static void node_randomize_link_color( MindMap map ) {
+    if( !map.editable ) return;
     map.model.randomize_current_link_color();
   }
 
   public static void node_reparent_link_color( MindMap map ) {
+    if( !map.editable ) return;
     map.model.reparent_current_link_color();
   }
 
   public static void node_change_task( MindMap map ) {
+    if( !map.editable ) return;
     var current = map.get_current_node();
     if( current != null ) {
       if( current.task_enabled() ) {
@@ -1564,6 +1581,7 @@ public enum KeyCommand {
   }
 
   public static void node_add_root( MindMap map ) {
+    if( !map.editable ) return;
     map.model.add_root_node();
   }
 
@@ -1587,10 +1605,12 @@ public enum KeyCommand {
   }
 
   public static void node_return( MindMap map ) {
+    if( !map.editable ) return;
     node_return_helper( map, false );
   }
 
   public static void node_shift_return( MindMap map ) {
+    if( !map.editable ) return;
     node_return_helper( map, true );
   }
 
@@ -1607,14 +1627,17 @@ public enum KeyCommand {
   }
 
   public static void node_tab( MindMap map ) {
+    if( !map.editable ) return;
     node_tab_helper( map, false );
   }
 
   public static void node_shift_tab( MindMap map ) {
+    if( !map.editable ) return;
     node_tab_helper( map, true );
   }
 
   public static void node_change_image( MindMap map ) {
+    if( !map.editable ) return;
     var current = map.get_current_node();
     if( (current != null) && (current.image != null) ) {
       map.model.edit_current_image();
@@ -1624,10 +1647,12 @@ public enum KeyCommand {
   }
 
   public static void node_remove_image( MindMap map ) {
+    if( !map.editable ) return;
     map.model.delete_current_image();
   }
 
   public static void node_toggle_callout( MindMap map ) {
+    if( !map.editable ) return;
     if (map.model.node_has_callout() ) {
       map.model.remove_callout();
     } else {
@@ -1636,10 +1661,12 @@ public enum KeyCommand {
   }
 
   public static void node_add_group( MindMap map ) {
+    if( !map.editable ) return;
     map.model.add_group();
   }
 
   public static void node_add_connection( MindMap map ) {
+    if( !map.editable ) return;
     if( map.selected.num_nodes() == 2 ) {
       map.model.create_connection();
     } else {
@@ -1648,18 +1675,22 @@ public enum KeyCommand {
   }
 
   public static void node_toggle_folds_shallow( MindMap map ) {
+    if( !map.editable ) return;
     map.model.toggle_folds( false );
   }
 
   public static void node_toggle_folds_deep( MindMap map ) {
+    if( !map.editable ) return;
     map.model.toggle_folds( true );
   }
 
   public static void node_toggle_sequence( MindMap map ) {
+    if( !map.editable ) return;
     map.model.toggle_sequence();
   }
 
   public static void node_toggle_links( MindMap map ) {
+    if( !map.editable ) return;
     map.model.toggle_links();
   }
 
@@ -1668,33 +1699,40 @@ public enum KeyCommand {
   }
 
   public static void node_sort_alphabetically( MindMap map ) {
+    if( !map.editable ) return;
     map.model.sort_alphabetically();
   }
 
   public static void node_sort_randomly( MindMap map ) {
+    if( !map.editable ) return;
     map.model.sort_randomly();
   }
 
   public static void node_quick_entry_insert( MindMap map ) {
+    if( !map.editable ) return;
     var quick_entry = new QuickEntry( map, false, map.settings );
     quick_entry.preload( "- " );
   }
 
   public static void node_quick_entry_replace( MindMap map ) {
+    if( !map.editable ) return;
     var quick_entry = new QuickEntry( map, true, map.settings );
     var export      = (ExportText)map.win.exports.get_by_name( "text" );
     quick_entry.preload( export.export_node( map, map.get_current_node(), "" ) );
   }
 
   public static void node_paste_node_link( MindMap map ) {
+    if( !map.editable ) return;
     map.do_paste_node_link();
   }
 
   public static void node_paste_replace( MindMap map ) {
+    if( !map.editable ) return;
     map.do_paste( true );
   }
 
   public static void node_remove( MindMap map ) {
+    if( !map.editable ) return;
     if( map.selected.num_nodes() > 1 ) {
       map.model.delete_nodes();
     } else {
@@ -1715,10 +1753,12 @@ public enum KeyCommand {
   }
 
   public static void node_remove_only_selected( MindMap map ) {
+    if( !map.editable ) return;
     map.model.delete_nodes();
   }
 
   public static void node_detach( MindMap map ) {
+    if( !map.editable ) return;
     map.model.detach();
   }
 
@@ -1745,18 +1785,22 @@ public enum KeyCommand {
   }
 
   public static void node_swap_left( MindMap map ) {
+    if( !map.editable ) return;
     node_swap( map, "left" );
   }
 
   public static void node_swap_right( MindMap map ) {
+    if( !map.editable ) return;
     node_swap( map, "right" );
   }
 
   public static void node_swap_up( MindMap map ) {
+    if( !map.editable ) return;
     node_swap( map, "up" );
   }
 
   public static void node_swap_down( MindMap map ) {
+    if( !map.editable ) return;
     node_swap( map, "down" );
   }
 
@@ -1780,6 +1824,7 @@ public enum KeyCommand {
   }
 
   public static void connection_remove( MindMap map ) {
+    if( !map.editable ) return;
     if( map.get_current_connection() != null ) {
       map.model.delete_connection();
     } else {
@@ -1795,6 +1840,7 @@ public enum KeyCommand {
   }
 
   public static void callout_remove( MindMap map ) {
+    if( !map.editable ) return;
     map.model.remove_callout();
   }
 
@@ -1802,6 +1848,7 @@ public enum KeyCommand {
   // STICKER FUNCTIONS
 
   public static void sticker_remove( MindMap map ) {
+    if( !map.editable ) return;
     map.model.remove_sticker();
   }
 
@@ -1809,6 +1856,7 @@ public enum KeyCommand {
   // GROUP FUNCTIONS
 
   public static void group_change_color( MindMap map ) {
+    if( !map.editable ) return;
     var color_picker = new Gtk.ColorChooserDialog( _( "Select a group color" ), map.win );
     color_picker.color_activated.connect((color) => {
       map.model.change_group_color( color );
@@ -1817,10 +1865,12 @@ public enum KeyCommand {
   }
 
   public static void group_merge( MindMap map ) {
+    if( !map.editable ) return;
     map.model.add_group();
   }
 
   public static void group_remove( MindMap map ) {
+    if( !map.editable ) return;
     map.model.remove_groups();
   }
 
@@ -1903,6 +1953,7 @@ public enum KeyCommand {
   }
 
   public static void edit_escape( MindMap map ) {
+    if( !map.editable ) return;
     var text = map.get_current_text();
     if( text != null ) {
       if( map.canvas.completion.shown ) {
@@ -1933,14 +1984,17 @@ public enum KeyCommand {
   }
 
   public static void edit_insert_newline( MindMap map ) {
+    if( !map.editable ) return;
     insert_text( map, "\n" );
   }
 
   public static void edit_insert_tab( MindMap map ) {
+    if( !map.editable ) return;
     insert_text( map, "\t" );
   }
 
   public static void edit_insert_emoji( MindMap map ) {
+    if( !map.editable ) return;
     var text = map.get_current_text();
     if( text != null ) {
       map.canvas.insert_emoji( text );
@@ -1948,6 +2002,7 @@ public enum KeyCommand {
   }
 
   public static void edit_backspace( MindMap map ) {
+    if( !map.editable ) return;
     var text = map.get_current_text();
     if( text != null ) {
       text.backspace( map.undo_text );
@@ -1956,6 +2011,7 @@ public enum KeyCommand {
   }
 
   public static void edit_delete( MindMap map ) {
+    if( !map.editable ) return;
     var text = map.get_current_text();
     if( text != null ) {
       text.delete( map.undo_text );
@@ -1964,6 +2020,7 @@ public enum KeyCommand {
   }
 
   public static void edit_remove_word_previous( MindMap map ) {
+    if( !map.editable ) return;
     var text = map.get_current_text();
     if( text != null ) {
       text.backspace_word( map.undo_text );
@@ -1972,6 +2029,7 @@ public enum KeyCommand {
   }
 
   public static void edit_remove_word_next( MindMap map ) {
+    if( !map.editable ) return;
     var text = map.get_current_text();
     if( text != null ) {
       text.delete_word( map.undo_text );
@@ -1980,102 +2038,127 @@ public enum KeyCommand {
   }
 
   public static void edit_cursor_char_next( MindMap map ) {
+    if( !map.editable ) return;
     edit_cursor( map, "char-next" );
   }
 
   public static void edit_cursor_char_previous( MindMap map ) {
+    if( !map.editable ) return;
     edit_cursor( map, "char-prev" );
   }
 
   public static void edit_cursor_up( MindMap map ) {
+    if( !map.editable ) return;
     edit_cursor( map, "up" );
   }
 
   public static void edit_cursor_down( MindMap map ) {
+    if( !map.editable ) return;
     edit_cursor( map, "down" );
   }
 
   public static void edit_cursor_word_next( MindMap map ) {
+    if( !map.editable ) return;
     edit_cursor( map, "word-next" );
   }
 
   public static void edit_cursor_word_previous( MindMap map ) {
+    if( !map.editable ) return;
     edit_cursor( map, "word-prev" );
   }
 
   public static void edit_cursor_to_start( MindMap map ) {
+    if( !map.editable ) return;
     edit_cursor( map, "start" );
   }
 
   public static void edit_cursor_to_end( MindMap map ) {
+    if( !map.editable ) return;
     edit_cursor( map, "end" );
   }
 
   public static void edit_cursor_to_linestart( MindMap map ) {
+    if( !map.editable ) return;
     edit_cursor( map, "linestart" );
   }
 
   public static void edit_cursor_to_lineend( MindMap map ) {
+    if( !map.editable ) return;
     edit_cursor( map, "lineend" );
   }
 
   public static void edit_select_char_next( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "char-next" );
   }
 
   public static void edit_select_char_previous( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "char-prev" );
   }
 
   public static void edit_select_up( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "up" );
   }
 
   public static void edit_select_down( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "down" );
   }
 
   public static void edit_select_word_next( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "word-next" );
   }
 
   public static void edit_select_word_previous( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "word-prev" );
   }
 
   public static void edit_select_start_up( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "start-up" );
   }
 
   public static void edit_select_start_home( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "start-home" );
   }
 
   public static void edit_select_end_down( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "end-down" );
   }
 
   public static void edit_select_end_end( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "end-end" );
   }
 
   public static void edit_select_linestart( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "linestart" );
   }
 
   public static void edit_select_lineend( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "lineend" );
   }
 
   public static void edit_select_all( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "all" );
   }
 
   public static void edit_deselect_all( MindMap map ) {
+    if( !map.editable ) return;
     edit_selection( map, "none" );
   }
 
   public static void edit_open_url( MindMap map ) {
+    if( !map.editable ) return;
     var text = map.get_current_text();
     if( text != null ) {
       int cursor, selstart, selend;
@@ -2086,26 +2169,32 @@ public enum KeyCommand {
   }
 
   public static void edit_add_url( MindMap map ) {
+    if( !map.editable ) return;
     map.canvas.url_editor.add_url();
   }
 
   public static void edit_edit_url( MindMap map ) {
+    if( !map.editable ) return;
     map.canvas.url_editor.edit_url();
   }
 
   public static void edit_remove_url( MindMap map ) {
+    if( !map.editable ) return;
     map.canvas.url_editor.remove_url();
   }
 
   public static void edit_copy( MindMap map ) {
+    if( !map.editable ) return;
     map.model.do_copy();
   }
 
   public static void edit_cut( MindMap map ) {
+    if( !map.editable ) return;
     map.model.do_cut();
   }
 
   public static void edit_paste( MindMap map ) {
+    if( !map.editable ) return;
     map.do_paste( false );
   }
 
@@ -2146,10 +2235,12 @@ public enum KeyCommand {
   }
 
   public static void edit_return( MindMap map ) {
+    if( !map.editable ) return;
     edit_return_helper( map, false );
   }
 
   public static void edit_shift_return( MindMap map ) {
+    if( !map.editable ) return;
     edit_return_helper( map, true );
   }
 
@@ -2170,10 +2261,12 @@ public enum KeyCommand {
   }
 
   public static void edit_tab( MindMap map ) {
+    if( !map.editable ) return;
     edit_tab_helper( map, false );
   }
 
   public static void edit_shift_tab( MindMap map ) {
+    if( !map.editable ) return;
     edit_tab_helper( map, true );
   }
 

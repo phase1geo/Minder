@@ -432,7 +432,7 @@ public class DrawArea : Gtk.DrawingArea {
             _im_context.reset();
             break;
         }
-      } else if( _press_num == 2 ) {
+      } else if( (_press_num == 2) && _map.editable ) {
         var current = _map.selected.current_connection();
         current.edit_title_begin( _map );
         _map.model.set_connection_mode( current, ConnMode.EDITABLE );
@@ -440,8 +440,10 @@ public class DrawArea : Gtk.DrawingArea {
       return( true );
     } else {
       if( _shift ) {
-        _map.selected.add_connection( conn );
-        _map.model.handle_connection_edit_on_creation( conn );
+        if( _map.editable ) {
+          _map.selected.add_connection( conn );
+          _map.model.handle_connection_edit_on_creation( conn );
+        }
       } else {
         _map.set_current_connection( conn );
       }
@@ -466,8 +468,10 @@ public class DrawArea : Gtk.DrawingArea {
     /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
     switch( component ) {
       case MapItemComponent.TASK :
-        _map.model.toggle_task( node );
-        current_changed( _map );
+        if( _map.editable ) {
+          _map.model.toggle_task( node );
+          current_changed( _map );
+        }
         return( false );
       case MapItemComponent.NODE_LINK :
         _map.select_linked_node( node );
@@ -477,9 +481,11 @@ public class DrawArea : Gtk.DrawingArea {
         current_changed( _map );
         return( false );
       case MapItemComponent.RESIZER :
-        _resize         = true;
-        _orig_resizable = node.image_resizable;
-        _orig_width     = node.style.node_width;
+        if( _map.editable ) {
+          _resize         = true;
+          _orig_resizable = node.image_resizable;
+          _orig_width     = node.style.node_width;
+        }
         return( true );
       case MapItemComponent.TITLE :
         if( !_shift && _control && node.name.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
@@ -518,11 +524,13 @@ public class DrawArea : Gtk.DrawingArea {
      otherwise, set the node's mode to editable.
     */
     } else if( !_control && !_shift && (_press_num == 2) ) {
-      if( component == MapItemComponent.IMAGE ) {
-        _map.model.edit_current_image();
-        return( false );
-      } else {
-        _map.model.set_node_mode( node, NodeMode.EDITABLE );
+      if( _map.editable ) {
+        if( component == MapItemComponent.IMAGE ) {
+          _map.model.edit_current_image();
+          return( false );
+        } else {
+          _map.model.set_node_mode( node, NodeMode.EDITABLE );
+        }
       }
       return( true );
 
@@ -592,8 +600,10 @@ public class DrawArea : Gtk.DrawingArea {
     /* If the sticker is selected, check to see if the cursor is over other parts */
     if( sticker.mode == StickerMode.SELECTED ) {
       if( sticker.is_within_resizer( scaled_x, scaled_y ) ) {
-        _resize     = true;
-        _orig_width = (int)sticker.width;
+        if( _map.editable ) {
+          _resize     = true;
+          _orig_width = (int)sticker.width;
+        }
         return( true );
       }
 
@@ -635,8 +645,10 @@ public class DrawArea : Gtk.DrawingArea {
     /* If the callout is being edited, go handle the click */
     switch( component ) {
       case MapItemComponent.RESIZER :
-        _resize = true;
-        _orig_width = (int)callout.total_width;
+        if( _map.editable ) {
+          _resize = true;
+          _orig_width = (int)callout.total_width;
+        }
         return( true );
       case MapItemComponent.TITLE :
         if( !_shift && _control && callout.text.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
@@ -666,7 +678,7 @@ public class DrawArea : Gtk.DrawingArea {
       return( true );
 
     /* If the user double-clicked a callout, set the callout mode to editable */
-    } else if( _press_num == 2 ) {
+    } else if( (_press_num == 2) && _map.editable ) {
       _map.model.set_callout_mode( callout, CalloutMode.EDITABLE );
       return( true );
 
@@ -696,20 +708,20 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* If we are going to pan the canvas, do it and return */
     if( _press_middle || _alt ) {
-      stdout.printf( "  early return, _press_middle: %s, _alt: %s\n", _press_middle.to_string(), _alt.to_string() );
       return( true );
     }
 
     MapItemComponent component;
     var match_conn = _map.model.get_connection_at_position( scaled_x, scaled_y, out component );
     if( (match_conn != null) && component.is_connection_handle() && (match_conn.mode == ConnMode.SELECTED) ) {
-      if( component == MapItemComponent.DRAG_HANDLE ) {
-        _map.model.set_connection_mode( match_conn, ConnMode.ADJUSTING );
-      } else {
-        _last_connection = new Connection.from_connection( _map, match_conn );
-        match_conn.disconnect_from_node( component == MapItemComponent.FROM_HANDLE );
+      if( _map.editable ) {
+        if( component == MapItemComponent.DRAG_HANDLE ) {
+          _map.model.set_connection_mode( match_conn, ConnMode.ADJUSTING );
+        } else {
+          _last_connection = new Connection.from_connection( _map, match_conn );
+          match_conn.disconnect_from_node( component == MapItemComponent.FROM_HANDLE );
+        }
       }
-      stdout.printf( "  clicked on connection drag handle\n" );
       return( true );
     }
 
@@ -719,7 +731,6 @@ public class DrawArea : Gtk.DrawingArea {
       var match_node = _map.model.get_node_at_position( scaled_x, scaled_y, out component );
       if( (match_conn != null) && (component != MapItemComponent.DRAG_HANDLE) &&
           ((match_node == null) || ((match_node != match_conn.from_node) && (match_node != match_conn.to_node))) ) {
-        stdout.printf( "  clicked on connection\n" );
         clear_current_node( false );
         clear_current_sticker( false );
         clear_current_group( false );
@@ -727,7 +738,6 @@ public class DrawArea : Gtk.DrawingArea {
         return( set_current_connection_from_position( match_conn, component, scaled_x, scaled_y ) );
       }
       if( match_node != null ) {
-        stdout.printf( "  clicked on node\n" );
         clear_current_connection( false );
         clear_current_sticker( false );
         clear_current_group( false );
@@ -736,7 +746,6 @@ public class DrawArea : Gtk.DrawingArea {
       }
       var match_callout = _map.model.get_callout_at_position( scaled_x, scaled_y, out component );
       if( match_callout != null ) {
-        stdout.printf( "  clicked on callout\n" );
         clear_current_node( false );
         clear_current_connection( false );
         clear_current_sticker( false );
@@ -745,7 +754,6 @@ public class DrawArea : Gtk.DrawingArea {
       }
       var match_sticker = _map.model.get_sticker_at_position( scaled_x, scaled_y );
       if( match_sticker != null ) {
-        stdout.printf( "  clicked on sticker\n" );
         clear_current_node( false );
         clear_current_connection( false );
         clear_current_group( false );
@@ -754,14 +762,12 @@ public class DrawArea : Gtk.DrawingArea {
       }
       var match_group = _map.model.get_group_at_position( scaled_x, scaled_y );
       if( match_group != null ) {
-        stdout.printf( "  clicked on group\n" );
         clear_current_node( false );
         clear_current_connection( false );
         clear_current_sticker( false );
         clear_current_callout( false );
         return( set_current_group_from_position( match_group, scaled_x, scaled_y ) );
       }
-      stdout.printf( "  clicked on nothing\n" );
       _select_box.x     = scaled_x;
       _select_box.y     = scaled_y;
       _select_box.valid = true;
@@ -776,8 +782,6 @@ public class DrawArea : Gtk.DrawingArea {
         _map.selected.set_current_node( _map.model.last_node );
       }
     }
-
-    stdout.printf( "  click missed\n" );
 
     return( true );
 
@@ -1182,8 +1186,6 @@ public class DrawArea : Gtk.DrawingArea {
   // Handle button press event
   private void on_press( int n_press, double x, double y, int button ) {
 
-    stdout.printf( "In on_press, x: %g, y: %g\n", x, y );
-
     var scaled_x = scale_value( x );
     var scaled_y = scale_value( y );
 
@@ -1277,7 +1279,7 @@ public class DrawArea : Gtk.DrawingArea {
             current_node.image_resizable = _control ? !_orig_resizable : _orig_resizable;
             current_node.resize( diffx );
             _map.auto_save();
-          } else {
+          } else if( _map.editable ) {
             var attach_summary = _map.model.attachable_summary_node( _scaled_x, _scaled_y );
             if( _map.model.attach_summary != null ) {
               _map.model.set_attach_summary( _map.model.attach_summary );
@@ -1308,7 +1310,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
 
       // If we are dealing with a sticker, handle it
-      } else if( current_sticker != null ) {
+      } else if( (current_sticker != null) && _map.editable ) {
         double diffx = _scaled_x - _press_x;
         double diffy = _scaled_y - _press_y;
         if( _resize ) {
@@ -1321,7 +1323,7 @@ public class DrawArea : Gtk.DrawingArea {
         _map.auto_save();
 
       // If we are dealing with a callout, handle it
-      } else if( current_callout != null ) {
+      } else if( (current_callout != null) && _map.editable ) {
         double diffx = _scaled_x - _press_x;
         if( _resize ) {
           current_callout.resize( diffx );
@@ -1337,7 +1339,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
       }
 
-      if( _motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within_node( _scaled_x, _scaled_y ) ) {
+      if( _motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within_node( _scaled_x, _scaled_y ) && _map.editable ) {
         if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) ) {
           current_node.set_alpha_only( 0.3 );
         } else {
@@ -1354,13 +1356,13 @@ public class DrawArea : Gtk.DrawingArea {
       MapItemComponent component;
       var tag = FormatTag.LENGTH;
       var url = "";
-      if( current_sticker != null ) {
+      if( (current_sticker != null) && _map.editable ) {
         if( current_sticker.is_within_resizer( _scaled_x, _scaled_y ) ) {
           set_cursor_name( "ew-resize" );
           return;
         }
       }
-      if( current_callout != null ) {
+      if( (current_callout != null) && _map.editable ) {
         if( current_callout.is_within_resizer( _scaled_x, _scaled_y ) ) {
           set_cursor_name( "ew-resize" );
           return;
@@ -1373,7 +1375,9 @@ public class DrawArea : Gtk.DrawingArea {
         if( current_conn.within_drag_handle( _scaled_x, _scaled_y ) ||
             current_conn.within_from_handle( _scaled_x, _scaled_y ) ||
             current_conn.within_to_handle( _scaled_x, _scaled_y ) ) {
-          set_cursor_name( move_cursor );
+          if( _map.editable ) {
+            set_cursor_name( move_cursor );
+          }
           return;
         } else if( current_conn.within_note( _scaled_x, _scaled_y ) ) {
           set_tooltip_markup( Utils.prepare_note_markup( current_conn.note ) );
@@ -1403,7 +1407,9 @@ public class DrawArea : Gtk.DrawingArea {
         if( (current_conn != null) && ((current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING)) ) {
           _map.model.set_attach_node( match_node );
         } else if( component == MapItemComponent.TASK ) {
-          set_cursor_name( pointer_cursor );
+          if( _map.editable ) {
+            set_cursor_name( pointer_cursor );
+          }
           set_tooltip_markup( _( "%0.3g%% complete" ).printf( match_node.task_completion_percentage() ) );
         } else if( component == MapItemComponent.NOTE ) {
           set_tooltip_markup( Utils.prepare_note_markup( match_node.note ) );
@@ -1419,11 +1425,13 @@ public class DrawArea : Gtk.DrawingArea {
           set_cursor_name( pointer_cursor );
           set_tooltip_markup( _node_link_tooltip );
         } else if( component == MapItemComponent.RESIZER ) {
-          set_cursor_name( "ew-resize" );
-          if( match_node.image == null ) {
-            set_tooltip_markup( _( "Drag to resize node" ) );
-          } else {
-            set_tooltip_markup( _( "Drag to resize node and image.\nControl-drag to resize only node." ) );
+          if( _map.editable ) {
+            set_cursor_name( "ew-resize" );
+            if( match_node.image == null ) {
+              set_tooltip_markup( _( "Drag to resize node" ) );
+            } else {
+              set_tooltip_markup( _( "Drag to resize node and image.\nControl-drag to resize only node." ) );
+            }
           }
         } else if( _control && match_node.name.is_within_clickable( _scaled_x, _scaled_y, out tag, out url ) ) {
           if( tag == FormatTag.URL ) {
@@ -1646,7 +1654,7 @@ public class DrawArea : Gtk.DrawingArea {
           current_node.name.move_cursor_to_end();
 
         /* If we are not a root node or a summary node, move the node into the appropriate position */
-        } else if( current_node.parent != null ) {
+        } else if( (current_node.parent != null) && _map.editable ) {
           var orig_index   = current_node.index();
           var orig_summary = current_node.summary_node();
           var moved        = false;
@@ -1682,7 +1690,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
 
     /* If a sticker is selected, deal with the possiblities */
-    } else if( current_sticker != null ) {
+    } else if( (current_sticker != null) && _map.editable ) {
       if( current_sticker.mode == StickerMode.SELECTED ) {
         _map.add_undo( new UndoStickerMove( current_sticker, _sticker_posx, _sticker_posy ) );
       }
@@ -1939,17 +1947,21 @@ public class DrawArea : Gtk.DrawingArea {
   // Handle any drag operations involving text.
   private Gdk.DragAction handle_text_drag_motion( double x, double y ) {
 
-    Node       attach_node;
-    Connection attach_conn;
-    Sticker    attach_sticker;
+    if( _map.editable ) {
 
-    var scaled_x = scale_value( x );
-    var scaled_y = scale_value( y );
+      Node       attach_node;
+      Connection attach_conn;
+      Sticker    attach_sticker;
 
-    _map.model.get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
+      var scaled_x = scale_value( x );
+      var scaled_y = scale_value( y );
 
-    // Set the attach mode
-    _map.model.set_attach_node( attach_node, NodeMode.DROPPABLE );
+      _map.model.get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
+
+      // Set the attach mode
+      _map.model.set_attach_node( attach_node, NodeMode.DROPPABLE );
+
+    }
 
     return( Gdk.DragAction.MOVE );
 
@@ -1959,22 +1971,26 @@ public class DrawArea : Gtk.DrawingArea {
   // Called when text is dropped on the DrawArea
   private bool handle_text_drop( Value val, double x, double y ) {
 
-    Node node;
-    var  text = (string)val;
+    if( _map.editable ) {
 
-    if( Utils.is_url( text.chomp() ) && do_file_drop( text.chomp(), x, y ) ) {
-      return( true );
-    }
+      Node node;
+      var  text = (string)val;
 
-    if( (_map.model.attach_node != null) && (_map.model.attach_node.mode == NodeMode.DROPPABLE) ) {
-      node = _map.model.create_child_node( _map.model.attach_node, text );
-      _map.add_undo( new UndoNodeInsert( node, node.index() ) );
-      if( _map.select_node( node ) ) {
-        queue_draw();
-        see();
-        _map.auto_save();
+      if( Utils.is_url( text.chomp() ) && do_file_drop( text.chomp(), x, y ) ) {
+        return( true );
       }
-      return( true );
+
+      if( (_map.model.attach_node != null) && (_map.model.attach_node.mode == NodeMode.DROPPABLE) ) {
+        node = _map.model.create_child_node( _map.model.attach_node, text );
+        _map.add_undo( new UndoNodeInsert( node, node.index() ) );
+        if( _map.select_node( node ) ) {
+          queue_draw();
+          see();
+          _map.auto_save();
+        }
+        return( true );
+      }
+
     }
 
     return( false );
@@ -2036,17 +2052,21 @@ public class DrawArea : Gtk.DrawingArea {
   // Called whenever we drag something over the canvas.
   private Gdk.DragAction handle_file_drag_motion( double x, double y ) {
 
-    Node       attach_node;
-    Connection attach_conn;
-    Sticker    attach_sticker;
+    if( _map.editable ) {
 
-    var scaled_x = scale_value( x );
-    var scaled_y = scale_value( y );
+      Node       attach_node;
+      Connection attach_conn;
+      Sticker    attach_sticker;
 
-    _map.model.get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
+      var scaled_x = scale_value( x );
+      var scaled_y = scale_value( y );
 
-    // Set the attach node (if valid) as droppable
-    _map.model.set_attach_node( attach_node, NodeMode.DROPPABLE );
+      _map.model.get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
+
+      // Set the attach node (if valid) as droppable
+      _map.model.set_attach_node( attach_node, NodeMode.DROPPABLE );
+
+    }
 
     return( Gdk.DragAction.COPY );
 
@@ -2066,32 +2086,36 @@ public class DrawArea : Gtk.DrawingArea {
   // Performs the file drop operation.
   private bool do_file_drop( string uri, double x, double y ) {
 
-    if( (_map.model.attach_node == null) || (_map.model.attach_node.mode != NodeMode.DROPPABLE) ) {
+    if( _map.editable ) {
 
-      var image = new NodeImage.from_uri( _map.image_manager, uri, 200 );
-      if( image.valid ) {
-        var node = _map.model.create_root_node( _( "Another Idea" ) );
-        node.set_image( _map.model.image_manager, image );
-        if( _map.select_node( node ) ) {
-          _map.model.set_node_mode( node, NodeMode.EDITABLE, false );
-          queue_draw();
-          _map.auto_save();
+      if( (_map.model.attach_node == null) || (_map.model.attach_node.mode != NodeMode.DROPPABLE) ) {
+
+        var image = new NodeImage.from_uri( _map.image_manager, uri, 200 );
+        if( image.valid ) {
+          var node = _map.model.create_root_node( _( "Another Idea" ) );
+          node.set_image( _map.model.image_manager, image );
+          if( _map.select_node( node ) ) {
+            _map.model.set_node_mode( node, NodeMode.EDITABLE, false );
+            queue_draw();
+            _map.auto_save();
+          }
+          return( true );
         }
-        return( true );
-      }
 
-    } else {
+      } else {
 
-      var image = new NodeImage.from_uri( _map.image_manager, uri, _map.model.attach_node.style.node_width );
-      if( image.valid ) {
-        var orig_image = _map.model.attach_node.image;
-        _map.model.attach_node.set_image( _map.model.image_manager, image );
-        _map.add_undo( new UndoNodeImage( _map.model.attach_node, orig_image ) );
-        _map.model.set_attach_node( null );
-        queue_draw();
-        current_changed( _map );
-        _map.auto_save();
-        return( true );
+        var image = new NodeImage.from_uri( _map.image_manager, uri, _map.model.attach_node.style.node_width );
+        if( image.valid ) {
+          var orig_image = _map.model.attach_node.image;
+          _map.model.attach_node.set_image( _map.model.image_manager, image );
+          _map.add_undo( new UndoNodeImage( _map.model.attach_node, orig_image ) );
+          _map.model.set_attach_node( null );
+          queue_draw();
+          current_changed( _map );
+          _map.auto_save();
+          return( true );
+        }
+
       }
 
     }

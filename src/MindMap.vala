@@ -34,6 +34,7 @@ public class MindMap {
   private Selection      _selected;
   private bool           _focus_mode  = false;
   private double         _focus_alpha = 0.05;
+  private bool           _editable    = true;
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -152,6 +153,15 @@ public class MindMap {
       _model.next_node_id = value;
     }
   }
+  public bool editable {
+    get {
+      return( _editable || doc.read_only );
+    }
+    set {
+      _editable = value;
+      editable_changed( this );
+    }
+  }
 
   public signal void changed();
   public signal void current_changed( MindMap map );
@@ -163,6 +173,7 @@ public class MindMap {
   public signal void hide_properties();
   public signal void save_state_changed();
   public signal void undo_buffer_changed( UndoBuffer buf );
+  public signal void editable_changed( MindMap map );
 
   //-------------------------------------------------------------
   // Constructor
@@ -322,6 +333,9 @@ public class MindMap {
     set_current_node( null );
 
     _canvas.queue_draw();
+
+    // TODO - Testing non-editable mode (remove this)
+    editable = false;
 
   }
 

@@ -61,7 +61,10 @@ public class ConnectionMenu : BaseMenu {
 
   protected override void on_popup() {
     var current = map.get_current_connection();
-    set_enabled( KeyCommand.REMOVE_STICKER_SELECTED, ((current != null) && (current.sticker != null)) );
+    set_enabled( KeyCommand.CONNECTION_REMOVE,       map.editable );
+    set_enabled( KeyCommand.EDIT_SELECTED,           map.editable );
+    set_enabled( KeyCommand.EDIT_NOTE,               map.editable );
+    set_enabled( KeyCommand.REMOVE_STICKER_SELECTED, ((current != null) && (current.sticker != null) && map.editable) );
   }
 
 }

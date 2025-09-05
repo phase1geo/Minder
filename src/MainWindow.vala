@@ -520,6 +520,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     map.undo_buffer.buffer_changed.connect( do_buffer_changed );
     map.undo_text.buffer_changed.connect( do_buffer_changed );
     map.theme_changed.connect( on_theme_changed );
+    map.editable_changed.connect( on_editable_changed );
     map.animator.enable = _settings.get_boolean( "enable-animations" );
 
     if( fname != null ) {
@@ -588,6 +589,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     /* Indicate that the tab has changed */
     if( reason != TabAddReason.LOAD ) {
       _nb.page = tab_index;
+      if( reason == TabAddReason.OPEN ) {
+        map.editable = true;
+      }
     }
 
     map.canvas.grab_focus();
@@ -671,7 +675,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     if( (map == null) || !map.doc.is_saved() ) {
       label = _( "Unnamed Document" ) + label;
     } else {
-      if( map.doc.readonly ) {
+      if( map.doc.read_only || !map.editable ) {
         label += " [%s]%s".printf( _( "Read-Only" ), label );
       }
       label = GLib.Path.get_basename( map.doc.filename ) + label;
@@ -1450,6 +1454,21 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
+  // Called when the editable attribute changes within the mindmap.
+  private void on_editable_changed( MindMap map ) {
+    _brain_btn.sensitive = map.editable;
+    (_stack.get_child_by_name( "current" ) as CurrentInspector).editable_changed();
+    (_stack.get_child_by_name( "style" )   as StyleInspector).editable_changed();
+    (_stack.get_child_by_name( "map" )     as MapInspector).editable_changed();
+    var label = map.doc.label;
+    if( map.doc.read_only || !map.editable ) {
+      label += " \u1f512";
+    }
+    set_tab_label_info( label, map.doc.filename );  // FOOBAR
+    update_title( map );
+  }
+
+  //-------------------------------------------------------------
   // Called whenever the undo buffer changes state.  Updates the
   // state of the undo and redo buffer buttons.
   public void do_buffer_changed( UndoBuffer buf ) {
@@ -1568,7 +1587,9 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void save_tabs() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
-      map.doc.cleanup();
+      if( map.editable ) {
+        map.doc.cleanup();
+      }
     }
   }
 
