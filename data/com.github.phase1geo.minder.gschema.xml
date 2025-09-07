@@ -1,5 +1,11 @@
  <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
+  <enum id="com.github.phase1geo.minder.upgrade-actions">
+    <value nick="ask" value="0"/>
+    <value nick="override" value="1"/>
+    <value nick="save-as"  value="2"/>
+    <value nick="read-only" value="3"/>
+  </enum>
   <schema path="/com/github/phase1geo/minder/" id="com.github.phase1geo.minder" gettext-domain="com.github.phase1geo.minder">
     <key name="window-w" type="i">
       <default>1000</default>
@@ -335,6 +341,27 @@
       <default>true</default>
       <summary>Specifies that the notes textbox should have syntax coloring applied</summary>
       <description>Specifies that the notes textbox should have syntax coloring applied</description>
+    </key>
+    <key name="upgrade-action" enum="com.github.phase1geo.minder.upgrade-actions">
+      <default>'ask'</default>
+      <summary>Action to perform when loading a Minder 1.x file to Minder 2.x format</summary>
+      <description>
+        Action to perform when loading a Minder 1.x file to Minder 2.x format.  The available
+        options are the following:
+        - ask       :  Displays a dialog box with the available options.
+        - override  :  Overwrites the Minder 1.x original file with the Minder 2.x version.
+        - save-as   :  Allows the user to choose a new name for the Minder 2.x file.
+        - read-only :  Opens the Minder 1.x data in read-only mode.
+      </description>
+    </key>
+    <key name="keep-backup-after-save" type="b">
+      <default>false</default>
+      <summary>If true, keeps the backup file on disk after the save is performed</summary>
+      <description>
+        When this option is true, the backup file created when saving will remain on disk after the save has completed
+        and when loading, the backup file will be ignored.  When this option is false, the backup file will be
+        removed from the file system on a good save and, on load, if a backup file exists it will be loaded.
+      </description>
     </key>
   </schema>
 </schemalist>

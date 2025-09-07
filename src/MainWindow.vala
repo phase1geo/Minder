@@ -363,11 +363,13 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Sets the tab label name and tooltip to the given values.
-  private void set_tab_label_info( string label, string tooltip ) {
+  private void set_tab_label_info( bool editable, string label, string tooltip ) {
     var page = _nb.get_nth_page( _nb.page );
     var tab  = _nb.get_tab_label( page );
-    var lbl  = (Label)Utils.get_child_at_index( tab, 0 );
-    lbl.label = label;
+    var lock = (Image)Utils.get_child_at_index( tab, 0 );
+    var lbl  = (Label)Utils.get_child_at_index( tab, 1 );
+    lock.visible     = !editable;
+    lbl.label        = label;
     lbl.tooltip_text = tooltip;
   }
 
@@ -532,9 +534,16 @@ public class MainWindow : Gtk.ApplicationWindow {
       child = map.canvas
     };
 
-    var tab_label = new Label( map.doc.label ) { margin_start  = 10,
-      margin_end    = 5,
+    var tab_lock = new Image.from_icon_name( "system-lock-screen-symbolic" ) {
+      margin_start  = 10,
       margin_top    = 5,
+      margin_bottom = 5
+    };
+    tab_lock.add_css_class( "tab" );
+
+    var tab_label = new Label( map.doc.label ) { margin_start  = 10,
+      margin_start  = 5,
+      margin_end    = 5,
       margin_top    = 5,
       margin_bottom = 5,
       tooltip_text  = map.doc.label
@@ -556,6 +565,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
 
     var tab_box = new Box( Orientation.HORIZONTAL, 5 );
+    tab_box.append( tab_lock );
     tab_box.append( tab_label );
     tab_box.append( tab_revealer );
 
@@ -1461,10 +1471,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     (_stack.get_child_by_name( "style" )   as StyleInspector).editable_changed();
     (_stack.get_child_by_name( "map" )     as MapInspector).editable_changed();
     var label = map.doc.label;
-    if( map.doc.read_only || !map.editable ) {
-      label += " \u1f512";
-    }
-    set_tab_label_info( label, map.doc.filename );  // FOOBAR
+    set_tab_label_info( map.editable, label, map.doc.filename );
     update_title( map );
   }
 
@@ -1536,7 +1543,7 @@ public class MainWindow : Gtk.ApplicationWindow {
           if( remove_after_save ) {
             remove_tab( null );
           } else {
-            set_tab_label_info( map.doc.label, fname );
+            set_tab_label_info( map.editable, map.doc.label, fname );
             update_title( map );
             save_tab_state( _nb.page );
             Utils.store_chooser_folder( fname, false );
@@ -1555,16 +1562,16 @@ public class MainWindow : Gtk.ApplicationWindow {
     save_file( map, false );
   }
 
-  /* Called whenever the node selection changes in the canvas */
+  //-------------------------------------------------------------
+  // Called whenever the node selection changes in the canvas
   private void on_current_changed( MindMap map ) {
     action_set_enabled( "win.action_zoom_selected", (map.get_current_node() != null) );
     _focus_btn.active = map.focus_mode;
   }
 
-  /*
-   Called if the canvas changes the scale factor value. Adjusts the
-   UI to match.
-  */
+  //-------------------------------------------------------------
+  // Called if the canvas changes the scale factor value. Adjusts the
+  // UI to match.
   private void change_scale( double scale_factor ) {
     var marks       = DrawArea.get_scale_marks();
     var scale_value = scale_factor * 100;
@@ -1576,7 +1583,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     save_tab_state( _nb.page );
   }
 
-  /* Called whenever the DrawArea origin changes in the current tab */
+  //-------------------------------------------------------------
+  // Called whenever the DrawArea origin changes in the current tab
   private void change_origin() {
     save_tab_state( _nb.page );
   }
@@ -1634,18 +1642,21 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Displays the theme editor pane */
+  //-------------------------------------------------------------
+  // Displays the theme editor pane
   public void show_theme_editor( bool edit ) {
     _themer.initialize( get_current_map().get_theme(), edit );
     _inspector_nb.page = 1;
   }
 
-  /* Hides the theme editor pane */
+  //-------------------------------------------------------------
+  // Hides the theme editor pane
   public void hide_theme_editor() {
     _inspector_nb.page = 0;
   }
 
-  /* Hides the node properties panel */
+  //-------------------------------------------------------------
+  // Hides the node properties panel
   private void hide_properties() {
     if( !_inspector_nb.get_mapped() ) return;
     _prop_btn.icon_name    = _prop_show;
@@ -1660,7 +1671,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     _settings.set_boolean( "sticker-properties-shown", false );
   }
 
-  /* Converts the given value from the scale to the zoom value to use */
+  //-------------------------------------------------------------
+  // Converts the given value from the scale to the zoom value to
+  // use.
   private double zoom_to_value( double value ) {
     double last = -1;
     foreach (double mark in DrawArea.get_scale_marks()) {
@@ -1674,7 +1687,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     return( last );
   }
 
-  /* Sets the scale factor for the level of zoom to perform */
+  //-------------------------------------------------------------
+  // Sets the scale factor for the level of zoom to perform
   private bool adjust_zoom( ScrollType scroll, double new_value ) {
     var value        = zoom_to_value( new_value );
     var scale_factor = value / 100;
@@ -1785,7 +1799,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     map.canvas.grab_focus();
   }
 
-  /* Display matched items to the search within the search popover */
+  //-------------------------------------------------------------
+  // Display matched items to the search within the search popover.
   private void on_search_change() {
     var search_opts = new bool[SearchOptions.NUM];
     search_opts[SearchOptions.NODES]       = _search_nodes.active;

@@ -23,6 +23,13 @@ using Cairo;
 using Gtk;
 using GLib;
 
+public enum UpgradeAction {
+  ASK,
+  OVERRIDE,
+  SAVE_AS,
+  READ_ONLY
+}
+
 public class Document : Object {
 
   private MindMap _map;
@@ -30,7 +37,8 @@ public class Document : Object {
   private string  _temp_dir;
   private bool    _from_user;  // Set to true if _filename was set by the user
   private string  _etag;
-  private bool    _read_only = false;
+  private bool    _upgrade_ro = false;
+  private bool    _read_only  = false;
 
   /* Properties */
   public string filename {
@@ -57,10 +65,10 @@ public class Document : Object {
     get {
       var prev_read_only = _read_only;
       _read_only = Utils.is_read_only( _filename );
-      if( save_needed && prev_read_only && !_read_only ) {
+      if( save_needed && prev_read_only && !_read_only && !_upgrade_ro ) {
         save();
       }
-      return( _read_only );
+      return( _read_only || _upgrade_ro );
     }
   }
 
@@ -113,6 +121,23 @@ public class Document : Object {
   public void load_filename( string fname, bool saved ) {
     filename   = fname;
     _from_user = saved;
+  }
+
+  //-------------------------------------------------------------
+  // Returns the name of the backup file to use for the stored
+  // filename.
+  private string get_bak_file() {
+
+    var file = GLib.File.new_for_path( filename );
+
+    // Get parent directory
+    var parent = file.get_parent ();
+    var dir    = (parent != null) ? parent.get_path () : ".";
+    var bak_basename = "." + file.get_basename() + ".bak";
+
+    // Join dir + new basename
+    return( GLib.Path.build_filename( dir, bak_basename ) );
+
   }
 
   //-------------------------------------------------------------
@@ -218,6 +243,9 @@ public class Document : Object {
   // all stored images to the ImageManager on the local computer
   public bool load() {
 
+    var bak_file = get_bak_file();
+    var fname    = (FileUtils.test( bak_file, FileTest.EXISTS ) && !_map.settings.get_boolean( "keep-backup-after-save" )) ? bak_file : filename;
+
     Archive.Read archive = new Archive.Read();
     archive.support_filter_gzip();
     archive.support_format_all();
@@ -233,7 +261,7 @@ public class Document : Object {
     extractor.set_standard_lookup();
 
     /* Open the portable Minder file for reading */
-    if( archive.open_filename( filename, 16384 ) != Archive.Result.OK ) {
+    if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
       return( upgrade() );
     }
 
@@ -353,6 +381,15 @@ public class Document : Object {
 
     stdout.printf( "Saving...\n" );
 
+    var bak_file = get_bak_file();
+    var backed   = false;
+
+    // Copy the file to a .bak file if it currently exists
+    if( FileUtils.test( filename, FileTest.EXISTS ) ) {
+      copy_file( filename, bak_file );
+      backed = true;
+    }
+
     // Create the tar.gz archive named according the the first argument
     Archive.Write archive = new Archive.Write ();
     archive.add_filter_gzip();
@@ -372,6 +409,11 @@ public class Document : Object {
     // Close the archive
     if( archive.close() != Archive.Result.OK ) {
       error( "Error : %s (%d)", archive.error_string(), archive.errno() );
+    }
+
+    // Remove the bak file if the save went well
+    if( backed && !_map.settings.get_boolean( "keep-backup-after-save" ) ) {
+      FileUtils.unlink( bak_file );
     }
 
     // Indicate that a save is no longer needed
@@ -482,13 +524,13 @@ public class Document : Object {
   // archive format, moving stored images to the new archive.
   private bool upgrade() {
 
-    /* Move the Minder XML file to the temporary directory */
-    move_file( filename, get_map_file() );
+    // Move the Minder XML file to the temporary directory
+    copy_file( filename, get_map_file() );
 
-    /* Load the XML file */
+    // Load the XML file
     load_xml();
 
-    /* Move all image files that are related to the temp images directory */
+    // Move all image files that are related to the temp images directory
     var image_ids = _map.image_manager.get_ids();
     for( int i=0; i<image_ids.length; i++ ) {
       var id       = image_ids.index( i );
@@ -496,14 +538,76 @@ public class Document : Object {
       copy_file( img_file, GLib.Path.build_filename( get_image_dir(), GLib.Path.get_basename( img_file ) ) );
     }
 
-    /* Set the image directory in the image manager */
+    // Set the image directory in the image manager
     _map.image_manager.set_image_dir( get_image_dir() );
 
-    /* Finally, create the new .minder file (it will act as a backup) */
-    save();
+    // Handle the upgrade
+    switch( (UpgradeAction)_map.settings.get_enum( "upgrade-action" ) ) {
+      case UpgradeAction.OVERRIDE  :  save();  break;
+      case UpgradeAction.SAVE_AS   :  _map.win.save_file( _map, false );  break;
+      case UpgradeAction.READ_ONLY :  _upgrade_ro = true;  _map.editable_changed( _map );  break;
+      default                      :  request_upgrade_action();  break;
+    }
 
     return( true );
 
+  }
+
+  //-------------------------------------------------------------
+  // Displays a dialog to the user to request what to do when
+  // upgrading.
+  private void request_upgrade_action() {
+
+    var dialog = new Granite.MessageDialog.with_image_from_icon_name(
+      _( "Save current unnamed document?" ),
+      _( "Changes will be permanently lost if not saved." ),
+      "system-software-update",
+      ButtonsType.NONE
+    );
+
+    var cancel = new Button.with_label( _( "Cancel" ) );
+    dialog.add_action_widget( cancel, ResponseType.CANCEL );
+
+    var ro = new Button.with_label( _( "Read Only" ) );
+    dialog.add_action_widget( ro, ResponseType.CLOSE );
+
+    var save_as = new Button.with_label( _( "Save As" ) );
+    dialog.add_action_widget( save_as, ResponseType.ACCEPT );
+
+    var overwrite = new Button.with_label( _( "Overwrite" ) );
+    overwrite.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    dialog.add_action_widget( overwrite, ResponseType.APPLY );
+
+    var remember = new CheckButton.with_label( _( "Remember selection" ) ) {
+      halign = Align.START,
+      margin_top = 10,
+      margin_start = 20
+    };
+
+    var box = dialog.get_content_area();
+    box.append( remember );
+
+    dialog.set_transient_for( _map.win );
+    dialog.set_default_response( ResponseType.ACCEPT );
+    dialog.set_title( "" );
+
+    dialog.response.connect((id) => {
+      switch( id ) {
+        case ResponseType.APPLY  :  save();     break;
+        case ResponseType.ACCEPT :  _map.win.save_file( _map, false );  break;
+        case ResponseType.CLOSE  :  _upgrade_ro = true;  _map.editable_changed( _map );  break; 
+      }
+      if( remember.active ) {
+        switch( id ) {
+          case ResponseType.APPLY  :  _map.settings.set_enum( "upgrade-action", UpgradeAction.OVERRIDE );   break;
+          case ResponseType.ACCEPT :  _map.settings.set_enum( "upgrade-action", UpgradeAction.SAVE_AS );    break;
+          case ResponseType.CLOSE  :  _map.settings.set_enum( "upgrade-action", UpgradeAction.READ_ONLY );  break;
+        }
+      }
+      dialog.close();
+    });
+
+    dialog.show();
   }
 
   //-------------------------------------------------------------
