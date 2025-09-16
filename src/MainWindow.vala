@@ -1389,9 +1389,13 @@ public class MainWindow : Gtk.ApplicationWindow {
     if( fname.has_suffix( ".minder" ) ) {
       var map = add_tab_conditionally( fname, TabAddReason.OPEN );
       update_title( map );
-      if( map.doc.load() ) {
-        save_tab_state( _nb.page );
-      }
+      map.doc.load( false, (valid) => {
+        if( valid ) {
+          save_tab_state( _nb.page );
+        } else {
+          close_current_tab();
+        }
+      });
       return( true );
     } else {
       for( int i=0; i<exports.length(); i++ ) {
@@ -2051,6 +2055,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       return;
     }
 
+    UpgradeAction? upgrade_action = null;
     var root = doc->get_root_element();
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
@@ -2061,6 +2066,7 @@ public class MainWindow : Gtk.ApplicationWindow {
           var origin_y  = it->get_prop( "origin-y" );
           var sfactor   = it->get_prop( "scale" );
           var braindump = it->get_prop( "braindump" );
+          var read_only = it->get_prop( "readonly" );
           var map       = add_tab( fname, TabAddReason.LOAD );
           if( origin_x != null ) {
             map.canvas.origin_x = int.parse( origin_x );
@@ -2075,10 +2081,13 @@ public class MainWindow : Gtk.ApplicationWindow {
           if( braindump != null ) {
             map.model.braindump_shown = bool.parse( braindump );
           }
-          map.doc.load_filename( fname, bool.parse( saved ) );
-          if( map.doc.load() ) {
-            tabs++;
+          if( read_only != null ) {
+            // FOOBAR
           }
+          map.doc.load_filename( fname, bool.parse( saved ) );
+          map.doc.load( true, (valid) => {
+            tabs++;
+          });
         } else {
           tab_skipped = true;
         }
