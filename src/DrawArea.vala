@@ -264,24 +264,28 @@ public class DrawArea : Gtk.DrawingArea {
 
     var file_drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
     this.add_controller( file_drop );
+    file_drop.accept.connect( handle_drop_accept );
     file_drop.motion.connect( handle_file_drag_motion );
     file_drop.drop.connect( handle_file_drop );
     file_drop.leave.connect( handle_cursor_leave );
 
     var sticker_drop = new DropTarget( typeof(Picture), Gdk.DragAction.COPY );
     this.add_controller( sticker_drop );
+    sticker_drop.accept.connect( handle_drop_accept );
     sticker_drop.motion.connect( handle_sticker_drag_motion );
     sticker_drop.drop.connect( handle_sticker_drop );
     sticker_drop.leave.connect( handle_cursor_leave );
 
     var text_drop = new DropTarget( typeof(string), Gdk.DragAction.MOVE );
     this.add_controller( text_drop );
+    text_drop.accept.connect( handle_drop_accept );
     text_drop.motion.connect( handle_text_drag_motion );
     text_drop.drop.connect( handle_text_drop );
     text_drop.leave.connect( handle_cursor_leave );
 
     var idea_drop = new DropTarget( typeof(Idea), Gdk.DragAction.MOVE );
     this.add_controller( idea_drop );
+    idea_drop.accept.connect( handle_drop_accept );
     idea_drop.motion.connect( handle_idea_drag_motion );
     idea_drop.drop.connect( handle_idea_drop );
     idea_drop.leave.connect( handle_cursor_leave );
@@ -1944,24 +1948,27 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   //-------------------------------------------------------------
+  // This function should be called when a drop target is deciding
+  // whether to accept a drop action or not.
+  private bool handle_drop_accept( Drop drop ) {
+    return( _map.editable );
+  }
+
+  //-------------------------------------------------------------
   // Handle any drag operations involving text.
   private Gdk.DragAction handle_text_drag_motion( double x, double y ) {
 
-    if( _map.editable ) {
+    Node       attach_node;
+    Connection attach_conn;
+    Sticker    attach_sticker;
 
-      Node       attach_node;
-      Connection attach_conn;
-      Sticker    attach_sticker;
+    var scaled_x = scale_value( x );
+    var scaled_y = scale_value( y );
 
-      var scaled_x = scale_value( x );
-      var scaled_y = scale_value( y );
+    _map.model.get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
 
-      _map.model.get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
-
-      // Set the attach mode
-      _map.model.set_attach_node( attach_node, NodeMode.DROPPABLE );
-
-    }
+    // Set the attach mode
+    _map.model.set_attach_node( attach_node, NodeMode.DROPPABLE );
 
     return( Gdk.DragAction.MOVE );
 
@@ -1971,26 +1978,22 @@ public class DrawArea : Gtk.DrawingArea {
   // Called when text is dropped on the DrawArea
   private bool handle_text_drop( Value val, double x, double y ) {
 
-    if( _map.editable ) {
+    Node node;
+    var  text = (string)val;
 
-      Node node;
-      var  text = (string)val;
+    if( Utils.is_url( text.chomp() ) && do_file_drop( text.chomp(), x, y ) ) {
+      return( true );
+    }
 
-      if( Utils.is_url( text.chomp() ) && do_file_drop( text.chomp(), x, y ) ) {
-        return( true );
+    if( (_map.model.attach_node != null) && (_map.model.attach_node.mode == NodeMode.DROPPABLE) ) {
+      node = _map.model.create_child_node( _map.model.attach_node, text );
+      _map.add_undo( new UndoNodeInsert( node, node.index() ) );
+      if( _map.select_node( node ) ) {
+        queue_draw();
+        see();
+        _map.auto_save();
       }
-
-      if( (_map.model.attach_node != null) && (_map.model.attach_node.mode == NodeMode.DROPPABLE) ) {
-        node = _map.model.create_child_node( _map.model.attach_node, text );
-        _map.add_undo( new UndoNodeInsert( node, node.index() ) );
-        if( _map.select_node( node ) ) {
-          queue_draw();
-          see();
-          _map.auto_save();
-        }
-        return( true );
-      }
-
+      return( true );
     }
 
     return( false );
@@ -2052,21 +2055,17 @@ public class DrawArea : Gtk.DrawingArea {
   // Called whenever we drag something over the canvas.
   private Gdk.DragAction handle_file_drag_motion( double x, double y ) {
 
-    if( _map.editable ) {
+    Node       attach_node;
+    Connection attach_conn;
+    Sticker    attach_sticker;
 
-      Node       attach_node;
-      Connection attach_conn;
-      Sticker    attach_sticker;
+    var scaled_x = scale_value( x );
+    var scaled_y = scale_value( y );
 
-      var scaled_x = scale_value( x );
-      var scaled_y = scale_value( y );
+    _map.model.get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
 
-      _map.model.get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
-
-      // Set the attach node (if valid) as droppable
-      _map.model.set_attach_node( attach_node, NodeMode.DROPPABLE );
-
-    }
+    // Set the attach node (if valid) as droppable
+    _map.model.set_attach_node( attach_node, NodeMode.DROPPABLE );
 
     return( Gdk.DragAction.COPY );
 
@@ -2086,36 +2085,32 @@ public class DrawArea : Gtk.DrawingArea {
   // Performs the file drop operation.
   private bool do_file_drop( string uri, double x, double y ) {
 
-    if( _map.editable ) {
+    if( (_map.model.attach_node == null) || (_map.model.attach_node.mode != NodeMode.DROPPABLE) ) {
 
-      if( (_map.model.attach_node == null) || (_map.model.attach_node.mode != NodeMode.DROPPABLE) ) {
-
-        var image = new NodeImage.from_uri( _map.image_manager, uri, 200 );
-        if( image.valid ) {
-          var node = _map.model.create_root_node( _( "Another Idea" ) );
-          node.set_image( _map.model.image_manager, image );
-          if( _map.select_node( node ) ) {
-            _map.model.set_node_mode( node, NodeMode.EDITABLE, false );
-            queue_draw();
-            _map.auto_save();
-          }
-          return( true );
-        }
-
-      } else {
-
-        var image = new NodeImage.from_uri( _map.image_manager, uri, _map.model.attach_node.style.node_width );
-        if( image.valid ) {
-          var orig_image = _map.model.attach_node.image;
-          _map.model.attach_node.set_image( _map.model.image_manager, image );
-          _map.add_undo( new UndoNodeImage( _map.model.attach_node, orig_image ) );
-          _map.model.set_attach_node( null );
+      var image = new NodeImage.from_uri( _map.image_manager, uri, 200 );
+      if( image.valid ) {
+        var node = _map.model.create_root_node( _( "Another Idea" ) );
+        node.set_image( _map.model.image_manager, image );
+        if( _map.select_node( node ) ) {
+          _map.model.set_node_mode( node, NodeMode.EDITABLE, false );
           queue_draw();
-          current_changed( _map );
           _map.auto_save();
-          return( true );
         }
+        return( true );
+      }
 
+    } else {
+
+      var image = new NodeImage.from_uri( _map.image_manager, uri, _map.model.attach_node.style.node_width );
+      if( image.valid ) {
+        var orig_image = _map.model.attach_node.image;
+        _map.model.attach_node.set_image( _map.model.image_manager, image );
+        _map.add_undo( new UndoNodeImage( _map.model.attach_node, orig_image ) );
+        _map.model.set_attach_node( null );
+        queue_draw();
+        current_changed( _map );
+        _map.auto_save();
+        return( true );
       }
 
     }
