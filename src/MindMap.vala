@@ -155,11 +155,13 @@ public class MindMap {
   }
   public bool editable {
     get {
-      return( _editable || doc.read_only );
+      return( _editable && !doc.read_only );
     }
     set {
-      _editable = value;
-      editable_changed( this );
+      if( _editable != value ) {
+        _editable = value;
+        editable_changed( this );
+      }
     }
   }
 

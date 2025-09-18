@@ -357,14 +357,14 @@ public class MainWindow : Gtk.ApplicationWindow {
   private string get_tab_label_name( int page_num ) {
     var page = _nb.get_nth_page( page_num );
     var tab  = _nb.get_tab_label( page );
-    var label = (Label)Utils.get_child_at_index( tab, 0 );
+    var label = (Label)Utils.get_child_at_index( tab, 1 );
     return( label.label );
   }
 
   //-------------------------------------------------------------
   // Sets the tab label name and tooltip to the given values.
-  private void set_tab_label_info( bool editable, string label, string tooltip ) {
-    var page = _nb.get_nth_page( _nb.page );
+  private void set_tab_label_info( int page_num, bool editable, string label, string tooltip ) {
+    var page = _nb.get_nth_page( page_num );
     var tab  = _nb.get_tab_label( page );
     var lock = (Image)Utils.get_child_at_index( tab, 0 );
     var lbl  = (Label)Utils.get_child_at_index( tab, 1 );
@@ -535,6 +535,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
 
     var tab_lock = new Image.from_icon_name( "system-lock-screen-symbolic" ) {
+      visible       = !map.editable,
       margin_start  = 10,
       margin_top    = 5,
       margin_bottom = 5
@@ -1475,7 +1476,12 @@ public class MainWindow : Gtk.ApplicationWindow {
     (_stack.get_child_by_name( "style" )   as StyleInspector).editable_changed();
     (_stack.get_child_by_name( "map" )     as MapInspector).editable_changed();
     var label = map.doc.label;
-    set_tab_label_info( map.editable, label, map.doc.filename );
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      if( get_map( i ) == map ) {
+        set_tab_label_info( i, map.editable, label, map.doc.filename );
+        break;
+      }
+    }
     update_title( map );
   }
 
@@ -1547,7 +1553,7 @@ public class MainWindow : Gtk.ApplicationWindow {
           if( remove_after_save ) {
             remove_tab( null );
           } else {
-            set_tab_label_info( map.editable, map.doc.label, fname );
+            set_tab_label_info( _nb.page, map.editable, map.doc.label, fname );
             update_title( map );
             save_tab_state( _nb.page );
             Utils.store_chooser_folder( fname, false );
@@ -2024,6 +2030,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       node->new_prop( "origin-y",  map.canvas.origin_y.to_string() );
       node->new_prop( "scale",     map.canvas.sfactor.to_string() );
       node->new_prop( "braindump", map.model.braindump_shown.to_string() );
+      node->new_prop( "readonly",  (!map.editable).to_string() );
       root->add_child( node );
     }
 
@@ -2082,12 +2089,11 @@ public class MainWindow : Gtk.ApplicationWindow {
             map.model.braindump_shown = bool.parse( braindump );
           }
           if( read_only != null ) {
-            // FOOBAR
+            map.editable = !bool.parse( read_only );
           }
           map.doc.load_filename( fname, bool.parse( saved ) );
-          map.doc.load( true, (valid) => {
-            tabs++;
-          });
+          map.doc.load( true, null );
+          tabs++;
         } else {
           tab_skipped = true;
         }

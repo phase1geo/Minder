@@ -430,9 +430,10 @@ public class NodeInspector : Box {
     var drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
     _image.add_controller( drop );
 
+    drop.accept.connect((d) => { return( _map.editable ); });
     drop.drop.connect((val, x, y) => {
       var file = (File)val;
-      return( _map.editable && _map.model.update_current_image( file.get_uri() ) );
+      return( _map.model.update_current_image( file.get_uri() ) );
     });
 
     return( box );
@@ -683,7 +684,8 @@ public class NodeInspector : Box {
     _ignore = true;
 
     if( current != null ) {
-      _task.set_active( current.task_enabled() && _map.editable );
+      _task.set_active( current.task_enabled() );
+      _task.set_sensitive( _map.editable );
       if( current.is_leaf() ) {
         _fold.set_active( false );
         _fold.set_sensitive( false );
@@ -701,7 +703,8 @@ public class NodeInspector : Box {
       if( current.is_root() ) {
         _link_box.visible = false;
         _root_color_box.visible = true;
-        _override.set_active( current.link_color_set && _map.editable );
+        _override.set_active( current.link_color_set );
+        _override.set_sensitive( _map.editable );
         _color_reveal.reveal_child = current.link_color_set;
         _root_color.rgba = current.link_color_set ? current.link_color : _map.get_theme().get_color( "root_background" );
       } else {
