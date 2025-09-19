@@ -28,6 +28,7 @@ public class MapInspector : Box {
   private GLib.Settings _settings;
   private ModeButtons   _layout;
   private Grid?         _theme_grid     = null;
+  private Button        _add_theme;
   private Button?       _balance        = null;
   private Button?       _fold_completed = null;
   private Button?       _unfold_all     = null;
@@ -379,13 +380,13 @@ public class MapInspector : Box {
     /* Add the themes to the theme box */
     update_themes();
 
-    var add = new Button.from_icon_name( "list-add-symbolic" ) {
+    _add_theme = new Button.from_icon_name( "list-add-symbolic" ) {
       valign       = Align.END,
       has_frame    = false,
       tooltip_text = _( "Add Custom Theme" )
     };
-    add.clicked.connect( create_custom_theme );
-    tb.append( add );
+    _add_theme.clicked.connect( create_custom_theme );
+    tb.append( _add_theme );
 
     /* Pack the panel */
     append( lbl );
@@ -468,10 +469,12 @@ public class MapInspector : Box {
         var click = new GestureClick();
         item.add_controller( click );
         click.pressed.connect((n_press, x, y) => {
-          select_theme( name );
-          _map.model.set_theme( theme, true );
-          if( theme.custom && (n_press == 2) ) {
-            edit_current_theme();
+          if( _map.editable ) {
+            select_theme( name );
+            _map.model.set_theme( theme, true );
+            if( theme.custom && (n_press == 2) ) {
+              edit_current_theme();
+            }
           }
         });
         _theme_grid.attach( item, (index % 2), (index / 2) );
@@ -606,6 +609,8 @@ public class MapInspector : Box {
     }
 
     /* Update the sensitivity of the buttons */
+    _read_only.set_sensitive( !_map.doc.read_only );
+    _add_theme.set_sensitive( _map.editable );
     _fold_completed.set_sensitive( foldable && _map.editable );
     _unfold_all.set_sensitive( unfoldable && _map.editable );
 
