@@ -449,7 +449,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     update_title( map );
     canvas_changed( map );
     _brain.set_list( map.model.braindump );
-    set_braindump_ui( map.model.braindump_shown );
+    _brain_btn.sensitive = map.editable;
+    set_braindump_ui( map, map.model.braindump_shown );
     save_tab_state( page_num );
   }
 
@@ -1035,7 +1036,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     register_widget_for_shortcut( _brain_btn, KeyCommand.TOGGLE_BRAINDUMP, _( "Brain Dump" ) );
 
     _brain_btn.clicked.connect((e) => {
-      set_braindump_ui( !_brain.visible );
+      set_braindump_ui( get_current_map(), !_brain.visible );
       save_tab_state( _nb.page );
     });
 
@@ -1045,19 +1046,18 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Shows or hides the braindump UI.
-  public void set_braindump_ui( bool show ) {
+  public void set_braindump_ui( MindMap map, bool show ) {
 
-    var map = get_current_map();
-    if( map != null ) {
-      map.model.braindump_shown = show;
-    }
+    var show_ui = show && map.editable;
 
-    _brain.visible    = show;
-    _brain_btn.active = show;
+    map.model.braindump_shown = show;
 
-    if( show ) {
+    _brain.visible    = show_ui;
+    _brain_btn.active = show_ui;
+
+    if( show_ui ) {
       _brain.grab_focus();
-    } else if( map != null ) {
+    } else {
       map.canvas.grab_focus();
     }
 
@@ -1472,6 +1472,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Called when the editable attribute changes within the mindmap.
   private void on_editable_changed( MindMap map ) {
     _brain_btn.sensitive = map.editable;
+    set_braindump_ui( map, map.model.braindump_shown );
     (_stack.get_child_by_name( "current" ) as CurrentInspector).editable_changed();
     (_stack.get_child_by_name( "style" )   as StyleInspector).editable_changed();
     (_stack.get_child_by_name( "map" )     as MapInspector).editable_changed();
