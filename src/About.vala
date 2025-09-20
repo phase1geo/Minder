@@ -43,9 +43,34 @@ public class About {
     _about.license_type  = License.GPL_3_0;
     _about.website       = "https://appcenter.elementary.io/com.github.phase1geo.minder/";
     _about.website_label = _( "Minder in AppCenter" );
+    _about.system_information = get_system_info();
 
     var image = new Image.from_resource( "/com/github/phase1geo/minder/minder-logo.svg" );
     _about.logo = image.get_paintable();
+
+  }
+
+  //-------------------------------------------------------------
+  // Returns the system information about how this application was
+  // built.
+  private string get_system_info() {
+
+    // Determine the Flatpak runtime being used
+    try {
+      var keyfile = new GLib.KeyFile();
+      keyfile.load_from_file( "/.flatpak-info", GLib.KeyFileFlags.NONE );
+
+      stdout.printf( "%s\n", keyfile.to_data() );
+
+      var runtime = keyfile.get_string( "Application", "runtime" );
+
+      return( "Flatpak Runtime: %s".printf( runtime ) );
+
+    } catch( Error e ) {
+      stdout.printf( "Error: %s\n", e.message );
+    }
+
+    return( "" );
 
   }
 
