@@ -61,6 +61,8 @@ public class ShortcutTooltip {
   }
 }
 
+public delegate void AfterLoadTabFunc();
+
 public class MainWindow : Gtk.ApplicationWindow {
 
   private GLib.Settings     _settings;
@@ -2036,6 +2038,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
 
     root->new_prop( "selected", current_page.to_string() );
+    root->new_prop( "version",  "2" );
 
     /* Save the file */
     doc->save_format_file( fname, 1 );
@@ -2045,26 +2048,118 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
+  // Returns the filepath of the tab_state.xml file.
+  private string get_tab_state_path() {
+    return( GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" ) );
+  }
+
+  //-------------------------------------------------------------
   // Loads the tab state
   public void load_tab_state() {
 
-    var tab_state = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" );
+    var tab_state = get_tab_state_path();
     if( !FileUtils.test( tab_state, FileTest.EXISTS ) ) {
       do_new_file();
       return;
     }
 
     Xml.Doc* doc  = Xml.Parser.parse_file( tab_state );
-    var      tabs = 0;
-    var      tab_skipped = false;
 
     if( doc == null ) {
       do_new_file();
       return;
     }
 
+    var root    = doc->get_root_element();
+    var version = root->get_prop( "version" );
+
+    delete doc;
+
+    if( version == null ) {
+      Idle.add(() => {
+        request_upgrade_action(() => {
+          load_tab_state_xml();
+        });
+        return( false );
+      });
+    } else {
+      load_tab_state_xml();
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Displays the UI that will allow the user to specify the
+  // upgrade action to use.
+  private void request_upgrade_action( AfterLoadTabFunc func ) {
+
+    var dialog = new Granite.MessageDialog.with_image_from_icon_name(
+      _( "Upgrade all files?" ),
+      _( "All previously opened tabs contain Minder files that need to be upgraded to be editable by this version of Minder.  Select an upgrade option below." ),
+      "system-software-update",
+      ButtonsType.NONE
+    );
+
+    var exit  = new Button.with_label( _( "Exit Minder" ) );
+    dialog.add_action_widget( exit, ResponseType.CLOSE );
+
+    var apply = new Button.with_label( _( "Apply" ) );
+    dialog.add_action_widget( apply, ResponseType.APPLY );
+
+    var options = new DropDown.from_strings( UpgradeAction.labels() ) {
+      halign = Align.START,
+      margin_top = 10,
+      margin_start = 20
+    };
+
+    var remember = new CheckButton.with_label( _( "Use this option for future upgrades (this can be changed in preferences)" ) ) {
+      halign = Align.START,
+      margin_top = 10,
+      margin_start = 20
+    };
+
+    var box = dialog.get_content_area();
+    box.append( options );
+    box.append( remember );
+
+    dialog.set_transient_for( this );
+    dialog.set_modal( true );
+    dialog.set_default_response( ResponseType.APPLY );
+    dialog.set_title( _( "Upgrades Needed" ) );
+
+    dialog.response.connect((id) => {
+      if( id == ResponseType.APPLY ) {
+        var action = (UpgradeAction)options.selected;
+        settings.set_int( "upgrade-action", action );
+        settings.set_boolean( "ask-for-upgrade-action", !remember.active );
+        if( func != null ) {
+          func();
+        }
+      } else {
+        destroy();
+      }
+      dialog.close();
+    });
+
+    dialog.present();
+
+  }
+
+  //-------------------------------------------------------------
+  // Loads the tab state after the upgrade action has been established.
+  private void load_tab_state_xml() {
+
+    Xml.Doc* doc  = Xml.Parser.parse_file( get_tab_state_path() );
+
+    if( doc == null ) {
+      return;
+    }
+
+    var root        = doc->get_root_element();
+    var tabs        = 0;
+    var tab_skipped = false;
+
     UpgradeAction? upgrade_action = null;
-    var root = doc->get_root_element();
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
         var fname = it->get_prop( "path" );

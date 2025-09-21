@@ -133,14 +133,18 @@ public class Preferences : Gtk.Window {
     grid.attach( make_info( _( "Backup files are created prior to saving.  If enabled, the backup file is retained but is not used when re-opening the file.  If disabled, the backup file is removed after save and used on re-opening file if it exists.  Backup files are hidden in the same directory as the original with a .bak extension." ) ), 3, row );
     row++;
 
+    grid.attach( make_label( _( "Show upgrade dialog when file upgrade is needed" ) ), 0, row );
+    grid.attach( make_switch( "ask-for-upgrade-action" ), 1, row );
+    row++;
+
     grid.attach( make_separator(), 0, row, 4 );
     row++;
 
     var box = new Box( Orientation.VERTICAL, 6 ) {
       halign = Align.FILL
     };
-    box.append( make_label( _( "When Minder file updates are needed" ), Align.START ) );
-    box.append( make_enum( "upgrade-action", UpgradeAction.all_labels() ) );
+    box.append( make_label( _( "Default file upgrade action" ), Align.START ) );
+    box.append( make_enum( "upgrade-action", UpgradeAction.labels() ) );
     grid.attach( box, 0, row, 5 );
     row++;
 

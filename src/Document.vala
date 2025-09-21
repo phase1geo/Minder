@@ -27,7 +27,6 @@ public enum UpgradeAction {
   OVERRIDE,
   SAVE_AS,
   READ_ONLY,
-  ASK,
   NUM;
 
   //-------------------------------------------------------------
@@ -37,28 +36,13 @@ public enum UpgradeAction {
       case OVERRIDE  :  return( _( "Upgrade older Minder file to new version" ) );
       case SAVE_AS   :  return( _( "Upgrade older Minder file to new with different filename" ) );
       case READ_ONLY :  return( _( "Do not upgrade older Minder file but view it as read-only" ) );
-      case ASK       :  return( _( "Ask each time older Minder file opened" ) );
       default        :  return( null );
     }
   }
 
   //-------------------------------------------------------------
-  // Returns an array of labels for all but the ASK upgrade action
-  // values.
+  // Returns an array of labels for upgrade action DropDown list.
   public static string[] labels() {
-    string[] lbls = {};
-    for( int i=0; i<ASK; i++ ) {
-      var action = (UpgradeAction)i;
-      if( action.label() != null ) {
-        lbls += action.label();
-      }
-    }
-    return( lbls );
-  }
-
-  //-------------------------------------------------------------
-  // Returns an array of labels for all upgrade action values.
-  public static string[] all_labels() {
     string[] lbls = {};
     for( int i=0; i<NUM; i++ ) {
       var action = (UpgradeAction)i;
@@ -67,7 +51,6 @@ public enum UpgradeAction {
       }
     }
     return( lbls );
-
   }
 
 }
@@ -306,7 +289,7 @@ public class Document : Object {
     /* Open the portable Minder file for reading */
     if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
       var action = force_v1_readonly ? UpgradeAction.READ_ONLY : (UpgradeAction)_map.settings.get_int( "upgrade-action" );
-      if( action == UpgradeAction.ASK ) {
+      if( _map.settings.get_boolean( "ask-for-upgrade-action" ) ) {
         request_upgrade_action( func );
       } else {
         upgrade( action, func );
@@ -644,7 +627,7 @@ public class Document : Object {
       margin_start = 20
     };
 
-    var remember = new CheckButton.with_label( _( "Remember selection" ) ) {
+    var remember = new CheckButton.with_label( _( "Use this option for future upgrades (this can be changed in preferences)" ) ) {
       halign = Align.START,
       margin_top = 10,
       margin_start = 20
@@ -655,15 +638,15 @@ public class Document : Object {
     box.append( remember );
 
     dialog.set_transient_for( _map.win );
+    dialog.set_modal( true );
     dialog.set_default_response( ResponseType.APPLY );
     dialog.set_title( _( "Upgrade Needed" ) );
 
     dialog.response.connect((id) => {
       if( id == ResponseType.APPLY ) {
         var action = (UpgradeAction)options.selected;
-        if( remember.active ) {
-          _map.settings.set_enum( "upgrade-action", action );
-        }
+        _map.settings.set_int( "upgrade-action", action );
+        _map.settings.set_boolean( "ask-for-upgrade-action", !remember.active );
         upgrade( action, func );
       } else if( (id == ResponseType.CANCEL) && (func != null) ) {
         func( false, "request_upgrade_action" );
@@ -671,7 +654,7 @@ public class Document : Object {
       dialog.close();
     });
 
-    dialog.show();
+    dialog.present();
 
   }
 
