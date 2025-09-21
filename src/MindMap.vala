@@ -173,7 +173,6 @@ public class MindMap {
   public signal void scroll_changed();
   public signal void show_properties( string? tab, PropertyGrab grab_type );
   public signal void hide_properties();
-  public signal void save_state_changed();
   public signal void undo_buffer_changed( UndoBuffer buf );
   public signal void editable_changed( MindMap map );
 
@@ -224,7 +223,7 @@ public class MindMap {
     _canvas.scale_changed.connect( handle_scale_changed );
     _canvas.scroll_changed.connect( handle_scroll_changed );
 
-    _doc.save_state_changed.connect( handle_save_state_changed );
+    _doc.read_only_changed.connect( handle_read_only_changed );
 
     _undo_buffer.buffer_changed.connect( handle_undo_buffer_changed );
 
@@ -280,9 +279,12 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
-  // Handles any indications that the save state has changed.
-  private void handle_save_state_changed() {
-    save_state_changed();
+  // Handles any indications that the document read-only status
+  // changed.
+  private void handle_read_only_changed() {
+    stdout.printf( "In handle_read_only_changed, doc.read_only: %s, editable: %s\n",
+     doc.read_only.to_string(), editable.to_string() );
+    editable_changed( this );
   }
 
   //-------------------------------------------------------------

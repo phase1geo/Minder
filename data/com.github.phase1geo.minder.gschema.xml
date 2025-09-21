@@ -1,11 +1,5 @@
  <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <enum id="com.github.phase1geo.minder.upgrade-actions">
-    <value nick="ask" value="0"/>
-    <value nick="override" value="1"/>
-    <value nick="save-as"  value="2"/>
-    <value nick="read-only" value="3"/>
-  </enum>
   <schema path="/com/github/phase1geo/minder/" id="com.github.phase1geo.minder" gettext-domain="com.github.phase1geo.minder">
     <key name="window-w" type="i">
       <default>1000</default>
@@ -342,16 +336,16 @@
       <summary>Specifies that the notes textbox should have syntax coloring applied</summary>
       <description>Specifies that the notes textbox should have syntax coloring applied</description>
     </key>
-    <key name="upgrade-action" enum="com.github.phase1geo.minder.upgrade-actions">
-      <default>'ask'</default>
-      <summary>Action to perform when loading a Minder 1.x file to Minder 2.x format</summary>
+    <key name="upgrade-action" type="i">
+      <default>3</default>
+      <summary>Action to perform when loading an older Minder format to an imcompatible newer Minder format</summary>
       <description>
-        Action to perform when loading a Minder 1.x file to Minder 2.x format.  The available
-        options are the following:
-        - ask       :  Displays a dialog box with the available options.
-        - override  :  Overwrites the Minder 1.x original file with the Minder 2.x version.
-        - save-as   :  Allows the user to choose a new name for the Minder 2.x file.
-        - read-only :  Opens the Minder 1.x data in read-only mode.
+        Action to perform when loading an older Minder format to an imcompatible newer Minder format.  The
+        following values are supported:
+          0 - Overwrites the older Minder file with the newer version.
+          1 - Saves the newer Minder file with a new filename.
+          2 - Opens the older Minder file in read-only mode.
+          3 - Asks the user each time an older Minder file is opened.
       </description>
     </key>
     <key name="keep-backup-after-save" type="b">

@@ -24,13 +24,55 @@ using Gtk;
 using GLib;
 
 public enum UpgradeAction {
-  ASK,
   OVERRIDE,
   SAVE_AS,
-  READ_ONLY
+  READ_ONLY,
+  ASK,
+  NUM;
+
+  //-------------------------------------------------------------
+  // Returns the label to display to the user for this option.
+  public string? label() {
+    switch( this ) {
+      case OVERRIDE  :  return( _( "Upgrade older Minder file to new version" ) );
+      case SAVE_AS   :  return( _( "Upgrade older Minder file to new with different filename" ) );
+      case READ_ONLY :  return( _( "Do not upgrade older Minder file but view it as read-only" ) );
+      case ASK       :  return( _( "Ask each time older Minder file opened" ) );
+      default        :  return( null );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns an array of labels for all but the ASK upgrade action
+  // values.
+  public static string[] labels() {
+    string[] lbls = {};
+    for( int i=0; i<ASK; i++ ) {
+      var action = (UpgradeAction)i;
+      if( action.label() != null ) {
+        lbls += action.label();
+      }
+    }
+    return( lbls );
+  }
+
+  //-------------------------------------------------------------
+  // Returns an array of labels for all upgrade action values.
+  public static string[] all_labels() {
+    string[] lbls = {};
+    for( int i=0; i<NUM; i++ ) {
+      var action = (UpgradeAction)i;
+      if( action.label() != null ) {
+        lbls += action.label();
+      }
+    }
+    return( lbls );
+
+  }
+
 }
 
-public delegate void AfterLoadFunc( bool loaded );
+public delegate void AfterLoadFunc( bool loaded, string msg );
 
 public class Document : Object {
 
@@ -74,7 +116,7 @@ public class Document : Object {
     }
   }
 
-  public signal void save_state_changed();
+  public signal void read_only_changed();
 
   //-------------------------------------------------------------
   // Default constructor
@@ -217,7 +259,6 @@ public class Document : Object {
 
     Xml.Doc* doc = load_raw();
     if( doc == null ) {
-      stdout.printf( "  Well, that didn't work\n" );
       return( false );
     }
 
@@ -264,7 +305,7 @@ public class Document : Object {
 
     /* Open the portable Minder file for reading */
     if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
-      var action = force_v1_readonly ? UpgradeAction.READ_ONLY : (UpgradeAction)_map.settings.get_enum( "upgrade-action" );
+      var action = force_v1_readonly ? UpgradeAction.READ_ONLY : (UpgradeAction)_map.settings.get_int( "upgrade-action" );
       if( action == UpgradeAction.ASK ) {
         request_upgrade_action( func );
       } else {
@@ -312,7 +353,7 @@ public class Document : Object {
     var loaded = load_xml();
 
     if( func != null ) {
-      func( loaded );
+      func( loaded, "load" );
     }
 
   }
@@ -425,8 +466,12 @@ public class Document : Object {
       FileUtils.unlink( bak_file );
     }
 
+    var upgrade_ro = _upgrade_ro;
+
     // Indicate that a save is no longer needed
     save_needed = false;
+    _upgrade_ro = false;
+    read_only_changed();
 
     return( true );
 
@@ -539,7 +584,7 @@ public class Document : Object {
     // Move the Minder XML file to the temporary directory
     if( !copy_file( filename, get_map_file() ) ) {
       if( func != null ) {
-        func( false );
+        func( false, "upgrade A" );
       }
       return;
     }
@@ -547,7 +592,7 @@ public class Document : Object {
     // Load the XML file
     if( !load_xml() ) {
       if( func != null ) {
-        func( false );
+        func( false, "upgrade B" );
       }
       return;
     }
@@ -570,7 +615,7 @@ public class Document : Object {
     }
 
     if( func != null ) {
-      func( true );
+      func( true, "upgrade C" );
     }
 
   }
@@ -581,8 +626,8 @@ public class Document : Object {
   private void request_upgrade_action( AfterLoadFunc? func ) {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
-      _( "Save current unnamed document?" ),
-      _( "Changes will be permanently lost if not saved." ),
+      _( "Upgrade?" ),
+      _( "This file is a version 1 Minder file and needs to be upgraded to edit." ),
       "system-software-update",
       ButtonsType.NONE
     );
@@ -590,15 +635,14 @@ public class Document : Object {
     var cancel = new Button.with_label( _( "Cancel" ) );
     dialog.add_action_widget( cancel, ResponseType.CANCEL );
 
-    var ro = new Button.with_label( _( "Read Only" ) );
-    dialog.add_action_widget( ro, ResponseType.CLOSE );
+    var apply = new Button.with_label( _( "Apply" ) );
+    dialog.add_action_widget( apply, ResponseType.APPLY );
 
-    var save_as = new Button.with_label( _( "Save As" ) );
-    dialog.add_action_widget( save_as, ResponseType.ACCEPT );
-
-    var overwrite = new Button.with_label( _( "Overwrite" ) );
-    overwrite.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
-    dialog.add_action_widget( overwrite, ResponseType.APPLY );
+    var options = new DropDown.from_strings( UpgradeAction.labels() ) {
+      halign = Align.START,
+      margin_top = 10,
+      margin_start = 20
+    };
 
     var remember = new CheckButton.with_label( _( "Remember selection" ) ) {
       halign = Align.START,
@@ -607,29 +651,28 @@ public class Document : Object {
     };
 
     var box = dialog.get_content_area();
+    box.append( options );
     box.append( remember );
 
     dialog.set_transient_for( _map.win );
-    dialog.set_default_response( ResponseType.ACCEPT );
-    dialog.set_title( "" );
+    dialog.set_default_response( ResponseType.APPLY );
+    dialog.set_title( _( "Upgrade Needed" ) );
 
     dialog.response.connect((id) => {
-      var action = UpgradeAction.ASK;
-      switch( id ) {
-        case ResponseType.APPLY  :  action = UpgradeAction.OVERRIDE;   break;
-        case ResponseType.ACCEPT :  action = UpgradeAction.SAVE_AS;    break;
-        case ResponseType.CLOSE  :  action = UpgradeAction.READ_ONLY;  break;
-      }
-      if( action != UpgradeAction.ASK ) {
+      if( id == ResponseType.APPLY ) {
+        var action = (UpgradeAction)options.selected;
         if( remember.active ) {
           _map.settings.set_enum( "upgrade-action", action );
         }
         upgrade( action, func );
+      } else if( (id == ResponseType.CANCEL) && (func != null) ) {
+        func( false, "request_upgrade_action" );
       }
       dialog.close();
     });
 
     dialog.show();
+
   }
 
   //-------------------------------------------------------------

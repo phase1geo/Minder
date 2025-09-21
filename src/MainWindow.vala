@@ -1390,7 +1390,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     if( fname.has_suffix( ".minder" ) ) {
       var map = add_tab_conditionally( fname, TabAddReason.OPEN );
       update_title( map );
-      map.doc.load( false, (valid) => {
+      map.doc.load( false, (valid, msg) => {
         if( valid ) {
           save_tab_state( _nb.page );
         } else {
