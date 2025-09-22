@@ -288,11 +288,12 @@ public class Document : Object {
 
     /* Open the portable Minder file for reading */
     if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
-      var action = force_v1_readonly ? UpgradeAction.READ_ONLY : (UpgradeAction)_map.settings.get_int( "upgrade-action" );
-      if( _map.settings.get_boolean( "ask-for-upgrade-action" ) ) {
+      if( force_v1_readonly ) {
+        upgrade( UpgradeAction.READ_ONLY, func );
+      } else if( _map.settings.get_boolean( "ask-for-upgrade-action" ) ) {
         request_upgrade_action( func );
       } else {
-        upgrade( action, func );
+        upgrade( (UpgradeAction)_map.settings.get_int( "upgrade-action" ), func );
       }
       return;
     }
@@ -610,7 +611,7 @@ public class Document : Object {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
       _( "Upgrade?" ),
-      _( "This file is a version 1 Minder file and needs to be upgraded to edit." ),
+      _( "This file is from an older version Minder and needs to be upgraded to edit.\n\nNote: Upgraded files cannot be viewed/edited with older versions of Minder." ),
       "system-software-update",
       ButtonsType.NONE
     );
@@ -622,20 +623,33 @@ public class Document : Object {
     dialog.add_action_widget( apply, ResponseType.APPLY );
 
     var options = new DropDown.from_strings( UpgradeAction.labels() ) {
-      halign = Align.START,
-      margin_top = 10,
-      margin_start = 20
+      halign       = Align.START,
+      margin_top   = 10,
+      margin_start = 20,
+      selected     = _map.settings.get_int( "upgrade-action" )
     };
 
-    var remember = new CheckButton.with_label( _( "Use this option for future upgrades (this can be changed in preferences)" ) ) {
-      halign = Align.START,
-      margin_top = 10,
-      margin_start = 20
+    var remember = new CheckButton();
+    var rem_description = new Label( _( "Don't show this dialog again" ) ) {
+      halign = Align.START
     };
+    var rem_info = new Label( _( "<small>This can be changed in preferences</small>" ) ) {
+      halign     = Align.START,
+      use_markup = true
+    };
+    var rem_grid = new Grid() {
+      row_spacing  = 5,
+      margin_start = 20,
+      margin_top   = 20
+    };
+
+    rem_grid.attach( remember,        0, 0 );
+    rem_grid.attach( rem_description, 1, 0 );
+    rem_grid.attach( rem_info,        1, 1 );
 
     var box = dialog.get_content_area();
     box.append( options );
-    box.append( remember );
+    box.append( rem_grid );
 
     dialog.set_transient_for( _map.win );
     dialog.set_modal( true );

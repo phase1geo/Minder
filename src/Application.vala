@@ -86,12 +86,6 @@ public class Minder : Gtk.Application {
     });
     */
 
-    /*
-    appwin.destroy.connect(() => {
-      quit();
-    });
-    */
-
     // Initialize desktop interface settings
     string[] names = {"font-name", "text-scaling-factor"};
     iface_settings = new GLib.Settings( INTERFACE_SCHEMA );

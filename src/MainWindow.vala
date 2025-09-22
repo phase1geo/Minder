@@ -2094,8 +2094,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void request_upgrade_action( AfterLoadTabFunc func ) {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
-      _( "Upgrade all files?" ),
-      _( "All previously opened tabs contain Minder files that need to be upgraded to be editable by this version of Minder.  Select an upgrade option below." ),
+      _( "File upgrade needed" ),
+      _( "All previously opened tabs contain Minder files that need to be upgraded to be editable by this version of Minder.\n\nSelect an upgrade option below." ),
       "system-software-update",
       ButtonsType.NONE
     );
@@ -2107,20 +2107,33 @@ public class MainWindow : Gtk.ApplicationWindow {
     dialog.add_action_widget( apply, ResponseType.APPLY );
 
     var options = new DropDown.from_strings( UpgradeAction.labels() ) {
-      halign = Align.START,
-      margin_top = 10,
+      halign       = Align.START,
+      margin_top   = 10,
+      margin_start = 20,
+      selected     = settings.get_int( "upgrade-action" )
+    };
+
+    var remember = new CheckButton();
+    var rem_description = new Label( _( "Don't show this dialog again" ) ) {
+      halign = Align.START
+    };
+    var rem_info = new Label( _( "<small>This can be changed in preferences</small>" ) ) {
+      halign     = Align.START,
+      use_markup = true
+    };
+    var rem_grid = new Grid() {
+      row_spacing  = 5,
+      margin_top   = 20,
       margin_start = 20
     };
 
-    var remember = new CheckButton.with_label( _( "Use this option for future upgrades (this can be changed in preferences)" ) ) {
-      halign = Align.START,
-      margin_top = 10,
-      margin_start = 20
-    };
+    rem_grid.attach( remember,        0, 0 );
+    rem_grid.attach( rem_description, 1, 0 );
+    rem_grid.attach( rem_info,        1, 1 );
 
     var box = dialog.get_content_area();
     box.append( options );
-    box.append( remember );
+    box.append( rem_grid );
 
     dialog.set_transient_for( this );
     dialog.set_modal( true );
@@ -2135,7 +2148,7 @@ public class MainWindow : Gtk.ApplicationWindow {
         if( func != null ) {
           func();
         }
-      } else {
+      } else if( id == ResponseType.CLOSE ) {
         destroy();
       }
       dialog.close();
