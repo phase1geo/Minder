@@ -40,4 +40,11 @@ public class CalloutMenu : BaseMenu {
 
   }
 
+  //-------------------------------------------------------------
+  // Update the enable status for menu items that need to be disabled
+  // based on the current state.
+  protected override void on_popup() {
+    set_enabled( KeyCommand.EDIT_DELETE, map.editable );
+  }
+
 }

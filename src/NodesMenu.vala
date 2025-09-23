@@ -121,17 +121,24 @@ public class NodesMenu : BaseMenu {
     bool foldable, unfoldable;
     nodes_foldable_status( out foldable, out unfoldable );
 
-    /* Set the menu sensitivity */
-    set_enabled( KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, (foldable || unfoldable) );
-    set_enabled( KeyCommand.NODE_TOGGLE_SEQUENCE,      map.model.sequences_togglable() );
-    set_enabled( KeyCommand.NODE_ADD_CONNECTION,       (node_num == 2) );
-    set_enabled( KeyCommand.NODE_REPARENT_LINK_COLOR,  link_colors_parentable() );
-    set_enabled( KeyCommand.NODE_ALIGN_TOP,            alignable );
-    set_enabled( KeyCommand.NODE_ALIGN_HCENTER,        alignable );
-    set_enabled( KeyCommand.NODE_ALIGN_BOTTOM,         alignable );
-    set_enabled( KeyCommand.NODE_ALIGN_LEFT,           alignable );
-    set_enabled( KeyCommand.NODE_ALIGN_VCENTER,        alignable );
-    set_enabled( KeyCommand.NODE_ALIGN_RIGHT,          alignable );
+    // Set the menu sensitivity
+    set_enabled( KeyCommand.EDIT_CUT,                  map.editable );
+    set_enabled( KeyCommand.NODE_REMOVE,               map.editable );
+    set_enabled( KeyCommand.NODE_CHANGE_LINK_COLOR,    map.editable );
+    set_enabled( KeyCommand.NODE_RANDOMIZE_LINK_COLOR, map.editable );
+    set_enabled( KeyCommand.NODE_REPARENT_LINK_COLOR,  map.editable );
+    set_enabled( KeyCommand.NODE_CHANGE_TASK,          map.editable );
+    set_enabled( KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, ((foldable || unfoldable) && map.editable) );
+    set_enabled( KeyCommand.NODE_TOGGLE_SEQUENCE,      (map.model.sequences_togglable() && map.editable) );
+    set_enabled( KeyCommand.NODE_TOGGLE_LINKS,         map.editable );
+    set_enabled( KeyCommand.NODE_ADD_CONNECTION,       ((node_num == 2) && map.editable) );
+    set_enabled( KeyCommand.NODE_REPARENT_LINK_COLOR,  (link_colors_parentable() && map.editable) );
+    set_enabled( KeyCommand.NODE_ALIGN_TOP,            (alignable && map.editable) );
+    set_enabled( KeyCommand.NODE_ALIGN_HCENTER,        (alignable && map.editable) );
+    set_enabled( KeyCommand.NODE_ALIGN_BOTTOM,         (alignable && map.editable) );
+    set_enabled( KeyCommand.NODE_ALIGN_LEFT,           (alignable && map.editable) );
+    set_enabled( KeyCommand.NODE_ALIGN_VCENTER,        (alignable && map.editable) );
+    set_enabled( KeyCommand.NODE_ALIGN_RIGHT,          (alignable && map.editable) );
     set_enabled( KeyCommand.NODE_SELECT_PARENT,        map.parent_selectable() );
     set_enabled( KeyCommand.NODE_SELECT_CHILDREN,      map.children_selectable() );
 

@@ -29,7 +29,10 @@ public class CurrentInspector : Box {
   private Stack    _stack;
 
   public signal void update_icons();
+  public signal void editable_changed();
 
+  //-------------------------------------------------------------
+  // Constructor
   public CurrentInspector( MainWindow win ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 10, valign: Align.FILL );
@@ -56,11 +59,18 @@ public class CurrentInspector : Box {
 
     win.canvas_changed.connect( tab_changed );
 
+    editable_changed.connect(() => {
+      node_box.editable_changed();
+      conn_box.editable_changed();
+      group_box.editable_changed();
+    });
+
     append( _stack );
 
   }
 
-  /* Sets the width of this panel to the given value */
+  //-------------------------------------------------------------
+  // Sets the width of this panel to the given value
   public void set_width( int width ) {
     var ni = _stack.get_child_by_name( "node" )       as NodeInspector;
     var ci = _stack.get_child_by_name( "connection" ) as ConnectionInspector;
@@ -82,12 +92,15 @@ public class CurrentInspector : Box {
     _stack.set_transition_duration( duration );
   }
 
-  /* Resets the width of this inspector to its default width */
+  //-------------------------------------------------------------
+  // Resets the width of this inspector to its default width
   public void reset_width() {
     set_width( 300 );
   }
 
-  /* Connected signal will provide us whenever the current tab changes in the main window */
+  //-------------------------------------------------------------
+  // Connected signal will provide us whenever the current tab
+  // changes in the main window.
   private void tab_changed( MindMap? map ) {
     if( _map != null ) {
       _map.current_changed.disconnect( current_changed );
@@ -99,7 +112,9 @@ public class CurrentInspector : Box {
     }
   }
 
-  /* Called whenever the user changes the current node in the canvas */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the current node in the
+  // canvas.
   private void current_changed() {
 
     if( _map.get_current_node() != null ) {
@@ -124,7 +139,8 @@ public class CurrentInspector : Box {
 
   }
 
-  /* Gives the node or connection note field keyboard focus */
+  //-------------------------------------------------------------
+  // Gives the node or connection note field keyboard focus
   public void grab_note() {
 
     if( _map.get_current_node() != null ) {
@@ -146,7 +162,8 @@ public class CurrentInspector : Box {
 
   }
 
-  /* Grabs the focus on the first field of the displayed pane */
+  //-------------------------------------------------------------
+  // Grabs the focus on the first field of the displayed pane
   public void grab_first() {
     switch( _stack.visible_child_name ) {
       case "node"       :  (_stack.get_child_by_name( "node" )       as NodeInspector).grab_first();        break;

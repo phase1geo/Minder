@@ -48,6 +48,7 @@ public class NodeInspector : Box {
   private bool           _ignore = false;
 
   public signal void update_icons();
+  public signal void editable_changed();
 
   //-------------------------------------------------------------
   // Constructor.
@@ -82,6 +83,7 @@ public class NodeInspector : Box {
       map.current_changed.connect( node_changed );
       map.theme_changed.connect( theme_changed );
       node_changed();
+      editable_changed();
     }
   }
 
@@ -348,6 +350,9 @@ public class NodeInspector : Box {
 
     var btn = new Button.with_label( _( "Add Image…" ) );
     btn.clicked.connect( image_button_clicked );
+    editable_changed.connect(() => {
+      btn.sensitive = _map.editable;
+    });
 
     var box = new Box( Orientation.VERTICAL, 10 );
     box.append( lbl );
@@ -416,10 +421,16 @@ public class NodeInspector : Box {
     box.append( tbox );
     box.append( _image );
 
+    editable_changed.connect(() => {
+      btn_edit.sensitive = _map.editable;
+      btn_del.sensitive  = _map.editable;
+    });
+
     /* Set ourselves up to be a drag target */
     var drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
     _image.add_controller( drop );
 
+    drop.accept.connect((d) => { return( _map.editable ); });
     drop.drop.connect((val, x, y) => {
       var file = (File)val;
       return( _map.model.update_current_image( file.get_uri() ) );
@@ -674,24 +685,26 @@ public class NodeInspector : Box {
 
     if( current != null ) {
       _task.set_active( current.task_enabled() );
+      _task.set_sensitive( _map.editable );
       if( current.is_leaf() ) {
         _fold.set_active( false );
         _fold.set_sensitive( false );
       } else {
         _fold.set_active( current.folded );
-        _fold.set_sensitive( true );
+        _fold.set_sensitive( _map.editable );
       }
       if( current.is_root() ) {
         _sequence.set_active( false );
         _sequence.set_sensitive( false );
       } else {
         _sequence.set_active( current.sequence );
-        _sequence.set_sensitive( true );
+        _sequence.set_sensitive( _map.editable );
       }
       if( current.is_root() ) {
         _link_box.visible = false;
         _root_color_box.visible = true;
         _override.set_active( current.link_color_set );
+        _override.set_sensitive( _map.editable );
         _color_reveal.reveal_child = current.link_color_set;
         _root_color.rgba = current.link_color_set ? current.link_color : _map.get_theme().get_color( "root_background" );
       } else {
@@ -699,14 +712,15 @@ public class NodeInspector : Box {
         _root_color_box.visible = false;
         _link_color.rgba = current.link_color;
       }
-      _detach_btn.set_sensitive( current.parent != null );
+      _detach_btn.set_sensitive( (current.parent != null) && _map.editable );
       var note = current.note;
       _note.buffer.text = note;
+      _note.editable    = _map.editable;
       if( current.image != null ) {
         var url = _map.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
         var str = "<a href=\"" + url + "\">" + url + "</a>";
         current.image.set_image( _image );
-        _resize.set_active( current.image_resizable );
+        _resize.set_active( current.image_resizable && _map.editable );
         _image_stack.visible_child_name = "edit";
       } else {
         _image_stack.visible_child_name = "add";

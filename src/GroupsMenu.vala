@@ -57,8 +57,11 @@ public class GroupsMenu : BaseMenu {
     var groups = map.get_selected_groups();
     var num    = groups.length;
 
-    /* Set the menu sensitivity */
-    set_enabled( KeyCommand.GROUP_MERGE, (num > 1) );
+    // Set the menu sensitivity
+    set_enabled( KeyCommand.GROUP_REMOVE, map.editable );
+    set_enabled( KeyCommand.EDIT_NOTE,    map.editable );
+    set_enabled( KeyCommand.GROUP_CHANGE_COLOR, map.editable );
+    set_enabled( KeyCommand.GROUP_MERGE,  ((num > 1) && map.editable) );
 
   }
 

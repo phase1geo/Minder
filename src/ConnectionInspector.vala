@@ -33,19 +33,23 @@ public class ConnectionInspector : Box {
   private string         _orig_note  = "";
   private Connection?    _connection = null;
 
+  public signal void editable_changed();
+
   //-------------------------------------------------------------
   // Default constructor
   public ConnectionInspector( MainWindow win ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 10 );
 
-    /* Create the node widgets */
+    // Create the node widgets
     create_title();
     create_color();
     create_note( win );
     create_buttons();
 
     win.canvas_changed.connect( tab_changed );
+
+    editable_changed.connect( connection_changed );
 
   }
 
@@ -60,7 +64,8 @@ public class ConnectionInspector : Box {
     }
   }
 
-  /* Sets the width of this inspector to the given value */
+  //-------------------------------------------------------------
+  // Sets the width of this inspector to the given value.
   public void set_width( int width ) {
     _sw.width_request = width;
   }
@@ -190,38 +195,43 @@ public class ConnectionInspector : Box {
 
   }
 
-  /*
-   Called whenever the text widget is changed.  Updates the current node
-   and redraws the canvas when needed.
-  */
+  //-------------------------------------------------------------
+  // Called whenever the text widget is changed.  Updates the
+  // current node and redraws the canvas when needed.
   private void note_changed() {
     _map.model.change_current_connection_note( _note.buffer.text );
   }
 
-  /* Saves the original version of the node's note so that we can */
+  //-------------------------------------------------------------
+  // Saves the original version of the node's note so that we can
   private void note_focus_in() {
     _connection = _map.get_current_connection();
     _orig_note  = _note.buffer.text;
   }
 
-  /* When the note buffer loses focus, save the note change to the undo buffer */
+  //-------------------------------------------------------------
+  // When the note buffer loses focus, save the note change to
+  // the undo buffer
   private void note_focus_out() {
     if( (_connection != null) && (_connection.note != _orig_note) ) {
       _map.add_undo( new UndoConnectionNote( _connection, _orig_note ) );
     }
   }
 
-  /* When a node link is added, tell the current node */
+  //-------------------------------------------------------------
+  // When a node link is added, tell the current node
   private int note_node_link_added( NodeLink link, out string text ) {
     return( _map.model.add_note_node_link( link, out text ) );
   }
 
-  /* Handles a click on the node link with the given ID */
+  //-------------------------------------------------------------
+  // Handles a click on the node link with the given ID
   private void note_node_link_clicked( int id ) {
     _map.model.note_node_link_clicked( id );
   }
 
-  /* Handles a hover over a node link */
+  //-------------------------------------------------------------
+  // Handles a hover over a node link
   private void note_node_link_hover( int id ) {
     var link = _map.model.node_links.get_node_link( id );
     if( link != null ) {
@@ -229,17 +239,20 @@ public class ConnectionInspector : Box {
     }
   }
 
-  /* Deletes the current connection */
+  //-------------------------------------------------------------
+  // Deletes the current connection
   private void connection_delete() {
     _map.model.delete_connection();
   }
 
-  /* Grabs the focus on the note widget */
+  //-------------------------------------------------------------
+  // Grabs the focus on the note widget
   public void grab_note() {
     _note.grab_focus();
   }
 
-  /* Called whenever the user changes the current node in the canvas */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the current node in the canvas
   private void connection_changed() {
 
     Connection? current = _map.get_current_connection();
@@ -247,13 +260,16 @@ public class ConnectionInspector : Box {
     if( current != null ) {
       var note = current.note;
       _color.rgba       = (current.color != null) ? current.color : _map.get_theme().get_color( "connection_background" );
+      _color.sensitive  = _map.editable;
       _note.buffer.text = note;
-      _reset.set_sensitive( current.color != null );
+      _note.sensitive   = _map.editable;
+      _reset.set_sensitive( (current.color != null) && _map.editable );
     }
 
   }
 
-  /* Sets the input focus on the first widget in this inspector */
+  //-------------------------------------------------------------
+  // Sets the input focus on the first widget in this inspector
   public void grab_first() {
     _color.grab_focus();
   }

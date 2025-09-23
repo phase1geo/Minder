@@ -22,7 +22,7 @@
 using Gtk;
 using Gdk;
 
-public class Preferences : Gtk.Window {
+public class Preferences : Granite.Dialog {
 
   private MainWindow _win;
   private MenuButton _theme_mb;
@@ -41,9 +41,9 @@ public class Preferences : Gtk.Window {
   public Preferences( MainWindow win ) {
 
     Object(
-      resizable: false,
       title: _("Preferences"),
-      transient_for: win
+      transient_for: win,
+      modal: true
     );
 
     _win = win;
@@ -60,6 +60,7 @@ public class Preferences : Gtk.Window {
     stack.add_titled( create_behavior(),   "behavior",   _( "Behavior" ) );
     stack.add_titled( create_appearance(), "appearance", _( "Appearance" ) );
     stack.add_titled( create_shortcuts(),  "shortcuts",  _( "Shortcuts" ) );
+    stack.add_titled( create_advanced(),   "advanced",   _( "Advanced" ) );
 
     var switcher = new StackSwitcher() {
       halign  = Align.CENTER,
@@ -72,7 +73,12 @@ public class Preferences : Gtk.Window {
     box.append( switcher );
     box.append( stack );
 
-    child = box;
+    get_content_area().append( box );
+
+    var close_button = (Gtk.Button)add_button( _("Close"), Gtk.ResponseType.CLOSE );
+    close_button.clicked.connect(() => {
+      destroy ();
+    });
 
     // Set the stage for menu actions
     var actions = new SimpleActionGroup ();
@@ -81,6 +87,9 @@ public class Preferences : Gtk.Window {
 
   }
 
+  //-------------------------------------------------------------
+  // Adds the Behavior panel which contains preferences related
+  // to the way the Minder behaves in certain cases.
   private Grid create_behavior() {
 
     var grid = new Grid() {
@@ -88,33 +97,46 @@ public class Preferences : Gtk.Window {
       column_spacing = 12,
       row_spacing    = 6
     };
+    var row = 0;
 
-    grid.attach( make_label( _( "Create new node from edit mode" ) ), 0, 0 );
-    grid.attach( make_switch( "new-node-from-edit" ), 1, 0 );
-    grid.attach( make_info( _( "Specifies if we should create a new node directly from edit mode if Return or Tab is pressed." ) ), 3, 0 );
+    grid.attach( make_label( _( "Create new node from edit mode" ) ), 0, row );
+    grid.attach( make_switch( "new-node-from-edit" ), 1, row );
+    grid.attach( make_info( _( "Specifies if we should create a new node directly from edit mode if Return or Tab is pressed." ) ), 3, row );
+    row++;
 
-    grid.attach( make_label( _( "Automatically make embedded URLs into links" ) ), 0, 1 );
-    grid.attach( make_switch( "auto-parse-embedded-urls" ), 1, 1 );
-    grid.attach( make_info( _( "Specifies if embedded URLs found in node titles should be automatically highlighted.") ), 3, 1 );
+    grid.attach( make_label( _( "Automatically make embedded URLs into links" ) ), 0, row );
+    grid.attach( make_switch( "auto-parse-embedded-urls" ), 1, row );
+    grid.attach( make_info( _( "Specifies if embedded URLs found in node titles should be automatically highlighted.") ), 3, row );
+    row++;
 
-    grid.attach( make_label( _( "Enable Markdown" ) ), 0, 2 );
-    grid.attach( make_switch( "enable-markdown" ), 1, 2 );
+    grid.attach( make_label( _( "Enable Markdown" ) ), 0, row );
+    grid.attach( make_switch( "enable-markdown" ), 1, row );
+    row++;
 
-    grid.attach( make_label( _( "Enable Unicode input" ) ), 0, 3 );
-    grid.attach( make_switch( "enable-unicode-input" ), 1, 3 );
-    grid.attach( make_info( _( "Specifies if Unicode characters can be input using backslash prefixed descriptors (ex. \\pi)" ) ), 3, 3 );
+    grid.attach( make_label( _( "Enable Unicode input" ) ), 0, row );
+    grid.attach( make_switch( "enable-unicode-input" ), 1, row );
+    grid.attach( make_info( _( "Specifies if Unicode characters can be input using backslash prefixed descriptors (ex. \\pi)" ) ), 3, row );
+    row++;
 
-    grid.attach( make_label( _( "Create connection title on creation" ) ), 0, 4 );
-    grid.attach( make_switch( "edit-connection-title-on-creation" ), 1, 4 );
-    grid.attach( make_info( _( "Specifies if the connection title will be added and put into edit mode immediately after the connection is made." ) ), 3, 4 );
+    grid.attach( make_label( _( "Create connection title on creation" ) ), 0, row );
+    grid.attach( make_switch( "edit-connection-title-on-creation" ), 1, row );
+    grid.attach( make_info( _( "Specifies if the connection title will be added and put into edit mode immediately after the connection is made." ) ), 3, row );
+    row++;
 
-    grid.attach( make_label( _( "Select items on mouse hover" ) ), 0, 5 );
-    grid.attach( make_switch( "select-on-hover" ), 1, 5 );
-    grid.attach( make_info( _( "If enabled, selects items when mouse cursor hovers over the item." ) ), 3, 5 );
+    grid.attach( make_label( _( "Select items on mouse hover" ) ), 0, row );
+    grid.attach( make_switch( "select-on-hover" ), 1, row );
+    grid.attach( make_info( _( "If enabled, selects items when mouse cursor hovers over the item." ) ), 3, row );
+    row++;
 
-    grid.attach( make_label( _( "Rotate main branch link colors" ) ), 0, 6 );
-    grid.attach( make_switch( "rotate-main-link-colors" ), 1, 6 );
-    grid.attach( make_info( _( "If enabled, causes a new color to be used whenever a main branch is created" ) ), 3, 6 );
+    grid.attach( make_label( _( "Rotate main branch link colors" ) ), 0, row );
+    grid.attach( make_switch( "rotate-main-link-colors" ), 1, row );
+    grid.attach( make_info( _( "If enabled, causes a new color to be used whenever a main branch is created" ) ), 3, row );
+    row++;
+
+    grid.attach( make_label( _( "Keep backup files after saving" ) ), 0, row );
+    grid.attach( make_switch( "keep-backup-after-save" ), 1, row );
+    grid.attach( make_info( _( "Backup files are created prior to saving.  If enabled, the backup file is retained but is not used when re-opening the file.  If disabled, the backup file is removed after save and used on re-opening file if it exists.  Backup files are hidden in the same directory as the original with a .bak extension." ) ), 3, row );
+    row++;
 
     return( grid );
 
@@ -328,10 +350,45 @@ public class Preferences : Gtk.Window {
   }
 
   //-------------------------------------------------------------
+  // Creates a pane used for more "advanced" settings which are
+  // not general use options.
+  private Grid create_advanced() {
+
+    var grid = new Grid() {
+      halign = Align.CENTER,
+      column_spacing = 12,
+      row_spacing    = 6
+    };
+    var row = 0;
+
+    grid.attach( make_label( _( "Show upgrade dialog when file upgrade is needed" ) ), 0, row );
+    grid.attach( make_switch( "ask-for-upgrade-action" ), 1, row );
+    row++;
+
+    grid.attach( make_separator(), 0, row, 4 );
+    row++;
+
+    var box = new Box( Orientation.VERTICAL, 6 ) {
+      halign = Align.FILL
+    };
+    box.append( make_label( _( "Default file upgrade action" ), Align.START ) );
+    box.append( make_enum( "upgrade-action", UpgradeAction.labels() ) );
+    grid.attach( box, 0, row, 5 );
+    row++;
+
+    return( grid );
+
+  }
+
+  //-------------------------------------------------------------
+  // HELPER FUNCTIONS
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
   // Creates label
-  private Label make_label( string label ) {
+  private Label make_label( string label, Align align = Align.END ) {
     var w = new Label( label ) {
-      halign = Align.END
+      halign = align
     };
     return( w );
   }
@@ -352,6 +409,17 @@ public class Preferences : Gtk.Window {
   private SpinButton make_spinner( string setting, int min_value, int max_value, int step ) {
     var w = new SpinButton.with_range( min_value, max_value, step );
     Minder.settings.bind( setting, w, "value", SettingsBindFlags.DEFAULT );
+    return( w );
+  }
+
+  //-------------------------------------------------------------
+  // Creates a dropdown list with the given labels.  Stores the position
+  // of the label as an enumeration for the given setting.
+  private DropDown make_enum( string setting, string[] labels ) {
+    var w = new DropDown.from_strings( labels ) {
+      halign = Align.FILL
+    };
+    Minder.settings.bind( setting, w, "selected", SettingsBindFlags.DEFAULT );
     return( w );
   }
 

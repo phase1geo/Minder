@@ -31,19 +31,25 @@ public class GroupInspector : Box {
   private string         _orig_note = "";
   private NodeGroup?     _group     = null;
 
+  public signal void editable_changed();
+
+  //-------------------------------------------------------------
+  // Constructor
   public GroupInspector( MainWindow win ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
 
-    /* Create the group widgets */
+    // Create the group widgets
     create_title();
     create_note( win );
 
     win.canvas_changed.connect( tab_changed );
+    editable_changed.connect( group_changed );
 
   }
 
-  /* Called whenever the tab in the main window changes */
+  //-------------------------------------------------------------
+  // Called whenever the tab in the main window changes.
   private void tab_changed( MindMap? map ) {
     if( _map != null ) {
       _map.current_changed.disconnect( group_changed );
@@ -54,7 +60,8 @@ public class GroupInspector : Box {
     }
   }
 
-  /* Sets the width of this inspector to the given value */
+  //-------------------------------------------------------------
+  // Sets the width of this inspector to the given value
   public void set_width( int width ) {
     _sw.width_request = width;
   }
@@ -113,13 +120,16 @@ public class GroupInspector : Box {
 
   }
 
-  /* Saves the original version of the node's note so that we can */
+  //-------------------------------------------------------------
+  // Saves the original version of the node's note so that we can
   private void note_focus_in() {
     _group     = _map.get_current_group();
     _orig_note = _note.buffer.text;
   }
 
-  /* When the note buffer loses focus, save the note change to the undo buffer */
+  //-------------------------------------------------------------
+  // When the note buffer loses focus, save the note change to
+  // the undo buffer.
   private void note_focus_out() {
     if( (_group != null) && (_note.buffer.text != _orig_note) ) {
       _group.note = _note.buffer.text;
@@ -128,17 +138,20 @@ public class GroupInspector : Box {
     }
   }
 
-  /* When a node link is added, tell the current node */
+  //-------------------------------------------------------------
+  // When a node link is added, tell the current node
   private int note_node_link_added( NodeLink link, out string text ) {
     return( _map.model.add_note_node_link( link, out text ) );
   }
 
-  /* Handles a click on the node link with the given ID */
+  //-------------------------------------------------------------
+  // Handles a click on the node link with the given ID
   private void note_node_link_clicked( int id ) {
     _map.model.note_node_link_clicked( id );
   }
 
-  /* Handles a hover over a node link */
+  //-------------------------------------------------------------
+  // Handles a hover over a node link
   private void note_node_link_hover( int id ) {
     var link = _map.model.node_links.get_node_link( id );
     if( link != null ) {
@@ -146,12 +159,14 @@ public class GroupInspector : Box {
     }
   }
 
-  /* Grabs the focus on the note widget */
+  //-------------------------------------------------------------
+  // Grabs the focus on the note widget
   public void grab_note() {
     _note.grab_focus();
   }
 
-  /* Called whenever the user changes the current node in the canvas */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the current node in the canvas
   private void group_changed() {
 
     NodeGroup? current = _map.get_current_group();
@@ -159,11 +174,13 @@ public class GroupInspector : Box {
     if( current != null ) {
       var note = current.note;
       _note.buffer.text = note;
+      _note.editable    = _map.editable;
     }
 
   }
 
-  /* Sets the input focus on the first widget in this inspector */
+  //-------------------------------------------------------------
+  // Sets the input focus on the first widget in this inspector
   public void grab_first() {
     grab_note();
   }

@@ -23,6 +23,40 @@ using Cairo;
 using Gtk;
 using GLib;
 
+public enum UpgradeAction {
+  OVERRIDE,
+  SAVE_AS,
+  READ_ONLY,
+  NUM;
+
+  //-------------------------------------------------------------
+  // Returns the label to display to the user for this option.
+  public string? label() {
+    switch( this ) {
+      case OVERRIDE  :  return( _( "Upgrade older Minder file to new version" ) );
+      case SAVE_AS   :  return( _( "Upgrade older Minder file to new with different filename" ) );
+      case READ_ONLY :  return( _( "Do not upgrade older Minder file but view it as read-only" ) );
+      default        :  return( null );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns an array of labels for upgrade action DropDown list.
+  public static string[] labels() {
+    string[] lbls = {};
+    for( int i=0; i<NUM; i++ ) {
+      var action = (UpgradeAction)i;
+      if( action.label() != null ) {
+        lbls += action.label();
+      }
+    }
+    return( lbls );
+  }
+
+}
+
+public delegate void AfterLoadFunc( bool loaded, string msg );
+
 public class Document : Object {
 
   private MindMap _map;
@@ -30,7 +64,8 @@ public class Document : Object {
   private string  _temp_dir;
   private bool    _from_user;  // Set to true if _filename was set by the user
   private string  _etag;
-  private bool    _read_only = false;
+  private bool    _upgrade_ro = false;
+  private bool    _read_only  = false;
 
   /* Properties */
   public string filename {
@@ -53,18 +88,18 @@ public class Document : Object {
     }
   }
   public bool save_needed { private set; get; default = false; }
-  public bool readonly {
+  public bool read_only {
     get {
       var prev_read_only = _read_only;
       _read_only = Utils.is_read_only( _filename );
-      if( save_needed && prev_read_only && !_read_only ) {
+      if( save_needed && prev_read_only && !_read_only && !_upgrade_ro ) {
         save();
       }
-      return( _read_only );
+      return( _read_only || _upgrade_ro );
     }
   }
 
-  public signal void save_state_changed();
+  public signal void read_only_changed();
 
   //-------------------------------------------------------------
   // Default constructor
@@ -113,6 +148,23 @@ public class Document : Object {
   public void load_filename( string fname, bool saved ) {
     filename   = fname;
     _from_user = saved;
+  }
+
+  //-------------------------------------------------------------
+  // Returns the name of the backup file to use for the stored
+  // filename.
+  private string get_bak_file() {
+
+    var file = GLib.File.new_for_path( filename );
+
+    // Get parent directory
+    var parent = file.get_parent ();
+    var dir    = (parent != null) ? parent.get_path () : ".";
+    var bak_basename = "." + file.get_basename() + ".bak";
+
+    // Join dir + new basename
+    return( GLib.Path.build_filename( dir, bak_basename ) );
+
   }
 
   //-------------------------------------------------------------
@@ -190,7 +242,6 @@ public class Document : Object {
 
     Xml.Doc* doc = load_raw();
     if( doc == null ) {
-      stdout.printf( "  Well, that didn't work\n" );
       return( false );
     }
 
@@ -216,7 +267,10 @@ public class Document : Object {
   //-------------------------------------------------------------
   // Converts the Minder file into the Minder document and moves
   // all stored images to the ImageManager on the local computer
-  public bool load() {
+  public void load( bool force_v1_readonly, AfterLoadFunc? func = null ) {
+
+    var bak_file = get_bak_file();
+    var fname    = (FileUtils.test( bak_file, FileTest.EXISTS ) && !_map.settings.get_boolean( "keep-backup-after-save" )) ? bak_file : filename;
 
     Archive.Read archive = new Archive.Read();
     archive.support_filter_gzip();
@@ -233,8 +287,15 @@ public class Document : Object {
     extractor.set_standard_lookup();
 
     /* Open the portable Minder file for reading */
-    if( archive.open_filename( filename, 16384 ) != Archive.Result.OK ) {
-      return( upgrade() );
+    if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
+      if( force_v1_readonly ) {
+        upgrade( UpgradeAction.READ_ONLY, func );
+      } else if( _map.settings.get_boolean( "ask-for-upgrade-action" ) ) {
+        request_upgrade_action( func );
+      } else {
+        upgrade( (UpgradeAction)_map.settings.get_int( "upgrade-action" ), func );
+      }
+      return;
     }
 
     unowned Archive.Entry entry;
@@ -249,7 +310,7 @@ public class Document : Object {
         entry.set_pathname( GLib.Path.build_filename( get_image_dir(), entry.pathname() ) );
       }
 
-      /* Read from the archive and write the files to disk */
+      // Read from the archive and write the files to disk
       if( extractor.write_header( entry ) != Archive.Result.OK ) {
         continue;
       }
@@ -264,19 +325,20 @@ public class Document : Object {
 
     }
 
-    /* Close the archive */
+    // Close the archive
     if( archive.close () != Archive.Result.OK) {
       error( "Error: %s (%d)", archive.error_string(), archive.errno() );
     }
 
-    /* Set the image directory in the image manager */
+    // Set the image directory in the image manager
     _map.image_manager.set_image_dir( get_image_dir() );
 
-    /* Finally, load the minder file and re-save it */
-    load_xml();
-    // _map.changed();
+    // Finally, load the minder file
+    var loaded = load_xml();
 
-    return( true );
+    if( func != null ) {
+      func( loaded, "load" );
+    }
 
   }
 
@@ -301,7 +363,7 @@ public class Document : Object {
             var fname = filename.replace( ".mind", "-backup-%s-%s.mind".printf( now.to_string(), _etag ) );
             save_xml_internal( fname, false );
             _map.initialize_for_open();
-            load();
+            load( false );
           }
           delete doc;
         });
@@ -353,6 +415,15 @@ public class Document : Object {
 
     stdout.printf( "Saving...\n" );
 
+    var bak_file = get_bak_file();
+    var backed   = false;
+
+    // Copy the file to a .bak file if it currently exists
+    if( FileUtils.test( filename, FileTest.EXISTS ) ) {
+      copy_file( filename, bak_file );
+      backed = true;
+    }
+
     // Create the tar.gz archive named according the the first argument
     Archive.Write archive = new Archive.Write ();
     archive.add_filter_gzip();
@@ -374,8 +445,17 @@ public class Document : Object {
       error( "Error : %s (%d)", archive.error_string(), archive.errno() );
     }
 
+    // Remove the bak file if the save went well
+    if( backed && !_map.settings.get_boolean( "keep-backup-after-save" ) ) {
+      FileUtils.unlink( bak_file );
+    }
+
+    var upgrade_ro = _upgrade_ro;
+
     // Indicate that a save is no longer needed
     save_needed = false;
+    _upgrade_ro = false;
+    read_only_changed();
 
     return( true );
 
@@ -442,26 +522,30 @@ public class Document : Object {
 
   //-------------------------------------------------------------
   // Copies a file from one location to another
-  private void move_file( string from, string to ) {
+  private bool move_file( string from, string to ) {
     var from_file = File.new_for_path( from );
     var to_file   = File.new_for_path( to );
     try {
       from_file.move( to_file, FileCopyFlags.OVERWRITE );
     } catch( Error e ) {
       critical( e.message );
+      return( false );
     }
+    return( true );
   }
 
   //-------------------------------------------------------------
   // Copies a file from one location to another */
-  private void copy_file( string from, string to ) {
+  private bool copy_file( string from, string to ) {
     var from_file = File.new_for_path( from );
     var to_file   = File.new_for_path( to );
     try {
       from_file.copy( to_file, FileCopyFlags.OVERWRITE );
     } catch( Error e ) {
       critical( e.message );
+      return( false );
     }
+    return( true );
   }
 
   //-------------------------------------------------------------
@@ -478,17 +562,26 @@ public class Document : Object {
   }
 
   //-------------------------------------------------------------
-  // Upgrades the existing XML Minder file to the new Minder
-  // archive format, moving stored images to the new archive.
-  private bool upgrade() {
+  // Perform the upgrade and run the given function.
+  private void upgrade( UpgradeAction action, AfterLoadFunc? func ) {
 
-    /* Move the Minder XML file to the temporary directory */
-    move_file( filename, get_map_file() );
+    // Move the Minder XML file to the temporary directory
+    if( !copy_file( filename, get_map_file() ) ) {
+      if( func != null ) {
+        func( false, "upgrade A" );
+      }
+      return;
+    }
 
-    /* Load the XML file */
-    load_xml();
+    // Load the XML file
+    if( !load_xml() ) {
+      if( func != null ) {
+        func( false, "upgrade B" );
+      }
+      return;
+    }
 
-    /* Move all image files that are related to the temp images directory */
+    // Move all image files that are related to the temp images directory
     var image_ids = _map.image_manager.get_ids();
     for( int i=0; i<image_ids.length; i++ ) {
       var id       = image_ids.index( i );
@@ -496,13 +589,86 @@ public class Document : Object {
       copy_file( img_file, GLib.Path.build_filename( get_image_dir(), GLib.Path.get_basename( img_file ) ) );
     }
 
-    /* Set the image directory in the image manager */
+    // Set the image directory in the image manager
     _map.image_manager.set_image_dir( get_image_dir() );
 
-    /* Finally, create the new .minder file (it will act as a backup) */
-    save();
+    switch( action ) {
+      case UpgradeAction.OVERRIDE  :  save();  break;
+      case UpgradeAction.SAVE_AS   :  _map.win.save_file( _map, false );  break;
+      case UpgradeAction.READ_ONLY :  _upgrade_ro = true;  _map.editable_changed( _map );  break;
+    }
 
-    return( true );
+    if( func != null ) {
+      func( true, "upgrade C" );
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Displays a dialog to the user to request what to do when
+  // upgrading.
+  private void request_upgrade_action( AfterLoadFunc? func ) {
+
+    var dialog = new Granite.MessageDialog.with_image_from_icon_name(
+      _( "Upgrade?" ),
+      _( "This file is from an older version Minder and needs to be upgraded to edit.\n\nNote: Upgraded files cannot be viewed/edited with older versions of Minder." ),
+      "system-software-update",
+      ButtonsType.NONE
+    );
+
+    var cancel = new Button.with_label( _( "Cancel" ) );
+    dialog.add_action_widget( cancel, ResponseType.CANCEL );
+
+    var apply = new Button.with_label( _( "Apply" ) );
+    dialog.add_action_widget( apply, ResponseType.APPLY );
+
+    var options = new DropDown.from_strings( UpgradeAction.labels() ) {
+      halign       = Align.START,
+      margin_top   = 10,
+      margin_start = 20,
+      selected     = _map.settings.get_int( "upgrade-action" )
+    };
+
+    var remember = new CheckButton();
+    var rem_description = new Label( _( "Don't show this dialog again" ) ) {
+      halign = Align.START
+    };
+    var rem_info = new Label( _( "<small>This can be changed in preferences</small>" ) ) {
+      halign     = Align.START,
+      use_markup = true
+    };
+    var rem_grid = new Grid() {
+      row_spacing  = 5,
+      margin_start = 20,
+      margin_top   = 20
+    };
+
+    rem_grid.attach( remember,        0, 0 );
+    rem_grid.attach( rem_description, 1, 0 );
+    rem_grid.attach( rem_info,        1, 1 );
+
+    var box = dialog.get_content_area();
+    box.append( options );
+    box.append( rem_grid );
+
+    dialog.set_transient_for( _map.win );
+    dialog.set_modal( true );
+    dialog.set_default_response( ResponseType.APPLY );
+    dialog.set_title( _( "Upgrade Needed" ) );
+
+    dialog.response.connect((id) => {
+      if( id == ResponseType.APPLY ) {
+        var action = (UpgradeAction)options.selected;
+        _map.settings.set_int( "upgrade-action", action );
+        _map.settings.set_boolean( "ask-for-upgrade-action", !remember.active );
+        upgrade( action, func );
+      } else if( (id == ResponseType.CANCEL) && (func != null) ) {
+        func( false, "request_upgrade_action" );
+      }
+      dialog.close();
+    });
+
+    dialog.present();
 
   }
 

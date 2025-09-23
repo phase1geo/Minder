@@ -47,9 +47,10 @@ public class EmptyMenu : BaseMenu {
   /* Called when the menu is popped up */
   protected override void on_popup() {
 
-    set_enabled( KeyCommand.EDIT_PASTE,             map.model.node_pasteable() );
-    set_enabled( KeyCommand.NODE_ADD_SIBLING_AFTER, (map.get_current_connection() == null) );
-    set_enabled( KeyCommand.NODE_SELECT_ROOT,       map.root_selectable() );
+    set_enabled( KeyCommand.EDIT_PASTE,              (map.model.node_pasteable() && map.editable) );
+    set_enabled( KeyCommand.NODE_ADD_SIBLING_AFTER,  ((map.get_current_connection() == null) && map.editable) );
+    set_enabled( KeyCommand.NODE_QUICK_ENTRY_INSERT, map.editable );
+    set_enabled( KeyCommand.NODE_SELECT_ROOT,        map.root_selectable() );
 
   }
 

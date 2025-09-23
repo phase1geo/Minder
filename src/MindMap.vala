@@ -34,6 +34,7 @@ public class MindMap {
   private Selection      _selected;
   private bool           _focus_mode  = false;
   private double         _focus_alpha = 0.05;
+  private bool           _editable    = true;
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -152,6 +153,17 @@ public class MindMap {
       _model.next_node_id = value;
     }
   }
+  public bool editable {
+    get {
+      return( _editable && !doc.read_only );
+    }
+    set {
+      if( _editable != value ) {
+        _editable = value;
+        editable_changed( this );
+      }
+    }
+  }
 
   public signal void changed();
   public signal void current_changed( MindMap map );
@@ -161,8 +173,8 @@ public class MindMap {
   public signal void scroll_changed();
   public signal void show_properties( string? tab, PropertyGrab grab_type );
   public signal void hide_properties();
-  public signal void save_state_changed();
   public signal void undo_buffer_changed( UndoBuffer buf );
+  public signal void editable_changed( MindMap map );
 
   //-------------------------------------------------------------
   // Constructor
@@ -211,7 +223,7 @@ public class MindMap {
     _canvas.scale_changed.connect( handle_scale_changed );
     _canvas.scroll_changed.connect( handle_scroll_changed );
 
-    _doc.save_state_changed.connect( handle_save_state_changed );
+    _doc.read_only_changed.connect( handle_read_only_changed );
 
     _undo_buffer.buffer_changed.connect( handle_undo_buffer_changed );
 
@@ -267,9 +279,12 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
-  // Handles any indications that the save state has changed.
-  private void handle_save_state_changed() {
-    save_state_changed();
+  // Handles any indications that the document read-only status
+  // changed.
+  private void handle_read_only_changed() {
+    stdout.printf( "In handle_read_only_changed, doc.read_only: %s, editable: %s\n",
+     doc.read_only.to_string(), editable.to_string() );
+    editable_changed( this );
   }
 
   //-------------------------------------------------------------
@@ -322,6 +337,9 @@ public class MindMap {
     set_current_node( null );
 
     _canvas.queue_draw();
+
+    // TODO - Testing non-editable mode (remove this)
+    editable = false;
 
   }
 

@@ -192,7 +192,7 @@ public class ExportPortableMinder : Export {
     DirUtils.remove( img_dir );
 
     /* Finally, load the minder file and re-save it */
-    map.doc.load();
+    map.doc.load( true );
     map.auto_save();
 
     return( true );

@@ -86,12 +86,6 @@ public class Minder : Gtk.Application {
     });
     */
 
-    /*
-    appwin.destroy.connect(() => {
-      quit();
-    });
-    */
-
     // Initialize desktop interface settings
     string[] names = {"font-name", "text-scaling-factor"};
     iface_settings = new GLib.Settings( INTERFACE_SCHEMA );
@@ -265,12 +259,13 @@ public class Minder : Gtk.Application {
         });
         var map = appwin.create_map();
         map.doc.load_filename( infile, false );
-        if( map.doc.load() ) {
-          return( export.export( outfile, map ) );
-        } else {
-          stderr.printf( _( "ERROR:  Unable to load Minder input file %s" ).printf( infile ) + "\n" );
-          return( false );
-        }
+        map.doc.load( true, (loaded) => {
+          if( loaded ) {
+            export.export( outfile, map );
+          } else {
+            stderr.printf( _( "ERROR:  Unable to load Minder input file %s" ).printf( infile ) + "\n" );
+          }
+        });
       }
     }
 

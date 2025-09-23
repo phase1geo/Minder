@@ -61,6 +61,8 @@ public class ShortcutTooltip {
   }
 }
 
+public delegate void AfterLoadTabFunc();
+
 public class MainWindow : Gtk.ApplicationWindow {
 
   private GLib.Settings     _settings;
@@ -357,17 +359,19 @@ public class MainWindow : Gtk.ApplicationWindow {
   private string get_tab_label_name( int page_num ) {
     var page = _nb.get_nth_page( page_num );
     var tab  = _nb.get_tab_label( page );
-    var label = (Label)Utils.get_child_at_index( tab, 0 );
+    var label = (Label)Utils.get_child_at_index( tab, 1 );
     return( label.label );
   }
 
   //-------------------------------------------------------------
   // Sets the tab label name and tooltip to the given values.
-  private void set_tab_label_info( string label, string tooltip ) {
-    var page = _nb.get_nth_page( _nb.page );
+  private void set_tab_label_info( int page_num, bool editable, string label, string tooltip ) {
+    var page = _nb.get_nth_page( page_num );
     var tab  = _nb.get_tab_label( page );
-    var lbl  = (Label)Utils.get_child_at_index( tab, 0 );
-    lbl.label = label;
+    var lock = (Image)Utils.get_child_at_index( tab, 0 );
+    var lbl  = (Label)Utils.get_child_at_index( tab, 1 );
+    lock.visible     = !editable;
+    lbl.label        = label;
     lbl.tooltip_text = tooltip;
   }
 
@@ -447,7 +451,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     update_title( map );
     canvas_changed( map );
     _brain.set_list( map.model.braindump );
-    set_braindump_ui( map.model.braindump_shown );
+    _brain_btn.sensitive = map.editable;
+    set_braindump_ui( map, map.model.braindump_shown );
     save_tab_state( page_num );
   }
 
@@ -520,6 +525,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     map.undo_buffer.buffer_changed.connect( do_buffer_changed );
     map.undo_text.buffer_changed.connect( do_buffer_changed );
     map.theme_changed.connect( on_theme_changed );
+    map.editable_changed.connect( on_editable_changed );
     map.animator.enable = _settings.get_boolean( "enable-animations" );
 
     if( fname != null ) {
@@ -531,9 +537,17 @@ public class MainWindow : Gtk.ApplicationWindow {
       child = map.canvas
     };
 
-    var tab_label = new Label( map.doc.label ) { margin_start  = 10,
-      margin_end    = 5,
+    var tab_lock = new Image.from_icon_name( "system-lock-screen-symbolic" ) {
+      visible       = !map.editable,
+      margin_start  = 10,
       margin_top    = 5,
+      margin_bottom = 5
+    };
+    tab_lock.add_css_class( "tab" );
+
+    var tab_label = new Label( map.doc.label ) { margin_start  = 10,
+      margin_start  = 5,
+      margin_end    = 5,
       margin_top    = 5,
       margin_bottom = 5,
       tooltip_text  = map.doc.label
@@ -555,6 +569,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
 
     var tab_box = new Box( Orientation.HORIZONTAL, 5 );
+    tab_box.append( tab_lock );
     tab_box.append( tab_label );
     tab_box.append( tab_revealer );
 
@@ -588,6 +603,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     /* Indicate that the tab has changed */
     if( reason != TabAddReason.LOAD ) {
       _nb.page = tab_index;
+      if( reason == TabAddReason.OPEN ) {
+        map.editable = true;
+      }
     }
 
     map.canvas.grab_focus();
@@ -671,7 +689,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     if( (map == null) || !map.doc.is_saved() ) {
       label = _( "Unnamed Document" ) + label;
     } else {
-      if( map.doc.readonly ) {
+      if( map.doc.read_only || !map.editable ) {
         label += " [%s]%s".printf( _( "Read-Only" ), label );
       }
       label = GLib.Path.get_basename( map.doc.filename ) + label;
@@ -1020,7 +1038,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     register_widget_for_shortcut( _brain_btn, KeyCommand.TOGGLE_BRAINDUMP, _( "Brain Dump" ) );
 
     _brain_btn.clicked.connect((e) => {
-      set_braindump_ui( !_brain.visible );
+      set_braindump_ui( get_current_map(), !_brain.visible );
       save_tab_state( _nb.page );
     });
 
@@ -1030,19 +1048,18 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Shows or hides the braindump UI.
-  public void set_braindump_ui( bool show ) {
+  public void set_braindump_ui( MindMap map, bool show ) {
 
-    var map = get_current_map();
-    if( map != null ) {
-      map.model.braindump_shown = show;
-    }
+    var show_ui = show && map.editable;
 
-    _brain.visible    = show;
-    _brain_btn.active = show;
+    map.model.braindump_shown = show;
 
-    if( show ) {
+    _brain.visible    = show_ui;
+    _brain_btn.active = show_ui;
+
+    if( show_ui ) {
       _brain.grab_focus();
-    } else if( map != null ) {
+    } else {
       map.canvas.grab_focus();
     }
 
@@ -1375,9 +1392,13 @@ public class MainWindow : Gtk.ApplicationWindow {
     if( fname.has_suffix( ".minder" ) ) {
       var map = add_tab_conditionally( fname, TabAddReason.OPEN );
       update_title( map );
-      if( map.doc.load() ) {
-        save_tab_state( _nb.page );
-      }
+      map.doc.load( false, (valid, msg) => {
+        if( valid ) {
+          save_tab_state( _nb.page );
+        } else {
+          close_current_tab();
+        }
+      });
       return( true );
     } else {
       for( int i=0; i<exports.length(); i++ ) {
@@ -1450,6 +1471,24 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
+  // Called when the editable attribute changes within the mindmap.
+  private void on_editable_changed( MindMap map ) {
+    _brain_btn.sensitive = map.editable;
+    set_braindump_ui( map, map.model.braindump_shown );
+    (_stack.get_child_by_name( "current" ) as CurrentInspector).editable_changed();
+    (_stack.get_child_by_name( "style" )   as StyleInspector).editable_changed();
+    (_stack.get_child_by_name( "map" )     as MapInspector).editable_changed();
+    var label = map.doc.label;
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      if( get_map( i ) == map ) {
+        set_tab_label_info( i, map.editable, label, map.doc.filename );
+        break;
+      }
+    }
+    update_title( map );
+  }
+
+  //-------------------------------------------------------------
   // Called whenever the undo buffer changes state.  Updates the
   // state of the undo and redo buffer buttons.
   public void do_buffer_changed( UndoBuffer buf ) {
@@ -1517,7 +1556,7 @@ public class MainWindow : Gtk.ApplicationWindow {
           if( remove_after_save ) {
             remove_tab( null );
           } else {
-            set_tab_label_info( map.doc.label, fname );
+            set_tab_label_info( _nb.page, map.editable, map.doc.label, fname );
             update_title( map );
             save_tab_state( _nb.page );
             Utils.store_chooser_folder( fname, false );
@@ -1536,16 +1575,16 @@ public class MainWindow : Gtk.ApplicationWindow {
     save_file( map, false );
   }
 
-  /* Called whenever the node selection changes in the canvas */
+  //-------------------------------------------------------------
+  // Called whenever the node selection changes in the canvas
   private void on_current_changed( MindMap map ) {
     action_set_enabled( "win.action_zoom_selected", (map.get_current_node() != null) );
     _focus_btn.active = map.focus_mode;
   }
 
-  /*
-   Called if the canvas changes the scale factor value. Adjusts the
-   UI to match.
-  */
+  //-------------------------------------------------------------
+  // Called if the canvas changes the scale factor value. Adjusts the
+  // UI to match.
   private void change_scale( double scale_factor ) {
     var marks       = DrawArea.get_scale_marks();
     var scale_value = scale_factor * 100;
@@ -1557,7 +1596,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     save_tab_state( _nb.page );
   }
 
-  /* Called whenever the DrawArea origin changes in the current tab */
+  //-------------------------------------------------------------
+  // Called whenever the DrawArea origin changes in the current tab
   private void change_origin() {
     save_tab_state( _nb.page );
   }
@@ -1568,7 +1608,9 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void save_tabs() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
-      map.doc.cleanup();
+      if( map.editable ) {
+        map.doc.cleanup();
+      }
     }
   }
 
@@ -1613,18 +1655,21 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Displays the theme editor pane */
+  //-------------------------------------------------------------
+  // Displays the theme editor pane
   public void show_theme_editor( bool edit ) {
     _themer.initialize( get_current_map().get_theme(), edit );
     _inspector_nb.page = 1;
   }
 
-  /* Hides the theme editor pane */
+  //-------------------------------------------------------------
+  // Hides the theme editor pane
   public void hide_theme_editor() {
     _inspector_nb.page = 0;
   }
 
-  /* Hides the node properties panel */
+  //-------------------------------------------------------------
+  // Hides the node properties panel
   private void hide_properties() {
     if( !_inspector_nb.get_mapped() ) return;
     _prop_btn.icon_name    = _prop_show;
@@ -1639,7 +1684,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     _settings.set_boolean( "sticker-properties-shown", false );
   }
 
-  /* Converts the given value from the scale to the zoom value to use */
+  //-------------------------------------------------------------
+  // Converts the given value from the scale to the zoom value to
+  // use.
   private double zoom_to_value( double value ) {
     double last = -1;
     foreach (double mark in DrawArea.get_scale_marks()) {
@@ -1653,7 +1700,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     return( last );
   }
 
-  /* Sets the scale factor for the level of zoom to perform */
+  //-------------------------------------------------------------
+  // Sets the scale factor for the level of zoom to perform
   private bool adjust_zoom( ScrollType scroll, double new_value ) {
     var value        = zoom_to_value( new_value );
     var scale_factor = value / 100;
@@ -1764,7 +1812,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     map.canvas.grab_focus();
   }
 
-  /* Display matched items to the search within the search popover */
+  //-------------------------------------------------------------
+  // Display matched items to the search within the search popover.
   private void on_search_change() {
     var search_opts = new bool[SearchOptions.NUM];
     search_opts[SearchOptions.NODES]       = _search_nodes.active;
@@ -1984,10 +2033,12 @@ public class MainWindow : Gtk.ApplicationWindow {
       node->new_prop( "origin-y",  map.canvas.origin_y.to_string() );
       node->new_prop( "scale",     map.canvas.sfactor.to_string() );
       node->new_prop( "braindump", map.model.braindump_shown.to_string() );
+      node->new_prop( "readonly",  (!map.editable).to_string() );
       root->add_child( node );
     }
 
     root->new_prop( "selected", current_page.to_string() );
+    root->new_prop( "version",  "2" );
 
     /* Save the file */
     doc->save_format_file( fname, 1 );
@@ -1997,25 +2048,131 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
+  // Returns the filepath of the tab_state.xml file.
+  private string get_tab_state_path() {
+    return( GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" ) );
+  }
+
+  //-------------------------------------------------------------
   // Loads the tab state
   public void load_tab_state() {
 
-    var tab_state = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" );
+    var tab_state = get_tab_state_path();
     if( !FileUtils.test( tab_state, FileTest.EXISTS ) ) {
       do_new_file();
       return;
     }
 
     Xml.Doc* doc  = Xml.Parser.parse_file( tab_state );
-    var      tabs = 0;
-    var      tab_skipped = false;
 
     if( doc == null ) {
       do_new_file();
       return;
     }
 
-    var root = doc->get_root_element();
+    var root    = doc->get_root_element();
+    var version = root->get_prop( "version" );
+
+    delete doc;
+
+    if( version == null ) {
+      Idle.add(() => {
+        request_upgrade_action(() => {
+          load_tab_state_xml();
+        });
+        return( false );
+      });
+    } else {
+      load_tab_state_xml();
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Displays the UI that will allow the user to specify the
+  // upgrade action to use.
+  private void request_upgrade_action( AfterLoadTabFunc func ) {
+
+    var dialog = new Granite.MessageDialog.with_image_from_icon_name(
+      _( "File upgrade needed" ),
+      _( "All previously opened tabs contain Minder files that need to be upgraded to be editable by this version of Minder.\n\nSelect an upgrade option below." ),
+      "system-software-update",
+      ButtonsType.NONE
+    );
+
+    var exit  = new Button.with_label( _( "Exit Minder" ) );
+    dialog.add_action_widget( exit, ResponseType.CLOSE );
+
+    var apply = new Button.with_label( _( "Apply" ) );
+    dialog.add_action_widget( apply, ResponseType.APPLY );
+
+    var options = new DropDown.from_strings( UpgradeAction.labels() ) {
+      halign       = Align.START,
+      margin_top   = 10,
+      margin_start = 20,
+      selected     = settings.get_int( "upgrade-action" )
+    };
+
+    var remember = new CheckButton();
+    var rem_description = new Label( _( "Don't show this dialog again" ) ) {
+      halign = Align.START
+    };
+    var rem_info = new Label( _( "<small>This can be changed in preferences</small>" ) ) {
+      halign     = Align.START,
+      use_markup = true
+    };
+    var rem_grid = new Grid() {
+      row_spacing  = 5,
+      margin_top   = 20,
+      margin_start = 20
+    };
+
+    rem_grid.attach( remember,        0, 0 );
+    rem_grid.attach( rem_description, 1, 0 );
+    rem_grid.attach( rem_info,        1, 1 );
+
+    var box = dialog.get_content_area();
+    box.append( options );
+    box.append( rem_grid );
+
+    dialog.set_transient_for( this );
+    dialog.set_modal( true );
+    dialog.set_default_response( ResponseType.APPLY );
+    dialog.set_title( _( "Upgrades Needed" ) );
+
+    dialog.response.connect((id) => {
+      if( id == ResponseType.APPLY ) {
+        var action = (UpgradeAction)options.selected;
+        settings.set_int( "upgrade-action", action );
+        settings.set_boolean( "ask-for-upgrade-action", !remember.active );
+        if( func != null ) {
+          func();
+        }
+      } else if( id == ResponseType.CLOSE ) {
+        destroy();
+      }
+      dialog.close();
+    });
+
+    dialog.present();
+
+  }
+
+  //-------------------------------------------------------------
+  // Loads the tab state after the upgrade action has been established.
+  private void load_tab_state_xml() {
+
+    Xml.Doc* doc  = Xml.Parser.parse_file( get_tab_state_path() );
+
+    if( doc == null ) {
+      return;
+    }
+
+    var root        = doc->get_root_element();
+    var tabs        = 0;
+    var tab_skipped = false;
+
+    UpgradeAction? upgrade_action = null;
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
         var fname = it->get_prop( "path" );
@@ -2025,6 +2182,7 @@ public class MainWindow : Gtk.ApplicationWindow {
           var origin_y  = it->get_prop( "origin-y" );
           var sfactor   = it->get_prop( "scale" );
           var braindump = it->get_prop( "braindump" );
+          var read_only = it->get_prop( "readonly" );
           var map       = add_tab( fname, TabAddReason.LOAD );
           if( origin_x != null ) {
             map.canvas.origin_x = int.parse( origin_x );
@@ -2039,10 +2197,12 @@ public class MainWindow : Gtk.ApplicationWindow {
           if( braindump != null ) {
             map.model.braindump_shown = bool.parse( braindump );
           }
-          map.doc.load_filename( fname, bool.parse( saved ) );
-          if( map.doc.load() ) {
-            tabs++;
+          if( read_only != null ) {
+            map.editable = !bool.parse( read_only );
           }
+          map.doc.load_filename( fname, bool.parse( saved ) );
+          map.doc.load( true, null );
+          tabs++;
         } else {
           tab_skipped = true;
         }

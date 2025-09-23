@@ -28,9 +28,11 @@ public class MapInspector : Box {
   private GLib.Settings _settings;
   private ModeButtons   _layout;
   private Grid?         _theme_grid     = null;
+  private Button        _add_theme;
   private Button?       _balance        = null;
   private Button?       _fold_completed = null;
   private Button?       _unfold_all     = null;
+  private Switch        _read_only;
   private Switch        _hide_connections;
   private Switch        _hide_callouts;
   private Button        _hleft;
@@ -43,6 +45,7 @@ public class MapInspector : Box {
 
   // This signal can be called by outside code to force icons to be updated
   public signal void update_icons();
+  public signal void editable_changed();
 
   //-------------------------------------------------------------
   // Default constructor.
@@ -54,6 +57,7 @@ public class MapInspector : Box {
     _settings = settings;
 
     // Create the interface
+    add_readonly_ui();
     add_connection_ui();
     add_callout_ui();
     add_layout_ui();
@@ -64,6 +68,11 @@ public class MapInspector : Box {
     // Listen for changes to the current tab
     win.canvas_changed.connect( tab_changed );
     win.themes.themes_changed.connect( update_themes );
+
+    editable_changed.connect(() => {
+      current_changed();
+      _layout.editable_changed( _map.editable );
+    });
 
     // Listen for preference changes
     _settings.changed.connect( settings_changed );
@@ -90,6 +99,7 @@ public class MapInspector : Box {
     _map = map;
     if( _map != null ) {
       _map.animator.enable = _settings.get_boolean( "enable-animations" );
+      _read_only.set_active( _map.doc.read_only );
       _hide_connections.set_active( _map.model.connections.hide );
       _hide_callouts.set_active( _map.model.hide_callouts );
       _map.model.set_theme( _map.get_theme(), false );
@@ -104,6 +114,39 @@ public class MapInspector : Box {
     switch( key ) {
       case "hide-themes-not-matching-visual-style" :  update_themes();  break;
     }
+  }
+
+  //-------------------------------------------------------------
+  // Add the readonly UI.
+  private void add_readonly_ui() {
+
+    var lbl = new Label( _( "Read-only" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0,
+    };
+    lbl.add_css_class( "titled" );
+
+    _read_only = new Switch() {
+      halign = Align.END,
+      active = false
+    };
+    _read_only.notify["active"].connect( read_only_changed );
+
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign = Align.FILL
+    };
+    box.append( lbl );
+    box.append( _read_only );
+
+    append( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Handles any changes to the read-only switch.
+  private void read_only_changed() {
+    _map.editable = !_read_only.active;
   }
 
   //-------------------------------------------------------------
@@ -299,7 +342,7 @@ public class MapInspector : Box {
   //-------------------------------------------------------------
   // Updates the state of the node alignment buttons.
   private void update_node_alignment() {
-    var enable_alignment = _map.model.nodes_alignable();
+    var enable_alignment = _map.model.nodes_alignable() && _map.editable;
     _hleft.set_sensitive( enable_alignment );
     _hcenter.set_sensitive( enable_alignment );
     _hright.set_sensitive( enable_alignment );
@@ -337,13 +380,13 @@ public class MapInspector : Box {
     /* Add the themes to the theme box */
     update_themes();
 
-    var add = new Button.from_icon_name( "list-add-symbolic" ) {
+    _add_theme = new Button.from_icon_name( "list-add-symbolic" ) {
       valign       = Align.END,
       has_frame    = false,
       tooltip_text = _( "Add Custom Theme" )
     };
-    add.clicked.connect( create_custom_theme );
-    tb.append( add );
+    _add_theme.clicked.connect( create_custom_theme );
+    tb.append( _add_theme );
 
     /* Pack the panel */
     append( lbl );
@@ -393,12 +436,12 @@ public class MapInspector : Box {
   // Updates the theme box widget with the current list of themes.
   private void update_themes() {
 
-    /* Clear the contents of the theme box */
+    // Clear the contents of the theme box
     for( int i=0; i<2; i++ ) {
       _theme_grid.remove_column( 0 );
     }
 
-    /* Get the theme information to display */
+    // Get the theme information to display
     var names    = new Array<string>();
     var icons    = new Array<Picture>();
     var hide     = _settings.get_boolean( "hide-themes-not-matching-visual-style" );
@@ -408,7 +451,7 @@ public class MapInspector : Box {
     _win.themes.names( ref names );
     _win.themes.icons( ref icons );
 
-    /* Add the themes */
+    // Add the themes
     var index = 0;
     for( int i=0; i<names.length; i++ ) {
       var name  = names.index( i );
@@ -426,10 +469,12 @@ public class MapInspector : Box {
         var click = new GestureClick();
         item.add_controller( click );
         click.pressed.connect((n_press, x, y) => {
-          select_theme( name );
-          _map.model.set_theme( theme, true );
-          if( theme.custom && (n_press == 2) ) {
-            edit_current_theme();
+          if( _map.editable ) {
+            select_theme( name );
+            _map.model.set_theme( theme, true );
+            if( theme.custom && (n_press == 2) ) {
+              edit_current_theme();
+            }
           }
         });
         _theme_grid.attach( item, (index % 2), (index / 2) );
@@ -437,7 +482,7 @@ public class MapInspector : Box {
       }
     }
 
-    /* Make sure that the current theme is selected */
+    // Make sure that the current theme is selected
     if( _map != null ) {
       select_theme( _map.get_theme().name );
     }
@@ -458,10 +503,10 @@ public class MapInspector : Box {
       }
     }
 
-    /* Set the sensitivity of the Balance Nodes button */
-    _balance.set_sensitive( _map.layouts.get_layout( name ).balanceable );
+    // Set the sensitivity of the Balance Nodes button
+    _balance.set_sensitive( _map.layouts.get_layout( name ).balanceable && _map.editable );
 
-    /* Make sure that alignment tools are shown when manual layout is selected */
+    // Make sure that alignment tools are shown when manual layout is selected
     _alignment_revealer.reveal_child = (name == _( "Manual" ));
 
   }
@@ -564,8 +609,10 @@ public class MapInspector : Box {
     }
 
     /* Update the sensitivity of the buttons */
-    _fold_completed.set_sensitive( foldable );
-    _unfold_all.set_sensitive( unfoldable );
+    _read_only.set_sensitive( !_map.doc.read_only );
+    _add_theme.set_sensitive( _map.editable );
+    _fold_completed.set_sensitive( foldable && _map.editable );
+    _unfold_all.set_sensitive( unfoldable && _map.editable );
 
     /* Update the node alignment buttons */
     update_node_alignment();

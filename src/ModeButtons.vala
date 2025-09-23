@@ -41,6 +41,7 @@ public class ModeButtons : Box {
   public signal void changed( int index );
 
   public signal void update_icons();
+  public signal void editable_changed( bool editable );
 
   //-------------------------------------------------------------
   // Default constructor
@@ -68,6 +69,10 @@ public class ModeButtons : Box {
     button.clicked.connect(() => {
       _selected = Utils.get_child_index( this, button );
       changed( _selected );
+    });
+
+    editable_changed.connect((editable) => {
+      button.set_sensitive( editable );
     });
 
     // This the checkbutton to the group

@@ -234,9 +234,6 @@ public class NodeMenu : BaseMenu {
     change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_CALLOUT,       callout_lbl );
     change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, fold_lbl );
 
-    set_enabled( KeyCommand.EDIT_PASTE, true );
-    set_enabled( KeyCommand.NODE_PASTE_REPLACE, true );
-
     // Set the paste and replace text
     if( MinderClipboard.node_pasteable() ) {
       change_menu_item_label( _edit_menu, KeyCommand.EDIT_PASTE,         _( "Paste Node As Child" ) );
@@ -254,18 +251,35 @@ public class NodeMenu : BaseMenu {
       set_enabled( KeyCommand.NODE_PASTE_REPLACE, false );
     }
 
-    /* Set the menu sensitivity */
-    set_enabled( KeyCommand.NODE_ADD_CONNECTION,       !map.model.connections.hide );
-    set_enabled( KeyCommand.NODE_ADD_PARENT,           node_parentable() );
-    set_enabled( KeyCommand.NODE_CHANGE_LINK_COLOR,    !current.is_root() );
-    set_enabled( KeyCommand.NODE_RANDOMIZE_LINK_COLOR, !current.is_root() );
-    set_enabled( KeyCommand.NODE_REPARENT_LINK_COLOR,  (!current.is_root() && !current.main_branch() && current.link_color_root) );
-    set_enabled( KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, node_foldable() );
-    set_enabled( KeyCommand.NODE_TOGGLE_SEQUENCE,      map.model.sequences_togglable() );
-    set_enabled( KeyCommand.NODE_TOGGLE_LINKS,         node_linkable() );
-    set_enabled( KeyCommand.NODE_DETACH,               map.model.detachable() );
-    set_enabled( KeyCommand.NODE_SORT_ALPHABETICALLY,  node_sortable() );
-    set_enabled( KeyCommand.NODE_SORT_RANDOMLY,        node_sortable() );
+    var node_pasteable = MinderClipboard.node_pasteable();
+
+    // Set the menu sensitivity
+    set_enabled( KeyCommand.EDIT_CUT,                  map.editable );
+    set_enabled( KeyCommand.EDIT_PASTE,                (node_pasteable && map.editable) );
+    set_enabled( KeyCommand.NODE_PASTE_REPLACE,        (node_pasteable && map.editable) );
+    set_enabled( KeyCommand.NODE_REMOVE,               map.editable );
+    set_enabled( KeyCommand.NODE_REMOVE_ONLY,          map.editable );
+    set_enabled( KeyCommand.EDIT_SELECTED,             map.editable );
+    set_enabled( KeyCommand.EDIT_NOTE,                 map.editable );
+    set_enabled( KeyCommand.NODE_CHANGE_TASK,          map.editable );
+    set_enabled( KeyCommand.NODE_CHANGE_IMAGE,         map.editable );
+    set_enabled( KeyCommand.NODE_ADD_CONNECTION,       (!map.model.connections.hide && map.editable) );
+    set_enabled( KeyCommand.NODE_ADD_PARENT,           (node_parentable() && map.editable) );
+    set_enabled( KeyCommand.NODE_ADD_GROUP,            map.editable );
+    set_enabled( KeyCommand.NODE_ADD_ROOT,             map.editable );
+    set_enabled( KeyCommand.NODE_ADD_CHILD,            map.editable );
+    set_enabled( KeyCommand.NODE_QUICK_ENTRY_INSERT,   map.editable );
+    set_enabled( KeyCommand.NODE_QUICK_ENTRY_REPLACE,  map.editable );
+    set_enabled( KeyCommand.NODE_CHANGE_LINK_COLOR,    (!current.is_root() && map.editable) );
+    set_enabled( KeyCommand.NODE_RANDOMIZE_LINK_COLOR, (!current.is_root() && map.editable) );
+    set_enabled( KeyCommand.NODE_REPARENT_LINK_COLOR,  (!current.is_root() && !current.main_branch() && current.link_color_root && map.editable) );
+    set_enabled( KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, (node_foldable() && map.editable) );
+    set_enabled( KeyCommand.NODE_TOGGLE_SEQUENCE,      (map.model.sequences_togglable() && map.editable) );
+    set_enabled( KeyCommand.NODE_TOGGLE_LINKS,         (node_linkable() && map.editable) );
+    set_enabled( KeyCommand.NODE_TOGGLE_CALLOUT,       map.editable );
+    set_enabled( KeyCommand.NODE_DETACH,               (map.model.detachable() && map.editable) );
+    set_enabled( KeyCommand.NODE_SORT_ALPHABETICALLY,  (node_sortable() && map.editable) );
+    set_enabled( KeyCommand.NODE_SORT_RANDOMLY,        (node_sortable() && map.editable) );
     set_enabled( KeyCommand.NODE_SELECT_ROOT,          map.root_selectable() );
     set_enabled( KeyCommand.NODE_SELECT_SIBLING_NEXT,  map.model.sibling_exists( current ) );
     set_enabled( KeyCommand.NODE_SELECT_SIBLING_PREV,  map.model.sibling_exists( current ) );
@@ -274,8 +288,10 @@ public class NodeMenu : BaseMenu {
     set_enabled( KeyCommand.NODE_SELECT_PARENT,        map.parent_selectable() );
     set_enabled( KeyCommand.NODE_SELECT_LINKED,        node_has_link() );
     set_enabled( KeyCommand.NODE_SELECT_CALLOUT,       node_has_callout() );
-    set_enabled( KeyCommand.REMOVE_STICKER_SELECTED,   (current.sticker != null) );
-    set_enabled( KeyCommand.NODE_ADD_SIBLING_AFTER,    !current.is_summary() );
+    set_enabled( KeyCommand.NODE_SELECT_CONNECTION,    map.editable );
+    set_enabled( KeyCommand.NODE_SELECT_CALLOUT,       map.editable );
+    set_enabled( KeyCommand.REMOVE_STICKER_SELECTED,   ((current.sticker != null) && map.editable) );
+    set_enabled( KeyCommand.NODE_ADD_SIBLING_AFTER,    (!current.is_summary() && map.editable) );
 
   }
 

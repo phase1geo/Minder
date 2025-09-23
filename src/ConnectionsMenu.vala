@@ -36,4 +36,11 @@ public class ConnectionsMenu : BaseMenu {
 
   }
 
+  //-------------------------------------------------------------
+  // Update state of menu items based on the current state of the
+  // mind map.
+  protected override void on_popup() {
+    set_enabled( KeyCommand.CONNECTION_REMOVE, map.editable );
+  }
+
 }

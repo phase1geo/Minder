@@ -45,6 +45,7 @@ public class ImageMenu : Box {
   public signal void changed( int index );
 
   public signal void update_icons();
+  public signal void editable_changed( bool editable );
 
   //-------------------------------------------------------------
   // Default constructor
@@ -68,6 +69,10 @@ public class ImageMenu : Box {
       var picture = (Picture)Utils.get_child_at_index( _box, 0 );
       _current = 0;
       picture.add_css_class( Granite.STYLE_CLASS_VIEW );
+    });
+
+    editable_changed.connect((editable) => {
+      _mb.set_sensitive( editable );
     });
 
     var key = new EventControllerKey();
