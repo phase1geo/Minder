@@ -48,21 +48,18 @@ public class ExportWebP : Export {
 
     /* Write the pixbuf to the file */
     var pixbuf = pixbuf_get_from_surface( surface, 0, 0, ((int)w + 20), ((int)h + 20) );
+    pixbuf = pixbuf.add_alpha( false, 0, 0, 0 );
 
     uint8* output_buffer = null;
     size_t buffer_size   = 0;
-    switch( pixbuf.get_n_channels() ) {
-      case 3 :
-        buffer_size = WebP.encode_lossless_rgb( pixbuf.get_pixels(), pixbuf.get_width(), pixbuf.get_height(), pixbuf.get_rowstride(), out output_buffer );
-        break;
-      case 4 :
-        buffer_size = WebP.encode_lossless_rgb( pixbuf.get_pixels(), pixbuf.get_width(), pixbuf.get_height(), pixbuf.get_rowstride(), out output_buffer );
-        break;
-    }
+
+    buffer_size = WebP.encode_lossless_rgba( pixbuf.get_pixels(), pixbuf.get_width(), pixbuf.get_height(), pixbuf.get_rowstride(), out output_buffer );
+
     if( buffer_size == 0 ) {
-      stdout.printf( "Failed to encode WebP image." );
+      stdout.printf( "Failed to encode WebP image.\n" );
       return( false );
     }
+
     try {
       uint8[] obuf = {};
       for( int i=0; i<buffer_size; i++ ) {
