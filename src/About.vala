@@ -26,7 +26,8 @@ public class About {
 
   private AboutDialog _about;
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public About( MainWindow win ) {
 
     _about = new AboutDialog();

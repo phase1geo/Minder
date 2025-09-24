@@ -342,9 +342,9 @@
       <description>
         Action to perform when loading an older Minder format to an imcompatible newer Minder format.  The
         following values are supported:
-          0 - Overwrites the older Minder file with the newer version.
-          1 - Saves the newer Minder file with a new filename.
-          2 - Opens the older Minder file in read-only mode.
+          0 - Upgrades the Minder file to new version.
+          1 - Upgrades the Minder file to new version, saving a copy of the older Minder file.
+          2 - Opens the Minder file in read-only mode without upgrading.
       </description>
     </key>
     <key name="ask-for-upgrade-action" type="b">

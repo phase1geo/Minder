@@ -25,7 +25,7 @@ using GLib;
 
 public enum UpgradeAction {
   OVERRIDE,
-  SAVE_AS,
+  SAVE_ORIG,
   READ_ONLY,
   NUM;
 
@@ -33,9 +33,9 @@ public enum UpgradeAction {
   // Returns the label to display to the user for this option.
   public string? label() {
     switch( this ) {
-      case OVERRIDE  :  return( _( "Upgrade older Minder file to new version" ) );
-      case SAVE_AS   :  return( _( "Upgrade older Minder file to new with different filename" ) );
-      case READ_ONLY :  return( _( "Do not upgrade older Minder file but view it as read-only" ) );
+      case OVERRIDE  :  return( _( "Upgrade Minder file to new version" ) );
+      case SAVE_ORIG :  return( _( "Upgrade Minder file to new version and keep a copy of the original" ) );
+      case READ_ONLY :  return( _( "Do not upgrade Minder file but view it as read-only" ) );
       default        :  return( null );
     }
   }
@@ -158,12 +158,31 @@ public class Document : Object {
     var file = GLib.File.new_for_path( filename );
 
     // Get parent directory
-    var parent = file.get_parent ();
-    var dir    = (parent != null) ? parent.get_path () : ".";
+    var parent = file.get_parent();
+    var dir    = (parent != null) ? parent.get_path() : ".";
     var bak_basename = "." + file.get_basename() + ".bak";
 
     // Join dir + new basename
     return( GLib.Path.build_filename( dir, bak_basename ) );
+
+  }
+
+  //-------------------------------------------------------------
+  // Returns the name of the filename named with a .orig in the
+  // filename just before the extension.
+  private string get_orig_file() {
+
+    var file = GLib.File.new_for_path( filename );
+
+    var parent   = file.get_parent();
+    var dir      = (parent != null) ? parent.get_path() : ".";
+    var basename = file.get_basename();
+    var index    = basename.last_index_of_char('.');
+
+    basename = (index > 0) ? (basename.substring( 0, index ) + ".orig" + basename.substring( index )) :
+                             (basename + ".orig");
+
+    return( GLib.Path.build_filename( dir, basename ) );
 
   }
 
@@ -410,6 +429,14 @@ public class Document : Object {
   }
 
   //-------------------------------------------------------------
+  // Copies the current filename as an original file, giving it
+  // a unique name.
+  public bool copy_as_orig() {
+    var orig_file = get_orig_file();
+    return( copy_file( filename, orig_file ) );
+  }
+
+  //-------------------------------------------------------------
   // Archives the contents of the opened Minder directory.
   public bool save() {
 
@@ -594,7 +621,7 @@ public class Document : Object {
 
     switch( action ) {
       case UpgradeAction.OVERRIDE  :  save();  break;
-      case UpgradeAction.SAVE_AS   :  _map.win.save_file( _map, false );  break;
+      case UpgradeAction.SAVE_ORIG :  copy_as_orig();  save();  break;
       case UpgradeAction.READ_ONLY :  _upgrade_ro = true;  _map.editable_changed( _map );  break;
     }
 
