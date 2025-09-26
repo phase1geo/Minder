@@ -150,7 +150,9 @@ public class MapInspector : Box {
   //-------------------------------------------------------------
   // Handles any changes to the read-only switch.
   private void read_only_changed() {
-    _map.editable = !_read_only.active;
+    if( !_map.doc.read_only ) {
+      _map.editable = !_read_only.active;
+    }
   }
 
   //-------------------------------------------------------------
