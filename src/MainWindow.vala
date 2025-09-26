@@ -1530,7 +1530,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     filter.add_pattern( "*.minder" );
     filters.append( filter );
     if( map.doc.is_saved() ) {
-      dialog.set_initial_name( map.doc.filename );
+      var fname = File.new_for_path( map.doc.filename );
+      dialog.set_initial_file( fname ); 
     } else {
       dialog.set_initial_name( map.doc.label );
       if( map.get_nodes().length > 0 ) {
