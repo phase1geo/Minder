@@ -602,10 +602,10 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     /* Indicate that the tab has changed */
     if( reason != TabAddReason.LOAD ) {
-      _nb.page = tab_index;
       if( reason == TabAddReason.OPEN ) {
         map.editable = true;
       }
+      _nb.page = tab_index;
     }
 
     map.canvas.grab_focus();

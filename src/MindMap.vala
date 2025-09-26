@@ -338,9 +338,6 @@ public class MindMap {
 
     _canvas.queue_draw();
 
-    // TODO - Testing non-editable mode (remove this)
-    editable = false;
-
   }
 
   //-------------------------------------------------------------

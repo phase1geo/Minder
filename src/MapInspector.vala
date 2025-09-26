@@ -72,6 +72,9 @@ public class MapInspector : Box {
     editable_changed.connect(() => {
       current_changed();
       _layout.editable_changed( _map.editable );
+      _add_theme.set_sensitive( _map.editable );
+      _read_only.set_active( !_map.editable );
+      _read_only.set_sensitive( !_map.doc.read_only );
     });
 
     // Listen for preference changes
@@ -99,7 +102,8 @@ public class MapInspector : Box {
     _map = map;
     if( _map != null ) {
       _map.animator.enable = _settings.get_boolean( "enable-animations" );
-      _read_only.set_active( _map.doc.read_only );
+      _read_only.set_active( !_map.editable );
+      _read_only.set_sensitive( !_map.doc.read_only );
       _hide_connections.set_active( _map.model.connections.hide );
       _hide_callouts.set_active( _map.model.hide_callouts );
       _map.model.set_theme( _map.get_theme(), false );
@@ -609,8 +613,6 @@ public class MapInspector : Box {
     }
 
     /* Update the sensitivity of the buttons */
-    _read_only.set_sensitive( !_map.doc.read_only );
-    _add_theme.set_sensitive( _map.editable );
     _fold_completed.set_sensitive( foldable && _map.editable );
     _unfold_all.set_sensitive( unfoldable && _map.editable );
 
