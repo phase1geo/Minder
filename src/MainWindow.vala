@@ -2095,24 +2095,40 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void request_upgrade_action( AfterLoadTabFunc func ) {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
-      _( "File upgrade needed" ),
+      _( "File upgrades needed" ),
       _( "All previously opened tabs contain Minder files that need to be upgraded to be editable by this version of Minder.\n\nSelect an upgrade option below." ),
       "system-software-update",
       ButtonsType.NONE
     );
 
-    var exit  = new Button.with_label( _( "Exit Minder" ) );
+    var exit  = new Button.with_label( _( "Quit Minder" ) );
     dialog.add_action_widget( exit, ResponseType.CLOSE );
 
     var apply = new Button.with_label( _( "Apply" ) );
     dialog.add_action_widget( apply, ResponseType.APPLY );
 
     var options = new DropDown.from_strings( UpgradeAction.labels() ) {
-      halign       = Align.START,
-      margin_top   = 10,
-      margin_start = 20,
-      selected     = settings.get_int( "upgrade-action" )
+      halign = Align.START,
     };
+
+    var description = new Label( "" ) {
+      halign = Align.FILL,
+      hexpand = true,
+      use_markup = true,
+      max_width_chars = 0,
+      wrap = true,
+      margin_bottom = 10
+    };
+
+    options.notify["selected"].connect(() => {
+      switch( options.selected ) {
+        case 0 :  description.label = _( "<small>Upgrades each Minder file which had a tab opened for it in the last Minder session.  This action is irreversible as older versions of Minder cannot read the upgraded format.</small>" );  break;
+        case 1 :  description.label = _( "<small>Upgrades each Minder file which had a tab opened for it in the last Minder session, but saves a copy of the older, original file in its original directory.</small>" );  break;
+        case 2 :  description.label = _( "<small>Leaves each Minder file in the original format, but opens each tab as read-only.  Read-only mindmaps can be viewed but cannot be changed.  To change a read-only mindmap, you can use the 'Save As' button in the header bar to write it to the newer format.</small>" );  break;
+      }
+    });
+
+    options.selected = settings.get_int( "upgrade-action" );
 
     var remember = new CheckButton();
     var rem_description = new Label( _( "Don't show this dialog again" ) ) {
@@ -2122,19 +2138,20 @@ public class MainWindow : Gtk.ApplicationWindow {
       halign     = Align.START,
       use_markup = true
     };
-    var rem_grid = new Grid() {
-      row_spacing  = 5,
+    var grid = new Grid() {
+      row_spacing  = 10,
       margin_top   = 20,
       margin_start = 20
     };
 
-    rem_grid.attach( remember,        0, 0 );
-    rem_grid.attach( rem_description, 1, 0 );
-    rem_grid.attach( rem_info,        1, 1 );
+    grid.attach( options,         0, 0, 2 );
+    grid.attach( description,     1, 1 );
+    grid.attach( remember,        0, 2 );
+    grid.attach( rem_description, 1, 2 );
+    grid.attach( rem_info,        1, 3 );
 
     var box = dialog.get_content_area();
-    box.append( options );
-    box.append( rem_grid );
+    box.append( grid );
 
     dialog.set_transient_for( this );
     dialog.set_modal( true );
