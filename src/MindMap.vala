@@ -282,8 +282,6 @@ public class MindMap {
   // Handles any indications that the document read-only status
   // changed.
   private void handle_read_only_changed() {
-    stdout.printf( "In handle_read_only_changed, doc.read_only: %s, editable: %s\n",
-     doc.read_only.to_string(), editable.to_string() );
     editable_changed( this );
   }
 

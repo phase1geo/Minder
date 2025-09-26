@@ -104,9 +104,6 @@ public class Layout : Object {
       var summary = parent.summary_node();
       var sb      = summary.tree_bbox;
 
-      stdout.printf( "node %s, first: %s, last: %s, nb: %s, sb: %s, msg: %s\n",
-                     parent.name.text.text, parent.first_summarized().to_string(), parent.last_summarized().to_string(), nb.to_string(), sb.to_string(), msg );
-
       if( parent.first_summarized() ) {
         nb.x = (parent.side.vertical()   && (nb.x > sb.x)) ? sb.x : nb.x;
         nb.y = (parent.side.horizontal() && (nb.y > sb.y)) ? sb.y : nb.y;

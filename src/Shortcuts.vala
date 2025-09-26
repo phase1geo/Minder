@@ -374,11 +374,6 @@ public class Shortcuts {
     var         shift   = (mods & ModifierType.SHIFT_MASK)   == ModifierType.SHIFT_MASK;
     var         alt     = (mods & ModifierType.ALT_MASK)     == ModifierType.ALT_MASK;
 
-    /*
-    stdout.printf( "In shortcuts.execute, keyval: %s, mods: %s %s %s, state: %s\n",
-      keyval_name( keyval ), control.to_string(), shift.to_string(), alt.to_string(), state.to_string() );
-    */
-
     Display.get_default().map_keycode( keycode, out ks, out kvs );
 
     for( int i=0; i<_shortcuts.length; i++ ) {
