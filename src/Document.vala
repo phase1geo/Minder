@@ -41,6 +41,17 @@ public enum UpgradeAction {
   }
 
   //-------------------------------------------------------------
+  // Returns the label to use when tabs need to be upgraded.
+  public string? tab_label() {
+    switch( this ) {
+      case OVERRIDE  :  return( _( "Upgrade Minder files to new version" ) );
+      case SAVE_ORIG :  return( _( "Upgrade Minder files to new version but keep a copy of the original if previously saved" ) );
+      case READ_ONLY :  return( _( "Do not upgrade Minder files but view them as read-only" ) );
+      default        :  return( null );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Returns an array of labels for upgrade action DropDown list.
   public static string[] labels() {
     string[] lbls = {};
@@ -48,6 +59,20 @@ public enum UpgradeAction {
       var action = (UpgradeAction)i;
       if( action.label() != null ) {
         lbls += action.label();
+      }
+    }
+    return( lbls );
+  }
+
+  //-------------------------------------------------------------
+  // Returns an array of labels to display when tabs need to be
+  // upgraded.
+  public static string[] tab_labels() {
+    string[] lbls = {};
+    for( int i=0; i<NUM; i++ ) {
+      var action = (UpgradeAction)i;
+      if( action.tab_label() != null ) {
+        lbls += action.tab_label();
       }
     }
     return( lbls );

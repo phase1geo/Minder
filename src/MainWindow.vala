@@ -2096,7 +2096,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
       _( "File upgrades needed" ),
-      _( "All previously opened tabs contain Minder files that need to be upgraded to be editable by this version of Minder.\n\nSelect an upgrade option below." ),
+      _( "All previously opened tabs contain Minder files that need to be upgraded to be edited by this version of Minder.\n\nSelect an upgrade option below." ),
       "system-software-update",
       ButtonsType.NONE
     );
@@ -2107,8 +2107,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     var apply = new Button.with_label( _( "Apply" ) );
     dialog.add_action_widget( apply, ResponseType.APPLY );
 
-    var options = new DropDown.from_strings( UpgradeAction.labels() ) {
+    var options = new DropDown.from_strings( UpgradeAction.tab_labels() ) {
       halign = Align.START,
+      selected = -1
     };
 
     var description = new Label( "" ) {
