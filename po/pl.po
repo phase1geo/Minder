@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-01 18:06-0500\n"
+"POT-Creation-Date: 2025-09-29 23:40-0500\n"
 "PO-Revision-Date: 2022-08-02 23:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,88 +17,88 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: src/About.vala:40
+#: src/About.vala:41
 msgid "Mind-mapping application"
 msgstr "Program do tworzenia map myśli"
 
-#: src/About.vala:41
+#: src/About.vala:42
 #, fuzzy
 msgid "Copyright © 2018-2024 Trevor Williams"
 msgstr "Copyright © 2018-2021 Trevor Williams"
 
-#: src/About.vala:45
+#: src/About.vala:46
 msgid "Minder in AppCenter"
 msgstr "Minder w AppCenter"
 
-#: src/Application.vala:154
+#: src/Application.vala:148
 #, c-format
 msgid "Import file from format (%s)"
 msgstr ""
 
-#: src/Application.vala:155
+#: src/Application.vala:149
 #, fuzzy, c-format
 msgid "Export mindmap as format (%s)"
 msgstr "Opcje eksportu"
 
-#: src/Application.vala:160
+#: src/Application.vala:154
 msgid "Display version number"
 msgstr "Pokaż numer wersji"
 
-#: src/Application.vala:161
+#: src/Application.vala:155
 msgid "Display help"
 msgstr ""
 
-#: src/Application.vala:162
+#: src/Application.vala:156
 msgid "Starts Minder with a new file"
 msgstr "Uruchom Mindera z nowym plikiem"
 
-#: src/Application.vala:165
+#: src/Application.vala:159
 #, fuzzy
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
 msgstr "Zapisz z przeźroczystym tłem"
 
-#: src/Application.vala:166
+#: src/Application.vala:160
 msgid "PNG compression value (0-9). Default is 0."
 msgstr ""
 
-#: src/Application.vala:167
+#: src/Application.vala:161
 msgid "JPEG quality (0-100). Default is 90."
 msgstr ""
 
-#: src/Application.vala:168
+#: src/Application.vala:162
 msgid "Enables image links in exported Markdown"
 msgstr ""
 
-#: src/Application.vala:177
+#: src/Application.vala:171
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "BŁĄD: %s\n"
 
-#: src/Application.vala:178
+#: src/Application.vala:172
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "Wykonaj '%s --help' aby zobaczyć możliwe opcje\n"
 
-#: src/Application.vala:201
+#: src/Application.vala:195
 #, fuzzy
 msgid "ERROR: Unable to import file"
 msgstr "BŁĄD:  Nie można otworzyć pliku '%s'\n"
 
-#: src/Application.vala:205
+#: src/Application.vala:199
 msgid "ERROR: Import is missing filename to import"
 msgstr ""
 
-#: src/Application.vala:228
+#: src/Application.vala:222
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
 
-#: src/Application.vala:238
+#: src/Application.vala:232
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "BŁĄD:  Nie można otworzyć pliku '%s'\n"
 
-#: src/Application.vala:271
+#: src/Application.vala:266
 #, fuzzy, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "BŁĄD:  Nie można otworzyć pliku '%s'\n"
@@ -114,7 +114,7 @@ msgstr ""
 
 #: src/CalloutMenu.vala:33 src/ConnectionMenu.vala:34
 #: src/ConnectionsMenu.vala:33 src/GroupsMenu.vala:33 src/NodeMenu.vala:40
-#: src/NodesMenu.vala:35 src/ThemeEditor.vala:155
+#: src/NodesMenu.vala:35 src/ThemeEditor.vala:157
 msgid "Delete"
 msgstr "Usuń"
 
@@ -130,25 +130,25 @@ msgstr ""
 msgid "No text found"
 msgstr "Nie znaleziono tekstu"
 
-#: src/ConnectionInspector.vala:72 src/KeyCommands.vala:669
+#: src/ConnectionInspector.vala:77 src/KeyCommands.vala:669
 #: src/NodeMenu.vala:91
 msgid "Connection"
 msgstr "Łącznik"
 
-#: src/ConnectionInspector.vala:85 src/NodeInspector.vala:197
+#: src/ConnectionInspector.vala:90 src/NodeInspector.vala:199
 msgid "Color"
 msgstr "Kolor"
 
-#: src/ConnectionInspector.vala:99
+#: src/ConnectionInspector.vala:104
 msgid "Use Theme Default Color"
 msgstr "Użyj domyślnego koloru z motywu"
 
-#: src/ConnectionInspector.vala:125 src/GroupInspector.vala:79
-#: src/NodeInspector.vala:282
+#: src/ConnectionInspector.vala:130 src/GroupInspector.vala:86
+#: src/NodeInspector.vala:284
 msgid "Note"
 msgstr "Notatka (można używać znaczników Markdown)"
 
-#: src/ConnectionInspector.vala:181
+#: src/ConnectionInspector.vala:186
 msgid "Delete Connection"
 msgstr "Usuń łącznik"
 
@@ -195,20 +195,80 @@ msgstr "Etykieta łącznika"
 msgid "Connection Note"
 msgstr "Notatka łącznika"
 
-#: src/Document.vala:83
+#: src/Document.vala:36
+msgid "Upgrade Minder file to new version"
+msgstr ""
+
+#: src/Document.vala:37
+msgid "Upgrade Minder file to new version and keep a copy of the original"
+msgstr ""
+
+#: src/Document.vala:38
+msgid "Do not upgrade Minder file but view it as read-only"
+msgstr ""
+
+#: src/Document.vala:47
+msgid "Upgrade Minder files to new version"
+msgstr ""
+
+#: src/Document.vala:48
+msgid ""
+"Upgrade Minder files to new version but keep a copy of the original if "
+"previously saved"
+msgstr ""
+
+#: src/Document.vala:49
+msgid "Do not upgrade Minder files but view them as read-only"
+msgstr ""
+
+#: src/Document.vala:143
 msgid "unnamed"
 msgstr "bez nazwy"
 
-#: src/DrawArea.vala:1407
+#: src/Document.vala:665
+msgid "Upgrade?"
+msgstr ""
+
+#: src/Document.vala:666
+msgid ""
+"This file is from an older version Minder and needs to be upgraded to edit.\n"
+"\n"
+"Note: Upgraded files cannot be viewed/edited with older versions of Minder."
+msgstr ""
+
+#: src/Document.vala:671 src/ImageEditor.vala:430 src/MainWindow.vala:1246
+#: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/ThemeEditor.vala:169
+#: src/UrlEditor.vala:62
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: src/Document.vala:674 src/ImageEditor.vala:433 src/MainWindow.vala:2107
+#: src/UrlEditor.vala:52
+msgid "Apply"
+msgstr "Zastosuj"
+
+#: src/Document.vala:685
+msgid "Don't show this dialog again"
+msgstr ""
+
+#: src/Document.vala:688 src/MainWindow.vala:2144
+msgid "<small>This can be changed in preferences</small>"
+msgstr ""
+
+#: src/Document.vala:709
+msgid "Upgrade Needed"
+msgstr ""
+
+#: src/DrawArea.vala:1417
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "Ukończono %0.3g%%"
 
-#: src/DrawArea.vala:1424
+#: src/DrawArea.vala:1435
 msgid "Drag to resize node"
 msgstr "Przeciągnij aby zmienić rozmiar elementu"
 
-#: src/DrawArea.vala:1426
+#: src/DrawArea.vala:1437
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -216,25 +276,25 @@ msgstr ""
 "Przeciągnij by zmienić rozmiar elementu oraz obrazu.\n"
 "CTRL+przeciąganie zmieni tylko rozmiar elementu."
 
-#: src/DrawArea.vala:1564
+#: src/DrawArea.vala:1576
 #, c-format
 msgid "Children: %u\n"
 msgstr "Podrzędne: %u\n"
 
-#: src/DrawArea.vala:1565
+#: src/DrawArea.vala:1577
 #, c-format
 msgid "Total: %d"
 msgstr "Wszystkie: %d"
 
-#: src/DrawArea.vala:1615
+#: src/DrawArea.vala:1627
 msgid "connection endpoint change"
 msgstr ""
 
-#: src/DrawArea.vala:1622
+#: src/DrawArea.vala:1634
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2072 src/MapModel.vala:1735 src/MapModel.vala:1750
+#: src/DrawArea.vala:2092 src/MapModel.vala:1740 src/MapModel.vala:1755
 msgid "Another Idea"
 msgstr "NOWY TEMAT"
 
@@ -247,7 +307,7 @@ msgstr ""
 "Wybierz element aby\n"
 "przeglądać lub edytować"
 
-#: src/EmptyMenu.vala:32 src/NodeMenu.vala:38 src/NodeMenu.vala:251
+#: src/EmptyMenu.vala:32 src/NodeMenu.vala:38 src/NodeMenu.vala:248
 #: src/TextMenu.vala:38
 msgid "Paste"
 msgstr "Wklej"
@@ -282,7 +342,7 @@ msgstr "Opcje eksportu"
 msgid "Export As %s"
 msgstr "Eksportuj jako %s"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1004 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1024 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Eksport"
 
@@ -449,7 +509,7 @@ msgstr "JPEG"
 msgid "Export to clipboard"
 msgstr "Wytnij obraz do schowka"
 
-#: src/GroupInspector.vala:66 src/KeyCommands.vala:675
+#: src/GroupInspector.vala:73 src/KeyCommands.vala:675
 #, fuzzy
 msgid "Group"
 msgstr "Dodaj grupę"
@@ -475,39 +535,30 @@ msgstr "Wszystkie zgrupowane elementy"
 msgid "Crop Area: %d,%d %3dx%3d"
 msgstr ""
 
-#: src/ImageEditor.vala:403
+#: src/ImageEditor.vala:401
 #, c-format
 msgid "Cursor: %3d,%3d"
 msgstr "Kursor: %3d,%3d"
 
-#: src/ImageEditor.vala:412
+#: src/ImageEditor.vala:410
 msgid "Change Image"
 msgstr "Zmień obraz"
 
-#: src/ImageEditor.vala:416
+#: src/ImageEditor.vala:414
 msgid "Paste Image from Clipboard"
 msgstr "Wklej obraz ze schowka"
 
-#: src/ImageEditor.vala:420 src/NodeInspector.vala:381 src/NodeMenu.vala:229
+#: src/ImageEditor.vala:418 src/NodeInspector.vala:386 src/NodeMenu.vala:229
 msgid "Remove Image"
 msgstr "Usuń obraz"
 
-#: src/ImageEditor.vala:424
+#: src/ImageEditor.vala:422
 msgid "Copy Image to Clipboard"
 msgstr "Kopiuj obraz do schowka"
 
-#: src/ImageEditor.vala:429
+#: src/ImageEditor.vala:427
 msgid "Cut Image to Clipboard"
 msgstr "Wytnij obraz do schowka"
-
-#: src/ImageEditor.vala:432 src/MainWindow.vala:1227 src/QuickEntry.vala:167
-#: src/StickerSet.vala:75 src/ThemeEditor.vala:167 src/UrlEditor.vala:62
-msgid "Cancel"
-msgstr "Anuluj"
-
-#: src/ImageEditor.vala:435 src/UrlEditor.vala:52
-msgid "Apply"
-msgstr "Zastosuj"
 
 #: src/ImageManager.vala:313
 msgid "Select Image"
@@ -517,7 +568,7 @@ msgstr "Wybierz oraz"
 msgid "Images"
 msgstr "Obrazy"
 
-#: src/KeyCommands.vala:563 src/Shortcuts.vala:784
+#: src/KeyCommands.vala:563 src/Shortcuts.vala:779
 #: data/com.github.phase1geo.minder.shortcuts.ui:12
 #: data/com.github.phase1geo.minder.shortcuts.ui:987
 msgid "General"
@@ -724,7 +775,7 @@ msgstr ""
 msgid "Quit the application"
 msgstr "Wyjście z programu"
 
-#: src/KeyCommands.vala:608 src/NodeInspector.vala:98
+#: src/KeyCommands.vala:608 src/NodeInspector.vala:100
 #, fuzzy
 msgid "Node"
 msgstr "Gałęzie"
@@ -1181,7 +1232,7 @@ msgstr ""
 msgid "Add end of current line to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:722 src/Shortcuts.vala:809
+#: src/KeyCommands.vala:722 src/Shortcuts.vala:804
 #: data/com.github.phase1geo.minder.shortcuts.ui:1127
 msgid "Select all text"
 msgstr ""
@@ -1191,311 +1242,367 @@ msgstr ""
 msgid "Deselect all text"
 msgstr "Zaznacz cały tekst"
 
-#: src/KeyCommands.vala:1812
+#: src/KeyCommands.vala:1860
 #, fuzzy
 msgid "Select a group color"
 msgstr "Ustaw kolor..."
 
-#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:236
-#: src/MapInspector.vala:465 src/MapModel.vala:2213
+#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:285
+#: src/MapInspector.vala:516 src/MapModel.vala:2218
 msgid "Manual"
 msgstr "Ręcznie"
 
-#: src/MainWindow.vala:171 src/MainWindow.vala:1488
+#: src/MainWindow.vala:173 src/MainWindow.vala:1529
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:230 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:232 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
 msgstr "Nowy plik"
 
-#: src/MainWindow.vala:235 src/MainWindow.vala:1314
+#: src/MainWindow.vala:237 src/MainWindow.vala:1333
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "Otwórz plik"
 
-#: src/MainWindow.vala:240 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:242 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
 msgstr "Zapisz plik jako"
 
-#: src/MainWindow.vala:247 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:249 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Cofnij"
 
-#: src/MainWindow.vala:254 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:256 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Ponów"
 
-#: src/MainWindow.vala:667 src/MainWindow.vala:1075
+#: src/MainWindow.vala:687 src/MainWindow.vala:1094
 msgid "Focus Mode"
 msgstr "Tryb skupienia"
 
-#: src/MainWindow.vala:670
+#: src/MainWindow.vala:690
 msgid "Unnamed Document"
 msgstr "Dokument Bez Nazwy"
 
-#: src/MainWindow.vala:673
+#: src/MainWindow.vala:693
 msgid "Read-Only"
 msgstr ""
 
-#: src/MainWindow.vala:691
+#: src/MainWindow.vala:711
 msgid "Zoom to Fit"
 msgstr "Najlepsze dopasowanie"
 
-#: src/MainWindow.vala:692 data/com.github.phase1geo.minder.shortcuts.ui:140
+#: src/MainWindow.vala:712 data/com.github.phase1geo.minder.shortcuts.ui:140
 #, fuzzy
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "Dopasowanie do wybranego elementu"
 
-#: src/MainWindow.vala:693
+#: src/MainWindow.vala:713
 msgid "Zoom to Actual Size"
 msgstr "Dopasowanie do aktualnego rozmiaru"
 
-#: src/MainWindow.vala:701
+#: src/MainWindow.vala:721
 msgid "Zoom to Percent"
 msgstr "Powiększenie w procentach"
 
-#: src/MainWindow.vala:716 src/ZoomWidget.vala:104
+#: src/MainWindow.vala:736 src/ZoomWidget.vala:104
 #: data/com.github.phase1geo.minder.shortcuts.ui:119
 msgid "Zoom In"
 msgstr "Powiększ"
 
-#: src/MainWindow.vala:723 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:743 src/ZoomWidget.vala:92
 #: data/com.github.phase1geo.minder.shortcuts.ui:126
 msgid "Zoom Out"
 msgstr "Pomniejsz"
 
-#: src/MainWindow.vala:741 src/MainWindow.vala:1551
+#: src/MainWindow.vala:761 src/MainWindow.vala:1593
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Powiększenie (%d%%)"
 
 # Łączniki??
-#: src/MainWindow.vala:753
+#: src/MainWindow.vala:773
 #, fuzzy
 msgid "Search Nodes, Callouts and Connections"
 msgstr "Przeszukaj gałęzie i łączniki"
 
-#: src/MainWindow.vala:795
+#: src/MainWindow.vala:815
 msgid "Search Criteria"
 msgstr "Kryteria wyszukiwania"
 
-#: src/MainWindow.vala:799
+#: src/MainWindow.vala:819
 msgid "Search all tabs"
 msgstr "Przeszukaj wszystkie karty"
 
-#: src/MainWindow.vala:840 src/StickerSet.vala:114
+#: src/MainWindow.vala:860 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Szukaj"
 
-#: src/MainWindow.vala:848
+#: src/MainWindow.vala:868
 msgid "Nodes"
 msgstr "Gałęzie"
 
-#: src/MainWindow.vala:849
+#: src/MainWindow.vala:869
 msgid "Connections"
 msgstr "Łączniki"
 
-#: src/MainWindow.vala:850
+#: src/MainWindow.vala:870
 msgid "Callouts"
 msgstr ""
 
-#: src/MainWindow.vala:851
+#: src/MainWindow.vala:871
 #, fuzzy
 msgid "Groups"
 msgstr "Dodaj grupę"
 
-#: src/MainWindow.vala:852
+#: src/MainWindow.vala:872
 msgid "Titles"
 msgstr "Tytuły"
 
-#: src/MainWindow.vala:853
+#: src/MainWindow.vala:873
 msgid "Notes"
 msgstr "Notatki"
 
-#: src/MainWindow.vala:854
+#: src/MainWindow.vala:874
 msgid "Folded"
 msgstr "Zwinięte"
 
-#: src/MainWindow.vala:855
+#: src/MainWindow.vala:875
 msgid "Unfolded"
 msgstr "Rozwinięte"
 
-#: src/MainWindow.vala:856
+#: src/MainWindow.vala:876
 msgid "Tasks"
 msgstr "Zadania"
 
-#: src/MainWindow.vala:857
+#: src/MainWindow.vala:877
 msgid "Non-tasks"
 msgstr "Nie zadania"
 
-#: src/MainWindow.vala:979
+#: src/MainWindow.vala:999
 msgid "Print…"
 msgstr "Drukuj…"
 
-#: src/MainWindow.vala:1018
+#: src/MainWindow.vala:1038
 msgid "Brain Dump"
 msgstr ""
 
-#: src/MainWindow.vala:1095 src/Preferences.vala:45
+#: src/MainWindow.vala:1114 src/Preferences.vala:44
 msgid "Preferences"
 msgstr "Ustawienia"
 
-#: src/MainWindow.vala:1096
+#: src/MainWindow.vala:1115
 msgid "Shortcuts Cheatsheet"
 msgstr "Lista skrótów klawiaturowych"
 
-#: src/MainWindow.vala:1099
+#: src/MainWindow.vala:1118
 msgid "About Minder"
 msgstr "O programie Minder"
 
-#: src/MainWindow.vala:1126 src/MainWindow.vala:1629
+#: src/MainWindow.vala:1145 src/MainWindow.vala:1677
 msgid "Show Property Sidebar"
 msgstr "Pokaż panel właściwości"
 
-#: src/MainWindow.vala:1137
+#: src/MainWindow.vala:1156
 msgid "Current"
 msgstr "Zaznaczenie"
 
-#: src/MainWindow.vala:1138 src/StyleInspector.vala:209
+#: src/MainWindow.vala:1157 src/StyleInspector.vala:211
 msgid "Style"
 msgstr "Wygląd"
 
-#: src/MainWindow.vala:1139
+#: src/MainWindow.vala:1158
 msgid "Stickers"
 msgstr "Ikony"
 
-#: src/MainWindow.vala:1140
+#: src/MainWindow.vala:1159
 msgid "Map"
 msgstr "Mapa"
 
-#: src/MainWindow.vala:1218
+#: src/MainWindow.vala:1237
 msgid "Save current unnamed document?"
 msgstr "Zapisać aktualny niezapisany dokument?"
 
-#: src/MainWindow.vala:1219
+#: src/MainWindow.vala:1238
 msgid "Changes will be permanently lost if not saved."
 msgstr "Zmiany zostaną utracone jeśli nie zostanie zapisany!"
 
-#: src/MainWindow.vala:1224
+#: src/MainWindow.vala:1243
 msgid "Discard Changes"
 msgstr "Odrzuć zmiany"
 
-#: src/MainWindow.vala:1230 src/MainWindow.vala:1484 src/ThemeEditor.vala:172
+#: src/MainWindow.vala:1249 src/MainWindow.vala:1525 src/ThemeEditor.vala:174
 msgid "Save"
 msgstr "Zapisz"
 
-#: src/MainWindow.vala:1259
+#: src/MainWindow.vala:1278
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "Plik %s został zmodyfikowany poza aplikacją."
 
-#: src/MainWindow.vala:1260
+#: src/MainWindow.vala:1279
 msgid "What do you want to do?"
 msgstr "Co chcesz zrobić?"
 
-#: src/MainWindow.vala:1265
+#: src/MainWindow.vala:1284
 msgid "Discard Changes and reload"
 msgstr "Odrzuć zmiany i wczytaj ponownie."
 
-#: src/MainWindow.vala:1268
+#: src/MainWindow.vala:1287
 msgid "Save local version and overwrite"
 msgstr "Zachowaj lokalną wersję i nadpisz"
 
-#: src/MainWindow.vala:1314
+#: src/MainWindow.vala:1333
 #, fuzzy
 msgid "Open Directory"
 msgstr "Otwórz plik"
 
-#: src/MainWindow.vala:1314
+#: src/MainWindow.vala:1333
 msgid "Open"
 msgstr "Otwórz"
 
-#: src/MainWindow.vala:1484
+#: src/MainWindow.vala:1525
 msgid "Save File"
 msgstr "Zapisz plik"
 
-#: src/MainWindow.vala:1578
+#: src/MainWindow.vala:1623
 msgid "Hide Property Sidebar"
 msgstr "Ukryj panel właściwości"
 
-#: src/MapInspector.vala:113
+#: src/MainWindow.vala:2098
+msgid "File upgrades needed"
+msgstr ""
+
+#: src/MainWindow.vala:2099
+msgid ""
+"All previously opened tabs contain Minder files that need to be upgraded to "
+"be edited by this version of Minder.\n"
+"\n"
+"Select an upgrade option below."
+msgstr ""
+
+#: src/MainWindow.vala:2104
+#, fuzzy
+msgid "Quit Minder"
+msgstr "O programie Minder"
+
+#: src/MainWindow.vala:2124
+#, fuzzy
+msgid "Detail"
+msgstr "Odłącz"
+
+#: src/MainWindow.vala:2132
+msgid ""
+"<small>Upgrades each Minder file which had a tab opened for it in the last "
+"Minder session.  This action is irreversible as older versions of Minder "
+"cannot read the upgraded format.</small>"
+msgstr ""
+
+#: src/MainWindow.vala:2133
+msgid ""
+"<small>Upgrades each Minder file which had a tab opened for it in the last "
+"Minder session, but saves a copy of the older, original file in its original "
+"directory.</small>"
+msgstr ""
+
+#: src/MainWindow.vala:2134
+msgid ""
+"<small>Leaves each Minder file in the original format, but opens each tab as "
+"read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
+"change a read-only mindmap, you can use the 'Save As' button in the header "
+"bar to write it to the newer format.</small>"
+msgstr ""
+
+#: src/MainWindow.vala:2141
+msgid "Use the selected option when future older Minder files are opened"
+msgstr ""
+
+#: src/MainWindow.vala:2166
+msgid "Upgrades Needed"
+msgstr ""
+
+#: src/MapInspector.vala:127
+msgid "Read-only"
+msgstr ""
+
+#: src/MapInspector.vala:162
 msgid "Hide connections"
 msgstr "Ukryj łączniki"
 
-#: src/MapInspector.vala:149
+#: src/MapInspector.vala:198
 #, fuzzy
 msgid "Hide callouts"
 msgstr "Układ gałęzi"
 
-#: src/MapInspector.vala:193
+#: src/MapInspector.vala:242
 msgid "Node Layouts"
 msgstr "Układ gałęzi"
 
-#: src/MapInspector.vala:247
+#: src/MapInspector.vala:296
 #, fuzzy
 msgid "Node Alignment"
 msgstr "wyrównanie gałęzi"
 
-#: src/MapInspector.vala:254
+#: src/MapInspector.vala:303
 #, fuzzy
 msgid "Align left edges"
 msgstr "Wyrównaj do lewej"
 
-#: src/MapInspector.vala:258
+#: src/MapInspector.vala:307
 #, fuzzy
 msgid "Align horizontal centers"
 msgstr "Poziomo"
 
-#: src/MapInspector.vala:262
+#: src/MapInspector.vala:311
 #, fuzzy
 msgid "Align right edges"
 msgstr "Wyrównaj do prawej"
 
-#: src/MapInspector.vala:266
+#: src/MapInspector.vala:315
 #, fuzzy
 msgid "Align top edges"
 msgstr "Wyrównanie gałęzi"
 
-#: src/MapInspector.vala:270
+#: src/MapInspector.vala:319
 #, fuzzy
 msgid "Align vertical centers"
 msgstr "Minder w AppCenter"
 
-#: src/MapInspector.vala:274
+#: src/MapInspector.vala:323
 #, fuzzy
 msgid "Align bottom edges"
 msgstr "Wyrównaj do dołu"
 
-#: src/MapInspector.vala:316
+#: src/MapInspector.vala:365
 msgid "Themes"
 msgstr "Motywy"
 
-#: src/MapInspector.vala:343
+#: src/MapInspector.vala:392
 msgid "Add Custom Theme"
 msgstr "Dodaj własny motyw"
 
-#: src/MapInspector.vala:366
+#: src/MapInspector.vala:415
 msgid "Balance Nodes"
 msgstr "Zbalansuj gałęzie"
 
-#: src/MapInspector.vala:370
+#: src/MapInspector.vala:419
 msgid "Fold Completed Tasks"
 msgstr "Zwiń ukończone zadania"
 
-#: src/MapInspector.vala:374
+#: src/MapInspector.vala:423
 msgid "Unfold All Nodes"
 msgstr "Rozwiń wszystkie gałęzie"
 
-#: src/MapInspector.vala:474
+#: src/MapInspector.vala:525
 msgid "Unsaved"
 msgstr "Niezapisany"
 
-#: src/MindMap.vala:335
+#: src/MindMap.vala:348
 msgid "Main Idea"
 msgstr "TEMAT"
 
-#: src/MindMap.vala:967
+#: src/MindMap.vala:980
 msgid "Select a link color"
 msgstr ""
 
@@ -1504,57 +1611,57 @@ msgstr ""
 msgid "Group Note"
 msgstr "Dodaj grupę"
 
-#: src/NodeInspector.vala:112
+#: src/NodeInspector.vala:114
 msgid "Task"
 msgstr "Ustaw jako zadanie"
 
 # Może tylko zwiń?
-#: src/NodeInspector.vala:138
+#: src/NodeInspector.vala:140
 msgid "Fold"
 msgstr "Zwiń podrzędne"
 
-#: src/NodeInspector.vala:164
+#: src/NodeInspector.vala:166
 msgid "Sequence"
 msgstr ""
 
-#: src/NodeInspector.vala:173
+#: src/NodeInspector.vala:175
 msgid ""
 "When set, automatically numbers child nodes and displays them as a sequence."
 msgstr ""
 
-#: src/NodeInspector.vala:228
+#: src/NodeInspector.vala:230
 msgid "Override Color"
 msgstr "Zmień kolor"
 
-#: src/NodeInspector.vala:343 src/NodeInspector.vala:364
+#: src/NodeInspector.vala:345 src/NodeInspector.vala:369
 msgid "Image"
 msgstr "Obraz"
 
-#: src/NodeInspector.vala:349
+#: src/NodeInspector.vala:351
 msgid "Add Image…"
 msgstr "Dodaj Obraz…"
 
-#: src/NodeInspector.vala:373 src/Shortcuts.vala:786
+#: src/NodeInspector.vala:378 src/Shortcuts.vala:781
 msgid "Edit Image"
 msgstr "Edytuj obraz"
 
-#: src/NodeInspector.vala:390
+#: src/NodeInspector.vala:395
 msgid "Resizable"
 msgstr "Pozwól na zmianę wielkości"
 
-#: src/NodeInspector.vala:471
+#: src/NodeInspector.vala:482
 msgid "Copy Node To Clipboard"
 msgstr "Kopiuj gałąź do schowka"
 
-#: src/NodeInspector.vala:476
+#: src/NodeInspector.vala:487
 msgid "Cut Node To Clipboard"
 msgstr "Wytnij gałąź do schowka"
 
-#: src/NodeInspector.vala:482
+#: src/NodeInspector.vala:493
 msgid "Detach Node"
 msgstr "Odłącz gałąź"
 
-#: src/NodeInspector.vala:492 data/com.github.phase1geo.minder.shortcuts.ui:284
+#: src/NodeInspector.vala:503 data/com.github.phase1geo.minder.shortcuts.ui:284
 msgid "Delete Node"
 msgstr "Usuń gałąź"
 
@@ -1570,7 +1677,7 @@ msgstr "Kopiuj"
 msgid "Cut"
 msgstr "Wytnij"
 
-#: src/NodeMenu.vala:39 src/NodeMenu.vala:243 src/NodeMenu.vala:252
+#: src/NodeMenu.vala:39 src/NodeMenu.vala:240 src/NodeMenu.vala:249
 msgid "Paste and Replace Node"
 msgstr "Wklej i zastąp gałąź"
 
@@ -1620,7 +1727,7 @@ msgstr "Dodaj grupę"
 msgid "Add Callout"
 msgstr "Dodaj grupę"
 
-#: src/NodeMenu.vala:58 src/ThemeEditor.vala:151
+#: src/NodeMenu.vala:58 src/ThemeEditor.vala:153
 msgid "Link Color"
 msgstr "Kolor linii gałęzi"
 
@@ -1741,23 +1848,23 @@ msgstr "Rozwiń gałęzie podrzędne"
 msgid "Remove Callout"
 msgstr "Usuń zadanie"
 
-#: src/NodeMenu.vala:242
+#: src/NodeMenu.vala:239
 msgid "Paste Node As Child"
 msgstr "Wklej gałąź jako gałąź podrzędną"
 
-#: src/NodeMenu.vala:245
+#: src/NodeMenu.vala:242
 msgid "Paste Image As Child Node"
 msgstr "Wklej obraz jako gałąź podrzędną"
 
-#: src/NodeMenu.vala:246
+#: src/NodeMenu.vala:243
 msgid "Paste and Replace Node Image"
 msgstr "Wklej i zastąp obraz w gałęzi"
 
-#: src/NodeMenu.vala:248
+#: src/NodeMenu.vala:245
 msgid "Paste Text As Child Node"
 msgstr "Wklej tekst jako gałąź podrzędną"
 
-#: src/NodeMenu.vala:249
+#: src/NodeMenu.vala:246
 msgid "Paste and Replace Node Text"
 msgstr "Wklej i zastąp tekst gałęzi"
 
@@ -1776,7 +1883,7 @@ msgstr "Kolor losowy"
 msgid "Use Parent Color"
 msgstr "Użyj koloru elementu nadrzędnego"
 
-#: src/NodesMenu.vala:43 src/ThemeEditor.vala:143
+#: src/NodesMenu.vala:43 src/ThemeEditor.vala:145
 msgid "Link Colors"
 msgstr "Kolory linii gałęzi"
 
@@ -1847,167 +1954,195 @@ msgstr "Notatka gałęzi"
 msgid "Callout Text"
 msgstr "Wklej tekst"
 
-#: src/Preferences.vala:59
+#: src/Preferences.vala:60
 msgid "Behavior"
 msgstr "Zachowanie"
 
-#: src/Preferences.vala:60
+#: src/Preferences.vala:61
 msgid "Appearance"
 msgstr "Wygląd"
 
-#: src/Preferences.vala:61
+#: src/Preferences.vala:62
 #, fuzzy
 msgid "Shortcuts"
 msgstr "Skróty klawiaturowe Midera"
 
-#: src/Preferences.vala:89
+#: src/Preferences.vala:63
+msgid "Advanced"
+msgstr ""
+
+#: src/Preferences.vala:78
+msgid "Close"
+msgstr "Zamknij"
+
+#: src/Preferences.vala:102
 msgid "Create new node from edit mode"
 msgstr ""
 
-#: src/Preferences.vala:91
+#: src/Preferences.vala:104
 msgid ""
 "Specifies if we should create a new node directly from edit mode if Return "
 "or Tab is pressed."
 msgstr ""
 
-#: src/Preferences.vala:93
+#: src/Preferences.vala:107
 msgid "Automatically make embedded URLs into links"
 msgstr "Automatycznie utwórz osadzony URL w linku"
 
-#: src/Preferences.vala:95
+#: src/Preferences.vala:109
 msgid ""
 "Specifies if embedded URLs found in node titles should be automatically "
 "highlighted."
 msgstr ""
 
-#: src/Preferences.vala:97
+#: src/Preferences.vala:112
 msgid "Enable Markdown"
 msgstr "Włącz Markdown"
 
-#: src/Preferences.vala:100
+#: src/Preferences.vala:116
 msgid "Enable Unicode input"
 msgstr ""
 
-#: src/Preferences.vala:102
+#: src/Preferences.vala:118
 msgid ""
 "Specifies if Unicode characters can be input using backslash prefixed "
 "descriptors (ex. \\pi)"
 msgstr ""
 
-#: src/Preferences.vala:104
+#: src/Preferences.vala:121
 msgid "Create connection title on creation"
 msgstr ""
 
-#: src/Preferences.vala:106
+#: src/Preferences.vala:123
 msgid ""
 "Specifies if the connection title will be added and put into edit mode "
 "immediately after the connection is made."
 msgstr ""
 
-#: src/Preferences.vala:108
+#: src/Preferences.vala:126
 msgid "Select items on mouse hover"
 msgstr "Wybierz element po najechaniu kursorem"
 
-#: src/Preferences.vala:110
+#: src/Preferences.vala:128
 msgid "If enabled, selects items when mouse cursor hovers over the item."
 msgstr ""
 
-#: src/Preferences.vala:112
+#: src/Preferences.vala:131
 msgid "Rotate main branch link colors"
 msgstr ""
 
-#: src/Preferences.vala:114
+#: src/Preferences.vala:133
 msgid ""
 "If enabled, causes a new color to be used whenever a main branch is created"
 msgstr ""
 
-#: src/Preferences.vala:127
+#: src/Preferences.vala:136
+msgid "Keep backup files after saving"
+msgstr ""
+
+#: src/Preferences.vala:138
+msgid ""
+"Backup files are created prior to saving.  If enabled, the backup file is "
+"retained but is not used when re-opening the file.  If disabled, the backup "
+"file is removed after save and used on re-opening file if it exists.  Backup "
+"files are hidden in the same directory as the original with a .bak extension."
+msgstr ""
+
+#: src/Preferences.vala:153
 msgid "Hide themes not matching visual style"
 msgstr "Ukryj motywy nie pasujące do stylu wizualnego"
 
-#: src/Preferences.vala:130
+#: src/Preferences.vala:156
 msgid "Default theme"
 msgstr "Domyślny motyw"
 
-#: src/Preferences.vala:132
+#: src/Preferences.vala:158
 msgid ""
 "Sets the default theme to use for newly created mindmaps (use Map sidebar "
 "panel to make immediate changes)."
 msgstr ""
 
-#: src/Preferences.vala:134
+#: src/Preferences.vala:160
 msgid "Enable animations"
 msgstr "Włącz animacje"
 
-#: src/Preferences.vala:137
+#: src/Preferences.vala:163
 msgid "Text field font size"
 msgstr ""
 
-#: src/Preferences.vala:140
+#: src/Preferences.vala:166
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
 msgstr ""
 
-#: src/Preferences.vala:142
+#: src/Preferences.vala:168
 msgid "Colorize note fields"
 msgstr ""
 
-#: src/Preferences.vala:213
+#: src/Preferences.vala:239
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
 msgstr ""
 
-#: src/Preferences.vala:214
+#: src/Preferences.vala:240
 msgid "Escape to cancel.  Press key combination to set."
 msgstr ""
 
-#: src/Preferences.vala:222
+#: src/Preferences.vala:248
 msgid "Set Minder Defaults"
 msgstr ""
 
-#: src/Preferences.vala:225
+#: src/Preferences.vala:251
 #, fuzzy
 msgid "Clear All Shortcuts"
 msgstr "Skróty klawiaturowe Midera"
 
-#: src/Preferences.vala:234
+#: src/Preferences.vala:260
 #, fuzzy
 msgid "Search commands"
 msgstr "Przeszukaj wszystkie karty"
 
-#: src/Preferences.vala:236
+#: src/Preferences.vala:262
 #, fuzzy
 msgid "Search shortcuts"
 msgstr "Skróty klawiaturowe Midera"
 
-#: src/Preferences.vala:370 src/styles/NodeBorderNone.vala:34
+#: src/Preferences.vala:364
+msgid "Show upgrade dialog when file upgrade is needed"
+msgstr ""
+
+#: src/Preferences.vala:374
+msgid "Default file upgrade action"
+msgstr ""
+
+#: src/Preferences.vala:441 src/styles/NodeBorderNone.vala:34
 msgid "None"
 msgstr "Brak"
 
-#: src/Preferences.vala:371
+#: src/Preferences.vala:442
 #, fuzzy
 msgid "Enter shortcut"
 msgstr "Skróty klawiaturowe Midera"
 
-#: src/Preferences.vala:530
+#: src/Preferences.vala:610
 msgid "Unable to set new shortcut due to conflicts"
 msgstr ""
 
-#: src/Preferences.vala:531
+#: src/Preferences.vala:611
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr ""
 
-#: src/Preferences.vala:596
+#: src/Preferences.vala:676
 #, fuzzy
 msgid "Clear all shortcuts?"
 msgstr "Skróty klawiaturowe Midera"
 
-#: src/Preferences.vala:596 src/Preferences.vala:607
+#: src/Preferences.vala:676 src/Preferences.vala:687
 msgid "Current shortcut settings will be lost"
 msgstr ""
 
-#: src/Preferences.vala:607
+#: src/Preferences.vala:687
 #, fuzzy
 msgid "Use Minder Default Shortcuts?"
 msgstr "Skróty klawiaturowe Midera"
@@ -2077,158 +2212,158 @@ msgstr "Zastąp"
 msgid "Insert"
 msgstr "Wstaw"
 
-#: src/Shortcuts.vala:761 src/Shortcuts.vala:767
+#: src/Shortcuts.vala:756 src/Shortcuts.vala:762
 msgid "No Commands Listed"
 msgstr ""
 
-#: src/Shortcuts.vala:782 data/com.github.phase1geo.minder.shortcuts.ui:983
+#: src/Shortcuts.vala:777 data/com.github.phase1geo.minder.shortcuts.ui:983
 msgid "Mouse Events"
 msgstr ""
 
-#: src/Shortcuts.vala:785 data/com.github.phase1geo.minder.shortcuts.ui:208
+#: src/Shortcuts.vala:780 data/com.github.phase1geo.minder.shortcuts.ui:208
 #: data/com.github.phase1geo.minder.shortcuts.ui:991
 msgid "Show Contextual Menu"
 msgstr ""
 
-#: src/Shortcuts.vala:785 data/com.github.phase1geo.minder.shortcuts.ui:992
+#: src/Shortcuts.vala:780 data/com.github.phase1geo.minder.shortcuts.ui:992
 msgid "[Right-click when item is selected]"
 msgstr ""
 
-#: src/Shortcuts.vala:786
+#: src/Shortcuts.vala:781
 msgid "[Double left-click image]"
 msgstr ""
 
-#: src/Shortcuts.vala:788 data/com.github.phase1geo.minder.shortcuts.ui:1007
+#: src/Shortcuts.vala:783 data/com.github.phase1geo.minder.shortcuts.ui:1007
 msgid "Canvas Movement"
 msgstr ""
 
-#: src/Shortcuts.vala:789 data/com.github.phase1geo.minder.shortcuts.ui:1011
+#: src/Shortcuts.vala:784 data/com.github.phase1geo.minder.shortcuts.ui:1011
 msgid "Pan Canvas"
 msgstr ""
 
-#: src/Shortcuts.vala:789 data/com.github.phase1geo.minder.shortcuts.ui:1012
+#: src/Shortcuts.vala:784 data/com.github.phase1geo.minder.shortcuts.ui:1012
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr ""
 
-#: src/Shortcuts.vala:790 data/com.github.phase1geo.minder.shortcuts.ui:1018
+#: src/Shortcuts.vala:785 data/com.github.phase1geo.minder.shortcuts.ui:1018
 msgid "Scroll Vertically"
 msgstr ""
 
-#: src/Shortcuts.vala:790 data/com.github.phase1geo.minder.shortcuts.ui:1019
+#: src/Shortcuts.vala:785 data/com.github.phase1geo.minder.shortcuts.ui:1019
 msgid "[Scrollwheel up/down]"
 msgstr ""
 
-#: src/Shortcuts.vala:791 data/com.github.phase1geo.minder.shortcuts.ui:1025
+#: src/Shortcuts.vala:786 data/com.github.phase1geo.minder.shortcuts.ui:1025
 msgid "Scroll Horizontally"
 msgstr ""
 
-#: src/Shortcuts.vala:791
+#: src/Shortcuts.vala:786
 msgid "[Scrollwhile left/right]"
 msgstr ""
 
-#: src/Shortcuts.vala:793 data/com.github.phase1geo.minder.shortcuts.ui:1034
+#: src/Shortcuts.vala:788 data/com.github.phase1geo.minder.shortcuts.ui:1034
 msgid "Item Selection"
 msgstr "Wybór elementu"
 
-#: src/Shortcuts.vala:794 data/com.github.phase1geo.minder.shortcuts.ui:1038
+#: src/Shortcuts.vala:789 data/com.github.phase1geo.minder.shortcuts.ui:1038
 msgid "Select Single Item"
 msgstr ""
 
-#: src/Shortcuts.vala:794 data/com.github.phase1geo.minder.shortcuts.ui:1039
+#: src/Shortcuts.vala:789 data/com.github.phase1geo.minder.shortcuts.ui:1039
 msgid "[Left-click on item]"
 msgstr ""
 
-#: src/Shortcuts.vala:795 data/com.github.phase1geo.minder.shortcuts.ui:1045
+#: src/Shortcuts.vala:790 data/com.github.phase1geo.minder.shortcuts.ui:1045
 msgid "Select Child Nodes"
 msgstr ""
 
-#: src/Shortcuts.vala:795 data/com.github.phase1geo.minder.shortcuts.ui:1046
+#: src/Shortcuts.vala:790 data/com.github.phase1geo.minder.shortcuts.ui:1046
 msgid "[Control + Left-click on parent node]"
 msgstr ""
 
-#: src/Shortcuts.vala:796 data/com.github.phase1geo.minder.shortcuts.ui:1052
+#: src/Shortcuts.vala:791 data/com.github.phase1geo.minder.shortcuts.ui:1052
 msgid "Select Node Tree/Subtree"
 msgstr "Wybierz gałąź/Wszystkie poniżej"
 
-#: src/Shortcuts.vala:796
+#: src/Shortcuts.vala:791
 msgid "[Control + Double left-click on parent node"
 msgstr ""
 
-#: src/Shortcuts.vala:797 data/com.github.phase1geo.minder.shortcuts.ui:1059
+#: src/Shortcuts.vala:792 data/com.github.phase1geo.minder.shortcuts.ui:1059
 msgid "Select All Nodes at Same Depth Level"
 msgstr ""
 
-#: src/Shortcuts.vala:797 data/com.github.phase1geo.minder.shortcuts.ui:1060
+#: src/Shortcuts.vala:792 data/com.github.phase1geo.minder.shortcuts.ui:1060
 msgid "[Control + Triple left-click on node]"
 msgstr ""
 
-#: src/Shortcuts.vala:798 data/com.github.phase1geo.minder.shortcuts.ui:1066
+#: src/Shortcuts.vala:793 data/com.github.phase1geo.minder.shortcuts.ui:1066
 msgid "Block Selection"
 msgstr ""
 
-#: src/Shortcuts.vala:798 data/com.github.phase1geo.minder.shortcuts.ui:1067
+#: src/Shortcuts.vala:793 data/com.github.phase1geo.minder.shortcuts.ui:1067
 msgid "[Left-click + Drag]"
 msgstr ""
 
-#: src/Shortcuts.vala:800
+#: src/Shortcuts.vala:795
 #, fuzzy
 msgid "Item Selection Toggle"
 msgstr "Wybór elementu"
 
-#: src/Shortcuts.vala:801 data/com.github.phase1geo.minder.shortcuts.ui:1079
+#: src/Shortcuts.vala:796 data/com.github.phase1geo.minder.shortcuts.ui:1079
 msgid "Toggle Selection of Item"
 msgstr ""
 
-#: src/Shortcuts.vala:801 data/com.github.phase1geo.minder.shortcuts.ui:1080
+#: src/Shortcuts.vala:796 data/com.github.phase1geo.minder.shortcuts.ui:1080
 msgid "[Shift + Left-click on item]"
 msgstr ""
 
-#: src/Shortcuts.vala:802 data/com.github.phase1geo.minder.shortcuts.ui:1086
+#: src/Shortcuts.vala:797 data/com.github.phase1geo.minder.shortcuts.ui:1086
 msgid "Toggle Selection of Child Nodes"
 msgstr ""
 
-#: src/Shortcuts.vala:802 data/com.github.phase1geo.minder.shortcuts.ui:1087
+#: src/Shortcuts.vala:797 data/com.github.phase1geo.minder.shortcuts.ui:1087
 msgid "[Shift + Control + Left-click on item]"
 msgstr ""
 
-#: src/Shortcuts.vala:803 data/com.github.phase1geo.minder.shortcuts.ui:1093
+#: src/Shortcuts.vala:798 data/com.github.phase1geo.minder.shortcuts.ui:1093
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "Przełącz wybór: Gałąź/Wszystkie poniżej"
 
-#: src/Shortcuts.vala:803 data/com.github.phase1geo.minder.shortcuts.ui:1094
+#: src/Shortcuts.vala:798 data/com.github.phase1geo.minder.shortcuts.ui:1094
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr ""
 
-#: src/Shortcuts.vala:804 data/com.github.phase1geo.minder.shortcuts.ui:1100
+#: src/Shortcuts.vala:799 data/com.github.phase1geo.minder.shortcuts.ui:1100
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr ""
 
-#: src/Shortcuts.vala:804
+#: src/Shortcuts.vala:799
 msgid "Shift + Control + Triple-click on node]"
 msgstr ""
 
-#: src/Shortcuts.vala:806 data/com.github.phase1geo.minder.shortcuts.ui:1109
+#: src/Shortcuts.vala:801 data/com.github.phase1geo.minder.shortcuts.ui:1109
 msgid "Text Selection"
 msgstr "Zaznaczanie tekstu"
 
-#: src/Shortcuts.vala:807 data/com.github.phase1geo.minder.shortcuts.ui:1113
+#: src/Shortcuts.vala:802 data/com.github.phase1geo.minder.shortcuts.ui:1113
 msgid "Set Cursor Insert Point"
 msgstr ""
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:802
 msgid "[Left-click in text]"
 msgstr ""
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:803
 #, fuzzy
 msgid "Select Current Word"
 msgstr "Wybierz gałąź nadrzędną"
 
-#: src/Shortcuts.vala:808 data/com.github.phase1geo.minder.shortcuts.ui:1121
+#: src/Shortcuts.vala:803 data/com.github.phase1geo.minder.shortcuts.ui:1121
 msgid "[Double left-click on word]"
 msgstr ""
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:804
 msgid "[Triple left-click text]"
 msgstr ""
 
@@ -2270,12 +2405,12 @@ msgstr ""
 msgid "Add custom stickers"
 msgstr "dodanie ikony do gałęzi"
 
-#: src/StickerInspector.vala:455
+#: src/StickerInspector.vala:459
 #, fuzzy
 msgid "Import Sticker(s)"
 msgstr "Usuń ikonę"
 
-#: src/StickerInspector.vala:455 src/StickerSet.vala:353
+#: src/StickerInspector.vala:459 src/StickerSet.vala:353
 msgid "Import"
 msgstr ""
 
@@ -2299,7 +2434,7 @@ msgstr "Przemysł"
 msgid "Mobile"
 msgstr "Mobile"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:973
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:975
 msgid "Arrows"
 msgstr "Strzałki"
 
@@ -3283,13 +3418,13 @@ msgstr ""
 msgid "Right up"
 msgstr ""
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:799
-#: src/StyleInspector.vala:1156 src/StyleInspector.vala:1309
+#: src/StickerSet.vala:290 src/StyleInspector.vala:801
+#: src/StyleInspector.vala:1158 src/StyleInspector.vala:1311
 msgid "Left"
 msgstr ""
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:801
-#: src/StyleInspector.vala:1158 src/StyleInspector.vala:1311
+#: src/StickerSet.vala:291 src/StyleInspector.vala:803
+#: src/StyleInspector.vala:1160 src/StyleInspector.vala:1313
 msgid "Right"
 msgstr ""
 
@@ -3550,55 +3685,55 @@ msgstr "Zaznaczonych elementów"
 msgid "Unknown"
 msgstr "Nieznane"
 
-#: src/StyleInspector.vala:149
+#: src/StyleInspector.vala:151
 msgid "Changes affect:"
 msgstr "Zastosuj zmiany dla:"
 
-#: src/StyleInspector.vala:186
+#: src/StyleInspector.vala:188
 msgid "Branch Options"
 msgstr "Kształt linii łączących"
 
-#: src/StyleInspector.vala:253
+#: src/StyleInspector.vala:255
 msgid "Corner Radius"
 msgstr "Zaokrąglenie"
 
-#: src/StyleInspector.vala:297 src/StyleInspector.vala:663
+#: src/StyleInspector.vala:299 src/StyleInspector.vala:665
 msgid "Margin"
 msgstr "Odstępy"
 
-#: src/StyleInspector.vala:354
+#: src/StyleInspector.vala:356
 msgid "Link Options"
 msgstr "Styl linii łączących"
 
-#: src/StyleInspector.vala:376 src/StyleInspector.vala:934
+#: src/StyleInspector.vala:378 src/StyleInspector.vala:936
 msgid "Line Dash"
 msgstr "Styl linii"
 
-#: src/StyleInspector.vala:415 src/StyleInspector.vala:1011
+#: src/StyleInspector.vala:417 src/StyleInspector.vala:1013
 msgid "Line Width"
 msgstr "Grubość linii"
 
-#: src/StyleInspector.vala:463
+#: src/StyleInspector.vala:465
 msgid "Link Arrow"
 msgstr "Pokaż strzałki"
 
-#: src/StyleInspector.vala:522
+#: src/StyleInspector.vala:524
 msgid "Node Options"
 msgstr "Styl gałęzi"
 
-#: src/StyleInspector.vala:544
+#: src/StyleInspector.vala:546
 msgid "Border Style"
 msgstr "Obramowanie"
 
-#: src/StyleInspector.vala:584
+#: src/StyleInspector.vala:586
 msgid "Border Width"
 msgstr "Grubość obramowania"
 
-#: src/StyleInspector.vala:631
+#: src/StyleInspector.vala:633
 msgid "Color Fill"
 msgstr "Wypełnienie kolorem"
 
-#: src/StyleInspector.vala:640
+#: src/StyleInspector.vala:642
 msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
@@ -3606,62 +3741,62 @@ msgstr ""
 "Wypełnia tło gałęzi kolorem,\n"
 "jest posiada zamknięte obramowanie"
 
-#: src/StyleInspector.vala:704 src/StyleInspector.vala:1060
-#: src/StyleInspector.vala:1334
+#: src/StyleInspector.vala:706 src/StyleInspector.vala:1062
+#: src/StyleInspector.vala:1336
 msgid "Padding"
 msgstr "Wypełnienie"
 
-#: src/StyleInspector.vala:745
+#: src/StyleInspector.vala:747
 msgid "Font"
 msgstr "Czcionka"
 
-#: src/StyleInspector.vala:788 src/StyleInspector.vala:1145
-#: src/StyleInspector.vala:1298
+#: src/StyleInspector.vala:790 src/StyleInspector.vala:1147
+#: src/StyleInspector.vala:1300
 #, fuzzy
 msgid "Text Alignment"
 msgstr "wyrównanie gałęzi"
 
-#: src/StyleInspector.vala:800 src/StyleInspector.vala:1157
-#: src/StyleInspector.vala:1310
+#: src/StyleInspector.vala:802 src/StyleInspector.vala:1159
+#: src/StyleInspector.vala:1312
 msgid "Center"
 msgstr ""
 
-#: src/StyleInspector.vala:825
+#: src/StyleInspector.vala:827
 msgid "Width"
 msgstr "Szerokość"
 
-#: src/StyleInspector.vala:855
+#: src/StyleInspector.vala:857
 msgid "Enable Markup"
 msgstr "Pozwól używać znaczników Markdown"
 
-#: src/StyleInspector.vala:912
+#: src/StyleInspector.vala:914
 msgid "Connection Options"
 msgstr "Opcje łącznika"
 
-#: src/StyleInspector.vala:1102
+#: src/StyleInspector.vala:1104
 msgid "Title Font"
 msgstr "Czcionka etykiety łącznika"
 
-#: src/StyleInspector.vala:1181
+#: src/StyleInspector.vala:1183
 msgid "Title Width"
 msgstr "Szerokość etykiety łącznika"
 
-#: src/StyleInspector.vala:1232
+#: src/StyleInspector.vala:1234
 #, fuzzy
 msgid "Callout Options"
 msgstr "Opcje eksportu"
 
-#: src/StyleInspector.vala:1255
+#: src/StyleInspector.vala:1257
 #, fuzzy
 msgid "Text Font"
 msgstr "Czcionka etykiety łącznika"
 
-#: src/StyleInspector.vala:1376
+#: src/StyleInspector.vala:1378
 #, fuzzy
 msgid "Pointer Width"
 msgstr "Grubość linii"
 
-#: src/StyleInspector.vala:1418
+#: src/StyleInspector.vala:1420
 msgid "Pointer Length"
 msgstr ""
 
@@ -3746,124 +3881,124 @@ msgstr "Usuń link"
 msgid "Parser regex error (re: %s, error: %s)\n"
 msgstr "Błąd parsera wyrażeń reguralnych (re: %s, error: %s)\n"
 
-#: src/ThemeEditor.vala:52
+#: src/ThemeEditor.vala:53
 msgid "Customize Theme"
 msgstr "Edycja motywu"
 
-#: src/ThemeEditor.vala:57
+#: src/ThemeEditor.vala:58
 msgid "Name"
 msgstr "Nazwa"
 
-#: src/ThemeEditor.vala:95
+#: src/ThemeEditor.vala:96
 msgid "Base Colors"
 msgstr "Podstawowe kolory"
 
-#: src/ThemeEditor.vala:101
+#: src/ThemeEditor.vala:102
 msgid "Background"
 msgstr "Tło"
 
-#: src/ThemeEditor.vala:102
+#: src/ThemeEditor.vala:103
 msgid "Foreground"
 msgstr ""
 
-#: src/ThemeEditor.vala:103
+#: src/ThemeEditor.vala:104
 msgid "Root Node Background"
 msgstr "Tło głównej gałęzi"
 
-#: src/ThemeEditor.vala:104
+#: src/ThemeEditor.vala:105
 msgid "Root Node Foreground"
 msgstr ""
 
-#: src/ThemeEditor.vala:105
+#: src/ThemeEditor.vala:106
 msgid "Node Select Background"
 msgstr ""
 
-#: src/ThemeEditor.vala:106
+#: src/ThemeEditor.vala:107
 msgid "Node Select Foreground"
 msgstr ""
 
-#: src/ThemeEditor.vala:107
+#: src/ThemeEditor.vala:108
 msgid "Text Select Background"
 msgstr ""
 
-#: src/ThemeEditor.vala:108
+#: src/ThemeEditor.vala:109
 msgid "Text Select Foreground"
 msgstr ""
 
-#: src/ThemeEditor.vala:109
+#: src/ThemeEditor.vala:110
 msgid "Text Cursor"
 msgstr ""
 
-#: src/ThemeEditor.vala:110
+#: src/ThemeEditor.vala:111
 msgid "Attachable Highlight"
 msgstr ""
 
-#: src/ThemeEditor.vala:111
+#: src/ThemeEditor.vala:112
 msgid "Connection Color"
 msgstr "Kolor łączników"
 
-#: src/ThemeEditor.vala:112
+#: src/ThemeEditor.vala:113
 msgid "Connection Title Color"
 msgstr ""
 
-#: src/ThemeEditor.vala:113
+#: src/ThemeEditor.vala:114
 #, fuzzy
 msgid "Callout Background"
 msgstr "Tło"
 
-#: src/ThemeEditor.vala:114
+#: src/ThemeEditor.vala:115
 msgid "URL Link Background"
 msgstr ""
 
-#: src/ThemeEditor.vala:115
+#: src/ThemeEditor.vala:116
 msgid "URL Link Foreground"
 msgstr ""
 
-#: src/ThemeEditor.vala:116
+#: src/ThemeEditor.vala:117
 msgid "Tag"
 msgstr "Tag"
 
-#: src/ThemeEditor.vala:117
+#: src/ThemeEditor.vala:118
 msgid "Markdown Syntax Chars"
 msgstr ""
 
-#: src/ThemeEditor.vala:118
+#: src/ThemeEditor.vala:119
 msgid "Match Background"
 msgstr ""
 
-#: src/ThemeEditor.vala:119
+#: src/ThemeEditor.vala:120
 msgid "Match Foreground"
 msgstr ""
 
-#: src/ThemeEditor.vala:120
+#: src/ThemeEditor.vala:121
 msgid "Markdown List Item"
 msgstr ""
 
-#: src/ThemeEditor.vala:126
+#: src/ThemeEditor.vala:127
 msgid "Prefer Dark Mode"
 msgstr "Preferuj tryb ciemny"
 
-#: src/ThemeEditor.vala:221
+#: src/ThemeEditor.vala:223
 msgid "Custom"
 msgstr "Własny"
 
-#: src/ThemeEditor.vala:239
+#: src/ThemeEditor.vala:245
 msgid "Delete theme?"
 msgstr "Usunąć motyw?"
 
-#: src/ThemeEditor.vala:240
+#: src/ThemeEditor.vala:246
 msgid "This operation cannot be undone."
 msgstr "Tej operacji nie będzie można cofnąć!"
 
-#: src/ThemeEditor.vala:245 src/Utils.vala:439
+#: src/ThemeEditor.vala:251 src/Utils.vala:439
 msgid "No"
 msgstr "Nie"
 
-#: src/ThemeEditor.vala:248 src/Utils.vala:442
+#: src/ThemeEditor.vala:254 src/Utils.vala:442
 msgid "Yes"
 msgstr "Tak"
 
-#: src/ThemeEditor.vala:266
+#: src/ThemeEditor.vala:272
 msgid "Default"
 msgstr "Domyślnie"
 
@@ -3887,12 +4022,12 @@ msgstr "Rozświetlony Jasny"
 msgid "Error parsing regular expression"
 msgstr "Błąd parsowania wyrażenia regularnego"
 
-#: src/Theme.vala:200
+#: src/Theme.vala:214
 #, c-format
 msgid "Unable to load background color: %s"
 msgstr "Nie można wczytać koloru tła: %s"
 
-#: src/Theme.vala:305
+#: src/Theme.vala:323
 msgid "Root"
 msgstr "Start"
 
@@ -4759,9 +4894,6 @@ msgstr ""
 
 #~ msgid "Remove Node Links"
 #~ msgstr "Usuń hiperłącze elementu"
-
-#~ msgid "Close"
-#~ msgstr "Zamknij"
 
 #~ msgid "Restore Link"
 #~ msgstr "Przywróć link"
