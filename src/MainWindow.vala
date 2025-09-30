@@ -2118,6 +2118,12 @@ public class MainWindow : Gtk.ApplicationWindow {
       use_markup = true,
       max_width_chars = 0,
       wrap = true,
+      margin_start = 20
+    };
+
+    var desc_exp = new Expander( _( "Detail" ) ) {
+      child = description,
+      expanded = false,
       margin_bottom = 10
     };
 
@@ -2132,7 +2138,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     options.selected = settings.get_int( "upgrade-action" );
 
     var remember = new CheckButton();
-    var rem_description = new Label( _( "Don't show this dialog again" ) ) {
+    var rem_description = new Label( _( "Use the selected option when future older Minder files are opened" ) ) {
       halign = Align.START
     };
     var rem_info = new Label( _( "<small>This can be changed in preferences</small>" ) ) {
@@ -2146,7 +2152,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
 
     grid.attach( options,         0, 0, 2 );
-    grid.attach( description,     1, 1 );
+    grid.attach( desc_exp,        0, 1, 2 );
     grid.attach( remember,        0, 2 );
     grid.attach( rem_description, 1, 2 );
     grid.attach( rem_info,        1, 3 );
