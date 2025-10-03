@@ -70,6 +70,7 @@ public class MapModel {
   private bool          _hide_callouts  = false;
   private Array<string> _braindump;
   private bool          _modifiable     = true;
+  private Tags          _tags;
 
   public Layouts        layouts         { set; get; default = new Layouts(); }
   public ImageManager   image_manager   { set; get; default = new ImageManager(); }
@@ -162,6 +163,11 @@ public class MapModel {
       _last_node = value;
     }
   }
+  public Tags tags {
+    get {
+      return( _tags );
+    }
+  }
 
   public signal void changed();
   public signal void current_changed();
@@ -192,6 +198,9 @@ public class MapModel {
 
     // Create the braindump list
     _braindump = new Array<string>();
+
+    // Create that mindmap tags
+    _tags = new Tags();
 
     /* Set the theme to the default theme */
     set_theme( _map.win.themes.get_theme( _map.settings.get_string( "default-theme" ) ), false );
@@ -381,6 +390,7 @@ public class MapModel {
           case "theme"       :  load_theme( it );   break;
           case "layout"      :  load_layout( it, ref use_layout );  break;
           case "styles"      :  StyleInspector.styles.load( it );  break;
+          case "tags"        :  _tags.load( it );  break;
           case "images"      :  image_manager.load( it );  break;
           case "connections" :  _connections.load( _map, it, null, _nodes );  break;
           case "groups"      :  groups.load( _map, it, null, _nodes );  break;
@@ -443,6 +453,8 @@ public class MapModel {
     Xml.Node* images = new Xml.Node( null, "images" );
     image_manager.save( images );
     parent->add_child( images );
+
+    parent->add_child( _tags.save() );
 
     Xml.Node* nodes = new Xml.Node( null, "nodes" );
     for( int i=0; i<_nodes.length; i++ ) {

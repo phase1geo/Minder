@@ -53,6 +53,7 @@ public enum KeyCommand {
     SIDEBAR_START,
       SHOW_CURRENT_SIDEBAR,
       SHOW_STYLE_SIDEBAR,
+      SHOW_TAG_SIDEBAR,
       SHOW_STICKER_SIDEBAR,
       SHOW_MAP_SIDEBAR,  // 30
     SIDEBAR_END,
@@ -260,6 +261,7 @@ public enum KeyCommand {
       case ZOOM_ACTUAL               :  return( "zoom-actual" );
       case SHOW_CURRENT_SIDEBAR      :  return( "show-current-sidebar" );
       case SHOW_STYLE_SIDEBAR        :  return( "show-style-sidebar" );
+      case SHOW_TAG_SIDEBAR          :  return( "show-tag-sidebard" );
       case SHOW_STICKER_SIDEBAR      :  return( "show-sticker-sidebar" );
       case SHOW_MAP_SIDEBAR          :  return( "show-map-sidebar" );
       case TOGGLE_CONNECTIONS        :  return( "toggle-connections" );
@@ -422,6 +424,7 @@ public enum KeyCommand {
       case "zoom-actual"               :  return( ZOOM_ACTUAL );
       case "show-current-sidebar"      :  return( SHOW_CURRENT_SIDEBAR );
       case "show-style-sidebar"        :  return( SHOW_STYLE_SIDEBAR );
+      case "show-tag-sidebar"          :  return( SHOW_TAG_SIDEBAR );
       case "show-sticker-sidebar"      :  return( SHOW_STICKER_SIDEBAR );
       case "show-map-sidebar"          :  return( SHOW_MAP_SIDEBAR );
       case "toggle-connections"        :  return( TOGGLE_CONNECTIONS );
@@ -584,6 +587,7 @@ public enum KeyCommand {
       case SIDEBAR_START             :  return( _( "Sidebar Commands" ) );
       case SHOW_CURRENT_SIDEBAR      :  return( _( "Show current tab in sidebar" ) );
       case SHOW_STYLE_SIDEBAR        :  return( _( "Show style tab in sidebar" ) );
+      case SHOW_TAG_SIDEBAR          :  return( _( "Show tag tab in sidebard" ) );
       case SHOW_STICKER_SIDEBAR      :  return( _( "Show sticker tab in sidebar" ) );
       case SHOW_MAP_SIDEBAR          :  return( _( "Show map tab in sidebar" ) );
       case MAP_START                 :  return( _( "Map Commands" ) );
@@ -748,6 +752,7 @@ public enum KeyCommand {
       case ZOOM_ACTUAL               :  return( zoom_actual );
       case SHOW_CURRENT_SIDEBAR      :  return( show_current_sidebar );
       case SHOW_STYLE_SIDEBAR        :  return( show_style_sidebar );
+      case SHOW_TAG_SIDEBAR          :  return( show_tag_sidebar );
       case SHOW_STICKER_SIDEBAR      :  return( show_sticker_sidebar );
       case SHOW_MAP_SIDEBAR          :  return( show_map_sidebar );
       case TOGGLE_CONNECTIONS        :  return( toggle_connections );
@@ -1260,6 +1265,10 @@ public enum KeyCommand {
 
   public static void show_style_sidebar( MindMap map ) {
     map.show_properties( "style", PropertyGrab.FIRST );
+  }
+
+  public static void show_tag_sidebar( MindMap map ) {
+    map.show_properties( "tag", PropertyGrab.FIRST );
   }
 
   public static void show_sticker_sidebar( MindMap map ) {

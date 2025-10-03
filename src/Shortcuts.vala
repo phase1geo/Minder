@@ -550,8 +550,9 @@ public class Shortcuts {
     add_default( Key.p,            true, false, false, KeyCommand.FILE_PRINT );
     add_default( Key.comma,        true, false, false, KeyCommand.SHOW_PREFERENCES );
     add_default( Key.question,     true, false, false, KeyCommand.SHOW_SHORTCUTS );
-    add_default( Key.@6,           true, false, false, KeyCommand.SHOW_CURRENT_SIDEBAR );
-    add_default( Key.@7,           true, false, false, KeyCommand.SHOW_STYLE_SIDEBAR );
+    add_default( Key.@5,           true, false, false, KeyCommand.SHOW_CURRENT_SIDEBAR );
+    add_default( Key.@6,           true, false, false, KeyCommand.SHOW_STYLE_SIDEBAR );
+    add_default( Key.@7,           true, false, false, KeyCommand.SHOW_TAG_SIDEBAR );
     add_default( Key.@8,           true, false, false, KeyCommand.SHOW_STICKER_SIDEBAR );
     add_default( Key.@9,           true, false, false, KeyCommand.SHOW_MAP_SIDEBAR );
     add_default( Key.Tab,          true, false, false, KeyCommand.TAB_GOTO_NEXT );

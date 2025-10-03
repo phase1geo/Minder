@@ -293,12 +293,14 @@ public class MainWindow : Gtk.ApplicationWindow {
     /* If the settings says to display the properties, do it now */
     if( _settings.get_boolean( "current-properties-shown" ) ) {
       show_properties( "current", PropertyGrab.NONE );
-    } else if( _settings.get_boolean( "map-properties-shown" ) ) {
-      show_properties( "map", PropertyGrab.NONE );
     } else if( _settings.get_boolean( "style-properties-shown" ) ) {
       show_properties( "style", PropertyGrab.NONE );
+    } else if( _settings.get_boolean( "tag-properties-shown" ) ) {
+      show_properties( "tag", PropertyGrab.NONE );
     } else if( _settings.get_boolean( "sticker-properties-shown" ) ) {
       show_properties( "sticker", PropertyGrab.NONE );
+    } else if( _settings.get_boolean( "map-properties-shown" ) ) {
+      show_properties( "map", PropertyGrab.NONE );
     }
 
     /* Look for any changes to the settings */
@@ -1153,10 +1155,11 @@ public class MainWindow : Gtk.ApplicationWindow {
       transition_type     = StackTransitionType.SLIDE_LEFT_RIGHT,
       transition_duration = 500
     };
-    _stack.add_titled( new CurrentInspector( this ), "current", _("Current") );
-    _stack.add_titled( new StyleInspector( this, _settings ), "style", _("Style") );
+    _stack.add_titled( new CurrentInspector( this ),            "current", _("Current") );
+    _stack.add_titled( new StyleInspector( this, _settings ),   "style",   _("Style") );
+    _stack.add_titled( new TagInspector( this ),                "tag",     _("Tags") );
     _stack.add_titled( new StickerInspector( this, _settings ), "sticker", _("Stickers") );
-    _stack.add_titled( new MapInspector( this, _settings ),  "map",  _("Map") );
+    _stack.add_titled( new MapInspector( this, _settings ),     "map",     _("Map") );
 
     var key = new EventControllerKey();
     _stack.add_controller( key );
@@ -1167,6 +1170,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       if( ps.name == "visible-child" ) {
         _settings.set_boolean( "current-properties-shown", (_stack.visible_child_name == "current") );
         _settings.set_boolean( "style-properties-shown",   (_stack.visible_child_name == "style" ) );
+        _settings.set_boolean( "tag-properties-shown",     (_stack.visible_child_name == "tag" ) );
         _settings.set_boolean( "sticker-properties-shown", (_stack.visible_child_name == "sticker" ) );
         _settings.set_boolean( "map-properties-shown",     (_stack.visible_child_name == "map") );
       }
@@ -1175,6 +1179,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     // Set shortcuts
     set_action_for_command( KeyCommand.SHOW_CURRENT_SIDEBAR );
     set_action_for_command( KeyCommand.SHOW_STYLE_SIDEBAR );
+    set_action_for_command( KeyCommand.SHOW_TAG_SIDEBAR );
     set_action_for_command( KeyCommand.SHOW_STICKER_SIDEBAR );
     set_action_for_command( KeyCommand.SHOW_MAP_SIDEBAR );
 
@@ -1640,6 +1645,7 @@ public class MainWindow : Gtk.ApplicationWindow {
         switch( _stack.visible_child_name ) {
           case "current" :  (_stack.get_child_by_name( "current" ) as CurrentInspector).grab_first();  break;
           case "style"   :  (_stack.get_child_by_name( "style" )   as StyleInspector).grab_first();    break;
+          case "tag"     :  (_stack.get_child_by_name( "tag" )     as TagInspector).grab_first();      break;
           case "sticker" :  (_stack.get_child_by_name( "sticker" ) as StickerInspector).grab_first();  break;
           case "map"     :  (_stack.get_child_by_name( "map" )     as MapInspector).grab_first();      break;
         }
@@ -1680,9 +1686,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     _pane.end_child        = null;
     get_current_map( "hide_properties" ).canvas.grab_focus();
     _settings.set_boolean( "current-properties-shown", false );
-    _settings.set_boolean( "map-properties-shown",     false );
     _settings.set_boolean( "style-properties-shown",   false );
+    _settings.set_boolean( "tag-properties-shown",     false );
     _settings.set_boolean( "sticker-properties-shown", false );
+    _settings.set_boolean( "map-properties-shown",     false );
   }
 
   //-------------------------------------------------------------
