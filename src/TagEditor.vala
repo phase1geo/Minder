@@ -132,6 +132,7 @@ public class TagEditor : Box {
       placeholder_text = _( "Enter Tag Name to Find or Create" ),
       width_chars      = 30,
       margin_top       = 5,
+      margin_bottom    = 10,
       margin_start     = 5,
       margin_end       = 5
     };

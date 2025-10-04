@@ -200,7 +200,7 @@ public class Tags {
   //-------------------------------------------------------------
   // Loads the tags based on the existing list of all available tags.
   public void load_indices( Xml.Node* node, Tags all_tags ) {
-    var l = node->get_prop( "taglist" );
+    var l = node->get_prop( "list" );
     if( l != null ) {
       var indices = l.split( "," );
       foreach (var index in indices) {

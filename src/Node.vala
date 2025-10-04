@@ -848,7 +848,7 @@ public class Node : Object {
     var name_height  = (_name.height < stk_height) ? stk_height : _name.height;
     var image_width  = (_image != null) ? _image.width : 0;
     var image_height = (_image != null) ? (_image.height + padding) : 0;
-    var tg_width     = tags_width();
+    var tg_width     = noname_width + tags_width();
     var tg_height    = tags_height();
     var all_width    = Math.fmax( name_width, Math.fmax( image_width, tg_width ) );
 
@@ -1254,9 +1254,9 @@ public class Node : Object {
   protected virtual void tag_bbox( int index, out double x, out double y, out double w, out double h ) {
     int margin  = style.node_margin ?? 0;
     int padding = style.node_padding ?? 0;
-    x = posx + margin + padding + (index * 10);
+    x = name.posx + (index * 15);
     y = posy + (_height - (margin + padding) - 5);
-    w = 5;
+    w = 10;
     h = 5;
   }
 
@@ -1711,7 +1711,7 @@ public class Node : Object {
           case "nodenote"   :  load_note( it );  break;
           case "nodeimage"  :  load_image( map.image_manager, it );  break;
           case "nodelink"   :  load_node_link( it );  break;
-          case "tags"       :  tags.load_indices( it, _map.model.tags );  break;
+          case "taglist"    :  tags.load_indices( it, _map.model.tags );  break;
           case "style"      :  load_style( it );  break;
           case "callout"    :  load_callout( it );  break;
           case "nodes"      :  load_nodes( it, sibling_parent, ref siblings );  break;
@@ -2053,7 +2053,7 @@ public class Node : Object {
   // Returns the total width of the tag indicators.
   public double tags_width() {
     var num_tags = _tags.size();
-    return( (num_tags == 0) ? 0 : ((num_tags * 5) + ((num_tags - 1) * 5)) );
+    return( (num_tags == 0) ? 0 : ((num_tags * 10) + ((num_tags - 1) * 5)) );
   }
 
   //-------------------------------------------------------------
