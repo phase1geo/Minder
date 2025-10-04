@@ -29,6 +29,7 @@ public class TagInspector : Box {
   private TagEditor _editor;
 
   public signal void editable_changed();
+  public signal void changed();
 
   //-------------------------------------------------------------
   // Constructor
@@ -37,6 +38,13 @@ public class TagInspector : Box {
     Object( orientation: Orientation.VERTICAL, spacing: 10, valign: Align.FILL );
 
     _editor = new TagEditor( win );
+    _editor.changed.connect(() => {
+      if( _map != null ) {
+        _map.queue_draw();
+        _map.auto_save();
+      }
+    });
+    _editor.select_changed.connect( tag_select_changed );
 
     win.canvas_changed.connect( tab_changed );
 
@@ -68,9 +76,33 @@ public class TagInspector : Box {
   }
 
   //-------------------------------------------------------------
+  // Updates the currently selected node by adding or removing
+  // the given tag from its tag list.
+  private void tag_select_changed( Tag tag, bool selected ) {
+
+    stdout.printf( "In tag_select_changed, tag: %s, selected: %s\n", tag.name, selected.to_string() );
+
+    var node = _map.get_current_node();
+    if( node != null ) {
+      if( selected ) {
+        node.add_tag( tag );
+      } else {
+        node.remove_tag( tag );
+      }
+      _map.queue_draw();
+      _map.auto_save();
+    }
+
+  }
+
+  //-------------------------------------------------------------
   // Called whenever the user changes the current node in the
   // canvas.
   private void current_changed() {
+
+    var node = _map.get_current_node();
+
+    _editor.show_selected_tags( (node != null) ? node.tags : null );
 
     /*
     if( _map.get_current_node() != null ) {
@@ -97,40 +129,10 @@ public class TagInspector : Box {
   }
 
   //-------------------------------------------------------------
-  // Gives the node or connection note field keyboard focus
-  public void grab_note() {
-
-    /*
-    if( _map.get_current_node() != null ) {
-      var ni = _stack.get_child_by_name( "node" ) as NodeInspector;
-      if( ni != null ) {
-        ni.grab_note();
-      }
-    } else if( _map.get_current_connection() != null ) {
-      var ci = _stack.get_child_by_name( "connection" ) as ConnectionInspector;
-      if( ci != null ) {
-        ci.grab_note();
-      }
-    } else if( _map.get_current_group() != null ) {
-      var gi = _stack.get_child_by_name( "group" ) as GroupInspector;
-      if( gi != null ) {
-        gi.grab_note();
-      }
-    }
-    */
-
-  }
-
-  //-------------------------------------------------------------
   // Grabs the focus on the first field of the displayed pane
   public void grab_first() {
-    /*
-    switch( _stack.visible_child_name ) {
-      case "node"       :  (_stack.get_child_by_name( "node" )       as NodeInspector).grab_first();        break;
-      case "connection" :  (_stack.get_child_by_name( "connection" ) as ConnectionInspector).grab_first();  break;
-      case "group"      :  (_stack.get_child_by_name( "group" )      as GroupInspector).grab_first();       break;
-    }
-    */
+    _editor.grab_focus();
+    current_changed();
   }
 
 }

@@ -26,6 +26,11 @@ public class TagBox : Box {
 
   private Tag _tag;
 
+  public bool selectable { get; set; default = false; }
+
+  public signal void changed();
+  public signal void select_changed( bool select );
+
   //-------------------------------------------------------------
   // Constructor
   public TagBox( Tag tag ) {
@@ -46,24 +51,45 @@ public class TagBox : Box {
 
     color.notify["rgba"].connect(() => {
       tag.color = color.get_rgba();
+      changed();
     });
 
     // Add name label
     var name = new EditableLabel( tag.name ) {
-      halign  = Align.FILL,
-      hexpand = true
+      halign   = Align.FILL,
+      editable = false,
+      hexpand  = true
     };
 
     name.changed.connect(() => {
       tag.name = name.text;
+      changed();
     });
 
     // Add checkmark field (not editable by user)
     var selected = new CheckButton() {
       halign = Align.END,
-      sensitive = false
+      sensitive = false,
+      active = true
     };
     selected.set_child_visible( false );
+
+    var click = new GestureClick();
+    click.pressed.connect((n_press, x, y) => {
+      switch( n_press ) {
+        case 1 :
+          if( selectable ) {
+            var select = !selected.get_child_visible();
+            selected.set_child_visible( select );
+            select_changed( select );
+          }
+          break;
+        case 2 :
+          name.editable = true;
+          break;
+      }
+    });
+    name.add_controller( click );
 
     append( color );
     append( name );
@@ -92,6 +118,9 @@ public class TagEditor : Box {
   private Entry   _entry;
   private ListBox _taglist;
 
+  public signal void changed();
+  public signal void select_changed( Tag tag, bool select );
+
   //-------------------------------------------------------------
   // Constructor.
   public TagEditor( MainWindow win ) {
@@ -110,9 +139,11 @@ public class TagEditor : Box {
     _entry.activate.connect(() => {
       var tag    = new Tag( _entry.text, Utils.color_from_string( "#000000" ) );
       var tagbox = new TagBox( tag );
-      _tags.add_tag( tag );
+      tagbox.changed.connect( handle_tag_change );
       _taglist.append( tagbox );
+      _tags.add_tag( tag );
       _entry.text = "";
+      changed();
     });
 
     _taglist = new ListBox() {
@@ -126,9 +157,7 @@ public class TagEditor : Box {
       var current = _taglist.get_selected_row();
       if( current != null ) {
         if( keyval == Gdk.Key.Delete ) {
-          var index = current.get_index();
-          _taglist.remove( current );
-          _tags.remove_tag( index );
+          remove_tag( current );
           return( true );
         }
       }
@@ -154,6 +183,53 @@ public class TagEditor : Box {
   }
 
   //-------------------------------------------------------------
+  // Called whenever an individual tag changes color or name.
+  private void handle_tag_change() {
+    changed();
+  }
+
+  //-------------------------------------------------------------
+  // Returns the TagBox at the given row in the listbox.
+  private TagBox? get_tagbox( ListBoxRow? row ) {
+    if( row != null ) {
+      var child = row.get_child();
+      if( child != null ) {
+        return( (TagBox)child );
+      }
+    }
+    return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Removes the tag at the given listbox row.
+  private void remove_tag( ListBoxRow? row ) {
+
+    var index  = row.get_index();
+    var change = false;
+
+    // Remove the tagbox from the listbox
+    var tagbox = get_tagbox( row );
+    if( tagbox != null ) {
+      tagbox.changed.disconnect( handle_tag_change );
+      change = true;
+    }
+    _taglist.remove( row );
+
+    // Remove the tag from the list of stored tags
+    var tag = _tags.get_tag( index );
+    if( tag != null ) {
+      _tags.remove_tag( index );
+      tag.removed();
+      change = true;
+    }
+
+    if( change ) {
+      changed();
+    }
+
+  }
+
+  //-------------------------------------------------------------
   // Sets the displayed tags list to the given list of tags.
   public void set_tags( Tags? tags ) {
 
@@ -162,11 +238,37 @@ public class TagEditor : Box {
 
     if( tags != null ) {
       for( int i=0; i<tags.size(); i++ ) {
-        var tag = new TagBox( tags.get_tag( i ) );
-        _taglist.append( tag );
+        var tag    = tags.get_tag( i );
+        var tagbox = new TagBox( tag );
+        tagbox.select_changed.connect((select) => {
+          select_changed( tag, select );
+        });
+        _taglist.append( tagbox );
       }
     }
 
   }
 
+  //-------------------------------------------------------------
+  // Shows the provided tags in the current list of tags as being
+  // used.
+  public void show_selected_tags( Tags? tags ) {
+
+    for( int i=0; i<_tags.size(); i++ ) {
+      var tagbox = get_tagbox( _taglist.get_row_at_index( i ) );
+      if( tagbox != null ) {
+        tagbox.selectable = (tags != null);
+        if( tags != null ) {
+          tagbox.set_selected( tags.contains_tag( _tags.get_tag( i ) ) );
+        }
+      }
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // When the focus is grabbed, we will give the entry field the focus.
+  public override bool grab_focus() {
+    return( _entry.grab_focus() );
+  }
 }
