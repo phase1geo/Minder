@@ -290,6 +290,13 @@ public class DrawArea : Gtk.DrawingArea {
     idea_drop.drop.connect( handle_idea_drop );
     idea_drop.leave.connect( handle_cursor_leave );
 
+    var tag_drop = new DropTarget( typeof(Tag), Gdk.DragAction.COPY );
+    this.add_controller( tag_drop );
+    tag_drop.accept.connect( handle_drop_accept );
+    tag_drop.motion.connect( handle_tag_drag_motion );
+    tag_drop.drop.connect( handle_tag_drop );
+    tag_drop.leave.connect( handle_cursor_leave );
+
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
     this.focusable = true;
@@ -1958,17 +1965,12 @@ public class DrawArea : Gtk.DrawingArea {
   // Handle any drag operations involving text.
   private Gdk.DragAction handle_text_drag_motion( double x, double y ) {
 
-    Node       attach_node;
-    Connection attach_conn;
-    Sticker    attach_sticker;
-
     var scaled_x = scale_value( x );
     var scaled_y = scale_value( y );
-
-    _map.model.get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
+    var node     = _map.model.get_droppable_node( scaled_x, scaled_y );
 
     // Set the attach mode
-    _map.model.set_attach_node( attach_node, NodeMode.DROPPABLE );
+    _map.model.set_attach_node( node, NodeMode.DROPPABLE );
 
     return( Gdk.DragAction.MOVE );
 
@@ -2004,17 +2006,12 @@ public class DrawArea : Gtk.DrawingArea {
   // Handle any drag operations involving a braindump idea.
   private Gdk.DragAction handle_idea_drag_motion( double x, double y ) {
 
-    Node       attach_node;
-    Connection attach_conn;
-    Sticker    attach_sticker;
-
     var scaled_x = scale_value( x );
     var scaled_y = scale_value( y );
-
-    _map.model.get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
+    var node     = _map.model.get_droppable_node( scaled_x, scaled_y );
 
     // Set the attach mode
-    _map.model.set_attach_node( attach_node, NodeMode.DROPPABLE );
+    _map.model.set_attach_node( node, NodeMode.DROPPABLE );
 
     return( Gdk.DragAction.MOVE );
 
@@ -2050,22 +2047,51 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  //-------------------------------------------------------------
+  // Called when a tag is dragged across the DrawArea.
+  private Gdk.DragAction handle_tag_drag_motion( double x, double y ) {
+
+    var scaled_x = scale_value( x );
+    var scaled_y = scale_value( y );
+    var node     = _map.model.get_droppable_node( scaled_x, scaled_y );
+
+    // Set the attach mode
+    _map.model.set_attach_node( node, NodeMode.DROPPABLE );
+
+    return( Gdk.DragAction.COPY );
+
+  }
+
+  //-------------------------------------------------------------
+  // Handles a tag drop event.  Adds the given tag to the node.
+  private bool handle_tag_drop( Value val, double x, double y ) {
+
+    var node = _map.model.attach_node;
+    var tag  = (Tag)val;
+
+    if( (node != null) && (node.mode == NodeMode.DROPPABLE) ) {
+      node.add_tag( tag );
+      if( _map.select_node( node ) ) {
+        stdout.printf( "Node selected\n" );
+        queue_draw();
+        _map.auto_save();
+      }
+    }
+
+    return( true );
+
+  }
 
   //-------------------------------------------------------------
   // Called whenever we drag something over the canvas.
   private Gdk.DragAction handle_file_drag_motion( double x, double y ) {
 
-    Node       attach_node;
-    Connection attach_conn;
-    Sticker    attach_sticker;
-
     var scaled_x = scale_value( x );
     var scaled_y = scale_value( y );
-
-    _map.model.get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
+    var node     = _map.model.get_droppable_node( scaled_x, scaled_y );
 
     // Set the attach node (if valid) as droppable
-    _map.model.set_attach_node( attach_node, NodeMode.DROPPABLE );
+    _map.model.set_attach_node( node, NodeMode.DROPPABLE );
 
     return( Gdk.DragAction.COPY );
 

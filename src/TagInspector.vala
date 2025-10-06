@@ -37,7 +37,7 @@ public class TagInspector : Box {
 
     Object( orientation: Orientation.VERTICAL, spacing: 10, valign: Align.FILL );
 
-    _editor = new TagEditor( win );
+    _editor = new TagEditor( win, true );
     _editor.changed.connect(() => {
       if( _map != null ) {
         _map.queue_draw();

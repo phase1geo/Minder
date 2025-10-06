@@ -24,8 +24,14 @@ using Gdk;
 
 public class TagBox : Box {
 
-  private Tag _tag;
+  private Tag           _tag;
+  private EditableLabel _name;
 
+  public EditableLabel name {
+    get {
+      return( _name );
+    }
+  }
   public bool selectable { get; set; default = false; }
 
   public signal void changed();
@@ -55,13 +61,13 @@ public class TagBox : Box {
     });
 
     // Add name label
-    var name = new EditableLabel( tag.name ) {
+    _name = new EditableLabel( tag.name ) {
       halign   = Align.FILL,
       editable = false,
       hexpand  = true
     };
 
-    name.changed.connect(() => {
+    _name.changed.connect(() => {
       tag.name = name.text;
       changed();
     });
@@ -75,7 +81,7 @@ public class TagBox : Box {
     selected.set_child_visible( false );
 
     var click = new GestureClick();
-    click.pressed.connect((n_press, x, y) => {
+    click.released.connect((n_press, x, y) => {
       switch( n_press ) {
         case 1 :
           if( selectable ) {
@@ -92,7 +98,7 @@ public class TagBox : Box {
     name.add_controller( click );
 
     append( color );
-    append( name );
+    append( _name );
     append( selected );
 
   }
@@ -114,18 +120,23 @@ public class TagBox : Box {
 // displayed.
 public class TagEditor : Box {
 
-  private Tags?   _tags = null;
-  private Entry   _entry;
-  private ListBox _taglist;
+  private MainWindow _win;
+  private Tags?      _tags = null;
+  private Entry      _entry;
+  private ListBox    _taglist;
+  private bool       _draggable = false;
 
   public signal void changed();
   public signal void select_changed( Tag tag, bool select );
 
   //-------------------------------------------------------------
   // Constructor.
-  public TagEditor( MainWindow win ) {
+  public TagEditor( MainWindow win, bool draggable ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 0 );
+
+    _win       = win;
+    _draggable = draggable;
 
     _entry = new Entry() {
       halign           = Align.FILL,
@@ -138,11 +149,7 @@ public class TagEditor : Box {
     };
 
     _entry.activate.connect(() => {
-      var tag    = new Tag( _entry.text, Utils.color_from_string( "#000000" ) );
-      var tagbox = new TagBox( tag );
-      tagbox.changed.connect( handle_tag_change );
-      _taglist.append( tagbox );
-      _tags.add_tag( tag );
+      add_new_tag( _entry.text );
       _entry.text = "";
       changed();
     });
@@ -202,6 +209,98 @@ public class TagEditor : Box {
   }
 
   //-------------------------------------------------------------
+  // Creates a new tag, setting the color to a unique value.
+  private void add_new_tag( string name ) {
+
+    var tag = new Tag( name, Utils.color_from_string( "#000000" ) );
+    _tags.add_tag( tag );
+
+    add_tag( tag );
+
+  } 
+
+  //-------------------------------------------------------------
+  // Creates a tag for the given tag name and adds it to the 
+  // stores tag list and to the listbox.
+  private void add_tag( Tag tag ) {
+
+    var tagbox = new TagBox( tag );
+
+    tagbox.changed.connect( handle_tag_change );
+
+    if( _draggable ) {
+
+      tagbox.select_changed.connect((select) => {
+        select_changed( tag, select );
+      });
+
+      var drag = new DragSource() {
+        actions = DragAction.COPY
+      };
+
+      tagbox.add_controller( drag );
+
+      drag.set_icon( create_icon( tagbox.name ), 10, 10 );
+
+      drag.prepare.connect((x, y) => {
+        var val = new Value( typeof(Tag) );
+        val.set_object( tag );
+        var provider = new ContentProvider.for_value( val );
+        return( provider );
+      });
+
+      /*
+      drag.drag_end.connect((d, del) => {
+        ideas_changed( BraindumpChangeType.REMOVE, _current_index.to_string() );
+      });
+      */
+
+    }
+
+    // Add the tagbox to the listbox
+    _taglist.append( tagbox );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the icon that will be displayed when dragging and dropping
+  // the given text from the brainstorm list.
+  private Paintable create_icon( EditableLabel label ) {
+    
+    Pango.Rectangle log, ink;
+
+    var theme = _win.get_current_map().model.get_theme();
+
+    var layout = label.create_pango_layout( label.text );
+    layout.set_wrap( Pango.WrapMode.WORD_CHAR );
+    layout.set_width( 200 * Pango.SCALE );
+    layout.get_extents( out ink, out log );
+
+    var padding = 10;
+    var alpha   = 0.5;
+    var width   = (log.width  / Pango.SCALE) + (padding * 2);
+    var height  = (log.height / Pango.SCALE) + (padding * 2);
+
+    var rect = Graphene.Rect.alloc();
+    rect.init( (float)0.0, (float)0.0, (float)width, (float)height );
+
+    var snapshot = new Gtk.Snapshot();
+    var context  = snapshot.append_cairo( rect );
+
+    Utils.set_context_color_with_alpha( context, theme.get_color( "root_background" ), alpha );
+    context.rectangle( 0, 0, width, height );
+    context.fill();
+
+    Utils.set_context_color_with_alpha( context, theme.get_color( "root_foreground" ), alpha );
+    context.move_to( (padding - (log.x / Pango.SCALE)), padding );
+    Pango.cairo_show_layout( context, layout );
+    context.new_path();
+
+    return( snapshot.free_to_paintable( null ) );
+
+  }
+
+  //-------------------------------------------------------------
   // Removes the tag at the given listbox row.
   private void remove_tag( ListBoxRow? row ) {
 
@@ -239,12 +338,8 @@ public class TagEditor : Box {
 
     if( tags != null ) {
       for( int i=0; i<tags.size(); i++ ) {
-        var tag    = tags.get_tag( i );
-        var tagbox = new TagBox( tag );
-        tagbox.select_changed.connect((select) => {
-          select_changed( tag, select );
-        });
-        _taglist.append( tagbox );
+        var tag = tags.get_tag( i );
+        add_tag( tag );
       }
     }
 

@@ -23,7 +23,7 @@ using Gdk;
 
 //-------------------------------------------------------------
 // Information for a single tag.
-public class Tag {
+public class Tag : Object {
 
   public string name  { get; set; default = _( "Tag" ); }
   public RGBA   color { get; set; default = Utils.color_from_string( "#000000" ); }

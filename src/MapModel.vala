@@ -2890,21 +2890,29 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
-  // Returns the droppable node or connection if one is found.
-  public void get_droppable( double x, double y, out Node? node, out Connection? conn, out Sticker? sticker ) {
-    node = null;
-    conn = null;
+  // Returns the droppable node, if one exists; otherwise, returns
+  // null.
+  public Node? get_droppable_node( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      Node tmp = _nodes.index( i ).contains( x, y, null );
-      if( tmp != null ) {
-        node = tmp;
-        return;
+      var node = _nodes.index( i ).contains( x, y, null );
+      if( node != null ) {
+        return( node );
       }
     }
+    return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the droppable node or connection if one is found.
+  public void get_droppable( double x, double y, out Node? node, out Connection? conn, out Sticker? sticker ) {
+    conn    = null;
+    sticker = null;
+    node    = get_droppable_node( x, y );
+    if( node != null ) return;
     conn = _connections.within_title_box( x, y );
-    if( conn == null ) {
-      conn = _connections.on_curve( x, y );
-    }
+    if( conn != null ) return;
+    conn = _connections.on_curve( x, y );
+    if( conn != null ) return;
     sticker = _stickers.is_within( x, y );
   }
 
