@@ -3313,7 +3313,7 @@ public class Node : Object {
       var tag = _tags.get_tag( i );
       double x, y, w, h;
       tag_bbox( i, out x, out y, out w, out h );
-      Utils.set_context_color( ctx, tag.color );
+      Utils.set_context_color_with_alpha( ctx, tag.color, _alpha );
       ctx.rectangle( x, y, w, h );
       ctx.fill();
     }
