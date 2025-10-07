@@ -56,6 +56,7 @@ public enum KeyCommand {
       SHOW_TAG_SIDEBAR,
       SHOW_STICKER_SIDEBAR,
       SHOW_MAP_SIDEBAR,  // 30
+      SHOW_CURRENT_INFO,
     SIDEBAR_END,
     MAP_START,
       TOGGLE_CONNECTIONS,
@@ -261,9 +262,10 @@ public enum KeyCommand {
       case ZOOM_ACTUAL               :  return( "zoom-actual" );
       case SHOW_CURRENT_SIDEBAR      :  return( "show-current-sidebar" );
       case SHOW_STYLE_SIDEBAR        :  return( "show-style-sidebar" );
-      case SHOW_TAG_SIDEBAR          :  return( "show-tag-sidebard" );
+      case SHOW_TAG_SIDEBAR          :  return( "show-tag-sidebar" );
       case SHOW_STICKER_SIDEBAR      :  return( "show-sticker-sidebar" );
       case SHOW_MAP_SIDEBAR          :  return( "show-map-sidebar" );
+      case SHOW_CURRENT_INFO         :  return( "show-current-info" );
       case TOGGLE_CONNECTIONS        :  return( "toggle-connections" );
       case TOGGLE_CALLOUTS           :  return( "toggle-callouts" );
       case BALANCE_NODES             :  return( "balance-nodes" );
@@ -427,6 +429,7 @@ public enum KeyCommand {
       case "show-tag-sidebar"          :  return( SHOW_TAG_SIDEBAR );
       case "show-sticker-sidebar"      :  return( SHOW_STICKER_SIDEBAR );
       case "show-map-sidebar"          :  return( SHOW_MAP_SIDEBAR );
+      case "show-current-info"         :  return( SHOW_CURRENT_INFO );
       case "toggle-connections"        :  return( TOGGLE_CONNECTIONS );
       case "toggle-callouts"           :  return( TOGGLE_CALLOUTS );
       case "balance-nodes"             :  return( BALANCE_NODES );
@@ -587,9 +590,10 @@ public enum KeyCommand {
       case SIDEBAR_START             :  return( _( "Sidebar Commands" ) );
       case SHOW_CURRENT_SIDEBAR      :  return( _( "Show current tab in sidebar" ) );
       case SHOW_STYLE_SIDEBAR        :  return( _( "Show style tab in sidebar" ) );
-      case SHOW_TAG_SIDEBAR          :  return( _( "Show tag tab in sidebard" ) );
+      case SHOW_TAG_SIDEBAR          :  return( _( "Show tag tab in sidebar" ) );
       case SHOW_STICKER_SIDEBAR      :  return( _( "Show sticker tab in sidebar" ) );
       case SHOW_MAP_SIDEBAR          :  return( _( "Show map tab in sidebar" ) );
+      case SHOW_CURRENT_INFO         :  return( _( "Show currently select node/connection/group information in sidebar" ) );
       case MAP_START                 :  return( _( "Map Commands" ) );
       case TOGGLE_CONNECTIONS        :  return( _( "Show/Hide Connections" ) );
       case TOGGLE_CALLOUTS           :  return( _( "Show/Hide Callouts" ) );
@@ -755,6 +759,7 @@ public enum KeyCommand {
       case SHOW_TAG_SIDEBAR          :  return( show_tag_sidebar );
       case SHOW_STICKER_SIDEBAR      :  return( show_sticker_sidebar );
       case SHOW_MAP_SIDEBAR          :  return( show_map_sidebar );
+      case SHOW_CURRENT_INFO         :  return( show_current_sidebar );
       case TOGGLE_CONNECTIONS        :  return( toggle_connections );
       case TOGGLE_CALLOUTS           :  return( toggle_callouts );
       case BALANCE_NODES             :  return( balance_nodes );
@@ -893,7 +898,7 @@ public enum KeyCommand {
       ((NODE_START < this) && (this < NODE_END)) ||
       (this == ZOOM_SELECTED) ||
       (this == EDIT_NOTE) ||
-      (this == SHOW_CURRENT_SIDEBAR) ||
+      (this == SHOW_CURRENT_INFO) ||
       (this == EDIT_SELECTED) ||
       (this == SHOW_SELECTED) ||
       (this == REMOVE_STICKER_SELECTED) ||
@@ -910,7 +915,7 @@ public enum KeyCommand {
     return(
       ((CONNECTION_START < this) && (this < CONNECTION_END)) ||
       (this == EDIT_NOTE) ||
-      (this == SHOW_CURRENT_SIDEBAR) ||
+      (this == SHOW_CURRENT_INFO) ||
       (this == EDIT_SELECTED) ||
       (this == SHOW_SELECTED) ||
       (this == REMOVE_STICKER_SELECTED) ||
@@ -925,7 +930,7 @@ public enum KeyCommand {
   public bool for_callout() {
     return(
       ((CALLOUT_START < this) && (this < CALLOUT_END)) ||
-      (this == SHOW_CURRENT_SIDEBAR) ||
+      (this == SHOW_CURRENT_INFO) ||
       (this == EDIT_SELECTED) ||
       (this == SHOW_SELECTED) ||
       (this == ESCAPE)
@@ -944,7 +949,7 @@ public enum KeyCommand {
     return(
       ((GROUP_START < this) && (this < GROUP_END)) ||
       (this == EDIT_NOTE) ||
-      (this == SHOW_CURRENT_SIDEBAR)
+      (this == SHOW_CURRENT_INFO)
     );
   }
 
