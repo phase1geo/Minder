@@ -80,8 +80,6 @@ public class TagInspector : Box {
   // the given tag from its tag list.
   private void tag_select_changed( Tag tag, bool selected ) {
 
-    stdout.printf( "In tag_select_changed, tag: %s, selected: %s\n", tag.name, selected.to_string() );
-
     var node = _map.get_current_node();
     if( node != null ) {
       if( selected ) {
@@ -99,33 +97,8 @@ public class TagInspector : Box {
   // Called whenever the user changes the current node in the
   // canvas.
   private void current_changed() {
-
     var node = _map.get_current_node();
-
     _editor.show_selected_tags( (node != null) ? node.tags : null );
-
-    /*
-    if( _map.get_current_node() != null ) {
-      if( _stack.visible_child_name != "node" ) {
-        _stack.transition_type = (_stack.visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
-        _stack.set_visible_child_name( "node" );
-      }
-    } else if( _map.get_current_connection() != null ) {
-      if( _stack.visible_child_name != "connection" ) {
-        _stack.transition_type = (_stack.visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
-        _stack.set_visible_child_name( "connection" );
-      }
-    } else if( _map.get_current_group() != null ) {
-      if( _stack.visible_child_name != "group" ) {
-        _stack.transition_type = (_stack.visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
-        _stack.set_visible_child_name( "group" );
-      }
-    } else {
-      _stack.transition_type = StackTransitionType.SLIDE_DOWN;
-      _stack.set_visible_child_name( "empty" );
-    }
-    */
-
   }
 
   //-------------------------------------------------------------

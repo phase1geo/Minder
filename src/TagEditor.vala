@@ -68,25 +68,37 @@ public class TagBox : Box {
     };
 
     _name.changed.connect(() => {
-      tag.name = name.text;
+      tag.name = _name.text;
       changed();
     });
 
     // Add checkmark field (not editable by user)
     var selected = new CheckButton() {
-      halign = Align.END,
       sensitive = false,
+      visible = false,
       active = true
     };
-    selected.set_child_visible( false );
+
+    var selected_box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign = Align.START
+    };
+    selected_box.append( selected );
+
+    var dummy = new CheckButton();
+    var stack = new Stack() {
+      halign = Align.END
+    };
+    stack.add_named( dummy,        "dummy" );
+    stack.add_named( selected_box, "selected" );
+    stack.visible_child_name = "selected";
 
     var click = new GestureClick();
     click.released.connect((n_press, x, y) => {
       switch( n_press ) {
         case 1 :
           if( selectable ) {
-            var select = !selected.get_child_visible();
-            selected.set_child_visible( select );
+            var select = !selected.visible;
+            selected.visible = select;
             select_changed( select );
           }
           break;
@@ -95,19 +107,23 @@ public class TagBox : Box {
           break;
       }
     });
-    name.add_controller( click );
+    _name.add_controller( click );
 
     append( color );
     append( _name );
-    append( selected );
+    append( stack );
 
   }
 
   //-------------------------------------------------------------
   // Called when the given child changes its selected state.
   public void set_selected( bool select ) {
-    var selected = (CheckButton)Utils.get_child_at_index( this, 2 );
-    selected.set_child_visible( select );
+    var stack = (Stack)Utils.get_child_at_index( this, 2 );
+    if( stack != null ) {
+      var box      = stack.visible_child;
+      var selected = Utils.get_child_at_index( box, 0 );
+      selected.visible = select;
+    }
   }
 
 }
@@ -351,11 +367,12 @@ public class TagEditor : Box {
   public void show_selected_tags( Tags? tags ) {
 
     for( int i=0; i<_tags.size(); i++ ) {
+      var tag    = _tags.get_tag( i );
       var tagbox = get_tagbox( _taglist.get_row_at_index( i ) );
       if( tagbox != null ) {
         tagbox.selectable = (tags != null);
         if( tags != null ) {
-          tagbox.set_selected( tags.contains_tag( _tags.get_tag( i ) ) );
+          tagbox.set_selected( tags.contains_tag( tag ) );
         }
       }
     }

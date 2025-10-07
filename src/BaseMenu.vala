@@ -101,7 +101,7 @@ public class BaseMenu {
 
   //-------------------------------------------------------------
   // Appends a command with the given command to the specified menu.
-  protected void append_menu_item( GLib.Menu menu, KeyCommand command, string label ) {
+  protected void append_menu_item( GLib.Menu menu, KeyCommand command, string label, bool grab_canvas = true ) {
 
     menu.append( label, detailed_name( command ) );
  
@@ -110,7 +110,9 @@ public class BaseMenu {
     action.activate.connect((v) => {
       var func = command.get_func();
       func( map );
-      map.canvas.grab_focus();
+      if( grab_canvas ) {
+        map.canvas.grab_focus();
+      }
     });
     _group.add_action( action );
 

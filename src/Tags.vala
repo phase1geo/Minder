@@ -212,4 +212,14 @@ public class Tags {
     }
   }
 
+  //-------------------------------------------------------------
+  // Returns the stored tags as a comma-separated string.
+  public string to_string() {
+    string[] parts = {};
+    for( int i=0; i<_tags.length; i++ ) {
+      parts += get_tag( i ).name;
+    }
+    return( string.joinv( ",", parts ) );
+  }
+
 }
