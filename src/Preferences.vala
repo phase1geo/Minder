@@ -59,6 +59,7 @@ public class Preferences : Granite.Dialog {
     };
     stack.add_titled( create_behavior(),   "behavior",   _( "Behavior" ) );
     stack.add_titled( create_appearance(), "appearance", _( "Appearance" ) );
+    stack.add_titled( create_tags(),       "tags",       _( "Tags" ) );
     stack.add_titled( create_shortcuts(),  "shortcuts",  _( "Shortcuts" ) );
     stack.add_titled( create_advanced(),   "advanced",   _( "Advanced" ) );
 
@@ -169,6 +170,23 @@ public class Preferences : Granite.Dialog {
     grid.attach( make_switch( "colorize-notes" ), 1, 4 );
 
     return( grid );
+
+  }
+
+  private Box create_tags() {
+
+    var editor = new TagEditor( _win, false );
+
+    /*
+    editor.changed.connect((tag, select) => {
+      // FOOBAR
+    });
+    */
+
+    var box = new Box( Orientation.VERTICAL, 5 );
+    box.append( editor );
+
+    return( box );
 
   }
 

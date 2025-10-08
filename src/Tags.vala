@@ -186,6 +186,22 @@ public class Tags {
   }
 
   //-------------------------------------------------------------
+  // Saves the list of stored tags as a variant used to store
+  // to the settings file.
+  public Variant save_variant() {
+
+    var builder = new VariantBuilder( new VariantType( "a(ss)" ) );
+
+    for( int i=0; i<_tags.length; i++ ) {
+      var tag = get_tag( i );
+      builder.add( "(ss)", tag.name, Utils.color_from_rgba( tag.color ) );
+    }
+
+    return( builder.end() );
+
+  }
+
+  //-------------------------------------------------------------
   // Loads the list of stored tags from Xml formatted data.
   public void load( Xml.Node* node ) {
     for( Xml.Node* it=node->children; it!= null; it=it->next ) {
@@ -209,6 +225,21 @@ public class Tags {
           add_tag( tag );
         }
       }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Used to load a variant that is from a settings file.  The
+  // variant MUST be an array of structures such that each structure
+  // contains to strings where the first is a name and the second is
+  // a color.
+  public void load_variant( Variant variant ) {
+    foreach( Variant child in variant ) {
+      string name, color;
+      child.get( "(ss)", out name, out color );
+      var tag      = new Tag( name, Utils.color_from_string( color ) );
+      var tag_inst = new TagInst( tag );
+      _tags.append_val( tag_inst );
     }
   }
 
