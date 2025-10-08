@@ -80,12 +80,16 @@ public class TagInspector : Box {
   // the given tag from its tag list.
   private void tag_select_changed( Tag tag, bool selected ) {
 
-    var node = _map.get_current_node();
-    if( node != null ) {
-      if( selected ) {
-        node.add_tag( tag );
-      } else {
-        node.remove_tag( tag );
+    var nodes = _map.get_selected_nodes();
+
+    if( nodes.length > 0 ) {
+      for( int i=0; i<nodes.length; i++ ) {
+        var node = nodes.index( i );
+        if( selected ) {
+          node.add_tag( tag );
+        } else {
+          node.remove_tag( tag );
+        }
       }
       _map.queue_draw();
       _map.auto_save();
@@ -97,8 +101,35 @@ public class TagInspector : Box {
   // Called whenever the user changes the current node in the
   // canvas.
   private void current_changed() {
-    var node = _map.get_current_node();
-    _editor.show_selected_tags( (node != null) ? node.tags : null );
+
+    var nodes = _map.get_selected_nodes();
+
+    if( nodes.length == 0 ) {
+      _editor.show_selected_tags( null );
+    } else if( nodes.length == 1 ) {
+      _editor.show_selected_tags( nodes.index( 0 ).tags );
+    } else if( _map != null ) {
+      var indices = new Array<int>();
+      var tags    = new Tags();
+      var init    = 0;
+      for( int i=0; i<_map.model.tags.size(); i++ ) {
+        indices.append_val( init );
+      }
+      for( int i=0; i<nodes.length; i++ ) {
+        var node_tags = nodes.index( i ).tags;
+        for( int j=0; j<node_tags.size(); j++ ) {
+          var tag_index = _map.model.tags.get_tag_index( node_tags.get_tag( j ) );
+          indices.data[tag_index]++;
+        }
+      }
+      for( int i=0; i<indices.length; i++ ) {
+        if( indices.index( i ) == nodes.length ) {
+          tags.add_tag( _map.model.tags.get_tag( i ) );
+        }
+      }
+      _editor.show_selected_tags( (tags.size() > 0) ? tags : null );
+    }
+
   }
 
   //-------------------------------------------------------------
@@ -108,4 +139,4 @@ public class TagInspector : Box {
     current_changed();
   }
 
-}
+} 

@@ -445,4 +445,5 @@ public class TagEditor : Box {
   public override bool grab_focus() {
     return( _entry.grab_focus() );
   }
+
 }
