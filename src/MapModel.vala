@@ -986,12 +986,14 @@ public class MapModel {
   //-------------------------------------------------------------
   // Called when the linking process has successfully completed
   public void end_link( Node node ) {
-    if( _map.selected.num_connections() == 0 ) return;
+    var connection = _map.get_current_connection();
+    if( connection == null ) return;
+    connection.disconnect_node( _last_node );
     _map.selected.clear_connections();
     _last_node.linked_node = new NodeLink( node );
     _map.add_undo( new UndoNodeLink( _last_node, null ) );
     _map.canvas.last_connection = null;
-    _last_node          = null;
+    _last_node = null;
     set_attach_node( null );
     auto_save();
     queue_draw();
