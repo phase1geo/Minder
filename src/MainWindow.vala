@@ -557,6 +557,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     tab_label.add_css_class( "tab" );
 
     var tab_close = new Button.from_icon_name( "window-close-symbolic" ) {
+      halign        = Align.END,
+      hexpand       = true,
       has_frame     = false,
       margin_end    = 10,
       margin_top    = 5,
