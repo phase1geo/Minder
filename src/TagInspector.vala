@@ -109,25 +109,11 @@ public class TagInspector : Box {
     } else if( nodes.length == 1 ) {
       _editor.show_selected_tags( nodes.index( 0 ).tags );
     } else if( _map != null ) {
-      var indices = new Array<int>();
-      var tags    = new Tags();
-      var init    = 0;
-      for( int i=0; i<_map.model.tags.size(); i++ ) {
-        indices.append_val( init );
+      var tags = nodes.index( 0 ).tags;
+      for( int i=1; i<nodes.length; i++ ) {
+        tags = Tags.intersect( tags, nodes.index( 1 ).tags );
       }
-      for( int i=0; i<nodes.length; i++ ) {
-        var node_tags = nodes.index( i ).tags;
-        for( int j=0; j<node_tags.size(); j++ ) {
-          var tag_index = _map.model.tags.get_tag_index( node_tags.get_tag( j ) );
-          indices.data[tag_index]++;
-        }
-      }
-      for( int i=0; i<indices.length; i++ ) {
-        if( indices.index( i ) == nodes.length ) {
-          tags.add_tag( _map.model.tags.get_tag( i ) );
-        }
-      }
-      _editor.show_selected_tags( (tags.size() > 0) ? tags : null );
+      _editor.show_selected_tags( tags );
     }
 
   }

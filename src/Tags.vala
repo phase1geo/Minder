@@ -253,4 +253,21 @@ public class Tags {
     return( string.joinv( ",", parts ) );
   }
 
+  //-------------------------------------------------------------
+  // Returns a new tags list which contains the tags that are in
+  // both the first and second tags list.
+  public static Tags intersect( Tags first, Tags second ) {
+    var tags = new Tags();
+    for( int i=0; i<first.size(); i++ ) {
+      var first_tag = first.get_tag( i );
+      for( int j=0; j<second.size(); j++ ) {
+        if( first_tag == second.get_tag( j ) ) {
+          tags.add_tag( first_tag );
+          break;
+        }
+      }
+    }
+    return( tags );
+  }
+
 }
