@@ -198,6 +198,20 @@ public class TagEditor : Box {
   private Entry      _entry;
   private ListBox    _taglist;
   private bool       _draggable = false;
+  private bool       _editable  = true;
+
+  public bool editable {
+    get {
+      return( _editable );
+    }
+    set {
+      if( _editable != value ) {
+        _editable = value;
+        _entry.sensitive = _editable;
+        _taglist.sensitive = _editable;
+      }
+    }
+  }
 
   public signal void tag_changed( Tag tag, Tag orig_tag );
   public signal void tag_added( Tag tag );

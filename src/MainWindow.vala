@@ -1484,6 +1484,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     set_braindump_ui( map, map.model.braindump_shown );
     (_stack.get_child_by_name( "current" ) as CurrentInspector).editable_changed();
     (_stack.get_child_by_name( "style" )   as StyleInspector).editable_changed();
+    (_stack.get_child_by_name( "tag" )     as TagInspector).editable_changed();
     (_stack.get_child_by_name( "map" )     as MapInspector).editable_changed();
     var label = map.doc.label;
     for( int i=0; i<_nb.get_n_pages(); i++ ) {

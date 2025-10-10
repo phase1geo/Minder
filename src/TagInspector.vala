@@ -45,11 +45,7 @@ public class TagInspector : Box {
     win.canvas_changed.connect( tab_changed );
 
     editable_changed.connect(() => {
-      /*
-      node_box.editable_changed();
-      conn_box.editable_changed();
-      group_box.editable_changed();
-      */
+      _editor.editable = (_map != null) && _map.editable;
     });
 
     append( _editor );

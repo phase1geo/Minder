@@ -265,6 +265,7 @@ public class MindMap {
   // loaded from file.
   private void handle_model_loaded() {
     loaded();
+    reload_tags();
   }
 
   //-------------------------------------------------------------
