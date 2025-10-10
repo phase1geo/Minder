@@ -89,8 +89,9 @@ public class Document : Object {
   private string  _temp_dir;
   private bool    _from_user;  // Set to true if _filename was set by the user
   private string  _etag;
-  private bool    _upgrade_ro = false;
-  private bool    _read_only  = false;
+  private bool    _upgrade_ro  = false;
+  private bool    _save_needed = false;
+  private bool    _read_only   = false;
 
   /* Properties */
   public string filename {
@@ -112,18 +113,23 @@ public class Document : Object {
       return( GLib.Path.get_basename( _filename ) );
     }
   }
-  public bool save_needed { private set; get; default = false; }
+  public bool save_needed {
+    get {
+      return( _save_needed );
+    }
+  }
   public bool read_only {
     get {
       var prev_read_only = _read_only;
       _read_only = Utils.is_read_only( _filename );
-      if( save_needed && prev_read_only && !_read_only && !_upgrade_ro ) {
+      if( _save_needed && prev_read_only && !_read_only && !_upgrade_ro ) {
         save();
       }
       return( _read_only || _upgrade_ro );
     }
   }
 
+  public signal void save_changed();
   public signal void read_only_changed();
 
   //-------------------------------------------------------------
@@ -163,8 +169,12 @@ public class Document : Object {
   // Called whenever the canvas changes such that a save will be
   // needed
   private void canvas_changed() {
-    save_needed = true;
+    var call_save_changed = !_save_needed;
+    _save_needed = true;
     auto_save();
+    if( call_save_changed ) {
+      save_changed();
+    }
   }
 
   //-------------------------------------------------------------
@@ -507,9 +517,10 @@ public class Document : Object {
     var upgrade_ro = _upgrade_ro;
 
     // Indicate that a save is no longer needed
-    save_needed = false;
+    _save_needed = false;
     _upgrade_ro = false;
     read_only_changed();
+    save_changed();
 
     return( true );
 
@@ -748,7 +759,7 @@ public class Document : Object {
   public void cleanup() {
 
     // Force the save to occur
-    if( save_needed ) {
+    if( _save_needed ) {
       save_xml();
       save();
     }

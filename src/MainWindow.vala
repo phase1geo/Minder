@@ -566,6 +566,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
     tab_close.add_css_class( "tab" );
 
+    map.doc.save_changed.connect(() => {
+      tab_close.icon_name = (map.doc.save_needed ? "media-record-symbolic" : "window-close-symbolic" );
+    });
+
     var tab_revealer = new Revealer() {
       reveal_child    = true,
       transition_type = RevealerTransitionType.CROSSFADE,
