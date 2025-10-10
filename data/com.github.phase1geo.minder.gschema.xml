@@ -366,5 +366,13 @@
         removed from the file system on a good save and, on load, if a backup file exists it will be loaded.
       </description>
     </key>
+    <key name="starting-tags" type="a(ss)">
+      <default>[]</default>
+      <summary>List of tags that will be available for all new mindmaps</summary>
+      <description>
+        List of tags that will be available for all new mindmaps.  Each tag must be in the format of:
+          ('name', '#hex RGB color')
+      </description>
+    </key>
   </schema>
 </schemalist>

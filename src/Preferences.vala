@@ -1,4 +1,4 @@
- /*
+/*
 * Copyright (c) 2018 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@ public class Preferences : Granite.Dialog {
   private string     _shortcut_inst_start_str;
   private string     _shortcut_inst_edit_str;
   private Label      _shortcut_instructions;
+  private Tags       _tags;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_set_default_theme",    action_set_default_theme, "s" },
@@ -143,6 +144,9 @@ public class Preferences : Granite.Dialog {
 
   }
 
+  //-------------------------------------------------------------
+  // Creates the preferences pane that contains control to change the
+  // appearance of Minder.
   private Grid create_appearance() {
 
     var grid = new Grid() {
@@ -173,21 +177,36 @@ public class Preferences : Granite.Dialog {
 
   }
 
+  //-------------------------------------------------------------
+  // Creates the preferences pane that allows for the creation of
+  // tags that will be applied to new or updated Mindmaps.
   private Box create_tags() {
 
-    var editor = new TagEditor( _win, false );
+    // Create the preference tags and load them from settings
+    _tags = new Tags();
+    _tags.load_variant( Minder.settings.get_value( "starting-tags" ) );
 
-    /*
-    editor.changed.connect((tag, select) => {
-      // FOOBAR
+    var editor = new TagEditor( _win, false );
+    editor.set_tags( _tags );
+    editor.tag_changed.connect(() => {
+      save_tags();
     });
-    */
+    editor.tag_added.connect(() => {
+      save_tags();
+    });
+    editor.tag_removed.connect(() => {
+      save_tags();
+    });
 
     var box = new Box( Orientation.VERTICAL, 5 );
     box.append( editor );
 
     return( box );
 
+  }
+
+  private void save_tags() {
+    Minder.settings.set_value( "starting-tags", _tags.save_variant() );
   }
 
   private Box create_shortcuts() {

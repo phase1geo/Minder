@@ -89,9 +89,10 @@ public class Document : Object {
   private string  _temp_dir;
   private bool    _from_user;  // Set to true if _filename was set by the user
   private string  _etag;
-  private bool    _upgrade_ro  = false;
-  private bool    _save_needed = false;
-  private bool    _read_only   = false;
+  private bool    _upgrade_ro   = false;
+  private bool    _save_needed  = false;
+  private bool    _read_only    = false;
+  private string  _load_version = "";  
 
   /* Properties */
   public string filename {
@@ -106,6 +107,11 @@ public class Document : Object {
     }
     get {
       return( _filename );
+    }
+  }
+  public string load_version {
+    get {
+      return( _load_version );
     }
   }
   public string label {
@@ -280,14 +286,8 @@ public class Document : Object {
   //-------------------------------------------------------------
   // Reads the stored etag attribute from the given XML document
   private string get_etag( Xml.Doc* doc ) {
-    for (Xml.Attr* prop = doc->get_root_element()->properties; prop != null; prop = prop->next) {
-      string attr_name = prop->name;
-      if( attr_name != "etag" ) {
-        continue;
-      }
-      return prop->children->content;
-    }
-    return "";
+    var e = doc->get_root_element()->get_prop( "etag" );
+    return( (e == null) ? "" : e );
   }
 
   //-------------------------------------------------------------
@@ -301,6 +301,11 @@ public class Document : Object {
 
     // Load Etag
     _etag = get_etag( doc );
+
+    var v = doc->get_root_element()->get_prop( "version" );
+    if( v != null ) {
+      _load_version = v;
+    }
 
     // Load document
     _map.model.load( doc->get_root_element() );
@@ -477,7 +482,7 @@ public class Document : Object {
   // Archives the contents of the opened Minder directory.
   public bool save() {
 
-    // stdout.printf( "Saving...\n" );
+    stdout.printf( "Saving...\n" );
 
     var bak_file = get_bak_file();
     var backed   = false;

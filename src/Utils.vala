@@ -458,4 +458,31 @@ public class Utils {
 
   }
 
+  //-------------------------------------------------------------
+  // Compares to version strings.  Returns 0 if they match, returns
+  // -1 if version A is less than version B, or returns 1 if version A
+  // is less than version B.
+  public static int compare_versions( string a, string b ) {
+
+    string[] parts_a = a.split( "." );
+    string[] parts_b = b.split( "." );
+
+    int len = int.max( parts_a.length, parts_b.length );
+
+    for( int i=0; i<len; i++ ) {
+      // Missing parts are treated as 0
+      int val_a = (i < parts_a.length) ? int.parse( parts_a[i] ) : 0;
+      int val_b = (i < parts_b.length) ? int.parse( parts_b[i] ) : 0;
+
+      if (val_a < val_b) {
+        return -1;
+      } else if (val_a > val_b) {
+        return 1;
+      }
+    }
+
+    return 0;
+
+  }
+
 }

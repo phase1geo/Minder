@@ -363,8 +363,6 @@ public class TagEditor : Box {
     
     Pango.Rectangle log, ink;
 
-    var theme = _win.get_current_map().model.get_theme();
-
     var layout = label.create_pango_layout( label.label );
     layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     layout.set_width( 200 * Pango.SCALE );
@@ -381,11 +379,11 @@ public class TagEditor : Box {
     var snapshot = new Gtk.Snapshot();
     var context  = snapshot.append_cairo( rect );
 
-    Utils.set_context_color_with_alpha( context, theme.get_color( "root_background" ), alpha );
+    Utils.set_context_color_with_alpha( context, Utils.color_from_string( "#ffffff" ), alpha );
     context.rectangle( 0, 0, width, height );
     context.fill();
 
-    Utils.set_context_color_with_alpha( context, theme.get_color( "root_foreground" ), alpha );
+    Utils.set_context_color_with_alpha( context, Utils.color_from_string( "#000000" ), alpha );
     context.move_to( (padding - (log.x / Pango.SCALE)), padding );
     Pango.cairo_show_layout( context, layout );
     context.new_path();

@@ -334,6 +334,11 @@ public class MindMap {
 
     initialize();
 
+    // Add tags from preference if we are loading a 1.x Minder file and it is not read-only
+    if( (Utils.compare_versions( _doc.load_version, "2.0" ) == -1) && !editable ) {
+      _model.tags.load_variant( Minder.settings.get_value( "starting-tags" ) );
+    }
+
     set_current_node( null );
 
     _canvas.queue_draw();
@@ -345,6 +350,9 @@ public class MindMap {
   public void initialize_for_new() {
 
     initialize();
+
+    // Add tags from preferences
+    _model.tags.load_variant( Minder.settings.get_value( "starting-tags" ) );
 
     // Create the main idea node
     var n = new Node.with_name( this, _("Main Idea"), _model.layouts.get_default() );
