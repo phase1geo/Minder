@@ -193,12 +193,12 @@ public class TagBox : Box {
 // displayed.
 public class TagEditor : Box {
 
-  private MainWindow _win;
-  private Tags?      _tags = null;
-  private Entry      _entry;
-  private ListBox    _taglist;
-  private bool       _draggable = false;
-  private bool       _editable  = true;
+  private MainWindow  _win;
+  private Tags?       _tags = null;
+  private SearchEntry _entry;
+  private ListBox     _taglist;
+  private bool        _draggable = false;
+  private bool        _editable  = true;
 
   public bool editable {
     get {
@@ -227,15 +227,17 @@ public class TagEditor : Box {
     _win       = win;
     _draggable = draggable;
 
-    _entry = new Entry() {
+    _entry = new SearchEntry() {
       halign           = Align.FILL,
-      placeholder_text = _( "Enter Tag Name to Find or Create" ),
+      placeholder_text = _( "Enter name of tag to find or create" ),
       width_chars      = 30,
       margin_top       = 5,
       margin_bottom    = 10,
       margin_start     = 5,
       margin_end       = 5
     };
+
+    _entry.search_changed.connect( search_tags );
 
     _entry.activate.connect(() => {
       add_new_tag( _entry.text );
@@ -300,6 +302,18 @@ public class TagEditor : Box {
       }
     }
     return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Searches tags for those containing the search string and
+  // only displays matching tags.
+  private void search_tags() {
+    var text = _entry.text;
+    for( int i=0; i<_tags.size(); i++ ) {
+      var tag    = _tags.get_tag( i );
+      var tagbox = _taglist.get_row_at_index( i );
+      tagbox.visible = (text == "") || tag.name.contains( text );
+    }
   }
 
   //-------------------------------------------------------------
