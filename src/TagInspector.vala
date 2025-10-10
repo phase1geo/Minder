@@ -36,6 +36,11 @@ public class TagInspector : Box {
 
     Object( orientation: Orientation.VERTICAL, spacing: 10, valign: Align.FILL );
 
+    var note = new Label( _( "Create tag by entering tag name in entry field.  Click on tag color to change.  Double-click tag name to rename.  Add/remove tags to node by selecting node and clicking on tags or drag/drop tags on nodes to add." ) ) {
+      wrap_mode = Pango.WrapMode.WORD,
+      wrap = true
+    };
+
     _editor = new TagEditor( win, true );
     _editor.tag_changed.connect( tag_changed );
     _editor.tag_added.connect( tag_added );
@@ -48,6 +53,7 @@ public class TagInspector : Box {
       _editor.editable = (_map != null) && _map.editable;
     });
 
+    append( note );
     append( _editor );
 
   }

@@ -1179,6 +1179,14 @@ public class MainWindow : Gtk.ApplicationWindow {
         _settings.set_boolean( "tag-properties-shown",     (_stack.visible_child_name == "tag" ) );
         _settings.set_boolean( "sticker-properties-shown", (_stack.visible_child_name == "sticker" ) );
         _settings.set_boolean( "map-properties-shown",     (_stack.visible_child_name == "map") );
+        switch( _stack.visible_child_name ) {
+          case "current" :  (_stack.visible_child as CurrentInspector).grab_first();  break;
+          case "style"   :  (_stack.visible_child as StyleInspector).grab_first();    break;
+          case "tag"     :  (_stack.visible_child as TagInspector).grab_first();      break;
+          case "sticker" :  (_stack.visible_child as StickerInspector).grab_first();  break;
+          case "map"     :  (_stack.visible_child as MapInspector).grab_first();      break;
+          default        :  break;
+        }
       }
     });
 
