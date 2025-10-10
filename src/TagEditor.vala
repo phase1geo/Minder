@@ -36,8 +36,8 @@ public class TagBox : Box {
 
   public bool selectable { get; set; default = false; }
 
-  public signal void changed();
-  public signal void select_changed( bool select );
+  public signal void changed( Tag tag, Tag orig_tag );
+  public signal void select_changed( Tag tag, bool select );
 
   //-------------------------------------------------------------
   // Constructor
@@ -58,8 +58,9 @@ public class TagBox : Box {
     color.dialog.with_alpha = false;
 
     color.notify["rgba"].connect(() => {
+      var orig_tag = tag.copy();
       tag.color = color.get_rgba();
-      changed();
+      changed( tag, orig_tag );
     });
 
     // Add name label
@@ -87,8 +88,9 @@ public class TagBox : Box {
     name_entry.activate.connect(() => {
       _name_lbl.label = name_entry.text;
       name_stack.visible_child_name = "label";
+      var orig_tag = tag.copy();
       tag.name = name_entry.text;
-      changed();
+      changed( tag, orig_tag );
     });
 
     var entry_focus = new EventControllerFocus();
@@ -158,7 +160,7 @@ public class TagBox : Box {
           _timeout_id = 0;
           var select = !selected.visible;
           selected.visible = select;
-          select_changed( select );
+          select_changed( tag, select );
           return( false );
         });
       }
@@ -197,7 +199,9 @@ public class TagEditor : Box {
   private ListBox    _taglist;
   private bool       _draggable = false;
 
-  public signal void changed();
+  public signal void tag_changed( Tag tag, Tag orig_tag );
+  public signal void tag_added( Tag tag );
+  public signal void tag_removed( Tag tag, int index );
   public signal void select_changed( Tag tag, bool select );
 
   //-------------------------------------------------------------
@@ -222,7 +226,6 @@ public class TagEditor : Box {
     _entry.activate.connect(() => {
       add_new_tag( _entry.text );
       _entry.text = "";
-      changed();
     });
 
     _taglist = new ListBox() {
@@ -263,8 +266,14 @@ public class TagEditor : Box {
 
   //-------------------------------------------------------------
   // Called whenever an individual tag changes color or name.
-  private void handle_tag_change() {
-    changed();
+  private void handle_tag_change( Tag tag, Tag orig_tag ) {
+    tag_changed( tag, orig_tag );
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever an individual tag changes its inclusion or not.
+  private void handle_select_change( Tag tag, bool selected ) {
+    select_changed( tag, selected );
   }
 
   //-------------------------------------------------------------
@@ -294,6 +303,8 @@ public class TagEditor : Box {
 
     add_tag( tag );
 
+    tag_added( tag );
+
   } 
 
   //-------------------------------------------------------------
@@ -307,9 +318,7 @@ public class TagEditor : Box {
 
     if( _draggable ) {
 
-      tagbox.select_changed.connect((select) => {
-        select_changed( tag, select );
-      });
+      tagbox.select_changed.connect( handle_select_change );
 
       var drag = new DragSource() {
         actions = DragAction.COPY
@@ -325,12 +334,6 @@ public class TagEditor : Box {
         var provider = new ContentProvider.for_value( val );
         return( provider );
       });
-
-      /*
-      drag.drag_end.connect((d, del) => {
-        ideas_changed( BraindumpChangeType.REMOVE, _current_index.to_string() );
-      });
-      */
 
     }
 
@@ -381,14 +384,15 @@ public class TagEditor : Box {
   // Removes the tag at the given listbox row.
   private void remove_tag( ListBoxRow? row ) {
 
-    var index  = row.get_index();
-    var change = false;
+    var index = row.get_index();
 
     // Remove the tagbox from the listbox
     var tagbox = get_tagbox( row );
     if( tagbox != null ) {
       tagbox.changed.disconnect( handle_tag_change );
-      change = true;
+      if( _draggable ) {
+        tagbox.select_changed.disconnect( handle_select_change );
+      }
     }
     _taglist.remove( row );
 
@@ -396,12 +400,7 @@ public class TagEditor : Box {
     var tag = _tags.get_tag( index );
     if( tag != null ) {
       _tags.remove_tag( index );
-      tag.removed();
-      change = true;
-    }
-
-    if( change ) {
-      changed();
+      tag_removed( tag, index );
     }
 
   }
@@ -432,9 +431,7 @@ public class TagEditor : Box {
       var tagbox = get_tagbox( _taglist.get_row_at_index( i ) );
       if( tagbox != null ) {
         tagbox.selectable = (tags != null);
-        if( tags != null ) {
-          tagbox.set_selected( tags.contains_tag( tag ) );
-        }
+        tagbox.set_selected( (tags != null) && tags.contains_tag( tag ) );
       }
     }
 

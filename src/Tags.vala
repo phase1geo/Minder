@@ -28,8 +28,6 @@ public class Tag : Object {
   public string name  { get; set; default = _( "Tag" ); }
   public RGBA   color { get; set; default = Utils.color_from_string( "#000000" ); }
 
-  public signal void removed();
-
   //-------------------------------------------------------------
   // Constructor
   public Tag( string name, RGBA color ) {
@@ -41,6 +39,13 @@ public class Tag : Object {
   // Constructor from Xml format
   public Tag.from_xml( Xml.Node* node ) {
     load( node );
+  }
+
+  //-------------------------------------------------------------
+  // Returns a copy of this tag.
+  public Tag copy() {
+    var tag = new Tag( name, color );
+    return( tag );
   }
 
   //-------------------------------------------------------------
@@ -71,21 +76,14 @@ public class Tag : Object {
 // Complete list of tags.
 public class Tags {
 
-  private class TagInst {
-    public Tag   tag       { get; private set; }
-    public ulong handle_id { get; private set; }
-    public TagInst( Tag t, ulong id = 0 ) {
-      tag       = t;
-      handle_id = id;
-    }
-  } 
+  private Array<Tag> _tags;
 
-  private Array<TagInst> _tags;
+  public signal void changed();
 
   //-------------------------------------------------------------
   // Default constructor
   public Tags() {
-    _tags = new Array<TagInst>();
+    _tags = new Array<Tag>();
   }
 
   //-------------------------------------------------------------
@@ -97,7 +95,7 @@ public class Tags {
   //-------------------------------------------------------------
   // Returns the tag at the given index.
   public Tag? get_tag( int index ) {
-    return( _tags.index( index ).tag );
+    return( _tags.index( index ) );
   }
 
   //-------------------------------------------------------------
@@ -105,7 +103,7 @@ public class Tags {
   // cannot be found.
   public int get_tag_index( Tag tag ) {
     for( int i=0; i<_tags.length; i++ ) {
-      if( _tags.index( i ).tag == tag ) {
+      if( _tags.index( i ) == tag ) {
         return( i );
       }
     }
@@ -121,44 +119,37 @@ public class Tags {
 
   //-------------------------------------------------------------
   // Adds the given tag to this list.
-  public void add_tag( Tag tag, bool append = true ) {
+  public bool add_tag( Tag tag, int index = -1 ) {
 
     // If the tag already exists in this list, don't add it again
-    if( contains_tag( tag ) ) return;
+    if( contains_tag( tag ) ) return( false );
 
-    var id = tag.removed.connect(() => {
-      var index = get_tag_index( tag );
-      if( index != -1 ) {
-        _tags.remove_index( index );
-      }
-    });
-
-    var tag_inst = new TagInst( tag, id );
-    if( append ) {
-      _tags.append_val( tag_inst );
+    if( index == -1 ) {
+      _tags.append_val( tag );
     } else {
-      _tags.prepend_val( tag_inst );
+      _tags.insert_val( index, tag );
     }
 
+    return( true );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates a copy of this tag.
+  public Tags copy() {
+    var tags = new Tags();
+    for( int i=0; i<_tags.length; i++ ) {
+      tags.add_tag( _tags.index( i ) );
+    }
+    return( tags );
   }
 
   //-------------------------------------------------------------
   // Removes the given tag from the list.
-  public void remove_tag( int index ) {
-    var tag_inst = _tags.index( index );
-    if( tag_inst.handle_id != 0 ) {
-      SignalHandler.disconnect( tag_inst.tag, tag_inst.handle_id );
-    }
+  public bool remove_tag( int index ) {
+    if( (index < 0) || (index > _tags.length) ) return( false );
     _tags.remove_index( index );
-  }
-
-  //-------------------------------------------------------------
-  // Merges the given list of tags to the beginning or end of this
-  // list of tags (tag order is maintained).
-  public void add_tags( Tags tags, bool append ) {
-    for( int i=0; i<tags.size(); i++ ) {
-      add_tag( tags.get_tag( i ), append );
-    }
+    return( true );
   }
 
   //-------------------------------------------------------------
@@ -166,7 +157,7 @@ public class Tags {
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "tags" );
     for( int i=0; i<_tags.length; i++ ) {
-      node->add_child( _tags.index( i ).tag.save() );
+      node->add_child( _tags.index( i ).save() );
     }
     return( node );
   }
@@ -177,7 +168,7 @@ public class Tags {
   public Xml.Node* save_indices( Tags all_tags ) {
     string[] indices = {};
     for( int i=0; i<_tags.length; i++ ) {
-      var all_index = all_tags.get_tag_index( _tags.index( i ).tag );
+      var all_index = all_tags.get_tag_index( _tags.index( i ) );
       indices += all_index.to_string();
     }
     Xml.Node* node = new Xml.Node( null, "taglist" );
@@ -206,9 +197,8 @@ public class Tags {
   public void load( Xml.Node* node ) {
     for( Xml.Node* it=node->children; it!= null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tag") ) {
-        var tag      = new Tag.from_xml( it );
-        var tag_inst = new TagInst( tag );
-        _tags.append_val( tag_inst );
+        var tag = new Tag.from_xml( it );
+        _tags.append_val( tag );
       }
     }
   }
@@ -237,9 +227,8 @@ public class Tags {
     foreach( Variant child in variant ) {
       string name, color;
       child.get( "(ss)", out name, out color );
-      var tag      = new Tag( name, Utils.color_from_string( color ) );
-      var tag_inst = new TagInst( tag );
-      _tags.append_val( tag_inst );
+      var tag = new Tag( name, Utils.color_from_string( color ) );
+      _tags.append_val( tag );
     }
   }
 

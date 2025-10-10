@@ -29,7 +29,6 @@ public class TagInspector : Box {
   private TagEditor _editor;
 
   public signal void editable_changed();
-  public signal void changed();
 
   //-------------------------------------------------------------
   // Constructor
@@ -38,12 +37,9 @@ public class TagInspector : Box {
     Object( orientation: Orientation.VERTICAL, spacing: 10, valign: Align.FILL );
 
     _editor = new TagEditor( win, true );
-    _editor.changed.connect(() => {
-      if( _map != null ) {
-        _map.queue_draw();
-        _map.auto_save();
-      }
-    });
+    _editor.tag_changed.connect( tag_changed );
+    _editor.tag_added.connect( tag_added );
+    _editor.tag_removed.connect( tag_removed );
     _editor.select_changed.connect( tag_select_changed );
 
     win.canvas_changed.connect( tab_changed );
@@ -66,12 +62,66 @@ public class TagInspector : Box {
   private void tab_changed( MindMap? map ) {
     if( _map != null ) {
       _map.current_changed.disconnect( current_changed );
+      _map.reload_tags.disconnect( reload_tags );
     }
     _map = map;
     _editor.set_tags( map.model.tags );
     if( map != null ) {
       map.current_changed.connect( current_changed );
+      map.reload_tags.connect( reload_tags );
       current_changed();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Reloads the tags from the current map.  This is needed when
+  // the map tag changes due to undo.
+  private void reload_tags() {
+    _editor.set_tags( _map.model.tags );
+    current_changed();
+  }
+
+  //-------------------------------------------------------------
+  // Called when a tag changes color or name.
+  private void tag_changed( Tag tag, Tag orig_tag ) {
+    if( _map != null ) {
+      _map.add_undo( new UndoTagChange( tag, orig_tag ) );
+      _map.queue_draw();
+      _map.auto_save();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Called when a new tag is added to the map tag list.
+  private void tag_added( Tag tag ) {
+    if( _map != null ) {
+      var nodes = _map.get_selected_nodes();
+      for( int i=0; i<nodes.length; i++ ) {
+        var node = nodes.index( i );
+        node.add_tag( tag );
+      }
+      _map.add_undo( new UndoTagsAdd( tag, (_map.model.tags.size() - 1), nodes ) );
+      if( nodes.length > 0 ) {
+        current_changed();
+        _map.queue_draw();
+      }
+      _map.auto_save();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // When a tag is removed from the tag editor, this tag might be
+  // used by a node within the map, so let's traverse the map,
+  // remove the tag, and keep track of that list.
+  private void tag_removed( Tag tag, int index ) {
+    if( _map != null ) {
+      var nodes = new Array<Node>();
+      _map.remove_tag( tag, nodes );
+      _map.add_undo( new UndoTagsRemove( tag, index, nodes ) );
+      if( nodes.length > 0 ) {
+        _map.queue_draw();
+      }
+      _map.auto_save();
     }
   }
 
@@ -83,16 +133,30 @@ public class TagInspector : Box {
     var nodes = _map.get_selected_nodes();
 
     if( nodes.length > 0 ) {
-      for( int i=0; i<nodes.length; i++ ) {
-        var node = nodes.index( i );
-        if( selected ) {
-          node.add_tag( tag );
-        } else {
-          node.remove_tag( tag );
+
+      var changed_nodes = new Array<Node>();
+
+      if( selected ) {
+        for( int i=0; i<nodes.length; i++ ) {
+          var node = nodes.index( i );
+          if( node.add_tag( tag ) ) {
+            changed_nodes.append_val( node );
+          }
         }
+        _map.add_undo( new UndoNodesTagAdd( nodes, tag ) );
+      } else {
+        for( int i=0; i<nodes.length; i++ ) {
+          var node = nodes.index( i );
+          if( node.remove_tag( tag ) ) {
+            changed_nodes.append_val( node );
+          }
+        }
+        _map.add_undo( new UndoNodesTagRemove( nodes, tag ) );
       }
-      _map.queue_draw();
+
       _map.auto_save();
+      _map.queue_draw();
+
     }
 
   }

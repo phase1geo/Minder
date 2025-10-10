@@ -700,7 +700,7 @@ public class Node : Object {
     tree_bbox.copy_from( n.tree_bbox );
     sticker          = n.sticker;
     sequence         = n.sequence;
-    tags.add_tags( n.tags, true );
+    _tags            = n.tags.copy();
   }
 
   //-------------------------------------------------------------
@@ -2605,19 +2605,31 @@ public class Node : Object {
 
   //-------------------------------------------------------------
   // Adds the given tag to this node.
-  public void add_tag( Tag tag ) {
-    tags.add_tag( tag );
+  public bool add_tag( Tag tag ) {
+    var added = tags.add_tag( tag );
     update_size();
+    return( added );
   }
 
   //-------------------------------------------------------------
   // Removes the specified tag from the list of tags.
-  public void remove_tag( Tag tag ) {
+  public bool remove_tag( Tag tag, Array<Node>? nodes = null ) {
     var index = tags.get_tag_index( tag );
     if( index != -1 ) {
       tags.remove_tag( index );
       update_size();
+      if( nodes != null ) {
+        nodes.append_val( this );
+      } else {
+        return( true );
+      }
     }
+    if( nodes != null ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).remove_tag( tag, nodes );
+      }
+    }
+    return( false );
   }
 
   //-------------------------------------------------------------

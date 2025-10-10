@@ -675,6 +675,15 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
+  // Removes the given tag from all nodes containing it.  Returns
+  // the list of affected nodes.
+  public void remove_tag( Tag tag, Array<Node> nodes ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).remove_tag( tag, nodes );
+    }
+  }
+
+  //-------------------------------------------------------------
   // GROUP METHODS
   //-------------------------------------------------------------
 

@@ -175,6 +175,7 @@ public class MindMap {
   public signal void hide_properties();
   public signal void undo_buffer_changed( UndoBuffer buf );
   public signal void editable_changed( MindMap map );
+  public signal void reload_tags();
 
   //-------------------------------------------------------------
   // Constructor
@@ -982,6 +983,13 @@ public class MindMap {
       _model.change_current_link_color( color );
     });
     color_picker.present();
+  }
+
+  //-------------------------------------------------------------
+  // Removes the tags from all nodes in the model, returning the
+  // list of nodes that were affected.
+  public void remove_tag( Tag tag, Array<Node> nodes ) {
+    _model.remove_tag( tag, nodes );
   }
 
   //-------------------------------------------------------------

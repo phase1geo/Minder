@@ -65,6 +65,8 @@ sources += files(
     'UndoNodesRandLinkColor.vala',
     'UndoNodesReparentLinkColor.vala',
     'UndoNodesReplace.vala',
+    'UndoNodesTagAdd.vala',
+    'UndoNodesTagRemove.vala',
 
     'UndoStickerAdd.vala',
     'UndoStickerChange.vala',
@@ -101,6 +103,11 @@ sources += files(
     'UndoStyleNodePadding.vala',
     'UndoStyleNodeTextAlign.vala',
     'UndoStyleNodeWidth.vala',
+
+    'UndoTagChange.vala',
+
+    'UndoTagsAdd.vala',
+    'UndoTagsRemove.vala',
 
     'UndoTextClearTags.vala',
     'UndoTextDelete.vala',
