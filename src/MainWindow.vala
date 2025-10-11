@@ -540,6 +540,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
 
     var tab_lock = new Image.from_icon_name( "system-lock-screen-symbolic" ) {
+      halign        = Align.START,
       visible       = !map.editable,
       margin_start  = 10,
       margin_top    = 5,
@@ -547,7 +548,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
     tab_lock.add_css_class( "tab" );
 
-    var tab_label = new Label( map.doc.label ) { margin_start  = 10,
+    var tab_label = new Label( map.doc.label ) {
+      halign        = Align.CENTER,
+      hexpand       = true,
       margin_start  = 5,
       margin_end    = 5,
       margin_top    = 5,
@@ -557,8 +560,6 @@ public class MainWindow : Gtk.ApplicationWindow {
     tab_label.add_css_class( "tab" );
 
     var tab_close = new Button.from_icon_name( "window-close-symbolic" ) {
-      halign        = Align.END,
-      hexpand       = true,
       has_frame     = false,
       margin_end    = 10,
       margin_top    = 5,
@@ -571,6 +572,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     });
 
     var tab_revealer = new Revealer() {
+      halign          = Align.END,
       reveal_child    = true,
       transition_type = RevealerTransitionType.CROSSFADE,
       child           = tab_close
