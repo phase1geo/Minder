@@ -79,6 +79,8 @@ public class Preferences : Granite.Dialog {
       margin_top = 10
     };
 
+    Utils.set_switcher_tab_widths( switcher );
+
     var box = new Box( Orientation.VERTICAL, 0 );
     box.append( switcher );
     box.append( stack );

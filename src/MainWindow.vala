@@ -1207,6 +1207,8 @@ public class MainWindow : Gtk.ApplicationWindow {
       stack  = _stack
     };
 
+    Utils.set_switcher_tab_widths( sb );
+
     var box = new Box( Orientation.VERTICAL, 20 ) {
       halign        = Align.FILL,
       valign        = Align.FILL,

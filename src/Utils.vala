@@ -485,4 +485,33 @@ public class Utils {
 
   }
 
+  //-------------------------------------------------------------
+  // Causes the given switcher to adjust tab widths to be the same
+  // based on the largest tab.
+  public static void set_switcher_tab_widths( StackSwitcher switcher ) {
+
+    Widget child;
+    var    i = 0;
+    uint   max_width = 0;
+    int    min, nat, min_bl, nat_bl;
+
+    // Force creation of child buttons
+    switcher.show ();
+
+    child = Utils.get_child_at_index( switcher, i++ );
+    while( child != null ) {
+      child.measure( Orientation.HORIZONTAL, -1, out min, out nat, out min_bl, out nat_bl );
+      max_width = uint.max( max_width, (uint)nat );
+      child     = Utils.get_child_at_index( switcher, i++ );
+    }
+
+    i     = 0;
+    child = Utils.get_child_at_index( switcher, i++ );
+    while( child != null ) {
+      child.set_size_request( (int)max_width, -1 );
+      child = Utils.get_child_at_index( switcher, i++ );
+    }
+
+  }
+
 }
