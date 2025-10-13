@@ -153,6 +153,12 @@ public class Tags {
   }
 
   //-------------------------------------------------------------
+  // Clears all of the tags.
+  public void clear_tags() {
+    _tags.remove_range( 0, _tags.length );
+  }
+
+  //-------------------------------------------------------------
   // Saves the tags in Xml format.
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "tags" );

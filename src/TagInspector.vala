@@ -27,6 +27,7 @@ public class TagInspector : Box {
 
   private MindMap?  _map = null;
   private TagEditor _editor;
+  private Tags      _selected_tags;
 
   public signal void editable_changed();
 
@@ -35,6 +36,8 @@ public class TagInspector : Box {
   public TagInspector( MainWindow win ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 10, valign: Align.FILL );
+
+    _selected_tags = new Tags();
 
     var note = new Label( _( "Create tag by entering tag name in entry field.  Click on tag color to change.  Double-click tag name to rename.  Add/remove tags to node by selecting node and clicking on tags or drag/drop tags on nodes to add." ) ) {
       wrap_mode = Pango.WrapMode.WORD,
@@ -159,6 +162,17 @@ public class TagInspector : Box {
       _map.auto_save();
       _map.queue_draw();
 
+    } else {
+
+      if( selected ) {
+        _selected_tags.add_tag( tag );
+      } else {
+        var index = _selected_tags.get_tag_index( tag );
+        _selected_tags.remove_tag( index );
+      }
+
+      _map.model.highlight_tags( _selected_tags, 0.3 );
+
     }
 
   }
@@ -168,18 +182,23 @@ public class TagInspector : Box {
   // canvas.
   private void current_changed() {
 
-    var nodes = _map.get_selected_nodes();
+    if( _map != null ) {
 
-    if( nodes.length == 0 ) {
-      _editor.show_selected_tags( null );
-    } else if( nodes.length == 1 ) {
-      _editor.show_selected_tags( nodes.index( 0 ).tags );
-    } else if( _map != null ) {
-      var tags = nodes.index( 0 ).tags;
-      for( int i=1; i<nodes.length; i++ ) {
-        tags = Tags.intersect( tags, nodes.index( 1 ).tags );
+      var nodes = _map.get_selected_nodes();
+
+      if( nodes.length == 0 ) {
+        _editor.show_selected_tags( null );
+        _selected_tags.clear_tags();
+      } else if( nodes.length == 1 ) {
+        _editor.show_selected_tags( nodes.index( 0 ).tags );
+      } else if( _map != null ) {
+        var tags = nodes.index( 0 ).tags;
+        for( int i=1; i<nodes.length; i++ ) {
+          tags = Tags.intersect( tags, nodes.index( 1 ).tags );
+        }
+        _editor.show_selected_tags( tags );
       }
-      _editor.show_selected_tags( tags );
+
     }
 
   }

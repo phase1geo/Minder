@@ -2633,6 +2633,18 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // Checks to see if the current node contains the given tag.
+  // If it exists, causes this node to be highlighted.  Performs
+  // this procedure recursively.
+  public void highlight_tags( Tags tags, double alpha ) {
+    var intersect = Tags.intersect( _tags, tags );
+    set_alpha_only( (intersect.size() == tags.size()) ? 1.0 : alpha );
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).highlight_tags( tags, alpha );
+    }
+  }
+
+  //-------------------------------------------------------------
   // MISCELLANEOUS
   //-------------------------------------------------------------
 

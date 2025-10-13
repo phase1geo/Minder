@@ -684,6 +684,15 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
+  // Highlights all of the tags that contain the given tag.
+  public void highlight_tags( Tags tags, double alpha ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).highlight_tags( tags, alpha );
+    }
+    _map.queue_draw();
+  }
+
+  //-------------------------------------------------------------
   // GROUP METHODS
   //-------------------------------------------------------------
 

@@ -143,6 +143,13 @@ public class TagBox : Box {
       }
     });
 
+    var visible_btn = new Button.from_icon_name( "minder-eye-symbolic" ) {
+      halign = Align.END
+    };
+    visible_btn.clicked.connect(() => {
+      stdout.printf( "Visible clicked\n" );
+    });
+
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
       halign     = Align.FILL,
       can_target = true,
@@ -150,6 +157,7 @@ public class TagBox : Box {
     };
     box.append( name_stack );
     box.append( sel_stack );
+    box.append( visible_btn );
 
     var box_click = new GestureClick();
     box.add_controller( box_click );
@@ -456,7 +464,7 @@ public class TagEditor : Box {
       var tag    = _tags.get_tag( i );
       var tagbox = get_tagbox( _taglist.get_row_at_index( i ) );
       if( tagbox != null ) {
-        tagbox.selectable = (tags != null);
+        tagbox.selectable = true; // (tags != null);
         tagbox.set_selected( (tags != null) && tags.contains_tag( tag ) );
       }
     }
