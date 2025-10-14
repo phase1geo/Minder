@@ -49,6 +49,7 @@ public class TagInspector : Box {
     _editor.tag_added.connect( tag_added );
     _editor.tag_removed.connect( tag_removed );
     _editor.select_changed.connect( tag_select_changed );
+    _editor.visible_changed.connect( tag_visible_changed );
 
     win.canvas_changed.connect( tab_changed );
 
@@ -162,18 +163,22 @@ public class TagInspector : Box {
       _map.auto_save();
       _map.queue_draw();
 
-    } else {
-
-      if( selected ) {
-        _selected_tags.add_tag( tag );
-      } else {
-        var index = _selected_tags.get_tag_index( tag );
-        _selected_tags.remove_tag( index );
-      }
-
-      _map.model.highlight_tags( _selected_tags, Minder.settings.get_double( "focus-mode-alpha" ) );
-
     }
+
+  }
+
+  //-------------------------------------------------------------
+  // Updates the current tag visibility in the mindmap.
+  private void tag_visible_changed( Tag tag, bool visible ) {
+
+    if( visible ) {
+      _selected_tags.add_tag( tag );
+    } else {
+      var index = _selected_tags.get_tag_index( tag );
+      _selected_tags.remove_tag( index );
+    }
+
+    _map.model.highlight_tags( _selected_tags, Minder.settings.get_double( "focus-mode-alpha" ) );
 
   }
 
@@ -188,16 +193,17 @@ public class TagInspector : Box {
 
       if( nodes.length == 0 ) {
         _editor.show_selected_tags( null );
-        _selected_tags.clear_tags();
       } else if( nodes.length == 1 ) {
         _editor.show_selected_tags( nodes.index( 0 ).tags );
-      } else if( _map != null ) {
+      } else {
         var tags = nodes.index( 0 ).tags;
         for( int i=1; i<nodes.length; i++ ) {
           tags = Tags.intersect( tags, nodes.index( 1 ).tags );
         }
         _editor.show_selected_tags( tags );
       }
+
+      _map.model.highlight_tags( _selected_tags, Minder.settings.get_double( "focus-mode-alpha" ) );
 
     }
 

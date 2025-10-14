@@ -27,6 +27,7 @@ public class TagBox : Box {
   private Tag   _tag;
   private Label _name_lbl;
   private uint  _timeout_id = 0;
+  private bool  _visible    = false;
 
   public Label name {
     get {
@@ -34,10 +35,12 @@ public class TagBox : Box {
     }
   }
 
-  public bool selectable { get; set; default = false; }
+  public bool enable_select  { get; set; default = false; }
+  public bool enable_visible { get; set; default = false; }
 
   public signal void changed( Tag tag, Tag orig_tag );
   public signal void select_changed( Tag tag, bool select );
+  public signal void visible_changed( Tag tag, bool visible );
 
   //-------------------------------------------------------------
   // Constructor
@@ -144,11 +147,30 @@ public class TagBox : Box {
     });
 
     var visible_btn = new Button.from_icon_name( "minder-eye-symbolic" ) {
+      halign = Align.END,
+      visible = false
+    };
+    var visible_box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign = Align.START
+    };
+    visible_box.append( visible_btn );
+
+    var visible_hide = new Button.from_icon_name( "minder-eye-symbolic" ) {
       halign = Align.END
     };
+
     visible_btn.clicked.connect(() => {
-      stdout.printf( "Visible clicked\n" );
+      if( enable_visible ) {
+        _visible = !_visible;
+        visible_btn.visible = _visible;
+        visible_changed( tag, _visible );
+      }
     });
+
+    var visible_stack = new Stack();
+    visible_stack.add_named( visible_hide, "hidden" );
+    visible_stack.add_named( visible_box,  "eye" );
+    visible_stack.visible_child_name = "eye";
 
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
       halign     = Align.FILL,
@@ -157,13 +179,13 @@ public class TagBox : Box {
     };
     box.append( name_stack );
     box.append( sel_stack );
-    box.append( visible_btn );
+    box.append( visible_stack );
 
     var box_click = new GestureClick();
     box.add_controller( box_click );
 
-    box_click.pressed.connect((n_press, x, y) => {
-      if( selectable && (n_press == 1) ) {
+    box_click.released.connect((n_press, x, y) => {
+      if( enable_select && (n_press == 1) ) {
         _timeout_id = Timeout.add( Gtk.Settings.get_default().gtk_double_click_time, () => {
           _timeout_id = 0;
           var select = !selected.visible;
@@ -171,6 +193,20 @@ public class TagBox : Box {
           select_changed( tag, select );
           return( false );
         });
+      }
+    });
+
+    var box_motion = new EventControllerMotion();
+    box.add_controller( box_motion );
+
+    box_motion.enter.connect((x, y) => {
+      if( enable_visible ) {
+        visible_btn.visible = true;
+      }
+    });
+    box_motion.leave.connect(() => {
+      if( !_visible ) {
+        visible_btn.visible = false;
       }
     });
 
@@ -205,8 +241,10 @@ public class TagEditor : Box {
   private Tags?       _tags = null;
   private SearchEntry _entry;
   private ListBox     _taglist;
-  private bool        _draggable = false;
-  private bool        _editable  = true;
+  private Button      _new_label;
+  private bool        _draggable  = false;
+  private bool        _selectable = false;
+  private bool        _editable   = true;
 
   public bool editable {
     get {
@@ -225,6 +263,7 @@ public class TagEditor : Box {
   public signal void tag_added( Tag tag );
   public signal void tag_removed( Tag tag, int index );
   public signal void select_changed( Tag tag, bool select );
+  public signal void visible_changed( Tag tag, bool visible );
 
   //-------------------------------------------------------------
   // Constructor.
@@ -283,6 +322,15 @@ public class TagEditor : Box {
       child             = _taglist
     };
 
+    _new_label = new Button.with_label( "" ) {
+      has_frame = false
+    };
+
+    _new_label.clicked.connect(() => {
+      add_new_tag( _entry.text );
+      _entry.text = "";
+    });
+
     append( _entry );
     append( sw );
 
@@ -298,6 +346,12 @@ public class TagEditor : Box {
   // Called whenever an individual tag changes its inclusion or not.
   private void handle_select_change( Tag tag, bool selected ) {
     select_changed( tag, selected );
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever an individual tag changes its visibility state.
+  private void handle_visible_change( Tag tag, bool visible ) {
+    visible_changed( tag, visible );
   }
 
   //-------------------------------------------------------------
@@ -322,6 +376,8 @@ public class TagEditor : Box {
       var tagbox = _taglist.get_row_at_index( i );
       tagbox.visible = (text == "") || tag.name.contains( text );
     }
+    _new_label.visible = (text != "");
+    _new_label.label   = _( "Create '%s' tag" ).printf( text );
   }
 
   //-------------------------------------------------------------
@@ -337,7 +393,7 @@ public class TagEditor : Box {
     var tag = new Tag( name, color );
     _tags.add_tag( tag );
 
-    add_tag( tag );
+    add_tag( tag, (_tags.size() - 1) );
 
     tag_added( tag );
 
@@ -346,15 +402,18 @@ public class TagEditor : Box {
   //-------------------------------------------------------------
   // Creates a tag for the given tag name and adds it to the 
   // stores tag list and to the listbox.
-  private void add_tag( Tag tag ) {
+  private void add_tag( Tag tag, int pos ) {
 
     var tagbox = new TagBox( tag );
+    tagbox.enable_select  = _selectable;
+    tagbox.enable_visible = _draggable;
 
     tagbox.changed.connect( handle_tag_change );
 
     if( _draggable ) {
 
       tagbox.select_changed.connect( handle_select_change );
+      tagbox.visible_changed.connect( handle_visible_change );
 
       var drag = new DragSource() {
         actions = DragAction.COPY
@@ -374,7 +433,7 @@ public class TagEditor : Box {
     }
 
     // Add the tagbox to the listbox
-    _taglist.append( tagbox );
+    _taglist.insert( tagbox, pos );
 
   }
 
@@ -426,6 +485,7 @@ public class TagEditor : Box {
       tagbox.changed.disconnect( handle_tag_change );
       if( _draggable ) {
         tagbox.select_changed.disconnect( handle_select_change );
+        tagbox.visible_changed.disconnect( handle_visible_change );
       }
     }
     _taglist.remove( row );
@@ -445,11 +505,14 @@ public class TagEditor : Box {
 
     _tags = tags;
     _taglist.remove_all();
+    _taglist.append( _new_label );
+
+    _new_label.visible = false;
 
     if( tags != null ) {
       for( int i=0; i<tags.size(); i++ ) {
         var tag = tags.get_tag( i );
-        add_tag( tag );
+        add_tag( tag, i );
       }
     }
 
@@ -460,11 +523,13 @@ public class TagEditor : Box {
   // used.
   public void show_selected_tags( Tags? tags ) {
 
+    _selectable = (tags != null);
+
     for( int i=0; i<_tags.size(); i++ ) {
       var tag    = _tags.get_tag( i );
       var tagbox = get_tagbox( _taglist.get_row_at_index( i ) );
       if( tagbox != null ) {
-        tagbox.selectable = true; // (tags != null);
+        tagbox.enable_select = _selectable;
         tagbox.set_selected( (tags != null) && tags.contains_tag( tag ) );
       }
     }

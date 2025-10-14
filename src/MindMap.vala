@@ -1008,6 +1008,7 @@ public class MindMap {
   //-------------------------------------------------------------
   // Update the focus mode.
   public void update_focus_mode() {
+    stdout.printf( "In update_focus_mode\n" );
     var selnodes = selected.nodes();
     var selconns = selected.connections();
     var alpha    = (_focus_mode && ((selnodes.length > 0) || (selconns.length > 0))) ? _focus_alpha : 1.0;

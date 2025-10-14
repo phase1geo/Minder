@@ -686,6 +686,7 @@ public class MapModel {
   //-------------------------------------------------------------
   // Highlights all of the tags that contain the given tag.
   public void highlight_tags( Tags tags, double alpha ) {
+    stdout.printf( "In highlight_tags\n" );
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).highlight_tags( tags, alpha );
     }
