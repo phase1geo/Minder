@@ -1254,10 +1254,10 @@ public class Node : Object {
   protected virtual void tag_bbox( int index, out double x, out double y, out double w, out double h ) {
     int margin  = style.node_margin ?? 0;
     int padding = style.node_padding ?? 0;
-    x = name.posx + (index * 15);
-    y = posy + (_height - (margin + padding) - 5);
-    w = 10;
-    h = 5;
+    x = name.posx + (index * 17);
+    y = posy + (_height - (margin + padding) - 8);
+    w = 12;
+    h = 8;
   }
 
   //-------------------------------------------------------------
@@ -3333,14 +3333,24 @@ public class Node : Object {
 
   //-------------------------------------------------------------
   // Draw all of the tag rectangles.
-  protected virtual void draw_tags( Context ctx ) {
+  protected virtual void draw_tags( Context ctx, Theme theme, bool exporting ) {
     for( int i=0; i<_tags.size(); i++ ) {
+
       var tag = _tags.get_tag( i );
+
       double x, y, w, h;
       tag_bbox( i, out x, out y, out w, out h );
+
       Utils.set_context_color_with_alpha( ctx, tag.color, _alpha );
       ctx.rectangle( x, y, w, h );
-      ctx.fill();
+      ctx.fill_preserve();
+
+      var color = (mode.is_selected() && !exporting) ? Granite.contrasting_foreground_color( theme.get_color( "nodesel_background" ) ) :
+                                                       theme.get_color( "background" );
+      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      ctx.set_line_width( 1 );
+      ctx.stroke();
+
     }
   }
 
@@ -3400,7 +3410,7 @@ public class Node : Object {
       draw_common_fold( ctx, foreground, background );
       draw_attachable(  ctx, theme, background );
       draw_resizer( ctx, theme, exporting );
-      draw_tags( ctx );
+      draw_tags( ctx, theme, exporting );
 
     /* Otherwise, draw the node as a non-root node */
     } else {
@@ -3423,7 +3433,7 @@ public class Node : Object {
       draw_common_fold( ctx, _link_color, background );
       draw_attachable(  ctx, theme, background );
       draw_resizer( ctx, theme, exporting );
-      draw_tags( ctx );
+      draw_tags( ctx, theme, exporting );
     }
 
     draw_callout( ctx, theme, exporting );

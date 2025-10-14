@@ -689,6 +689,7 @@ public class MapModel {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).highlight_tags( tags, alpha );
     }
+    _connections.update_alpha();
     _map.queue_draw();
   }
 

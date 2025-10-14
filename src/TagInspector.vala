@@ -171,7 +171,7 @@ public class TagInspector : Box {
         _selected_tags.remove_tag( index );
       }
 
-      _map.model.highlight_tags( _selected_tags, 0.3 );
+      _map.model.highlight_tags( _selected_tags, Minder.settings.get_double( "focus-mode-alpha" ) );
 
     }
 
