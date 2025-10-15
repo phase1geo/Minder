@@ -2633,14 +2633,22 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns true if this node should be highlighted.
+  public bool highlightable( Tags tags ) {
+    var intersect = Tags.intersect( _tags, tags );
+    return( intersect.size() == tags.size() );
+  }
+
+  //-------------------------------------------------------------
   // Checks to see if the current node contains the given tag.
   // If it exists, causes this node to be highlighted.  Performs
   // this procedure recursively.
-  public void highlight_tags( Tags tags, double alpha ) {
-    var intersect = Tags.intersect( _tags, tags );
-    set_alpha_only( (intersect.size() == tags.size()) ? 1.0 : alpha );
+  public void highlight_tags( Tags tags ) {
+    if( highlightable( tags ) ) {
+      set_alpha_only( 1.0 );
+    }
     for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).highlight_tags( tags, alpha );
+      _children.index( i ).highlight_tags( tags );
     }
   }
 

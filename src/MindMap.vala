@@ -34,6 +34,7 @@ public class MindMap {
   private Selection      _selected;
   private bool           _focus_mode  = false;
   private double         _focus_alpha = 0.05;
+  private Tags           _highlighted;
   private bool           _editable    = true;
 
   /* Allocate static parsers */
@@ -96,6 +97,11 @@ public class MindMap {
   public double focus_alpha {
     get {
       return( _focus_alpha );
+    }
+  }
+  public Tags highlighted {
+    get {
+      return( _highlighted );
     }
   }
 
@@ -202,6 +208,8 @@ public class MindMap {
     // Create the selection handler
     _selected = new Selection( this );
 
+    _highlighted = new Tags();
+
     // Create the parsers
     tagger_parser   = new TaggerParser( this );
     markdown_parser = new MarkdownParser( this );
@@ -229,6 +237,8 @@ public class MindMap {
     _undo_buffer.buffer_changed.connect( handle_undo_buffer_changed );
 
     _selected.selection_changed.connect( handle_selection_changed );
+
+    _highlighted.changed.connect( handle_tag_highlight_changed );
 
     // Get the value of the new node from edit
     update_focus_mode_alpha();
@@ -299,6 +309,13 @@ public class MindMap {
     update_focus_mode();
     _canvas.queue_draw();
     current_changed( this );
+  }
+
+  //-------------------------------------------------------------
+  // Handles any changes to the highlighted tag list.
+  private void handle_tag_highlight_changed() {
+    update_focus_mode();
+    _canvas.queue_draw();
   }
 
   //-------------------------------------------------------------
@@ -1008,10 +1025,10 @@ public class MindMap {
   //-------------------------------------------------------------
   // Update the focus mode.
   public void update_focus_mode() {
-    stdout.printf( "In update_focus_mode\n" );
     var selnodes = selected.nodes();
     var selconns = selected.connections();
-    var alpha    = (_focus_mode && ((selnodes.length > 0) || (selconns.length > 0))) ? _focus_alpha : 1.0;
+    var alpha    = (_focus_mode && ((selnodes.length > 0) || (selconns.length > 0))) ||
+                   (_highlighted.size() > 0) ? _focus_alpha : 1.0;
     var nodes    = _model.get_nodes();
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).alpha = alpha;
@@ -1019,10 +1036,17 @@ public class MindMap {
     if( _focus_mode ) {
       for( int i=0; i<selnodes.length; i++ ) {
         var current = selnodes.index( i );
-        current.alpha = 1.0;
+        current.highlight_tags( _highlighted );
+        /*
+        if( current.highlightable( _highlighted ) ) {
+          current.alpha = 1.0;
+        }
+        */
         var parent = current.parent;
         while( parent != null ) {
-          parent.set_alpha_only( 1.0 );
+          if( parent.highlightable( _highlighted ) ) {
+            parent.set_alpha_only( 1.0 );
+          }
           parent = parent.parent;
         }
       }
@@ -1030,6 +1054,8 @@ public class MindMap {
       for( int i=0; i<selconns.length; i++ ) {
         selconns.index( i ).alpha = 1.0;
       }
+    } else if( _highlighted.size() > 0 ) {
+      _model.highlight_tags( _highlighted );
     }
     queue_draw();
   }

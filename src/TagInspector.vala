@@ -27,7 +27,6 @@ public class TagInspector : Box {
 
   private MindMap?  _map = null;
   private TagEditor _editor;
-  private Tags      _selected_tags;
 
   public signal void editable_changed();
 
@@ -36,8 +35,6 @@ public class TagInspector : Box {
   public TagInspector( MainWindow win ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 10, valign: Align.FILL );
-
-    _selected_tags = new Tags();
 
     var note = new Label( _( "Create tag by entering tag name in entry field.  Click on tag color to change.  Double-click tag name to rename.  Add/remove tags to node by selecting node and clicking on tags or drag/drop tags on nodes to add." ) ) {
       wrap_mode = Pango.WrapMode.WORD,
@@ -170,16 +167,12 @@ public class TagInspector : Box {
   //-------------------------------------------------------------
   // Updates the current tag visibility in the mindmap.
   private void tag_visible_changed( Tag tag, bool visible ) {
-
     if( visible ) {
-      _selected_tags.add_tag( tag );
+      _map.highlighted.add_tag( tag );
     } else {
-      var index = _selected_tags.get_tag_index( tag );
-      _selected_tags.remove_tag( index );
+      var index = _map.highlighted.get_tag_index( tag );
+      _map.highlighted.remove_tag( index );
     }
-
-    _map.model.highlight_tags( _selected_tags, Minder.settings.get_double( "focus-mode-alpha" ) );
-
   }
 
   //-------------------------------------------------------------
@@ -202,8 +195,6 @@ public class TagInspector : Box {
         }
         _editor.show_selected_tags( tags );
       }
-
-      _map.model.highlight_tags( _selected_tags, Minder.settings.get_double( "focus-mode-alpha" ) );
 
     }
 

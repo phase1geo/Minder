@@ -130,6 +130,8 @@ public class Tags {
       _tags.insert_val( index, tag );
     }
 
+    changed();
+
     return( true );
 
   }
@@ -149,6 +151,7 @@ public class Tags {
   public bool remove_tag( int index ) {
     if( (index < 0) || (index > _tags.length) ) return( false );
     _tags.remove_index( index );
+    changed();
     return( true );
   }
 
@@ -156,6 +159,7 @@ public class Tags {
   // Clears all of the tags.
   public void clear_tags() {
     _tags.remove_range( 0, _tags.length );
+    changed();
   }
 
   //-------------------------------------------------------------
