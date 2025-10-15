@@ -21,6 +21,55 @@
 
 using Gdk;
 
+public enum TagComboType {
+  AND,
+  OR,
+  NUM;
+
+  //-------------------------------------------------------------
+  // Displays this enumeration as a printable string.
+  public string to_string() {
+    switch( this ) {
+      case AND :  return( "and" );
+      case OR  :  return( "or" );
+      default  :  assert_not_reached();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the label associated with this TagComboType.
+  public string label() {
+    switch( this ) {
+      case AND :  return( _( "All" ) );
+      case OR  :  return( _( "Any" ) );
+      default  :  assert_not_reached();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Parses a given string and returns the associated TagComboType.
+  public static TagComboType parse( string val ) {
+    switch( val ) {
+      case "and" :  return( AND );
+      case "or"  :  return( OR );
+      default    :  return( AND );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given tags contain all (AND) or any (OR)
+  // of the tags in the specified highlight tags.
+  public bool highlightable( Tags tags, Tags highlight ) {
+    var intersect = Tags.intersect( tags, highlight );
+    switch( this ) {
+      case AND :  return( intersect.size() == highlight.size() );
+      case OR  :  return( intersect.size() > 0 );
+      default  :  assert_not_reached();
+    }
+  }
+
+}
+
 //-------------------------------------------------------------
 // Information for a single tag.
 public class Tag : Object {

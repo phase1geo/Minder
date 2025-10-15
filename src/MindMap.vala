@@ -32,10 +32,11 @@ public class MindMap {
   private UndoBuffer     _undo_buffer;
   private UndoTextBuffer _undo_text;
   private Selection      _selected;
-  private bool           _focus_mode  = false;
-  private double         _focus_alpha = 0.05;
+  private bool           _focus_mode     = false;
+  private double         _focus_alpha    = 0.05;
   private Tags           _highlighted;
-  private bool           _editable    = true;
+  private TagComboType   _highlight_mode = TagComboType.AND;
+  private bool           _editable       = true;
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -102,6 +103,17 @@ public class MindMap {
   public Tags highlighted {
     get {
       return( _highlighted );
+    }
+  }
+  public TagComboType highlight_mode {
+    get {
+      return( _highlight_mode );
+    }
+    set {
+      if( _highlight_mode != value ) {
+        _highlight_mode = value;
+        update_focus_mode();
+      }
     }
   }
 
@@ -1036,15 +1048,10 @@ public class MindMap {
     if( _focus_mode ) {
       for( int i=0; i<selnodes.length; i++ ) {
         var current = selnodes.index( i );
-        current.highlight_tags( _highlighted );
-        /*
-        if( current.highlightable( _highlighted ) ) {
-          current.alpha = 1.0;
-        }
-        */
+        current.highlight_tags( _highlighted, _highlight_mode );
         var parent = current.parent;
         while( parent != null ) {
-          if( parent.highlightable( _highlighted ) ) {
+          if( parent.highlightable( _highlighted, _highlight_mode ) ) {
             parent.set_alpha_only( 1.0 );
           }
           parent = parent.parent;
@@ -1055,7 +1062,7 @@ public class MindMap {
         selconns.index( i ).alpha = 1.0;
       }
     } else if( _highlighted.size() > 0 ) {
-      _model.highlight_tags( _highlighted );
+      _model.highlight_tags( _highlighted, _highlight_mode );
     }
     queue_draw();
   }

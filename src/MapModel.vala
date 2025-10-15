@@ -685,9 +685,9 @@ public class MapModel {
 
   //-------------------------------------------------------------
   // Highlights all of the tags that contain the given tag.
-  public void highlight_tags( Tags tags ) {
+  public void highlight_tags( Tags tags, TagComboType combo_type ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).highlight_tags( tags );
+      _nodes.index( i ).highlight_tags( tags, combo_type );
     }
     _connections.update_alpha();
   }

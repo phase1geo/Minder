@@ -2633,22 +2633,23 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
-  // Returns true if this node should be highlighted.
-  public bool highlightable( Tags tags ) {
-    var intersect = Tags.intersect( _tags, tags );
-    return( intersect.size() == tags.size() );
+  // Returns true if the given node is highlightable based on its
+  // current tags, the tags selected to highlight and the given
+  // combo type.
+  public bool highlightable( Tags tags, TagComboType combo_type ) {
+    return( combo_type.highlightable( _tags, tags ) );
   }
 
   //-------------------------------------------------------------
   // Checks to see if the current node contains the given tag.
   // If it exists, causes this node to be highlighted.  Performs
   // this procedure recursively.
-  public void highlight_tags( Tags tags ) {
-    if( highlightable( tags ) ) {
+  public void highlight_tags( Tags tags, TagComboType combo_type ) {
+    if( combo_type.highlightable( _tags, tags ) ) {
       set_alpha_only( 1.0 );
     }
     for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).highlight_tags( tags );
+      _children.index( i ).highlight_tags( tags, combo_type );
     }
   }
 
