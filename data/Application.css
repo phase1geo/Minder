@@ -48,3 +48,7 @@
 .shortcut-selected {
   border: 2px solid grey;
 }
+
+.dim-icon {
+  opacity: 0.3;
+}

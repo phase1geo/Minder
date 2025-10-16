@@ -1045,15 +1045,15 @@ public class MindMap {
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).alpha = alpha;
     }
-    if( _focus_mode ) {
+    if( _highlighted.size() > 0 ) {
+      _model.highlight_tags( _highlighted, _highlight_mode );
+    } else if( _focus_mode ) {
       for( int i=0; i<selnodes.length; i++ ) {
         var current = selnodes.index( i );
-        current.highlight_tags( _highlighted, _highlight_mode );
+        current.alpha = 1.0;
         var parent = current.parent;
         while( parent != null ) {
-          if( parent.highlightable( _highlighted, _highlight_mode ) ) {
-            parent.set_alpha_only( 1.0 );
-          }
+          parent.set_alpha_only( 1.0 );
           parent = parent.parent;
         }
       }
@@ -1061,8 +1061,6 @@ public class MindMap {
       for( int i=0; i<selconns.length; i++ ) {
         selconns.index( i ).alpha = 1.0;
       }
-    } else if( _highlighted.size() > 0 ) {
-      _model.highlight_tags( _highlighted, _highlight_mode );
     }
     queue_draw();
   }

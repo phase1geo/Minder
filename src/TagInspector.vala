@@ -27,6 +27,7 @@ public class TagInspector : Box {
 
   private MindMap?  _map = null;
   private TagEditor _editor;
+  private bool      _ignore = false;
 
   public signal void editable_changed();
 
@@ -48,6 +49,43 @@ public class TagInspector : Box {
     _editor.select_changed.connect( tag_select_changed );
     _editor.visible_changed.connect( tag_visible_changed );
 
+    string[] mode_strs = {};
+    for( int i=0; i<TagComboType.NUM; i++ ) {
+      var mode = (TagComboType)i;
+      mode_strs += mode.label();
+    }
+
+    var highlight_mode_lbl = new Label( _( "Highlight Mode" ) ) {
+      halign = Align.START
+    };
+    var highlight_mode = new DropDown.from_strings( mode_strs ) {
+      halign = Align.START
+    };
+    highlight_mode.activate.connect(() => {
+      _map.highlight_mode = (TagComboType)highlight_mode.selected;
+    });
+
+    var highlight_disable = new Button.with_label( _( "End Tag Highlighting" ) ) {
+      halign  = Align.END,
+      hexpand = true
+    };
+    highlight_disable.clicked.connect(() => {
+      _editor.clear_visible();
+      _map.highlighted.clear_tags();
+      enable_highlight_box( false );
+    });
+
+    var highlight_box = new Box( Orientation.HORIZONTAL, 5 ) {
+      visible       = false,
+      margin_top    = 5,
+      margin_bottom = 5,
+    };
+    highlight_box.append( highlight_mode_lbl );
+    highlight_box.append( highlight_mode );
+    highlight_box.append( highlight_disable );
+
+    _editor.content_area.append( highlight_box );
+
     win.canvas_changed.connect( tab_changed );
 
     editable_changed.connect(() => {
@@ -57,6 +95,14 @@ public class TagInspector : Box {
     append( note );
     append( _editor );
 
+  }
+
+  //-------------------------------------------------------------
+  // Sets the highlight box visibility to the given value.
+  private void enable_highlight_box( bool show ) {
+    var box = Utils.get_child_at_index( _editor.content_area, 0 );
+    box.visible = show;
+    _ignore = true;
   }
 
   //-------------------------------------------------------------
@@ -169,9 +215,13 @@ public class TagInspector : Box {
   private void tag_visible_changed( Tag tag, bool visible ) {
     if( visible ) {
       _map.highlighted.add_tag( tag );
+      enable_highlight_box( true );
     } else {
       var index = _map.highlighted.get_tag_index( tag );
       _map.highlighted.remove_tag( index );
+      if( _map.highlighted.size() == 0 ) {
+        enable_highlight_box( false );
+      }
     }
   }
 

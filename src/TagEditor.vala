@@ -55,8 +55,9 @@ public class TagBox : Box {
       modal = true
     };
     var color = new ColorDialogButton( dialog ) {
-      halign = Align.START,
-      rgba   = tag.color,
+      halign       = Align.START,
+      rgba         = tag.color,
+      tooltip_text = _( "Click to change tag color" )
     };
     color.dialog.with_alpha = false;
 
@@ -68,16 +69,19 @@ public class TagBox : Box {
 
     // Add name label
     _name_lbl = new Label( tag.name ) {
-      halign    = Align.START,
-      hexpand   = true,
-      ellipsize = Pango.EllipsizeMode.END
+      halign       = Align.START,
+      hexpand      = true,
+      ellipsize    = Pango.EllipsizeMode.END,
+      tooltip_text = enable_select ? _( "Click to add/remove tag to selected node(s).  Click + Delete to remove node from tag list.  Double-click to rename tag." ) :
+                                     _( "Click + Delete to remove node from tag list.  Double-click to rename tag." )
     };
     var name_click = new GestureClick();
     _name_lbl.add_controller( name_click );
 
     var name_entry = new Entry() {
-      halign  = Align.FILL,
-      hexpand = true
+      halign           = Align.FILL,
+      hexpand          = true,
+      placeholder_text = _( "Enter tag name" )
     };
 
     var name_stack = new Stack() {
@@ -147,9 +151,12 @@ public class TagBox : Box {
     });
 
     var visible_btn = new Button.from_icon_name( "minder-eye-symbolic" ) {
-      halign = Align.END,
-      visible = false
+      halign       = Align.END,
+      visible      = false,
+      tooltip_text = _( "Click to add tag to highlight list" )
     };
+    visible_btn.add_css_class( "dim-icon" );
+
     var visible_box = new Box( Orientation.HORIZONTAL, 0 ) {
       halign = Align.START
     };
@@ -161,8 +168,7 @@ public class TagBox : Box {
 
     visible_btn.clicked.connect(() => {
       if( enable_visible ) {
-        _visible = !_visible;
-        visible_btn.visible = _visible;
+        set_visible( !_visible );
         visible_changed( tag, _visible );
       }
     });
@@ -227,6 +233,26 @@ public class TagBox : Box {
     }
   }
 
+  //-------------------------------------------------------------
+  // Called when the given child changes its visible state.
+  public void set_visible( bool visible ) {
+    var box = Utils.get_child_at_index( this, 1 );
+    var stack = (Stack)Utils.get_child_at_index( box, 2 );
+    if( stack != null ) {
+      var vis_box = stack.visible_child;
+      var vis_btn = Utils.get_child_at_index( vis_box, 0 );
+      _visible = visible;
+      vis_btn.visible = visible;
+      vis_btn.tooltip_text = _visible ? _( "Click to remove tag from highlight" ) :
+                                        _( "Click to add tag to highlight list" );
+      if( visible ) {
+        vis_btn.remove_css_class( "dim-icon" );
+      } else {
+        vis_btn.add_css_class( "dim-icon" );
+      }
+    }
+  }
+
 }
 
 //-------------------------------------------------------------
@@ -240,6 +266,7 @@ public class TagEditor : Box {
   private MainWindow  _win;
   private Tags?       _tags = null;
   private SearchEntry _entry;
+  private Box         _content_area;
   private ListBox     _taglist;
   private Button      _new_label;
   private bool        _draggable  = false;
@@ -256,6 +283,11 @@ public class TagEditor : Box {
         _entry.sensitive = _editable;
         _taglist.sensitive = _editable;
       }
+    }
+  }
+  public Box content_area {
+    get {
+      return( _content_area );
     }
   }
 
@@ -279,7 +311,7 @@ public class TagEditor : Box {
       placeholder_text = _( "Enter name of tag to find or create" ),
       width_chars      = 30,
       margin_top       = 5,
-      margin_bottom    = 10,
+      margin_bottom    = 5,
       margin_start     = 5,
       margin_end       = 5
     };
@@ -290,6 +322,11 @@ public class TagEditor : Box {
       add_new_tag( _entry.text );
       _entry.text = "";
     });
+
+    _content_area = new Box( Orientation.VERTICAL, 5 ) {
+      margin_start = 5,
+      margin_end   = 5
+    };
 
     _taglist = new ListBox() {
       halign          = Align.FILL,
@@ -318,6 +355,7 @@ public class TagEditor : Box {
       valign            = Align.FILL,
       margin_start      = 5,
       margin_end        = 5,
+      margin_top        = 5,
       vexpand           = true,
       child             = _taglist
     };
@@ -332,6 +370,7 @@ public class TagEditor : Box {
     });
 
     append( _entry );
+    append( _content_area );
     append( sw );
 
   }
@@ -531,6 +570,19 @@ public class TagEditor : Box {
       if( tagbox != null ) {
         tagbox.enable_select = _selectable;
         tagbox.set_selected( (tags != null) && tags.contains_tag( tag ) );
+      }
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Clears the visibility indicators on all tags.
+  public void clear_visible() {
+
+    for( int i=0; i<_tags.size(); i++ ) {
+      var tagbox = get_tagbox( _taglist.get_row_at_index( i ) );
+      if( tagbox != null ) {
+        tagbox.set_visible( false );
       }
     }
 
