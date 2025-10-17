@@ -60,6 +60,7 @@ public class TagBox : Box {
       tooltip_text = _( "Click to change tag color" )
     };
     color.dialog.with_alpha = false;
+    color.add_css_class( "frameless" );
 
     color.notify["rgba"].connect(() => {
       var orig_tag = tag.copy();

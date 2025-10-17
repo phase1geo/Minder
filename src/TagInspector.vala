@@ -27,7 +27,7 @@ public class TagInspector : Box {
 
   private MindMap?  _map = null;
   private TagEditor _editor;
-  private bool      _ignore = false;
+  private Box       _highlight_box;
 
   public signal void editable_changed();
 
@@ -49,6 +49,12 @@ public class TagInspector : Box {
     _editor.select_changed.connect( tag_select_changed );
     _editor.visible_changed.connect( tag_visible_changed );
 
+    win.canvas_changed.connect( tab_changed );
+
+    editable_changed.connect(() => {
+      _editor.editable = (_map != null) && _map.editable;
+    });
+
     string[] mode_strs = {};
     for( int i=0; i<TagComboType.NUM; i++ ) {
       var mode = (TagComboType)i;
@@ -61,7 +67,7 @@ public class TagInspector : Box {
     var highlight_mode = new DropDown.from_strings( mode_strs ) {
       halign = Align.START
     };
-    highlight_mode.activate.connect(() => {
+    highlight_mode.notify["selected"].connect(() => {
       _map.highlight_mode = (TagComboType)highlight_mode.selected;
     });
 
@@ -75,34 +81,27 @@ public class TagInspector : Box {
       enable_highlight_box( false );
     });
 
-    var highlight_box = new Box( Orientation.HORIZONTAL, 5 ) {
+    _highlight_box = new Box( Orientation.HORIZONTAL, 5 ) {
+      valign        = Align.END,
       visible       = false,
       margin_top    = 5,
       margin_bottom = 5,
     };
-    highlight_box.append( highlight_mode_lbl );
-    highlight_box.append( highlight_mode );
-    highlight_box.append( highlight_disable );
 
-    _editor.content_area.append( highlight_box );
-
-    win.canvas_changed.connect( tab_changed );
-
-    editable_changed.connect(() => {
-      _editor.editable = (_map != null) && _map.editable;
-    });
+    _highlight_box.append( highlight_mode_lbl );
+    _highlight_box.append( highlight_mode );
+    _highlight_box.append( highlight_disable );
 
     append( note );
     append( _editor );
+    append( _highlight_box );
 
   }
 
   //-------------------------------------------------------------
   // Sets the highlight box visibility to the given value.
   private void enable_highlight_box( bool show ) {
-    var box = Utils.get_child_at_index( _editor.content_area, 0 );
-    box.visible = show;
-    _ignore = true;
+    _highlight_box.visible = show;
   }
 
   //-------------------------------------------------------------

@@ -52,3 +52,10 @@
 .dim-icon {
   opacity: 0.3;
 }
+
+.frameless {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+}

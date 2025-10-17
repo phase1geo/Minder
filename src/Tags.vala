@@ -24,15 +24,17 @@ using Gdk;
 public enum TagComboType {
   AND,
   OR,
+  NONE,
   NUM;
 
   //-------------------------------------------------------------
   // Displays this enumeration as a printable string.
   public string to_string() {
     switch( this ) {
-      case AND :  return( "and" );
-      case OR  :  return( "or" );
-      default  :  assert_not_reached();
+      case AND  :  return( "and" );
+      case OR   :  return( "or" );
+      case NONE :  return( "none" );
+      default   :  assert_not_reached();
     }
   }
 
@@ -40,9 +42,10 @@ public enum TagComboType {
   // Returns the label associated with this TagComboType.
   public string label() {
     switch( this ) {
-      case AND :  return( _( "All" ) );
-      case OR  :  return( _( "Any" ) );
-      default  :  assert_not_reached();
+      case AND  :  return( _( "All" ) );
+      case OR   :  return( _( "Any" ) );
+      case NONE :  return( _( "None" ) );
+      default   :  assert_not_reached();
     }
   }
 
@@ -50,9 +53,10 @@ public enum TagComboType {
   // Parses a given string and returns the associated TagComboType.
   public static TagComboType parse( string val ) {
     switch( val ) {
-      case "and" :  return( AND );
-      case "or"  :  return( OR );
-      default    :  return( AND );
+      case "and"  :  return( AND );
+      case "or"   :  return( OR );
+      case "none" :  return( NONE );
+      default     :  return( AND );
     }
   }
 
@@ -62,9 +66,10 @@ public enum TagComboType {
   public bool highlightable( Tags tags, Tags highlight ) {
     var intersect = Tags.intersect( tags, highlight );
     switch( this ) {
-      case AND :  return( intersect.size() == highlight.size() );
-      case OR  :  return( intersect.size() > 0 );
-      default  :  assert_not_reached();
+      case AND  :  return( intersect.size() == highlight.size() );
+      case OR   :  return( intersect.size() > 0 );
+      case NONE :  return( intersect.size() == 0 );
+      default   :  assert_not_reached();
     }
   }
 

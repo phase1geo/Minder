@@ -528,6 +528,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     map.undo_text.buffer_changed.connect( do_buffer_changed );
     map.theme_changed.connect( on_theme_changed );
     map.editable_changed.connect( on_editable_changed );
+    map.highlighted.changed.connect(() => { on_tag_highlight_changed( map ); });
     map.animator.enable = _settings.get_boolean( "enable-animations" );
 
     if( fname != null ) {
@@ -693,14 +694,16 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Updates the title */
   private void update_title( MindMap? map ) {
     var label = " \u2014 Minder";
-    if( _focus_btn.active ) {
+    if( (map != null) && (map.highlighted.size() > 0) ) {
+      label += " (%s)".printf( _( "Tag Highlight Mode" ) );
+    } else if( _focus_btn.active ) {
       label += " (%s)".printf( _( "Focus Mode" ) );
     }
     if( (map == null) || !map.doc.is_saved() ) {
       label = _( "Unnamed Document" ) + label;
     } else {
       if( map.doc.read_only || !map.editable ) {
-        label += " [%s]%s".printf( _( "Read-Only" ), label );
+        label += " [%s]".printf( _( "Read-Only" ) );
       }
       label = GLib.Path.get_basename( map.doc.filename ) + label;
     }
@@ -1509,6 +1512,12 @@ public class MainWindow : Gtk.ApplicationWindow {
         break;
       }
     }
+    update_title( map );
+  }
+
+  //-------------------------------------------------------------
+  // Handles any changes in the highlight tag mode.
+  private void on_tag_highlight_changed( MindMap map ) {
     update_title( map );
   }
 

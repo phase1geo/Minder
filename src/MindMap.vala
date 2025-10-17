@@ -1039,8 +1039,8 @@ public class MindMap {
   public void update_focus_mode() {
     var selnodes = selected.nodes();
     var selconns = selected.connections();
-    var alpha    = (_focus_mode && ((selnodes.length > 0) || (selconns.length > 0))) ||
-                   (_highlighted.size() > 0) ? _focus_alpha : 1.0;
+    var alpha    = (_highlighted.size() > 0) ||
+                   (_focus_mode && ((selnodes.length > 0) || (selconns.length > 0))) ? _focus_alpha : 1.0;
     var nodes    = _model.get_nodes();
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).alpha = alpha;

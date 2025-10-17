@@ -2671,6 +2671,7 @@ public class Node : Object {
   // that match the given string pattern.
   public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     if( search_opts[SearchOptions.NODES] &&
+        (_alpha == 1.0) &&
         (((((_task_count == 0) || !is_leaf()) && search_opts[SearchOptions.NONTASKS]) ||
           ((_task_count != 0) && is_leaf()   && search_opts[SearchOptions.TASKS])) &&
          (((parent != null) && parent.folded && search_opts[SearchOptions.FOLDED]) ||
