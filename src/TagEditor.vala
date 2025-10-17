@@ -44,7 +44,7 @@ public class TagBox : Box {
 
   //-------------------------------------------------------------
   // Constructor
-  public TagBox( Tag tag ) {
+  public TagBox( TagEditor editor, Tag tag ) {
 
     Object( orientation: Orientation.HORIZONTAL, spacing: 5 );
 
@@ -151,7 +151,7 @@ public class TagBox : Box {
       }
     });
 
-    var visible_btn = new Button.from_icon_name( "minder-eye-symbolic" ) {
+    var visible_btn = new Button.from_icon_name( "minder-eye-light-symbolic" ) {
       halign       = Align.END,
       visible      = false,
       tooltip_text = _( "Click to add tag to highlight list" )
@@ -220,6 +220,10 @@ public class TagBox : Box {
     append( color );
     append( box );
 
+    editor.update_icons.connect(() => {
+      visible_btn.icon_name = Utils.use_dark_mode( visible_btn ) ? "minder-eye-dark-symbolic" : "minder-eye-light-symbolic";
+    });
+
   }
 
   //-------------------------------------------------------------
@@ -267,7 +271,6 @@ public class TagEditor : Box {
   private MainWindow  _win;
   private Tags?       _tags = null;
   private SearchEntry _entry;
-  private Box         _content_area;
   private ListBox     _taglist;
   private Button      _new_label;
   private bool        _draggable  = false;
@@ -286,17 +289,13 @@ public class TagEditor : Box {
       }
     }
   }
-  public Box content_area {
-    get {
-      return( _content_area );
-    }
-  }
 
   public signal void tag_changed( Tag tag, Tag orig_tag );
   public signal void tag_added( Tag tag );
   public signal void tag_removed( Tag tag, int index );
   public signal void select_changed( Tag tag, bool select );
   public signal void visible_changed( Tag tag, bool visible );
+  public signal void update_icons();
 
   //-------------------------------------------------------------
   // Constructor.
@@ -323,11 +322,6 @@ public class TagEditor : Box {
       add_new_tag( _entry.text );
       _entry.text = "";
     });
-
-    _content_area = new Box( Orientation.VERTICAL, 5 ) {
-      margin_start = 5,
-      margin_end   = 5
-    };
 
     _taglist = new ListBox() {
       halign          = Align.FILL,
@@ -371,7 +365,6 @@ public class TagEditor : Box {
     });
 
     append( _entry );
-    append( _content_area );
     append( sw );
 
   }
@@ -444,7 +437,7 @@ public class TagEditor : Box {
   // stores tag list and to the listbox.
   private void add_tag( Tag tag, int pos ) {
 
-    var tagbox = new TagBox( tag );
+    var tagbox = new TagBox( this, tag );
     tagbox.enable_select  = _selectable;
     tagbox.enable_visible = _draggable;
 

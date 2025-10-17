@@ -55,7 +55,8 @@
     <file alias="minder-search.svg">icons/scalable/minder-search.svg</file>
     <file alias="minder-braindump-light-symbolic.svg">icons/scalable/minder-braindump-light-symbolic.svg</file>
     <file alias="minder-braindump-dark-symbolic.svg">icons/scalable/minder-braindump-dark-symbolic.svg</file>
-    <file alias="minder-eye-symbolic.svg">icons/scalable/minder-eye-symbolic.svg</file>
+    <file alias="minder-eye-light-symbolic.svg">icons/scalable/minder-eye-light-symbolic.svg</file>
+    <file alias="minder-eye-dark-symbolic.svg">icons/scalable/minder-eye-dark-symbolic.svg</file>
 
     <file alias="data_encryption">icons/flat-color-icons/svg/data_encryption.svg</file>
     <file alias="factory_breakdown">icons/flat-color-icons/svg/factory_breakdown.svg</file>

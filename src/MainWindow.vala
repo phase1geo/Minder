@@ -1493,6 +1493,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _prop_btn.icon_name  = use_dark_mode ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
     (_stack.get_child_by_name( "current" ) as CurrentInspector).update_icons();
     (_stack.get_child_by_name( "style" )   as StyleInspector).update_icons();
+    (_stack.get_child_by_name( "tag" )     as TagInspector).update_icons();
     (_stack.get_child_by_name( "map" )     as MapInspector).update_icons();
   }
 
