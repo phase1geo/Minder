@@ -40,7 +40,8 @@ public enum MapItemComponent {
   LINK,
   TASK,
   FOLD,
-  RESIZER;
+  RESIZER,
+  TAGS;
 
   //-------------------------------------------------------------
   // Returns true if this component is a connection handle.
@@ -1268,6 +1269,8 @@ public class MapModel {
           component = MapItemComponent.IMAGE;
         } else if( node.is_within_resizer( x, y ) ) {
           component = MapItemComponent.RESIZER;
+        } else if( node.is_within_tags( x, y ) ) {
+          component = MapItemComponent.TAGS;
         }
         return( node );
       }

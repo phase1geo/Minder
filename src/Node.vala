@@ -1261,6 +1261,17 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns the positional information for all of the tags.
+  protected virtual void tags_bbox( out double x, out double y, out double w, out double h ) {
+    tag_bbox( 0, out x, out y, out w, out h );
+    if( _tags.size() > 1 ) {
+      double bx, by, bw, bh;
+      tag_bbox( (_tags.size() - 1), out bx, out by, out bw, out bh );
+      w = (bx + bw);
+    }
+  }
+
+  //-------------------------------------------------------------
   // Returns true if the given cursor coordinates lies within the
   // task checkbutton area.
   public virtual bool is_within_task( double x, double y ) {
@@ -1341,6 +1352,18 @@ public class Node : Object {
       double rx, ry, rw, rh;
       resizer_bbox( out rx, out ry, out rw, out rh );
       return( Utils.is_within_bounds( x, y, rx, ry, rw, rh ) );
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lie within the
+  // tags area.
+  public virtual bool is_within_tags( double x, double y ) {
+    if( _tags.size() > 0 ) {
+      double tx, ty, tw, th;
+      tags_bbox( out tx, out ty, out tw, out th );
+      return( Utils.is_within_bounds( x, y, tx, ty, tw, th ) );
     }
     return( false );
   }
@@ -2054,7 +2077,7 @@ public class Node : Object {
   // Returns the total width of the tag indicators.
   public double tags_width() {
     var num_tags = _tags.size();
-    return( (num_tags == 0) ? 0 : ((num_tags * 10) + ((num_tags - 1) * 5)) );
+    return( (num_tags == 0) ? 0 : ((num_tags * 12) + ((num_tags - 1) * 5)) );
   }
 
   //-------------------------------------------------------------

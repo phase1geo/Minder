@@ -124,6 +124,14 @@ public class Tag : Object {
     }
   }
 
+  //-------------------------------------------------------------
+  // Returns this tag as a markup tooltip.
+  public string to_tooltip() {
+    var bgcolor = Utils.color_from_rgba( color );
+    var fgcolor = Utils.color_from_rgba( Granite.contrasting_foreground_color( color ) );
+    return( "<span background='%s' foreground='%s'> %s </span> ".printf( bgcolor, fgcolor, Markup.escape_text( name ) ) );
+  }
+
 }
 
 //-------------------------------------------------------------
@@ -304,6 +312,17 @@ public class Tags {
       parts += get_tag( i ).name;
     }
     return( string.joinv( ",", parts ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the list of strings as a tooltip.
+  public string to_tooltip() {
+    var str = "";
+    for( int i=0; i<_tags.length; i++ ) {
+      var tag = _tags.index( i );
+      str += tag.to_tooltip();
+    }
+    return( str );
   }
 
   //-------------------------------------------------------------

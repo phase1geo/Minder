@@ -506,6 +506,9 @@ public class DrawArea : Gtk.DrawingArea {
           return( false );
         }
         break;
+      case MapItemComponent.TAGS :
+        _map.show_properties( "tag", PropertyGrab.FIRST );
+        break;
     }
 
     _orig_side = node.side;
@@ -1444,6 +1447,9 @@ public class DrawArea : Gtk.DrawingArea {
               set_tooltip_markup( _( "Drag to resize node and image.\nControl-drag to resize only node." ) );
             }
           }
+        } else if( component == MapItemComponent.TAGS ) {
+          set_cursor_name( pointer_cursor );
+          set_tooltip_markup( match_node.tags.to_tooltip() );
         } else if( _control && match_node.name.is_within_clickable( _scaled_x, _scaled_y, out tag, out url ) ) {
           if( tag == FormatTag.URL ) {
             set_cursor_name( pointer_cursor );
@@ -2072,7 +2078,6 @@ public class DrawArea : Gtk.DrawingArea {
     if( (node != null) && (node.mode == NodeMode.DROPPABLE) ) {
       node.add_tag( tag );
       if( _map.select_node( node ) ) {
-        stdout.printf( "Node selected\n" );
         queue_draw();
         _map.auto_save();
       }
