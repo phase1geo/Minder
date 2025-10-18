@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16" height="16" viewBox="0 0 16 16"
+     xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" fill-rule="evenodd">
+    <path class="outer" fill="#fff"
+          d="M8 3.5c3.665 0 6.639 2.644 7.54 4.5C14.639 10.356 11.665 13 8 13s-6.639-2.644-7.54-4.5C1.361 6.144 4.335 3.5 8 3.5z"/>
+    <path class="inner" fill="#000"
+          d="M8 5.5c1.933 0 3.5 1.567 3.5 3.5S9.933 12.5 8 12.5 4.5 10.933 4.5 9 6.067 5.5 8 5.5z"/>
+    <circle class="center" fill="#fff"
+            cx="8" cy="9" r="1.5"/>
+  </g>
+</svg>

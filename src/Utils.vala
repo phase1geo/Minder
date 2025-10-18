@@ -458,4 +458,60 @@ public class Utils {
 
   }
 
+  //-------------------------------------------------------------
+  // Compares to version strings.  Returns 0 if they match, returns
+  // -1 if version A is less than version B, or returns 1 if version A
+  // is less than version B.
+  public static int compare_versions( string a, string b ) {
+
+    string[] parts_a = a.split( "." );
+    string[] parts_b = b.split( "." );
+
+    int len = int.max( parts_a.length, parts_b.length );
+
+    for( int i=0; i<len; i++ ) {
+      // Missing parts are treated as 0
+      int val_a = (i < parts_a.length) ? int.parse( parts_a[i] ) : 0;
+      int val_b = (i < parts_b.length) ? int.parse( parts_b[i] ) : 0;
+
+      if (val_a < val_b) {
+        return -1;
+      } else if (val_a > val_b) {
+        return 1;
+      }
+    }
+
+    return 0;
+
+  }
+
+  //-------------------------------------------------------------
+  // Causes the given switcher to adjust tab widths to be the same
+  // based on the largest tab.
+  public static void set_switcher_tab_widths( StackSwitcher switcher ) {
+
+    Widget child;
+    var    i = 0;
+    uint   max_width = 0;
+    int    min, nat, min_bl, nat_bl;
+
+    // Force creation of child buttons
+    switcher.show ();
+
+    child = Utils.get_child_at_index( switcher, i++ );
+    while( child != null ) {
+      child.measure( Orientation.HORIZONTAL, -1, out min, out nat, out min_bl, out nat_bl );
+      max_width = uint.max( max_width, (uint)nat );
+      child     = Utils.get_child_at_index( switcher, i++ );
+    }
+
+    i     = 0;
+    child = Utils.get_child_at_index( switcher, i++ );
+    while( child != null ) {
+      child.set_size_request( (int)max_width, -1 );
+      child = Utils.get_child_at_index( switcher, i++ );
+    }
+
+  }
+
 }

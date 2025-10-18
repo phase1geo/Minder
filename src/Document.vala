@@ -89,8 +89,10 @@ public class Document : Object {
   private string  _temp_dir;
   private bool    _from_user;  // Set to true if _filename was set by the user
   private string  _etag;
-  private bool    _upgrade_ro = false;
-  private bool    _read_only  = false;
+  private bool    _upgrade_ro   = false;
+  private bool    _save_needed  = false;
+  private bool    _read_only    = false;
+  private string  _load_version = "";  
 
   /* Properties */
   public string filename {
@@ -107,23 +109,33 @@ public class Document : Object {
       return( _filename );
     }
   }
+  public string load_version {
+    get {
+      return( _load_version );
+    }
+  }
   public string label {
     owned get {
       return( GLib.Path.get_basename( _filename ) );
     }
   }
-  public bool save_needed { private set; get; default = false; }
+  public bool save_needed {
+    get {
+      return( _save_needed );
+    }
+  }
   public bool read_only {
     get {
       var prev_read_only = _read_only;
       _read_only = Utils.is_read_only( _filename );
-      if( save_needed && prev_read_only && !_read_only && !_upgrade_ro ) {
+      if( _save_needed && prev_read_only && !_read_only && !_upgrade_ro ) {
         save();
       }
       return( _read_only || _upgrade_ro );
     }
   }
 
+  public signal void save_changed();
   public signal void read_only_changed();
 
   //-------------------------------------------------------------
@@ -163,8 +175,12 @@ public class Document : Object {
   // Called whenever the canvas changes such that a save will be
   // needed
   private void canvas_changed() {
-    save_needed = true;
+    var call_save_changed = !_save_needed;
+    _save_needed = true;
     auto_save();
+    if( call_save_changed ) {
+      save_changed();
+    }
   }
 
   //-------------------------------------------------------------
@@ -270,14 +286,8 @@ public class Document : Object {
   //-------------------------------------------------------------
   // Reads the stored etag attribute from the given XML document
   private string get_etag( Xml.Doc* doc ) {
-    for (Xml.Attr* prop = doc->get_root_element()->properties; prop != null; prop = prop->next) {
-      string attr_name = prop->name;
-      if( attr_name != "etag" ) {
-        continue;
-      }
-      return prop->children->content;
-    }
-    return "";
+    var e = doc->get_root_element()->get_prop( "etag" );
+    return( (e == null) ? "" : e );
   }
 
   //-------------------------------------------------------------
@@ -291,6 +301,11 @@ public class Document : Object {
 
     // Load Etag
     _etag = get_etag( doc );
+
+    var v = doc->get_root_element()->get_prop( "version" );
+    if( v != null ) {
+      _load_version = v;
+    }
 
     // Load document
     _map.model.load( doc->get_root_element() );
@@ -315,6 +330,8 @@ public class Document : Object {
 
     var bak_file = get_bak_file();
     var fname    = (FileUtils.test( bak_file, FileTest.EXISTS ) && !_map.settings.get_boolean( "keep-backup-after-save" )) ? bak_file : filename;
+
+    // stdout.printf( "Loading fname: %s, temp: %s\n", fname, _temp_dir );
 
     Archive.Read archive = new Archive.Read();
     archive.support_filter_gzip();
@@ -505,9 +522,10 @@ public class Document : Object {
     var upgrade_ro = _upgrade_ro;
 
     // Indicate that a save is no longer needed
-    save_needed = false;
+    _save_needed = false;
     _upgrade_ro = false;
     read_only_changed();
+    save_changed();
 
     return( true );
 
@@ -746,7 +764,7 @@ public class Document : Object {
   public void cleanup() {
 
     // Force the save to occur
-    if( save_needed ) {
+    if( _save_needed ) {
       save_xml();
       save();
     }

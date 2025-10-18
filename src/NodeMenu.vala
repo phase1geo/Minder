@@ -47,7 +47,8 @@ public class NodeMenu : BaseMenu {
 
     _change_submenu = new GLib.Menu();
     append_menu_item( _change_submenu, KeyCommand.EDIT_SELECTED,       _( "Edit Text…" ) );
-    append_menu_item( _change_submenu, KeyCommand.EDIT_NOTE,           _( "Edit Note" ) );
+    append_menu_item( _change_submenu, KeyCommand.EDIT_NOTE,           _( "Edit Note" ), false );
+    append_menu_item( _change_submenu, KeyCommand.SHOW_TAG_SIDEBAR,    _( "Edit Tags" ), false );
     append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_TASK,    _( "Add Task" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_IMAGE,   _( "Add Image" ) );
     append_menu_item( _change_submenu, KeyCommand.REMOVE_STICKER_SELECTED, _( "Remove Sticker" ) );
@@ -69,8 +70,8 @@ public class NodeMenu : BaseMenu {
     append_menu_item( add_submenu, KeyCommand.NODE_ADD_SIBLING_AFTER, _( "Add Sibling Node" ) );
 
     var quick_menu = new GLib.Menu();
-    append_menu_item( quick_menu, KeyCommand.NODE_QUICK_ENTRY_INSERT,  _( "Insert Nodes" ) );
-    append_menu_item( quick_menu, KeyCommand.NODE_QUICK_ENTRY_REPLACE, _( "Replace Nodes" ) );
+    append_menu_item( quick_menu, KeyCommand.NODE_QUICK_ENTRY_INSERT,  _( "Insert Nodes" ), false );
+    append_menu_item( quick_menu, KeyCommand.NODE_QUICK_ENTRY_REPLACE, _( "Replace Nodes" ), false );
 
     var add_menu = new GLib.Menu();
     add_menu.append_submenu( _( "Add Node" ), add_submenu );

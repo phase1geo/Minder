@@ -196,7 +196,7 @@ public class StyleInspector : Box {
 
     var sep = new Separator( Orientation.HORIZONTAL );
 
-    var box = new Box( Orientation.VERTICAL, 10 );
+    var box = new Box( Orientation.VERTICAL, 5 );
     box.append( exp );
     box.append( sep );
 
@@ -278,7 +278,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the branch radius value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the branch radius value is changed
   private bool branch_radius_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 40 ) {
@@ -318,7 +319,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the node margin value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the node margin value is changed
   private bool branch_margin_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 150 ) {
@@ -334,14 +336,15 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  /* Adds the options to manipulate line options */
+  //-------------------------------------------------------------
+  // Adds the options to manipulate line options
   private Box create_link_ui() {
 
     var link_dash  = create_link_dash_ui();
     var link_width = create_link_width_ui();
     var link_arrow = create_link_arrow_ui();
 
-    var cbox = new Box( Orientation.VERTICAL, 10 ) {
+    var cbox = new Box( Orientation.VERTICAL, 0 ) {
       homogeneous   = true,
       margin_start  = 10,
       margin_end    = 10,
@@ -372,7 +375,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Create the link dash widget */
+  //-------------------------------------------------------------
+  // Create the link dash widget
   private Box create_link_dash_ui() {
 
     var lbl = new Label( _( "Line Dash" ) ) {
@@ -411,7 +415,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Create widget for handling the width of a link */
+  //-------------------------------------------------------------
+  // Create widget for handling the width of a link
   private Box create_link_width_ui() {
 
     var lbl = new Label( _( "Line Width" ) ) {
@@ -445,7 +450,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the user changes the link width value */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the link width value
   private bool link_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
     var int_value  = (int)value;
@@ -459,7 +465,8 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  /* Creates the link arrow UI element */
+  //-------------------------------------------------------------
+  // Creates the link arrow UI element
   private Box create_link_arrow_ui() {
 
     var lbl = new Label( _( "Link Arrow" ) ) {
@@ -482,7 +489,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called when the user clicks on the link arrow switch */
+  //-------------------------------------------------------------
+  // Called when the user clicks on the link arrow switch
   private void link_arrow_changed() {
     if( !_ignore ) {
       bool val = _link_arrow.get_active();
@@ -490,7 +498,8 @@ public class StyleInspector : Box {
     }
   }
 
-  /* Creates the options to manipulate node options */
+  //-------------------------------------------------------------
+  // Creates the options to manipulate node options
   private Box create_node_ui() {
 
     var node_border      = create_node_border_ui();
@@ -503,7 +512,7 @@ public class StyleInspector : Box {
     var node_width       = create_node_width_ui();
     var node_markup      = create_node_markup_ui();
 
-    var cbox = new Box( Orientation.VERTICAL, 10 ) {
+    var cbox = new Box( Orientation.VERTICAL, 0 ) {
       homogeneous   = true,
       margin_start  = 10,
       margin_end    = 10,
@@ -540,7 +549,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Creates the node border panel */
+  //-------------------------------------------------------------
+  // Creates the node border panel
   private Box create_node_border_ui() {
 
     var lbl = new Label( _( "Border Style" ) ) {
@@ -572,7 +582,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the user changes the current layout */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the current layout
   private void set_node_border( int index ) {
     var node_borders = styles.get_node_borders();
     if( index < node_borders.length ) {
@@ -580,7 +591,8 @@ public class StyleInspector : Box {
     }
   }
 
-  /* Create widget for handling the width of a link */
+  //-------------------------------------------------------------
+  // Create widget for handling the width of a link
   private Box create_node_borderwidth_ui() {
 
     var lbl = new Label( _( "Border Width" ) ) {
@@ -614,7 +626,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the user changes the link width value */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the link width value
   private bool node_borderwidth_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     var borderwidth = new UndoStyleNodeBorderwidth( _affects, intval, _map );
@@ -627,7 +640,8 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  /* Create the node fill UI */
+  //-------------------------------------------------------------
+  // Create the node fill UI
   private Box create_node_fill_ui() {
 
     var lbl = new Label( _( "Color Fill") ) {
@@ -651,7 +665,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the node fill status changes */
+  //-------------------------------------------------------------
+  // Called whenever the node fill status changes
   private void node_fill_changed() {
     if( !_ignore ) {
       bool val = _node_fill.get_active();
@@ -659,7 +674,8 @@ public class StyleInspector : Box {
     }
   }
 
-  /* Allows the user to change the node margin */
+  //-------------------------------------------------------------
+  // Allows the user to change the node margin
   private Box create_node_margin_ui() {
 
     var lbl = new Label( _( "Margin" ) ) {
@@ -684,7 +700,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the node margin value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the node margin value is changed
   private bool node_margin_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 20 ) {
@@ -700,7 +717,8 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  /* Allows the user to change the node padding */
+  //-------------------------------------------------------------
+  // Allows the user to change the node padding
   private Box create_node_padding_ui() {
 
     var lbl = new Label( _( "Padding" ) ) {
@@ -725,7 +743,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the node margin value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the node margin value is changed
   private bool node_padding_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 20 ) {
@@ -741,7 +760,8 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  /* Creates the node font selector */
+  //-------------------------------------------------------------
+  // Creates the node font selector
   private Box create_node_font_ui() {
 
     var lbl = new Label( _( "Font" ) ) {
@@ -754,7 +774,7 @@ public class StyleInspector : Box {
     _node_font = new FontDialogButton( font_dialog ) {
       valign   = Align.CENTER,
       use_font = true,
-      use_size = true
+      use_size = false
     };
     var font_filter = new CustomFilter((obj) => {
       var font_face = (obj as Pango.FontFace);
@@ -767,7 +787,7 @@ public class StyleInspector : Box {
       return( false );
     });
     font_dialog.set_filter( font_filter );
-    _node_font.notify["font_desc"].connect(() => {
+    _node_font.notify["font-desc"].connect(() => {
       var family = _node_font.font_desc.get_family();
       var size   = _node_font.font_desc.get_size();
       _map.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _map ) );
@@ -895,7 +915,7 @@ public class StyleInspector : Box {
     var conn_text_align = create_connection_text_align_ui();
     var conn_twidth     = create_connection_title_width_ui();
 
-    var cbox = new Box( Orientation.VERTICAL, 10 ) {
+    var cbox = new Box( Orientation.VERTICAL, 0 ) {
       homogeneous   = true,
       margin_start  = 10,
       margin_end    = 10,
@@ -1111,7 +1131,7 @@ public class StyleInspector : Box {
     _conn_font = new FontDialogButton( font_dialog ) {
       valign   = Align.CENTER,
       use_font = true,
-      use_size = true
+      use_size = false
     };
     var font_filter = new CustomFilter((obj) => {
       var font_face = (obj as Pango.FontFace);
@@ -1124,9 +1144,9 @@ public class StyleInspector : Box {
       return( false );
     });
     font_dialog.set_filter( font_filter );
-    _conn_font.notify["font_desc"].connect(() => {
-      var family = _node_font.font_desc.get_family();
-      var size   = _node_font.font_desc.get_size();
+    _conn_font.notify["font-desc"].connect(() => {
+      var family = _conn_font.font_desc.get_family();
+      var size   = _conn_font.font_desc.get_size();
       _map.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _map ) );
     });
 
@@ -1217,7 +1237,7 @@ public class StyleInspector : Box {
     var callout_pwidth     = create_callout_pointer_width_ui();
     var callout_plength    = create_callout_pointer_length_ui();
 
-    var cbox = new Box( Orientation.VERTICAL, 10 ) {
+    var cbox = new Box( Orientation.VERTICAL, 0 ) {
       homogeneous   = true,
       margin_start  = 10,
       margin_end    = 10,
@@ -1243,7 +1263,7 @@ public class StyleInspector : Box {
 
     var sep = new Separator( Orientation.HORIZONTAL );
 
-    var box = new Box( Orientation.VERTICAL, 0 );
+    var box = new Box( Orientation.VERTICAL, 5 );
     box.append( _callout_exp );
     box.append( sep );
 
@@ -1264,7 +1284,7 @@ public class StyleInspector : Box {
     _callout_font = new FontDialogButton( font_dialog ) {
       valign   = Align.CENTER,
       use_font = true,
-      use_size = true
+      use_size = false
     };
     var font_filter = new CustomFilter((obj) => {
       var font_face = (obj as Pango.FontFace);
@@ -1277,10 +1297,10 @@ public class StyleInspector : Box {
       return( false );
     });
     font_dialog.set_filter( font_filter );
-    _callout_font.notify["font_desc"].connect(() => {
-      var family = _node_font.font_desc.get_family();
-      var size   = _node_font.font_desc.get_size();
-      _map.undo_buffer.add_item( new UndoStyleCalloutFont( _affects, family, size, _map ) );
+    _callout_font.notify["font-desc"].connect(() => {
+      var family = _callout_font.font_desc.get_family();
+      var size   = _callout_font.font_desc.get_size();
+      _map.add_undo( new UndoStyleCalloutFont( _affects, family, size, _map ) );
     });
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1330,7 +1350,8 @@ public class StyleInspector : Box {
     }
   }
 
-  /* Allows the user to change the callout padding */
+  //-------------------------------------------------------------
+  // Allows the user to change the callout padding
   private Box create_callout_padding_ui() {
 
     var lbl = new Label( _( "Padding" ) ) {
@@ -1356,7 +1377,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the callout padding value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the callout padding value is changed
   private bool callout_padding_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 20 ) {
@@ -1372,7 +1394,8 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  /* Allows the user to change the callout padding */
+  //-------------------------------------------------------------
+  // Allows the user to change the callout padding
   private Box create_callout_pointer_width_ui() {
 
     var lbl = new Label( _( "Pointer Width" ) ) {
@@ -1398,7 +1421,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the callout padding value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the callout padding value is changed
   private bool callout_pointer_width_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 30 ) {
@@ -1414,7 +1438,8 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  /* Allows the user to change the callout padding */
+  //-------------------------------------------------------------
+  // Allows the user to change the callout padding
   private Box create_callout_pointer_length_ui() {
 
     var lbl = new Label( _( "Pointer Length" ) ) {
@@ -1440,7 +1465,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the callout padding value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the callout padding value is changed
   private bool callout_pointer_length_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 100 ) {
@@ -1456,7 +1482,8 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  /* Sets the affects value and save the change to the settings */
+  //-------------------------------------------------------------
+  // Sets the affects value and save the change to the settings
   private void set_affects( StyleAffects affects ) {
     var selected         = _map.selected;
     _affects             = affects;
@@ -1501,7 +1528,9 @@ public class StyleInspector : Box {
     }
   }
 
-  /* Checks the nodes in the given tree at the specified level to see if there are any non-leaf nodes */
+  //-------------------------------------------------------------
+  // Checks the nodes in the given tree at the specified level to
+  // see if there are any non-leaf nodes.
   private bool check_level_for_branches( Node node, int levels, int level ) {
     if( (levels & (1 << level)) != 0 ) {
       return( !node.is_leaf() );
@@ -1515,7 +1544,9 @@ public class StyleInspector : Box {
     }
   }
 
-  /* We need to disable the link types widget if our affected nodes are leaf nodes only */
+  //-------------------------------------------------------------
+  // We need to disable the link types widget if our affected
+  // nodes are leaf nodes only.
   private void update_link_types_state() {
     bool sensitive = false;
     switch( _affects ) {
@@ -1699,7 +1730,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the current node changes */
+  //-------------------------------------------------------------
+  // Called whenever the current node changes
   private void handle_current_changed() {
     if( _map.get_current_node() != null ) {
       update_ui_with_style( _map.get_current_node().style );
@@ -1711,7 +1743,8 @@ public class StyleInspector : Box {
     handle_ui_changed();
   }
 
-  /* Called whenever the current node or connection changes */
+  //-------------------------------------------------------------
+  // Called whenever the current node or connection changes
   private void handle_ui_changed() {
     var selected = _map.selected;
     if( selected.num_nodes() > 0 ) {
@@ -1725,7 +1758,8 @@ public class StyleInspector : Box {
     }
   }
 
-  /* Grabbing focus on the first UI element */
+  //-------------------------------------------------------------
+  // Grabbing focus on the first UI element
   public void grab_first() {
     _link_types.grab_focus();
   }

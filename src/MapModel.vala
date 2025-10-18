@@ -40,7 +40,8 @@ public enum MapItemComponent {
   LINK,
   TASK,
   FOLD,
-  RESIZER;
+  RESIZER,
+  TAGS;
 
   //-------------------------------------------------------------
   // Returns true if this component is a connection handle.
@@ -70,6 +71,7 @@ public class MapModel {
   private bool          _hide_callouts  = false;
   private Array<string> _braindump;
   private bool          _modifiable     = true;
+  private Tags          _tags;
 
   public Layouts        layouts         { set; get; default = new Layouts(); }
   public ImageManager   image_manager   { set; get; default = new ImageManager(); }
@@ -162,6 +164,11 @@ public class MapModel {
       _last_node = value;
     }
   }
+  public Tags tags {
+    get {
+      return( _tags );
+    }
+  }
 
   public signal void changed();
   public signal void current_changed();
@@ -192,6 +199,9 @@ public class MapModel {
 
     // Create the braindump list
     _braindump = new Array<string>();
+
+    // Create that mindmap tags
+    _tags = new Tags();
 
     /* Set the theme to the default theme */
     set_theme( _map.win.themes.get_theme( _map.settings.get_string( "default-theme" ) ), false );
@@ -381,6 +391,7 @@ public class MapModel {
           case "theme"       :  load_theme( it );   break;
           case "layout"      :  load_layout( it, ref use_layout );  break;
           case "styles"      :  StyleInspector.styles.load( it );  break;
+          case "tags"        :  _tags.load( it );  break;
           case "images"      :  image_manager.load( it );  break;
           case "connections" :  _connections.load( _map, it, null, _nodes );  break;
           case "groups"      :  groups.load( _map, it, null, _nodes );  break;
@@ -443,6 +454,8 @@ public class MapModel {
     Xml.Node* images = new Xml.Node( null, "images" );
     image_manager.save( images );
     parent->add_child( images );
+
+    parent->add_child( _tags.save() );
 
     Xml.Node* nodes = new Xml.Node( null, "nodes" );
     for( int i=0; i<_nodes.length; i++ ) {
@@ -660,6 +673,24 @@ public class MapModel {
       _map.animator.animate();
       auto_save();
     }
+  }
+
+  //-------------------------------------------------------------
+  // Removes the given tag from all nodes containing it.  Returns
+  // the list of affected nodes.
+  public void remove_tag( Tag tag, Array<Node> nodes ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).remove_tag( tag, nodes );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Highlights all of the tags that contain the given tag.
+  public void highlight_tags( Tags tags, TagComboType combo_type ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).highlight_tags( tags, combo_type );
+    }
+    _connections.update_alpha();
   }
 
   //-------------------------------------------------------------
@@ -974,12 +1005,14 @@ public class MapModel {
   //-------------------------------------------------------------
   // Called when the linking process has successfully completed
   public void end_link( Node node ) {
-    if( _map.selected.num_connections() == 0 ) return;
+    var connection = _map.get_current_connection();
+    if( connection == null ) return;
+    connection.disconnect_node( _last_node );
     _map.selected.clear_connections();
     _last_node.linked_node = new NodeLink( node );
     _map.add_undo( new UndoNodeLink( _last_node, null ) );
     _map.canvas.last_connection = null;
-    _last_node          = null;
+    _last_node = null;
     set_attach_node( null );
     auto_save();
     queue_draw();
@@ -1236,6 +1269,8 @@ public class MapModel {
           component = MapItemComponent.IMAGE;
         } else if( node.is_within_resizer( x, y ) ) {
           component = MapItemComponent.RESIZER;
+        } else if( node.is_within_tags( x, y ) ) {
+          component = MapItemComponent.TAGS;
         }
         return( node );
       }
@@ -2878,21 +2913,29 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
-  // Returns the droppable node or connection if one is found.
-  public void get_droppable( double x, double y, out Node? node, out Connection? conn, out Sticker? sticker ) {
-    node = null;
-    conn = null;
+  // Returns the droppable node, if one exists; otherwise, returns
+  // null.
+  public Node? get_droppable_node( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      Node tmp = _nodes.index( i ).contains( x, y, null );
-      if( tmp != null ) {
-        node = tmp;
-        return;
+      var node = _nodes.index( i ).contains( x, y, null );
+      if( node != null ) {
+        return( node );
       }
     }
+    return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the droppable node or connection if one is found.
+  public void get_droppable( double x, double y, out Node? node, out Connection? conn, out Sticker? sticker ) {
+    conn    = null;
+    sticker = null;
+    node    = get_droppable_node( x, y );
+    if( node != null ) return;
     conn = _connections.within_title_box( x, y );
-    if( conn == null ) {
-      conn = _connections.on_curve( x, y );
-    }
+    if( conn != null ) return;
+    conn = _connections.on_curve( x, y );
+    if( conn != null ) return;
     sticker = _stickers.is_within( x, y );
   }
 

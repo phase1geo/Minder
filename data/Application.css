@@ -48,3 +48,14 @@
 .shortcut-selected {
   border: 2px solid grey;
 }
+
+.dim-icon {
+  opacity: 0.3;
+}
+
+.frameless {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+}

@@ -40,6 +40,7 @@ public class NodesMenu : BaseMenu {
     append_menu_item( color_menu, KeyCommand.NODE_REPARENT_LINK_COLOR,  _( "Use Parent Color" ) );
 
     var change_menu = new GLib.Menu();
+    append_menu_item( change_menu, KeyCommand.SHOW_TAG_SIDEBAR,          _( "Edit Tags" ), false );
     change_menu.append_submenu( _( "Link Colors" ), color_menu );
     append_menu_item( change_menu, KeyCommand.NODE_CHANGE_TASK,          _( "Toggle Tasks" ) );
     append_menu_item( change_menu, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, _( "Toggle Folds" ) );

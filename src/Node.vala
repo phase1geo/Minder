@@ -248,6 +248,7 @@ public class Node : Object {
   private   SequenceNum  _sequence_num   = null;
   private   Callout?     _callout        = null;
   private   bool         _sequence       = false;
+  private   Tags         _tags;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -563,6 +564,11 @@ public class Node : Object {
       }
     }
   }
+  public Tags tags {
+    get {
+      return( _tags );
+    }
+  }
 
   //-------------------------------------------------------------
   // Default constructor.
@@ -574,6 +580,7 @@ public class Node : Object {
     _layout    = layout;
     _name      = new CanvasText( map );
     _name.resized.connect( position_text_and_update_size );
+    _tags      = new Tags();
     set_parsers();
   }
 
@@ -587,6 +594,7 @@ public class Node : Object {
     _layout    = layout;
     _name      = new CanvasText.with_text( map, n );
     _name.resized.connect( position_text_and_update_size );
+    _tags      = new Tags();
     set_parsers();
   }
 
@@ -599,6 +607,7 @@ public class Node : Object {
     _layout    = layout;
     _name      = new CanvasText.with_text( map, "" );
     _name.resized.connect( position_text_and_update_size );
+    _tags      = new Tags();
     set_parsers();
     siblings.append_val( this );
     load( map, n, isroot, sibling_parent, ref siblings );
@@ -612,6 +621,7 @@ public class Node : Object {
     _children  = n._children;
     _tree_bbox = new NodeBounds( map );
     _name      = new CanvasText( map );
+    _tags      = new Tags();
     copy_variables( n, im );
     _name.resized.connect( position_text_and_update_size );
     set_parsers();
@@ -627,6 +637,7 @@ public class Node : Object {
     _children  = new Array<Node>();
     _tree_bbox = new NodeBounds( map );
     _name      = new CanvasText( map );
+    _tags      = new Tags();
     copy_variables( n, im );
   }
 
@@ -638,6 +649,7 @@ public class Node : Object {
     _children  = new Array<Node>();
     _tree_bbox = new NodeBounds( map );
     _name      = new CanvasText( map );
+    _tags      = new Tags();
     copy_variables( n, im );
     _name.resized.connect( position_text_and_update_size );
     set_parsers();
@@ -688,6 +700,7 @@ public class Node : Object {
     tree_bbox.copy_from( n.tree_bbox );
     sticker          = n.sticker;
     sequence         = n.sequence;
+    _tags            = n.tags.copy();
   }
 
   //-------------------------------------------------------------
@@ -833,16 +846,15 @@ public class Node : Object {
     var noname_width = task_width() + sticker_width() + sequence_width() + note_width() + linked_node_width();
     var name_width   = noname_width + _name.width;
     var name_height  = (_name.height < stk_height) ? stk_height : _name.height;
+    var image_width  = (_image != null) ? _image.width : 0;
+    var image_height = (_image != null) ? (_image.height + padding) : 0;
+    var tg_width     = noname_width + tags_width();
+    var tg_height    = tags_height();
+    var all_width    = Math.fmax( name_width, Math.fmax( image_width, tg_width ) );
 
-    if( _image != null ) {
-      width      = (margin * 2) + (padding * 2) + ((name_width < _image.width) ? _image.width : name_width);
-      height     = (margin * 2) + (padding * 2) + _image.height + padding + name_height;
-      name_space = (name_width < _image.width) ? (_image.width - name_width) : 0.0;
-    } else {
-      width      = (margin * 2) + (padding * 2) + name_width;
-      height     = (margin * 2) + (padding * 2) + name_height;
-      name_space = 0.0;
-    }
+    width      = (margin * 2) + (padding * 2) + all_width;
+    height     = (margin * 2) + (padding * 2) + image_height + name_height + tg_height;
+    name_space = all_width - name_width;
 
   }
 
@@ -1237,6 +1249,29 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns the positional information for where the given tag
+  // indicator exists.
+  protected virtual void tag_bbox( int index, out double x, out double y, out double w, out double h ) {
+    int margin  = style.node_margin ?? 0;
+    int padding = style.node_padding ?? 0;
+    x = name.posx + (index * 17);
+    y = posy + (_height - (margin + padding) - 8);
+    w = 12;
+    h = 8;
+  }
+
+  //-------------------------------------------------------------
+  // Returns the positional information for all of the tags.
+  protected virtual void tags_bbox( out double x, out double y, out double w, out double h ) {
+    tag_bbox( 0, out x, out y, out w, out h );
+    if( _tags.size() > 1 ) {
+      double bx, by, bw, bh;
+      tag_bbox( (_tags.size() - 1), out bx, out by, out bw, out bh );
+      w = (bx + bw);
+    }
+  }
+
+  //-------------------------------------------------------------
   // Returns true if the given cursor coordinates lies within the
   // task checkbutton area.
   public virtual bool is_within_task( double x, double y ) {
@@ -1317,6 +1352,18 @@ public class Node : Object {
       double rx, ry, rw, rh;
       resizer_bbox( out rx, out ry, out rw, out rh );
       return( Utils.is_within_bounds( x, y, rx, ry, rw, rh ) );
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lie within the
+  // tags area.
+  public virtual bool is_within_tags( double x, double y ) {
+    if( _tags.size() > 0 ) {
+      double tx, ty, tw, th;
+      tags_bbox( out tx, out ty, out tw, out th );
+      return( Utils.is_within_bounds( x, y, tx, ty, tw, th ) );
     }
     return( false );
   }
@@ -1687,6 +1734,7 @@ public class Node : Object {
           case "nodenote"   :  load_note( it );  break;
           case "nodeimage"  :  load_image( map.image_manager, it );  break;
           case "nodelink"   :  load_node_link( it );  break;
+          case "taglist"    :  tags.load_indices( it, _map.model.tags );  break;
           case "style"      :  load_style( it );  break;
           case "callout"    :  load_callout( it );  break;
           case "nodes"      :  load_nodes( it, sibling_parent, ref siblings );  break;
@@ -1781,6 +1829,7 @@ public class Node : Object {
 
     node->add_child( name.save( "nodename" ) );
     node->new_text_child( null, "nodenote", note );
+    node->add_child( tags.save_indices( _map.model.tags ) );
 
     if( _linked_node != null ) {
       node->add_child( _linked_node.save() );
@@ -1814,7 +1863,8 @@ public class Node : Object {
   // Resizes the node width by the given amount.
   public virtual void resize( double diff ) {
     diff = resizer_on_left() ? (0 - diff) : diff;
-    var int_diff = (int)diff;
+    var int_diff  = (int)diff;
+    if( (_name.width + diff) < tags_width() ) return;
     if( _image == null ) {
       if( (diff < 0) ? ((style.node_width + diff) <= _min_width) : !_name.is_wrapped() ) return;
       style.node_width += int_diff;
@@ -2021,6 +2071,19 @@ public class Node : Object {
   // Returns the width of the linked node indicator.
   public double linked_node_width() {
     return( (linked_node != null) ? (10 + _ipadx) : 0 );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the total width of the tag indicators.
+  public double tags_width() {
+    var num_tags = _tags.size();
+    return( (num_tags == 0) ? 0 : ((num_tags * 12) + ((num_tags - 1) * 5)) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the height of the tags indicators.
+  public double tags_height() {
+    return( (_tags.size() > 0) ? (5 + _ipadx) : 0 );
   }
 
   //-------------------------------------------------------------
@@ -2560,6 +2623,60 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // TAGS
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Adds the given tag to this node.
+  public bool add_tag( Tag tag ) {
+    var added = tags.add_tag( tag );
+    update_size();
+    return( added );
+  }
+
+  //-------------------------------------------------------------
+  // Removes the specified tag from the list of tags.
+  public bool remove_tag( Tag tag, Array<Node>? nodes = null ) {
+    var index = tags.get_tag_index( tag );
+    if( index != -1 ) {
+      tags.remove_tag( index );
+      update_size();
+      if( nodes != null ) {
+        nodes.append_val( this );
+      } else {
+        return( true );
+      }
+    }
+    if( nodes != null ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).remove_tag( tag, nodes );
+      }
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given node is highlightable based on its
+  // current tags, the tags selected to highlight and the given
+  // combo type.
+  public bool highlightable( Tags tags, TagComboType combo_type ) {
+    return( combo_type.highlightable( _tags, tags ) );
+  }
+
+  //-------------------------------------------------------------
+  // Checks to see if the current node contains the given tag.
+  // If it exists, causes this node to be highlighted.  Performs
+  // this procedure recursively.
+  public void highlight_tags( Tags tags, TagComboType combo_type ) {
+    if( combo_type.highlightable( _tags, tags ) ) {
+      set_alpha_only( 1.0 );
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).highlight_tags( tags, combo_type );
+    }
+  }
+
+  //-------------------------------------------------------------
   // MISCELLANEOUS
   //-------------------------------------------------------------
 
@@ -2577,6 +2694,7 @@ public class Node : Object {
   // that match the given string pattern.
   public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     if( search_opts[SearchOptions.NODES] &&
+        (_alpha == 1.0) &&
         (((((_task_count == 0) || !is_leaf()) && search_opts[SearchOptions.NONTASKS]) ||
           ((_task_count != 0) && is_leaf()   && search_opts[SearchOptions.TASKS])) &&
          (((parent != null) && parent.folded && search_opts[SearchOptions.FOLDED]) ||
@@ -3234,7 +3352,6 @@ public class Node : Object {
     }
 
     double x, y, w, h;
-
     resizer_bbox( out x, out y, out w, out h );
 
     Utils.set_context_color( ctx, theme.get_color( "background" ) );
@@ -3245,6 +3362,29 @@ public class Node : Object {
     Utils.set_context_color_with_alpha( ctx, theme.get_color( "foreground" ), _alpha );
     ctx.stroke();
 
+  }
+
+  //-------------------------------------------------------------
+  // Draw all of the tag rectangles.
+  protected virtual void draw_tags( Context ctx, Theme theme, bool exporting ) {
+    for( int i=0; i<_tags.size(); i++ ) {
+
+      var tag = _tags.get_tag( i );
+
+      double x, y, w, h;
+      tag_bbox( i, out x, out y, out w, out h );
+
+      Utils.set_context_color_with_alpha( ctx, tag.color, _alpha );
+      ctx.rectangle( x, y, w, h );
+      ctx.fill_preserve();
+
+      var color = (mode.is_selected() && !exporting) ? Granite.contrasting_foreground_color( theme.get_color( "nodesel_background" ) ) :
+                                                       theme.get_color( "background" );
+      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      ctx.set_line_width( 1 );
+      ctx.stroke();
+
+    }
   }
 
   //-------------------------------------------------------------
@@ -3303,6 +3443,7 @@ public class Node : Object {
       draw_common_fold( ctx, foreground, background );
       draw_attachable(  ctx, theme, background );
       draw_resizer( ctx, theme, exporting );
+      draw_tags( ctx, theme, exporting );
 
     /* Otherwise, draw the node as a non-root node */
     } else {
@@ -3325,6 +3466,7 @@ public class Node : Object {
       draw_common_fold( ctx, _link_color, background );
       draw_attachable(  ctx, theme, background );
       draw_resizer( ctx, theme, exporting );
+      draw_tags( ctx, theme, exporting );
     }
 
     draw_callout( ctx, theme, exporting );

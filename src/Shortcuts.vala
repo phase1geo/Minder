@@ -276,6 +276,8 @@ public class Shortcuts {
     create_default_shortcuts();
 
     add_builtin_shortcuts();
+    add_default_shortcuts();
+
     load();
 
   }
@@ -394,6 +396,15 @@ public class Shortcuts {
   }
 
   //-------------------------------------------------------------
+  // Returns true if the given shortcut is different than the default
+  // version of this shortcut (if a default exists).  If the default
+  // does not exist, returns true.
+  private bool differs_from_default( Shortcut shortcut ) {
+    var dflt = get_default_shortcut( shortcut.command );
+    return( (dflt == null) || !dflt.matches_shortcut( shortcut ) );
+  }
+
+  //-------------------------------------------------------------
   // Saves the shortcuts to the shortcuts XML file.
   public void save() {
 
@@ -404,7 +415,7 @@ public class Shortcuts {
 
     for( int i=0; i<_shortcuts.length; i++ ) {
       var shortcut = _shortcuts.index( i );
-      if( shortcut.editable() ) {
+      if( shortcut.editable() && differs_from_default( shortcut ) ) {
         root->add_child( shortcut.save() );
       }
     }
@@ -420,11 +431,11 @@ public class Shortcuts {
   // Loads the shortcuts from the shortcuts XML file.
   private void load() {
 
+    if( !FileUtils.test( shortcuts_path(), FileTest.EXISTS ) ) return;
+
     Xml.Doc* doc = Xml.Parser.parse_file( shortcuts_path() );
 
     if( doc == null ) {
-      add_default_shortcuts();
-      save();
       return;
     }
 
@@ -463,6 +474,7 @@ public class Shortcuts {
   public void add_default_shortcuts() {
     for( int i=0; i<_defaults.length; i++ ) {
       _shortcuts.append_val( _defaults.index( i ) );
+      // FOOBAR
     }
   }
 
@@ -545,13 +557,13 @@ public class Shortcuts {
     add_default( Key.@1,           true, false, false, KeyCommand.ZOOM_FIT );
     add_default( Key.@2,           true, false, false, KeyCommand.ZOOM_SELECTED );
     add_default( Key.plus,         true, false, false, KeyCommand.ZOOM_IN );
-    add_default( Key.equal,        true, false, false, KeyCommand.ZOOM_IN );
     add_default( Key.minus,        true, false, false, KeyCommand.ZOOM_OUT );
     add_default( Key.p,            true, false, false, KeyCommand.FILE_PRINT );
     add_default( Key.comma,        true, false, false, KeyCommand.SHOW_PREFERENCES );
     add_default( Key.question,     true, false, false, KeyCommand.SHOW_SHORTCUTS );
-    add_default( Key.@6,           true, false, false, KeyCommand.SHOW_CURRENT_SIDEBAR );
-    add_default( Key.@7,           true, false, false, KeyCommand.SHOW_STYLE_SIDEBAR );
+    add_default( Key.@5,           true, false, false, KeyCommand.SHOW_CURRENT_SIDEBAR );
+    add_default( Key.@6,           true, false, false, KeyCommand.SHOW_STYLE_SIDEBAR );
+    add_default( Key.@7,           true, false, false, KeyCommand.SHOW_TAG_SIDEBAR );
     add_default( Key.@8,           true, false, false, KeyCommand.SHOW_STICKER_SIDEBAR );
     add_default( Key.@9,           true, false, false, KeyCommand.SHOW_MAP_SIDEBAR );
     add_default( Key.Tab,          true, false, false, KeyCommand.TAB_GOTO_NEXT );
@@ -611,7 +623,7 @@ public class Shortcuts {
     add_default( Key.x,            false, false, false, KeyCommand.NODE_ADD_CONNECTION );
     add_default( Key.y,            false, false, false, KeyCommand.NODE_TOGGLE_LINKS );
     add_default( Key.e,            false, true,  false, KeyCommand.EDIT_NOTE );
-    add_default( Key.i,            false, false, false, KeyCommand.SHOW_CURRENT_SIDEBAR );
+    add_default( Key.i,            false, false, false, KeyCommand.SHOW_CURRENT_INFO );
     add_default( Key.e,            false, false, false, KeyCommand.EDIT_SELECTED );
     add_default( Key.s,            false, false, false, KeyCommand.SHOW_SELECTED );
 
@@ -637,7 +649,6 @@ public class Shortcuts {
     add_default( Key.n,            false, false, false, KeyCommand.NODE_SELECT_SIBLING_NEXT );
     add_default( Key.o,            false, false, false, KeyCommand.NODE_TOGGLE_CALLOUT );
     add_default( Key.p,            false, false, false, KeyCommand.NODE_SELECT_SIBLING_PREV );
-    add_default( Key.x,            false, false, false, KeyCommand.NODE_ADD_CONNECTION );
     add_default( Key.Left,         false, false, true,  KeyCommand.NODE_SWAP_LEFT );
     add_default( Key.Right,        false, false, true,  KeyCommand.NODE_SWAP_RIGHT );
     add_default( Key.Up,           false, false, true,  KeyCommand.NODE_SWAP_UP );

@@ -1,4 +1,4 @@
- /*
+/*
 * Copyright (c) 2018 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
@@ -29,12 +29,15 @@ public class Preferences : Granite.Dialog {
   private string     _shortcut_inst_start_str;
   private string     _shortcut_inst_edit_str;
   private Label      _shortcut_instructions;
+  private Tags       _tags;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_set_default_theme",    action_set_default_theme, "s" },
     { "action_clear_all_shortcuts",  action_clear_all_shortcuts },
     { "action_set_minder_shortcuts", action_set_minder_shortcuts },
   };
+
+  private signal void tab_switched( string tab_name );
 
   //-------------------------------------------------------------
   // Constructor
@@ -59,8 +62,15 @@ public class Preferences : Granite.Dialog {
     };
     stack.add_titled( create_behavior(),   "behavior",   _( "Behavior" ) );
     stack.add_titled( create_appearance(), "appearance", _( "Appearance" ) );
+    stack.add_titled( create_tags(),       "tags",       _( "Tags" ) );
     stack.add_titled( create_shortcuts(),  "shortcuts",  _( "Shortcuts" ) );
     stack.add_titled( create_advanced(),   "advanced",   _( "Advanced" ) );
+
+    stack.notify.connect((ps) => {
+      if( ps.name == "visible-child" ) {
+        tab_switched( stack.visible_child_name );
+      }
+    });
 
     var switcher = new StackSwitcher() {
       halign  = Align.CENTER,
@@ -68,6 +78,8 @@ public class Preferences : Granite.Dialog {
       stack   = stack,
       margin_top = 10
     };
+
+    Utils.set_switcher_tab_widths( switcher );
 
     var box = new Box( Orientation.VERTICAL, 0 );
     box.append( switcher );
@@ -84,6 +96,9 @@ public class Preferences : Granite.Dialog {
     var actions = new SimpleActionGroup ();
     actions.add_action_entries( action_entries, this );
     insert_action_group( "prefs", actions );
+
+    // Indicate that the behavior tab is being shown
+    tab_switched( "behavior" );
 
   }
 
@@ -138,10 +153,20 @@ public class Preferences : Granite.Dialog {
     grid.attach( make_info( _( "Backup files are created prior to saving.  If enabled, the backup file is retained but is not used when re-opening the file.  If disabled, the backup file is removed after save and used on re-opening file if it exists.  Backup files are hidden in the same directory as the original with a .bak extension." ) ), 3, row );
     row++;
 
+    tab_switched.connect((tab_name) => {
+      if( tab_name == "behavior" ) {
+        var w = grid.get_child_at( 1, 0 );
+        w.grab_focus();
+      }
+    });
+
     return( grid );
 
   }
 
+  //-------------------------------------------------------------
+  // Creates the preferences pane that contains control to change the
+  // appearance of Minder.
   private Grid create_appearance() {
 
     var grid = new Grid() {
@@ -149,27 +174,84 @@ public class Preferences : Granite.Dialog {
       column_spacing = 12,
       row_spacing    = 6
     };
+    var row = 0;
 
-    grid.attach( make_label( _( "Hide themes not matching visual style" ) ), 0, 0 );
-    grid.attach( make_switch( "hide-themes-not-matching-visual-style" ), 1, 0 );
+    grid.attach( make_label( _( "Hide themes not matching visual style" ) ), 0, row );
+    grid.attach( make_switch( "hide-themes-not-matching-visual-style" ), 1, row );
+    row++;
 
-    grid.attach( make_label( _( "Default theme" ) ), 0, 1 );
-    grid.attach( make_themes(), 1, 1, 2 );
-    grid.attach( make_info( _( "Sets the default theme to use for newly created mindmaps (use Map sidebar panel to make immediate changes)." ) ), 3, 1 );
+    grid.attach( make_label( _( "Default theme" ) ), 0, row );
+    grid.attach( make_themes(), 1, row, 2 );
+    grid.attach( make_info( _( "Sets the default theme to use for newly created mindmaps (use Map sidebar panel to make immediate changes)." ) ), 3, row );
+    row++;
 
-    grid.attach( make_label( _( "Enable animations" ) ),  0, 2 );
-    grid.attach( make_switch( "enable-animations" ), 1, 2 );
+    grid.attach( make_label( _( "Enable animations" ) ),  0, row );
+    grid.attach( make_switch( "enable-animations" ), 1, row );
+    row++;
 
-    grid.attach( make_label( _( "Text field font size" ) ), 0, 3 );
-    grid.attach( make_switch( "text-field-use-custom-font-size" ), 1, 3 );
-    grid.attach( make_spinner( "text-field-custom-font-size", 8, 24, 1 ), 2, 3 );
-    grid.attach( make_info( _( "Specifies the custom font size to use in text editing fields (i.e, quick entry or notes field)." ) ), 3, 3 );
+    grid.attach( make_label( _( "Text field font size" ) ), 0, row );
+    grid.attach( make_switch( "text-field-use-custom-font-size" ), 1, row );
+    grid.attach( make_spinner( "text-field-custom-font-size", 8, 24, 1 ), 2, row );
+    grid.attach( make_info( _( "Specifies the custom font size to use in text editing fields (i.e, quick entry or notes field)." ) ), 3, row );
+    row++;
 
-    grid.attach( make_label( _( "Colorize note fields" ) ), 0, 4 );
-    grid.attach( make_switch( "colorize-notes" ), 1, 4 );
+    grid.attach( make_label( _( "Colorize note fields" ) ), 0, row );
+    grid.attach( make_switch( "colorize-notes" ), 1, row );
+    row++;
+
+    tab_switched.connect((tab_name) => {
+      if( tab_name == "appearance" ) {
+        var w = grid.get_child_at( 1, 0 );
+        w.grab_focus();
+      }
+    });
 
     return( grid );
 
+  }
+
+  //-------------------------------------------------------------
+  // Creates the preferences pane that allows for the creation of
+  // tags that will be applied to new or updated Mindmaps.
+  private Box create_tags() {
+
+    // Create the preference tags and load them from settings
+    _tags = new Tags();
+    _tags.load_variant( Minder.settings.get_value( "starting-tags" ) );
+
+    var note = new Label( _( "Tags in this list will be the starting list of tags for new mindmaps." ) ) {
+      wrap = true,
+      wrap_mode = Pango.WrapMode.WORD
+    };
+
+    var editor = new TagEditor( _win, false );
+    editor.set_tags( _tags );
+    editor.tag_changed.connect(() => {
+      save_tags();
+    });
+    editor.tag_added.connect(() => {
+      save_tags();
+    });
+    editor.tag_removed.connect(() => {
+      save_tags();
+    });
+
+    var box = new Box( Orientation.VERTICAL, 10 );
+    box.append( note );
+    box.append( editor );
+
+    tab_switched.connect((tab_name) => {
+      if( tab_name == "tags" ) {
+        editor.grab_focus();
+      }
+    });
+
+    return( box );
+
+  }
+
+  private void save_tags() {
+    Minder.settings.set_value( "starting-tags", _tags.save_variant() );
   }
 
   private Box create_shortcuts() {
@@ -302,6 +384,12 @@ public class Preferences : Granite.Dialog {
     box.append( search );
     box.append( sw );
 
+    tab_switched.connect((tab_name) => {
+      if( tab_name == "shortcuts" ) {
+        search_btn.grab_focus();
+      }
+    });
+
     return( box );
 
   }
@@ -375,6 +463,13 @@ public class Preferences : Granite.Dialog {
     box.append( make_enum( "upgrade-action", UpgradeAction.labels() ) );
     grid.attach( box, 0, row, 5 );
     row++;
+
+    tab_switched.connect((tab_name) => {
+      if( tab_name == "advanced" ) {
+        var w = grid.get_child_at( 0, 1 );
+        w.grab_focus();
+      }
+    });
 
     return( grid );
 

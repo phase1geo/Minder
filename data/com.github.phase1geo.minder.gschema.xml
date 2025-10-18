@@ -26,6 +26,11 @@
       <summary>Most recent state of the style properties sidebar</summary>
       <description>Most recent state of the style properities sidebar</description>
     </key>
+    <key name="tag-properties-shown" type="b">
+      <default>false</default>
+      <summary>Most recent state of the tag properties sidebar</summary>
+      <description>Most recent state of the tag properties sidebar</description>
+    </key>
     <key name="sticker-properties-shown" type="b">
       <default>false</default>
       <summary>Most recent state of the sticker properties sidebar</summary>
@@ -359,6 +364,14 @@
         When this option is true, the backup file created when saving will remain on disk after the save has completed
         and when loading, the backup file will be ignored.  When this option is false, the backup file will be
         removed from the file system on a good save and, on load, if a backup file exists it will be loaded.
+      </description>
+    </key>
+    <key name="starting-tags" type="a(ss)">
+      <default>[]</default>
+      <summary>List of tags that will be available for all new mindmaps</summary>
+      <description>
+        List of tags that will be available for all new mindmaps.  Each tag must be in the format of:
+          ('name', '#hex RGB color')
       </description>
     </key>
   </schema>

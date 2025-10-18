@@ -32,9 +32,11 @@ public class MindMap {
   private UndoBuffer     _undo_buffer;
   private UndoTextBuffer _undo_text;
   private Selection      _selected;
-  private bool           _focus_mode  = false;
-  private double         _focus_alpha = 0.05;
-  private bool           _editable    = true;
+  private bool           _focus_mode     = false;
+  private double         _focus_alpha    = 0.05;
+  private Tags           _highlighted;
+  private TagComboType   _highlight_mode = TagComboType.AND;
+  private bool           _editable       = true;
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -96,6 +98,22 @@ public class MindMap {
   public double focus_alpha {
     get {
       return( _focus_alpha );
+    }
+  }
+  public Tags highlighted {
+    get {
+      return( _highlighted );
+    }
+  }
+  public TagComboType highlight_mode {
+    get {
+      return( _highlight_mode );
+    }
+    set {
+      if( _highlight_mode != value ) {
+        _highlight_mode = value;
+        update_focus_mode();
+      }
     }
   }
 
@@ -175,6 +193,7 @@ public class MindMap {
   public signal void hide_properties();
   public signal void undo_buffer_changed( UndoBuffer buf );
   public signal void editable_changed( MindMap map );
+  public signal void reload_tags();
 
   //-------------------------------------------------------------
   // Constructor
@@ -200,6 +219,8 @@ public class MindMap {
 
     // Create the selection handler
     _selected = new Selection( this );
+
+    _highlighted = new Tags();
 
     // Create the parsers
     tagger_parser   = new TaggerParser( this );
@@ -228,6 +249,8 @@ public class MindMap {
     _undo_buffer.buffer_changed.connect( handle_undo_buffer_changed );
 
     _selected.selection_changed.connect( handle_selection_changed );
+
+    _highlighted.changed.connect( handle_tag_highlight_changed );
 
     // Get the value of the new node from edit
     update_focus_mode_alpha();
@@ -264,6 +287,7 @@ public class MindMap {
   // loaded from file.
   private void handle_model_loaded() {
     loaded();
+    reload_tags();
   }
 
   //-------------------------------------------------------------
@@ -300,6 +324,13 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
+  // Handles any changes to the highlighted tag list.
+  private void handle_tag_highlight_changed() {
+    update_focus_mode();
+    _canvas.queue_draw();
+  }
+
+  //-------------------------------------------------------------
   // INITIALIZATION CODE
   //-------------------------------------------------------------
   
@@ -332,6 +363,11 @@ public class MindMap {
 
     initialize();
 
+    // Add tags from preference if we are loading a 1.x Minder file and it is not read-only
+    if( (Utils.compare_versions( _doc.load_version, "2.0" ) == -1) && !editable ) {
+      _model.tags.load_variant( Minder.settings.get_value( "starting-tags" ) );
+    }
+
     set_current_node( null );
 
     _canvas.queue_draw();
@@ -343,6 +379,9 @@ public class MindMap {
   public void initialize_for_new() {
 
     initialize();
+
+    // Add tags from preferences
+    _model.tags.load_variant( Minder.settings.get_value( "starting-tags" ) );
 
     // Create the main idea node
     var n = new Node.with_name( this, _("Main Idea"), _model.layouts.get_default() );
@@ -985,6 +1024,13 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
+  // Removes the tags from all nodes in the model, returning the
+  // list of nodes that were affected.
+  public void remove_tag( Tag tag, Array<Node> nodes ) {
+    _model.remove_tag( tag, nodes );
+  }
+
+  //-------------------------------------------------------------
   // FOCUS MODE FUNCTIONS
   //-------------------------------------------------------------
 
@@ -993,12 +1039,15 @@ public class MindMap {
   public void update_focus_mode() {
     var selnodes = selected.nodes();
     var selconns = selected.connections();
-    var alpha    = (_focus_mode && ((selnodes.length > 0) || (selconns.length > 0))) ? _focus_alpha : 1.0;
+    var alpha    = (_highlighted.size() > 0) ||
+                   (_focus_mode && ((selnodes.length > 0) || (selconns.length > 0))) ? _focus_alpha : 1.0;
     var nodes    = _model.get_nodes();
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).alpha = alpha;
     }
-    if( _focus_mode ) {
+    if( _highlighted.size() > 0 ) {
+      _model.highlight_tags( _highlighted, _highlight_mode );
+    } else if( _focus_mode ) {
       for( int i=0; i<selnodes.length; i++ ) {
         var current = selnodes.index( i );
         current.alpha = 1.0;

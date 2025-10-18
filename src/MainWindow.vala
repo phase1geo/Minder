@@ -293,12 +293,14 @@ public class MainWindow : Gtk.ApplicationWindow {
     /* If the settings says to display the properties, do it now */
     if( _settings.get_boolean( "current-properties-shown" ) ) {
       show_properties( "current", PropertyGrab.NONE );
-    } else if( _settings.get_boolean( "map-properties-shown" ) ) {
-      show_properties( "map", PropertyGrab.NONE );
     } else if( _settings.get_boolean( "style-properties-shown" ) ) {
       show_properties( "style", PropertyGrab.NONE );
+    } else if( _settings.get_boolean( "tag-properties-shown" ) ) {
+      show_properties( "tag", PropertyGrab.NONE );
     } else if( _settings.get_boolean( "sticker-properties-shown" ) ) {
       show_properties( "sticker", PropertyGrab.NONE );
+    } else if( _settings.get_boolean( "map-properties-shown" ) ) {
+      show_properties( "map", PropertyGrab.NONE );
     }
 
     /* Look for any changes to the settings */
@@ -526,6 +528,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     map.undo_text.buffer_changed.connect( do_buffer_changed );
     map.theme_changed.connect( on_theme_changed );
     map.editable_changed.connect( on_editable_changed );
+    map.highlighted.changed.connect(() => { on_tag_highlight_changed( map ); });
     map.animator.enable = _settings.get_boolean( "enable-animations" );
 
     if( fname != null ) {
@@ -538,6 +541,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
 
     var tab_lock = new Image.from_icon_name( "system-lock-screen-symbolic" ) {
+      halign        = Align.START,
       visible       = !map.editable,
       margin_start  = 10,
       margin_top    = 5,
@@ -545,7 +549,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
     tab_lock.add_css_class( "tab" );
 
-    var tab_label = new Label( map.doc.label ) { margin_start  = 10,
+    var tab_label = new Label( map.doc.label ) {
+      halign        = Align.CENTER,
+      hexpand       = true,
       margin_start  = 5,
       margin_end    = 5,
       margin_top    = 5,
@@ -562,7 +568,12 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
     tab_close.add_css_class( "tab" );
 
+    map.doc.save_changed.connect(() => {
+      tab_close.icon_name = (map.doc.save_needed ? "media-record-symbolic" : "window-close-symbolic" );
+    });
+
     var tab_revealer = new Revealer() {
+      halign          = Align.END,
       reveal_child    = true,
       transition_type = RevealerTransitionType.CROSSFADE,
       child           = tab_close
@@ -683,14 +694,16 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Updates the title */
   private void update_title( MindMap? map ) {
     var label = " \u2014 Minder";
-    if( _focus_btn.active ) {
+    if( (map != null) && (map.highlighted.size() > 0) ) {
+      label += " (%s)".printf( _( "Tag Highlight Mode" ) );
+    } else if( _focus_btn.active ) {
       label += " (%s)".printf( _( "Focus Mode" ) );
     }
     if( (map == null) || !map.doc.is_saved() ) {
       label = _( "Unnamed Document" ) + label;
     } else {
       if( map.doc.read_only || !map.editable ) {
-        label += " [%s]%s".printf( _( "Read-Only" ), label );
+        label += " [%s]".printf( _( "Read-Only" ) );
       }
       label = GLib.Path.get_basename( map.doc.filename ) + label;
     }
@@ -1153,10 +1166,11 @@ public class MainWindow : Gtk.ApplicationWindow {
       transition_type     = StackTransitionType.SLIDE_LEFT_RIGHT,
       transition_duration = 500
     };
-    _stack.add_titled( new CurrentInspector( this ), "current", _("Current") );
-    _stack.add_titled( new StyleInspector( this, _settings ), "style", _("Style") );
+    _stack.add_titled( new CurrentInspector( this ),            "current", _("Current") );
+    _stack.add_titled( new StyleInspector( this, _settings ),   "style",   _("Style") );
+    _stack.add_titled( new TagInspector( this ),                "tag",     _("Tags") );
     _stack.add_titled( new StickerInspector( this, _settings ), "sticker", _("Stickers") );
-    _stack.add_titled( new MapInspector( this, _settings ),  "map",  _("Map") );
+    _stack.add_titled( new MapInspector( this, _settings ),     "map",     _("Map") );
 
     var key = new EventControllerKey();
     _stack.add_controller( key );
@@ -1167,14 +1181,24 @@ public class MainWindow : Gtk.ApplicationWindow {
       if( ps.name == "visible-child" ) {
         _settings.set_boolean( "current-properties-shown", (_stack.visible_child_name == "current") );
         _settings.set_boolean( "style-properties-shown",   (_stack.visible_child_name == "style" ) );
+        _settings.set_boolean( "tag-properties-shown",     (_stack.visible_child_name == "tag" ) );
         _settings.set_boolean( "sticker-properties-shown", (_stack.visible_child_name == "sticker" ) );
         _settings.set_boolean( "map-properties-shown",     (_stack.visible_child_name == "map") );
+        switch( _stack.visible_child_name ) {
+          case "current" :  (_stack.visible_child as CurrentInspector).grab_first();  break;
+          case "style"   :  (_stack.visible_child as StyleInspector).grab_first();    break;
+          case "tag"     :  (_stack.visible_child as TagInspector).grab_first();      break;
+          case "sticker" :  (_stack.visible_child as StickerInspector).grab_first();  break;
+          case "map"     :  (_stack.visible_child as MapInspector).grab_first();      break;
+          default        :  break;
+        }
       }
     });
 
     // Set shortcuts
     set_action_for_command( KeyCommand.SHOW_CURRENT_SIDEBAR );
     set_action_for_command( KeyCommand.SHOW_STYLE_SIDEBAR );
+    set_action_for_command( KeyCommand.SHOW_TAG_SIDEBAR );
     set_action_for_command( KeyCommand.SHOW_STICKER_SIDEBAR );
     set_action_for_command( KeyCommand.SHOW_MAP_SIDEBAR );
 
@@ -1185,6 +1209,8 @@ public class MainWindow : Gtk.ApplicationWindow {
       halign = Align.FILL,
       stack  = _stack
     };
+
+    Utils.set_switcher_tab_widths( sb );
 
     var box = new Box( Orientation.VERTICAL, 20 ) {
       halign        = Align.FILL,
@@ -1467,6 +1493,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _prop_btn.icon_name  = use_dark_mode ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
     (_stack.get_child_by_name( "current" ) as CurrentInspector).update_icons();
     (_stack.get_child_by_name( "style" )   as StyleInspector).update_icons();
+    (_stack.get_child_by_name( "tag" )     as TagInspector).update_icons();
     (_stack.get_child_by_name( "map" )     as MapInspector).update_icons();
   }
 
@@ -1477,6 +1504,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     set_braindump_ui( map, map.model.braindump_shown );
     (_stack.get_child_by_name( "current" ) as CurrentInspector).editable_changed();
     (_stack.get_child_by_name( "style" )   as StyleInspector).editable_changed();
+    (_stack.get_child_by_name( "tag" )     as TagInspector).editable_changed();
     (_stack.get_child_by_name( "map" )     as MapInspector).editable_changed();
     var label = map.doc.label;
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
@@ -1485,6 +1513,12 @@ public class MainWindow : Gtk.ApplicationWindow {
         break;
       }
     }
+    update_title( map );
+  }
+
+  //-------------------------------------------------------------
+  // Handles any changes in the highlight tag mode.
+  private void on_tag_highlight_changed( MindMap map ) {
     update_title( map );
   }
 
@@ -1640,6 +1674,7 @@ public class MainWindow : Gtk.ApplicationWindow {
         switch( _stack.visible_child_name ) {
           case "current" :  (_stack.get_child_by_name( "current" ) as CurrentInspector).grab_first();  break;
           case "style"   :  (_stack.get_child_by_name( "style" )   as StyleInspector).grab_first();    break;
+          case "tag"     :  (_stack.get_child_by_name( "tag" )     as TagInspector).grab_first();      break;
           case "sticker" :  (_stack.get_child_by_name( "sticker" ) as StickerInspector).grab_first();  break;
           case "map"     :  (_stack.get_child_by_name( "map" )     as MapInspector).grab_first();      break;
         }
@@ -1680,9 +1715,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     _pane.end_child        = null;
     get_current_map( "hide_properties" ).canvas.grab_focus();
     _settings.set_boolean( "current-properties-shown", false );
-    _settings.set_boolean( "map-properties-shown",     false );
     _settings.set_boolean( "style-properties-shown",   false );
+    _settings.set_boolean( "tag-properties-shown",     false );
     _settings.set_boolean( "sticker-properties-shown", false );
+    _settings.set_boolean( "map-properties-shown",     false );
   }
 
   //-------------------------------------------------------------
