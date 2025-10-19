@@ -113,6 +113,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private Shortcuts         _shortcuts;
   private SimpleActionGroup _actions;
   private Gee.HashMap<KeyCommand,ShortcutTooltip> _shortcut_widgets;
+  private Templates                               _templates;
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
 
@@ -149,6 +150,11 @@ public class MainWindow : Gtk.ApplicationWindow {
       return( _shortcuts );
     }
   }
+  public Templates templates {
+    get {
+      return( _templates );
+    }
+  }
 
   public delegate void OverwriteFunc( bool overwrite );
 
@@ -160,6 +166,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     Object( application: app );
 
     _settings = settings;
+
+    // Create the templates
+    _templates = new Templates();
+    _templates.load();
 
     var window_w = settings.get_int( "window-w" );
     var window_h = settings.get_int( "window-h" );

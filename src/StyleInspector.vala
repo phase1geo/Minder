@@ -44,6 +44,7 @@ public enum StyleAffects {
 
 public class StyleInspector : Box {
 
+  private MainWindow       _win;
   private MindMap?         _map = null;
   private GLib.Settings    _settings;
   private Revealer         _branch_radius_revealer;
@@ -86,6 +87,13 @@ public class StyleInspector : Box {
   private bool             _change_add = true;
   private bool             _ignore     = false;
 
+  private const GLib.ActionEntry action_entries[] = {
+    { "action_save_as_template",      action_save_as_template, "s" },
+    { "action_load_default_template", action_load_default_template },
+    { "action_load_saved_template",   action_load_saved_template, "(is)" },
+    { "action_delete_saved_template", action_delete_saved_template, "(is)" },
+  };
+
   public static Styles styles = new Styles();
 
   public signal void update_icons();
@@ -95,6 +103,7 @@ public class StyleInspector : Box {
 
     Object( orientation:Orientation.VERTICAL, spacing:20 );
 
+    _win      = win;
     _settings = settings;
 
     /* Initialize the affects */
@@ -131,6 +140,11 @@ public class StyleInspector : Box {
     win.canvas_changed.connect( tab_changed );
     editable_changed.connect( handle_current_changed );
 
+    // Add the menu actions
+    var actions = new SimpleActionGroup();
+    actions.add_action_entries( action_entries, this );
+    insert_action_group( "styles", actions );
+
   }
 
   /* Listen for any changes to the current tab in the main window */
@@ -157,13 +171,78 @@ public class StyleInspector : Box {
       halign = Align.START
     };
 
+    var saved_menu = new GLib.Menu();
+    saved_menu.append( _( "Save Style As Template" ), "styles.action_save_as_template('general')" );
+
+    var load_submenu = new GLib.Menu();
+    var load_menu = new GLib.Menu();
+    load_menu.append_submenu( _( "Load Saved Style" ), null /* load_submenu */ );
+    load_menu.append( _( "Load Default Style" ), "styles.action_load_default_template" );
+
+    var del_submenu = new GLib.Menu();
+    var delete_menu = new GLib.Menu();
+    delete_menu.append_submenu( _( "Delete Saved Style" ), null /* del_submenu */ );
+
+    var menu = new GLib.Menu();
+    menu.append_section( _( "General" ), saved_menu );
+    menu.append_section( null, load_menu );
+    menu.append_section( null, delete_menu );
+
+    var template_btn = new MenuButton() {
+      halign = Align.END,
+      icon_name = "view-more-symbolic",
+      hexpand = true,
+      menu_model = menu
+    };
+
     /* Pack the menubutton box */
     var box = new Box( Orientation.HORIZONTAL, 10 );
     box.append( lbl );
     box.append( _affects_label );
+    box.append( template_btn );
 
     return( box );
 
+  }
+
+  //-------------------------------------------------------------
+  // Creates a save as template dialog and displays it to the user
+  // If the user successfully adds a name, adds it to the list of
+  // templates and saves it to the application template file.
+  private void action_save_as_template( SimpleAction action, Variant? variant ) {
+    assert( variant != null );
+    var template_type = (TemplateType)variant.get_int32();
+    _win.templates.save_as_template( _win, template_type, (template) => {
+      var style_template = (StyleTemplate)template;
+      // style_template.update_from_style( style );  TODO - we need to get "style" here
+    });
+  }
+
+  private void action_load_default_template() {
+    // TODO
+  }
+
+  //-------------------------------------------------------------
+  // Loads the given template.
+  private void action_load_saved_template( SimpleAction action, Variant? variant ) {
+
+    int    index;
+    string name;
+
+    assert( variant != null );
+    variant.get( "(is)", out index, out name );
+
+    var template_type = (TemplateType)index;
+    _win.templates.add_template( template_type.create_template( name ) );
+
+  }
+
+  private void action_delete_saved_template( SimpleAction action, Variant? variant ) {
+    int    template_index;
+    string template_name;
+    assert( variant != null );
+    variant.get( "(is)", out template_index, out template_name );
+    _win.templates.delete_template( (TemplateType)template_index, template_name );
   }
 
   /* Adds the options to manipulate line options */

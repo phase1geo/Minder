@@ -69,6 +69,9 @@ sources += files(
     'TagEditor.vala',
     'TagInspector.vala',
     'Tags.vala',
+    'Template.vala',
+    'TemplateGroup.vala',
+    'Templates.vala',
     'TextCompletion.vala',
     'TextMenu.vala',
     'TextParser.vala',
@@ -90,5 +93,6 @@ subdir('exports')
 subdir('layouts')
 subdir('parsers')
 subdir('styles')
+subdir('templates')
 subdir('themes')
 subdir('undo_actions')

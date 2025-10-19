@@ -2851,6 +2851,13 @@ public class Node : Object {
     double w = _width  - (style.node_margin * 2);
     double h = _height - (style.node_margin * 2);
 
+    // If we are a root node and our alpha value is not 1.0, draw our shape in the background color to hide
+    // any links that are drawn under us.
+    if( is_root() && (_alpha < 1.0) ) {
+      Utils.set_context_color( ctx, theme.get_color( "background" ) );
+      style.draw_node_fill( ctx, x, y, w, h, side );
+    }
+
     /* Set the fill color */
     if( mode.is_selected() && !exporting ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
