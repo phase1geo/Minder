@@ -86,13 +86,8 @@ public class StyleInspector : Box {
   private Expander         _callout_exp;
   private bool             _change_add = true;
   private bool             _ignore     = false;
-
-  private const GLib.ActionEntry action_entries[] = {
-    { "action_save_as_template",      action_save_as_template, "s" },
-    { "action_load_default_template", action_load_default_template },
-    { "action_load_saved_template",   action_load_saved_template, "(is)" },
-    { "action_delete_saved_template", action_delete_saved_template, "(is)" },
-  };
+  private Style            _curr_style = new Style.templated();
+  private MenuButton       _template_btn;
 
   public static Styles styles = new Styles();
 
@@ -140,10 +135,11 @@ public class StyleInspector : Box {
     win.canvas_changed.connect( tab_changed );
     editable_changed.connect( handle_current_changed );
 
-    // Add the menu actions
-    var actions = new SimpleActionGroup();
-    actions.add_action_entries( action_entries, this );
-    insert_action_group( "styles", actions );
+    // Add the template menus
+    _win.templates.add_menus( TemplateType.STYLE_GENERAL,    this, win, add_style_template, load_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_NODE,       this, win, add_style_template, load_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_CONNECTION, this, win, add_style_template, load_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_CALLOUT,    this, win, add_style_template, load_style_template );
 
   }
 
@@ -159,6 +155,21 @@ public class StyleInspector : Box {
     handle_ui_changed();
   }
 
+  //-------------------------------------------------------------
+  // Creates a save as template dialog and displays it to the user
+  // If the user successfully adds a name, adds it to the list of
+  // templates and saves it to the application template file.
+  private void add_style_template( Template template ) {
+    var style_template = (StyleTemplate)template;
+    style_template.update_from_style( _curr_style );
+  }
+
+  //-------------------------------------------------------------
+  // Loads the given template into this widget.
+  private void load_style_template( Template template ) {
+    update_style_from_template( (StyleTemplate)template );
+  }
+
   /* Creates the menubutton that changes the affect */
   private Box create_affect_ui() {
 
@@ -171,81 +182,24 @@ public class StyleInspector : Box {
       halign = Align.START
     };
 
-    var saved_menu = new GLib.Menu();
-    saved_menu.append( _( "Save Style As Template" ), "styles.action_save_as_template('general')" );
-
-    var load_submenu = new GLib.Menu();
-    var load_menu = new GLib.Menu();
-    load_menu.append_submenu( _( "Load Saved Style" ), null /* load_submenu */ );
-    load_menu.append( _( "Load Default Style" ), "styles.action_load_default_template" );
-
-    var del_submenu = new GLib.Menu();
-    var delete_menu = new GLib.Menu();
-    delete_menu.append_submenu( _( "Delete Saved Style" ), null /* del_submenu */ );
-
-    var menu = new GLib.Menu();
-    menu.append_section( _( "General" ), saved_menu );
-    menu.append_section( null, load_menu );
-    menu.append_section( null, delete_menu );
-
-    var template_btn = new MenuButton() {
+    _template_btn = new MenuButton() {
       halign = Align.END,
       icon_name = "view-more-symbolic",
-      hexpand = true,
-      menu_model = menu
+      hexpand = true
     };
 
     /* Pack the menubutton box */
     var box = new Box( Orientation.HORIZONTAL, 10 );
     box.append( lbl );
     box.append( _affects_label );
-    box.append( template_btn );
+    box.append( _template_btn );
 
     return( box );
 
   }
 
   //-------------------------------------------------------------
-  // Creates a save as template dialog and displays it to the user
-  // If the user successfully adds a name, adds it to the list of
-  // templates and saves it to the application template file.
-  private void action_save_as_template( SimpleAction action, Variant? variant ) {
-    assert( variant != null );
-    var template_type = (TemplateType)variant.get_int32();
-    _win.templates.save_as_template( _win, template_type, (template) => {
-      var style_template = (StyleTemplate)template;
-      // style_template.update_from_style( style );  TODO - we need to get "style" here
-    });
-  }
-
-  private void action_load_default_template() {
-    // TODO
-  }
-
-  //-------------------------------------------------------------
-  // Loads the given template.
-  private void action_load_saved_template( SimpleAction action, Variant? variant ) {
-
-    int    index;
-    string name;
-
-    assert( variant != null );
-    variant.get( "(is)", out index, out name );
-
-    var template_type = (TemplateType)index;
-    _win.templates.add_template( template_type.create_template( name ) );
-
-  }
-
-  private void action_delete_saved_template( SimpleAction action, Variant? variant ) {
-    int    template_index;
-    string template_name;
-    assert( variant != null );
-    variant.get( "(is)", out template_index, out template_name );
-    _win.templates.delete_template( (TemplateType)template_index, template_name );
-  }
-
-  /* Adds the options to manipulate line options */
+  // Adds the options to manipulate line options.
   private Box create_branch_ui() {
 
     var branch_type   = create_branch_type_ui();
@@ -329,6 +283,8 @@ public class StyleInspector : Box {
     }
   }
 
+  //-------------------------------------------------------------
+  // Creates the UI for changing the branch drawing type.
   private Revealer create_branch_radius_ui() {
 
     var lbl = new Label( _( "Corner Radius" ) ) {
@@ -374,6 +330,8 @@ public class StyleInspector : Box {
     return( false );
   }
 
+  //-------------------------------------------------------------
+  // Creates the branch margin UI.
   private Box create_branch_margin_ui() {
 
     var lbl = new Label( _( "Margin" ) ) {
@@ -1562,6 +1520,45 @@ public class StyleInspector : Box {
   }
 
   //-------------------------------------------------------------
+  // Update style from template style.
+  private void update_style_from_template( StyleTemplate template ) {
+    switch( _affects ) {
+      case StyleAffects.ALL :
+        var nodes = _map.get_nodes();
+        var conns = _map.connections.connections;
+        for( int i=0; i<nodes.length; i++ ) {
+          nodes.index( i ).set_style_for_tree( template.style );
+        }
+        for( int i=0; i<conns.length; i++ ) {
+          conns.index( i ).style = template.style;
+        }
+        update_ui_with_style( styles.get_global_style() );
+        break;
+      case StyleAffects.SELECTED_NODES :
+        var nodes = _map.selected.nodes();
+        for( int i=0; i<nodes.length; i++ ) {
+          nodes.index( i ).style = template.style;
+        }
+        update_ui_with_style( nodes.index( 0 ).style );
+        break;
+      case StyleAffects.SELECTED_CONNECTIONS :
+        var conns = _map.selected.connections();
+        for( int i=0; i<conns.length; i++ ) {
+          conns.index( i ).style = template.style;
+        }
+        update_ui_with_style( conns.index( 0 ).style );
+        break;
+      case StyleAffects.SELECTED_CALLOUTS :
+        var callouts = _map.selected.callouts();
+        for( int i=0; i<callouts.length; i++ ) {
+          callouts.index( i ).style = template.style;
+        }
+        update_ui_with_style( callouts.index( 0 ).style );
+        break;
+    }
+  }
+
+  //-------------------------------------------------------------
   // Sets the affects value and save the change to the settings
   private void set_affects( StyleAffects affects ) {
     var selected         = _map.selected;
@@ -1569,42 +1566,47 @@ public class StyleInspector : Box {
     _affects_label.label = affects.label();
     switch( _affects ) {
       case StyleAffects.ALL     :
-        update_ui_with_style( styles.get_global_style() );
-        _branch_group.visible  = true;
-        _link_group.visible    = true;
-        _node_group.visible    = true;
-        _conn_group.visible    = true;
-        _callout_group.visible = true;
-        _conn_exp.expanded     = _settings.get_boolean( "style-connection-options-expanded" );
-        _callout_exp.expanded  = _settings.get_boolean( "style-callout-options-expanded" ); 
+        _curr_style = styles.get_global_style();
+        _branch_group.visible    = true;
+        _link_group.visible      = true;
+        _node_group.visible      = true;
+        _conn_group.visible      = true;
+        _callout_group.visible   = true;
+        _conn_exp.expanded       = _settings.get_boolean( "style-connection-options-expanded" );
+        _callout_exp.expanded    = _settings.get_boolean( "style-callout-options-expanded" ); 
+        _template_btn.menu_model = _win.templates.get_template_group_menu( TemplateType.STYLE_GENERAL );
         break;
       case StyleAffects.SELECTED_NODES :
-        update_ui_with_style( selected.nodes().index( 0 ).style );
-        _branch_group.visible  = true;
-        _link_group.visible    = true;
-        _node_group.visible    = true;
-        _conn_group.visible    = false;
-        _callout_group.visible = false;
+        _curr_style = selected.nodes().index( 0 ).style;
+        _branch_group.visible    = true;
+        _link_group.visible      = true;
+        _node_group.visible      = true;
+        _conn_group.visible      = false;
+        _callout_group.visible   = false;
+        _template_btn.menu_model = _win.templates.get_template_group_menu( TemplateType.STYLE_NODE );
         break;
       case StyleAffects.SELECTED_CONNECTIONS :
-        update_ui_with_style( selected.connections().index( 0 ).style );
-        _branch_group.visible  = false;
-        _link_group.visible    = false;
-        _node_group.visible    = false;
-        _conn_group.visible    = true;
-        _callout_group.visible = false;
-        _conn_exp.expanded     = true;
+        _curr_style = selected.connections().index( 0 ).style;
+        _branch_group.visible    = false;
+        _link_group.visible      = false;
+        _node_group.visible      = false;
+        _conn_group.visible      = true;
+        _callout_group.visible   = false;
+        _conn_exp.expanded       = true;
+        _template_btn.menu_model = _win.templates.get_template_group_menu( TemplateType.STYLE_CONNECTION );
         break;
       case StyleAffects.SELECTED_CALLOUTS :
-        update_ui_with_style( selected.callouts().index( 0 ).style );
-        _branch_group.visible  = false;
-        _link_group.visible    = false;
-        _node_group.visible    = false;
-        _conn_group.visible    = false;
-        _callout_group.visible = true;
-        _callout_exp.expanded  = true;
+        _curr_style = selected.callouts().index( 0 ).style;
+        _branch_group.visible    = false;
+        _link_group.visible      = false;
+        _node_group.visible      = false;
+        _conn_group.visible      = false;
+        _callout_group.visible   = true;
+        _callout_exp.expanded    = true;
+        _template_btn.menu_model = _win.templates.get_template_group_menu( TemplateType.STYLE_CALLOUT );
         break;
     }
+    update_ui_with_style( _curr_style );
   }
 
   //-------------------------------------------------------------

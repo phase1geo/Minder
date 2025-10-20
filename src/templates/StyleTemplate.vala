@@ -21,7 +21,7 @@
 
 public class StyleTemplate : Template {
 
-  protected Style style { get; default = new Style.templated(); }
+  public Style style { get; default = new Style(); }
 
   //-------------------------------------------------------------
   // Default constructor

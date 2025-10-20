@@ -61,6 +61,7 @@ public enum TemplateType {
       case STYLE_CALLOUT           :  return( _( "Callout Options" ) );
       case STYLE_OPTION_BRANCH     :  return( _( "Node Branch Options" ) );
       case STYLE_OPTION_LINK       :  return( _( "Node Link Options" ) );
+      case STYLE_OPTION_NODE       :  return( _( "Node Options" ) );
       case STYLE_OPTION_CONNECTION :  return( _( "Connection Options" ) );
       case STYLE_OPTION_CALLOUT    :  return( _( "Callout Options" ) );
       default                      :  assert_not_reached();
@@ -104,8 +105,6 @@ public enum TemplateType {
 
 }
 
-public delegate void TemplateAddFunc( Template template );
-
 public class Templates {
 
   public Array<TemplateGroup> _template_groups;
@@ -117,6 +116,9 @@ public class Templates {
     for( int i=0; i<TemplateType.NUM; i++ ) {
       var ttype = (TemplateType)i;
       var group = new TemplateGroup( ttype );
+      group.changed.connect(() => {
+        save();
+      });
       _template_groups.append_val( group );
     }
   }
@@ -125,6 +127,18 @@ public class Templates {
   // Returns the template with the given name, if it exists.
   public Template? get_template( TemplateType ttype, string name ) {
     return( _template_groups.index( (int)ttype ).get_template( name ) );
+  }
+
+  //-------------------------------------------------------------
+  // Adds the menus for the given template type group.
+  public void add_menus( TemplateType ttype, Widget w, MainWindow win, TemplateAddLoadFunc add_func, TemplateAddLoadFunc load_func ) {
+    _template_groups.index( (int)ttype ).add_menus( w, win, add_func, load_func );
+  }
+
+  //-------------------------------------------------------------
+  // Retrieves the menu for the given template group.
+  public GLib.Menu get_template_group_menu( TemplateType ttype ) {
+    return( _template_groups.index( (int)ttype ).menu );
   }
 
   //-------------------------------------------------------------
@@ -139,58 +153,6 @@ public class Templates {
   public void delete_template( TemplateType ttype, string name ) {
     _template_groups.index( (int)ttype ).delete_template( name );
     save();
-  }
-
-  //-------------------------------------------------------------
-  // Creates a save as template dialog and displays it to the user
-  // If the user successfully adds a name, adds it to the list of
-  // templates and saves it to the application template file.
-  public void save_as_template( MainWindow win, TemplateType template_type, TemplateAddFunc func ) {
-
-    var dialog = new Granite.Dialog() {
-      modal         = true,
-      transient_for = win
-    };
-
-    dialog.add_button( _( "Cancel" ), ResponseType.CANCEL );
-    dialog.add_button( _( "Save Template" ), ResponseType.ACCEPT );
-    dialog.set_default_response( ResponseType.ACCEPT );
-
-    var save = dialog.get_widget_for_response( ResponseType.ACCEPT );
-    save.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
-
-    var label = new Label( _( "Template Name:" ) ) {
-      halign = Align.START,
-    };
-
-    var entry = new Entry() {
-      halign           = Align.FILL,
-      width_chars      = 40,
-      placeholder_text = _( "Enter template name" )
-    };
-
-    entry.activate.connect(() => {
-      dialog.activate_default();
-    });
-
-    var box = new Box( Orientation.HORIZONTAL, 5 );
-    box.append( label );
-    box.append( entry );
-
-    dialog.get_content_area().append( box );
-
-    dialog.response.connect((id) => {
-      if( id == ResponseType.ACCEPT ) {
-        var template = template_type.create_template( entry.text );
-        func( template );
-        add_template( template );
-      }
-      dialog.destroy();
-    });
-
-    dialog.present();
-    entry.grab_focus();
-
   }
 
   //-------------------------------------------------------------

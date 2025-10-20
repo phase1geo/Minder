@@ -160,7 +160,8 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   public signal void canvas_changed( MindMap? map );
 
-  /* Create the main window UI */
+  //-------------------------------------------------------------
+  // Create the main window UI.
   public MainWindow( Gtk.Application app, GLib.Settings settings ) {
 
     Object( application: app );
@@ -169,15 +170,14 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     // Create the templates
     _templates = new Templates();
-    _templates.load();
 
     var window_w = settings.get_int( "window-w" );
     var window_h = settings.get_int( "window-h" );
 
-    /* Create the exports and load it */
+    // Create the exports and load it
     _exports = new Exports();
 
-    /* Create the header bar */
+    // Create the header bar
     _header = new HeaderBar() {
       show_title_buttons = true,
       title_widget       = new Label( _( "Minder" ) )
@@ -197,7 +197,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _actions = new SimpleActionGroup ();
     insert_action_group( "win", _actions );
 
-    /* Create the notebook */
+    // Create the notebook
     _nb = new Notebook() {
       halign     = Align.FILL,
       hexpand    = true,
@@ -237,7 +237,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     content.append( _nb );
     content.append( _brain );
 
-    /* Create title toolbar */
+    // Create title toolbar
     var new_btn = new Button.from_icon_name( get_icon_name( "document-new" ) );
     register_widget_for_shortcut( new_btn, KeyCommand.FILE_NEW, _( "New File" ) );
     new_btn.clicked.connect(() => { execute_command( KeyCommand.FILE_NEW ); });
@@ -267,10 +267,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     _redo_btn.clicked.connect(() => { execute_command( KeyCommand.REDO_ACTION ); });
     _header.pack_start( _redo_btn );
 
-    /* Create unicode inserter */
+    // Create unicode inserter
     _unicoder = new UnicodeInsert();
 
-    /* Add the buttons on the right side in the reverse order */
+    // Add the buttons on the right side in the reverse order
     add_property_button();
     add_miscellaneous_button();
     add_export_button();
@@ -280,7 +280,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     add_braindump_button();
     add_debug_button();
 
-    /* Create the panel so that we can resize */
+    // Create the panel so that we can resize
     _pane = new Paned( Orientation.HORIZONTAL ) {
       halign           = Align.FILL,
       valign           = Align.FILL,
@@ -297,10 +297,10 @@ public class MainWindow : Gtk.ApplicationWindow {
       _settings.set_int( "properties-width", _pane.position );
     });
 
-    /* Display the UI */
+    // Display the UI
     child = _pane;
 
-    /* If the settings says to display the properties, do it now */
+    // If the settings says to display the properties, do it now
     if( _settings.get_boolean( "current-properties-shown" ) ) {
       show_properties( "current", PropertyGrab.NONE );
     } else if( _settings.get_boolean( "style-properties-shown" ) ) {
@@ -313,7 +313,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       show_properties( "map", PropertyGrab.NONE );
     }
 
-    /* Look for any changes to the settings */
+    // Look for any changes to the settings
     _text_size = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
     settings.changed.connect((key) => {
       switch( key ) {
@@ -327,7 +327,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       }
     });
 
-    /* If we receive focus, update the titlebar */
+    // If we receive focus, update the titlebar
     var focus = new EventControllerFocus();
     _pane.add_controller( focus );
     focus.enter.connect(() => {
@@ -335,8 +335,11 @@ public class MainWindow : Gtk.ApplicationWindow {
       update_title( map );
     });
 
-    /* Load the exports data */
+    // Load the exports data
     _exports.load();
+
+    // Load the templates
+    _templates.load();
 
     close_request.connect(() => {
       save_window_size();
@@ -352,7 +355,8 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Returns the name of the icon to use for a headerbar icon */
+  //-------------------------------------------------------------
+  // Returns the name of the icon to use for a headerbar icon.
   private string get_icon_name( string icon_name ) {
     return( "%s%s".printf( icon_name, (on_elementary ? "" : "-symbolic") ) );
   }
