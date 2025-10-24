@@ -1511,6 +1511,7 @@ public class MapModel {
       current.attach( _attach_node.parent, (_attach_node.index() + 1), _theme );
     } else {
       current.attach( _attach_node, -1, _theme );
+      current.set_style_for_tree( _attach_node.style );
     }
 
     /* Attach the node */

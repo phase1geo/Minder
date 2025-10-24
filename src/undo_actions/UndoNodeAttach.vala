@@ -91,6 +91,7 @@ public class UndoNodeAttach : UndoItem {
       if( _old_summary != null ) {
         _old_summary.add_node( _n );
       }
+      _n.set_style_for_tree( _old_parent.style );
     }
     map.set_current_node( _n );
     map.animator.animate();
@@ -115,12 +116,14 @@ public class UndoNodeAttach : UndoItem {
     if( _old_parent == null ) {
       _n.attach( _new_parent, -1, map.get_theme() );
       _n.set_node_info( _new_info, ref index );
+      _n.set_style_for_tree( _new_parent.style );
     } else {
       _n.set_node_info( _new_info, ref index );
       _n.attach_init( _new_parent, _new_index );
       if( _new_summary != null ) {
         _new_summary.add_node( _n );
       }
+      _n.set_style_for_tree( _new_parent.style );
     }
     map.set_current_node( _n );
     map.animator.animate();
