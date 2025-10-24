@@ -374,5 +374,12 @@
           ('name', '#hex RGB color')
       </description>
     </key>
+    <key name="show-temp-dir-in-map-sidebar" type="b">
+      <default>false</default>
+      <summary>If set to true, displays the temporary directory used to store the contents of the current mindmap
+        in the map sidebar.</summary>
+      <description>If set to true, displays the temporary directory used to store the contents of the current mindmap
+        in the map sidebar.</description>
+    </key>
   </schema>
 </schemalist>

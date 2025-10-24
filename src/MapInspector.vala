@@ -42,6 +42,7 @@ public class MapInspector : Box {
   private Button        _vcenter;
   private Button        _vbottom;
   private Revealer      _alignment_revealer;
+  private LinkButton    _map_dir;
 
   // This signal can be called by outside code to force icons to be updated
   public signal void update_icons();
@@ -63,6 +64,7 @@ public class MapInspector : Box {
     add_layout_ui();
     add_alignment_ui();
     add_theme_ui();
+    add_dir_ui();
     add_button_ui();
 
     // Listen for changes to the current tab
@@ -107,6 +109,8 @@ public class MapInspector : Box {
       _hide_connections.set_active( _map.model.connections.hide );
       _hide_callouts.set_active( _map.model.hide_callouts );
       _map.model.set_theme( _map.get_theme(), false );
+      _map_dir.label = Path.get_basename( _map.doc.temp_dir );
+      _map_dir.uri   = "file://" + _map.doc.temp_dir;
     }
     update_theme_layout();
   }
@@ -397,6 +401,26 @@ public class MapInspector : Box {
     /* Pack the panel */
     append( lbl );
     append( sw );
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds the temporary directory link button UI.
+  private void add_dir_ui() {
+
+    _map_dir = new LinkButton( "" ) {
+      halign = Align.CENTER,
+      visible = _settings.get_boolean( "show-temp-dir-in-map-sidebar" ),
+      tooltip_text = _( "Copy location of temporary directory" )
+    };
+
+    _settings.changed.connect((key) => {
+      if( key == "show-temp-dir-in-map-sidebar" ) {
+        _map_dir.visible = _settings.get_boolean( key );
+      }
+    });
+
+    append( _map_dir );
 
   }
 

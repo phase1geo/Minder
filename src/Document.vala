@@ -109,6 +109,11 @@ public class Document : Object {
       return( _filename );
     }
   }
+  public string temp_dir {
+    get {
+      return( _temp_dir );
+    }
+  }
   public string load_version {
     get {
       return( _load_version );

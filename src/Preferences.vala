@@ -453,6 +453,10 @@ public class Preferences : Granite.Dialog {
     grid.attach( make_switch( "ask-for-upgrade-action" ), 1, row );
     row++;
 
+    grid.attach( make_label( _( "Show temporary directory containing current mindmap in map sidebar" ) ), 0, row );
+    grid.attach( make_switch( "show-temp-dir-in-map-sidebar" ), 1, row );
+    row++;
+
     grid.attach( make_separator(), 0, row, 4 );
     row++;
 
