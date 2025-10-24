@@ -1589,43 +1589,43 @@ public class StyleInspector : Box {
     switch( _affects ) {
       case StyleAffects.ALL     :
         _curr_style = styles.get_global_style();
-        _branch_group.visible    = true;
-        _link_group.visible      = true;
-        _node_group.visible      = true;
-        _conn_group.visible      = true;
-        _callout_group.visible   = true;
-        _conn_exp.expanded       = _settings.get_boolean( "style-connection-options-expanded" );
-        _callout_exp.expanded    = _settings.get_boolean( "style-callout-options-expanded" ); 
-        _template_btn.menu_model = _win.templates.get_template_group_menu( TemplateType.STYLE_GENERAL );
+        _branch_group.visible  = true;
+        _link_group.visible    = true;
+        _node_group.visible    = true;
+        _conn_group.visible    = true;
+        _callout_group.visible = true;
+        _conn_exp.expanded     = _settings.get_boolean( "style-connection-options-expanded" );
+        _callout_exp.expanded  = _settings.get_boolean( "style-callout-options-expanded" ); 
+        _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_GENERAL );
         break;
       case StyleAffects.SELECTED_NODES :
         _curr_style = selected.nodes().index( 0 ).style;
-        _branch_group.visible    = true;
-        _link_group.visible      = true;
-        _node_group.visible      = true;
-        _conn_group.visible      = false;
-        _callout_group.visible   = false;
-        _template_btn.menu_model = _win.templates.get_template_group_menu( TemplateType.STYLE_NODE );
+        _branch_group.visible  = true;
+        _link_group.visible    = true;
+        _node_group.visible    = true;
+        _conn_group.visible    = false;
+        _callout_group.visible = false;
+        _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_NODE );
         break;
       case StyleAffects.SELECTED_CONNECTIONS :
         _curr_style = selected.connections().index( 0 ).style;
-        _branch_group.visible    = false;
-        _link_group.visible      = false;
-        _node_group.visible      = false;
-        _conn_group.visible      = true;
-        _callout_group.visible   = false;
-        _conn_exp.expanded       = true;
-        _template_btn.menu_model = _win.templates.get_template_group_menu( TemplateType.STYLE_CONNECTION );
+        _branch_group.visible  = false;
+        _link_group.visible    = false;
+        _node_group.visible    = false;
+        _conn_group.visible    = true;
+        _callout_group.visible = false;
+        _conn_exp.expanded     = true;
+        _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_CONNECTION );
         break;
       case StyleAffects.SELECTED_CALLOUTS :
         _curr_style = selected.callouts().index( 0 ).style;
-        _branch_group.visible    = false;
-        _link_group.visible      = false;
-        _node_group.visible      = false;
-        _conn_group.visible      = false;
-        _callout_group.visible   = true;
-        _callout_exp.expanded    = true;
-        _template_btn.menu_model = _win.templates.get_template_group_menu( TemplateType.STYLE_CALLOUT );
+        _branch_group.visible  = false;
+        _link_group.visible    = false;
+        _node_group.visible    = false;
+        _conn_group.visible    = false;
+        _callout_group.visible = true;
+        _callout_exp.expanded  = true;
+        _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_CALLOUT );
         break;
     }
     update_ui_with_style( _curr_style );

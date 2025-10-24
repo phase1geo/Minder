@@ -137,7 +137,7 @@ public class Templates {
 
   //-------------------------------------------------------------
   // Retrieves the menu for the given template group.
-  public GLib.Menu get_template_group_menu( TemplateType ttype ) {
+  public PopoverMenu get_template_group_menu( TemplateType ttype ) {
     return( _template_groups.index( (int)ttype ).menu );
   }
 

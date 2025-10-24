@@ -27,9 +27,9 @@ public class TemplateGroup {
 
   private TemplateType    _type;
   private Array<Template> _templates;
-  private GLib.Menu?      _menu = null;
+  private PopoverMenu?    _menu = null;
 
-  public GLib.Menu menu {
+  public PopoverMenu menu {
     get {
       assert( _menu != null );
       return( _menu );
@@ -159,17 +159,33 @@ public class TemplateGroup {
     load_menu.append_submenu( _( "Load Saved Style" ), load_submenu );
     // TODO - load_menu.append( _( "Load Default Style" ), "styles.action_load_default_template" );
 
+    var del_item = new GLib.MenuItem( null, null );
+    del_item.set_attribute( "custom", "s", "delete" );
+
+    /*
     var del_submenu = new GLib.Menu();
     var delete_menu = new GLib.Menu();
     delete_menu.append_submenu( _( "Delete Saved Style" ), del_submenu );
+    */
 
-    _menu = new GLib.Menu();
-    _menu.append_section( _type.label(), saved_menu );
-    _menu.append_section( null, load_menu );
-    _menu.append_section( null, delete_menu );
+    var menu = new GLib.Menu();
+    menu.append_section( _type.label(), saved_menu );
+    menu.append_section( null, load_menu );
+    menu.append_item( del_item );
+
+    var del_menu = new TemplateDeleter( this );
+
+    _menu = new PopoverMenu.from_model( menu ) {
+      margin_top = 5
+    };
+    _menu.add_child( del_menu, "delete" );
+
+    del_menu.close.connect(() => {
+      _menu.popdown();
+    });
 
     local_changed.connect(() => {
-      update_menu( load_submenu, del_submenu );
+      update_menu( load_submenu, del_menu );
     });
 
   }
@@ -195,13 +211,12 @@ public class TemplateGroup {
   //-------------------------------------------------------------
   // Updates the given load and delete menus with the latest list of
   // templates in this group.
-  private void update_menu( GLib.Menu ld_menu, GLib.Menu dl_menu ) {
+  private void update_menu( GLib.Menu ld_menu, TemplateDeleter deleter ) {
     ld_menu.remove_all();
-    dl_menu.remove_all();
+    deleter.update_list();
     for( int i=0; i<_templates.length; i++ ) {
       var name = _templates.index( i ).name;
       ld_menu.append( name, "%s.action_load_saved_template('%s')".printf( _type.to_string(), name ) );
-      dl_menu.append( name, "%s.action_delete_saved_template('%s')".printf( _type.to_string(), name ) );
     }
   }
 
@@ -223,6 +238,16 @@ public class TemplateGroup {
   public Template? get_template( string name ) {
     var index = get_template_index( name );
     return( (index == -1) ? null : _templates.index( index ) );
+  }
+
+  //-------------------------------------------------------------
+  // Gets the list of template names in order that they are stored.
+  public Array<string> get_names() {
+    var names = new Array<string>();
+    for( int i=0; i<_templates.length; i++ ) {
+      names.append_val( _templates.index( i ).name );
+    }
+    return( names );
   }
 
   //-------------------------------------------------------------
