@@ -263,7 +263,10 @@ public class ThemeEditor : Gtk.Box {
       if( id == ResponseType.ACCEPT ) {
         delete_theme();
       }
+      dialog.close();
     });
+
+    dialog.present();
 
   }
 
