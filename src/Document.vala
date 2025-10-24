@@ -743,7 +743,15 @@ public class Document : Object {
   }
 
   //-------------------------------------------------------------
-  // Deletes the given unnamed file when called
+  // Auto-saves the document
+  public void auto_save() {
+    save_xml();
+  }
+
+  //-------------------------------------------------------------
+  // If this documen hasn't been named by the user but we are deleting
+  // it, remove the unnamed file.  We don't touch the temporary directory
+  // because we may need to save it with a given name.
   public bool remove() {
     if( !_from_user ) {
       FileUtils.unlink( _filename );
@@ -752,9 +760,23 @@ public class Document : Object {
   }
 
   //-------------------------------------------------------------
-  // Auto-saves the document
-  public void auto_save() {
-    save_xml();
+  // Recursively deletes a given directory.
+  private void delete_recursively( File file ) throws Error {
+
+    try {
+      var enumerator = file.enumerate_children ( FileAttribute.STANDARD_NAME, FileQueryInfoFlags.NOFOLLOW_SYMLINKS );
+      FileInfo? info;
+      while( (info = enumerator.next_file ()) != null ) {
+        var child = file.get_child (info.get_name ());
+        delete_recursively( child );
+      }
+    } catch (Error e) {
+      // ignore if not a directory
+    }
+
+    // Finally delete the file or directory itself
+    file.delete ();
+
   }
 
   //-------------------------------------------------------------
@@ -770,7 +792,8 @@ public class Document : Object {
     }
 
     // Delete the temporary directory
-    DirUtils.remove( _temp_dir );
+    var dir = File.new_for_path( _temp_dir );
+    delete_recursively( dir );
 
   }
 

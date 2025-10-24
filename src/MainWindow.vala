@@ -498,6 +498,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void close_tab( int page_num ) {
     var map = get_map( page_num );
     if( map.doc.is_saved() ) {
+      map.close();
       remove_tab( page_num );
     } else {
       show_save_warning( map );
@@ -1296,8 +1297,11 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     dialog.response.connect((id) => {
       switch( id ) {
-        case ResponseType.ACCEPT :  save_file( map, true );  break;
+        case ResponseType.ACCEPT :
+          save_file( map, true );
+          break;
         case ResponseType.CLOSE  :  
+          map.close();
           map.doc.remove();
           remove_tab( null );
           break;
@@ -1603,6 +1607,7 @@ public class MainWindow : Gtk.ApplicationWindow {
           map.doc.filename = fname;
           map.doc.save();
           if( remove_after_save ) {
+            map.close();
             remove_tab( null );
           } else {
             set_tab_label_info( _nb.page, map.editable, map.doc.label, fname );
@@ -1658,7 +1663,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
       if( map.editable ) {
-        map.doc.cleanup();
+        map.close();
       }
     }
   }
