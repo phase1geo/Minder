@@ -73,7 +73,7 @@ public class Themes : Object {
     for( int i=0; i<_themes.length; i++ ) {
       var picture = new Picture.for_paintable( _themes.index( i ).make_icon() ) {
         margin_top = 10,
-        can_shrink = true
+        can_shrink = false
       };
       icons.append_val( picture );
     }
