@@ -44,6 +44,7 @@ public enum StyleAffects {
 
 public class StyleInspector : Box {
 
+  private MainWindow       _win;
   private MindMap?         _map = null;
   private GLib.Settings    _settings;
   private Revealer         _branch_radius_revealer;
@@ -85,6 +86,8 @@ public class StyleInspector : Box {
   private Expander         _callout_exp;
   private bool             _change_add = true;
   private bool             _ignore     = false;
+  private Style            _curr_style = new Style.templated();
+  private MenuButton       _template_btn;
 
   public static Styles styles = new Styles();
 
@@ -95,6 +98,7 @@ public class StyleInspector : Box {
 
     Object( orientation:Orientation.VERTICAL, spacing:20 );
 
+    _win      = win;
     _settings = settings;
 
     /* Initialize the affects */
@@ -131,6 +135,12 @@ public class StyleInspector : Box {
     win.canvas_changed.connect( tab_changed );
     editable_changed.connect( handle_current_changed );
 
+    // Add the template menus
+    _win.templates.add_menus( TemplateType.STYLE_GENERAL,    this, win, add_style_template, load_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_NODE,       this, win, add_style_template, load_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_CONNECTION, this, win, add_style_template, load_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_CALLOUT,    this, win, add_style_template, load_style_template );
+
   }
 
   /* Listen for any changes to the current tab in the main window */
@@ -145,6 +155,44 @@ public class StyleInspector : Box {
     handle_ui_changed();
   }
 
+  //-------------------------------------------------------------
+  // Creates a save as template dialog and displays it to the user
+  // If the user successfully adds a name, adds it to the list of
+  // templates and saves it to the application template file.
+  private void add_style_template( Template template ) {
+
+    var style_template = (StyleTemplate)template;
+    style_template.update_from_style( _curr_style );
+
+    // If we are adding a new general style template, add the template
+    // to the other styles as well.
+    if( style_template.ttype == TemplateType.STYLE_GENERAL ) {
+
+      // Add the node style
+      var node_style = new StyleTemplate( TemplateType.STYLE_NODE, template.name );
+      node_style.update_from_style( style_template.style );
+      _win.templates.add_template( node_style );
+
+      // Add the connection style
+      var conn_style = new StyleTemplate( TemplateType.STYLE_CONNECTION, template.name );
+      conn_style.update_from_style( style_template.style );
+      _win.templates.add_template( conn_style );
+
+      // Add the callout style
+      var call_style = new StyleTemplate( TemplateType.STYLE_CALLOUT, template.name );
+      call_style.update_from_style( style_template.style );
+      _win.templates.add_template( call_style );
+
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Loads the given template into this widget.
+  private void load_style_template( Template template ) {
+    update_style_from_template( (StyleTemplate)template );
+  }
+
   /* Creates the menubutton that changes the affect */
   private Box create_affect_ui() {
 
@@ -157,16 +205,24 @@ public class StyleInspector : Box {
       halign = Align.START
     };
 
+    _template_btn = new MenuButton() {
+      halign = Align.END,
+      icon_name = "view-more-symbolic",
+      hexpand = true
+    };
+
     /* Pack the menubutton box */
     var box = new Box( Orientation.HORIZONTAL, 10 );
     box.append( lbl );
     box.append( _affects_label );
+    box.append( _template_btn );
 
     return( box );
 
   }
 
-  /* Adds the options to manipulate line options */
+  //-------------------------------------------------------------
+  // Adds the options to manipulate line options.
   private Box create_branch_ui() {
 
     var branch_type   = create_branch_type_ui();
@@ -250,6 +306,8 @@ public class StyleInspector : Box {
     }
   }
 
+  //-------------------------------------------------------------
+  // Creates the UI for changing the branch drawing type.
   private Revealer create_branch_radius_ui() {
 
     var lbl = new Label( _( "Corner Radius" ) ) {
@@ -295,6 +353,8 @@ public class StyleInspector : Box {
     return( false );
   }
 
+  //-------------------------------------------------------------
+  // Creates the branch margin UI.
   private Box create_branch_margin_ui() {
 
     var lbl = new Label( _( "Margin" ) ) {
@@ -1483,6 +1543,44 @@ public class StyleInspector : Box {
   }
 
   //-------------------------------------------------------------
+  // Update style from template style.
+  private void update_style_from_template( StyleTemplate template ) {
+    switch( _affects ) {
+      case StyleAffects.ALL :
+        var nodes = _map.get_nodes();
+        var conns = _map.connections.connections;
+        for( int i=0; i<nodes.length; i++ ) {
+          nodes.index( i ).set_style_for_tree( template.style );
+        }
+        for( int i=0; i<conns.length; i++ ) {
+          conns.index( i ).style = template.style;
+        }
+        break;
+      case StyleAffects.SELECTED_NODES :
+        var nodes = _map.selected.nodes();
+        for( int i=0; i<nodes.length; i++ ) {
+          nodes.index( i ).style = template.style;
+        }
+        break;
+      case StyleAffects.SELECTED_CONNECTIONS :
+        var conns = _map.selected.connections();
+        for( int i=0; i<conns.length; i++ ) {
+          conns.index( i ).style = template.style;
+        }
+        break;
+      case StyleAffects.SELECTED_CALLOUTS :
+        var callouts = _map.selected.callouts();
+        for( int i=0; i<callouts.length; i++ ) {
+          callouts.index( i ).style = template.style;
+        }
+        break;
+    }
+    update_ui_with_style( template.style );
+    _map.queue_draw();
+    _map.auto_save();
+  }
+
+  //-------------------------------------------------------------
   // Sets the affects value and save the change to the settings
   private void set_affects( StyleAffects affects ) {
     var selected         = _map.selected;
@@ -1490,7 +1588,7 @@ public class StyleInspector : Box {
     _affects_label.label = affects.label();
     switch( _affects ) {
       case StyleAffects.ALL     :
-        update_ui_with_style( styles.get_global_style() );
+        _curr_style = styles.get_global_style();
         _branch_group.visible  = true;
         _link_group.visible    = true;
         _node_group.visible    = true;
@@ -1498,34 +1596,39 @@ public class StyleInspector : Box {
         _callout_group.visible = true;
         _conn_exp.expanded     = _settings.get_boolean( "style-connection-options-expanded" );
         _callout_exp.expanded  = _settings.get_boolean( "style-callout-options-expanded" ); 
+        _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_GENERAL );
         break;
       case StyleAffects.SELECTED_NODES :
-        update_ui_with_style( selected.nodes().index( 0 ).style );
+        _curr_style = selected.nodes().index( 0 ).style;
         _branch_group.visible  = true;
         _link_group.visible    = true;
         _node_group.visible    = true;
         _conn_group.visible    = false;
         _callout_group.visible = false;
+        _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_NODE );
         break;
       case StyleAffects.SELECTED_CONNECTIONS :
-        update_ui_with_style( selected.connections().index( 0 ).style );
+        _curr_style = selected.connections().index( 0 ).style;
         _branch_group.visible  = false;
         _link_group.visible    = false;
         _node_group.visible    = false;
         _conn_group.visible    = true;
         _callout_group.visible = false;
         _conn_exp.expanded     = true;
+        _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_CONNECTION );
         break;
       case StyleAffects.SELECTED_CALLOUTS :
-        update_ui_with_style( selected.callouts().index( 0 ).style );
+        _curr_style = selected.callouts().index( 0 ).style;
         _branch_group.visible  = false;
         _link_group.visible    = false;
         _node_group.visible    = false;
         _conn_group.visible    = false;
         _callout_group.visible = true;
         _callout_exp.expanded  = true;
+        _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_CALLOUT );
         break;
     }
+    update_ui_with_style( _curr_style );
   }
 
   //-------------------------------------------------------------
@@ -1571,90 +1674,103 @@ public class StyleInspector : Box {
   }
 
   private void update_link_types_with_style( Style style ) {
-    var link_types = styles.get_link_types();
-    for( int i=0; i<link_types.length; i++ ) {
-      if( link_types.index( i ).name() == style.link_type.name() ) {
-        _link_types.selected = i;
-        break;
+    if( style.link_type != null ) {
+      var link_types = styles.get_link_types();
+      for( int i=0; i<link_types.length; i++ ) {
+        if( link_types.index( i ).name() == style.link_type.name() ) {
+          _link_types.selected = i;
+          break;
+        }
       }
+      _branch_radius_revealer.visible      = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
+      _branch_radius_revealer.reveal_child = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
     }
     update_link_types_state();
-    _branch_radius_revealer.visible      = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
-    _branch_radius_revealer.reveal_child = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
   }
 
   private void update_link_dashes_with_style( Style style ) {
-    var link_dashes = styles.get_link_dashes();
-    for( int i=0; i<link_dashes.length; i++ ) {
-      if( link_dashes.index( i ).name == style.link_dash.name ) {
-        _link_dash.selected = i;
-        break;
+    if( style.link_dash != null ) {
+      var link_dashes = styles.get_link_dashes();
+      for( int i=0; i<link_dashes.length; i++ ) {
+        if( link_dashes.index( i ).name == style.link_dash.name ) {
+          _link_dash.selected = i;
+          break;
+        }
       }
     }
     _link_dash.editable_changed( _map.editable );
   }
 
   private void update_node_borders_with_style( Style style ) {
-    var node_borders = styles.get_node_borders();
-    for( int i=0; i<node_borders.length; i++ ) {
-      if( node_borders.index( i ).name() == style.node_border.name() ) {
-        _node_borders.selected = i;
-        break;
+    if( style.node_border != null ) {
+      var node_borders = styles.get_node_borders();
+      for( int i=0; i<node_borders.length; i++ ) {
+        if( node_borders.index( i ).name() == style.node_border.name() ) {
+          _node_borders.selected = i;
+          break;
+        }
       }
     }
     _node_borders.editable_changed( _map.editable );
   }
 
   private void update_node_text_align_with_style( Style style ) {
-    if( style.node_text_align == null ) return;
-    switch( style.node_text_align ) {
-      case Pango.Alignment.LEFT   :  _node_text_align.selected = 0;  break;
-      case Pango.Alignment.CENTER :  _node_text_align.selected = 1;  break;
-      case Pango.Alignment.RIGHT  :  _node_text_align.selected = 2;  break;
+    if( style.node_text_align != null ) {
+      switch( style.node_text_align ) {
+        case Pango.Alignment.LEFT   :  _node_text_align.selected = 0;  break;
+        case Pango.Alignment.CENTER :  _node_text_align.selected = 1;  break;
+        case Pango.Alignment.RIGHT  :  _node_text_align.selected = 2;  break;
+      }
     }
     _node_text_align.editable_changed( _map.editable );
   }
 
   private void update_conn_dashes_with_style( Style style ) {
-    var link_dashes = styles.get_link_dashes();
-    for( int i=0; i<link_dashes.length; i++ ) {
-      if( link_dashes.index( i ).name == style.connection_dash.name ) {
-        _conn_dash.selected = i;
-        break;
+    if( style.connection_dash != null ) {
+      var link_dashes = styles.get_link_dashes();
+      for( int i=0; i<link_dashes.length; i++ ) {
+        if( link_dashes.index( i ).name == style.connection_dash.name ) {
+          _conn_dash.selected = i;
+          break;
+        }
       }
     }
     _conn_dash.editable_changed( _map.editable );
   }
 
   private void update_conn_arrows_with_style( Style style ) {
-    string arrows[4] = {"none", "fromto", "tofrom", "both"};
-    var i = 0;
-    foreach( var arrow in arrows ) {
-      if( arrow == style.connection_arrow ) {
-        _conn_arrow.selected = i;
-        break;
+    if( style.connection_arrow != null ) {
+      string arrows[4] = {"none", "fromto", "tofrom", "both"};
+      var i = 0;
+      foreach( var arrow in arrows ) {
+        if( arrow == style.connection_arrow ) {
+          _conn_arrow.selected = i;
+          break;
+        }
+        i++;
       }
-      i++;
     }
     _conn_arrow.editable_changed( _map.editable );
   }
 
   private void update_conn_text_align_with_style( Style style ) {
-    if( style.connection_text_align == null ) return;
-    switch( style.connection_text_align ) {
-      case Pango.Alignment.LEFT   :  _conn_text_align.selected = 0;  break;
-      case Pango.Alignment.CENTER :  _conn_text_align.selected = 1;  break;
-      case Pango.Alignment.RIGHT  :  _conn_text_align.selected = 2;  break;
+    if( style.connection_text_align != null ) {
+      switch( style.connection_text_align ) {
+        case Pango.Alignment.LEFT   :  _conn_text_align.selected = 0;  break;
+        case Pango.Alignment.CENTER :  _conn_text_align.selected = 1;  break;
+        case Pango.Alignment.RIGHT  :  _conn_text_align.selected = 2;  break;
+      }
     }
     _conn_text_align.editable_changed( _map.editable );
   }
 
   private void update_callout_text_align_with_style( Style style ) {
-    if( style.callout_text_align == null ) return;
-    switch( style.callout_text_align ) {
-      case Pango.Alignment.LEFT   :  _callout_text_align.selected = 0;  break;
-      case Pango.Alignment.CENTER :  _callout_text_align.selected = 1;  break;
-      case Pango.Alignment.RIGHT  :  _callout_text_align.selected = 2;  break;
+    if( style.callout_text_align != null ) {
+      switch( style.callout_text_align ) {
+        case Pango.Alignment.LEFT   :  _callout_text_align.selected = 0;  break;
+        case Pango.Alignment.CENTER :  _callout_text_align.selected = 1;  break;
+        case Pango.Alignment.RIGHT  :  _callout_text_align.selected = 2;  break;
+      }
     }
     _callout_text_align.editable_changed( _map.editable );
   }
@@ -1680,53 +1796,106 @@ public class StyleInspector : Box {
     var callout_plength = style.callout_ptr_length;
 
     _ignore = true;
-    _branch_margin.set_value( (double)branch_margin );
-    _branch_margin.set_sensitive( _map.editable );
-    _branch_radius.set_value( (double)branch_radius );
-    _branch_radius.set_sensitive( _map.editable );
-    update_link_types_with_style( style );
-    update_link_dashes_with_style( style );
-    update_node_borders_with_style( style );
-    update_node_text_align_with_style( style );
-    update_conn_dashes_with_style( style );
-    update_conn_arrows_with_style( style );
-    update_conn_text_align_with_style( style );
-    update_callout_text_align_with_style( style );
-    _link_width.set_value( (double)link_width );
-    _link_width.set_sensitive( _map.editable );
-    _link_arrow.set_active( (bool)link_arrow );
-    _link_arrow.set_sensitive( _map.editable );
-    _node_borderwidth.set_value( (double)node_bw );
-    _node_borderwidth.set_sensitive( _map.editable );
-    _node_fill.set_active( (bool)node_fill );
-    _node_fill.set_sensitive( style.node_border.is_fillable() && _map.editable );
-    _node_margin.set_value( (double)node_margin );
-    _node_margin.set_sensitive( _map.editable );
-    _node_padding.set_value( (double)node_padding );
-    _node_padding.set_sensitive( _map.editable );
-    _node_font.set_font_features( style.node_font.to_string() );
-    _node_font.set_sensitive( _map.editable );
-    _node_width.set_value( (float)node_width );
-    _node_width.set_sensitive( _map.editable );
-    _node_markup.set_active( (bool)node_markup );
-    _node_markup.set_sensitive( _map.editable );
-    _conn_lwidth.set_value( (double)conn_line_width );
-    _conn_lwidth.set_sensitive( _map.editable );
-    _conn_font.set_font_features( style.connection_font.to_string() );
-    _conn_font.set_sensitive( _map.editable );
-    _conn_twidth.set_value( style.connection_title_width );
-    _conn_twidth.set_sensitive( _map.editable );
-    _conn_padding.set_value( (double)conn_padding );
-    _conn_padding.set_sensitive( _map.editable );
-    _callout_font.set_font_features( style.callout_font.to_string() );
-    _callout_font.set_sensitive( _map.editable );
-    _callout_padding.set_value( (double)callout_padding );
-    _callout_padding.set_sensitive( _map.editable );
-    _callout_ptr_width.set_value( (double)callout_pwidth );
-    _callout_ptr_width.set_sensitive( _map.editable );
-    _callout_ptr_length.set_value( (double)callout_plength );
-    _callout_ptr_length.set_sensitive( _map.editable );
+
+    // Nodes
+    if( (_affects == StyleAffects.ALL) || (_affects == StyleAffects.SELECTED_NODES) ) {
+      if( branch_margin != null ) {
+        _branch_margin.set_value( (double)branch_margin );
+      }
+      if( branch_radius != null ) {
+        _branch_radius.set_value( (double)branch_radius );
+      }
+      if( link_width != null ) {
+        _link_width.set_value( (double)link_width );
+      }
+      if( link_arrow != null ) {
+        _link_arrow.set_active( (bool)link_arrow );
+      }
+      update_link_types_with_style( style );
+      update_link_dashes_with_style( style );
+      if( node_bw != null ) {
+        _node_borderwidth.set_value( (double)node_bw );
+      }
+      if( node_fill != null ) {
+        _node_fill.set_active( (bool)node_fill );
+      }
+      if( node_margin != null ) {
+        _node_margin.set_value( (double)node_margin );
+      }
+      if( node_padding != null ) {
+        _node_padding.set_value( (double)node_padding );
+      }
+      if( style.node_font != null ) {
+        _node_font.set_font_features( style.node_font.to_string() );
+      }
+      if( node_width != null ) {
+        _node_width.set_value( (float)node_width );
+      }
+      if( node_markup != null ) {
+        _node_markup.set_active( (bool)node_markup );
+      }
+      update_node_borders_with_style( style );
+      update_node_text_align_with_style( style );
+    }
+
+    // Connections
+    if( (_affects == StyleAffects.ALL) || (_affects == StyleAffects.SELECTED_CONNECTIONS) ) {
+      update_conn_dashes_with_style( style );
+      update_conn_arrows_with_style( style );
+      update_conn_text_align_with_style( style );
+      if( conn_line_width != null ) {
+        _conn_lwidth.set_value( (double)conn_line_width );
+      }
+      if( style.connection_font != null ) {
+        _conn_font.set_font_features( style.connection_font.to_string() );
+      }
+      if( style.connection_title_width != null ) {
+        _conn_twidth.set_value( style.connection_title_width );
+      }
+      if( conn_padding != null ) {
+        _conn_padding.set_value( (double)conn_padding );
+      }
+    }
+
+    // Callout
+    if( (_affects == StyleAffects.ALL) || (_affects == StyleAffects.SELECTED_CALLOUTS) ) {
+      update_callout_text_align_with_style( style );
+      if( style.callout_font != null ) {
+        _callout_font.set_font_features( style.callout_font.to_string() );
+      }
+      if( callout_padding != null ) {
+        _callout_padding.set_value( (double)callout_padding );
+      }
+      if( callout_pwidth != null ) {
+        _callout_ptr_width.set_value( (double)callout_pwidth );
+      }
+      if( callout_plength != null ) {
+        _callout_ptr_length.set_value( (double)callout_plength );
+      }
+    }
+
     _ignore = false;
+
+    // Handle editable changes
+    _branch_margin.set_sensitive( _map.editable );
+    _branch_radius.set_sensitive( _map.editable );
+    _link_width.set_sensitive( _map.editable );
+    _link_arrow.set_sensitive( _map.editable );
+    _node_borderwidth.set_sensitive( _map.editable );
+    _node_fill.set_sensitive( (style.node_border != null) && style.node_border.is_fillable() && _map.editable );
+    _node_margin.set_sensitive( _map.editable );
+    _node_padding.set_sensitive( _map.editable );
+    _node_font.set_sensitive( _map.editable );
+    _node_width.set_sensitive( _map.editable );
+    _node_markup.set_sensitive( _map.editable );
+    _conn_lwidth.set_sensitive( _map.editable );
+    _conn_font.set_sensitive( _map.editable );
+    _conn_twidth.set_sensitive( _map.editable );
+    _conn_padding.set_sensitive( _map.editable );
+    _callout_font.set_sensitive( _map.editable );
+    _callout_padding.set_sensitive( _map.editable );
+    _callout_ptr_width.set_sensitive( _map.editable );
+    _callout_ptr_length.set_sensitive( _map.editable );
 
   }
 
