@@ -61,6 +61,6 @@
 }
  
 .widget-selected {
-  background-color: @theme_selected_bg_color;
-  color: @theme_selected_fg_color;
+  background-color: mix(@theme_base_color, @theme_fg_color, 0.08);
+  /* color: @theme_selected_fg_color; */
 }
