@@ -30,6 +30,7 @@ public class UndoNodeAttach : UndoItem {
   private int              _old_index;
   private Array<NodeInfo?> _old_info;
   private SummaryNode?     _old_summary;
+  private Style?           _old_style;
   private Node             _new_parent;
   private NodeSide         _new_side;
   private int              _new_index;
@@ -46,6 +47,7 @@ public class UndoNodeAttach : UndoItem {
     _old_index   = old_index;
     _old_info    = old_info;
     _old_summary = old_summary;
+    _old_style   = null;
     _new_parent  = n.parent;
     _new_side    = n.side;
     _new_index   = n.index();
@@ -56,13 +58,14 @@ public class UndoNodeAttach : UndoItem {
 
   //-------------------------------------------------------------
   // Constructor for root nodes.
-  public UndoNodeAttach.for_root( Node n, int old_index, Array<NodeInfo?> old_info ) {
+  public UndoNodeAttach.for_root( Node n, int old_index, Array<NodeInfo?> old_info, Style old_style ) {
     base( _( "attach node" ) );
     _n           = n;
     _old_parent  = null;
     _old_index   = old_index;
     _old_info    = old_info;
     _old_summary = null;
+    _old_style   = old_style;
     _new_parent  = n.parent;
     _new_side    = n.side;
     _new_index   = n.index();
@@ -83,6 +86,7 @@ public class UndoNodeAttach : UndoItem {
     if( _old_parent == null ) {
       map.model.add_root( _n, _old_index );
       _n.set_node_info( _old_info, ref index );
+      _n.style = _old_style;
     } else {
       _n.set_node_info( _old_info, ref index );
       _n.side = _old_side;
@@ -91,7 +95,7 @@ public class UndoNodeAttach : UndoItem {
       if( _old_summary != null ) {
         _old_summary.add_node( _n );
       }
-      _n.set_style_for_tree( _old_parent.style );
+      _n.style = _old_parent.style;
     }
     map.set_current_node( _n );
     map.animator.animate();
@@ -116,15 +120,14 @@ public class UndoNodeAttach : UndoItem {
     if( _old_parent == null ) {
       _n.attach( _new_parent, -1, map.get_theme() );
       _n.set_node_info( _new_info, ref index );
-      _n.set_style_for_tree( _new_parent.style );
     } else {
       _n.set_node_info( _new_info, ref index );
       _n.attach_init( _new_parent, _new_index );
       if( _new_summary != null ) {
         _new_summary.add_node( _n );
       }
-      _n.set_style_for_tree( _new_parent.style );
     }
+    _n.style = _new_parent.style;
     map.set_current_node( _n );
     map.animator.animate();
     map.auto_save();

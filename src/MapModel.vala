@@ -1473,6 +1473,7 @@ public class MapModel {
     var          orig_index         = -1;
     SummaryNode? orig_summary       = null;
     var          orig_summary_index = -1;
+    Style?       orig_style         = null;
     var          current            = _map.selected.current_node();
     var          isroot             = current.is_root();
     var          isleaf             = current.is_leaf();
@@ -1486,6 +1487,8 @@ public class MapModel {
           break;
         }
       }
+      orig_style = new Style();
+      orig_style.copy( current.style );
     } else {
       orig_parent        = current.parent;
       orig_index         = current.index();
@@ -1519,7 +1522,7 @@ public class MapModel {
 
     /* Add the attachment information to the undo buffer */
     if( isroot ) {
-      _map.add_undo( new UndoNodeAttach.for_root( current, orig_index, _map.canvas.orig_info ) );
+      _map.add_undo( new UndoNodeAttach.for_root( current, orig_index, _map.canvas.orig_info, orig_style ) );
     } else {
       _map.add_undo( new UndoNodeAttach( current, orig_parent, _map.canvas.get_orig_side(), orig_index, _map.canvas.orig_info, orig_summary, orig_summary_index ) );
     }
