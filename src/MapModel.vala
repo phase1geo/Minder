@@ -1698,15 +1698,14 @@ public class MapModel {
   // Creates a sibling node, positions it and appends immediately
   // after the given sibling node.
   public Node create_main_node( Node root, NodeSide side, string name = "" ) {
-    var node   = new Node.with_name( _map, name, layouts.get_default() );
-    node.side  = side;
-    node.style = root.style;
-    // node.style = StyleInspector.styles.get_style_for_level( 1, null );
+    var node  = new Node.with_name( _map, name, layouts.get_default() );
+    node.side = side;
     if( root.layout.balanceable && ((side == NodeSide.LEFT) || (side == NodeSide.TOP)) ) {
       node.attach( root, root.side_count( side ), _theme, false );
     } else {
       node.attach( root, -1, _theme, false );
     }
+    set_style_after_parent_attach( node );
     return( node );
   }
 
@@ -1716,8 +1715,8 @@ public class MapModel {
   public Node create_sibling_node( Node sibling, bool below, string name = "" ) {
     var node   = new Node.with_name( _map, name, layouts.get_default() );
     node.side  = sibling.side;
-    node.style = sibling.style;
     node.attach( sibling.parent, (sibling.index() + (below ? 1 : 0)), _theme );
+    set_style_after_parent_attach( node );
     node.parent.set_fold( false, true );
     if( sibling.is_summarized() ) {
       sibling.summary_node().add_node( node );
@@ -1732,12 +1731,11 @@ public class MapModel {
     var node  = new Node.with_name( _map, name, layouts.get_default() );
     var color = child.link_color;
     node.side  = child.side;
-    node.style = child.style;
-    // node.style = StyleInspector.styles.get_style_for_level( child.get_level(), child.style );
     node.attach( child.parent, child.index(), null );
     node.link_color = color;
     child.detach( node.side );
     child.attach( node, -1, null );
+    set_style_after_parent_attach( node );
     return( node );
   }
 
@@ -1751,12 +1749,9 @@ public class MapModel {
     }
     if( parent.children().length > 0 ) {
       parent.folded = false;
-      node.style    = parent.last_child().style;
-    } else {
-      node.style = parent.style;
     }
-    // node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), parent.style );
     node.attach( parent, -1, _theme );
+    set_style_after_parent_attach( node );
     parent.set_fold( false, true );
     return( node );
   }
