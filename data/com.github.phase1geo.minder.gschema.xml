@@ -381,5 +381,14 @@
       <description>If set to true, displays the temporary directory used to store the contents of the current mindmap
         in the map sidebar.</description>
     </key>
+    <key name="style-always-from-parent" type="b">
+      <default>false</default>
+      <summary>If set to true, a new child node or a child node moved to a new parent will always have its style set from the new parent node</summary>
+      <description>
+        If set to true, a new child node or a child node moved to a new parent node will always have its style
+        come from the new parent.  If set to false, the same node will get its style set from the last sibling node, or
+        if no sibling exists, style information will come from the parent node.
+      </description>
+    </key>
   </schema>
 </schemalist>

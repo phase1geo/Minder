@@ -21,6 +21,8 @@
 
 using Gtk;
 
+//-------------------------------------------------------------
+// Undo/Redo when moving a node within the same parent.
 public class UndoNodeMove : UndoItem {
 
   private Node         _n;

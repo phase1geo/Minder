@@ -1473,6 +1473,7 @@ public class MapModel {
     var          orig_index         = -1;
     SummaryNode? orig_summary       = null;
     var          orig_summary_index = -1;
+    var          orig_style         = new Style();
     var          current            = _map.selected.current_node();
     var          isroot             = current.is_root();
     var          isleaf             = current.is_leaf();
@@ -1497,6 +1498,8 @@ public class MapModel {
       }
     }
 
+    orig_style.copy( current.style );
+
     var summary = _attach_node.summary_node();
 
     if( isleaf && (orig_summary != summary) && _attach_node.first_summarized() ) {
@@ -1511,6 +1514,7 @@ public class MapModel {
       current.attach( _attach_node.parent, (_attach_node.index() + 1), _theme );
     } else {
       current.attach( _attach_node, -1, _theme );
+      set_style_after_parent_attach( current );
     }
 
     /* Attach the node */
@@ -1518,15 +1522,24 @@ public class MapModel {
 
     /* Add the attachment information to the undo buffer */
     if( isroot ) {
-      _map.add_undo( new UndoNodeAttach.for_root( current, orig_index, _map.canvas.orig_info ) );
+      _map.add_undo( new UndoNodeAttach.for_root( current, orig_index, _map.canvas.orig_info, orig_style ) );
     } else {
-      _map.add_undo( new UndoNodeAttach( current, orig_parent, _map.canvas.get_orig_side(), orig_index, _map.canvas.orig_info, orig_summary, orig_summary_index ) );
-    }
+      _map.add_undo( new UndoNodeAttach( current, orig_parent, _map.canvas.get_orig_side(), orig_index, _map.canvas.orig_info, orig_summary, orig_summary_index, orig_style ) ); }
 
     queue_draw();
     auto_save();
     current_changed();
 
+  }
+
+  //-------------------------------------------------------------
+  // Sets the given node's styling after attaching this node to its
+  // parent.
+  public void set_style_after_parent_attach( Node node ) {
+    if( !node.is_root() ) {
+      var sibling = node.previous_sibling();
+      node.style = (_map.settings.get_boolean( "style-always-from-parent" ) || (sibling == null)) ? node.parent.style : sibling.style;
+    }
   }
 
   //-------------------------------------------------------------
