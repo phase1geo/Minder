@@ -39,7 +39,7 @@ public class UndoNodeAttach : UndoItem {
 
   //-------------------------------------------------------------
   // Default constructor.
-  public UndoNodeAttach( Node n, Node? old_parent, NodeSide old_side, int old_index, Array<NodeInfo?> old_info, SummaryNode? old_summary, int old_summary_index ) {
+  public UndoNodeAttach( Node n, Node? old_parent, NodeSide old_side, int old_index, Array<NodeInfo?> old_info, SummaryNode? old_summary, int old_summary_index, Style old_style ) {
     base( _( "attach node" ) );
     _n           = n;
     _old_parent  = old_parent;
@@ -47,7 +47,7 @@ public class UndoNodeAttach : UndoItem {
     _old_index   = old_index;
     _old_info    = old_info;
     _old_summary = old_summary;
-    _old_style   = null;
+    _old_style   = old_style;
     _new_parent  = n.parent;
     _new_side    = n.side;
     _new_index   = n.index();
@@ -86,7 +86,6 @@ public class UndoNodeAttach : UndoItem {
     if( _old_parent == null ) {
       map.model.add_root( _n, _old_index );
       _n.set_node_info( _old_info, ref index );
-      _n.style = _old_style;
     } else {
       _n.set_node_info( _old_info, ref index );
       _n.side = _old_side;
@@ -95,8 +94,8 @@ public class UndoNodeAttach : UndoItem {
       if( _old_summary != null ) {
         _old_summary.add_node( _n );
       }
-      _n.style = _old_parent.style;
     }
+    _n.style = _old_style;
     map.set_current_node( _n );
     map.animator.animate();
     map.auto_save();
@@ -127,7 +126,7 @@ public class UndoNodeAttach : UndoItem {
         _new_summary.add_node( _n );
       }
     }
-    _n.style = _new_parent.style;
+    map.model.set_style_after_parent_attach( _n );
     map.set_current_node( _n );
     map.animator.animate();
     map.auto_save();

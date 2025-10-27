@@ -119,6 +119,11 @@ public class Preferences : Granite.Dialog {
     grid.attach( make_info( _( "Specifies if we should create a new node directly from edit mode if Return or Tab is pressed." ) ), 3, row );
     row++;
 
+    grid.attach( make_label( _( "Newly attached nodes get style from parent" ) ), 0, row );
+    grid.attach( make_switch( "style-always-from-parent" ), 1, row );
+    grid.attach( make_info( _( "Specifies if a node is attached to a new parent, whether its style should come from the new parent or its new siblings" ) ), 3, row );
+    row++;
+
     grid.attach( make_label( _( "Automatically make embedded URLs into links" ) ), 0, row );
     grid.attach( make_switch( "auto-parse-embedded-urls" ), 1, row );
     grid.attach( make_info( _( "Specifies if embedded URLs found in node titles should be automatically highlighted.") ), 3, row );

@@ -1473,7 +1473,7 @@ public class MapModel {
     var          orig_index         = -1;
     SummaryNode? orig_summary       = null;
     var          orig_summary_index = -1;
-    Style?       orig_style         = null;
+    var          orig_style         = new Style();
     var          current            = _map.selected.current_node();
     var          isroot             = current.is_root();
     var          isleaf             = current.is_leaf();
@@ -1487,8 +1487,6 @@ public class MapModel {
           break;
         }
       }
-      orig_style = new Style();
-      orig_style.copy( current.style );
     } else {
       orig_parent        = current.parent;
       orig_index         = current.index();
@@ -1499,6 +1497,8 @@ public class MapModel {
         orig_summary.remove_node( current );
       }
     }
+
+    orig_style.copy( current.style );
 
     var summary = _attach_node.summary_node();
 
@@ -1514,7 +1514,7 @@ public class MapModel {
       current.attach( _attach_node.parent, (_attach_node.index() + 1), _theme );
     } else {
       current.attach( _attach_node, -1, _theme );
-      current.set_style_for_tree( _attach_node.style );
+      set_style_after_parent_attach( current );
     }
 
     /* Attach the node */
@@ -1524,13 +1524,22 @@ public class MapModel {
     if( isroot ) {
       _map.add_undo( new UndoNodeAttach.for_root( current, orig_index, _map.canvas.orig_info, orig_style ) );
     } else {
-      _map.add_undo( new UndoNodeAttach( current, orig_parent, _map.canvas.get_orig_side(), orig_index, _map.canvas.orig_info, orig_summary, orig_summary_index ) );
-    }
+      _map.add_undo( new UndoNodeAttach( current, orig_parent, _map.canvas.get_orig_side(), orig_index, _map.canvas.orig_info, orig_summary, orig_summary_index, orig_style ) ); }
 
     queue_draw();
     auto_save();
     current_changed();
 
+  }
+
+  //-------------------------------------------------------------
+  // Sets the given node's styling after attaching this node to its
+  // parent.
+  public void set_style_after_parent_attach( Node node ) {
+    if( !node.is_root() ) {
+      var sibling = node.previous_sibling();
+      node.style = (_map.settings.get_boolean( "style-always-from-parent" ) || (sibling == null)) ? node.parent.style : sibling.style;
+    }
   }
 
   //-------------------------------------------------------------
