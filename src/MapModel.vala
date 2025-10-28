@@ -1193,7 +1193,7 @@ public class MapModel {
   // previously selected.  If this is the case, select the node.
   public bool select_node_if_unselected( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      var node = _nodes.index( i ).contains( x, y, null );
+      var node = _nodes.index( i ).contains( x, y, true );
       if( node != null ) {
         if( !_map.selected.is_node_selected( node ) && (node.mode != NodeMode.EDITABLE) ) {
           _map.set_current_node( node );
@@ -1253,7 +1253,7 @@ public class MapModel {
   public Node? get_node_at_position( double x, double y, out MapItemComponent component ) {
     component = MapItemComponent.NONE;
     for( int i=0; i<_nodes.length; i++ ) {
-      var node = _nodes.index( i ).contains( x, y, null );
+      var node = _nodes.index( i ).contains( x, y, true );
       if( node != null ) {
         if( node.is_within_title( x, y ) ) {
           component = MapItemComponent.TITLE;
@@ -1385,7 +1385,7 @@ public class MapModel {
   public Node? attachable_node( double x, double y ) {
     var current = _map.selected.current_node();
     for( int i=0; i<_nodes.length; i++ ) {
-      Node tmp = _nodes.index( i ).contains( x, y, current );
+      Node tmp = _nodes.index( i ).contains( x, y, false );
       if( (tmp != null) && (tmp != current.parent) && !current.contains_node( tmp ) && !tmp.is_summarized() ) {
         return( tmp );
       }
@@ -2925,7 +2925,7 @@ public class MapModel {
   // null.
   public Node? get_droppable_node( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      var node = _nodes.index( i ).contains( x, y, null );
+      var node = _nodes.index( i ).contains( x, y, true );
       if( node != null ) {
         return( node );
       }

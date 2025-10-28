@@ -588,8 +588,9 @@ public class DrawArea : Gtk.DrawingArea {
           _map.selected.add_child_nodes( node );
         }
 
-      /* Otherwise, just select the current node */
-      } else {
+      // If the node is currently selected, we may be moving multiple nodes, so
+      // hold off
+      } else if (node.mode != NodeMode.SELECTED) {
         _map.selected.set_current_node( node );
         if( node.parent != null ) {
           node.parent.set_summary_extents();
@@ -1323,6 +1324,25 @@ public class DrawArea : Gtk.DrawingArea {
         }
         queue_draw();
 
+      // If we are moving multiple nodes, move them
+      } else if( _map.selected.num_nodes() > 1 ) {
+        double diffx = _scaled_x - _press_x;
+        double diffy = _scaled_y - _press_y;
+        if( _map.editable ) {
+          var attach_node = _map.model.attachable_node( _scaled_x, _scaled_y );
+          if( attach_node != null ) {
+            _map.model.set_attach_node( attach_node );
+          }
+          var nodes = _map.selected.nodes();
+          for( int i=0; i<nodes.length; i++ ) {
+            var node = nodes.index( i );
+            node.set_posx_only( (node.posx - origin_x) + diffx );
+            node.set_posy_only( (node.posy - origin_y) + diffy );
+            node.set_alpha_only( 0.3 );
+          }
+          queue_draw();
+        }
+
       // If we are dealing with a sticker, handle it
       } else if( (current_sticker != null) && _map.editable ) {
         double diffx = _scaled_x - _press_x;
@@ -1656,7 +1676,7 @@ public class DrawArea : Gtk.DrawingArea {
 
       queue_draw();
 
-    /* If a node is selected, deal with the possibilities */
+    // If a single node is selected, deal with the possibilities
     } else if( current_node != null ) {
 
       if( current_node.mode == NodeMode.CURRENT ) {
@@ -1704,6 +1724,41 @@ public class DrawArea : Gtk.DrawingArea {
           queue_draw();
         }
 
+      }
+
+    // If we have more than 1 selected node, handle the potential multi-move
+    } else if( _map.selected.num_nodes() > 1 ) {
+
+      var nodes = _map.selected.nodes();
+
+      // If we are attaching the selected nodes to a new node, perform the attachment
+      if( _map.model.attach_node != null ) {
+        stdout.printf( "Attaching selected nodes\n" );
+        // _map.model.attach_selected_nodes();
+
+      // If no move occurred, select the node that we are hovering over
+      } else if( !_motion && !_shift) {
+        MapItemComponent component;
+        var match_node = _map.model.get_node_at_position( scaled_x, scaled_y, out component );
+        if( _map.select_node( match_node ) ) {
+          queue_draw();
+          see();
+          _map.auto_save();
+        }
+
+      // If we moved, but we are not attaching to anything, put everything back
+      } else if( _motion ) {
+        stdout.printf( "Returning selected nodes\n" );
+        animator.add_nodes( _map.get_nodes(), false, "return nodes" );
+        for( int i=0; i<nodes.length; i++ ) {
+          nodes.index( i ).return_to_position();
+        }
+        animator.animate();
+      }
+
+      // Make all nodes fully visible again
+      for( int i=0; i<nodes.length; i++ ) {
+        nodes.index( i ).set_alpha_only( 1.0 );
       }
 
     /* If a sticker is selected, deal with the possiblities */

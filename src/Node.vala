@@ -1390,12 +1390,13 @@ public class Node : Object {
 
   //-------------------------------------------------------------
   // Finds the node which contains the given pixel coordinates.
-  public virtual Node? contains( double x, double y, Node? n ) {
-    if( (this != n) && (is_within_node( x, y ) || is_within_fold_area( x, y )) ) {
+  public virtual Node? contains( double x, double y, bool allow_selected ) {
+    if( (allow_selected || ((mode != NodeMode.CURRENT) && (mode != NodeMode.SELECTED))) &&
+        (is_within_node( x, y ) || is_within_fold_area( x, y )) ) {
       return( this );
     } else if( !folded ) {
       for( int i=0; i<_children.length; i++ ) {
-        var tmp = _children.index( i ).contains( x, y, n );
+        var tmp = _children.index( i ).contains( x, y, allow_selected );
         if( tmp != null ) {
           return( tmp );
         }
@@ -2142,6 +2143,16 @@ public class Node : Object {
     child.attach( this, -1, null, false );
     last_selected_child = last_selected;
     return( _children.length != (idx + 1) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns this node to its original position.
+  public void return_to_position() {
+    var orig_parent = parent;
+    var orig_index  = index();
+    detach( side );
+    attached = true;
+    attach( orig_parent, orig_index, null, false );
   }
 
   //-------------------------------------------------------------
