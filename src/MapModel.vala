@@ -1383,10 +1383,16 @@ public class MapModel {
   //-------------------------------------------------------------
   // Returns the attachable node if one is found.
   public Node? attachable_node( double x, double y ) {
-    var current = _map.selected.current_node();
+    var sel_nodes = _map.selected.nodes();
     for( int i=0; i<_nodes.length; i++ ) {
       Node tmp = _nodes.index( i ).contains( x, y, false );
-      if( (tmp != null) && (tmp != current.parent) && !current.contains_node( tmp ) && !tmp.is_summarized() ) {
+      if( tmp != null ) {
+        for( int j=0; j<sel_nodes.length; j++ ) {
+          var current = sel_nodes.index( j );
+          if( (tmp == current.parent) || current.contains_node( tmp ) || tmp.is_summarized() ) {
+            return( null );
+          }
+        }
         return( tmp );
       }
     }
@@ -1530,6 +1536,17 @@ public class MapModel {
     auto_save();
     current_changed();
 
+  }
+
+  //-------------------------------------------------------------
+  // Attach all of the selected nodes.  If a selected node has
+  // children, attach those children to the original parent node.
+  public void attach_selected_nodes() {
+    var nodes = _map.selected.nodes();
+    for( int i=0; i<nodes.length; i++ ) {
+      var node = nodes.index( i );
+    }
+    // FOOBAR
   }
 
   //-------------------------------------------------------------

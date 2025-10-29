@@ -50,7 +50,7 @@ public class UndoNodeUnclify : UndoItem {
   // Performs a redo operation.
   public override void redo( MindMap map ) {
     map.animator.add_nodes( map.get_nodes(), false, "redo_make_parent_sibling" );
-    _node.make_parent_sibling( _node.parent, false );
+    _node.make_parent_sibling();
     map.animator.animate();
     map.auto_save();
   }

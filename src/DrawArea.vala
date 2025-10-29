@@ -1733,8 +1733,7 @@ public class DrawArea : Gtk.DrawingArea {
 
       // If we are attaching the selected nodes to a new node, perform the attachment
       if( _map.model.attach_node != null ) {
-        stdout.printf( "Attaching selected nodes\n" );
-        // _map.model.attach_selected_nodes();
+        _map.model.attach_selected_nodes();
 
       // If no move occurred, select the node that we are hovering over
       } else if( !_motion && !_shift) {

@@ -1789,11 +1789,8 @@ public enum KeyCommand {
         case "down"  :  other = map.model.get_node_down( current );   break;
         default      :  return;
       }
-      if( current.swap_with_sibling( other )   ||
-          current.make_parent_sibling( other ) ||
-          current.make_children_siblings( other ) ) {
-        map.queue_draw();
-        map.auto_save();
+      if( other != null ) {
+        map.swap_nodes( current, other );
       }
     }
   }

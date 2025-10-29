@@ -1532,6 +1532,35 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns the sibling node relative to this node.
+  private Node? get_sibling( int dir, bool wrap ) {
+    var index = index() + dir;
+    if( index < 0 ) {
+      return( wrap ? parent.children().index( parent.children().length - 1 ) : null );
+    } else if( index >= parent.children().length ) {
+      return( wrap ? parent.children().index( 0 ) : null );
+    } else {
+      return( parent.children().index( index ) );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the previous sibling node relative to this node.
+  public Node? previous_sibling( bool wrap = false ) {
+    return( get_sibling( -1, wrap ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the previous sibling node relative to this node.
+  public Node? next_sibling( bool wrap = false ) {
+    return( get_sibling( 1, wrap ) );
+  }
+
+  //-------------------------------------------------------------
+  // LOAD
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
   // Loads the name value from the given XML node.
   private void load_name( Xml.Node* n ) {
     if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
@@ -1604,45 +1633,6 @@ public class Node : Object {
         }
       }
     }
-  }
-
-  //-------------------------------------------------------------
-  // Searches for a node ID matching the given node ID.  If found,
-  // returns true along with the plain text title of the found node.
-  public static bool xml_find( Xml.Node* n, int id, ref string name ) {
-
-    bool found = false;
-
-    string? i = n->get_prop( "id" );
-    if( i != null ) {
-      found = (int.parse( i ) == id);
-    }
-
-    for( Xml.Node* it = n->children; it != null; it = it->next ) {
-      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
-        switch( it->name ) {
-          case "nodename" :
-            if( (it->children != null) && (it->children->type == Xml.ElementType.TEXT_NODE) ) {
-              name = it->children->get_content();
-            } else {
-              name = CanvasText.xml_text( it );
-            }
-            break;
-          case "nodes" :
-            for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
-              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                if( xml_find( it2, id, ref name ) ) {
-                  return( true );
-                }
-              }
-            }
-            break;
-        }
-      }
-    }
-
-    return( found );
-
   }
 
   //-------------------------------------------------------------
@@ -1798,6 +1788,10 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // SAVE
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
   // Saves the current node.
   public virtual void save( Xml.Node* parent ) {
     parent->add_child( save_node() );
@@ -1866,6 +1860,49 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // SEARCH
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Searches for a node ID matching the given node ID.  If found,
+  // returns true along with the plain text title of the found node.
+  public static bool xml_find( Xml.Node* n, int id, ref string name ) {
+
+    bool found = false;
+
+    string? i = n->get_prop( "id" );
+    if( i != null ) {
+      found = (int.parse( i ) == id);
+    }
+
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        switch( it->name ) {
+          case "nodename" :
+            if( (it->children != null) && (it->children->type == Xml.ElementType.TEXT_NODE) ) {
+              name = it->children->get_content();
+            } else {
+              name = CanvasText.xml_text( it );
+            }
+            break;
+          case "nodes" :
+            for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
+              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
+                if( xml_find( it2, id, ref name ) ) {
+                  return( true );
+                }
+              }
+            }
+            break;
+        }
+      }
+    }
+
+    return( found );
+
+  }
+
+  //-------------------------------------------------------------
   // Sets the resizable property on the node image, if it exists.
   public void set_resizable( bool resizable ) {
     if( _image != null ) {
@@ -1890,6 +1927,10 @@ public class Node : Object {
     }
     _name.resize( diff );
   }
+
+  //-------------------------------------------------------------
+  // LOCATION METHODS
+  //-------------------------------------------------------------
 
   //-------------------------------------------------------------
   // Returns the bounding box for this node.
@@ -2045,6 +2086,10 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // SIZE METHODS
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
   // Returns the width of the sticker.
   public double sticker_width() {
     return( (_sticker_buf != null) ? (_sticker_buf.width + _ipadx) : 0 );
@@ -2156,80 +2201,29 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
-  // Returns the sibling node relative to this node.
-  private Node? get_sibling( int dir, bool wrap ) {
-    var index = index() + dir;
-    if( index < 0 ) {
-      return( wrap ? parent.children().index( parent.children().length - 1 ) : null );
-    } else if( index >= parent.children().length ) {
-      return( wrap ? parent.children().index( 0 ) : null );
-    } else {
-      return( parent.children().index( index ) );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Returns the previous sibling node relative to this node.
-  public Node? previous_sibling( bool wrap = false ) {
-    return( get_sibling( -1, wrap ) );
-  }
-
-  //-------------------------------------------------------------
-  // Returns the previous sibling node relative to this node.
-  public Node? next_sibling( bool wrap = false ) {
-    return( get_sibling( 1, wrap ) );
-  }
-
-  //-------------------------------------------------------------
   // Checks to see if the given node is a sibling node on the
   // same side.  If it is, swaps the position of the given node
   // with the given node.  Returns true if the nodes are swapped.
-  public bool swap_with_sibling( Node? other ) {
+  public void swap_with_previous_sibling() {
 
-    if( (other != null) && !is_summary() && !other.is_summary() && (summary_node() == other.summary_node()) && (other.parent == parent) ) {
+    var other = previous_sibling();
+    if( other == null ) return;
 
-      var other_index   = other.index();
-      var other_summary = other.summary_node();
-      var our_index     = index();
-      var our_parent    = parent;
-      var our_summary   = summary_node();
+    var other_summary = other.summary_node();
+    var our_index     = index();
+    var our_summary   = summary_node();
 
-      if( (other_index + 1) == our_index ) {
-        map.animator.add_nodes( map.get_nodes(), false, "swap_with_sibling" );
-        detach( side );
-        if( our_summary != null ) {
-          our_summary.remove_node( this );
-        }
-        attached = true;
-        attach( our_parent, other_index, null, false );
-        if( other_summary != null ) {
-          other_summary.add_node( this );
-        }
-        our_parent.last_selected_child = this;
-        map.undo_buffer.add_item( new UndoNodeMove( this, side, our_index, our_summary ) );
-        map.animator.animate();
-        return( true );
-
-      } else if( (our_index + 1) == other_index ) {
-        var other_side = other.side;
-        map.animator.add_nodes( map.get_nodes(), false, "swap_with_sibling" );
-        other.detach( other_side );
-        if( other_summary != null ) {
-          other_summary.remove_node( other );
-        }
-        other.attached = true;
-        other.attach( our_parent, our_index, null, false );
-        if( our_summary != null ) {
-          our_summary.add_node( other );
-        }
-        map.undo_buffer.add_item( new UndoNodeMove( other, other_side, other_index, other_summary ) );
-        map.animator.animate();
-        return( true );
-      }
-
+    detach( side );
+    if( our_summary != null ) {
+      our_summary.remove_node( this );
+    }
+    attached = true;
+    attach( other.parent, other.index(), null, false );
+    if( other_summary != null ) {
+      other_summary.add_node( this );
     }
 
-    return( false );
+    parent.last_selected_child = this;
 
   }
 
@@ -2237,57 +2231,29 @@ public class Node : Object {
   // Moves the node (and its tree) to be a sibling of its parent
   // located just before its parent node (side will match parent's
   // side).
-  public bool make_parent_sibling( Node? other, bool add_undo = true ) {
+  public void make_parent_sibling() {
 
-    // If the other node matches our parent, perform this operation
-    if( (other != null) && (other == parent) && !parent.is_root() ) {
+    var grandparent = parent.parent;
+    var parent_idx  = parent.index();
 
-      var grandparent = parent.parent;
-      var parent_idx  = parent.index();
-
-      if( add_undo ) {
-        map.undo_buffer.add_item( new UndoNodeUnclify( this ) );
-      }
-
-      map.animator.add_nodes( map.get_nodes(), false, "make_sibling_of_grandparent" );
-      detach( side );
-      attach( grandparent, parent_idx, null );
-      map.animator.animate();
-
-      return( true );
-
-    }
-
-    return( false );
+    detach( side );
+    attach( grandparent, parent_idx, null );
 
   }
 
   //-------------------------------------------------------------
   // Moves all children of the given node to the node's parent,
   // placed just before the parent node.
-  public bool make_children_siblings( Node? potential_child, bool add_undo = true ) {
+  public void make_children_siblings() {
 
-    if( (potential_child != null) && contains_node( potential_child ) ) {
+    var idx          = index();
+    var num_children = (int)_children.length;
 
-      var idx          = index();
-      var num_children = (int)_children.length;
-
-      map.animator.add_nodes( map.get_nodes(), false, "make_children_siblings" );
-      for( int i=(num_children - 1); i>=0; i-- ) {
-        var child = _children.index( i );
-        child.detach( child.side );
-        child.attach( parent, idx, null );
-      }
-      if( add_undo ) {
-        map.undo_buffer.add_item( new UndoNodeReparent( this, idx, idx + num_children ) );
-      }
-      map.animator.animate();
-
-      return( true );
-
+    for( int i=(num_children - 1); i>=0; i-- ) {
+      var child = _children.index( i );
+      child.detach( child.side );
+      child.attach( parent, idx, null );
     }
-
-    return( false );
 
   }
 

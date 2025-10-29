@@ -53,7 +53,7 @@ public class UndoNodeReparent : UndoItem {
   // Performs a redo operation.
   public override void redo( MindMap map ) {
     map.animator.add_nodes( map.model.get_nodes(), false, "redo_make_children_siblings" );
-    _node.make_children_siblings( _node.children().index( 0 ), false );
+    _node.make_children_siblings();
     map.animator.animate();
     map.auto_save();
   }
