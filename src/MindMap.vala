@@ -1086,6 +1086,25 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
+  // Attach all of the selected nodes to the current attachment node.
+  public void attach_selected_nodes() {
+
+    assert( _model.attach_node != null );
+
+    var nodes = _selected.ordered_nodes();
+
+    add_undo( new UndoNodesAttach( nodes, _model.attach_node ) );
+
+    animator.add_nodes( get_nodes(), false, "attach_selected_nodes" );
+    _model.attach_nodes( nodes, _model.attach_node );
+    _model.set_attach_node( null );
+    animator.animate();
+
+    auto_save();
+
+  }
+
+  //-------------------------------------------------------------
   // FOCUS MODE FUNCTIONS
   //-------------------------------------------------------------
 

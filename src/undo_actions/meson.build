@@ -56,6 +56,7 @@ sources += files(
     'UndoNodeUnclify.vala',
 
     'UndoNodesAlign.vala',
+    'UndoNodesAttach.vala',
     'UndoNodesCut.vala',
     'UndoNodesDelete.vala',
     'UndoNodesGroup.vala',

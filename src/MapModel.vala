@@ -1530,7 +1530,8 @@ public class MapModel {
     if( isroot ) {
       _map.add_undo( new UndoNodeAttach.for_root( current, orig_index, _map.canvas.orig_info, orig_style ) );
     } else {
-      _map.add_undo( new UndoNodeAttach( current, orig_parent, _map.canvas.get_orig_side(), orig_index, _map.canvas.orig_info, orig_summary, orig_summary_index, orig_style ) ); }
+      _map.add_undo( new UndoNodeAttach( current, orig_parent, _map.canvas.get_orig_side(), orig_index, _map.canvas.orig_info, orig_summary, orig_summary_index, orig_style ) );
+    }
 
     queue_draw();
     auto_save();
@@ -1541,12 +1542,14 @@ public class MapModel {
   //-------------------------------------------------------------
   // Attach all of the selected nodes.  If a selected node has
   // children, attach those children to the original parent node.
-  public void attach_selected_nodes() {
-    var nodes = _map.selected.nodes();
+  public void attach_nodes( Array<Node> nodes, Node parent ) {
     for( int i=0; i<nodes.length; i++ ) {
       var node = nodes.index( i );
+      node.return_to_position();
+      node.make_children_siblings();
+      node.detach( node.side );
+      node.attach( parent, -1, null );
     }
-    // FOOBAR
   }
 
   //-------------------------------------------------------------

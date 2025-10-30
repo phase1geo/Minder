@@ -2409,7 +2409,7 @@ public class Node : Object {
 
   //-------------------------------------------------------------
   // Attaches this node as a child of the given node.
-  public virtual void attach( Node parent, int index, Theme? theme, bool set_side = true ) {
+  public virtual void attach( Node parent, int idx, Theme? theme, bool set_side = true ) {
     this.parent = parent;
     layout = parent.layout;
     assert( !is_summary() );
@@ -2428,7 +2428,7 @@ public class Node : Object {
       }
       layout.initialize( this );
     }
-    attach_common( index, theme );
+    attach_common( idx, theme );
   }
 
   public virtual void attach_init( Node parent, int index ) {

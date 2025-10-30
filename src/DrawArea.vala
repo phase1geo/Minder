@@ -1733,7 +1733,7 @@ public class DrawArea : Gtk.DrawingArea {
 
       // If we are attaching the selected nodes to a new node, perform the attachment
       if( _map.model.attach_node != null ) {
-        _map.model.attach_selected_nodes();
+        _map.attach_selected_nodes();
 
       // If no move occurred, select the node that we are hovering over
       } else if( !_motion && !_shift) {
@@ -1747,7 +1747,6 @@ public class DrawArea : Gtk.DrawingArea {
 
       // If we moved, but we are not attaching to anything, put everything back
       } else if( _motion ) {
-        stdout.printf( "Returning selected nodes\n" );
         animator.add_nodes( _map.get_nodes(), false, "return nodes" );
         for( int i=0; i<nodes.length; i++ ) {
           nodes.index( i ).return_to_position();
