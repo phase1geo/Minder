@@ -1745,8 +1745,8 @@ public class DrawArea : Gtk.DrawingArea {
           _map.auto_save();
         }
 
-      // If we moved, but we are not attaching to anything, put everything back
-      } else if( _motion ) {
+      // If we moved, but we are not attaching to anything and we are not in manual mode, put everything back
+      } else if( _motion && ((nodes.index( 0 ).layout == null) || !nodes.index( 0 ).layout.is_manual()) ) {
         animator.add_nodes( _map.get_nodes(), false, "return nodes" );
         for( int i=0; i<nodes.length; i++ ) {
           nodes.index( i ).return_to_position();
