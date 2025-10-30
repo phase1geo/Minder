@@ -87,12 +87,13 @@ public class Styles {
     _styles = new Array<StyleLevel>();
     for( int i=0; i<=10; i++ ) {
       var level = new StyleLevel();
-      level.style.branch_margin = 100;
-      level.style.branch_radius = 25;
-      level.style.link_type     = lt_straight;
-      level.style.link_width    = 4;
-      level.style.link_arrow    = false;
-      level.style.link_dash     = ld_solid;
+      level.style.branch_margin   = 100;
+      level.style.branch_radius   = 25;
+      level.style.link_type       = lt_straight;
+      level.style.link_width      = 4;
+      level.style.link_arrow      = false;
+      level.style.link_arrow_size = 2;
+      level.style.link_dash       = ld_solid;
       if( i == 0 ) {
         level.style.node_border  = nb_rounded;
         level.style.node_margin  = 10;
@@ -110,6 +111,7 @@ public class Styles {
       level.style.connection_dash        = ld_dotted;
       level.style.connection_line_width  = 2;
       level.style.connection_arrow       = "fromto";
+      level.style.connection_arrow_size  = 0;
       level.style.connection_padding     = 3;
       level.style.connection_title_width = 100;
       level.style.connection_text_align  = text_align;

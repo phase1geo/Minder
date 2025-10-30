@@ -877,10 +877,10 @@ public class Connection : Object {
     /* Draw the arrow */
     if( (mode != ConnMode.SELECTED) || exporting ) {
       if( (style.connection_arrow == "fromto") || (style.connection_arrow == "both") ) {
-        draw_arrow( ctx, style.connection_line_width, end_x, end_y, cx, cy );
+        draw_arrow( ctx, style.connection_line_width, end_x, end_y, cx, cy, style.connection_arrow_size );
       }
       if( (style.connection_arrow == "tofrom") || (style.connection_arrow == "both") ) {
-        draw_arrow( ctx, style.connection_line_width, start_x, start_y, cx, cy );
+        draw_arrow( ctx, style.connection_line_width, start_x, start_y, cx, cy, style.connection_arrow_size );
       }
     }
 
@@ -1044,12 +1044,12 @@ public class Connection : Object {
   //-------------------------------------------------------------
   // Draws arrow point to the "to" node.  The tailx/y values
   // should be the bezier control point closest to the "to" node.
-  public static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy, double tailx, double taily, double arrowLength = 0 ) {
+  public static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy, double tailx, double taily, int? arrow_size = 0, double arrowLength = 0 ) {
 
     double extlen[8] = {12, 13, 14, 15, 16, 17, 18, 18};
 
     if( arrowLength == 0 ) {
-      arrowLength = extlen[line_width-1];
+      arrowLength = extlen[line_width-1] + ((arrow_size != null) ? (arrow_size * 3) : 0);
     }
 
     var dx = tipx - tailx;

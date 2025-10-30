@@ -3310,7 +3310,7 @@ public class Node : Object {
 
     double extlen[7] = {12, 12, 13, 14, 15, 16, 16};
 
-    var arrowLength = extlen[style.link_width - 2]; // can be adjusted
+    var arrowLength = extlen[style.link_width - 2] + (style.link_arrow_size * 3); // can be adjusted
     var dx = tipx - tailx;
     var dy = tipy - taily;
 

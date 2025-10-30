@@ -30,6 +30,7 @@ public class Style {
   public LinkType?        link_type              { get; set; default = null; }
   public int?             link_width             { get; set; default = null; }
   public bool?            link_arrow             { get; set; default = null; }
+  public int?             link_arrow_size        { get; set; default = null; }
   public LinkDash?        link_dash              { get; set; default = null; }
   public NodeBorder?      node_border            { get; set; default = null; }
   public int?             node_borderwidth       { get; set; default = null; }
@@ -43,6 +44,7 @@ public class Style {
   public LinkDash?        connection_dash        { get; set; default = null; }
   public int?             connection_line_width  { get; set; default = null; }
   public string?          connection_arrow       { get; set; default = null; }
+  public int?             connection_arrow_size  { get; set; default = null; }
   public int?             connection_padding     { get; set; default = null; }
   public FontDescription? connection_font        { get; set; default = null; }
   public Pango.Alignment? connection_text_align  { get; set; default = null; }
@@ -96,6 +98,7 @@ public class Style {
       link_type              = null;
       link_width             = null;
       link_arrow             = null;
+      link_arrow_size        = null;
       link_dash              = null;
       node_border            = null;
       node_borderwidth       = null;
@@ -109,6 +112,7 @@ public class Style {
       connection_dash        = null;
       connection_line_width  = null;
       connection_arrow       = null;
+      connection_arrow_size  = null;
       connection_padding     = null;
       connection_font        = null;
       connection_text_align  = null;
@@ -135,10 +139,11 @@ public class Style {
   // Copies the node link style fields.
   public bool copy_node_link( Style s ) {
     bool changed = false;
-    if( ((s.link_type  != null) || !s._template) && (link_type  != s.link_type) )  { changed = true;  link_type  = s.link_type; }
-    if( ((s.link_width != null) || !s._template) && (link_width != s.link_width) ) { changed = true;  link_width = s.link_width; }
-    if( ((s.link_arrow != null) || !s._template) && (link_arrow != s.link_arrow) ) { changed = true;  link_arrow = s.link_arrow; }
-    if( ((s.link_dash  != null) || !s._template) && (link_dash  != s.link_dash) )  { changed = true;  link_dash  = s.link_dash; }
+    if( ((s.link_type       != null) || !s._template) && (link_type       != s.link_type) )       { changed = true;  link_type       = s.link_type; }
+    if( ((s.link_width      != null) || !s._template) && (link_width      != s.link_width) )      { changed = true;  link_width      = s.link_width; }
+    if( ((s.link_arrow      != null) || !s._template) && (link_arrow      != s.link_arrow) )      { changed = true;  link_arrow      = s.link_arrow; }
+    if( ((s.link_arrow_size != null) || !s._template) && (link_arrow_size != s.link_arrow_size) ) { changed = true;  link_arrow_size = s.link_arrow_size; }
+    if( ((s.link_dash       != null) || !s._template) && (link_dash       != s.link_dash) )       { changed = true;  link_dash       = s.link_dash; }
     return( changed );
   }
 
@@ -165,6 +170,7 @@ public class Style {
     if( ((s.connection_dash        != null) || !s._template) && (connection_dash        != s.connection_dash) )        { changed = true;  connection_dash        = s.connection_dash; }
     if( ((s.connection_line_width  != null) || !s._template) && (connection_line_width  != s.connection_line_width) )  { changed = true;  connection_line_width  = s.connection_line_width; }
     if( ((s.connection_arrow       != null) || !s._template) && (connection_arrow       != s.connection_arrow) )       { changed = true;  connection_arrow       = s.connection_arrow; }
+    if( ((s.connection_arrow_size  != null) || !s._template) && (connection_arrow_size  != s.connection_arrow_size) )  { changed = true;  connection_arrow_size  = s.connection_arrow_size; }
     if( ((s.connection_padding     != null) || !s._template) && (connection_padding     != s.connection_padding) )     { changed = true;  connection_padding     = s.connection_padding; }
     if( ((s.connection_font        != null) || !s._template) )                                                         { changed = true;  connection_font        = s.connection_font.copy(); }
     if( ((s.connection_text_align  != null) || !s._template) && (connection_text_align  != s.connection_text_align) )  { changed = true;  connection_text_align  = s.connection_text_align; }
@@ -208,6 +214,7 @@ public class Style {
     if( link_type              != null ) arr += "ltype[%s]".printf( link_type.name() );
     if( link_width             != null ) arr += "lwidth[%d]".printf( link_width );
     if( link_arrow             != null ) arr += "larrow[%s]".printf( link_arrow.to_string() );
+    if( link_arrow_size        != null ) arr += "larrsz[%d]".printf( link_arrow_size );
     if( link_dash              != null ) arr += "ldash[%s]".printf( link_dash.name );
     if( node_border            != null ) arr += "nborder[%s]".printf( node_border.name() );
     if( node_borderwidth       != null ) arr += "nbwidth[%d]".printf( node_borderwidth );
@@ -227,6 +234,7 @@ public class Style {
     if( connection_dash        != null ) arr += "cdash[%s]".printf( connection_dash.name );
     if( connection_line_width  != null ) arr += "clwidth[%d]".printf( connection_line_width );
     if( connection_arrow       != null ) arr += "carrow[%s]".printf( connection_arrow );
+    if( connection_arrow_size  != null ) arr += "carrsz[%d]".printf( connection_arrow_size );
     if( connection_padding     != null ) arr += "cpad[%d]".printf( connection_padding );
     if( connection_font        != null ) arr += "cfont";
     if( connection_text_align  != null ) {
@@ -278,6 +286,10 @@ public class Style {
     string? la = node->get_prop( "linkarrow" );
     if( la != null ) {
       link_arrow = bool.parse( la );
+    }
+    string? las = node->get_prop( "linkarrowsize" );
+    if( las != null ) {
+      link_arrow_size = int.parse( las );
     }
     string? ld = node->get_prop( "linkdash" );
     if( ld != null ) {
@@ -356,6 +368,10 @@ public class Style {
     if( a != null ) {
       connection_arrow = a;
     }
+    string? az = node->get_prop( "connectionarrowsize" );
+    if( az != null ) {
+      connection_arrow_size = int.parse( az );
+    }
     string? p = node->get_prop( "connectionpadding" );
     if( p != null ) {
       connection_padding = int.parse( p );
@@ -433,6 +449,9 @@ public class Style {
     if( link_arrow != null ) {
       n->set_prop( "linkarrow", link_arrow.to_string() );
     }
+    if( link_arrow_size != null ) {
+      n->set_prop( "linkarrowsize", link_arrow_size.to_string() );
+    }
     if( link_dash != null ) {
       n->set_prop( "linkdash", link_dash.name );
     }
@@ -501,6 +520,9 @@ public class Style {
     }
     if( connection_arrow != null ) {
       n->set_prop( "connectionarrow", connection_arrow );
+    }
+    if( connection_arrow_size != null ) {
+      n->set_prop( "connectionarrowsize", connection_arrow_size.to_string() );
     }
     if( connection_padding != null ) {
       n->set_prop( "connectionpadding", connection_padding.to_string() );

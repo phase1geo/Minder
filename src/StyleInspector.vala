@@ -53,6 +53,7 @@ public class StyleInspector : Box {
   private ModeButtons      _link_types;
   private Scale            _link_width;
   private Switch           _link_arrow;
+  private Scale            _link_arrow_size;
   private ImageMenu        _link_dash;
   private ModeButtons      _node_borders;
   private Scale            _node_borderwidth;
@@ -65,6 +66,7 @@ public class StyleInspector : Box {
   private Switch           _node_markup;
   private ImageMenu        _conn_dash;
   private ImageMenu        _conn_arrow;
+  private Scale            _conn_arrow_size;
   private Scale            _conn_lwidth;
   private Scale            _conn_padding;
   private FontDialogButton _conn_font;
@@ -403,6 +405,7 @@ public class StyleInspector : Box {
     var link_dash  = create_link_dash_ui();
     var link_width = create_link_width_ui();
     var link_arrow = create_link_arrow_ui();
+    var link_arrow_size = create_link_arrow_size_ui();
 
     var cbox = new Box( Orientation.VERTICAL, 0 ) {
       homogeneous   = true,
@@ -414,6 +417,7 @@ public class StyleInspector : Box {
     cbox.append( link_dash );
     cbox.append( link_width );
     cbox.append( link_arrow );
+    cbox.append( link_arrow_size );
 
     /* Create expander */
     var exp = new Expander( "  " + _( "Link Options" ) ) {
@@ -556,6 +560,51 @@ public class StyleInspector : Box {
       bool val = _link_arrow.get_active();
       _map.undo_buffer.add_item( new UndoStyleLinkArrow( _affects, val, _map ) );
     }
+  }
+
+  //-------------------------------------------------------------
+  // Creates the link arrow size UI.
+  private Box create_link_arrow_size_ui() {
+
+    var lbl = new Label( _( "Link Arrow Size" ) ) {
+      halign  = Align.START,
+      hexpand = true
+    };
+
+    _link_arrow_size = new Scale.with_range( Orientation.HORIZONTAL, 0, 3, 1 ) {
+      halign     = Align.FILL,
+      draw_value = false
+    };
+
+    _link_arrow_size.add_mark( 0, PositionType.BOTTOM, "S" );
+    _link_arrow_size.add_mark( 1, PositionType.BOTTOM, "M" );
+    _link_arrow_size.add_mark( 2, PositionType.BOTTOM, "L" );
+    _link_arrow_size.add_mark( 3, PositionType.BOTTOM, "XL" );
+    _link_arrow_size.change_value.connect( link_arrow_size_changed );
+
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _link_arrow_size );
+
+    return( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever the user changes the link arrow size value
+  private bool link_arrow_size_changed( ScrollType scroll, double value ) {
+    if( value > 3 ) value = 3;
+    var int_value       = (int)value;
+    var link_arrow_size = new UndoStyleLinkArrowSize( _affects, int_value, _map );
+    if( _change_add ) {
+      _map.undo_buffer.add_item( link_arrow_size );
+      _change_add = false;
+    } else {
+      _map.undo_buffer.replace_item( link_arrow_size );
+    }
+    return( false );
   }
 
   //-------------------------------------------------------------
@@ -969,6 +1018,7 @@ public class StyleInspector : Box {
 
     var conn_dash       = create_connection_dash_ui();
     var conn_arrow      = create_connection_arrow_ui();
+    var conn_arrow_size = create_connection_arrow_size_ui();
     var conn_lwidth     = create_connection_line_width_ui();
     var conn_padding    = create_connection_padding_ui();
     var conn_font       = create_connection_font_ui();
@@ -984,6 +1034,7 @@ public class StyleInspector : Box {
     };
     cbox.append( conn_dash );
     cbox.append( conn_arrow );
+    cbox.append( conn_arrow_size );
     cbox.append( conn_lwidth );
     cbox.append( conn_padding );
     cbox.append( conn_font );
@@ -1085,6 +1136,51 @@ public class StyleInspector : Box {
 
     return( box );
 
+  }
+
+  //-------------------------------------------------------------
+  // Creates the link arrow size UI.
+  private Box create_connection_arrow_size_ui() {
+
+    var lbl = new Label( _( "Arrow Size" ) ) {
+      halign  = Align.START,
+      hexpand = true
+    };
+
+    _conn_arrow_size = new Scale.with_range( Orientation.HORIZONTAL, 0, 3, 1 ) {
+      halign     = Align.FILL,
+      draw_value = false
+    };
+
+    _conn_arrow_size.add_mark( 0, PositionType.BOTTOM, "S" );
+    _conn_arrow_size.add_mark( 1, PositionType.BOTTOM, "M" );
+    _conn_arrow_size.add_mark( 2, PositionType.BOTTOM, "L" );
+    _conn_arrow_size.add_mark( 3, PositionType.BOTTOM, "XL" );
+    _conn_arrow_size.change_value.connect( connection_arrow_size_changed );
+
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _conn_arrow_size );
+
+    return( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever the user changes the connection arrow size value
+  private bool connection_arrow_size_changed( ScrollType scroll, double value ) {
+    if( value > 3 ) value = 3;
+    var int_value       = (int)value;
+    var conn_arrow_size = new UndoStyleConnectionArrowSize( _affects, int_value, _map );
+    if( _change_add ) {
+      _map.undo_buffer.add_item( conn_arrow_size );
+      _change_add = false;
+    } else {
+      _map.undo_buffer.replace_item( conn_arrow_size );
+    }
+    return( false );
   }
 
   /* Create widget for handling the width of a connection */
@@ -1783,12 +1879,14 @@ public class StyleInspector : Box {
     var branch_radius   = style.branch_radius;
     var link_width      = style.link_width;
     var link_arrow      = style.link_arrow;
+    var link_arrow_size = style.link_arrow_size;
     var node_bw         = style.node_borderwidth;
     var node_fill       = style.node_fill;
     var node_margin     = style.node_margin;
     var node_padding    = style.node_padding;
     var node_width      = style.node_width;
     var node_markup     = style.node_markup;
+    var conn_arrow_size = style.connection_arrow_size;
     var conn_line_width = style.connection_line_width;
     var conn_padding    = style.connection_padding;
     var callout_padding = style.callout_padding;
@@ -1810,6 +1908,9 @@ public class StyleInspector : Box {
       }
       if( link_arrow != null ) {
         _link_arrow.set_active( (bool)link_arrow );
+      }
+      if( link_arrow_size != null ) {
+        _link_arrow_size.set_value( (double)link_arrow_size );
       }
       update_link_types_with_style( style );
       update_link_dashes_with_style( style );
@@ -1843,6 +1944,9 @@ public class StyleInspector : Box {
       update_conn_dashes_with_style( style );
       update_conn_arrows_with_style( style );
       update_conn_text_align_with_style( style );
+      if( conn_arrow_size != null ) {
+        _conn_arrow_size.set_value( (double)conn_arrow_size );
+      }
       if( conn_line_width != null ) {
         _conn_lwidth.set_value( (double)conn_line_width );
       }
@@ -1881,6 +1985,7 @@ public class StyleInspector : Box {
     _branch_radius.set_sensitive( _map.editable );
     _link_width.set_sensitive( _map.editable );
     _link_arrow.set_sensitive( _map.editable );
+    _link_arrow_size.set_sensitive( _map.editable );
     _node_borderwidth.set_sensitive( _map.editable );
     _node_fill.set_sensitive( (style.node_border != null) && style.node_border.is_fillable() && _map.editable );
     _node_margin.set_sensitive( _map.editable );
