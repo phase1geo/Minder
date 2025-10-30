@@ -30,24 +30,24 @@ public class About {
   // Constructor
   public About( MainWindow win ) {
 
-    _about = new AboutDialog();
+    var image = new Image.from_resource( "/com/github/phase1geo/minder/minder-logo.svg" );
+
+    _about = new AboutDialog() {
+      authors            = { "Trevor Williams" },
+      program_name       = "Minder",
+      comments           = _( "Mind-mapping application" ),
+      copyright          = _( "Copyright © 2018-2024 Trevor Williams" ),
+      version            = Minder.version,
+      license_type       = License.GPL_3_0,
+      website            = "https://appcenter.elementary.io/com.github.phase1geo.minder/",
+      website_label      = _( "Minder in AppCenter" ),
+      system_information = get_system_info(),
+      logo               = image.get_paintable()
+    };
 
    	_about.set_destroy_with_parent( true );
 	  _about.set_transient_for( win);
 	  _about.set_modal( true );
-
-    _about.authors       = { "Trevor Williams" };
-    _about.program_name  = "Minder";
-    _about.comments      = _( "Mind-mapping application" );
-    _about.copyright     = _( "Copyright © 2018-2024 Trevor Williams" );
-    _about.version       = Minder.version;
-    _about.license_type  = License.GPL_3_0;
-    _about.website       = "https://appcenter.elementary.io/com.github.phase1geo.minder/";
-    _about.website_label = _( "Minder in AppCenter" );
-    _about.system_information = get_system_info();
-
-    var image = new Image.from_resource( "/com/github/phase1geo/minder/minder-logo.svg" );
-    _about.logo = image.get_paintable();
 
   }
 
@@ -60,8 +60,6 @@ public class About {
     try {
       var keyfile = new GLib.KeyFile();
       keyfile.load_from_file( "/.flatpak-info", GLib.KeyFileFlags.NONE );
-
-      stdout.printf( "%s\n", keyfile.to_data() );
 
       var runtime = keyfile.get_string( "Application", "runtime" );
 
