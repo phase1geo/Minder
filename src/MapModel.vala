@@ -1193,7 +1193,7 @@ public class MapModel {
   // previously selected.  If this is the case, select the node.
   public bool select_node_if_unselected( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      var node = _nodes.index( i ).contains( x, y, null );
+      var node = _nodes.index( i ).contains( x, y, true );
       if( node != null ) {
         if( !_map.selected.is_node_selected( node ) && (node.mode != NodeMode.EDITABLE) ) {
           _map.set_current_node( node );
@@ -1253,7 +1253,7 @@ public class MapModel {
   public Node? get_node_at_position( double x, double y, out MapItemComponent component ) {
     component = MapItemComponent.NONE;
     for( int i=0; i<_nodes.length; i++ ) {
-      var node = _nodes.index( i ).contains( x, y, null );
+      var node = _nodes.index( i ).contains( x, y, true );
       if( node != null ) {
         if( node.is_within_title( x, y ) ) {
           component = MapItemComponent.TITLE;
@@ -1383,10 +1383,16 @@ public class MapModel {
   //-------------------------------------------------------------
   // Returns the attachable node if one is found.
   public Node? attachable_node( double x, double y ) {
-    var current = _map.selected.current_node();
+    var sel_nodes = _map.selected.nodes();
     for( int i=0; i<_nodes.length; i++ ) {
-      Node tmp = _nodes.index( i ).contains( x, y, current );
-      if( (tmp != null) && (tmp != current.parent) && !current.contains_node( tmp ) && !tmp.is_summarized() ) {
+      Node tmp = _nodes.index( i ).contains( x, y, false );
+      if( tmp != null ) {
+        for( int j=0; j<sel_nodes.length; j++ ) {
+          var current = sel_nodes.index( j );
+          if( (tmp == current.parent) || current.contains_node( tmp ) || tmp.is_summarized() ) {
+            return( null );
+          }
+        }
         return( tmp );
       }
     }
@@ -1524,12 +1530,26 @@ public class MapModel {
     if( isroot ) {
       _map.add_undo( new UndoNodeAttach.for_root( current, orig_index, _map.canvas.orig_info, orig_style ) );
     } else {
-      _map.add_undo( new UndoNodeAttach( current, orig_parent, _map.canvas.get_orig_side(), orig_index, _map.canvas.orig_info, orig_summary, orig_summary_index, orig_style ) ); }
+      _map.add_undo( new UndoNodeAttach( current, orig_parent, _map.canvas.get_orig_side(), orig_index, _map.canvas.orig_info, orig_summary, orig_summary_index, orig_style ) );
+    }
 
     queue_draw();
     auto_save();
     current_changed();
 
+  }
+
+  //-------------------------------------------------------------
+  // Attach all of the selected nodes.  If a selected node has
+  // children, attach those children to the original parent node.
+  public void attach_nodes( Array<Node> nodes, Node parent ) {
+    for( int i=0; i<nodes.length; i++ ) {
+      var node = nodes.index( i );
+      node.return_to_position();
+      node.make_children_siblings();
+      node.detach( node.side );
+      node.attach( parent, -1, null );
+    }
   }
 
   //-------------------------------------------------------------
@@ -2925,7 +2945,7 @@ public class MapModel {
   // null.
   public Node? get_droppable_node( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      var node = _nodes.index( i ).contains( x, y, null );
+      var node = _nodes.index( i ).contains( x, y, true );
       if( node != null ) {
         return( node );
       }

@@ -1041,6 +1041,70 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
+  // Swaps the position of the two nodes in the mindmap.
+  public void swap_nodes( Node node, Node other ) {
+
+    var complete = false;
+
+    if( node.previous_sibling() == other ) {
+      var index   = node.index();
+      var summary = node.summary_node();
+      animator.add_nodes( get_nodes(), false, "swap_with_previous_sibling" );
+      node.swap_with_previous_sibling();
+      add_undo( new UndoNodeMove( node, node.side, index, summary ) );
+      complete = true;
+
+    } else if( other.previous_sibling() == node ) {
+      var index   = other.index();
+      var summary = other.summary_node();
+      animator.add_nodes( get_nodes(), false, "swap_with_next_sibling" );
+      other.swap_with_previous_sibling();
+      add_undo( new UndoNodeMove( other, other.side, index, summary ) );
+      complete = true;
+
+    } else if( (other == node.parent) && !node.parent.is_root() ) {
+      animator.add_nodes( get_nodes(), false, "make_sibling_of_grandparent" );
+      add_undo( new UndoNodeUnclify( node ) );
+      node.make_parent_sibling();
+      complete = true;
+
+    } else if( node.contains_node( other ) ) {
+      var idx          = node.index();
+      var num_children = (int)node.children().length;
+      animator.add_nodes( get_nodes(), false, "make_children_siblings" );
+      node.make_children_siblings();
+      add_undo( new UndoNodeReparent( node, idx, (idx + num_children) ) );
+      complete = true;
+    }
+
+    if( complete ) {
+      animator.animate();
+      queue_draw();
+      auto_save();
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Attach all of the selected nodes to the current attachment node.
+  public void attach_selected_nodes() {
+
+    assert( _model.attach_node != null );
+
+    var nodes = _selected.ordered_nodes();
+
+    add_undo( new UndoNodesAttach( nodes, _model.attach_node ) );
+
+    animator.add_nodes( get_nodes(), false, "attach_selected_nodes" );
+    _model.attach_nodes( nodes, _model.attach_node );
+    _model.set_attach_node( null );
+    animator.animate();
+
+    auto_save();
+
+  }
+
+  //-------------------------------------------------------------
   // FOCUS MODE FUNCTIONS
   //-------------------------------------------------------------
 

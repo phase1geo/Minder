@@ -33,6 +33,12 @@ public class Layout : Object {
   public Layout() {}
 
   //-------------------------------------------------------------
+  // Returns true if this layout is set to manual mode.
+  public virtual bool is_manual() {
+    return( false );
+  }
+
+  //-------------------------------------------------------------
   // Virtual function used to map a node's side to its new side
   // when this layout is applied.
   public virtual NodeSide side_mapping( NodeSide side ) {

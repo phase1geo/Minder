@@ -29,6 +29,10 @@ public class LayoutManual : Layout {
     balanceable = false;
   }
 
+  public override bool is_manual() {
+    return( true );
+  }
+
   /* Initializes this layout */
   public override void initialize( Node parent ) {}
 
