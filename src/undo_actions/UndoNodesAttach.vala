@@ -37,10 +37,14 @@ public class UndoNodesAttach : UndoItem {
     _children = new Array<int>();
     _parent = parent;
     for( int i=0; i<nodes.length; i++ ) {
-      var node  = nodes.index( i );
-      var index = node.index();
-      var par   = node.parent;
-      var children = (int)node.children().length;
+      var node     = nodes.index( i );
+      var index    = node.index();
+      var par      = node.parent;
+      var children = 0;
+      for( int j=0; j<node.children().length; j++ ) {
+        var child = node.children().index( j );
+        children += (child.mode != NodeMode.SELECTED) ? 1 : 0;
+      }
       _nodes.append_val( node );
       _indices.append_val( index );
       _parents.append_val( par );
