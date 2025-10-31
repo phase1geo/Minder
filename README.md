@@ -14,21 +14,22 @@ Use the power of mind-mapping to make your ideas come to life.
 - Choose from many tree layout choices.
 - Support for Markdown formatting.
 - Support for insertion of Unicode characters.
-- Add notes, tasks and images to your nodes.
+- Add notes, tasks, and images to your nodes.
 - Add node-to-node connections with optional text and notes.
-- Stylize nodes, links and connections to add more meaning and improve readability.
-- Add stickers and node groups to call out and visibly organize information.
+- Stylize nodes, callouts, links and connections to add more meaning and improve readability.
+- Add stickers, tags, callouts and node groups to call out and visibly organize information.
 - Quick search of node and connection titles and notes, including filtering options.
 - Zoom in or enable focus mode to focus on certain ideas or zoom out to see the bigger picture.
 - Enter focus mode to better view and understand portions of the map.
+- Quickly brainstorm ideas with the brainstorming interface and worry about where those ideas belong in the mind map later.
 - Unlimited undo/redo of any change.
 - Automatically saves in the background.
 - Colorized node branches.
 - Open multiple mindmaps with the use of tabs.
 - Built-in and customizable theming.
 - Gorgeous animations.
-- Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, Portable Minder, filesystem and XMind formats.
-- Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, Portable Minder, PlainText, filesystem, XMind and yEd formats.
+- Import from OPML, FreeMind, Freeplane, PlainText/Markdown (formatted), Outliner, Portable Minder, filesystem and XMind formats.
+- Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, WebP, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, filesystem, XMind and yEd formats.
 - Printer support.
 
 ## Installation
@@ -39,15 +40,15 @@ You will need the following dependencies to build Minder:
 * python3-pip
 * python3-setuptools
 * meson
-* valac (any 0.48.x version -- any later version will result in segfaults -- earlier versions have issues with libarchive)
+* valac
 * debhelper
 * libcairo2-dev
-* libgranite-dev
-* libgtk-3-dev
+* libgranite-7-dev
+* libgtk-4-dev
 * libxml2-dev
 * libgee-0.8-dev
 * libarchive-dev
-* libgtksourceview-4-dev
+* libgtksourceview-5-dev
 * libmarkdown2-dev
 * libhandy-1-dev
 * libjson-glib-dev
@@ -55,7 +56,9 @@ You will need the following dependencies to build Minder:
 * webp-pixbuf-loader`
 
 To install, run `sudo ./app install` and then run the application from your application launcher or from
-the command-line with `./app run`.
+the command-line with `./app run`.  If you want to debug with gdb using this build, run `./app debug`.
+
+Alternatively, you can install the elementary OS Flatpak using `./app elementary` or the Flathub Flatpak using `./app flathub`.  Once the Flatpak has been built, it can be run using `./app run-flatpak`.
 
 ## Flatpak
 
@@ -72,6 +75,8 @@ https://flathub.org/apps/com.github.phase1geo.minder
 Search for "Minder" in AppCenter and install from there.
 
 ## Distribution packages
+
+The following distributions have Minder available in their own packaging formats.  These versions may not be the latest versions of Minder, so install these at your own discretion.  The Flatpak versions of Minder are officially supported by the developers of Minder.
 
 ### Arch Linux
 
