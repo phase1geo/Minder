@@ -115,7 +115,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private Gee.HashMap<KeyCommand,ShortcutTooltip> _shortcut_widgets;
   private Templates                               _templates;
 
-  private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
+  private bool on_elementary = Utils.on_elementary();
 
   private delegate void ChangedFunc();
 
@@ -1163,8 +1163,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void add_property_button() {
 
     // Keep the show/hide sidebar icon names
-    _prop_show = (on_elementary ? "minder-sidebar-open"  : "minder-sidebar-symbolic");
-    _prop_hide = (on_elementary ? "minder-sidebar-close" : "minder-sidebar-symbolic");
+    _prop_show = (on_elementary ? "minder-sidebar-open"  : "minder-sidebar-light-symbolic");
+    _prop_hide = (on_elementary ? "minder-sidebar-close" : "minder-sidebar-light-symbolic");
 
     /* Add the menubutton */
     _prop_btn  = new ToggleButton() {
@@ -1507,8 +1507,10 @@ public class MainWindow : Gtk.ApplicationWindow {
       settings.gtk_application_prefer_dark_theme = dark_mode;
     }
     var use_dark_mode = Utils.use_dark_mode( _header );
-    _brain_btn.icon_name = use_dark_mode ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
-    _prop_btn.icon_name  = use_dark_mode ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
+    if( !on_elementary ) {
+      _brain_btn.icon_name = use_dark_mode ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
+      _prop_btn.icon_name  = use_dark_mode ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
+    }
     (_stack.get_child_by_name( "current" ) as CurrentInspector).update_icons();
     (_stack.get_child_by_name( "style" )   as StyleInspector).update_icons();
     (_stack.get_child_by_name( "tag" )     as TagInspector).update_icons();
