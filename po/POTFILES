@@ -75,7 +75,13 @@ src/styles/NodeBorderRounded.vala
 src/styles/NodeBorderSquared.vala
 src/styles/NodeBorderUnderlined.vala
 src/Styles.vala
+src/TagEditor.vala
 src/Tagger.vala
+src/TagInspector.vala
+src/Tags.vala
+src/TemplateDeleter.vala
+src/TemplateGroup.vala
+src/Templates.vala
 src/TextMenu.vala
 src/TextParser.vala
 src/ThemeEditor.vala
@@ -126,6 +132,7 @@ src/undo_actions/UndoNodeReparent.vala
 src/undo_actions/UndoNodeReplace.vala
 src/undo_actions/UndoNodeResize.vala
 src/undo_actions/UndoNodesAlign.vala
+src/undo_actions/UndoNodesAttach.vala
 src/undo_actions/UndoNodesCut.vala
 src/undo_actions/UndoNodesDelete.vala
 src/undo_actions/UndoNodeSequences.vala
@@ -137,6 +144,8 @@ src/undo_actions/UndoNodeSort.vala
 src/undo_actions/UndoNodesRandLinkColor.vala
 src/undo_actions/UndoNodesReparentLinkColor.vala
 src/undo_actions/UndoNodesReplace.vala
+src/undo_actions/UndoNodesTagAdd.vala
+src/undo_actions/UndoNodesTagRemove.vala
 src/undo_actions/UndoNodeStickerAdd.vala
 src/undo_actions/UndoNodeStickerChange.vala
 src/undo_actions/UndoNodeStickerRemove.vala
@@ -151,6 +160,9 @@ src/undo_actions/UndoStickerMove.vala
 src/undo_actions/UndoStickerRemove.vala
 src/undo_actions/UndoStickerResize.vala
 src/undo_actions/UndoStyleChange.vala
+src/undo_actions/UndoTagChange.vala
+src/undo_actions/UndoTagsAdd.vala
+src/undo_actions/UndoTagsRemove.vala
 src/undo_actions/UndoTextClearTags.vala
 src/undo_actions/UndoTextDelete.vala
 src/undo_actions/UndoTextInsert.vala
