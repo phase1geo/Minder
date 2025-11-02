@@ -458,7 +458,7 @@ public class TagEditor : Box {
 
       drag.prepare.connect((x, y) => {
         var val = new Value( typeof(Tag) );
-        val.set_object( tag );
+        val.set_object( tag.copy() );
         var provider = new ContentProvider.for_value( val );
         return( provider );
       });

@@ -264,35 +264,30 @@ public class DrawArea : Gtk.DrawingArea {
 
     var file_drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
     this.add_controller( file_drop );
-    file_drop.accept.connect( handle_drop_accept );
     file_drop.motion.connect( handle_file_drag_motion );
     file_drop.drop.connect( handle_file_drop );
     file_drop.leave.connect( handle_cursor_leave );
 
     var sticker_drop = new DropTarget( typeof(Picture), Gdk.DragAction.COPY );
     this.add_controller( sticker_drop );
-    sticker_drop.accept.connect( handle_drop_accept );
     sticker_drop.motion.connect( handle_sticker_drag_motion );
     sticker_drop.drop.connect( handle_sticker_drop );
     sticker_drop.leave.connect( handle_cursor_leave );
 
-    var text_drop = new DropTarget( typeof(string), Gdk.DragAction.MOVE );
+    var text_drop = new DropTarget( typeof(string), Gdk.DragAction.COPY );
     this.add_controller( text_drop );
-    text_drop.accept.connect( handle_drop_accept );
     text_drop.motion.connect( handle_text_drag_motion );
     text_drop.drop.connect( handle_text_drop );
     text_drop.leave.connect( handle_cursor_leave );
 
     var idea_drop = new DropTarget( typeof(Idea), Gdk.DragAction.MOVE );
     this.add_controller( idea_drop );
-    idea_drop.accept.connect( handle_drop_accept );
     idea_drop.motion.connect( handle_idea_drag_motion );
     idea_drop.drop.connect( handle_idea_drop );
     idea_drop.leave.connect( handle_cursor_leave );
 
     var tag_drop = new DropTarget( typeof(Tag), Gdk.DragAction.COPY );
     this.add_controller( tag_drop );
-    tag_drop.accept.connect( handle_drop_accept );
     tag_drop.motion.connect( handle_tag_drag_motion );
     tag_drop.drop.connect( handle_tag_drop );
     tag_drop.leave.connect( handle_cursor_leave );
@@ -2031,13 +2026,15 @@ public class DrawArea : Gtk.DrawingArea {
     // Set the attach mode
     _map.model.set_attach_node( node, NodeMode.DROPPABLE );
 
-    return( Gdk.DragAction.MOVE );
+    return( Gdk.DragAction.COPY );
 
   }
 
   //-------------------------------------------------------------
   // Called when text is dropped on the DrawArea
   private bool handle_text_drop( Value val, double x, double y ) {
+
+    if( !_map.editable ) return( false );
 
     Node node;
     var  text = (string)val;
@@ -2079,6 +2076,8 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Called when an idea is dropped on the DrawArea
   private bool handle_idea_drop( Value val, double x, double y ) {
+
+    if( !_map.editable ) return( false );
 
     Node node;
     int  index;
@@ -2125,6 +2124,8 @@ public class DrawArea : Gtk.DrawingArea {
   // Handles a tag drop event.  Adds the given tag to the node.
   private bool handle_tag_drop( Value val, double x, double y ) {
 
+    if( !_map.editable ) return( false );
+
     var node = _map.model.attach_node;
     var tag  = (Tag)val;
 
@@ -2168,6 +2169,8 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Performs the file drop operation.
   private bool do_file_drop( string uri, double x, double y ) {
+
+    if( !_map.editable ) return( false );
 
     if( (_map.model.attach_node == null) || (_map.model.attach_node.mode != NodeMode.DROPPABLE) ) {
 
@@ -2227,6 +2230,8 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Called when a sticker is dropped on the DrawArea.
   private bool handle_sticker_drop( Value val, double x, double y ) {
+
+    if( !_map.editable ) return( false );
 
     var drop_sticker = (Picture)val;
 
