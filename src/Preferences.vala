@@ -263,6 +263,7 @@ public class Preferences : Granite.Dialog {
 
     var grid = new Grid() {
       halign = Align.CENTER,
+      margin_end      = 16,
       column_spacing  = 12,
       row_spacing     = 6,
       row_homogeneous = true
@@ -318,10 +319,10 @@ public class Preferences : Granite.Dialog {
       hscrollbar_policy = PolicyType.NEVER,
       overlay_scrolling = false,
       hexpand           = true,
-      margin_top = 20,
-      child = grid
+      margin_top        = 20,
+      child             = grid
     };
-    sw.set_size_request( 400, 500 );
+    sw.set_size_request( -1, 500 );
 
     _shortcut_inst_start_str = _( "Double-click to edit shortcut.  Select + Delete to remove shortcut." );
     _shortcut_inst_edit_str  = _( "Escape to cancel.  Press key combination to set." );
