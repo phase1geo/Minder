@@ -29,7 +29,7 @@ Use the power of mind-mapping to make your ideas come to life.
 - Built-in and customizable theming.
 - Gorgeous animations.
 - Import from OPML, FreeMind, Freeplane, PlainText/Markdown (formatted), Outliner, Portable Minder, filesystem and XMind formats.
-- Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, WebP, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, filesystem, XMind and yEd formats.
+- Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, WebP, Markdown, Mermaid, Mermaid Mindmap, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, filesystem, XMind and yEd formats.
 - Printer support.
 
 ## Installation
@@ -58,7 +58,7 @@ You will need the following dependencies to build Minder:
 To install, run `sudo ./app install` and then run the application from your application launcher or from
 the command-line with `./app run`.  If you want to debug with gdb using this build, run `./app debug`.
 
-Alternatively, you can install the elementary OS Flatpak using `./app elementary` or the Flathub Flatpak using `./app flathub`.  Once the Flatpak has been built, it can be run using `./app run-flatpak`.
+Alternatively, you can install the elementary OS Flatpak using `./app elementary` or the Flathub Flatpak using `./app flathub`.  Once the Flatpak has been built, it can be run using `./app run-flatpak`.  To make this work, make sure that `flatpak` and `flatpak-builder` are installed on your system along with the required Sdk and Platform flatpaks.
 
 ## Flatpak
 
