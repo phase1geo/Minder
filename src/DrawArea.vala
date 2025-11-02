@@ -2039,10 +2039,17 @@ public class DrawArea : Gtk.DrawingArea {
     Node node;
     var  text = (string)val;
 
+    // If the text string is a file but doesn't look like a standard file URI, make it so.
+    if( FileUtils.test( text.chomp(), FileTest.EXISTS ) && text.has_prefix( "/" ) && !text.has_prefix( "file://" ) ) {
+      text = "file://%s".printf( text );
+    }
+
+    // Check to see if the text is a valid image file and add it to the attach node
     if( Utils.is_url( text.chomp() ) && do_file_drop( text.chomp(), x, y ) ) {
       return( true );
     }
 
+    // Otherwise, add the text as a child of the current node
     if( (_map.model.attach_node != null) && (_map.model.attach_node.mode == NodeMode.DROPPABLE) ) {
       node = _map.model.create_child_node( _map.model.attach_node, text );
       _map.add_undo( new UndoNodeInsert( node, node.index() ) );
