@@ -434,12 +434,11 @@ public class ExportXMind2021 : Export {
 
     for( int i=0; i<conns.length; i++ ) {
 
-      var node     = new Json.Object();
-      var conn     = conns.index( i );
-      var conn_id  = ids++;
-      var style_id = ids++;
-      var color    = (conn.color == null) ? map.get_theme().get_color( "connection_background" ) : conn.color;
-      var dash     = "dash";
+      var node    = new Json.Object();
+      var conn    = conns.index( i );
+      var conn_id = ids++;
+      var color   = (conn.color == null) ? map.get_theme().get_color( "connection_background" ) : conn.color;
+      var dash    = "dash";
 
       node.set_string_member( "id", conn_id.to_string() );
       node.set_string_member( "end1", conn.from_node.id().to_string() );
