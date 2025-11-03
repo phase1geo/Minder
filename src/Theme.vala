@@ -368,8 +368,8 @@ public class Theme : Object {
       p[4], p[5]
     );
     ctx.stroke();
-    Connection.draw_arrow( ctx, 2, p[0], p[1], p[2], p[3], 7 );
-    Connection.draw_arrow( ctx, 2, p[4], p[5], p[2], p[3], 7 );
+    Connection.draw_arrow( ctx, 2, p[0], p[1], p[2], p[3], 0, 7 );
+    Connection.draw_arrow( ctx, 2, p[4], p[5], p[2], p[3], 0, 7 );
 
     return( snapshot.free_to_paintable( null ) );
 
