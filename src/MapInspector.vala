@@ -454,7 +454,6 @@ public class MapInspector : Box {
     _unfold_all.clicked.connect(() => { _win.execute_command( KeyCommand.UNFOLD_ALL_NODES ); });
 
     update_icons.connect(() => {
-      var dark = Utils.use_dark_mode( _balance );
       var dark = Utils.use_dark_mode( grid );
       _balance.icon_name        = dark ? "minder-balance-dark-symbolic"        : "minder-balance-light-symbolic";
       _fold_completed.icon_name = dark ? "minder-fold-completed-dark-symbolic" : "minder-fold-completed-light-symbolic";
