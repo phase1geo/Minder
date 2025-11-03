@@ -435,20 +435,27 @@ public class MapInspector : Box {
       row_spacing        = 5
     };
 
-    _balance = new Button.from_icon_name( "minder-balance-light-symbolic" );
+    _balance = new Button.from_icon_name( "minder-balance-light-symbolic" ) {
+      tooltip_text = _( "Balance nodes" )
+    };
     _win.register_widget_for_shortcut( _balance, KeyCommand.BALANCE_NODES, _( "Balance Nodes" ) );
     _balance.clicked.connect(() => { _win.execute_command( KeyCommand.BALANCE_NODES ); });
 
-    _fold_completed = new Button.from_icon_name( "minder-fold-completed-light-symbolic" );
+    _fold_completed = new Button.from_icon_name( "minder-fold-completed-light-symbolic" ) {
+      tooltip_text = _( "Fold nodes with completed tasks")
+    };
     _win.register_widget_for_shortcut( _fold_completed, KeyCommand.FOLD_COMPLETED_TASKS, _( "Fold Completed Tasks" ) );
     _fold_completed.clicked.connect(() => { _win.execute_command( KeyCommand.FOLD_COMPLETED_TASKS ); });
 
-    _unfold_all = new Button.from_icon_name( "minder-unfold-light-symbolic" );
+    _unfold_all = new Button.from_icon_name( "minder-unfold-light-symbolic" ) {
+      tooltip_text = _( "Unfold all nodes" )
+    };
     _win.register_widget_for_shortcut( _unfold_all, KeyCommand.UNFOLD_ALL_NODES, _( "Unfold All Nodes" ) );
     _unfold_all.clicked.connect(() => { _win.execute_command( KeyCommand.UNFOLD_ALL_NODES ); });
 
     update_icons.connect(() => {
       var dark = Utils.use_dark_mode( _balance );
+      var dark = Utils.use_dark_mode( grid );
       _balance.icon_name        = dark ? "minder-balance-dark-symbolic"        : "minder-balance-light-symbolic";
       _fold_completed.icon_name = dark ? "minder-fold-completed-dark-symbolic" : "minder-fold-completed-light-symbolic";
       _unfold_all.icon_name     = dark ? "minder-unfold-dark-symbolic"         : "minder-unfold-light-symbolic";
@@ -457,6 +464,7 @@ public class MapInspector : Box {
     grid.attach( _balance,        0, 0 );
     grid.attach( _fold_completed, 1, 0 );
     grid.attach( _unfold_all,     2, 0 );
+
 
     append( grid );
 

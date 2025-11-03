@@ -223,6 +223,7 @@ public class MapModel {
   //-------------------------------------------------------------
   // Sets the theme to the given value.
   public void set_theme( Theme theme, bool save ) {
+    if( _theme == theme ) return;
     Theme? orig_theme = _theme;
     _theme        = theme;
     _theme.index  = (orig_theme != null) ? orig_theme.index : -1;

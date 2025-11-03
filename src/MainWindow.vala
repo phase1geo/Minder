@@ -1507,8 +1507,8 @@ public class MainWindow : Gtk.ApplicationWindow {
       settings.gtk_application_prefer_dark_theme = dark_mode;
     }
     var use_dark_mode = Utils.use_dark_mode( _header );
+    _brain_btn.icon_name = use_dark_mode ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
     if( !on_elementary ) {
-      _brain_btn.icon_name = use_dark_mode ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
       _prop_btn.icon_name  = use_dark_mode ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
     }
     (_stack.get_child_by_name( "current" ) as CurrentInspector).update_icons();
