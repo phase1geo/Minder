@@ -70,7 +70,7 @@ sources += files(
     'TagInspector.vala',
     'Tags.vala',
     'Template.vala',
-    'TemplateDeleter.vala',
+    'TemplateEditor.vala',
     'TemplateGroup.vala',
     'Templates.vala',
     'TextCompletion.vala',

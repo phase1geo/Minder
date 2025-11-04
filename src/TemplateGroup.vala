@@ -149,7 +149,7 @@ public class TemplateGroup {
 
   //-------------------------------------------------------------
   // Creates the menu system to manage this template group.
-  private void create_menus() {
+  private void create_menus( TemplateAddLoadFunc load_func ) {
 
     var saved_menu = new GLib.Menu();
     saved_menu.append( _( "Save Style As Template" ), "%s.action_save_as_template".printf( _type.to_string() ) );
@@ -173,7 +173,7 @@ public class TemplateGroup {
     menu.append_section( null, load_menu );
     menu.append_item( del_item );
 
-    var del_menu = new TemplateDeleter( this );
+    var del_menu = new TemplateEditor( this, load_func );
 
     _menu = new PopoverMenu.from_model( menu ) {
       margin_top = 5
@@ -204,14 +204,14 @@ public class TemplateGroup {
     add_delete_menu_command( group );
 
     // Create the menus
-    create_menus();
+    create_menus( load_func );
 
   }
 
   //-------------------------------------------------------------
   // Updates the given load and delete menus with the latest list of
   // templates in this group.
-  private void update_menu( GLib.Menu ld_menu, TemplateDeleter deleter ) {
+  private void update_menu( GLib.Menu ld_menu, TemplateEditor deleter ) {
     ld_menu.remove_all();
     deleter.update_list();
     for( int i=0; i<_templates.length; i++ ) {
