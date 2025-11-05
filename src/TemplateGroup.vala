@@ -53,7 +53,7 @@ public class TemplateGroup {
     var action = new SimpleAction( "action_save_as_template", null );
 
     action.activate.connect((v) => {
-      save_as_template( win, func );
+      // save_as_template( win, func );
     });
 
     group.add_action( action );
@@ -99,7 +99,8 @@ public class TemplateGroup {
   // Creates a save as template dialog and displays it to the user
   // If the user successfully adds a name, adds it to the list of
   // templates and saves it to the application template file.
-  private void save_as_template( MainWindow win, TemplateAddLoadFunc func ) {
+  /*
+  public void save_as_template( MainWindow win, TemplateAddLoadFunc func ) {
 
     var dialog = new Granite.Dialog() {
       modal         = true,
@@ -146,10 +147,21 @@ public class TemplateGroup {
     entry.grab_focus();
 
   }
+  */
+
+  //-------------------------------------------------------------
+  // Saves the given name as a template within this template group,
+  // calling the provided function prior to adding to our list to allow
+  // external code to populate the template as needed.
+  public bool save_as_template( string name, TemplateAddLoadFunc func ) {
+    var template = _type.create_template( name );
+    func( template );
+    return( add_template( template ) );
+  }
 
   //-------------------------------------------------------------
   // Creates the menu system to manage this template group.
-  private void create_menus( TemplateAddLoadFunc load_func ) {
+  private void create_menus( MainWindow win, TemplateAddLoadFunc add_func, TemplateAddLoadFunc load_func ) {
 
     var saved_menu = new GLib.Menu();
     saved_menu.append( _( "Save Style As Template" ), "%s.action_save_as_template".printf( _type.to_string() ) );
@@ -169,11 +181,11 @@ public class TemplateGroup {
     */
 
     var menu = new GLib.Menu();
-    menu.append_section( _type.label(), saved_menu );
-    menu.append_section( null, load_menu );
+    // menu.append_section( _type.label(), saved_menu );
+    // menu.append_section( null, load_menu );
     menu.append_item( del_item );
 
-    var del_menu = new TemplateEditor( this, load_func );
+    var del_menu = new TemplateEditor( win, this, add_func, load_func );
 
     _menu = new PopoverMenu.from_model( menu ) {
       margin_top = 5
@@ -204,7 +216,7 @@ public class TemplateGroup {
     add_delete_menu_command( group );
 
     // Create the menus
-    create_menus( load_func );
+    create_menus( win, add_func, load_func );
 
   }
 
