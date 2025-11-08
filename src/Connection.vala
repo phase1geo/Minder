@@ -186,7 +186,7 @@ public class Connection : Object {
     connect_node( _from_node );
     position_title();
     _curve     = new Bezier.with_endpoints( map, _posx, _posy, _posx, _posy );
-    style      = StyleInspector.styles.get_global_style();
+    style      = map.global_style;
   }
 
   //-------------------------------------------------------------
@@ -201,7 +201,7 @@ public class Connection : Object {
   // Constructor from XML data.
   public Connection.from_xml( MindMap map, Xml.Node* n, Array<Node> nodes ) {
     _map  = map;
-    style = StyleInspector.styles.get_global_style();
+    style = map.global_style;
     load( map, n, nodes );
   }
 

@@ -355,6 +355,14 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
+  // Loads the global style stored in the mindmap file.
+  private void load_global_style( Xml.Node* n ) {
+    _map.global_style.load_node( n );
+    _map.global_style.load_connection( n );
+    _map.global_style.load_callout( n );
+  }
+
+  //-------------------------------------------------------------
   // Searches for a node with the given ID.  If found, returns
   // true along with its title.
   public static bool xml_find( Xml.Node* n, int id, ref string name ) {
@@ -389,16 +397,20 @@ public class MapModel {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "theme"       :  load_theme( it );   break;
-          case "layout"      :  load_layout( it, ref use_layout );  break;
-          case "styles"      :  StyleInspector.styles.load( it );  break;
-          case "tags"        :  _tags.load( it );  break;
-          case "images"      :  image_manager.load( it );  break;
-          case "connections" :  _connections.load( _map, it, null, _nodes );  break;
-          case "groups"      :  groups.load( _map, it, null, _nodes );  break;
-          case "stickers"    :  _stickers.load( _map, it );  break;
-          case "nodelinks"   :  _node_links.load( it );  break;
-          case "nodes"       :
+          case "theme"        :  load_theme( it );   break;
+          case "layout"       :  load_layout( it, ref use_layout );  break;
+          case "styles"       :  
+            StyleInspector.styles.load( it );
+            _map.global_style.copy( StyleInspector.styles.get_global_style() );
+            break;
+          case "global-style" :  load_global_style( it );  break;
+          case "tags"         :  _tags.load( it );  break;
+          case "images"       :  image_manager.load( it );  break;
+          case "connections"  :  _connections.load( _map, it, null, _nodes );  break;
+          case "groups"       :  groups.load( _map, it, null, _nodes );  break;
+          case "stickers"     :  _stickers.load( _map, it );  break;
+          case "nodelinks"    :  _node_links.load( it );  break;
+          case "nodes"        :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var siblings = new Array<Node>();
@@ -450,7 +462,11 @@ public class MapModel {
 
     parent->add_child( _theme.save() );
 
-    StyleInspector.styles.save( parent );
+    Xml.Node* style = new Xml.Node( null, "global-style" );
+    _map.global_style.save_node_in_node( style );
+    _map.global_style.save_connection_in_node( style );
+    _map.global_style.save_callout_in_node( style );
+    parent->add_child( style );
 
     Xml.Node* images = new Xml.Node( null, "images" );
     image_manager.save( images );
@@ -766,7 +782,7 @@ public class MapModel {
     if( (current != null) && (current.callout == null) ) {
       _map.add_undo( new UndoNodeCallout( current ) );
       current.callout = new Callout( current );
-      current.callout.style = StyleInspector.styles.get_global_style();
+      current.callout.style = _map.global_style;
       _map.selected.set_current_callout( current.callout, (_map.focus_mode ? _map.focus_alpha : 1.0) );
       set_callout_mode( current.callout, CalloutMode.EDITABLE );
       queue_draw();
@@ -1709,7 +1725,7 @@ public class MapModel {
   // appends it to the root node list.
   public Node create_root_node( string name = "" ) {
     var node = new Node.with_name( _map, name, ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
-    node.style = StyleInspector.styles.get_global_style();
+    node.style = _map.global_style;
     position_root_node( node );
     _nodes.append_val( node );
     return( node );

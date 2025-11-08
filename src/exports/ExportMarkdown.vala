@@ -123,7 +123,7 @@ public class ExportMarkdown : Export {
 
     /* Add the style component to the node */
     if( parent == null ) {
-      node.style = StyleInspector.styles.get_global_style();
+      node.style = map.global_style;
       if( attach ) {
         map.model.position_root_node( node );
         map.model.add_root( node, -1 );

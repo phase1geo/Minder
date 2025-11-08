@@ -95,6 +95,7 @@ public class StyleInspector : Box {
   private Array<Style?>    _style_clipboard;
 
   public static Styles styles = new Styles();
+  public static Style? last_global_style = null;
 
   public signal void update_icons();
   public signal void editable_changed();
@@ -305,9 +306,8 @@ public class StyleInspector : Box {
     });
 
     _template_btn = new MenuButton() {
-      halign = Align.END,
-      icon_name = "folder-templates-symbolic",
-      // icon_name = "view-more-symbolic",
+      halign       = Align.END,
+      icon_name    = "folder-templates-symbolic",
       tooltip_text = _( "Style Templates" )
     };
 
@@ -1785,7 +1785,8 @@ public class StyleInspector : Box {
     _paste_btn.sensitive = (_style_clipboard.index( _affects ) != null);
     switch( _affects ) {
       case StyleAffects.ALL     :
-        _curr_style = styles.get_global_style();
+        _curr_style            = _map.global_style;
+        last_global_style      = _curr_style;
         _branch_group.visible  = true;
         _link_group.visible    = true;
         _node_group.visible    = true;
