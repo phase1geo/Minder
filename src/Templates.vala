@@ -105,6 +105,9 @@ public enum TemplateType {
 
 }
 
+public delegate void TemplateAddLoadFunc( Template template );
+public delegate void TemplateDeleteFunc();
+
 public class Templates {
 
   public Array<TemplateGroup> _template_groups;
@@ -124,6 +127,12 @@ public class Templates {
   }
 
   //-------------------------------------------------------------
+  // Returns the template group associated with the given type.
+  public TemplateGroup get_template_group( TemplateType ttype ) {
+    return( _template_groups.index( (int)ttype ) );
+  }
+
+  //-------------------------------------------------------------
   // Returns the template with the given name, if it exists.
   public Template? get_template( TemplateType ttype, string name ) {
     return( _template_groups.index( (int)ttype ).get_template( name ) );
@@ -131,8 +140,8 @@ public class Templates {
 
   //-------------------------------------------------------------
   // Adds the menus for the given template type group.
-  public void add_menus( TemplateType ttype, Widget w, MainWindow win, TemplateAddLoadFunc add_func, TemplateAddLoadFunc load_func ) {
-    _template_groups.index( (int)ttype ).add_menus( w, win, add_func, load_func );
+  public void add_menus( TemplateType ttype, Widget w, MainWindow win, TemplateAddLoadFunc add_func, TemplateAddLoadFunc load_func, TemplateDeleteFunc del_func ) {
+    _template_groups.index( (int)ttype ).add_menus( w, win, add_func, load_func, del_func );
   }
 
   //-------------------------------------------------------------

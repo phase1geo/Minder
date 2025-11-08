@@ -30,11 +30,14 @@ public class Preferences : Granite.Dialog {
   private string     _shortcut_inst_edit_str;
   private Label      _shortcut_instructions;
   private Tags       _tags;
+  private MenuButton _style_menu;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_set_default_theme",    action_set_default_theme, "s" },
     { "action_clear_all_shortcuts",  action_clear_all_shortcuts },
     { "action_set_minder_shortcuts", action_set_minder_shortcuts },
+    { "action_set_style_builtin",    action_set_style_builtin, "i" },
+    { "action_set_style_named",      action_set_style_named, "s" },
   };
 
   private signal void tab_switched( string tab_name );
@@ -202,6 +205,11 @@ public class Preferences : Granite.Dialog {
 
     grid.attach( make_label( _( "Colorize note fields" ) ), 0, row );
     grid.attach( make_switch( "colorize-notes" ), 1, row );
+    row++;
+
+    grid.attach( make_label( _( "Default global style" ) ), 0, row );
+    grid.attach( make_global_style( _win.templates ), 1, row, 2 );
+    grid.attach( make_info( _( "Specifies the global style to use for newly created mindmaps." ) ), 3, row );
     row++;
 
     tab_switched.connect((tab_name) => {
@@ -795,6 +803,70 @@ public class Preferences : Granite.Dialog {
         _win.shortcuts.save();
       }
     );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the builtin global style value in settings.
+  private void action_set_style_builtin( SimpleAction action, Variant? variant ) {
+    if( variant != null ) {
+      Minder.settings.set_int( "default-global-style", variant.get_int32() );
+      Minder.settings.set_string( "default-global-style-name", "" );
+      set_global_style_label();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Sets the named global style value in settings.
+  private void action_set_style_named( SimpleAction action, Variant? variant ) {
+    if( variant != null ) {
+      Minder.settings.set_int( "default-global-style", 2 );
+      Minder.settings.set_string( "default-global-style-name", variant.get_string() );
+      set_global_style_label();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Updates the label on the global style menubutton to match
+  // the current settings.
+  private void set_global_style_label() {
+    var label = _( "Minder Default" );
+    var style = Minder.settings.get_int( "default-global-style" );
+    if( style == 1 ) {
+      label = _( "Last Used" );
+    } else if( style >= 2 ) {
+      label = _( "Named Style: %s" ).printf( Minder.settings.get_string( "default-global-style-name" ) );
+    }
+    _style_menu.label = label;
+  }
+
+  //-------------------------------------------------------------
+  // Specialty widget that allows the user to select the global style.
+  private MenuButton make_global_style( Templates templates ) {
+
+    var gtemplates = templates.get_template_group( TemplateType.STYLE_GENERAL );
+    var names      = gtemplates.get_names();
+
+    var builtin = new GLib.Menu();
+    builtin.append( _( "Minder Default" ), "prefs.action_set_style_builtin(0)" );
+    builtin.append( _( "Last Used" ),      "prefs.action_set_style_builtin(1)" );
+
+    var named = new GLib.Menu();
+    for( int i=0; i<names.length; i++ ) {
+      named.append( _( "Named Style: %s" ).printf( names.index( i ) ), "prefs.action_set_style_named('%s')".printf( names.index( i ) ) );
+    }
+
+    var menu = new GLib.Menu();
+    menu.append_section( null, builtin );
+    menu.append_section( null, named );
+
+    _style_menu = new MenuButton() {
+      menu_model = menu
+    };
+
+    set_global_style_label();
+
+    return( _style_menu );
+
   }
 
 }

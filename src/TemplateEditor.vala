@@ -37,7 +37,7 @@ public class TemplateEditor : Box {
 
   //-------------------------------------------------------------
   // Constructor
-  public TemplateEditor( MainWindow win, TemplateGroup templates, TemplateAddLoadFunc add_func, TemplateAddLoadFunc load_func ) {
+  public TemplateEditor( MainWindow win, TemplateGroup templates, TemplateAddLoadFunc add_func, TemplateAddLoadFunc load_func, TemplateDeleteFunc del_func ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 5 );
 
@@ -123,6 +123,7 @@ public class TemplateEditor : Box {
       });
       _names_to_delete.clear();
       edit_mode_changed( false );
+      del_func();
     });
 
     _edit_btn = new Button.with_label( _( "Edit" ) ) {

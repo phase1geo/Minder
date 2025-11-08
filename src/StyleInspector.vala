@@ -148,10 +148,10 @@ public class StyleInspector : Box {
     editable_changed.connect( handle_current_changed );
 
     // Add the template menus
-    _win.templates.add_menus( TemplateType.STYLE_GENERAL,    this, win, add_style_template, load_style_template );
-    _win.templates.add_menus( TemplateType.STYLE_NODE,       this, win, add_style_template, load_style_template );
-    _win.templates.add_menus( TemplateType.STYLE_CONNECTION, this, win, add_style_template, load_style_template );
-    _win.templates.add_menus( TemplateType.STYLE_CALLOUT,    this, win, add_style_template, load_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_GENERAL,    this, win, add_style_template, load_style_template, delete_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_NODE,       this, win, add_style_template, load_style_template, delete_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_CONNECTION, this, win, add_style_template, load_style_template, delete_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_CALLOUT,    this, win, add_style_template, load_style_template, delete_style_template );
 
   }
 
@@ -204,6 +204,66 @@ public class StyleInspector : Box {
   private void load_style_template( Template template ) {
     var style_template = (StyleTemplate)template;
     update_from_style( style_template.style );
+  }
+
+  //-------------------------------------------------------------
+  // Handles a deletion request from the template editor.  We will check
+  // to see if we are deleting a global style template that is being used
+  // by the default style preferences option.  If we are, display a dialog
+  // alerting the user about this
+  private void delete_style_template() {
+
+    if( (_affects == StyleAffects.ALL) && (Minder.settings.get_int( "default-global-style" ) == 2) ) {
+
+      var name  = Minder.settings.get_string( "default-global-style-name" );
+      var group = _win.templates.get_template_group( TemplateType.STYLE_GENERAL );
+      var names = group.get_names();
+      for( int i=0; i<names.length; i++ ) {
+        if( names.index( i ) == name ) {
+          return;
+        }
+      }
+
+      // We didn't find the default global style in preferences, set it to default Minder style
+      // and tell the user about it
+      Minder.settings.set_int( "default-global-style", 0 );
+      Minder.settings.set_string( "default-global-style-name", "" );
+      show_global_style_dialog( name );
+
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Displays a dialog that will prompt the user to select a new
+  // default global style value.
+  private void show_global_style_dialog( string name ) {
+
+    // Force the default to be "use the default Minder global style"
+    Minder.settings.set_int( "default-global-style", 0 );
+
+    var dialog = new Granite.MessageDialog.with_image_from_icon_name(
+      _( "Deleted preferences default global style" ),
+      _( "The default global style '%s' was deleted.  Setting default global style in preferences to use the default Minder global style." ).printf( name ),
+      "dialog-warning",
+      ButtonsType.NONE
+    ) {
+      transient_for = _win,
+      title         = "",
+    };
+
+    dialog.set_default_response( ResponseType.CLOSE );
+
+    var close = new Button.with_label( _( "Close" ) );
+    close.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    dialog.add_action_widget( close, ResponseType.CLOSE );
+
+    dialog.response.connect((id) => {
+      dialog.close();
+    });
+
+    dialog.show();
+
   }
 
   /* Creates the menubutton that changes the affect */
