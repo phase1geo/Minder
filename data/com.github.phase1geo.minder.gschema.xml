@@ -390,5 +390,24 @@
         if no sibling exists, style information will come from the parent node.
       </description>
     </key>
+    <key name="default-global-style" type="i">
+      <default>0</default>
+      <summary>Default global style to use in Style sidebar when a new mindmap is created.</summary>
+      <description>
+        Specifies the default global style that is used in the Style sidebar when a new mindmap is
+        created.  The following values are supported:
+          0 - Use the default Minder global style
+          1 - Keep the global style from the last mindmap edited prior to adding the new mindmap.  If no
+              prior mindmap exists, this will use the default Minder global style.
+          2 - Use a saved global style.  The 'default-global-style-name' preference option will store the
+              name of the global style to use.  If this global style doesn't exist, the default Minder global
+              style will be used.
+      </description>
+    </key>
+    <key name="default-global-style-name" type="s">
+      <default>""</default>
+      <summary>When 'default-global-style' is set to a value of 2, the name of the saved global style to use.</summary>
+      <description>When 'default-global-style' is set to a value of 2, the name of the saved global style to use.</description>
+    </key>
   </schema>
 </schemalist>

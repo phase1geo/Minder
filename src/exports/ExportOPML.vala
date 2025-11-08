@@ -212,7 +212,7 @@ public class ExportOPML : Export {
     }
 
     /* Load the style */
-    node.style.copy( StyleInspector.styles.get_global_style() );
+    node.style = map.global_style;
 
     /* Figure out if this node is folded */
     if( expand_state != null ) {

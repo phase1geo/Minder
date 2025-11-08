@@ -358,7 +358,7 @@ public class ExportXMind2021 : Export {
   private Json.Object export_relationship_style( MindMap map ) {
 
     var theme = map.get_theme();
-    var style = StyleInspector.styles.get_global_style();
+    var style = map.global_style;
     var node  = new Json.Object();
     var props = new Json.Object();
 

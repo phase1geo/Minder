@@ -424,11 +424,10 @@ public class TagEditor : Box {
     var color = Utils.color_from_string( "#%02x%02x%02x".printf( red, green, blue ) );
 
     var tag = new Tag( name, color );
-    _tags.add_tag( tag );
-
-    add_tag( tag, (_tags.size() - 1) );
-
-    tag_added( tag );
+    if( _tags.add_tag( tag ) ) {
+      add_tag( tag, (_tags.size() - 1) );
+      tag_added( tag );
+    }
 
   } 
 

@@ -21,8 +21,6 @@
 
 using Gtk;
 
-public delegate void TemplateAddLoadFunc( Template template );
-
 public class TemplateGroup {
 
   private TemplateType    _type;
@@ -53,7 +51,7 @@ public class TemplateGroup {
     var action = new SimpleAction( "action_save_as_template", null );
 
     action.activate.connect((v) => {
-      save_as_template( win, func );
+      // save_as_template( win, func );
     });
 
     group.add_action( action );
@@ -96,60 +94,18 @@ public class TemplateGroup {
   }
 
   //-------------------------------------------------------------
-  // Creates a save as template dialog and displays it to the user
-  // If the user successfully adds a name, adds it to the list of
-  // templates and saves it to the application template file.
-  private void save_as_template( MainWindow win, TemplateAddLoadFunc func ) {
-
-    var dialog = new Granite.Dialog() {
-      modal         = true,
-      transient_for = win
-    };
-
-    dialog.add_button( _( "Cancel" ), ResponseType.CANCEL );
-    dialog.add_button( _( "Save Template" ), ResponseType.ACCEPT );
-    dialog.set_default_response( ResponseType.ACCEPT );
-
-    var save = dialog.get_widget_for_response( ResponseType.ACCEPT );
-    save.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
-
-    var label = new Label( _( "Template Name:" ) ) {
-      halign = Align.START,
-    };
-
-    var entry = new Entry() {
-      halign           = Align.FILL,
-      width_chars      = 40,
-      placeholder_text = _( "Enter template name" )
-    };
-
-    entry.activate.connect(() => {
-      dialog.activate_default();
-    });
-
-    var box = new Box( Orientation.HORIZONTAL, 5 );
-    box.append( label );
-    box.append( entry );
-
-    dialog.get_content_area().append( box );
-
-    dialog.response.connect((id) => {
-      if( id == ResponseType.ACCEPT ) {
-        var template = _type.create_template( entry.text );
-        func( template );
-        add_template( template );
-      }
-      dialog.destroy();
-    });
-
-    dialog.present();
-    entry.grab_focus();
-
+  // Saves the given name as a template within this template group,
+  // calling the provided function prior to adding to our list to allow
+  // external code to populate the template as needed.
+  public bool save_as_template( string name, TemplateAddLoadFunc func ) {
+    var template = _type.create_template( name );
+    func( template );
+    return( add_template( template ) );
   }
 
   //-------------------------------------------------------------
   // Creates the menu system to manage this template group.
-  private void create_menus() {
+  private void create_menus( MainWindow win, TemplateAddLoadFunc add_func, TemplateAddLoadFunc load_func, TemplateDeleteFunc del_func ) {
 
     var saved_menu = new GLib.Menu();
     saved_menu.append( _( "Save Style As Template" ), "%s.action_save_as_template".printf( _type.to_string() ) );
@@ -159,40 +115,32 @@ public class TemplateGroup {
     load_menu.append_submenu( _( "Load Saved Style" ), load_submenu );
     // TODO - load_menu.append( _( "Load Default Style" ), "styles.action_load_default_template" );
 
-    var del_item = new GLib.MenuItem( null, null );
-    del_item.set_attribute( "custom", "s", "delete" );
-
-    /*
-    var del_submenu = new GLib.Menu();
-    var delete_menu = new GLib.Menu();
-    delete_menu.append_submenu( _( "Delete Saved Style" ), del_submenu );
-    */
+    var menu_item = new GLib.MenuItem( null, null );
+    menu_item.set_attribute( "custom", "s", "editor" );
 
     var menu = new GLib.Menu();
-    menu.append_section( _type.label(), saved_menu );
-    menu.append_section( null, load_menu );
-    menu.append_item( del_item );
+    menu.append_item( menu_item );
 
-    var del_menu = new TemplateDeleter( this );
+    var editor = new TemplateEditor( win, this, add_func, load_func, del_func );
 
     _menu = new PopoverMenu.from_model( menu ) {
       margin_top = 5
     };
-    _menu.add_child( del_menu, "delete" );
+    _menu.add_child( editor, "editor" );
 
-    del_menu.close.connect(() => {
+    editor.close.connect(() => {
       _menu.popdown();
     });
 
     local_changed.connect(() => {
-      update_menu( load_submenu, del_menu );
+      update_menu( load_submenu, editor );
     });
 
   }
 
   //-------------------------------------------------------------
   // This function must be called for a given group to create menus.
-  public void add_menus( Widget w, MainWindow win, TemplateAddLoadFunc add_func, TemplateAddLoadFunc load_func ) {
+  public void add_menus( Widget w, MainWindow win, TemplateAddLoadFunc add_func, TemplateAddLoadFunc load_func, TemplateDeleteFunc del_func ) {
 
     // Create and add the action group to the mindmap canvas
     var group = new SimpleActionGroup();
@@ -204,16 +152,16 @@ public class TemplateGroup {
     add_delete_menu_command( group );
 
     // Create the menus
-    create_menus();
+    create_menus( win, add_func, load_func, del_func );
 
   }
 
   //-------------------------------------------------------------
   // Updates the given load and delete menus with the latest list of
   // templates in this group.
-  private void update_menu( GLib.Menu ld_menu, TemplateDeleter deleter ) {
+  private void update_menu( GLib.Menu ld_menu, TemplateEditor editor ) {
     ld_menu.remove_all();
-    deleter.update_list();
+    editor.update_list();
     for( int i=0; i<_templates.length; i++ ) {
       var name = _templates.index( i ).name;
       ld_menu.append( name, "%s.action_load_saved_template('%s')".printf( _type.to_string(), name ) );

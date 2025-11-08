@@ -37,6 +37,7 @@ public class MindMap {
   private Tags           _highlighted;
   private TagComboType   _highlight_mode = TagComboType.AND;
   private bool           _editable       = true;
+  private Style          _global_style;
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -114,6 +115,11 @@ public class MindMap {
         _highlight_mode = value;
         update_focus_mode();
       }
+    }
+  }
+  public Style global_style {
+    get {
+      return( _global_style );
     }
   }
 
@@ -219,6 +225,9 @@ public class MindMap {
 
     // Create the selection handler
     _selected = new Selection( this );
+
+    // Create the global style
+    _global_style = new Style();
 
     _highlighted = new Tags();
 
@@ -390,6 +399,29 @@ public class MindMap {
 
     initialize();
 
+    // If we are a new mindmap, populate our global style
+    switch( _settings.get_int( "default-global-style" ) ) {
+      case 0  :
+        _global_style.copy( StyleInspector.styles.get_global_style() );
+        break;
+      case 1  :
+        if( StyleInspector.last_global_style != null ) {
+          _global_style.copy( StyleInspector.last_global_style );
+        } else {
+          _global_style.copy( StyleInspector.styles.get_global_style() );
+        }
+        break;
+      default :      
+        var template = _win.templates.get_template( TemplateType.STYLE_GENERAL, Minder.settings.get_string( "default-global-style-name" ) );
+        if( template != null ) {
+          var style_template = (StyleTemplate)template;
+          _global_style.copy( style_template.style );
+        } else {
+          _global_style.copy( StyleInspector.styles.get_global_style() );
+        }
+        break;
+    }
+
     // Add tags from preferences
     _model.tags.load_variant( Minder.settings.get_value( "starting-tags" ) );
 
@@ -403,7 +435,7 @@ public class MindMap {
     // Set the node information
     n.posx  = (wwidth  / 2) - 30;
     n.posy  = (wheight / 2) - 10;
-    n.style = StyleInspector.styles.get_global_style();
+    n.style = _global_style;
 
     _model.get_nodes().append_val( n );
 

@@ -27,7 +27,8 @@ public enum StyleAffects {
   ALL = 0,               // Applies changes to all nodes and connections
   SELECTED_NODES,        // Applies changes to selected nodes
   SELECTED_CONNECTIONS,  // Applies changes to selected connections
-  SELECTED_CALLOUTS;     // Applies changes to selected callouts
+  SELECTED_CALLOUTS,     // Applies changes to selected callouts
+  NUM;
 
   /* Displays the label to display for this enumerated value */
   public string label() {
@@ -89,9 +90,12 @@ public class StyleInspector : Box {
   private bool             _change_add = true;
   private bool             _ignore     = false;
   private Style            _curr_style = new Style.templated();
+  private Button           _paste_btn;
   private MenuButton       _template_btn;
+  private Array<Style?>    _style_clipboard;
 
   public static Styles styles = new Styles();
+  public static Style? last_global_style = null;
 
   public signal void update_icons();
   public signal void editable_changed();
@@ -105,6 +109,13 @@ public class StyleInspector : Box {
 
     /* Initialize the affects */
     _affects = StyleAffects.ALL;
+
+    /* Initialize style clipboard */
+    _style_clipboard = new Array<Style?>();
+    for( int i=0; i<StyleAffects.NUM; i++ ) {
+      Style? style = null;
+      _style_clipboard.append_val( style );
+    }
 
     /* Create the UI for nodes */
     var affect = create_affect_ui();
@@ -138,10 +149,10 @@ public class StyleInspector : Box {
     editable_changed.connect( handle_current_changed );
 
     // Add the template menus
-    _win.templates.add_menus( TemplateType.STYLE_GENERAL,    this, win, add_style_template, load_style_template );
-    _win.templates.add_menus( TemplateType.STYLE_NODE,       this, win, add_style_template, load_style_template );
-    _win.templates.add_menus( TemplateType.STYLE_CONNECTION, this, win, add_style_template, load_style_template );
-    _win.templates.add_menus( TemplateType.STYLE_CALLOUT,    this, win, add_style_template, load_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_GENERAL,    this, win, add_style_template, load_style_template, delete_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_NODE,       this, win, add_style_template, load_style_template, delete_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_CONNECTION, this, win, add_style_template, load_style_template, delete_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_CALLOUT,    this, win, add_style_template, load_style_template, delete_style_template );
 
   }
 
@@ -192,7 +203,68 @@ public class StyleInspector : Box {
   //-------------------------------------------------------------
   // Loads the given template into this widget.
   private void load_style_template( Template template ) {
-    update_style_from_template( (StyleTemplate)template );
+    var style_template = (StyleTemplate)template;
+    update_from_style( style_template.style );
+  }
+
+  //-------------------------------------------------------------
+  // Handles a deletion request from the template editor.  We will check
+  // to see if we are deleting a global style template that is being used
+  // by the default style preferences option.  If we are, display a dialog
+  // alerting the user about this
+  private void delete_style_template() {
+
+    if( (_affects == StyleAffects.ALL) && (Minder.settings.get_int( "default-global-style" ) == 2) ) {
+
+      var name  = Minder.settings.get_string( "default-global-style-name" );
+      var group = _win.templates.get_template_group( TemplateType.STYLE_GENERAL );
+      var names = group.get_names();
+      for( int i=0; i<names.length; i++ ) {
+        if( names.index( i ) == name ) {
+          return;
+        }
+      }
+
+      // We didn't find the default global style in preferences, set it to default Minder style
+      // and tell the user about it
+      Minder.settings.set_int( "default-global-style", 0 );
+      Minder.settings.set_string( "default-global-style-name", "" );
+      show_global_style_dialog( name );
+
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Displays a dialog that will prompt the user to select a new
+  // default global style value.
+  private void show_global_style_dialog( string name ) {
+
+    // Force the default to be "use the default Minder global style"
+    Minder.settings.set_int( "default-global-style", 0 );
+
+    var dialog = new Granite.MessageDialog.with_image_from_icon_name(
+      _( "Deleted preferences default global style" ),
+      _( "The default global style '%s' was deleted.  Setting default global style in preferences to use the default Minder global style." ).printf( name ),
+      "dialog-warning",
+      ButtonsType.NONE
+    ) {
+      transient_for = _win,
+      title         = "",
+    };
+
+    dialog.set_default_response( ResponseType.CLOSE );
+
+    var close = new Button.with_label( _( "Close" ) );
+    close.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    dialog.add_action_widget( close, ResponseType.CLOSE );
+
+    dialog.response.connect((id) => {
+      dialog.close();
+    });
+
+    dialog.show();
+
   }
 
   /* Creates the menubutton that changes the affect */
@@ -204,19 +276,47 @@ public class StyleInspector : Box {
     lbl.add_css_class( "titled" );
 
     _affects_label = new Label( "" ) {
-      halign = Align.START
+      halign = Align.START,
+      hexpand = true
     };
 
-    _template_btn = new MenuButton() {
+    var copy_btn = new Button.from_icon_name( "edit-copy-symbolic" ) {
       halign = Align.END,
-      icon_name = "view-more-symbolic",
-      hexpand = true
+      tooltip_text = _( "Copy current style" )
+    };
+
+    copy_btn.clicked.connect(() => {
+      var style = _style_clipboard.index( _affects );
+      if( style == null ) {
+        style = new Style();
+        _style_clipboard.insert_val( _affects, style );
+        _paste_btn.sensitive = true;
+      }
+      style.copy( _curr_style );
+    });
+
+    _paste_btn = new Button.from_icon_name( "edit-paste-symbolic" ) {
+      halign       = Align.END,
+      tooltip_text = _( "Paste copied style" ),
+      sensitive    = false
+    };
+
+    _paste_btn.clicked.connect(() => {
+      update_from_style( _style_clipboard.index( _affects ) );
+    });
+
+    _template_btn = new MenuButton() {
+      halign       = Align.END,
+      icon_name    = "folder-templates-symbolic",
+      tooltip_text = _( "Style Templates" )
     };
 
     /* Pack the menubutton box */
     var box = new Box( Orientation.HORIZONTAL, 10 );
     box.append( lbl );
     box.append( _affects_label );
+    box.append( copy_btn );
+    box.append( _paste_btn );
     box.append( _template_btn );
 
     return( box );
@@ -1640,38 +1740,38 @@ public class StyleInspector : Box {
 
   //-------------------------------------------------------------
   // Update style from template style.
-  private void update_style_from_template( StyleTemplate template ) {
+  private void update_from_style( Style style ) {
     switch( _affects ) {
       case StyleAffects.ALL :
         var nodes = _map.get_nodes();
         var conns = _map.connections.connections;
         for( int i=0; i<nodes.length; i++ ) {
-          nodes.index( i ).set_style_for_tree( template.style );
+          nodes.index( i ).set_style_for_tree( style );
         }
         for( int i=0; i<conns.length; i++ ) {
-          conns.index( i ).style = template.style;
+          conns.index( i ).style = style;
         }
         break;
       case StyleAffects.SELECTED_NODES :
         var nodes = _map.selected.nodes();
         for( int i=0; i<nodes.length; i++ ) {
-          nodes.index( i ).style = template.style;
+          nodes.index( i ).style = style;
         }
         break;
       case StyleAffects.SELECTED_CONNECTIONS :
         var conns = _map.selected.connections();
         for( int i=0; i<conns.length; i++ ) {
-          conns.index( i ).style = template.style;
+          conns.index( i ).style = style;
         }
         break;
       case StyleAffects.SELECTED_CALLOUTS :
         var callouts = _map.selected.callouts();
         for( int i=0; i<callouts.length; i++ ) {
-          callouts.index( i ).style = template.style;
+          callouts.index( i ).style = style;
         }
         break;
     }
-    update_ui_with_style( template.style );
+    update_ui_with_style( style );
     _map.queue_draw();
     _map.auto_save();
   }
@@ -1682,9 +1782,11 @@ public class StyleInspector : Box {
     var selected         = _map.selected;
     _affects             = affects;
     _affects_label.label = affects.label();
+    _paste_btn.sensitive = (_style_clipboard.index( _affects ) != null);
     switch( _affects ) {
       case StyleAffects.ALL     :
-        _curr_style = styles.get_global_style();
+        _curr_style            = _map.global_style;
+        last_global_style      = _curr_style;
         _branch_group.visible  = true;
         _link_group.visible    = true;
         _node_group.visible    = true;
