@@ -1062,7 +1062,6 @@ public class StyleInspector : Box {
     _node_width = new SpinButton.with_range( 200, 1000, 100 ) {
       halign = Align.END,
       valign = Align.CENTER,
-      value  = _settings.get_int( "style-node-width" )
     };
     _node_width.value_changed.connect(() => {
       if( !_ignore ) {
@@ -1465,7 +1464,6 @@ public class StyleInspector : Box {
     _conn_twidth = new SpinButton.with_range( 100, 400, 50 ) {
       halign = Align.END,
       valign = Align.CENTER,
-      value  = _settings.get_int( "style-connection-title-width" )
     };
     _conn_twidth.value_changed.connect(() => {
       if( !_ignore ) {

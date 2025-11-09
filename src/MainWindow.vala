@@ -73,6 +73,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private Paned             _pane           = null;
   private Notebook?         _inspector_nb   = null;
   private Stack?            _stack          = null;
+  private StackSwitcher?    _sidebar_switcher = null;
   private Popover?          _zoom           = null;
   private Popover?          _search         = null;
   private MenuButton?       _search_btn     = null;
@@ -324,6 +325,7 @@ public class MainWindow : Gtk.ApplicationWindow {
         case "auto-parse-embedded-urls"        :  setting_changed_embedded_urls();   break;
         case "enable-markdown"                 :  setting_changed_markdown();        break;
         case "enable-unicode-input"            :  setting_changed_unicode_input();   break;
+        case "compact-sidebar-width"           :  setting_changed_compact_sidebar(); break;
       }
     });
 
@@ -450,6 +452,12 @@ public class MainWindow : Gtk.ApplicationWindow {
       var map = get_map( i );
       map.unicode_parser.enable = value;
     }
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever the compact sidebar width setting is changed.
+  private void setting_changed_compact_sidebar() {
+    _sidebar_switcher.orientation = Minder.settings.get_boolean( "compact-sidebar-width" ) ? Orientation.VERTICAL : Orientation.HORIZONTAL;
   }
 
   //-------------------------------------------------------------
@@ -640,9 +648,8 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /*
-   Closes all tabs that contain documents that have not been changed.
-  */
+  //-------------------------------------------------------------
+  // Closes all tabs that contain documents that have not been changed.
   private void close_unchanged_tabs() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
@@ -653,10 +660,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
   }
 
-  /*
-   Searches the current tabs for an unchanged tab.  If one is found, make it the
-   current tab.
-  */
+  //-------------------------------------------------------------
+  // Searches the current tabs for an unchanged tab.  If one is
+  // found, make it the current tab.
   private bool find_unchanged_tab() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
@@ -669,11 +675,11 @@ public class MainWindow : Gtk.ApplicationWindow {
     return( false );
   }
 
-  /*
-   Checks to see if any other tab contains the given filename.  If the filename
-   is already found, refresh the tab with the file contents and make it the current
-   tab; otherwise, add the new tab and populate it.
-  */
+  //-------------------------------------------------------------
+  // Checks to see if any other tab contains the given filename.
+  // If the filename is already found, refresh the tab with the
+  // file contents and make it the current tab; otherwise, add the
+  // new tab and populate it.
   private MindMap add_tab_conditionally( string? fname, TabAddReason reason ) {
 
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
@@ -689,15 +695,20 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
+  //-------------------------------------------------------------
+  // Returns the next tab in the tabbar.
   public void next_tab() {
     _nb.next_page();
   }
 
+  //-------------------------------------------------------------
+  // Returns the previous tab in the tabbar.
   public void previous_tab() {
     _nb.prev_page();
   }
 
-  /* Returns the current drawing area */
+  //-------------------------------------------------------------
+  // Returns the current drawing area.
   public MindMap? get_current_map( string? caller = null ) {
     if( _debug && (caller != null) ) {
       stdout.printf( "get_current_map called from %s\n", caller );
@@ -706,7 +717,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     return( get_map( _nb.page ) );
   }
 
-  /* Updates the title */
+  //-------------------------------------------------------------
+  // Updates the title.
   private void update_title( MindMap? map ) {
     var label = " \u2014 Minder";
     if( (map != null) && (map.highlighted.size() > 0) ) {
@@ -726,7 +738,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     lbl.label = label;
   }
 
-  /* Adds the zoom functionality */
+  //-------------------------------------------------------------
+  // Adds the zoom functionality.
   private void add_zoom_button() {
 
     var zoom_item = new GLib.MenuItem( null, null );
@@ -793,7 +806,8 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Adds the search functionality */
+  //-------------------------------------------------------------
+  // Adds the search functionality.
   private void add_search_button() {
 
     /* Create the search entry field */
@@ -816,24 +830,27 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     _search_items = new Gtk.ListStore( 8, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(Callout), typeof(NodeGroup), typeof(string), typeof(string) );
 
-    /* Create the treeview */
-    _search_list  = new TreeView.with_model( _search_items );
-    var type_cell = new CellRendererText();
-    var str_cell  = new CellRendererText();
-    var tab_cell  = new CellRendererText();
-    type_cell.xalign       = 1;
-    str_cell.ellipsize     = Pango.EllipsizeMode.END;
-    str_cell.ellipsize_set = true;
-    str_cell.width_chars   = 50;
+    // Create the treeview
+    _search_list  = new TreeView.with_model( _search_items ) {
+      headers_visible          = false,
+      activate_on_single_click = true,
+      enable_search            = false,
+    };
+    var type_cell = new CellRendererText() {
+      xalign = 1
+    };
+    var str_cell = new CellRendererText() {
+      ellipsize     = Pango.EllipsizeMode.END,
+      ellipsize_set = true,
+      width_chars   = 50,
+    };
+    var tab_cell = new CellRendererText();
     _search_list.insert_column_with_attributes( -1, null, type_cell, "markup", 0, null );
     _search_list.insert_column_with_attributes( -1, null, str_cell,  "markup", 1, null );
     _search_list.insert_column_with_attributes( -1, null, tab_cell,  "markup", 7, null );
-    _search_list.headers_visible = false;
-    _search_list.activate_on_single_click = true;
-    _search_list.enable_search = false;
     _search_list.row_activated.connect( on_search_clicked );
 
-    /* Create the scrolled window for the treeview */
+    // Create the scrolled window for the treeview
     _search_scroll = new ScrolledWindow() {
       height_request    = 200,
       hscrollbar_policy = PolicyType.EXTERNAL,
@@ -1220,12 +1237,14 @@ public class MainWindow : Gtk.ApplicationWindow {
     // Handle the enable-ui-animations value
     setting_changed_ui_animations();
 
-    var sb = new StackSwitcher() {
-      halign = Align.FILL,
-      stack  = _stack
+    _sidebar_switcher = new StackSwitcher() {
+      orientation = Minder.settings.get_boolean( "compact-sidebar-width" ) ? Orientation.VERTICAL : Orientation.HORIZONTAL,
+      halign      = Align.FILL,
+      stack       = _stack
     };
 
-    Utils.set_switcher_tab_widths( sb );
+    // Make sure that the tabs are displayed nicely
+    Utils.set_switcher_tab_widths( _sidebar_switcher );
 
     var box = new Box( Orientation.VERTICAL, 20 ) {
       halign        = Align.FILL,
@@ -1235,7 +1254,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       margin_top    = 5,
       margin_bottom = 5
     };
-    box.append( sb );
+    box.append( _sidebar_switcher );
     box.append( _stack );
 
     _themer = new ThemeEditor( this );

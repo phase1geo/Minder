@@ -188,6 +188,10 @@ public class Preferences : Granite.Dialog {
     grid.attach( make_switch( "hide-themes-not-matching-visual-style" ), 1, row );
     row++;
 
+    grid.attach( make_label( _( "Compact sidebar width" ) ), 0, row );
+    grid.attach( make_switch( "compact-sidebar-width" ), 1, row );
+    row++;
+
     grid.attach( make_label( _( "Default theme" ) ), 0, row );
     grid.attach( make_themes(), 1, row, 2 );
     grid.attach( make_info( _( "Sets the default theme to use for newly created mindmaps (use Map sidebar panel to make immediate changes)." ) ), 3, row );

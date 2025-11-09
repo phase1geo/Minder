@@ -37,6 +37,14 @@ public class Utils {
   }
 
   //-------------------------------------------------------------
+  // Determines if we are using the adwaita theme.
+  public static bool using_adwaita() {
+    var settings = Gtk.Settings.get_default();
+    var theme    = settings.gtk_theme_name;
+    return( (theme != null) && theme.contains( "Adwaita" ) );
+  }
+
+  //-------------------------------------------------------------
   // Creates the given directory (and all parent directories) with
   // appropriate permissions
   public static bool create_dir( string path ) {
