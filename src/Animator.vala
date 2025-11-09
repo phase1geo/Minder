@@ -114,6 +114,14 @@ public class Animator : Object {
   }
 
   //-------------------------------------------------------------
+  // Clears the save on completion indicator of the last action.
+  public void clear_last_save() {
+    if( _actions.length > 0 ) {
+      _actions.peek_tail().clear_save();
+    }
+  }
+
+  //-------------------------------------------------------------
   // Cancels the last add operation if it can be cancelled; otherwise,
   // force the animation.
   public void cancel_last_add() {

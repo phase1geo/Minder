@@ -2161,7 +2161,7 @@ public class Node : Object {
               child.attached = true;
               child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
               last_selected_child = last_selected;
-              return( i != (idx + 1) );
+              return( (i != (idx + 1)) || (child.side != side) );
             }
             break;
           case NodeSide.TOP :
@@ -2171,7 +2171,7 @@ public class Node : Object {
               child.attached = true;
               child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
               last_selected_child = last_selected;
-              return( i != (idx + 1) );
+              return( (i != (idx + 1)) || (child.side != side) );
             }
             break;
         }
@@ -2180,14 +2180,14 @@ public class Node : Object {
         child.attached = true;
         child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
         last_selected_child = last_selected;
-        return( i != (idx + 1) );
+        return( (i != (idx + 1)) || (child.side != side) );
       }
     }
     child.detach( side );
     child.attached = true;
     child.attach( this, -1, null, false );
     last_selected_child = last_selected;
-    return( _children.length != (idx + 1) );
+    return( (_children.length != (idx + 1)) || (child.side != side) );
   }
 
   //-------------------------------------------------------------

@@ -32,10 +32,9 @@ public enum AnimationType {
   PANSCALE
 }
 
-/*
- Base class that allows multiple animation objects to be stored in the
- animator class.
-*/
+//-------------------------------------------------------------
+// Base class that allows multiple animation objects to be
+// stored in the animator class.
 public class AnimatorAction : Object {
 
   protected string     _name;
@@ -46,45 +45,56 @@ public class AnimatorAction : Object {
   protected int    index  { set; get; default = 0; }
   protected double frames { private set; get; default = 10; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public AnimatorAction( string name, bool save ) {
     _name = name;
     _save = save;
     _id   = _next_id++;
   }
 
-  /* Returns the name of this action for debug purposes */
+  //-------------------------------------------------------------
+  // Returns the name of this action for debug purposes
   public string name() {
     return( _name + "-" + _id.to_string() );
   }
 
-  /* Returns true if we should save after this animation ends */
+  //-------------------------------------------------------------
+  // Returns true if we should save after this animation ends
   public bool save() {
     return( _save );
   }
 
-  /* Returns true if this animation action is complete */
+  //-------------------------------------------------------------
+  // Clears the save indication of the action.
+  public void clear_save() {
+    _save = false;
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this animation action is complete
   public bool done() {
     return( index > frames );
   }
 
-  /* Returns the animation type */
+  //-------------------------------------------------------------
+  // Returns the animation type
   public virtual AnimationType type() {
     return( AnimationType.UNKNOWN );
   }
 
-  /* Captures the end state */
+  //-------------------------------------------------------------
+  // Captures the end state
   public virtual void capture( DrawArea da ) {}
 
-  /*
-   Adjusts the animation by one frame.  Returns true if the action is
-   complete.
-  */
+  //-------------------------------------------------------------
+  // Adjusts the animation by one frame.  Returns true if the
+  // action is complete.
   public virtual void adjust( DrawArea da ) {}
 
-  /*
-   Allows the animation action to do something after the animation has completed.
-  */
+  //-------------------------------------------------------------
+  // Allows the animation action to do something after the animation
+  // has completed.
   public virtual void on_completion( DrawArea da ) {}
 
   //-------------------------------------------------------------
@@ -93,10 +103,9 @@ public class AnimatorAction : Object {
     return( true );
   }
 
-  /*
-   Force the animation to complete immediately by forcing the index to
-   be equal to the frame count.
-  */
+  //-------------------------------------------------------------
+  // Force the animation to complete immediately by forcing the
+  // index to be equal to the frame count.
   public void flush( DrawArea da ) {
     frames = (double)index;
     adjust( da );

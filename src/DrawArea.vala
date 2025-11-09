@@ -1757,6 +1757,9 @@ public class DrawArea : Gtk.DrawingArea {
             (current_node as SummaryNode).nodes_changed( 1, 1 );
           } else {
             moved = current_node.parent.move_to_position( current_node, _orig_side, scale_value( x ), scale_value( y ) );
+            if( !moved ) {
+              animator.clear_last_save();
+            }
           }
           if( !current_node.is_summarized() && (_map.model.attach_summary != null) ) {
             _map.model.attach_summary.add_node( current_node );
