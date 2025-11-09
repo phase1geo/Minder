@@ -45,6 +45,12 @@ public class DrawArea : Gtk.DrawingArea {
   private const string pointer_cursor = "pointer";
   private const string pan_cursor     = "grabbing";
 
+  private const double autopan_inner_edge = 20;
+  private const double autopan_outer_edge = 5;
+  private const double autopan_min_speed  = 5;
+  private const double autopan_max_speed  = 15;
+  private const uint   autopan_frame_rate = 20;
+
   private MindMap               _map;
   private double                _press_x;
   private double                _press_y;
@@ -1227,21 +1233,26 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Performs autopan based on the position of the mouse cursor.
   private bool do_autopan() {
+
     double diffx = 0.0;
     double diffy = 0.0;
     var aw = get_allocated_width();
     var ah = get_allocated_height();
+    var inner_edge = autopan_inner_edge;
+    var outer_edge = autopan_outer_edge;
+    var max_speed  = autopan_max_speed;
+    var min_speed  = autopan_min_speed;
 
-    if( _scaled_x < scale_value( 20 ) ) {
-      diffx = scale_value( (_scaled_x < scale_value( 10 )) ? 10 : 5 );
-    } else if( _scaled_x >= scale_value( aw - 20 ) ) {
-      diffx = scale_value( (_scaled_x >= scale_value( aw - 10 )) ? -10 : -5 );
+    if( _scaled_x < scale_value( inner_edge ) ) {
+      diffx = scale_value( (_scaled_x < scale_value( outer_edge )) ? max_speed : min_speed );
+    } else if( _scaled_x >= scale_value( aw - inner_edge ) ) {
+      diffx = scale_value( (_scaled_x >= scale_value( aw - outer_edge )) ? (0 - max_speed) : (0 - min_speed) );
     }
 
-    if( _scaled_y < scale_value( 20 ) ) {
-      diffy = scale_value( (_scaled_y < scale_value( 10 )) ? 10 : 5 );
-    } else if( _scaled_y >= scale_value( ah - 20 ) ) {
-      diffy = scale_value( (_scaled_y >= scale_value( ah - 10 )) ? -10 : -5 );
+    if( _scaled_y < scale_value( inner_edge ) ) {
+      diffy = scale_value( (_scaled_y < scale_value( outer_edge )) ? max_speed : min_speed );
+    } else if( _scaled_y >= scale_value( ah - inner_edge ) ) {
+      diffy = scale_value( (_scaled_y >= scale_value( ah - outer_edge )) ? (0 - max_speed) : (0 - min_speed) );
     }
 
     if( (diffx != 0) || (diffy != 0) ) {
@@ -1251,7 +1262,9 @@ public class DrawArea : Gtk.DrawingArea {
         on_motion( (_scaled_x * sfactor), (_scaled_y * sfactor) );
       }
     }
+
     return( true );
+
   }
 
   //-------------------------------------------------------------
@@ -1297,9 +1310,10 @@ public class DrawArea : Gtk.DrawingArea {
       if( _map.selected.is_any_draggable_selected() ) {
         double diff_x = _scaled_x - last_x;
         double diff_y = _scaled_y - last_y;
-        if( (x < 20) || (x >= (get_allocated_width() - 20)) || (y < 20) || (y >= (get_allocated_height() - 20)) ) {
+        var edge = autopan_inner_edge;
+        if( !Utils.is_within_bounds( x, y, edge, edge, (get_allocated_width() - (edge * 2)), (get_allocated_height() - (edge * 2)) ) ) {
           if( _autopan_id == 0 ) {
-            _autopan_id = Timeout.add( 20, do_autopan );
+            _autopan_id = Timeout.add( autopan_frame_rate, do_autopan );
           }
         } else if( _autopan_id > 0 ) {
           Source.remove( _autopan_id );
