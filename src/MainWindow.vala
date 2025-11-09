@@ -458,6 +458,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Called whenever the compact sidebar width setting is changed.
   private void setting_changed_compact_sidebar() {
     _sidebar_switcher.orientation = Minder.settings.get_boolean( "compact-sidebar-width" ) ? Orientation.VERTICAL : Orientation.HORIZONTAL;
+    _pane.position = get_width() - 100;
   }
 
   //-------------------------------------------------------------
@@ -1701,8 +1702,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       }
       if( !_inspector_nb.get_mapped() ) {
         _pane.end_child = _inspector_nb;
-        var prop_width = _settings.get_int( "properties-width" );
-        _pane.set_position( prop_width );
+        _pane.position  = _settings.get_int( "properties-width" );
         if( get_current_map( "show_properties 1" ) != null ) {
           get_current_map( "show_properties 2" ).canvas.see( true, -300 );
         }
