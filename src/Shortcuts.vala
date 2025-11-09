@@ -218,6 +218,12 @@ public class Shortcut {
   }
 
   //-------------------------------------------------------------
+  // Outputs a debuggable string version of this shortcut.
+  public string to_string() {
+    return( ( "Ctrl: %s, Shift: %s, Alt: %s, Key: %s, Command: %s" ).printf( _control.to_string(), _shift.to_string(), _alt.to_string(), _keycode.to_string(), _command.to_string() ) );
+  }
+
+  //-------------------------------------------------------------
   // Saves the contents of this shortcut to an XML node and returns
   // it.
   public Xml.Node* save() {
