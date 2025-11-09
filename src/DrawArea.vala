@@ -91,6 +91,7 @@ public class DrawArea : Gtk.DrawingArea {
   private EventControllerKey    _key_controller;
   private EventControllerScroll _scroll;
   private string?               _node_link_tooltip = null;
+  private uint                  _autopan_id = 0;
 
   public MainWindow win      { private set; get; }
   public Animator   animator { set; get; }
@@ -1224,6 +1225,36 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   //-------------------------------------------------------------
+  // Performs autopan based on the position of the mouse cursor.
+  private bool do_autopan() {
+    double diffx = 0.0;
+    double diffy = 0.0;
+    var aw = get_allocated_width();
+    var ah = get_allocated_height();
+
+    if( _scaled_x < scale_value( 20 ) ) {
+      diffx = scale_value( (_scaled_x < scale_value( 10 )) ? 10 : 5 );
+    } else if( _scaled_x >= scale_value( aw - 20 ) ) {
+      diffx = scale_value( (_scaled_x >= scale_value( aw - 10 )) ? -10 : -5 );
+    }
+
+    if( _scaled_y < scale_value( 20 ) ) {
+      diffy = scale_value( (_scaled_y < scale_value( 10 )) ? 10 : 5 );
+    } else if( _scaled_y >= scale_value( ah - 20 ) ) {
+      diffy = scale_value( (_scaled_y >= scale_value( ah - 10 )) ? -10 : -5 );
+    }
+
+    if( (diffx != 0) || (diffy != 0) ) {
+      if( move_origin( diffx, diffy ) ) {
+        _press_x += diffx;
+        _press_y += diffy;
+        on_motion( (_scaled_x * sfactor), (_scaled_y * sfactor) );
+      }
+    }
+    return( true );
+  }
+
+  //-------------------------------------------------------------
   // Handle mouse motion.
   private void on_motion( double x, double y ) {
 
@@ -1262,6 +1293,20 @@ public class DrawArea : Gtk.DrawingArea {
         return;
       }
   
+      // Pan the canvas if we are dragging something that is draggable
+      if( _map.selected.is_any_draggable_selected() ) {
+        double diff_x = _scaled_x - last_x;
+        double diff_y = _scaled_y - last_y;
+        if( (x < 20) || (x >= (get_allocated_width() - 20)) || (y < 20) || (y >= (get_allocated_height() - 20)) ) {
+          if( _autopan_id == 0 ) {
+            _autopan_id = Timeout.add( 20, do_autopan );
+          }
+        } else if( _autopan_id > 0 ) {
+          Source.remove( _autopan_id );
+          _autopan_id = 0;
+        }
+      }
+
       // If we are dealing with a connection, update it based on its mode
       if( current_conn != null ) {
         MapItemComponent component;
