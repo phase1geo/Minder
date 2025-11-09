@@ -42,6 +42,12 @@ public class Selection {
   }
 
   //-------------------------------------------------------------
+  // Returns if any items that can be dragged around are selected.
+  public bool is_any_draggable_selected() {
+    return( (_nodes.length > 0) || (_conns.length > 0) || (_stickers.length > 0) || (_callouts.length > 0) );
+  }
+
+  //-------------------------------------------------------------
   // Returns true if the given node is currently selected.
   public bool is_node_selected( Node node ) {
     return( node.mode.is_selected() );
