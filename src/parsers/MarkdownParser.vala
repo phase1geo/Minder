@@ -76,51 +76,67 @@ public class MarkdownParser : TextParser {
   }
 
   private void highlight_bold( FormattedText text, MatchInfo match ) {
-    make_grey( text, match, 1 );
-    add_tag( text, match, 2, FormatTag.BOLD );
-    make_grey( text, match, 3 );
+    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+      make_grey( text, match, 1 );
+      add_tag( text, match, 2, FormatTag.BOLD );
+      make_grey( text, match, 3 );
+    }
   }
 
   private void highlight_italics( FormattedText text, MatchInfo match ) {
-    make_grey( text, match, 1 );
-    add_tag( text, match, 2, FormatTag.ITALICS );
-    make_grey( text, match, 3 );
+    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+      make_grey( text, match, 1 );
+      add_tag( text, match, 2, FormatTag.ITALICS );
+      make_grey( text, match, 3 );
+    }
   }
 
   private void highlight_strikethrough( FormattedText text, MatchInfo match ) {
-    make_grey( text, match, 1 );
-    add_tag( text, match, 2, FormatTag.STRIKETHRU );
-    make_grey( text, match, 3 );
+    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+      make_grey( text, match, 1 );
+      add_tag( text, match, 2, FormatTag.STRIKETHRU );
+      make_grey( text, match, 3 );
+    }
   }
 
   private void highlight_url1( FormattedText text, MatchInfo match ) {
-    make_grey( text, match, 1 );
-    add_tag( text, match, 2, FormatTag.URL, get_text( match, 4 ) );
-    make_grey( text, match, 3 );
+    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+      make_grey( text, match, 1 );
+      add_tag( text, match, 2, FormatTag.URL, get_text( match, 4 ) );
+      make_grey( text, match, 3 );
+    }
   }
 
   private void highlight_url2( FormattedText text, MatchInfo match ) {
-    make_grey( text, match, 1 );
-    add_tag( text, match, 2, FormatTag.URL, get_text( match, 2 ) );
-    make_grey( text, match, 5 );
+    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+      make_grey( text, match, 1 );
+      add_tag( text, match, 2, FormatTag.URL, get_text( match, 2 ) );
+      make_grey( text, match, 5 );
+    }
   }
 
   private void highlight_url3( FormattedText text, MatchInfo match ) {
-    make_grey( text, match, 1 );
-    add_tag( text, match, 2, FormatTag.URL, get_text( match, 2 ) );
-    make_grey( text, match, 4 );
+    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+      make_grey( text, match, 1 );
+      add_tag( text, match, 2, FormatTag.URL, get_text( match, 2 ) );
+      make_grey( text, match, 4 );
+    }
   }
 
   private void highlight_subscript( FormattedText text, MatchInfo match ) {
-    make_grey( text, match, 1 );
-    add_tag( text, match, 2, FormatTag.SUB, get_text( match, 2 ) );
-    make_grey( text, match, 3 );
+    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+      make_grey( text, match, 1 );
+      add_tag( text, match, 2, FormatTag.SUB, get_text( match, 2 ) );
+      make_grey( text, match, 3 );
+    }
   }
 
   private void highlight_superscript( FormattedText text, MatchInfo match ) {
-    make_grey( text, match, 1 );
-    add_tag( text, match, 2, FormatTag.SUPER, get_text( match, 2 ) );
-    make_grey( text, match, 3 );
+    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+      make_grey( text, match, 1 );
+      add_tag( text, match, 2, FormatTag.SUPER, get_text( match, 2 ) );
+      make_grey( text, match, 3 );
+    }
   }
 
   /* Returns true if the associated tag should enable the associated FormatBar button */
