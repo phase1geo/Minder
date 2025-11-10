@@ -79,7 +79,7 @@ src/TagEditor.vala
 src/Tagger.vala
 src/TagInspector.vala
 src/Tags.vala
-src/TemplateDeleter.vala
+src/TemplateEditor.vala
 src/TemplateGroup.vala
 src/Templates.vala
 src/TextMenu.vala
