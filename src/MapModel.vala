@@ -200,7 +200,7 @@ public class MapModel {
     // Create the braindump list
     _braindump = new Array<string>();
 
-    // Create that mindmap tags
+    // Create the mindmap tags
     _tags = new Tags();
 
     /* Set the theme to the default theme */

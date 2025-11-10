@@ -498,6 +498,9 @@ public class Document : Object {
       backed = true;
     }
 
+    // Save the XML file before we do everything else
+    save_xml();
+
     // Create the tar.gz archive named according the the first argument
     Archive.Write archive = new Archive.Write ();
     archive.add_filter_gzip();
@@ -750,7 +753,7 @@ public class Document : Object {
   //-------------------------------------------------------------
   // Auto-saves the document
   public void auto_save() {
-    save_xml();
+    // save_xml();
   }
 
   //-------------------------------------------------------------
@@ -792,7 +795,6 @@ public class Document : Object {
 
     // Force the save to occur
     if( _save_needed ) {
-      save_xml();
       save();
     }
 

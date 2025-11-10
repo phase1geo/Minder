@@ -424,6 +424,7 @@ public class MindMap {
 
     // Add tags from preferences
     _model.tags.load_variant( Minder.settings.get_value( "starting-tags" ) );
+    reload_tags();
 
     // Create the main idea node
     var n = new Node.with_name( this, _("Main Idea"), _model.layouts.get_default() );
