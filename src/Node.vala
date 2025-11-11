@@ -214,7 +214,7 @@ public struct NodeTaskInfo {
 
 public class Node : Object {
 
-  /* Member variables */
+  // Member variables
   private   MindMap      _map;
   protected int          _id;
   private   CanvasText   _name;
@@ -250,11 +250,11 @@ public class Node : Object {
   private   bool         _sequence       = false;
   private   Tags         _tags;
 
-  /* Node signals */
+  // Node signals
   public signal void moved( double diffx, double diffy );
   public signal void resized( double diffw, double diffh );
 
-  /* Properties */
+  // Properties
   public MindMap map {
     get {
       return( _map );
@@ -1719,7 +1719,7 @@ public class Node : Object {
       siblings.append_val( this );
     }
 
-    /* If the posx and posy values are not set, set the layout now */
+    // If the posx and posy values are not set, set the layout now
     if( (x == null) && (y == null) ) {
       string? l = n->get_prop( "layout" );
       if( l != null ) {
@@ -1728,7 +1728,7 @@ public class Node : Object {
       _loaded = true;
     }
 
-    /* Make sure the style has a default value */
+    // Make sure the style has a default value
     style.copy( StyleInspector.styles.get_style_for_level( (isroot ? 0 : 1), null ) );
 
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
@@ -1753,11 +1753,11 @@ public class Node : Object {
 
     _loaded = true;
 
-    /* Force the size to get re-calculated */
+    // Force the size to get re-calculated
     update_total_size();
     update_size();
 
-    /* Load the layout after the nodes are loaded if the posx/posy information is set */
+    // Load the layout after the nodes are loaded if the posx/posy information is set
     if( (x != null) || (y != null) ) {
       string? l = n->get_prop( "layout" );
       if( l != null ) {
@@ -1765,7 +1765,7 @@ public class Node : Object {
       }
     }
 
-    /* If a color was not specified and this node is a root node, colorize the children */
+    // If a color was not specified and this node is a root node, colorize the children
     if( isroot ) {
       for( int j=0; j<_children.length; j++ ) {
         var child = _children.index( j );
@@ -1775,14 +1775,14 @@ public class Node : Object {
       }
     }
 
-    /* Get the tree bbox */
+    // Get the tree bbox
     tree_bbox = layout.bbox( this, -1, "node.load" );
 
     if( ts == null ) {
       tree_size = side.horizontal() ? tree_bbox.height : tree_bbox.width;
     }
 
-    /* Make sure that the name is positioned properly */
+    // Make sure that the name is positioned properly
     position_text();
 
   }
@@ -2431,6 +2431,9 @@ public class Node : Object {
     attach_common( idx, theme );
   }
 
+  //-------------------------------------------------------------
+  // Attachment method to use when node side is known and does not
+  // need to be calculated.
   public virtual void attach_init( Node parent, int index ) {
     assert( !is_summary() );
     this.parent = parent;
@@ -2438,15 +2441,15 @@ public class Node : Object {
     attach_common( index, null );
   }
 
+  //-------------------------------------------------------------
+  // Common attachment code that is called by the higher-level attachment
+  // methods.
   protected virtual void attach_common( int index, Theme? theme ) {
     if( index == -1 ) {
       index = (int)this.parent.children().length;
       parent.children().append_val( this );
     } else {
       parent.children().insert_val( index, this );
-    }
-    if( (parent._task_count > 0) && (_task_count == 0) ) {
-      _task_count = 1;
     }
     propagate_task_info_up( _task_count, _task_done );
     if( parent.sequence ) {
@@ -2525,8 +2528,11 @@ public class Node : Object {
   //-------------------------------------------------------------
   // Propagates task information toward the leaf nodes.
   private void propagate_task_info_down( bool? enable, bool? done ) {
+    stdout.printf( "In propagate_task_info_down, enable: %s\n", enable.to_string() );
     if( is_leaf() ) {
+      stdout.printf( "Found leaf\n" );
       if( enable != null ) {
+        stdout.printf( "  HERE!\n" );
         _task_count = enable ? 1 : 0;
       }
       if( _task_count == 1 ) {
@@ -2848,7 +2854,7 @@ public class Node : Object {
       style.draw_node_fill( ctx, x, y, w, h, side );
     }
 
-    /* Set the fill color */
+    // Set the fill color
     if( mode.is_selected() && !exporting ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
       style.draw_node_fill( ctx, x, y, w, h, side );
@@ -2862,16 +2868,16 @@ public class Node : Object {
 
     if( !is_root() || style.is_fillable() ) {
 
-      /* Draw the border */
+      // Draw the border
       Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
       ctx.set_line_width( style.node_borderwidth );
 
-      /* If we are in a vertical orientation and the border type is underlined, draw nothing */
+      // If we are in a vertical orientation and the border type is underlined, draw nothing
       style.draw_node_border( ctx, x, y, w, h, side );
 
     }
 
-    /* If we have children and we need to extend our link point, let's draw the extended link link now */
+    // If we have children and we need to extend our link point, let's draw the extended link link now
     if( (_children.length > 0) && !is_summarized() ) {
       var max_width = 0;
       for( int i=0; i<_children.length; i++ ) {
@@ -2914,7 +2920,7 @@ public class Node : Object {
     int hmargin = 3;
     int vmargin = 3;
 
-    /* Draw the selection box around the text if the node is in the 'selected' state */
+    // Draw the selection box around the text if the node is in the 'selected' state
     if( mode.is_selected() && !exporting ) {
       var padding = style.node_padding ?? 0;
       var margin  = style.node_margin  ?? 0;
@@ -2926,7 +2932,7 @@ public class Node : Object {
       ctx.fill();
     }
 
-    /* Draw the text */
+    // Draw the text
     var color = theme.get_color( "foreground" );
     if( mode.is_selected() && !exporting ) {
       color = theme.get_color( "nodesel_foreground" );
@@ -2987,7 +2993,7 @@ public class Node : Object {
       x += _task_radius;
       y += _task_radius;
 
-      /* Draw circle outline */
+      // Draw circle outline
       ctx.new_path();
       ctx.set_line_width( 2 );
       ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
@@ -2999,7 +3005,7 @@ public class Node : Object {
         ctx.stroke();
       }
 
-      /* Draw completeness pie */
+      // Draw completeness pie
       if( _task_done > 0 ) {
         Utils.set_context_color_with_alpha( ctx, color, _alpha );
         ctx.new_path();
@@ -3033,7 +3039,7 @@ public class Node : Object {
         ctx.fill();
       }
 
-      /* Draw sticker */
+      // Draw sticker
       cairo_set_source_pixbuf( ctx, _sticker_buf, x, y );
       ctx.paint_with_alpha( _alpha );
 
@@ -3061,11 +3067,11 @@ public class Node : Object {
         ctx.fill();
       }
 
-      /* Draw sequence number */
+      // Draw sequence number
       Pango.Rectangle ink_rect, log_rect;
       _sequence_num.layout.get_extents( out ink_rect, out log_rect );
 
-      /* Output the text */
+      // Output the text
       ctx.move_to( (x - (log_rect.x / Pango.SCALE)), y );
       Utils.set_context_color_with_alpha( ctx, color, _alpha );
       Pango.cairo_show_layout( ctx, _sequence_num.layout );
@@ -3157,14 +3163,14 @@ public class Node : Object {
 
     if( folded ) {
 
-      /* Draw the fold rectangle */
+      // Draw the fold rectangle
       Utils.set_context_color_with_alpha( ctx, bg_color, _alpha );
       ctx.new_path();
       ctx.set_line_width( 1 );
       ctx.rectangle( fx, fy, fw, fh );
       ctx.fill();
 
-      /* Draw circles */
+      // Draw circles
       Utils.set_context_color_with_alpha( ctx, fg_color, _alpha );
       ctx.new_path();
       ctx.arc( (fx + (fw / 3)), (fy + (fh / 2)), 2, 0, (2 * Math.PI) );
@@ -3175,7 +3181,7 @@ public class Node : Object {
 
     } else if( show_fold ) {
 
-      /* Draw the fold rectangle */
+      // Draw the fold rectangle
       Utils.set_context_color_with_alpha( ctx, fg_color, _alpha );
       ctx.new_path();
       ctx.set_line_width( 2 );
@@ -3198,7 +3204,7 @@ public class Node : Object {
       double x, y, w, h;
       node_bbox( out x, out y, out w, out h );
 
-      /* Draw highlight border */
+      // Draw highlight border
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), _alpha );
       ctx.set_line_width( 4 );
       ctx.rectangle( x, y, w, h );
@@ -3225,7 +3231,7 @@ public class Node : Object {
     var margin  = style.node_margin  ?? 0;
     var padding = style.node_padding ?? 0;
 
-    /* Get the parent's link point */
+    // Get the parent's link point
     var prev = previous_sibling();
     var link_sibling = parent.sequence && (prev != null);
     if( link_sibling ) {
@@ -3297,7 +3303,7 @@ public class Node : Object {
     }
 
 
-    /* Draw the arrow */
+    // Draw the arrow
     if( style.link_arrow ) {
       draw_link_arrow( ctx, theme, tailx, taily, tipx, tipy );
     }
@@ -3324,7 +3330,7 @@ public class Node : Object {
     var x2   = tipx - arrowLength * Math.cos( theta + phi2 );
     var y2   = tipy - arrowLength * Math.sin( theta + phi2 );
 
-    /* Draw the arrow */
+    // Draw the arrow
     Utils.set_context_color_with_alpha( ctx, _link_color, _alpha );
     ctx.set_line_width( 1 );
     ctx.move_to( tipx, tipy );
@@ -3343,7 +3349,7 @@ public class Node : Object {
   // Draw the node resizer area.
   protected virtual void draw_resizer( Context ctx, Theme theme, bool exporting ) {
 
-    /* Only draw the resizer if we are the current node */
+    // Only draw the resizer if we are the current node
     if( ((mode != NodeMode.CURRENT) && (mode != NodeMode.HIGHLIGHTED)) || exporting ) {
       return;
     }
@@ -3399,15 +3405,15 @@ public class Node : Object {
     var nodesel_background = theme.get_color( "nodesel_background" );
     var nodesel_foreground = theme.get_color( "nodesel_foreground" );
 
-    /* Draw tree_bbox */
+    // Draw tree_bbox
     if( is_summarized() || is_summary() ) {
       Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.1 );
       ctx.rectangle( tree_bbox.x, tree_bbox.y, tree_bbox.width, tree_bbox.height );
       ctx.fill();
     }
 
-    /* Draw bbox */
     /*
+    // Draw bbox
     double x, y, w, h;
     bbox( out x, out y, out w, out h );
     Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.1 );
@@ -3415,7 +3421,7 @@ public class Node : Object {
     ctx.fill();
     */
 
-    /* If this is a root node, draw specifically for a root node */
+    // If this is a root node, draw specifically for a root node
     if( is_root() ) {
 
       var background = theme.get_color( "root_background" );
@@ -3442,7 +3448,7 @@ public class Node : Object {
       draw_resizer( ctx, theme, exporting );
       draw_tags( ctx, theme, exporting );
 
-    /* Otherwise, draw the node as a non-root node */
+    // Otherwise, draw the node as a non-root node
     } else {
 
       var background = theme.get_color( "background" );
