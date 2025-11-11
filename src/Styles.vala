@@ -89,7 +89,7 @@ public class Styles {
       var level = new StyleLevel();
       level.style.branch_margin   = 100;
       level.style.branch_radius   = 25;
-      level.style.link_type       = lt_straight;
+      level.style.link_type       = lt_curved;
       level.style.link_width      = 4;
       level.style.link_arrow      = false;
       level.style.link_arrow_size = 2;
