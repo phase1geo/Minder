@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-10 00:01-0600\n"
+"POT-Creation-Date: 2025-11-11 17:31-0600\n"
 "PO-Revision-Date: 2024-04-27 15:12+0200\n"
 "Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
 "Language-Team: \n"
@@ -298,7 +298,7 @@ msgstr "Änderung des Verbindungsendpunkts"
 msgid "connection drag"
 msgstr "Verbindung verschieben"
 
-#: src/DrawArea.vala:2248 src/MapModel.vala:1820 src/MapModel.vala:1835
+#: src/DrawArea.vala:2248 src/MapModel.vala:1826 src/MapModel.vala:1841
 msgid "Another Idea"
 msgstr "Noch eine Idee"
 
@@ -477,7 +477,7 @@ msgstr "SVG"
 msgid "PlainText"
 msgstr "Einfacher Text"
 
-#: src/exports/ExportWebP.vala:30
+#: src/exports/ExportWebP.vala:29
 msgid "WebP"
 msgstr ""
 
@@ -1290,7 +1290,7 @@ msgid "Select a group color"
 msgstr "Verbindungsfarbe auswählen"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:289
-#: src/MapInspector.vala:547 src/MapModel.vala:2298
+#: src/MapInspector.vala:547 src/MapModel.vala:2304
 msgid "Manual"
 msgstr "Manuell"
 
@@ -1450,7 +1450,7 @@ msgstr "Eigenschaften-Seitenleiste anzeigen"
 msgid "Current"
 msgstr "Auswahl"
 
-#: src/MainWindow.vala:1203 src/StyleInspector.vala:369
+#: src/MainWindow.vala:1203 src/StyleInspector.vala:364
 msgid "Style"
 msgstr "Stil"
 
@@ -2004,15 +2004,15 @@ msgstr "Rechts ausrichten"
 msgid "Align"
 msgstr "Oberseite ausrichten"
 
-#: src/Node.vala:2698
+#: src/Node.vala:2701
 msgid "Node Title"
 msgstr "Knoten-Titel"
 
-#: src/Node.vala:2706
+#: src/Node.vala:2709
 msgid "Node Note"
 msgstr "Knoten-Notiz"
 
-#: src/Node.vala:2716
+#: src/Node.vala:2719
 msgid "Callout Text"
 msgstr "Callout-Text"
 
@@ -2034,7 +2034,7 @@ msgstr "Minder Tastenkombinationen"
 msgid "Advanced"
 msgstr "Fortschritt"
 
-#: src/Preferences.vala:93 src/StyleInspector.vala:258
+#: src/Preferences.vala:93 src/StyleInspector.vala:255
 msgid "Close"
 msgstr "Schließen"
 
@@ -2572,7 +2572,7 @@ msgstr "Industrie"
 msgid "Mobile"
 msgstr "Mobil"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1205
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1226
 msgid "Arrows"
 msgstr "Pfeile"
 
@@ -3556,13 +3556,13 @@ msgstr "Oben"
 msgid "Right up"
 msgstr "Rechts oben"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1030
-#: src/StyleInspector.vala:1433 src/StyleInspector.vala:1585
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1038
+#: src/StyleInspector.vala:1464 src/StyleInspector.vala:1626
 msgid "Left"
 msgstr "Links"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1032
-#: src/StyleInspector.vala:1435 src/StyleInspector.vala:1587
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1040
+#: src/StyleInspector.vala:1466 src/StyleInspector.vala:1628
 msgid "Right"
 msgstr "Rechts"
 
@@ -3822,55 +3822,55 @@ msgstr "Ausgewählte Callouts"
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: src/StyleInspector.vala:247
+#: src/StyleInspector.vala:244
 msgid "Deleted preferences default global style"
 msgstr ""
 
-#: src/StyleInspector.vala:248
+#: src/StyleInspector.vala:245
 #, c-format
 msgid ""
 "The default global style '%s' was deleted.  Setting default global style in "
 "preferences to use the default Minder global style."
 msgstr ""
 
-#: src/StyleInspector.vala:273
+#: src/StyleInspector.vala:271
 msgid "Changes affect:"
 msgstr "Änderungen betreffen:"
 
-#: src/StyleInspector.vala:285
+#: src/StyleInspector.vala:283
 msgid "Copy current style"
 msgstr ""
 
-#: src/StyleInspector.vala:300
+#: src/StyleInspector.vala:295
 msgid "Paste copied style"
 msgstr ""
 
-#: src/StyleInspector.vala:311
+#: src/StyleInspector.vala:306
 #, fuzzy
 msgid "Style Templates"
 msgstr "Vorlage"
 
-#: src/StyleInspector.vala:346
+#: src/StyleInspector.vala:341
 msgid "Branch Options"
 msgstr "Zweig-Optionen"
 
-#: src/StyleInspector.vala:415
+#: src/StyleInspector.vala:411
 msgid "Corner Radius"
 msgstr "Eckradius"
 
-#: src/StyleInspector.vala:462 src/StyleInspector.vala:890
+#: src/StyleInspector.vala:459 src/StyleInspector.vala:895
 msgid "Margin"
 msgstr "Randstärke"
 
-#: src/StyleInspector.vala:523
+#: src/StyleInspector.vala:521
 msgid "Link Options"
 msgstr "Verbinder-Optionen"
 
-#: src/StyleInspector.vala:546 src/StyleInspector.vala:1166
+#: src/StyleInspector.vala:544 src/StyleInspector.vala:1185
 msgid "Line Dash"
 msgstr "Linientyp"
 
-#: src/StyleInspector.vala:586 src/StyleInspector.vala:1288
+#: src/StyleInspector.vala:585 src/StyleInspector.vala:1312
 msgid "Line Width"
 msgstr "Linienstärke"
 
@@ -3878,28 +3878,28 @@ msgstr "Linienstärke"
 msgid "Link Arrow"
 msgstr "Pfeilverbindung"
 
-#: src/StyleInspector.vala:669
+#: src/StyleInspector.vala:670
 #, fuzzy
 msgid "Link Arrow Size"
 msgstr "Pfeilverbindung"
 
-#: src/StyleInspector.vala:742 src/Templates.vala:59 src/Templates.vala:64
+#: src/StyleInspector.vala:744 src/Templates.vala:59 src/Templates.vala:64
 msgid "Node Options"
 msgstr "Knoten-Optionen"
 
-#: src/StyleInspector.vala:765
+#: src/StyleInspector.vala:767
 msgid "Border Style"
 msgstr "Umrandungsstil"
 
-#: src/StyleInspector.vala:807
+#: src/StyleInspector.vala:810
 msgid "Border Width"
 msgstr "Randbreite"
 
-#: src/StyleInspector.vala:856
+#: src/StyleInspector.vala:860
 msgid "Color Fill"
 msgstr "Farbfüllung"
 
-#: src/StyleInspector.vala:865
+#: src/StyleInspector.vala:869
 msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
@@ -3907,65 +3907,65 @@ msgstr ""
 "Füllt den Knoten mit Farbe, wenn der Knotenrand\n"
 "quadratisch, abgerundet oder pillenförmig ist"
 
-#: src/StyleInspector.vala:933 src/StyleInspector.vala:1337
-#: src/StyleInspector.vala:1611
+#: src/StyleInspector.vala:939 src/StyleInspector.vala:1364
+#: src/StyleInspector.vala:1657
 msgid "Padding"
 msgstr "Abstand"
 
-#: src/StyleInspector.vala:976
+#: src/StyleInspector.vala:983
 msgid "Font"
 msgstr "Schriftart"
 
-#: src/StyleInspector.vala:1019 src/StyleInspector.vala:1422
-#: src/StyleInspector.vala:1574
+#: src/StyleInspector.vala:1027 src/StyleInspector.vala:1453
+#: src/StyleInspector.vala:1615
 #, fuzzy
 msgid "Text Alignment"
 msgstr "Knoten-Ausrichtung"
 
-#: src/StyleInspector.vala:1031 src/StyleInspector.vala:1434
-#: src/StyleInspector.vala:1586
+#: src/StyleInspector.vala:1039 src/StyleInspector.vala:1465
+#: src/StyleInspector.vala:1627
 #, fuzzy
 msgid "Center"
 msgstr "Auf Arbeitsfläche zentrieren"
 
-#: src/StyleInspector.vala:1056
+#: src/StyleInspector.vala:1069
 msgid "Width"
 msgstr "Breite"
 
-#: src/StyleInspector.vala:1085
+#: src/StyleInspector.vala:1101
 msgid "Enable Markup"
 msgstr "Markup aktivieren"
 
-#: src/StyleInspector.vala:1144 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1162 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "Verbindungsoptionen"
 
-#: src/StyleInspector.vala:1244
+#: src/StyleInspector.vala:1266
 #, fuzzy
 msgid "Arrow Size"
 msgstr "Pfeile"
 
-#: src/StyleInspector.vala:1379
+#: src/StyleInspector.vala:1409
 msgid "Title Font"
 msgstr "Titel Schriftart"
 
-#: src/StyleInspector.vala:1458
+#: src/StyleInspector.vala:1495
 msgid "Title Width"
 msgstr "Titelbreite"
 
-#: src/StyleInspector.vala:1508 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1547 src/Templates.vala:61 src/Templates.vala:66
 msgid "Callout Options"
 msgstr "Callout-Optionen"
 
-#: src/StyleInspector.vala:1531
+#: src/StyleInspector.vala:1571
 msgid "Text Font"
 msgstr "Text-Schriftart"
 
-#: src/StyleInspector.vala:1655
+#: src/StyleInspector.vala:1702
 msgid "Pointer Width"
 msgstr "Zeigerbreite"
 
-#: src/StyleInspector.vala:1699
+#: src/StyleInspector.vala:1747
 msgid "Pointer Length"
 msgstr "Zeigerlänge"
 

@@ -7,7 +7,11 @@
   <name>Minder</name>
   <summary>Create, develop and visualize your ideas</summary>
   <description>
-    <p>Use the power of mind-mapping to make your ideas come to life.</p>
+    <p>
+      Use the power of mind-mapping to make your ideas come to life.  Minder provides a mindmap creation and
+      exploration environment that focuses on a clean interface with smooth animations and rich, expressive elements
+      to help capture and organize your ideas quickly and stay in the your flow.
+    </p>
     <ul>
       <li>Quickly create visual mind-maps using the keyboard and automatic layout.</li>
       <li>Choose from many tree layout choices.</li>
@@ -94,19 +98,71 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
-    <release version="2.0.0" date="2025-10-30">
+    <release version="2.0.0" date="2025-11-18">
       <description>
         <p>New</p>
         <ul>
-          <li>TBD</li>
+          <li>Added support for node text alignment controls in Style sidebar</li>
+          <li>Added new brainstorming UI for quickly adding ideas without organizing them into the node tree</li>
+          <li>Added support for configuring shortcuts within preferences.</li>
+          <li>Added support for exporting as a Mermaid mindmap.</li>
+          <li>Added support for exporting as a WebP image file.</li>
+          <li>Added support for exporting most formats to the clipboard.</li>
+          <li>Added shortcut ability to close current tab.</li>
+          <li>Added support for node tagging.</li>
+          <li>Added support for style templates.</li>
+          <li>Added support for copying/pasting style.</li>
+          <li>Added support for adjust size of link and connection arrows in style sidebar.</li>
+          <li>Added support for multi-node selection drag-drop operations.</li>
+          <li>Added read-only support.</li>
+          <li>Added support for automatic mindmap panning when dragging nodes.</li>
+          <li>Added preference option to enable compact sidebar width (useful for Gnome environments).</li>
+          <li>Added preference option to control the default style settings used in new mindmaps (Minder default, last
+              used, or a saved style template).</li>
+          <li>Added preference option to control whether a new node style matches its sibling or parent node.</li>
         </ul>
         <p>Changes</p>
         <ul>
-          <li>TBD</li>
+          <li>Updated Italian translation (thanks to Albano Battistella)</li>
+          <li>Updated Russian translation (thanks to Maksim Syomochkin).</li>
+          <li>Updated code base from Gtk3 to Gtk4.</li>
+          <li>Updated text editors from gtksourceview4 to gtksourceview5.</li>
+          <li>Updated granite to granite-7.</li>
+          <li>Changed .minder save format to contain mindmap, embedded images, etc. (IMPORTANT NOTES: .minder files
+              created with previous versions will load in Minder 2.0 but will be converted and saved in the new format
+              upon opening. New save format is not backward compatible with older versions of Minder).</li>
+          <li>Saving to the new save format only occurs when Control-S is used by the user or the application is closed
+              by the user.  Reduced number of saves to disk during application usage dramatically.</li>
+          <li>Updated elementary OS Flatpak runtime version from 6 to 8.2.</li>
+          <li>Added support for creating Flathub manifests (Flathub flatpaks are now officially supported by the project; Gnome 49 SDK used).</li>
+          <li>Added more support for tree change animations.</li>
+          <li>Under the hood code improvements to improve code quality and maintenance issues.</li>
+          <li>Node trees with only two main branches can still be balanced in horizontal or vertical node layouts.</li>
+          <li>Moved random link colors switch from Map sidebar to preferences.</li>
+          <li>Changed automatic task enablement to only adding a node task when a new node is created. New sibling nodes will be enabled if the sibling node was enabled. New child nodes will be enabled if the parent was enabled.</li>
         </ul>
         <p>Bug Fixes</p>
         <ul>
-          <li>TBD</li>
+          <li>Improved look of icons when dark mode is changed between light and dark.</li>
+          <li>Improved URL detection to detect URLs that do not contain a period.</li>
+          <li>Fixed issues with including node groups in copy and paste of node tree containing them.</li>
+          <li>Fixed issue with all nodes getting selected when a group is selected.</li>
+          <li>Fixed application crashes when right-clicking on tabs (thanks to Quaylyn Rimer).</li>
+          <li>Fixed application crashes when resizing nodes with images (thanks to Quaylyn Rimer).</li>
+          <li>Fixed application crash when adding a child to a folded node.</li>
+          <li>Fixed location of text cursor when text is selected.</li>
+          <li>Fixed issues with cutting and pasting or deletion of more than one selected nodes.</li>
+          <li>Eliminated unnecessary move undo operations.</li>
+          <li>Fixed issue with selecting a node with a connection (previously the connection was incorrectly selected).</li>
+          <li>Fixed issue where not was not reporting a resize correctly.</li>
+          <li>Fixed potential issue when connecting nodes.</li>
+          <li>Fixed issues with sequence numbers not updating correctly.</li>
+          <li>Fixed issue with undo-ing a root node deletion.</li>
+          <li>Fixed potential text selection issue when hitting backspace.</li>
+          <li>Fixed issues with the location of contextual menus when the mindmap zoom level is not 100%.</li>
+          <li>Fixed issues with handling potential errors during clipboard paste operation.</li>
+          <li>Fixed issues with clearing attachment indicator when the cursor leaves the mindmap canvas.</li>
+          <li>Fixed layout issues caused by tasks being enabled in some nodes.</li>
         </ul>
       </description>
     </release>
