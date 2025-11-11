@@ -30,7 +30,7 @@ public enum StyleAffects {
   SELECTED_CALLOUTS,     // Applies changes to selected callouts
   NUM;
 
-  /* Displays the label to display for this enumerated value */
+  // Displays the label to display for this enumerated value
   public string label() {
     switch( this ) {
       case ALL                  :  return( _( "All" ) );
@@ -89,7 +89,7 @@ public class StyleInspector : Box {
   private Expander         _callout_exp;
   private bool             _change_add = true;
   private bool             _ignore     = false;
-  private Style            _curr_style = new Style.templated();
+  private Style?           _curr_style = null;
   private Button           _paste_btn;
   private MenuButton       _template_btn;
   private Array<Style?>    _style_clipboard;
@@ -100,6 +100,8 @@ public class StyleInspector : Box {
   public signal void update_icons();
   public signal void editable_changed();
 
+  //-------------------------------------------------------------
+  // Default constructor
   public StyleInspector( MainWindow win, GLib.Settings settings ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:20 );
@@ -107,17 +109,17 @@ public class StyleInspector : Box {
     _win      = win;
     _settings = settings;
 
-    /* Initialize the affects */
+    // Initialize the affects
     _affects = StyleAffects.ALL;
 
-    /* Initialize style clipboard */
+    // Initialize style clipboard
     _style_clipboard = new Array<Style?>();
     for( int i=0; i<StyleAffects.NUM; i++ ) {
       Style? style = null;
       _style_clipboard.append_val( style );
     }
 
-    /* Create the UI for nodes */
+    // Create the UI for nodes
     var affect = create_affect_ui();
 
     _branch_group  = create_branch_ui();
@@ -126,7 +128,7 @@ public class StyleInspector : Box {
     _conn_group    = create_connection_ui();
     _callout_group = create_callout_ui();
 
-    /* Pack the scrollwindow */
+    // Pack the scrollwindow
     var box = new Box( Orientation.VERTICAL, 10 );
     box.append( _branch_group );
     box.append( _link_group );
@@ -140,11 +142,11 @@ public class StyleInspector : Box {
     };
     sw.child.set_size_request( 200, 600 );
 
-    /* Pack the elements into this widget */
+    // Pack the elements into this widget
     append( affect );
     append( sw );
 
-    /* Listen for changes to the current tab in the main window */
+    // Listen for changes to the current tab in the main window
     win.canvas_changed.connect( tab_changed );
     editable_changed.connect( handle_current_changed );
 
@@ -156,7 +158,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Listen for any changes to the current tab in the main window */
+  //-------------------------------------------------------------
+  // Listen for any changes to the current tab in the main window
   private void tab_changed( MindMap? map ) {
     if( _map != null ) {
       _map.current_changed.disconnect( handle_current_changed );
@@ -267,7 +270,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Creates the menubutton that changes the affect */
+  //-------------------------------------------------------------
+  // Creates the menubutton that changes the affect
   private Box create_affect_ui() {
 
     var lbl = new Label( _( "Changes affect:" ) ) {
@@ -290,9 +294,9 @@ public class StyleInspector : Box {
       if( style == null ) {
         style = new Style();
         _style_clipboard.insert_val( _affects, style );
-        _paste_btn.sensitive = true;
       }
       style.copy( _curr_style );
+      _paste_btn.sensitive = true;
     });
 
     _paste_btn = new Button.from_icon_name( "edit-paste-symbolic" ) {
@@ -302,6 +306,7 @@ public class StyleInspector : Box {
     };
 
     _paste_btn.clicked.connect(() => {
+      var style = _style_clipboard.index( _affects );
       update_from_style( _style_clipboard.index( _affects ) );
     });
 
@@ -311,7 +316,7 @@ public class StyleInspector : Box {
       tooltip_text = _( "Style Templates" )
     };
 
-    /* Pack the menubutton box */
+    // Pack the menubutton box
     var box = new Box( Orientation.HORIZONTAL, 10 );
     box.append( lbl );
     box.append( _affects_label );
@@ -342,7 +347,7 @@ public class StyleInspector : Box {
     cbox.append( branch_radius );
     cbox.append( branch_margin );
 
-    /* Create expander */
+    // Create expander
     var exp = new Expander( "  " + _( "Branch Options" ) ) {
       expanded = _settings.get_boolean( "style-branch-options-expanded" ),
       child    = cbox
@@ -404,6 +409,7 @@ public class StyleInspector : Box {
     var link_types = styles.get_link_types();
     if( index < link_types.length ) {
       var link_type = link_types.index( _link_types.selected );
+      _curr_style.link_type = link_type;
       _map.undo_buffer.add_item( new UndoStyleLinkType( _affects, link_type, _map ) );
     }
   }
@@ -446,6 +452,7 @@ public class StyleInspector : Box {
       return( false );
     }
     var margin = new UndoStyleBranchRadius( _affects, intval, _map );
+    _curr_style.branch_radius = intval;
     if( _change_add ) {
       _map.undo_buffer.add_item( margin );
       _change_add = false;
@@ -489,6 +496,7 @@ public class StyleInspector : Box {
       return( false );
     }
     var margin = new UndoStyleBranchMargin( _affects, intval, _map );
+    _curr_style.branch_margin = intval;
     if( _change_add ) {
       _map.undo_buffer.add_item( margin );
       _change_add = false;
@@ -519,7 +527,7 @@ public class StyleInspector : Box {
     cbox.append( link_arrow );
     cbox.append( link_arrow_size );
 
-    /* Create expander */
+    // Create expander
     var exp = new Expander( "  " + _( "Link Options" ) ) {
       expanded = _settings.get_boolean( "style-link-options-expanded" ),
       child    = cbox
@@ -556,6 +564,7 @@ public class StyleInspector : Box {
     };
 
     _link_dash.changed.connect((index) => {
+      _curr_style.link_dash = dashes.index( index );
       _map.undo_buffer.add_item( new UndoStyleLinkDash( _affects, dashes.index( index ), _map ) );
     });
 
@@ -620,6 +629,7 @@ public class StyleInspector : Box {
     if( value > 8 ) value = 8;
     var int_value  = (int)value;
     var link_width = new UndoStyleLinkWidth( _affects, int_value, _map );
+    _curr_style.link_width = int_value;
     if( _change_add ) {
       _map.undo_buffer.add_item( link_width );
       _change_add = false;
@@ -658,6 +668,7 @@ public class StyleInspector : Box {
   private void link_arrow_changed() {
     if( !_ignore ) {
       bool val = _link_arrow.get_active();
+      _curr_style.link_arrow = val;
       _map.undo_buffer.add_item( new UndoStyleLinkArrow( _affects, val, _map ) );
     }
   }
@@ -698,6 +709,7 @@ public class StyleInspector : Box {
     if( value > 3 ) value = 3;
     var int_value       = (int)value;
     var link_arrow_size = new UndoStyleLinkArrowSize( _affects, int_value, _map );
+    _curr_style.link_arrow_size = int_value;
     if( _change_add ) {
       _map.undo_buffer.add_item( link_arrow_size );
       _change_add = false;
@@ -738,7 +750,7 @@ public class StyleInspector : Box {
     cbox.append( node_width );
     cbox.append( node_markup );
 
-    /* Create expander */
+    // Create expander
     var exp = new Expander( "  " + _( "Node Options" ) ) {
       expanded = _settings.get_boolean( "style-node-options-expanded" ),
       child    = cbox
@@ -796,6 +808,7 @@ public class StyleInspector : Box {
   private void set_node_border( int index ) {
     var node_borders = styles.get_node_borders();
     if( index < node_borders.length ) {
+      _curr_style.node_border = node_borders.index( index );
       _map.undo_buffer.add_item( new UndoStyleNodeBorder( _affects, node_borders.index( index ), _map ) );
     }
   }
@@ -840,6 +853,7 @@ public class StyleInspector : Box {
   private bool node_borderwidth_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     var borderwidth = new UndoStyleNodeBorderwidth( _affects, intval, _map );
+    _curr_style.node_borderwidth = intval;
     if( _change_add ) {
       _map.undo_buffer.add_item( borderwidth );
       _change_add = false;
@@ -879,6 +893,7 @@ public class StyleInspector : Box {
   private void node_fill_changed() {
     if( !_ignore ) {
       bool val = _node_fill.get_active();
+      _curr_style.node_fill = val;
       _map.undo_buffer.add_item( new UndoStyleNodeFill( _affects, val, _map ) );
     }
   }
@@ -917,6 +932,7 @@ public class StyleInspector : Box {
       return( false );
     }
     var margin = new UndoStyleNodeMargin( _affects, intval, _map );
+    _curr_style.node_margin = intval;
     if( _change_add ) {
       _map.undo_buffer.add_item( margin );
       _change_add = false;
@@ -960,6 +976,7 @@ public class StyleInspector : Box {
       return( false );
     }
     var padding = new UndoStyleNodePadding( _affects, intval, _map );
+    _curr_style.node_padding = intval;
     if( _change_add ) {
       _map.undo_buffer.add_item( padding );
       _change_add = false;
@@ -999,6 +1016,7 @@ public class StyleInspector : Box {
     _node_font.notify["font-desc"].connect(() => {
       var family = _node_font.font_desc.get_family();
       var size   = _node_font.font_desc.get_size();
+      _curr_style.node_font = _node_font.font_desc.copy();
       _map.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _map ) );
     });
 
@@ -1042,10 +1060,15 @@ public class StyleInspector : Box {
   //-------------------------------------------------------------
   // Sets the node text alignment value.
   private void set_node_text_align( int index ) {
+    Pango.Alignment? align = null;
     switch( index ) {
-      case 0 :  _map.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.LEFT,   _map ) );  break;
-      case 1 :  _map.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.CENTER, _map ) );  break;
-      case 2 :  _map.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.RIGHT,  _map ) );  break;
+      case 0 :  align = Pango.Alignment.LEFT;    break;
+      case 1 :  align = Pango.Alignment.CENTER;  break;
+      case 2 :  align = Pango.Alignment.RIGHT;   break;
+    }
+    if( align != null ) {
+      _curr_style.node_text_align = align;
+      _map.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, align, _map ) );
     }
   }
 
@@ -1066,6 +1089,7 @@ public class StyleInspector : Box {
     _node_width.value_changed.connect(() => {
       if( !_ignore ) {
         var width = (int)_node_width.get_value();
+        _curr_style.node_width = width;
         _map.undo_buffer.replace_item( new UndoStyleNodeWidth( _affects, width, _map ) );
       }
     });
@@ -1080,6 +1104,8 @@ public class StyleInspector : Box {
 
   }
 
+  //-------------------------------------------------------------
+  // Create the node markup style setting
   private Box create_node_markup_ui() {
 
     var lbl = new Label( _( "Enable Markup" ) ) {
@@ -1104,7 +1130,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the node fill status changes */
+  //-------------------------------------------------------------
+  // Called whenever the node fill status changes
   private void node_markup_changed() {
     if( !_ignore ) {
       var val = _node_markup.get_active();
@@ -1112,7 +1139,8 @@ public class StyleInspector : Box {
     }
   }
 
-  /* Creates the connection style UI */
+  //-------------------------------------------------------------
+  // Creates the connection style UI
   private Box create_connection_ui() {
 
     var conn_dash       = create_connection_dash_ui();
@@ -1140,7 +1168,7 @@ public class StyleInspector : Box {
     cbox.append( conn_text_align );
     cbox.append( conn_twidth );
 
-    /* Create expander */
+    // Create expander
     _conn_exp = new Expander( "  " + _( "Connection Options" ) ) {
       expanded = _settings.get_boolean( "style-connection-options-expanded" ),
       child    = cbox
@@ -1160,7 +1188,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Create the connection dash widget */
+  //-------------------------------------------------------------
+  // Create the connection dash widget
   private Box create_connection_dash_ui() {
 
     var lbl = new Label( _( "Line Dash" ) ) {
@@ -1176,6 +1205,7 @@ public class StyleInspector : Box {
     };
 
     _conn_dash.changed.connect((index) => {
+      _curr_style.connection_dash = dashes.index( index );
       _map.undo_buffer.add_item( new UndoStyleConnectionDash( _affects, dashes.index( index ), _map ) );
     });
 
@@ -1199,7 +1229,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Creates the connection arrow position UI */
+  //-------------------------------------------------------------
+  // Creates the connection arrow position UI
   private Box create_connection_arrow_ui() {
 
     var lbl = new Label( _( "Arrows" ) ) {
@@ -1215,6 +1246,7 @@ public class StyleInspector : Box {
     };
 
     _conn_arrow.changed.connect((index) => {
+      _curr_style.connection_arrow = arrows[index];
       _map.undo_buffer.add_item( new UndoStyleConnectionArrow( _affects, arrows[index], _map ) );
     });
 
@@ -1273,6 +1305,7 @@ public class StyleInspector : Box {
     if( value > 3 ) value = 3;
     var int_value       = (int)value;
     var conn_arrow_size = new UndoStyleConnectionArrowSize( _affects, int_value, _map );
+    _curr_style.connection_arrow_size = int_value;
     if( _change_add ) {
       _map.undo_buffer.add_item( conn_arrow_size );
       _change_add = false;
@@ -1282,7 +1315,8 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  /* Create widget for handling the width of a connection */
+  //-------------------------------------------------------------
+  // Create widget for handling the width of a connection
   private Box create_connection_line_width_ui() {
 
     var lbl = new Label( _( "Line Width" ) ) {
@@ -1317,11 +1351,13 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the user changes the link width value */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the link width value.
   private bool connection_line_width_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 8 ) intval = 8;
     var width = new UndoStyleConnectionLineWidth( _affects, intval, _map );
+    _curr_style.connection_line_width = intval;
     if( _change_add ) {
       _map.undo_buffer.add_item( width );
       _change_add = false;
@@ -1331,7 +1367,8 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  /* Allows the user to change the node padding */
+  //-------------------------------------------------------------
+  // Allows the user to change the node padding
   private Box create_connection_padding_ui() {
 
     var lbl = new Label( _( "Padding" ) ) {
@@ -1357,13 +1394,15 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the node margin value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the node margin value is changed
   private bool connection_padding_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 20 ) {
       return( false );
     }
     var padding = new UndoStyleConnectionPadding( _affects, intval, _map );
+    _curr_style.connection_padding = intval;
     if( _change_add ) {
       _map.undo_buffer.add_item( padding );
       _change_add = false;
@@ -1373,7 +1412,8 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  /* Creates the node font selector */
+  //-------------------------------------------------------------
+  // Creates the node font selector
   private Box create_connection_font_ui() {
 
     var lbl = new Label( _( "Title Font" ) ) {
@@ -1402,6 +1442,7 @@ public class StyleInspector : Box {
     _conn_font.notify["font-desc"].connect(() => {
       var family = _conn_font.font_desc.get_family();
       var size   = _conn_font.font_desc.get_size();
+      _curr_style.connection_font = _conn_font.font_desc.copy();
       _map.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _map ) );
     });
 
@@ -1445,14 +1486,20 @@ public class StyleInspector : Box {
   //-------------------------------------------------------------
   // Sets the connection text alignment value.
   private void set_connection_text_align( int index ) {
+    Pango.Alignment? align = null;
     switch( index ) {
-      case 0 :  _map.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, Pango.Alignment.LEFT,   _map ) );  break;
-      case 1 :  _map.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, Pango.Alignment.CENTER, _map ) );  break;
-      case 2 :  _map.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, Pango.Alignment.RIGHT,  _map ) );  break;
+      case 0 :  align = Pango.Alignment.LEFT;    break;
+      case 1 :  align = Pango.Alignment.CENTER;  break;
+      case 2 :  align = Pango.Alignment.RIGHT;   break;
+    }
+    if( align != null ) {
+      _curr_style.connection_text_align = align;
+      _map.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, align, _map ) );
     }
   }
 
-  /* Creates the connection title width selector */
+  //-------------------------------------------------------------
+  // Creates the connection title width selector
   private Box create_connection_title_width_ui() {
 
     var lbl = new Label( _( "Title Width" ) ) {
@@ -1468,6 +1515,7 @@ public class StyleInspector : Box {
     _conn_twidth.value_changed.connect(() => {
       if( !_ignore ) {
         var width = (int)_conn_twidth.get_value();
+        _curr_style.connection_title_width = width;
         _map.undo_buffer.replace_item( new UndoStyleConnectionTitleWidth( _affects, width, _map ) );
       }
     });
@@ -1482,7 +1530,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Creates the callout style UI */
+  //-------------------------------------------------------------
+  // Creates the callout style UI
   private Box create_callout_ui() {
 
     var callout_font       = create_callout_font_ui();
@@ -1504,7 +1553,7 @@ public class StyleInspector : Box {
     cbox.append( callout_pwidth );
     cbox.append( callout_plength );
 
-    /* Create expander */
+    // Create expander
     _callout_exp = new Expander( "  " + _( "Callout Options" ) ) {
       use_markup = true,
       expanded   = _settings.get_boolean( "style-callout-options-expanded" ),
@@ -1525,7 +1574,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Creates the callout font selector */
+  //-------------------------------------------------------------
+  // Creates the callout font selector
   private Box create_callout_font_ui() {
 
     var lbl = new Label( _( "Text Font" ) ) {
@@ -1554,6 +1604,7 @@ public class StyleInspector : Box {
     _callout_font.notify["font-desc"].connect(() => {
       var family = _callout_font.font_desc.get_family();
       var size   = _callout_font.font_desc.get_size();
+      _curr_style.callout_font = _callout_font.font_desc.copy();
       _map.add_undo( new UndoStyleCalloutFont( _affects, family, size, _map ) );
     });
 
@@ -1597,10 +1648,15 @@ public class StyleInspector : Box {
   //-------------------------------------------------------------
   // Sets the callout text alignment value.
   private void set_callout_text_align( int index ) {
+    Pango.Alignment? align = null;
     switch( index ) {
-      case 0 :  _map.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, Pango.Alignment.LEFT,   _map ) );  break;
-      case 1 :  _map.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, Pango.Alignment.CENTER, _map ) );  break;
-      case 2 :  _map.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, Pango.Alignment.RIGHT,  _map ) );  break;
+      case 0 :  align = Pango.Alignment.LEFT;    break;
+      case 1 :  align = Pango.Alignment.CENTER;  break;
+      case 2 :  align = Pango.Alignment.RIGHT;   break;
+    }
+    if( align != null ) {
+      _curr_style.callout_text_align = align;
+      _map.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, align, _map ) );
     }
   }
 
@@ -1639,6 +1695,7 @@ public class StyleInspector : Box {
       return( false );
     }
     var padding = new UndoStyleCalloutPadding( _affects, intval, _map );
+    _curr_style.callout_padding = intval;
     if( _change_add ) {
       _map.undo_buffer.add_item( padding );
       _change_add = false;
@@ -1683,6 +1740,7 @@ public class StyleInspector : Box {
       return( false );
     }
     var pwidth = new UndoStyleCalloutPointerWidth( _affects, intval, _map );
+    _curr_style.callout_ptr_width = intval;
     if( _change_add ) {
       _map.undo_buffer.add_item( pwidth );
       _change_add = false;
@@ -1727,6 +1785,7 @@ public class StyleInspector : Box {
       return( false );
     }
     var plength = new UndoStyleCalloutPointerLength( _affects, intval, _map );
+    _curr_style.callout_ptr_length = intval;
     if( _change_add ) {
       _map.undo_buffer.add_item( plength );
       _change_add = false;
@@ -1869,6 +1928,9 @@ public class StyleInspector : Box {
     _link_types.set_sensitive( sensitive && _map.editable );
   }
 
+  //-------------------------------------------------------------
+  // Updates the state of the link types modebutton widget with the
+  // link type style information.
   private void update_link_types_with_style( Style style ) {
     if( style.link_type != null ) {
       var link_types = styles.get_link_types();
@@ -1884,6 +1946,9 @@ public class StyleInspector : Box {
     update_link_types_state();
   }
 
+  //-------------------------------------------------------------
+  // Updates the state of the link dashes modebutton widget with
+  // the link dashes style information.
   private void update_link_dashes_with_style( Style style ) {
     if( style.link_dash != null ) {
       var link_dashes = styles.get_link_dashes();
@@ -1897,6 +1962,9 @@ public class StyleInspector : Box {
     _link_dash.editable_changed( _map.editable );
   }
 
+  //-------------------------------------------------------------
+  // Updates the state of the node borders modebutton widget with
+  // the node border style information.
   private void update_node_borders_with_style( Style style ) {
     if( style.node_border != null ) {
       var node_borders = styles.get_node_borders();
@@ -1910,6 +1978,9 @@ public class StyleInspector : Box {
     _node_borders.editable_changed( _map.editable );
   }
 
+  //-------------------------------------------------------------
+  // Updates the state of the node text alignment modebutton widget
+  // with the node text alignment style information.
   private void update_node_text_align_with_style( Style style ) {
     if( style.node_text_align != null ) {
       switch( style.node_text_align ) {
@@ -1921,6 +1992,9 @@ public class StyleInspector : Box {
     _node_text_align.editable_changed( _map.editable );
   }
 
+  //-------------------------------------------------------------
+  // Updates the state of the connection dash modebutton widget
+  // with the connection dash style information.
   private void update_conn_dashes_with_style( Style style ) {
     if( style.connection_dash != null ) {
       var link_dashes = styles.get_link_dashes();
@@ -1934,6 +2008,9 @@ public class StyleInspector : Box {
     _conn_dash.editable_changed( _map.editable );
   }
 
+  //-------------------------------------------------------------
+  // Updates the state of the connection arrow style dropdown
+  // widget based on the connection arrow style information.
   private void update_conn_arrows_with_style( Style style ) {
     if( style.connection_arrow != null ) {
       string arrows[4] = {"none", "fromto", "tofrom", "both"};
@@ -1949,6 +2026,9 @@ public class StyleInspector : Box {
     _conn_arrow.editable_changed( _map.editable );
   }
 
+  //-------------------------------------------------------------
+  // Updates the state of the connection text alignment modebutton
+  // widget based on the connection text alignment style information.
   private void update_conn_text_align_with_style( Style style ) {
     if( style.connection_text_align != null ) {
       switch( style.connection_text_align ) {
@@ -1960,6 +2040,9 @@ public class StyleInspector : Box {
     _conn_text_align.editable_changed( _map.editable );
   }
 
+  //-------------------------------------------------------------
+  // Updates the state of the callout text alignment modebutton
+  // widget based on the callout text alignment style information.
   private void update_callout_text_align_with_style( Style style ) {
     if( style.callout_text_align != null ) {
       switch( style.callout_text_align ) {
