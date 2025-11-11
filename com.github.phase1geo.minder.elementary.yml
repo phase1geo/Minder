@@ -5,7 +5,7 @@ app-id: com.github.phase1geo.minder
 # we can use a convenient pre-made runtime and SDK. For this example, we'll be
 # using the runtime and SDK provided by elementary.
 runtime: io.elementary.Platform
-runtime-version: '8'
+runtime-version: '8.2'
 sdk: io.elementary.Sdk
 
 # This should match the exec line in your .desktop file and usually is the same
@@ -25,22 +25,17 @@ finish-args:
 # If we had external dependencies that weren't included in our SDK, we would list
 # them here.
 modules:
-  - name: libmarkdown2
+  - name: libmarkdown
     buildsystem: simple
-    sources:
-      - type: archive
-        url: https://github.com/Orc/discount/archive/v2.2.3b8.tar.gz
-        sha256: 5d69aa20c43e0da5ac8509c4f95880720655a9b9e36206c5b5adcbba75f80391
     build-commands:
-      - ./configure.sh --prefix=/app --shared --pkg-config
-      - make -j1
+      - ./configure.sh --shared --prefix=/app --pkg-config
+      - make -j${FLATPAK_BUILDER_N_JOBS}
       - sed -e 's|/sbin/ldconfig|/sbin/ldconfig -n|' -i librarian.sh
       - make install
-      - install -m644 libmarkdown.pc /app/lib/pkgconfig/libmarkdown.pc
-    cleanup:
-      - /bin
-      - /include
-      - /lib/pkgconfig
+    sources:
+      - type: archive
+        url: https://github.com/Orc/discount/archive/refs/tags/v2.2.4.tar.gz
+        sha256: 918905377e6ed3d0a7158cac0a4a18ed3c4cc0cad8ee95dddd82cb86ba9dd044
 
   - name: gtksourceview
     buildsystem: meson
