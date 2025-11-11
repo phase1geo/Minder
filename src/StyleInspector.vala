@@ -92,7 +92,8 @@ public class StyleInspector : Box {
   private Style?           _curr_style = null;
   private Button           _paste_btn;
   private MenuButton       _template_btn;
-  private Array<Style?>    _style_clipboard;
+  private Style?           _clipboard_style  = null;
+  private StyleAffects?    _clipboard_affect = null;
 
   public static Styles styles = new Styles();
   public static Style? last_global_style = null;
@@ -111,13 +112,6 @@ public class StyleInspector : Box {
 
     // Initialize the affects
     _affects = StyleAffects.ALL;
-
-    // Initialize style clipboard
-    _style_clipboard = new Array<Style?>();
-    for( int i=0; i<StyleAffects.NUM; i++ ) {
-      Style? style = null;
-      _style_clipboard.append_val( style );
-    }
 
     // Create the UI for nodes
     var affect = create_affect_ui();
@@ -290,12 +284,9 @@ public class StyleInspector : Box {
     };
 
     copy_btn.clicked.connect(() => {
-      var style = _style_clipboard.index( _affects );
-      if( style == null ) {
-        style = new Style();
-        _style_clipboard.insert_val( _affects, style );
-      }
-      style.copy( _curr_style );
+      _clipboard_style = new Style();
+      _clipboard_style.copy( _curr_style );
+      _clipboard_affect = _affects;
       _paste_btn.sensitive = true;
     });
 
@@ -306,8 +297,7 @@ public class StyleInspector : Box {
     };
 
     _paste_btn.clicked.connect(() => {
-      var style = _style_clipboard.index( _affects );
-      update_from_style( _style_clipboard.index( _affects ) );
+      update_from_style( _clipboard_style );
     });
 
     _template_btn = new MenuButton() {
@@ -1837,9 +1827,11 @@ public class StyleInspector : Box {
   // Sets the affects value and save the change to the settings
   private void set_affects( StyleAffects affects ) {
     var selected         = _map.selected;
+    if( _clipboard_affect != null ) {
+      _paste_btn.sensitive = ((_clipboard_affect == affects) || (_clipboard_affect == StyleAffects.ALL));
+    }
     _affects             = affects;
     _affects_label.label = affects.label();
-    _paste_btn.sensitive = (_style_clipboard.index( _affects ) != null);
     switch( _affects ) {
       case StyleAffects.ALL     :
         _curr_style            = _map.global_style;
