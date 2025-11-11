@@ -2528,11 +2528,8 @@ public class Node : Object {
   //-------------------------------------------------------------
   // Propagates task information toward the leaf nodes.
   private void propagate_task_info_down( bool? enable, bool? done ) {
-    stdout.printf( "In propagate_task_info_down, enable: %s\n", enable.to_string() );
     if( is_leaf() ) {
-      stdout.printf( "Found leaf\n" );
       if( enable != null ) {
-        stdout.printf( "  HERE!\n" );
         _task_count = enable ? 1 : 0;
       }
       if( _task_count == 1 ) {
