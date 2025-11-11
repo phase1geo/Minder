@@ -46,11 +46,13 @@ if libmarkdown.version().version_compare('>=3.0')
 endif
 
 add_project_arguments([
-        '--vapidir', join_paths(meson.current_source_dir(), 'vapi'),
+        '--vapidir=' + join_paths(meson.project_source_root(), 'vapi'),
         '--disable-warnings'
     ],
     language: 'vala',
 )
+
+add_project_arguments(['-w'], language: 'c')
 
 dependencies = [
     dependency('gobject-2.0'),
@@ -76,7 +78,8 @@ e = executable('com.github.phase1geo.minder',
     gresource,
     dependencies: dependencies,
     vala_args: [
-        meson.source_root() + markdown_vapi
+        join_paths(meson.project_source_root(), 'vapi', 'libmarkdown.vapi'),
+        join_paths(meson.project_source_root(), 'vapi', 'libwebp.vapi'),
     ],
     install : true
 )

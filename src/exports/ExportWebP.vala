@@ -19,7 +19,6 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-using WebP;
 using Cairo;
 using Gdk;
 using Gtk;
@@ -54,7 +53,7 @@ public class ExportWebP : Export {
     uint8* output_buffer = null;
     size_t buffer_size   = 0;
 
-    buffer_size = WebP.encode_lossless_rgba( pixbuf.get_pixels(), pixbuf.get_width(), pixbuf.get_height(), pixbuf.get_rowstride(), out output_buffer );
+    buffer_size = WebPEncodeLosslessRGBA( pixbuf.get_pixels(), pixbuf.get_width(), pixbuf.get_height(), pixbuf.get_rowstride(), out output_buffer );
 
     if( buffer_size == 0 ) {
       stdout.printf( "Failed to encode WebP image.\n" );
@@ -66,7 +65,7 @@ public class ExportWebP : Export {
       for( int i=0; i<buffer_size; i++ ) {
         obuf += output_buffer[i];
       }
-      WebP.free( output_buffer );
+      WebPFree( output_buffer );
       var file = File.new_for_path( fname );
       var output_stream = file.replace( null, false, FileCreateFlags.NONE, null );
       output_stream.write( obuf );
