@@ -1379,7 +1379,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
 
       // If we are moving multiple nodes, move them
-      } else if( _map.selected.num_nodes() > 1 ) {
+      } else if( (_map.selected.num_nodes() > 1) && !_select_box.valid ) {
         double diffx = _scaled_x - _press_x;
         double diffy = _scaled_y - _press_y;
         if( _map.editable ) {

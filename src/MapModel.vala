@@ -1754,6 +1754,9 @@ public class MapModel {
     node.side  = sibling.side;
     node.attach( sibling.parent, (sibling.index() + (below ? 1 : 0)), _theme );
     set_style_after_parent_attach( node );
+    if( sibling.task_enabled() ) {
+      node.enable_task( true );
+    }
     node.parent.set_fold( false, true );
     if( sibling.is_summarized() ) {
       sibling.summary_node().add_node( node );
@@ -1789,6 +1792,9 @@ public class MapModel {
     }
     node.attach( parent, -1, _theme );
     set_style_after_parent_attach( node );
+    if( parent.task_enabled() ) {
+      node.enable_task( true );
+    }
     parent.set_fold( false, true );
     return( node );
   }

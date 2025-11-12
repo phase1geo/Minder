@@ -321,7 +321,7 @@ public class Layout : Object {
         n.posx = px - (cw + margin);
         break;
       case NodeSide.RIGHT :
-        n.posx = px + (pw + margin) - n.parent.task_width();
+        n.posx = px + (pw + margin);
         break;
       case NodeSide.TOP :
         double cx, cy, cw, ch;

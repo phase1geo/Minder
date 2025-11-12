@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-10 00:01-0600\n"
+"POT-Creation-Date: 2025-11-11 20:38-0600\n"
 "PO-Revision-Date: 2023-10-10 17:50+0800\n"
 "Last-Translator: Aerowolf <aerowolf@tom.com>\n"
 "Language-Team: 简体中文\n"
@@ -300,7 +300,7 @@ msgstr "连接端点修改"
 msgid "connection drag"
 msgstr "连接拖动"
 
-#: src/DrawArea.vala:2248 src/MapModel.vala:1820 src/MapModel.vala:1835
+#: src/DrawArea.vala:2248 src/MapModel.vala:1826 src/MapModel.vala:1841
 msgid "Another Idea"
 msgstr "其他想法"
 
@@ -476,7 +476,7 @@ msgstr "SVG"
 msgid "PlainText"
 msgstr "纯文本"
 
-#: src/exports/ExportWebP.vala:30
+#: src/exports/ExportWebP.vala:29
 msgid "WebP"
 msgstr ""
 
@@ -1288,7 +1288,7 @@ msgid "Select a group color"
 msgstr "选择链接颜色"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:289
-#: src/MapInspector.vala:547 src/MapModel.vala:2298
+#: src/MapInspector.vala:547 src/MapModel.vala:2304
 msgid "Manual"
 msgstr "手动"
 
@@ -1449,7 +1449,7 @@ msgstr "显示属性侧边栏"
 msgid "Current"
 msgstr "当前"
 
-#: src/MainWindow.vala:1203 src/StyleInspector.vala:369
+#: src/MainWindow.vala:1203 src/StyleInspector.vala:364
 msgid "Style"
 msgstr "样式"
 
@@ -2005,15 +2005,15 @@ msgstr "右对齐"
 msgid "Align"
 msgstr "上部对齐"
 
-#: src/Node.vala:2698
+#: src/Node.vala:2701
 msgid "Node Title"
 msgstr "节点标题"
 
-#: src/Node.vala:2706
+#: src/Node.vala:2709
 msgid "Node Note"
 msgstr "节点备注"
 
-#: src/Node.vala:2716
+#: src/Node.vala:2719
 msgid "Callout Text"
 msgstr "标记文本"
 
@@ -2035,7 +2035,7 @@ msgstr "Minder快捷键"
 msgid "Advanced"
 msgstr "进展"
 
-#: src/Preferences.vala:93 src/StyleInspector.vala:258
+#: src/Preferences.vala:93 src/StyleInspector.vala:255
 msgid "Close"
 msgstr "关闭"
 
@@ -2546,7 +2546,7 @@ msgstr "工业"
 msgid "Mobile"
 msgstr "移动"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1205
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1226
 msgid "Arrows"
 msgstr "箭头"
 
@@ -3530,13 +3530,13 @@ msgstr "向上"
 msgid "Right up"
 msgstr "右上"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1030
-#: src/StyleInspector.vala:1433 src/StyleInspector.vala:1585
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1038
+#: src/StyleInspector.vala:1464 src/StyleInspector.vala:1626
 msgid "Left"
 msgstr "向左"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1032
-#: src/StyleInspector.vala:1435 src/StyleInspector.vala:1587
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1040
+#: src/StyleInspector.vala:1466 src/StyleInspector.vala:1628
 msgid "Right"
 msgstr "向右"
 
@@ -3796,55 +3796,55 @@ msgstr "选定的标记"
 msgid "Unknown"
 msgstr "未知"
 
-#: src/StyleInspector.vala:247
+#: src/StyleInspector.vala:244
 msgid "Deleted preferences default global style"
 msgstr ""
 
-#: src/StyleInspector.vala:248
+#: src/StyleInspector.vala:245
 #, c-format
 msgid ""
 "The default global style '%s' was deleted.  Setting default global style in "
 "preferences to use the default Minder global style."
 msgstr ""
 
-#: src/StyleInspector.vala:273
+#: src/StyleInspector.vala:271
 msgid "Changes affect:"
 msgstr "修改将会影响："
 
-#: src/StyleInspector.vala:285
+#: src/StyleInspector.vala:283
 msgid "Copy current style"
 msgstr ""
 
-#: src/StyleInspector.vala:300
+#: src/StyleInspector.vala:295
 msgid "Paste copied style"
 msgstr ""
 
-#: src/StyleInspector.vala:311
+#: src/StyleInspector.vala:306
 #, fuzzy
 msgid "Style Templates"
 msgstr "模板"
 
-#: src/StyleInspector.vala:346
+#: src/StyleInspector.vala:341
 msgid "Branch Options"
 msgstr "分支选项"
 
-#: src/StyleInspector.vala:415
+#: src/StyleInspector.vala:411
 msgid "Corner Radius"
 msgstr "圆角半径"
 
-#: src/StyleInspector.vala:462 src/StyleInspector.vala:890
+#: src/StyleInspector.vala:459 src/StyleInspector.vala:895
 msgid "Margin"
 msgstr "边矩"
 
-#: src/StyleInspector.vala:523
+#: src/StyleInspector.vala:521
 msgid "Link Options"
 msgstr "链接选项"
 
-#: src/StyleInspector.vala:546 src/StyleInspector.vala:1166
+#: src/StyleInspector.vala:544 src/StyleInspector.vala:1185
 msgid "Line Dash"
 msgstr "线形"
 
-#: src/StyleInspector.vala:586 src/StyleInspector.vala:1288
+#: src/StyleInspector.vala:585 src/StyleInspector.vala:1312
 msgid "Line Width"
 msgstr "线宽"
 
@@ -3852,92 +3852,92 @@ msgstr "线宽"
 msgid "Link Arrow"
 msgstr "链接箭头"
 
-#: src/StyleInspector.vala:669
+#: src/StyleInspector.vala:670
 #, fuzzy
 msgid "Link Arrow Size"
 msgstr "链接箭头"
 
-#: src/StyleInspector.vala:742 src/Templates.vala:59 src/Templates.vala:64
+#: src/StyleInspector.vala:744 src/Templates.vala:59 src/Templates.vala:64
 msgid "Node Options"
 msgstr "节点选项"
 
-#: src/StyleInspector.vala:765
+#: src/StyleInspector.vala:767
 msgid "Border Style"
 msgstr "边框样式"
 
-#: src/StyleInspector.vala:807
+#: src/StyleInspector.vala:810
 msgid "Border Width"
 msgstr "边框宽度"
 
-#: src/StyleInspector.vala:856
+#: src/StyleInspector.vala:860
 msgid "Color Fill"
 msgstr "颜色填充"
 
-#: src/StyleInspector.vala:865
+#: src/StyleInspector.vala:869
 msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
 msgstr "当节点边框是矩形、圆形或药丸形状时，使用颜色填充节点"
 
-#: src/StyleInspector.vala:933 src/StyleInspector.vala:1337
-#: src/StyleInspector.vala:1611
+#: src/StyleInspector.vala:939 src/StyleInspector.vala:1364
+#: src/StyleInspector.vala:1657
 msgid "Padding"
 msgstr "填充"
 
-#: src/StyleInspector.vala:976
+#: src/StyleInspector.vala:983
 msgid "Font"
 msgstr "字体"
 
-#: src/StyleInspector.vala:1019 src/StyleInspector.vala:1422
-#: src/StyleInspector.vala:1574
+#: src/StyleInspector.vala:1027 src/StyleInspector.vala:1453
+#: src/StyleInspector.vala:1615
 #, fuzzy
 msgid "Text Alignment"
 msgstr "节点对齐"
 
-#: src/StyleInspector.vala:1031 src/StyleInspector.vala:1434
-#: src/StyleInspector.vala:1586
+#: src/StyleInspector.vala:1039 src/StyleInspector.vala:1465
+#: src/StyleInspector.vala:1627
 #, fuzzy
 msgid "Center"
 msgstr "居中视图"
 
-#: src/StyleInspector.vala:1056
+#: src/StyleInspector.vala:1069
 msgid "Width"
 msgstr "宽度"
 
-#: src/StyleInspector.vala:1085
+#: src/StyleInspector.vala:1101
 msgid "Enable Markup"
 msgstr "启用标记"
 
-#: src/StyleInspector.vala:1144 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1162 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "连接选项"
 
-#: src/StyleInspector.vala:1244
+#: src/StyleInspector.vala:1266
 #, fuzzy
 msgid "Arrow Size"
 msgstr "箭头"
 
-#: src/StyleInspector.vala:1379
+#: src/StyleInspector.vala:1409
 msgid "Title Font"
 msgstr "标题字体"
 
-#: src/StyleInspector.vala:1458
+#: src/StyleInspector.vala:1495
 msgid "Title Width"
 msgstr "标题宽度"
 
-#: src/StyleInspector.vala:1508 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1547 src/Templates.vala:61 src/Templates.vala:66
 msgid "Callout Options"
 msgstr "标记选项"
 
-#: src/StyleInspector.vala:1531
+#: src/StyleInspector.vala:1571
 msgid "Text Font"
 msgstr "文本字体"
 
-#: src/StyleInspector.vala:1655
+#: src/StyleInspector.vala:1702
 msgid "Pointer Width"
 msgstr "指针宽度"
 
-#: src/StyleInspector.vala:1699
+#: src/StyleInspector.vala:1747
 msgid "Pointer Length"
 msgstr "指标长度"
 
