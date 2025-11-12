@@ -51,7 +51,7 @@ public class ThemeDark : Theme {
     set_color( "callout_background",    color_from_string( "#f9c440" ) );
 
     /* Generate the link colors */
-    set_color( "link_color0", color_from_string( "#c6262e" ) );
+    set_color( "link_color0", color_from_string( "#a3242a" ) );
     set_color( "link_color1", color_from_string( "#f37329" ) );
     set_color( "link_color2", color_from_string( "#f9c440" ) );
     set_color( "link_color3", color_from_string( "#68b723" ) );

@@ -30,21 +30,14 @@
       <li xml:lang="ru">Используйте форматирование Markdown.</li>
       <li xml:lang="pt">Suporte para formatação Markdown.</li>
       <li>Support for insertion of Unicode characters.</li>
-      <li>Add notes, tasks and images to your nodes.</li>
-      <li xml:lang="ru">Добавляйте примечания, задачи и изображения к узлам.</li>
-      <li xml:lang="pt">Adicione notas, tarefas e imagens aos seus nós.</li>
-      <li xml:lang="fr">Ajoutez des notes, des tâches et des images à vos nœuds.</li>
+      <li>Add notes, tasks, and images to your nodes.</li>
       <li>Add node-to-node connections with optional text and notes.</li>
       <li xml:lang="ru">Соединяйте узлы друг с другом, подписывайте соединения и добавляйте к ним примечания.</li>
       <li xml:lang="pt">Adicione conexões nó a nó com texto opcional e notas.</li>
       <li xml:lang="fr">Ajoutez des connexions nœud-vers-nœud avec en option du texte et des notes.</li>
-      <li>Stylize nodes, links and connections to add more meaning and improve readability.</li>
-      <li xml:lang="ru">Настраивайте стиль узлов, ссылок и соединений, чтобы придать диаграмме больше глубины и улучшить её восприятие.</li>
-      <li xml:lang="pt">Personalize o estilo de nós, ligações e conexões para adicionar mais significado e melhorar a legibilidade.</li>
-      <li xml:lang="fr">Stylisez les nœuds, liens et connexions pour ajouter plus de sens et améliorer la lisibilité.</li>
-      <li>Add stickers and node groups to call out and visibly organize information.</li>
-      <li xml:lang="ru">Добавляйте стикеры и группируйте узлы, чтобы визуально организовывать информацию.</li>
-      <li xml:lang="pt">Adicione autocolantes e grupos de nós para destacar e organizar a informação para esta se tornar mais visível.</li>
+      <li>Stylize nodes, callouts, links and connections to add more meaning and improve readability.</li>
+      <li>Save and reuse style settings within and across open mindmaps.</li>
+      <li>Add stickers, tags, callouts and node groups to call out and visibly organize information.</li>
       <li>Quick search of node and connection titles and notes, including filtering options.</li>
       <li xml:lang="ru">Быстро находите узлы, заголовки соединений и примечания, используйте фильтры поиска.</li>
       <li xml:lang="pt">Procura rápida de títulos e notas de nós e conexões, incluindo opções de filtragem.</li>
@@ -57,14 +50,13 @@
       <li xml:lang="ru">Используйте режим фокусировки , чтобы лучше понимать отдельные участки диаграммы.</li>
       <li xml:lang="pt">Entre no modo de concentração para visualizar e perceber melhor as porções do mapa.</li>
       <li xml:lang="fr">Entrez en mode concentration pour une vue plus claire et mieux apréhender les zones de la carte.</li>
+      <li>Quickly brainstorm ideas with the brainstorming interface and worry about where those ideas belong in the
+          mindmap later.</li>
       <li>Unlimited undo/redo of any change.</li>
       <li xml:lang="ru">Отменяйте и возвращайте любые изменения в диаграмме как угодно далеко по истории правок.</li>
       <li xml:lang="pt">Desfazer/refazer ilimitado para qualquer alteração.</li>
       <li xml:lang="fr">Possibilité infinie d'annuler/rétablir des modifications.</li>
-      <li>Automatically saves in the background.</li>
-      <li xml:lang="ru">Не теряйте данны благодаря фоновому автосохранению документов.</li>
-      <li xml:lang="pt">Grava automaticamente em segundo plano.</li>
-      <li xml:lang="fr">Sauvegarde automatique en arrière-plan.</li>
+      <li>Automatically and manual saving supported.</li>
       <li>Colorized node branches.</li>
       <li xml:lang="ru">Пользуйтесь раскрашенными ветками узлов.</li>
       <li xml:lang="pt">Ramificações de nós coloridas.</li>
@@ -81,8 +73,10 @@
       <li xml:lang="ru">Шикарная анимация.</li>
       <li xml:lang="pt">Animações lindas.</li>
       <li xml:lang="fr">Magnifiques animations.</li>
-      <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Markdown, Outliner, PlantUML, Portable Minder, filesystem, and XMind formats.</li>
-      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, PlantUML, Portable Minder, filesystem, XMind and yEd formats.</li>
+      <li>Import from OPML, FreeMind, Freeplane, PlainText/Markdown (formatted), Outliner, Portable Minder, filesystem
+          and XMind formats.</li>
+      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, WebP, Markdown, Mermaid, Mermaid Mindmap, OPML, Org-Mode,
+          Outliner, PDF, PNG, PlainText, filesystem, XMind and yEd formats.</li>
       <li>Printer support.</li>
       <li xml:lang="ru">Используйте функцию вывода на печать.</li>
       <li xml:lang="pt">Suporte para impressora.</li>
@@ -95,9 +89,7 @@
   </provides>
   <screenshots>
     <screenshot type="default">
-      <caption>Node/Connection Property Sidebar</caption>
-      <caption xml:lang="pt">Barra Lateral das Propriedades de Nó/Conexão</caption>
-      <caption xml:lang="fr">Barre latérale des propriétés des nœuds et connexions</caption>
+      <caption>Node/Connection/Group Property Sidebar</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-current-properties.png</image>
     </screenshot>
     <screenshot>
@@ -105,6 +97,10 @@
       <caption xml:lang="pt">Personalizar Propriedades da Barra Lateral</caption>
       <caption xml:lang="fr">Barre latérale des propriétés de style</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-style-properties.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Tags Property Sidebar</caption>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-tags-properties.png</image>
     </screenshot>
     <screenshot>
       <caption>Sticker Property Sidebar</caption>

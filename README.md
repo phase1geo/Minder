@@ -17,13 +17,14 @@ Use the power of mind-mapping to make your ideas come to life.
 - Add notes, tasks, and images to your nodes.
 - Add node-to-node connections with optional text and notes.
 - Stylize nodes, callouts, links and connections to add more meaning and improve readability.
+- Save and reuse style settings within and across open mindmaps.
 - Add stickers, tags, callouts and node groups to call out and visibly organize information.
 - Quick search of node and connection titles and notes, including filtering options.
 - Zoom in or enable focus mode to focus on certain ideas or zoom out to see the bigger picture.
 - Enter focus mode to better view and understand portions of the map.
 - Quickly brainstorm ideas with the brainstorming interface and worry about where those ideas belong in the mind map later.
 - Unlimited undo/redo of any change.
-- Automatically saves in the background.
+- Automatically and manual saving supported.
 - Colorized node branches.
 - Open multiple mindmaps with the use of tabs.
 - Built-in and customizable theming.
@@ -50,7 +51,6 @@ You will need the following dependencies to build Minder:
 * libarchive-dev
 * libgtksourceview-5-dev
 * libmarkdown2-dev
-* libhandy-1-dev
 * libjson-glib-dev
 * libwebp-dev
 * webp-pixbuf-loader`

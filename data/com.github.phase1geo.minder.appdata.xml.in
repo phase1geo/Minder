@@ -17,21 +17,26 @@
       <li>Choose from many tree layout choices.</li>
       <li>Support for Markdown formatting.</li>
       <li>Support for insertion of Unicode characters.</li>
-      <li>Add notes, tasks and images to your nodes.</li>
+      <li>Add notes, tasks, and images to your nodes.</li>
       <li>Add node-to-node connections with optional text and notes.</li>
-      <li>Stylize nodes, links and connections to add more meaning and improve readability.</li>
-      <li>Add stickers and node groups to call out and visibly organize information.</li>
+      <li>Stylize nodes, callouts, links and connections to add more meaning and improve readability.</li>
+      <li>Save and reuse style settings within and across open mindmaps.</li>
+      <li>Add stickers, tags, callouts and node groups to call out and visibly organize information.</li>
       <li>Quick search of node and connection titles and notes, including filtering options.</li>
       <li>Zoom in or enable focus mode to focus on certain ideas or zoom out to see the bigger picture.</li>
       <li>Enter focus mode to better view and understand portions of the map.</li>
+      <li>Quickly brainstorm ideas with the brainstorming interface and worry about where those ideas belong in the
+          mindmap later.</li>
       <li>Unlimited undo/redo of any change.</li>
-      <li>Automatically saves in the background.</li>
+      <li>Automatically and manual saving supported.</li>
       <li>Colorized node branches.</li>
       <li>Open multiple mindmaps with the use of tabs.</li>
       <li>Built-in and customizable theming.</li>
       <li>Gorgeous animations.</li>
-      <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Markdown, Outliner, PlantUML, Portable Minder, filesystem, and XMind formats.</li>
-      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, PlantUML, Portable Minder, filesystem, XMind and yEd formats.</li>
+      <li>Import from OPML, FreeMind, Freeplane, PlainText/Markdown (formatted), Outliner, Portable Minder, filesystem
+          and XMind formats.</li>
+      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, WebP, Markdown, Mermaid, Mermaid Mindmap, OPML, Org-Mode,
+          Outliner, PDF, PNG, PlainText, filesystem, XMind and yEd formats.</li>
       <li>Printer support.</li>
     </ul>
   </description>
@@ -41,12 +46,16 @@
   </provides>
   <screenshots>
     <screenshot type="default">
-      <caption>Node/Connection Property Sidebar</caption>
+      <caption>Node/Connection/Group Property Sidebar</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-current-properties.png</image>
     </screenshot>
     <screenshot>
       <caption>Style Property Sidebar</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-style-properties.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Tags Property Sidebar</caption>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-tags-properties.png</image>
     </screenshot>
     <screenshot>
       <caption>Sticker Property Sidebar</caption>
