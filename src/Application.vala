@@ -33,7 +33,7 @@ public class Minder : Gtk.Application {
   private        GLib.Settings       touch_settings;
 
   public  static GLib.Settings settings;
-  public  static string        version       = "2.0";
+  public  static string        version       = "2.0.0-beta1";
   public  static bool          debug         = false;
   public  static bool          debug_advance = false;
   public  static int           debug_count   = 0;
