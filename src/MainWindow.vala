@@ -73,7 +73,6 @@ public class MainWindow : Gtk.ApplicationWindow {
   private Paned             _pane           = null;
   private Notebook?         _inspector_nb   = null;
   private Stack?            _stack          = null;
-  private StackSwitcher?    _sidebar_switcher = null;
   private Popover?          _zoom           = null;
   private Popover?          _search         = null;
   private MenuButton?       _search_btn     = null;
@@ -325,7 +324,6 @@ public class MainWindow : Gtk.ApplicationWindow {
         case "auto-parse-embedded-urls"        :  setting_changed_embedded_urls();   break;
         case "enable-markdown"                 :  setting_changed_markdown();        break;
         case "enable-unicode-input"            :  setting_changed_unicode_input();   break;
-        case "compact-sidebar-width"           :  setting_changed_compact_sidebar(); break;
       }
     });
 
@@ -452,13 +450,6 @@ public class MainWindow : Gtk.ApplicationWindow {
       var map = get_map( i );
       map.unicode_parser.enable = value;
     }
-  }
-
-  //-------------------------------------------------------------
-  // Called whenever the compact sidebar width setting is changed.
-  private void setting_changed_compact_sidebar() {
-    _sidebar_switcher.orientation = Minder.settings.get_boolean( "compact-sidebar-width" ) ? Orientation.VERTICAL : Orientation.HORIZONTAL;
-    _pane.position = get_width() - 100;
   }
 
   //-------------------------------------------------------------
@@ -1238,14 +1229,38 @@ public class MainWindow : Gtk.ApplicationWindow {
     // Handle the enable-ui-animations value
     setting_changed_ui_animations();
 
-    _sidebar_switcher = new StackSwitcher() {
-      orientation = Minder.settings.get_boolean( "compact-sidebar-width" ) ? Orientation.VERTICAL : Orientation.HORIZONTAL,
-      halign      = Align.FILL,
-      stack       = _stack
+    var sidebar_switcher = new ModeButtons() {
+      halign = Align.CENTER
     };
 
+    sidebar_switcher.add_stack_tab( _( "Current" ) );
+    sidebar_switcher.add_stack_tab( _( "Style" ) );
+    sidebar_switcher.add_stack_tab( _( "Tags" ) );
+    sidebar_switcher.add_stack_tab( _( "Stickers" ) );
+    sidebar_switcher.add_stack_tab( _( "Map" ) );
+
+    sidebar_switcher.changed.connect((index) => {
+      switch( index ) {
+        case 0 :  _stack.visible_child_name = "current";  break;
+        case 1 :  _stack.visible_child_name = "style";    break;
+        case 2 :  _stack.visible_child_name = "tag";      break;
+        case 3 :  _stack.visible_child_name = "sticker";  break;
+        case 4 :  _stack.visible_child_name = "map";      break;
+      }
+    });
+
+    _stack.notify["visible-child-name"].connect(() => {
+      switch( _stack.visible_child_name ) {
+        case "current" :  sidebar_switcher.selected = 0;  break;
+        case "style"   :  sidebar_switcher.selected = 1;  break;
+        case "tag"     :  sidebar_switcher.selected = 2;  break;
+        case "sticker" :  sidebar_switcher.selected = 3;  break;
+        case "map"     :  sidebar_switcher.selected = 4;  break;
+      }
+    });
+
     // Make sure that the tabs are displayed nicely
-    Utils.set_switcher_tab_widths( _sidebar_switcher );
+    Utils.set_switcher_tab_widths( sidebar_switcher );
 
     var box = new Box( Orientation.VERTICAL, 20 ) {
       halign        = Align.FILL,
@@ -1255,7 +1270,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       margin_top    = 5,
       margin_bottom = 5
     };
-    box.append( _sidebar_switcher );
+    box.append( sidebar_switcher );
     box.append( _stack );
 
     _themer = new ThemeEditor( this );
