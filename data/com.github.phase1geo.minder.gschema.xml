@@ -304,11 +304,5 @@
       <summary>When 'default-global-style' is set to a value of 2, the name of the saved global style to use.</summary>
       <description>When 'default-global-style' is set to a value of 2, the name of the saved global style to use.</description>
     </key>
-    <key name="compact-sidebar-width" type="b">
-      <default>false</default>
-      <summary>Displays the sidebar using vertical tabs to allow the sidebar width to be smaller.</summary>
-      <description>When set, displays the sidebar with vertical tabs to keep the sidebar width as small as possible;
-        otherwise, displays the sidebar with horizontal tabs to maximize horizontal space in the sidebar.</description>
-    </key>
   </schema>
 </schemalist>
