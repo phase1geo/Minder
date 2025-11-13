@@ -12,7 +12,7 @@ Comment[pt]=Crie, desenvolva e visualize as suas ideias
 Comment[ru]=Создавайте, развивайте и визуализуйте идеи
 Comment=Create, develop and visualize your ideas
 Categories=Utility;Office;Development;
-Exec=com.github.phase1geo.minder %f
+Exec=env GTK_THEME=Adwaita:light com.github.phase1geo.minder %f
 Icon=com.github.phase1geo.minder
 Terminal=false
 Type=Application
