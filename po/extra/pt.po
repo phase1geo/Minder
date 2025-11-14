@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-11 20:38-0600\n"
+"POT-Creation-Date: 2025-11-13 20:13-0600\n"
 "PO-Revision-Date: 2020-08-31 14:53+0100\n"
 "Last-Translator: André Barata <andretiagob@protonmail.com>\n"
 "Language-Team: none\n"
@@ -18,25 +18,25 @@ msgstr ""
 "X-Generator: Poedit 2.4.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: data/com.github.phase1geo.minder.desktop.in:3
+#: data/com.github.phase1geo.minder.desktop.in:2
 #: data/com.github.phase1geo.minder.appdata.xml.in:7
 msgid "Minder"
 msgstr "Minder"
 
-#: data/com.github.phase1geo.minder.desktop.in:4
+#: data/com.github.phase1geo.minder.desktop.in:3
 msgid "Mind-mapper"
 msgstr "Mapa Mental"
 
-#: data/com.github.phase1geo.minder.desktop.in:5
+#: data/com.github.phase1geo.minder.desktop.in:4
 #: data/com.github.phase1geo.minder.appdata.xml.in:8
 msgid "Create, develop and visualize your ideas"
 msgstr "Crie, desenvolva e visualize as suas ideias"
 
-#: data/com.github.phase1geo.minder.desktop.in:14
+#: data/com.github.phase1geo.minder.desktop.in:13
 msgid "Mind;Mapping;"
 msgstr "Mind;Mente;Mapping;Mapear;"
 
-#: data/com.github.phase1geo.minder.desktop.in:18
+#: data/com.github.phase1geo.minder.desktop.in:17
 msgid "New Document"
 msgstr "Novo Documento"
 
@@ -712,7 +712,7 @@ msgstr "Problemas corrigidos com a coloração de conexões."
 #, fuzzy
 msgid ""
 "Fixed issue where application would crash when hovering over node note icon "
-"on systems that installed Discount version &gt;= 3.0."
+"on systems that installed Discount version >= 3.0."
 msgstr "Problemas corrigidos com a coloração de conexões."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:208

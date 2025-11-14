@@ -3,7 +3,7 @@ Name=Minder
 GenericName=Mind-mapper
 Comment=Create, develop and visualize your ideas
 Categories=Utility;Office;Development;
-Exec=com.github.phase1geo.minder %f
+Exec=env GTK_THEME=Adwaita:light com.github.phase1geo.minder %f
 Icon=com.github.phase1geo.minder
 Terminal=false
 Type=Application

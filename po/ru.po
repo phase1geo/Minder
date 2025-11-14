@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-11 20:38-0600\n"
+"POT-Creation-Date: 2025-11-13 20:13-0600\n"
 "PO-Revision-Date: 2024-01-15 06:57+0100\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -243,13 +243,13 @@ msgid ""
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1307
+#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1322
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
 #: src/ThemeEditor.vala:169 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2183
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2198
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Применить"
@@ -258,7 +258,7 @@ msgstr "Применить"
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:714 src/MainWindow.vala:2220
+#: src/Document.vala:714 src/MainWindow.vala:2235
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
@@ -266,16 +266,16 @@ msgstr ""
 msgid "Upgrade Needed"
 msgstr ""
 
-#: src/DrawArea.vala:1501
+#: src/DrawArea.vala:1506
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% завершено"
 
-#: src/DrawArea.vala:1519
+#: src/DrawArea.vala:1524
 msgid "Drag to resize node"
 msgstr "Перетащите для смены размера узла"
 
-#: src/DrawArea.vala:1521
+#: src/DrawArea.vala:1526
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -283,25 +283,25 @@ msgstr ""
 "Перетаскивание меняет размер узла и изображения.\n"
 "Ctrl+перетаскивание меняет размер только узла."
 
-#: src/DrawArea.vala:1663
+#: src/DrawArea.vala:1668
 #, c-format
 msgid "Children: %u\n"
 msgstr "Потомки: %u\n"
 
-#: src/DrawArea.vala:1664
+#: src/DrawArea.vala:1669
 #, c-format
 msgid "Total: %d"
 msgstr "Всего: %d"
 
-#: src/DrawArea.vala:1714
+#: src/DrawArea.vala:1719
 msgid "connection endpoint change"
 msgstr "смену конечной точки соединения"
 
-#: src/DrawArea.vala:1721
+#: src/DrawArea.vala:1726
 msgid "connection drag"
 msgstr "перетаскивание соединения"
 
-#: src/DrawArea.vala:2248 src/MapModel.vala:1826 src/MapModel.vala:1841
+#: src/DrawArea.vala:2251 src/MapModel.vala:1826 src/MapModel.vala:1841
 msgid "Another Idea"
 msgstr "Ещё одна идея"
 
@@ -348,7 +348,7 @@ msgstr "Параметры экспорта"
 msgid "Export As %s"
 msgstr "Экспортировать как %s"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1070 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1061 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Экспортировать"
 
@@ -1295,233 +1295,234 @@ msgstr "Выбрать цвет связи"
 msgid "Manual"
 msgstr "Вручную"
 
-#: src/MainWindow.vala:184 src/MainWindow.vala:1603
+#: src/MainWindow.vala:183 src/MainWindow.vala:1618
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:243 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:242 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
 msgstr "Создать документ"
 
-#: src/MainWindow.vala:248 src/MainWindow.vala:1397
+#: src/MainWindow.vala:247 src/MainWindow.vala:1412
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: src/MainWindow.vala:253 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:252 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
 msgstr "Сохранить файл как"
 
-#: src/MainWindow.vala:260 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:259 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Отменить"
 
-#: src/MainWindow.vala:267 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:266 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Вернуть"
 
-#: src/MainWindow.vala:726
+#: src/MainWindow.vala:717
 msgid "Tag Highlight Mode"
 msgstr ""
 
-#: src/MainWindow.vala:728 src/MainWindow.vala:1140
+#: src/MainWindow.vala:719 src/MainWindow.vala:1131
 msgid "Focus Mode"
 msgstr "Режим фокусировки"
 
-#: src/MainWindow.vala:731
+#: src/MainWindow.vala:722
 msgid "Unnamed Document"
 msgstr "Безымянный документ"
 
-#: src/MainWindow.vala:734
+#: src/MainWindow.vala:725
 msgid "Read-Only"
 msgstr "Только чтение"
 
-#: src/MainWindow.vala:753
+#: src/MainWindow.vala:744
 msgid "Zoom to Fit"
 msgstr "Уместить всё"
 
-#: src/MainWindow.vala:754 data/com.github.phase1geo.minder.shortcuts.ui:140
+#: src/MainWindow.vala:745 data/com.github.phase1geo.minder.shortcuts.ui:140
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "Уместить выбранное дерево узлов"
 
-#: src/MainWindow.vala:755
+#: src/MainWindow.vala:746
 msgid "Zoom to Actual Size"
 msgstr "Настоящий размер"
 
-#: src/MainWindow.vala:763
+#: src/MainWindow.vala:754
 msgid "Zoom to Percent"
 msgstr "Масштаб в процентах"
 
-#: src/MainWindow.vala:778 src/ZoomWidget.vala:104
+#: src/MainWindow.vala:769 src/ZoomWidget.vala:104
 #: data/com.github.phase1geo.minder.shortcuts.ui:119
 msgid "Zoom In"
 msgstr "Приблизить"
 
-#: src/MainWindow.vala:785 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:776 src/ZoomWidget.vala:92
 #: data/com.github.phase1geo.minder.shortcuts.ui:126
 msgid "Zoom Out"
 msgstr "Отдалить"
 
-#: src/MainWindow.vala:803 src/MainWindow.vala:1668
+#: src/MainWindow.vala:794 src/MainWindow.vala:1683
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Масштаб (%d%%)"
 
-#: src/MainWindow.vala:816
+#: src/MainWindow.vala:807
 msgid "Search Nodes, Callouts and Connections"
 msgstr "Искать по узлам, выноскам и соединениям"
 
-#: src/MainWindow.vala:861
+#: src/MainWindow.vala:852
 msgid "Search Criteria"
 msgstr "Критерии поиска"
 
-#: src/MainWindow.vala:865
+#: src/MainWindow.vala:856
 msgid "Search all tabs"
 msgstr "Искать во всех вкладках"
 
-#: src/MainWindow.vala:906 src/StickerSet.vala:114
+#: src/MainWindow.vala:897 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Искать"
 
-#: src/MainWindow.vala:914
+#: src/MainWindow.vala:905
 msgid "Nodes"
 msgstr "Узлы"
 
-#: src/MainWindow.vala:915
+#: src/MainWindow.vala:906
 msgid "Connections"
 msgstr "Соединения"
 
-#: src/MainWindow.vala:916
+#: src/MainWindow.vala:907
 msgid "Callouts"
 msgstr "Выноски"
 
-#: src/MainWindow.vala:917
+#: src/MainWindow.vala:908
 #, fuzzy
 msgid "Groups"
 msgstr "Группа"
 
-#: src/MainWindow.vala:918
+#: src/MainWindow.vala:909
 msgid "Titles"
 msgstr "Заголовки"
 
-#: src/MainWindow.vala:919
+#: src/MainWindow.vala:910
 msgid "Notes"
 msgstr "Примечания"
 
-#: src/MainWindow.vala:920
+#: src/MainWindow.vala:911
 msgid "Folded"
 msgstr "Свёрнутые"
 
-#: src/MainWindow.vala:921
+#: src/MainWindow.vala:912
 msgid "Unfolded"
 msgstr "Развёрнутые"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:913
 msgid "Tasks"
 msgstr "Задачи"
 
-#: src/MainWindow.vala:923
+#: src/MainWindow.vala:914
 msgid "Non-tasks"
 msgstr "Не задачи"
 
-#: src/MainWindow.vala:1045
+#: src/MainWindow.vala:1036
 msgid "Print…"
 msgstr "Печать…"
 
-#: src/MainWindow.vala:1084
+#: src/MainWindow.vala:1075
 msgid "Brain Dump"
 msgstr ""
 
-#: src/MainWindow.vala:1160 src/Preferences.vala:50
+#: src/MainWindow.vala:1151 src/Preferences.vala:50
 msgid "Preferences"
 msgstr "Параметры"
 
-#: src/MainWindow.vala:1161
+#: src/MainWindow.vala:1152
 msgid "Shortcuts Cheatsheet"
 msgstr "Справка по горячим клавишам"
 
-#: src/MainWindow.vala:1164
+#: src/MainWindow.vala:1155
 msgid "About Minder"
 msgstr "О программе"
 
-#: src/MainWindow.vala:1191 src/MainWindow.vala:1752
+#: src/MainWindow.vala:1182 src/MainWindow.vala:1767
 msgid "Show Property Sidebar"
 msgstr "Показать панель свойств"
 
-#: src/MainWindow.vala:1202
+#: src/MainWindow.vala:1193 src/MainWindow.vala:1236
 msgid "Current"
 msgstr "Выбранное"
 
-#: src/MainWindow.vala:1203 src/StyleInspector.vala:364
+#: src/MainWindow.vala:1194 src/MainWindow.vala:1237
+#: src/StyleInspector.vala:363
 msgid "Style"
 msgstr "Стиль"
 
-#: src/MainWindow.vala:1204 src/Preferences.vala:68
+#: src/MainWindow.vala:1195 src/MainWindow.vala:1238 src/Preferences.vala:68
 msgid "Tags"
 msgstr ""
 
-#: src/MainWindow.vala:1205
+#: src/MainWindow.vala:1196 src/MainWindow.vala:1239
 msgid "Stickers"
 msgstr "Стикеры"
 
-#: src/MainWindow.vala:1206
+#: src/MainWindow.vala:1197 src/MainWindow.vala:1240
 msgid "Map"
 msgstr "Макет"
 
-#: src/MainWindow.vala:1298
+#: src/MainWindow.vala:1313
 msgid "Save current unnamed document?"
 msgstr "Сохранить текущий безымянный документ?"
 
-#: src/MainWindow.vala:1299
+#: src/MainWindow.vala:1314
 msgid "Changes will be permanently lost if not saved."
 msgstr "Без сохранения изменения будут утеряны навсегда."
 
-#: src/MainWindow.vala:1304
+#: src/MainWindow.vala:1319
 msgid "Discard Changes"
 msgstr "Отказаться от изменений"
 
-#: src/MainWindow.vala:1310 src/MainWindow.vala:1599 src/ThemeEditor.vala:174
+#: src/MainWindow.vala:1325 src/MainWindow.vala:1614 src/ThemeEditor.vala:174
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/MainWindow.vala:1342
+#: src/MainWindow.vala:1357
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "Файл %s был изменён другим приложением."
 
-#: src/MainWindow.vala:1343
+#: src/MainWindow.vala:1358
 msgid "What do you want to do?"
 msgstr "Как вы хотите поступить?"
 
-#: src/MainWindow.vala:1348
+#: src/MainWindow.vala:1363
 msgid "Discard Changes and reload"
 msgstr "Отказаться от изменений и перезагрузить"
 
-#: src/MainWindow.vala:1351
+#: src/MainWindow.vala:1366
 msgid "Save local version and overwrite"
 msgstr "Сохранить локальную версию и перезаписать"
 
-#: src/MainWindow.vala:1397
+#: src/MainWindow.vala:1412
 msgid "Open Directory"
 msgstr "Открыть папку"
 
-#: src/MainWindow.vala:1397
+#: src/MainWindow.vala:1412
 msgid "Open"
 msgstr "Открыть"
 
-#: src/MainWindow.vala:1599
+#: src/MainWindow.vala:1614
 msgid "Save File"
 msgstr "Сохранить файл"
 
-#: src/MainWindow.vala:1698
+#: src/MainWindow.vala:1713
 msgid "Hide Property Sidebar"
 msgstr "Скрыть панель свойств"
 
-#: src/MainWindow.vala:2174
+#: src/MainWindow.vala:2189
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2175
+#: src/MainWindow.vala:2190
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1529,31 +1530,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2180
+#: src/MainWindow.vala:2195
 #, fuzzy
 msgid "Quit Minder"
 msgstr "О программе"
 
-#: src/MainWindow.vala:2200
+#: src/MainWindow.vala:2215
 #, fuzzy
 msgid "Detail"
 msgstr "Открепить"
 
-#: src/MainWindow.vala:2208
+#: src/MainWindow.vala:2223
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2209
+#: src/MainWindow.vala:2224
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2210
+#: src/MainWindow.vala:2225
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1561,11 +1562,11 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2217
+#: src/MainWindow.vala:2232
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2242
+#: src/MainWindow.vala:2257
 msgid "Upgrades Needed"
 msgstr ""
 
@@ -2134,28 +2135,24 @@ msgid "Hide themes not matching visual style"
 msgstr "Скрывать темы, не соответствующие визуальному стилю"
 
 #: src/Preferences.vala:191
-msgid "Compact sidebar width"
-msgstr ""
-
-#: src/Preferences.vala:195
 msgid "Default theme"
 msgstr "Тема по умолчанию"
 
-#: src/Preferences.vala:197
+#: src/Preferences.vala:193
 msgid ""
 "Sets the default theme to use for newly created mindmaps (use Map sidebar "
 "panel to make immediate changes)."
 msgstr ""
 
-#: src/Preferences.vala:200
+#: src/Preferences.vala:196
 msgid "Enable animations"
 msgstr "Включить анимацию"
 
-#: src/Preferences.vala:204
+#: src/Preferences.vala:200
 msgid "Text field font size"
 msgstr "Размер шрифта в текстовых полях"
 
-#: src/Preferences.vala:207
+#: src/Preferences.vala:203
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
@@ -2163,105 +2160,105 @@ msgstr ""
 "Какой заказной кегль шрифта использовать в любых полях ввода, например, в "
 "поле примечаний и поле быстрого ввода"
 
-#: src/Preferences.vala:210
+#: src/Preferences.vala:206
 msgid "Colorize note fields"
 msgstr ""
 
-#: src/Preferences.vala:214
+#: src/Preferences.vala:210
 #, fuzzy
 msgid "Default global style"
 msgstr "Тема по умолчанию"
 
-#: src/Preferences.vala:216
+#: src/Preferences.vala:212
 msgid "Specifies the global style to use for newly created mindmaps."
 msgstr ""
 
-#: src/Preferences.vala:239
+#: src/Preferences.vala:235
 msgid "Tags in this list will be the starting list of tags for new mindmaps."
 msgstr ""
 
-#: src/Preferences.vala:339
+#: src/Preferences.vala:335
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
 msgstr ""
 
-#: src/Preferences.vala:340
+#: src/Preferences.vala:336
 msgid "Escape to cancel.  Press key combination to set."
 msgstr ""
 
-#: src/Preferences.vala:348
+#: src/Preferences.vala:344
 msgid "Set Minder Defaults"
 msgstr ""
 
-#: src/Preferences.vala:351
+#: src/Preferences.vala:347
 #, fuzzy
 msgid "Clear All Shortcuts"
 msgstr "Горячие клавиши в Minder"
 
-#: src/Preferences.vala:360
+#: src/Preferences.vala:356
 #, fuzzy
 msgid "Search commands"
 msgstr "Операции с узлами"
 
-#: src/Preferences.vala:362
+#: src/Preferences.vala:358
 #, fuzzy
 msgid "Search shortcuts"
 msgstr "Горячие клавиши в Minder"
 
-#: src/Preferences.vala:470
+#: src/Preferences.vala:466
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr ""
 
-#: src/Preferences.vala:474
+#: src/Preferences.vala:470
 msgid "Show temporary directory containing current mindmap in map sidebar"
 msgstr ""
 
-#: src/Preferences.vala:484
+#: src/Preferences.vala:480
 msgid "Default file upgrade action"
 msgstr ""
 
-#: src/Preferences.vala:558 src/styles/NodeBorderNone.vala:34 src/Tags.vala:47
+#: src/Preferences.vala:554 src/styles/NodeBorderNone.vala:34 src/Tags.vala:47
 msgid "None"
 msgstr "Нет"
 
-#: src/Preferences.vala:559
+#: src/Preferences.vala:555
 #, fuzzy
 msgid "Enter shortcut"
 msgstr "Горячие клавиши в Minder"
 
-#: src/Preferences.vala:727
+#: src/Preferences.vala:723
 msgid "Unable to set new shortcut due to conflicts"
 msgstr ""
 
-#: src/Preferences.vala:728
+#: src/Preferences.vala:724
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr ""
 
-#: src/Preferences.vala:793
+#: src/Preferences.vala:789
 #, fuzzy
 msgid "Clear all shortcuts?"
 msgstr "Горячие клавиши в Minder"
 
-#: src/Preferences.vala:793 src/Preferences.vala:804
+#: src/Preferences.vala:789 src/Preferences.vala:800
 msgid "Current shortcut settings will be lost"
 msgstr ""
 
-#: src/Preferences.vala:804
+#: src/Preferences.vala:800
 #, fuzzy
 msgid "Use Minder Default Shortcuts?"
 msgstr "Горячие клавиши в Minder"
 
-#: src/Preferences.vala:836 src/Preferences.vala:854
+#: src/Preferences.vala:832 src/Preferences.vala:850
 #, fuzzy
 msgid "Minder Default"
 msgstr "По умолчанию"
 
-#: src/Preferences.vala:839 src/Preferences.vala:855
+#: src/Preferences.vala:835 src/Preferences.vala:851
 #, fuzzy
 msgid "Last Used"
 msgstr "Вернуть отменённое действие"
 
-#: src/Preferences.vala:841 src/Preferences.vala:859
+#: src/Preferences.vala:837 src/Preferences.vala:855
 #, c-format
 msgid "Named Style: %s"
 msgstr ""
@@ -2565,7 +2562,7 @@ msgstr "Промышленность"
 msgid "Mobile"
 msgstr "Мобильная связь"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1226
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1225
 msgid "Arrows"
 msgstr "Стрелки"
 
@@ -3549,13 +3546,13 @@ msgstr "Вверх"
 msgid "Right up"
 msgstr "Направо вверх"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1038
-#: src/StyleInspector.vala:1464 src/StyleInspector.vala:1626
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1037
+#: src/StyleInspector.vala:1463 src/StyleInspector.vala:1625
 msgid "Left"
 msgstr "Влево"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1040
-#: src/StyleInspector.vala:1466 src/StyleInspector.vala:1628
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1039
+#: src/StyleInspector.vala:1465 src/StyleInspector.vala:1627
 msgid "Right"
 msgstr "Вправо"
 
@@ -3843,56 +3840,56 @@ msgstr ""
 msgid "Style Templates"
 msgstr "Шаблон"
 
-#: src/StyleInspector.vala:341
+#: src/StyleInspector.vala:340
 msgid "Branch Options"
 msgstr "Параметры ветвей"
 
-#: src/StyleInspector.vala:411
+#: src/StyleInspector.vala:410
 msgid "Corner Radius"
 msgstr "Угловой радиус"
 
-#: src/StyleInspector.vala:459 src/StyleInspector.vala:895
+#: src/StyleInspector.vala:458 src/StyleInspector.vala:894
 msgid "Margin"
 msgstr "Поля"
 
-#: src/StyleInspector.vala:521
+#: src/StyleInspector.vala:520
 msgid "Link Options"
 msgstr "Параметры связей"
 
-#: src/StyleInspector.vala:544 src/StyleInspector.vala:1185
+#: src/StyleInspector.vala:543 src/StyleInspector.vala:1184
 msgid "Line Dash"
 msgstr "Пунктир"
 
-#: src/StyleInspector.vala:585 src/StyleInspector.vala:1312
+#: src/StyleInspector.vala:584 src/StyleInspector.vala:1311
 msgid "Line Width"
 msgstr "Толщина линии"
 
-#: src/StyleInspector.vala:636
+#: src/StyleInspector.vala:635
 msgid "Link Arrow"
 msgstr "Стрелка связи"
 
-#: src/StyleInspector.vala:670
+#: src/StyleInspector.vala:669
 #, fuzzy
 msgid "Link Arrow Size"
 msgstr "Стрелка связи"
 
-#: src/StyleInspector.vala:744 src/Templates.vala:59 src/Templates.vala:64
+#: src/StyleInspector.vala:743 src/Templates.vala:59 src/Templates.vala:64
 msgid "Node Options"
 msgstr "Параметры узлов"
 
-#: src/StyleInspector.vala:767
+#: src/StyleInspector.vala:766
 msgid "Border Style"
 msgstr "Стиль края"
 
-#: src/StyleInspector.vala:810
+#: src/StyleInspector.vala:809
 msgid "Border Width"
 msgstr "Толщина края"
 
-#: src/StyleInspector.vala:860
+#: src/StyleInspector.vala:859
 msgid "Color Fill"
 msgstr "Заливка цветом"
 
-#: src/StyleInspector.vala:869
+#: src/StyleInspector.vala:868
 msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
@@ -3900,65 +3897,65 @@ msgstr ""
 "Залить этот узел цветом, когда его рамка квадратная,\n"
 "закругленная или в форме таблетки"
 
-#: src/StyleInspector.vala:939 src/StyleInspector.vala:1364
-#: src/StyleInspector.vala:1657
+#: src/StyleInspector.vala:938 src/StyleInspector.vala:1363
+#: src/StyleInspector.vala:1656
 msgid "Padding"
 msgstr "Отступы"
 
-#: src/StyleInspector.vala:983
+#: src/StyleInspector.vala:982
 msgid "Font"
 msgstr "Шрифт"
 
-#: src/StyleInspector.vala:1027 src/StyleInspector.vala:1453
-#: src/StyleInspector.vala:1615
+#: src/StyleInspector.vala:1026 src/StyleInspector.vala:1452
+#: src/StyleInspector.vala:1614
 #, fuzzy
 msgid "Text Alignment"
 msgstr "Выравнивание узлов"
 
-#: src/StyleInspector.vala:1039 src/StyleInspector.vala:1465
-#: src/StyleInspector.vala:1627
+#: src/StyleInspector.vala:1038 src/StyleInspector.vala:1464
+#: src/StyleInspector.vala:1626
 #, fuzzy
 msgid "Center"
 msgstr "Центрировать в окне"
 
-#: src/StyleInspector.vala:1069
+#: src/StyleInspector.vala:1068
 msgid "Width"
 msgstr "Ширина"
 
-#: src/StyleInspector.vala:1101
+#: src/StyleInspector.vala:1100
 msgid "Enable Markup"
 msgstr "Включить разметку"
 
-#: src/StyleInspector.vala:1162 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1161 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "Параметры соединения"
 
-#: src/StyleInspector.vala:1266
+#: src/StyleInspector.vala:1265
 #, fuzzy
 msgid "Arrow Size"
 msgstr "Стрелки"
 
-#: src/StyleInspector.vala:1409
+#: src/StyleInspector.vala:1408
 msgid "Title Font"
 msgstr "Шрифт подписи"
 
-#: src/StyleInspector.vala:1495
+#: src/StyleInspector.vala:1494
 msgid "Title Width"
 msgstr "Ширина подписи"
 
-#: src/StyleInspector.vala:1547 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1546 src/Templates.vala:61 src/Templates.vala:66
 msgid "Callout Options"
 msgstr "Параметры выноски"
 
-#: src/StyleInspector.vala:1571
+#: src/StyleInspector.vala:1570
 msgid "Text Font"
 msgstr "Шрифт текста"
 
-#: src/StyleInspector.vala:1702
+#: src/StyleInspector.vala:1701
 msgid "Pointer Width"
 msgstr "Ширина указателя"
 
-#: src/StyleInspector.vala:1747
+#: src/StyleInspector.vala:1746
 msgid "Pointer Length"
 msgstr "Длина указателя"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-11 20:38-0600\n"
+"POT-Creation-Date: 2025-11-13 20:13-0600\n"
 "PO-Revision-Date: 2023-10-10 17:50+0800\n"
 "Last-Translator: Aerowolf <aerowolf@tom.com>\n"
 "Language-Team: 简体中文\n"
@@ -242,13 +242,13 @@ msgid ""
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1307
+#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1322
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
 #: src/ThemeEditor.vala:169 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "取消"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2183
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2198
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "应用"
@@ -257,7 +257,7 @@ msgstr "应用"
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:714 src/MainWindow.vala:2220
+#: src/Document.vala:714 src/MainWindow.vala:2235
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
@@ -265,16 +265,16 @@ msgstr ""
 msgid "Upgrade Needed"
 msgstr ""
 
-#: src/DrawArea.vala:1501
+#: src/DrawArea.vala:1506
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% 完成"
 
-#: src/DrawArea.vala:1519
+#: src/DrawArea.vala:1524
 msgid "Drag to resize node"
 msgstr "拖动可调整节点大小"
 
-#: src/DrawArea.vala:1521
+#: src/DrawArea.vala:1526
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -282,25 +282,25 @@ msgstr ""
 "拖动可调整节点和图像的大小。\n"
 "按住Ctrl键再拖动，可只调整节点大小。"
 
-#: src/DrawArea.vala:1663
+#: src/DrawArea.vala:1668
 #, c-format
 msgid "Children: %u\n"
 msgstr "子节点： %u\n"
 
-#: src/DrawArea.vala:1664
+#: src/DrawArea.vala:1669
 #, c-format
 msgid "Total: %d"
 msgstr "总计： %d"
 
-#: src/DrawArea.vala:1714
+#: src/DrawArea.vala:1719
 msgid "connection endpoint change"
 msgstr "连接端点修改"
 
-#: src/DrawArea.vala:1721
+#: src/DrawArea.vala:1726
 msgid "connection drag"
 msgstr "连接拖动"
 
-#: src/DrawArea.vala:2248 src/MapModel.vala:1826 src/MapModel.vala:1841
+#: src/DrawArea.vala:2251 src/MapModel.vala:1826 src/MapModel.vala:1841
 msgid "Another Idea"
 msgstr "其他想法"
 
@@ -345,7 +345,7 @@ msgstr "导出选项"
 msgid "Export As %s"
 msgstr "导出为 %s"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1070 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1061 src/StickerSet.vala:352
 msgid "Export"
 msgstr "导出"
 
@@ -1292,233 +1292,234 @@ msgstr "选择链接颜色"
 msgid "Manual"
 msgstr "手动"
 
-#: src/MainWindow.vala:184 src/MainWindow.vala:1603
+#: src/MainWindow.vala:183 src/MainWindow.vala:1618
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:243 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:242 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
 msgstr "新建文件"
 
-#: src/MainWindow.vala:248 src/MainWindow.vala:1397
+#: src/MainWindow.vala:247 src/MainWindow.vala:1412
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "打开文件"
 
-#: src/MainWindow.vala:253 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:252 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
 msgstr "将文件另存为"
 
-#: src/MainWindow.vala:260 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:259 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "撤消"
 
-#: src/MainWindow.vala:267 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:266 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "重做"
 
-#: src/MainWindow.vala:726
+#: src/MainWindow.vala:717
 msgid "Tag Highlight Mode"
 msgstr ""
 
-#: src/MainWindow.vala:728 src/MainWindow.vala:1140
+#: src/MainWindow.vala:719 src/MainWindow.vala:1131
 msgid "Focus Mode"
 msgstr "聚焦模式"
 
-#: src/MainWindow.vala:731
+#: src/MainWindow.vala:722
 msgid "Unnamed Document"
 msgstr "未命名文档"
 
-#: src/MainWindow.vala:734
+#: src/MainWindow.vala:725
 msgid "Read-Only"
 msgstr "只读"
 
-#: src/MainWindow.vala:753
+#: src/MainWindow.vala:744
 msgid "Zoom to Fit"
 msgstr "自适应缩放"
 
-#: src/MainWindow.vala:754 data/com.github.phase1geo.minder.shortcuts.ui:140
+#: src/MainWindow.vala:745 data/com.github.phase1geo.minder.shortcuts.ui:140
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "对选定的节点树进行合理缩放"
 
-#: src/MainWindow.vala:755
+#: src/MainWindow.vala:746
 msgid "Zoom to Actual Size"
 msgstr "缩放至实际大小"
 
-#: src/MainWindow.vala:763
+#: src/MainWindow.vala:754
 msgid "Zoom to Percent"
 msgstr "缩放百分比："
 
-#: src/MainWindow.vala:778 src/ZoomWidget.vala:104
+#: src/MainWindow.vala:769 src/ZoomWidget.vala:104
 #: data/com.github.phase1geo.minder.shortcuts.ui:119
 msgid "Zoom In"
 msgstr "放大"
 
-#: src/MainWindow.vala:785 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:776 src/ZoomWidget.vala:92
 #: data/com.github.phase1geo.minder.shortcuts.ui:126
 msgid "Zoom Out"
 msgstr "缩小"
 
-#: src/MainWindow.vala:803 src/MainWindow.vala:1668
+#: src/MainWindow.vala:794 src/MainWindow.vala:1683
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "缩放 （%d%%）"
 
-#: src/MainWindow.vala:816
+#: src/MainWindow.vala:807
 msgid "Search Nodes, Callouts and Connections"
 msgstr "搜索节点、标记和连接"
 
-#: src/MainWindow.vala:861
+#: src/MainWindow.vala:852
 msgid "Search Criteria"
 msgstr "搜索条件"
 
-#: src/MainWindow.vala:865
+#: src/MainWindow.vala:856
 msgid "Search all tabs"
 msgstr "搜索所有选项卡"
 
-#: src/MainWindow.vala:906 src/StickerSet.vala:114
+#: src/MainWindow.vala:897 src/StickerSet.vala:114
 msgid "Search"
 msgstr "搜索"
 
-#: src/MainWindow.vala:914
+#: src/MainWindow.vala:905
 msgid "Nodes"
 msgstr "节点"
 
-#: src/MainWindow.vala:915
+#: src/MainWindow.vala:906
 msgid "Connections"
 msgstr "连接"
 
-#: src/MainWindow.vala:916
+#: src/MainWindow.vala:907
 msgid "Callouts"
 msgstr "标记"
 
-#: src/MainWindow.vala:917
+#: src/MainWindow.vala:908
 #, fuzzy
 msgid "Groups"
 msgstr "添加群组"
 
-#: src/MainWindow.vala:918
+#: src/MainWindow.vala:909
 msgid "Titles"
 msgstr "标题"
 
-#: src/MainWindow.vala:919
+#: src/MainWindow.vala:910
 msgid "Notes"
 msgstr "备注"
 
-#: src/MainWindow.vala:920
+#: src/MainWindow.vala:911
 msgid "Folded"
 msgstr "折叠"
 
-#: src/MainWindow.vala:921
+#: src/MainWindow.vala:912
 msgid "Unfolded"
 msgstr "展开"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:913
 msgid "Tasks"
 msgstr "任务"
 
-#: src/MainWindow.vala:923
+#: src/MainWindow.vala:914
 msgid "Non-tasks"
 msgstr "非任务"
 
-#: src/MainWindow.vala:1045
+#: src/MainWindow.vala:1036
 msgid "Print…"
 msgstr "打印……"
 
-#: src/MainWindow.vala:1084
+#: src/MainWindow.vala:1075
 msgid "Brain Dump"
 msgstr ""
 
-#: src/MainWindow.vala:1160 src/Preferences.vala:50
+#: src/MainWindow.vala:1151 src/Preferences.vala:50
 msgid "Preferences"
 msgstr "参数设置"
 
-#: src/MainWindow.vala:1161
+#: src/MainWindow.vala:1152
 msgid "Shortcuts Cheatsheet"
 msgstr "快捷键"
 
-#: src/MainWindow.vala:1164
+#: src/MainWindow.vala:1155
 msgid "About Minder"
 msgstr "关于 Minder"
 
-#: src/MainWindow.vala:1191 src/MainWindow.vala:1752
+#: src/MainWindow.vala:1182 src/MainWindow.vala:1767
 msgid "Show Property Sidebar"
 msgstr "显示属性侧边栏"
 
-#: src/MainWindow.vala:1202
+#: src/MainWindow.vala:1193 src/MainWindow.vala:1236
 msgid "Current"
 msgstr "当前"
 
-#: src/MainWindow.vala:1203 src/StyleInspector.vala:364
+#: src/MainWindow.vala:1194 src/MainWindow.vala:1237
+#: src/StyleInspector.vala:363
 msgid "Style"
 msgstr "样式"
 
-#: src/MainWindow.vala:1204 src/Preferences.vala:68
+#: src/MainWindow.vala:1195 src/MainWindow.vala:1238 src/Preferences.vala:68
 msgid "Tags"
 msgstr ""
 
-#: src/MainWindow.vala:1205
+#: src/MainWindow.vala:1196 src/MainWindow.vala:1239
 msgid "Stickers"
 msgstr "贴纸"
 
-#: src/MainWindow.vala:1206
+#: src/MainWindow.vala:1197 src/MainWindow.vala:1240
 msgid "Map"
 msgstr "地图"
 
-#: src/MainWindow.vala:1298
+#: src/MainWindow.vala:1313
 msgid "Save current unnamed document?"
 msgstr "要保存当前未命名的文档吗？"
 
-#: src/MainWindow.vala:1299
+#: src/MainWindow.vala:1314
 msgid "Changes will be permanently lost if not saved."
 msgstr "如不保存，修改内容将永久丢失。"
 
-#: src/MainWindow.vala:1304
+#: src/MainWindow.vala:1319
 msgid "Discard Changes"
 msgstr "放弃修改"
 
-#: src/MainWindow.vala:1310 src/MainWindow.vala:1599 src/ThemeEditor.vala:174
+#: src/MainWindow.vala:1325 src/MainWindow.vala:1614 src/ThemeEditor.vala:174
 msgid "Save"
 msgstr "保存"
 
-#: src/MainWindow.vala:1342
+#: src/MainWindow.vala:1357
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "文件 %s 已被其他应用程序修改。"
 
-#: src/MainWindow.vala:1343
+#: src/MainWindow.vala:1358
 msgid "What do you want to do?"
 msgstr "想做什么？"
 
-#: src/MainWindow.vala:1348
+#: src/MainWindow.vala:1363
 msgid "Discard Changes and reload"
 msgstr "放弃修改并重新加载"
 
-#: src/MainWindow.vala:1351
+#: src/MainWindow.vala:1366
 msgid "Save local version and overwrite"
 msgstr "保存本地版本并覆盖"
 
-#: src/MainWindow.vala:1397
+#: src/MainWindow.vala:1412
 msgid "Open Directory"
 msgstr "打开目录"
 
-#: src/MainWindow.vala:1397
+#: src/MainWindow.vala:1412
 msgid "Open"
 msgstr "打开"
 
-#: src/MainWindow.vala:1599
+#: src/MainWindow.vala:1614
 msgid "Save File"
 msgstr "保存文件"
 
-#: src/MainWindow.vala:1698
+#: src/MainWindow.vala:1713
 msgid "Hide Property Sidebar"
 msgstr "隐藏属性侧边栏"
 
-#: src/MainWindow.vala:2174
+#: src/MainWindow.vala:2189
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2175
+#: src/MainWindow.vala:2190
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1526,31 +1527,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2180
+#: src/MainWindow.vala:2195
 #, fuzzy
 msgid "Quit Minder"
 msgstr "关于 Minder"
 
-#: src/MainWindow.vala:2200
+#: src/MainWindow.vala:2215
 #, fuzzy
 msgid "Detail"
 msgstr "拆分"
 
-#: src/MainWindow.vala:2208
+#: src/MainWindow.vala:2223
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2209
+#: src/MainWindow.vala:2224
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2210
+#: src/MainWindow.vala:2225
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1558,11 +1559,11 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2217
+#: src/MainWindow.vala:2232
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2242
+#: src/MainWindow.vala:2257
 msgid "Upgrades Needed"
 msgstr ""
 
@@ -2128,132 +2129,128 @@ msgid "Hide themes not matching visual style"
 msgstr "隐藏与视觉样式不匹配的主题"
 
 #: src/Preferences.vala:191
-msgid "Compact sidebar width"
-msgstr ""
-
-#: src/Preferences.vala:195
 msgid "Default theme"
 msgstr "默认主题"
 
-#: src/Preferences.vala:197
+#: src/Preferences.vala:193
 msgid ""
 "Sets the default theme to use for newly created mindmaps (use Map sidebar "
 "panel to make immediate changes)."
 msgstr ""
 
-#: src/Preferences.vala:200
+#: src/Preferences.vala:196
 msgid "Enable animations"
 msgstr "启用动画"
 
-#: src/Preferences.vala:204
+#: src/Preferences.vala:200
 msgid "Text field font size"
 msgstr "文本字段字体大小"
 
-#: src/Preferences.vala:207
+#: src/Preferences.vala:203
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
 msgstr "指定在文本编辑区域（即快速输入或注释字段）中使用的字体大小。"
 
-#: src/Preferences.vala:210
+#: src/Preferences.vala:206
 msgid "Colorize note fields"
 msgstr ""
 
-#: src/Preferences.vala:214
+#: src/Preferences.vala:210
 #, fuzzy
 msgid "Default global style"
 msgstr "默认主题"
 
-#: src/Preferences.vala:216
+#: src/Preferences.vala:212
 msgid "Specifies the global style to use for newly created mindmaps."
 msgstr ""
 
-#: src/Preferences.vala:239
+#: src/Preferences.vala:235
 msgid "Tags in this list will be the starting list of tags for new mindmaps."
 msgstr ""
 
-#: src/Preferences.vala:339
+#: src/Preferences.vala:335
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
 msgstr ""
 
-#: src/Preferences.vala:340
+#: src/Preferences.vala:336
 msgid "Escape to cancel.  Press key combination to set."
 msgstr ""
 
-#: src/Preferences.vala:348
+#: src/Preferences.vala:344
 msgid "Set Minder Defaults"
 msgstr ""
 
-#: src/Preferences.vala:351
+#: src/Preferences.vala:347
 #, fuzzy
 msgid "Clear All Shortcuts"
 msgstr "Minder快捷键"
 
-#: src/Preferences.vala:360
+#: src/Preferences.vala:356
 #, fuzzy
 msgid "Search commands"
 msgstr "节点命令"
 
-#: src/Preferences.vala:362
+#: src/Preferences.vala:358
 #, fuzzy
 msgid "Search shortcuts"
 msgstr "Minder快捷键"
 
-#: src/Preferences.vala:470
+#: src/Preferences.vala:466
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr ""
 
-#: src/Preferences.vala:474
+#: src/Preferences.vala:470
 msgid "Show temporary directory containing current mindmap in map sidebar"
 msgstr ""
 
-#: src/Preferences.vala:484
+#: src/Preferences.vala:480
 msgid "Default file upgrade action"
 msgstr ""
 
-#: src/Preferences.vala:558 src/styles/NodeBorderNone.vala:34 src/Tags.vala:47
+#: src/Preferences.vala:554 src/styles/NodeBorderNone.vala:34 src/Tags.vala:47
 msgid "None"
 msgstr "无"
 
-#: src/Preferences.vala:559
+#: src/Preferences.vala:555
 #, fuzzy
 msgid "Enter shortcut"
 msgstr "Minder快捷键"
 
-#: src/Preferences.vala:727
+#: src/Preferences.vala:723
 msgid "Unable to set new shortcut due to conflicts"
 msgstr ""
 
-#: src/Preferences.vala:728
+#: src/Preferences.vala:724
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr ""
 
-#: src/Preferences.vala:793
+#: src/Preferences.vala:789
 #, fuzzy
 msgid "Clear all shortcuts?"
 msgstr "Minder快捷键"
 
-#: src/Preferences.vala:793 src/Preferences.vala:804
+#: src/Preferences.vala:789 src/Preferences.vala:800
 msgid "Current shortcut settings will be lost"
 msgstr ""
 
-#: src/Preferences.vala:804
+#: src/Preferences.vala:800
 #, fuzzy
 msgid "Use Minder Default Shortcuts?"
 msgstr "Minder快捷键"
 
-#: src/Preferences.vala:836 src/Preferences.vala:854
+#: src/Preferences.vala:832 src/Preferences.vala:850
 #, fuzzy
 msgid "Minder Default"
 msgstr "默认"
 
-#: src/Preferences.vala:839 src/Preferences.vala:855
+#: src/Preferences.vala:835 src/Preferences.vala:851
 #, fuzzy
 msgid "Last Used"
 msgstr "重做上次撤消"
 
-#: src/Preferences.vala:841 src/Preferences.vala:859
+#: src/Preferences.vala:837 src/Preferences.vala:855
 #, c-format
 msgid "Named Style: %s"
 msgstr ""
@@ -2546,7 +2543,7 @@ msgstr "工业"
 msgid "Mobile"
 msgstr "移动"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1226
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1225
 msgid "Arrows"
 msgstr "箭头"
 
@@ -3530,13 +3527,13 @@ msgstr "向上"
 msgid "Right up"
 msgstr "右上"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1038
-#: src/StyleInspector.vala:1464 src/StyleInspector.vala:1626
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1037
+#: src/StyleInspector.vala:1463 src/StyleInspector.vala:1625
 msgid "Left"
 msgstr "向左"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1040
-#: src/StyleInspector.vala:1466 src/StyleInspector.vala:1628
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1039
+#: src/StyleInspector.vala:1465 src/StyleInspector.vala:1627
 msgid "Right"
 msgstr "向右"
 
@@ -3824,120 +3821,120 @@ msgstr ""
 msgid "Style Templates"
 msgstr "模板"
 
-#: src/StyleInspector.vala:341
+#: src/StyleInspector.vala:340
 msgid "Branch Options"
 msgstr "分支选项"
 
-#: src/StyleInspector.vala:411
+#: src/StyleInspector.vala:410
 msgid "Corner Radius"
 msgstr "圆角半径"
 
-#: src/StyleInspector.vala:459 src/StyleInspector.vala:895
+#: src/StyleInspector.vala:458 src/StyleInspector.vala:894
 msgid "Margin"
 msgstr "边矩"
 
-#: src/StyleInspector.vala:521
+#: src/StyleInspector.vala:520
 msgid "Link Options"
 msgstr "链接选项"
 
-#: src/StyleInspector.vala:544 src/StyleInspector.vala:1185
+#: src/StyleInspector.vala:543 src/StyleInspector.vala:1184
 msgid "Line Dash"
 msgstr "线形"
 
-#: src/StyleInspector.vala:585 src/StyleInspector.vala:1312
+#: src/StyleInspector.vala:584 src/StyleInspector.vala:1311
 msgid "Line Width"
 msgstr "线宽"
 
-#: src/StyleInspector.vala:636
+#: src/StyleInspector.vala:635
 msgid "Link Arrow"
 msgstr "链接箭头"
 
-#: src/StyleInspector.vala:670
+#: src/StyleInspector.vala:669
 #, fuzzy
 msgid "Link Arrow Size"
 msgstr "链接箭头"
 
-#: src/StyleInspector.vala:744 src/Templates.vala:59 src/Templates.vala:64
+#: src/StyleInspector.vala:743 src/Templates.vala:59 src/Templates.vala:64
 msgid "Node Options"
 msgstr "节点选项"
 
-#: src/StyleInspector.vala:767
+#: src/StyleInspector.vala:766
 msgid "Border Style"
 msgstr "边框样式"
 
-#: src/StyleInspector.vala:810
+#: src/StyleInspector.vala:809
 msgid "Border Width"
 msgstr "边框宽度"
 
-#: src/StyleInspector.vala:860
+#: src/StyleInspector.vala:859
 msgid "Color Fill"
 msgstr "颜色填充"
 
-#: src/StyleInspector.vala:869
+#: src/StyleInspector.vala:868
 msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
 msgstr "当节点边框是矩形、圆形或药丸形状时，使用颜色填充节点"
 
-#: src/StyleInspector.vala:939 src/StyleInspector.vala:1364
-#: src/StyleInspector.vala:1657
+#: src/StyleInspector.vala:938 src/StyleInspector.vala:1363
+#: src/StyleInspector.vala:1656
 msgid "Padding"
 msgstr "填充"
 
-#: src/StyleInspector.vala:983
+#: src/StyleInspector.vala:982
 msgid "Font"
 msgstr "字体"
 
-#: src/StyleInspector.vala:1027 src/StyleInspector.vala:1453
-#: src/StyleInspector.vala:1615
+#: src/StyleInspector.vala:1026 src/StyleInspector.vala:1452
+#: src/StyleInspector.vala:1614
 #, fuzzy
 msgid "Text Alignment"
 msgstr "节点对齐"
 
-#: src/StyleInspector.vala:1039 src/StyleInspector.vala:1465
-#: src/StyleInspector.vala:1627
+#: src/StyleInspector.vala:1038 src/StyleInspector.vala:1464
+#: src/StyleInspector.vala:1626
 #, fuzzy
 msgid "Center"
 msgstr "居中视图"
 
-#: src/StyleInspector.vala:1069
+#: src/StyleInspector.vala:1068
 msgid "Width"
 msgstr "宽度"
 
-#: src/StyleInspector.vala:1101
+#: src/StyleInspector.vala:1100
 msgid "Enable Markup"
 msgstr "启用标记"
 
-#: src/StyleInspector.vala:1162 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1161 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "连接选项"
 
-#: src/StyleInspector.vala:1266
+#: src/StyleInspector.vala:1265
 #, fuzzy
 msgid "Arrow Size"
 msgstr "箭头"
 
-#: src/StyleInspector.vala:1409
+#: src/StyleInspector.vala:1408
 msgid "Title Font"
 msgstr "标题字体"
 
-#: src/StyleInspector.vala:1495
+#: src/StyleInspector.vala:1494
 msgid "Title Width"
 msgstr "标题宽度"
 
-#: src/StyleInspector.vala:1547 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1546 src/Templates.vala:61 src/Templates.vala:66
 msgid "Callout Options"
 msgstr "标记选项"
 
-#: src/StyleInspector.vala:1571
+#: src/StyleInspector.vala:1570
 msgid "Text Font"
 msgstr "文本字体"
 
-#: src/StyleInspector.vala:1702
+#: src/StyleInspector.vala:1701
 msgid "Pointer Width"
 msgstr "指针宽度"
 
-#: src/StyleInspector.vala:1747
+#: src/StyleInspector.vala:1746
 msgid "Pointer Length"
 msgstr "指标长度"
 
