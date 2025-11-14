@@ -327,6 +327,17 @@ public class MainWindow : Gtk.ApplicationWindow {
       }
     });
 
+    // Handle any changes to the system default
+    var gtk_settings  = Gtk.Settings.get_default();
+    if( gtk_settings != null ) {
+      gtk_settings.notify["gtk-application-prefer-dark-theme"].connect(() => {
+        var map = get_current_map();
+        if( gtk_settings.gtk_application_prefer_dark_theme != map.get_theme().prefer_dark ) {
+          gtk_settings.gtk_application_prefer_dark_theme = map.get_theme().prefer_dark;
+        }
+      });
+    }
+
     // If we receive focus, update the titlebar
     var focus = new EventControllerFocus();
     _pane.add_controller( focus );
