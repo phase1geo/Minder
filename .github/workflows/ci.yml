@@ -6,6 +6,9 @@ on:
       - opened
       - reopened
       - synchronize
+    branches:
+      - master
+      - beta
 
 jobs:
   flatpak:
