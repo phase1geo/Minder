@@ -358,7 +358,8 @@ public class MainWindow : Gtk.ApplicationWindow {
       return( false );
     });
 
-    // Set shortcut to quit
+    // Set shortcuts that don't have a UI element
+    set_action_for_command( KeyCommand.FILE_SAVE );
     set_action_for_command( KeyCommand.QUIT );
 
     // Set the window size based on gsettings
