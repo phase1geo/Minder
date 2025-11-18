@@ -1,0 +1,3928 @@
+# Swedish translation for Minder.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.phase1geo.minder package.
+# Daniel Nylander <po@danielnylander.se>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.phase1geo.minder\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-29 21:52-0500\n"
+"PO-Revision-Date: 2025-11-18 10:17+0100\n"
+"Last-Translator: Daniel Nylander <github@danielnylander.se>\n"
+"Language-Team: sv\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.8\n"
+
+#: src/About.vala:36
+msgid "Mind-mapping application"
+msgstr "Applikation för tankekartor"
+
+#: src/About.vala:37
+msgid "Copyright © 2018-2024 Trevor Williams"
+msgstr "Copyright © 2018-2024 Trevor Williams"
+
+#: src/About.vala:41
+msgid "Minder in AppCenter"
+msgstr "Minder i AppCenter"
+
+#: src/Application.vala:141
+#, c-format
+msgid "Import file from format (%s)"
+msgstr "Importera fil från format (%s)"
+
+#: src/Application.vala:142
+#, c-format
+msgid "Export mindmap as format (%s)"
+msgstr "Exportera mindmap som format (%s)"
+
+#: src/Application.vala:147
+msgid "Display version number"
+msgstr "Visa versionsnummer"
+
+#: src/Application.vala:148
+msgid "Display help"
+msgstr "Visa hjälp"
+
+#: src/Application.vala:149
+msgid "Starts Minder with a new file"
+msgstr "Startar Minder med en ny fil"
+
+#: src/Application.vala:152
+msgid ""
+"Enables a transparent background for PNG images.  Default is no transparency."
+msgstr ""
+"Aktiverar en transparent bakgrund för PNG-bilder. Standardinställningen är "
+"ingen transparens."
+
+#: src/Application.vala:153
+msgid "PNG compression value (0-9). Default is 0."
+msgstr "PNG-komprimeringsvärde (0-9). Standardvärdet är 0."
+
+#: src/Application.vala:154
+msgid "JPEG quality (0-100). Default is 90."
+msgstr "JPEG-kvalitet (0-100). Standardvärdet är 90."
+
+#: src/Application.vala:155
+msgid "Enables image links in exported Markdown"
+msgstr "Aktiverar bildlänkar i exporterad Markdown"
+
+#: src/Application.vala:164
+#, c-format
+msgid "ERROR: %s\n"
+msgstr "FEL: %s\n"
+
+#: src/Application.vala:165
+#, c-format
+msgid "Run '%s --help' to see valid options\n"
+msgstr "Kör '%s --help' för att se giltiga flaggor\n"
+
+#: src/Application.vala:188
+msgid "ERROR: Unable to import file"
+msgstr "FEL: Det går inte att importera filen"
+
+#: src/Application.vala:192
+msgid "ERROR: Import is missing filename to import"
+msgstr "FEL: Importen saknar filnamn att importera"
+
+#: src/Application.vala:215
+msgid "ERROR: Export is missing input file and/or export output file"
+msgstr "FEL: Exporten saknar inmatningsfil och/eller exportutmatningsfil"
+
+#: src/Application.vala:225
+#, c-format
+msgid "ERROR:  Unable to open file '%s'\n"
+msgstr "FEL: Det går inte att öppna filen '%s'\n"
+
+#: src/Application.vala:257
+#, c-format
+msgid "ERROR:  Unable to load Minder input file %s"
+msgstr "FEL:  Det går inte att läsa in Minder-inmatningsfilen %s"
+
+#: src/CalloutMenu.vala:34 src/ConnectionMenu.vala:42
+#: src/ConnectionsMenu.vala:35 src/GroupsMenu.vala:40 src/NodeMenu.vala:89
+#: src/NodesMenu.vala:57 src/ThemeEditor.vala:139
+msgid "Delete"
+msgstr "Ta bort"
+
+#: src/CalloutMenu.vala:38 src/EmptyMenu.vala:49
+#: data/com.github.phase1geo.minder.shortcuts.ui:676
+msgid "Select Node"
+msgstr "Välj nod"
+
+#: src/Callout.vala:129 src/NodeMenu.vala:244
+msgid "Callout"
+msgstr "Callout"
+
+#: src/CanvasText.vala:269 src/FormattedText.vala:1092
+msgid "No text found"
+msgstr "Ingen text hittades"
+
+#: src/ConnectionInspector.vala:74 src/NodeMenu.vala:239
+msgid "Connection"
+msgstr "Anslutning"
+
+#: src/ConnectionInspector.vala:85 src/NodeInspector.vala:172
+msgid "Color"
+msgstr "Färg"
+
+#: src/ConnectionInspector.vala:99
+msgid "Use Theme Default Color"
+msgstr "Använd temats standardfärg"
+
+#: src/ConnectionInspector.vala:118 src/GroupInspector.vala:82
+#: src/NodeInspector.vala:247
+msgid "Note"
+msgstr "Anteckning"
+
+#: src/ConnectionInspector.vala:157
+msgid "Delete Connection"
+msgstr "Ta bort anslutning"
+
+#: src/ConnectionMenu.vala:46
+msgid "Edit Title…"
+msgstr "Redigera titel…"
+
+#: src/ConnectionMenu.vala:50 src/GroupsMenu.vala:47 src/NodeMenu.vala:104
+#: data/com.github.phase1geo.minder.shortcuts.ui:358
+#: data/com.github.phase1geo.minder.shortcuts.ui:703
+msgid "Edit Note"
+msgstr "Redigera anteckning"
+
+#: src/ConnectionMenu.vala:53 src/NodeMenu.vala:115
+msgid "Remove Sticker"
+msgstr "Ta bort klistermärke"
+
+#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
+#: src/NodeMenu.vala:194 src/NodesMenu.vala:105
+msgid "Select"
+msgstr "Välj"
+
+#: src/ConnectionMenu.vala:61
+msgid "Start Node"
+msgstr "Startnod"
+
+#: src/ConnectionMenu.vala:65
+msgid "End Node"
+msgstr "Slutnod"
+
+#: src/ConnectionMenu.vala:69
+msgid "Next Connection"
+msgstr "Nästa anslutning"
+
+#: src/ConnectionMenu.vala:73
+msgid "Previous Connection"
+msgstr "Tidigare anslutning"
+
+#: src/Connection.vala:732
+msgid "Connection Title"
+msgstr "Anslutningstitel"
+
+#: src/Connection.vala:740
+msgid "Connection Note"
+msgstr "Anslutningsanmärkning"
+
+#: src/Document.vala:80
+msgid "unnamed"
+msgstr "namnlös"
+
+#: src/DrawArea.vala:780
+msgid "Main Idea"
+msgstr "Huvudidé"
+
+#: src/DrawArea.vala:2698
+#, c-format
+msgid "%0.3g%% complete"
+msgstr "%0.3g%% färdig"
+
+#: src/DrawArea.vala:2712
+msgid "Drag to resize node"
+msgstr "Dra för att ändra storlek på nod"
+
+#: src/DrawArea.vala:2714
+msgid ""
+"Drag to resize node and image.\n"
+"Control-drag to resize only node."
+msgstr ""
+"Dra för att ändra storlek på nod och bild. Kontroll-dra för att endast ändra "
+"storlek på nod."
+
+#: src/DrawArea.vala:2842
+#, c-format
+msgid "Children: %u\n"
+msgstr "Underordnade: %u\n"
+
+#: src/DrawArea.vala:2843
+#, c-format
+msgid "Total: %d"
+msgstr "Totalt: %d"
+
+#: src/DrawArea.vala:2892
+msgid "connection endpoint change"
+msgstr "ändring av anslutningsändpunkt"
+
+#: src/DrawArea.vala:2899
+msgid "connection drag"
+msgstr "anslutningsdrag"
+
+#: src/DrawArea.vala:3705 src/DrawArea.vala:3719 src/DrawArea.vala:5733
+msgid "Another Idea"
+msgstr "En annan idé"
+
+#: src/DrawArea.vala:5186 src/layouts/LayoutManual.vala:26
+#: src/MapInspector.vala:225 src/MapInspector.vala:448
+msgid "Manual"
+msgstr "Manuell"
+
+#: src/DynamicNotebook.vala:234 src/DynamicNotebook.vala:258
+msgid "Close Tab"
+msgstr "Stäng flik"
+
+#: src/DynamicNotebook.vala:261
+msgid "Open in a New Window"
+msgstr "Öppna i ett nytt fönster"
+
+#: src/DynamicNotebook.vala:262
+msgid "Duplicate"
+msgstr "Duplicera"
+
+#: src/DynamicNotebook.vala:314
+msgid "Close Other Tab"
+msgstr "Stäng annan flik"
+
+#: src/DynamicNotebook.vala:314
+msgid "Close Other Tabs"
+msgstr "Stäng andra flikar"
+
+#: src/DynamicNotebook.vala:485
+msgid "Clear All"
+msgstr "Rensa alla"
+
+#: src/DynamicNotebook.vala:767 src/DynamicNotebook.vala:798
+msgid "New Tab"
+msgstr "Ny flik"
+
+#: src/DynamicNotebook.vala:768
+msgid "Undo Close Tab"
+msgstr "Ångra Stäng flik"
+
+#: src/DynamicNotebook.vala:810
+msgid "Closed Tabs"
+msgstr "Stängda flikar"
+
+#: src/EmptyInspector.vala:30
+msgid ""
+"Select a node, connection or group\n"
+"to view/edit information"
+msgstr "Välj en nod, anslutning eller grupp för att visa/redigera information"
+
+#: src/EmptyMenu.vala:38 src/NodeMenu.vala:81 src/TextMenu.vala:52
+msgid "Paste"
+msgstr "Klistra in"
+
+#: src/EmptyMenu.vala:42 src/NodeMenu.vala:163
+msgid "Add Root Node"
+msgstr "Lägg till rotnod"
+
+#: src/EmptyMenu.vala:46
+msgid "Add Nodes With Quick Entry"
+msgstr "Lägg till noder med snabbinmatning"
+
+#: src/EmptyMenu.vala:54 src/Theme.vala:301
+msgid "Root"
+msgstr "Rot"
+
+#: src/Exporter.vala:43
+msgid "Export…"
+msgstr "Exportera…"
+
+#: src/Exporter.vala:44
+msgid "Export With Current Settings"
+msgstr "Exportera med aktuella inställningar"
+
+#: src/Exporter.vala:112
+msgid "Export Options"
+msgstr "Exportalternativ"
+
+#: src/Exporter.vala:133
+#, c-format
+msgid "Export As %s"
+msgstr "Exportera som %s"
+
+#: src/Exporter.vala:134 src/ImageEditor.vala:381 src/ImageManager.vala:300
+#: src/MainWindow.vala:1056 src/MainWindow.vala:1151 src/MainWindow.vala:1295
+#: src/QuickEntry.vala:154 src/StickerInspector.vala:402 src/StickerSet.vala:75
+#: src/ThemeEditor.vala:144 src/UrlEditor.vala:62
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: src/Exporter.vala:134 src/MainWindow.vala:873 src/StickerSet.vala:352
+msgid "Export"
+msgstr "Exportera"
+
+#: src/Exporter.vala:160
+msgid "Minder Export Completed"
+msgstr "Minder Export slutförd"
+
+#: src/exports/ExportCSV.vala:26
+msgid "CSV"
+msgstr "CSV"
+
+#: src/exports/ExportFileSystem.vala:29
+msgid "File System"
+msgstr "Filsystem"
+
+#: src/exports/ExportFreemind.vala:29
+msgid "Freemind"
+msgstr "Freemind"
+
+#: src/exports/ExportFreemind.vala:45 src/exports/ExportFreeplane.vala:47
+#: src/exports/ExportOPML.vala:36 src/exports/ExportYed.vala:41
+msgid "Generated by Minder"
+msgstr "Genererat av Minder"
+
+#: src/exports/ExportFreeplane.vala:31
+msgid "Freeplane"
+msgstr "Freeplane"
+
+#: src/exports/ExportImage.vala:79 src/exports/ExportPNG.vala:86
+msgid "Zoom %"
+msgstr "Zoom %"
+
+#: src/exports/ExportImage.vala:86
+msgid "Quality"
+msgstr "Kvalitet"
+
+#: src/exports/ExportMarkdown.vala:33
+msgid "Markdown"
+msgstr "Markdown"
+
+#: src/exports/ExportMarkdown.vala:358
+msgid "Include image links"
+msgstr "Inkludera bildlänkar"
+
+#: src/exports/ExportMarkdown.vala:359
+msgid "Creates a directory containing the Markdown and embedded images"
+msgstr "Skapar en katalog som innehåller Markdown och inbäddade bilder"
+
+#: src/exports/ExportMermaid.vala:26
+msgid "Mermaid"
+msgstr "Sjöjungfru"
+
+#: src/exports/ExportMermaid.vala:46 src/layouts/LayoutVertical.vala:26
+#: src/MapInspector.vala:449
+msgid "Vertical"
+msgstr "Vertikal"
+
+#: src/exports/ExportMermaid.vala:46 src/layouts/LayoutDown.vala:26
+#: src/MapInspector.vala:454
+msgid "Downwards"
+msgstr "Nedåt"
+
+#: src/exports/ExportMermaid.vala:48 src/layouts/LayoutLeft.vala:26
+#: src/MapInspector.vala:451
+msgid "To left"
+msgstr "Till vänster"
+
+#: src/exports/ExportMermaid.vala:50 src/layouts/LayoutUp.vala:26
+#: src/MapInspector.vala:453
+msgid "Upwards"
+msgstr "Uppåt"
+
+#: src/exports/ExportOPML.vala:26
+msgid "OPML"
+msgstr "OPML"
+
+#: src/exports/ExportOrgMode.vala:28
+msgid "Org-Mode"
+msgstr "Org-läge"
+
+#: src/exports/ExportOrgMode.vala:33
+msgid "Indent Mode"
+msgstr "Indragningsläge"
+
+#: src/exports/ExportOrgMode.vala:33
+msgid "Export using indentation spaces"
+msgstr "Exportera med indragningsmellanslag"
+
+#: src/exports/ExportOutliner.vala:28
+msgid "Outliner"
+msgstr "Outliner"
+
+#: src/exports/ExportPDF.vala:28
+msgid "PDF"
+msgstr "PDF"
+
+#: src/exports/ExportPlantUML.vala:29
+msgid "PlantUML"
+msgstr "PlantUML"
+
+#: src/exports/ExportPNG.vala:30
+msgid "PNG"
+msgstr "PNG"
+
+#: src/exports/ExportPNG.vala:87
+msgid "Enable Transparent Background"
+msgstr "Aktivera transparent bakgrund"
+
+#: src/exports/ExportPNG.vala:88
+msgid "Compression"
+msgstr "Kompression"
+
+#: src/exports/ExportPortableMinder.vala:28
+msgid "Portable Minder"
+msgstr "Bärbar påminnelse"
+
+#: src/exports/ExportSVG.vala:28
+msgid "SVG"
+msgstr "SVG"
+
+#: src/exports/ExportText.vala:44
+msgid "PlainText"
+msgstr "PlainText"
+
+#: src/exports/ExportXMind2021.vala:79
+msgid "XMind 2021"
+msgstr "XMind 2021"
+
+#: src/exports/ExportXMind2021.vala:682 src/exports/ExportXMind8.vala:683
+#: src/layouts/LayoutHorizontal.vala:26 src/MapInspector.vala:450
+msgid "Horizontal"
+msgstr "Horisontell"
+
+#: src/exports/ExportXMind2021.vala:684 src/exports/ExportXMind8.vala:685
+#: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:452
+msgid "To right"
+msgstr "Till höger"
+
+#: src/exports/ExportXMind8.vala:80
+msgid "XMind 8"
+msgstr "XMind 8"
+
+#: src/exports/ExportYed.vala:26
+msgid "Yed"
+msgstr "Yed"
+
+#: src/Exports.vala:36
+msgid "JPEG"
+msgstr "JPEG"
+
+#: src/GroupInspector.vala:70
+msgid "Group"
+msgstr "Grupp"
+
+#: src/GroupsMenu.vala:43
+msgid "Merge"
+msgstr "Sammanfoga"
+
+#: src/GroupsMenu.vala:50
+msgid "Change color…"
+msgstr "Ändra färg…"
+
+#: src/GroupsMenu.vala:57
+msgid "Top Nodes"
+msgstr "Toppnoder"
+
+#: src/GroupsMenu.vala:60
+msgid "All Grouped Nodes"
+msgstr "Alla grupperade noder"
+
+#: src/GroupsMenu.vala:111 src/NodeMenu.vala:708 src/NodesMenu.vala:303
+msgid "Select a link color"
+msgstr "Välj en länkfärg"
+
+#: src/ImageEditor.vala:166
+#, c-format
+msgid "Crop Area: %d,%d %3dx%3d"
+msgstr "Odlingsareal: %d,%d %3dx%3d"
+
+#: src/ImageEditor.vala:374
+#, c-format
+msgid "Cursor: %3d,%3d"
+msgstr "Markör: %3d,%3d"
+
+#: src/ImageEditor.vala:382 src/UrlEditor.vala:55
+msgid "Apply"
+msgstr "Tillämpa"
+
+#: src/ImageEditor.vala:392
+msgid "Change Image"
+msgstr "Ändra bild"
+
+#: src/ImageEditor.vala:393
+msgid "Copy Image to Clipboard"
+msgstr "Kopiera bild till urklipp"
+
+#: src/ImageEditor.vala:394
+msgid "Cut Image to Clipboard"
+msgstr "Klipp ut bild till urklipp"
+
+#: src/ImageEditor.vala:395
+msgid "Paste Image from Clipboard"
+msgstr "Klistra in bild från urklipp"
+
+#: src/ImageEditor.vala:396 src/NodeInspector.vala:320 src/NodeMenu.vala:458
+msgid "Remove Image"
+msgstr "Ta bort bild"
+
+#: src/ImageManager.vala:300
+msgid "Select Image"
+msgstr "Välj bild"
+
+#: src/ImageManager.vala:305
+msgid "Images"
+msgstr "Bilder"
+
+#: src/MainWindow.vala:169 src/MainWindow.vala:1300
+msgid "Minder"
+msgstr "Minder"
+
+#: src/MainWindow.vala:202 data/com.github.phase1geo.minder.shortcuts.ui:21
+msgid "New File"
+msgstr "Ny fil"
+
+#: src/MainWindow.vala:208 src/MainWindow.vala:1147
+#: data/com.github.phase1geo.minder.shortcuts.ui:28
+msgid "Open File"
+msgstr "Öppna fil"
+
+#: src/MainWindow.vala:214 data/com.github.phase1geo.minder.shortcuts.ui:42
+msgid "Save File As"
+msgstr "Spara fil som"
+
+#: src/MainWindow.vala:220 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+msgid "Undo"
+msgstr "Ångra"
+
+#: src/MainWindow.vala:227 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+msgid "Redo"
+msgstr "Gör om"
+
+#: src/MainWindow.vala:562
+msgid "Unnamed Document"
+msgstr "Namnlöst dokument"
+
+#: src/MainWindow.vala:565
+msgid "Read-Only"
+msgstr "Skrivskyddad"
+
+#: src/MainWindow.vala:569 src/MainWindow.vala:908
+msgid "Focus Mode"
+msgstr "Fokusläge"
+
+#: src/MainWindow.vala:603 src/MainWindow.vala:1352
+#, c-format
+msgid "Zoom (%d%%)"
+msgstr "Zooma (%d%%)"
+
+#: src/MainWindow.vala:610
+msgid "Zoom to Percent"
+msgstr "Zooma till procent"
+
+#: src/MainWindow.vala:623 src/ZoomWidget.vala:102
+#: data/com.github.phase1geo.minder.shortcuts.ui:119
+msgid "Zoom In"
+msgstr "Zooma in"
+
+#: src/MainWindow.vala:629 src/ZoomWidget.vala:92
+#: data/com.github.phase1geo.minder.shortcuts.ui:126
+msgid "Zoom Out"
+msgstr "Zooma ut"
+
+#: src/MainWindow.vala:639
+msgid "Zoom to Fit"
+msgstr "Zooma för att passa"
+
+#: src/MainWindow.vala:644 data/com.github.phase1geo.minder.shortcuts.ui:140
+msgid "Zoom to Fit Selected Node Tree"
+msgstr "Zooma för att passa vald nodträd"
+
+#: src/MainWindow.vala:649
+msgid "Zoom to Actual Size"
+msgstr "Zooma till faktisk storlek"
+
+#: src/MainWindow.vala:673 src/StickerSet.vala:114
+msgid "Search"
+msgstr "Sök"
+
+#: src/MainWindow.vala:683
+msgid "Search Nodes, Callouts and Connections"
+msgstr "Sök noder, utrop och anslutningar"
+
+#: src/MainWindow.vala:712
+msgid "Search Criteria"
+msgstr "Sökkriterier"
+
+#: src/MainWindow.vala:715
+msgid "Search all tabs"
+msgstr "Sök i alla flikar"
+
+#: src/MainWindow.vala:749
+msgid "Nodes"
+msgstr "Noder"
+
+#: src/MainWindow.vala:750
+msgid "Connections"
+msgstr "Vänner"
+
+#: src/MainWindow.vala:751
+msgid "Callouts"
+msgstr "Callouts"
+
+#: src/MainWindow.vala:752
+msgid "Groups"
+msgstr "Grupper"
+
+#: src/MainWindow.vala:753
+msgid "Titles"
+msgstr "Rubriker"
+
+#: src/MainWindow.vala:754
+msgid "Notes"
+msgstr "Anteckningar"
+
+#: src/MainWindow.vala:755
+msgid "Folded"
+msgstr "Vikt"
+
+#: src/MainWindow.vala:756
+msgid "Unfolded"
+msgstr "Utfälld"
+
+#: src/MainWindow.vala:757
+msgid "Tasks"
+msgstr "Uppgifter"
+
+#: src/MainWindow.vala:758
+msgid "Non-tasks"
+msgstr "Icke-uppgifter"
+
+#: src/MainWindow.vala:885
+msgid "Print…"
+msgstr "Skriv ut…"
+
+#: src/MainWindow.vala:933 src/Preferences.vala:36
+msgid "Preferences"
+msgstr "Inställningar"
+
+#: src/MainWindow.vala:938
+msgid "Shortcuts Cheatsheet"
+msgstr "Genvägslathund"
+
+#: src/MainWindow.vala:942
+msgid "About Minder"
+msgstr "Om Minder"
+
+#: src/MainWindow.vala:975 src/MainWindow.vala:1424
+msgid "Show Property Sidebar"
+msgstr "Visa sidofält för egenskaper"
+
+#: src/MainWindow.vala:990
+msgid "Current"
+msgstr "Nuvarande"
+
+#: src/MainWindow.vala:991 src/StyleInspector.vala:198
+msgid "Style"
+msgstr "Stil"
+
+#: src/MainWindow.vala:992
+msgid "Stickers"
+msgstr "Klistermärken"
+
+#: src/MainWindow.vala:993
+msgid "Map"
+msgstr "Karta"
+
+#: src/MainWindow.vala:1047
+msgid "Save current unnamed document?"
+msgstr "Spara det aktuella namnlösa dokumentet?"
+
+#: src/MainWindow.vala:1048
+msgid "Changes will be permanently lost if not saved."
+msgstr "Ändringar kommer att gå förlorade permanent om de inte sparas."
+
+#: src/MainWindow.vala:1053
+msgid "Discard Changes"
+msgstr "Kassera ändringar"
+
+#: src/MainWindow.vala:1059 src/MainWindow.vala:1295 src/ThemeEditor.vala:147
+msgid "Save"
+msgstr "Spara"
+
+#: src/MainWindow.vala:1088
+#, c-format
+msgid "The file %s was modified outside of the application."
+msgstr "Filen %s har modifierats utanför applikationen."
+
+#: src/MainWindow.vala:1089
+msgid "What do you want to do?"
+msgstr "Vad vill ni göra?"
+
+#: src/MainWindow.vala:1094
+msgid "Discard Changes and reload"
+msgstr "Förkasta ändringar och läs om"
+
+#: src/MainWindow.vala:1097
+msgid "Save local version and overwrite"
+msgstr "Spara lokal version och skriv över"
+
+#: src/MainWindow.vala:1147
+msgid "Open Directory"
+msgstr "Öppen katalog"
+
+#: src/MainWindow.vala:1150
+msgid "Open"
+msgstr "Öppen"
+
+#: src/MainWindow.vala:1295
+msgid "Save File"
+msgstr "Spara fil"
+
+#: src/MainWindow.vala:1368
+msgid "Hide Property Sidebar"
+msgstr "Dölj sidofält för egenskaper"
+
+#: src/MapInspector.vala:108
+msgid "Hide connections"
+msgstr "Dölj anslutningar"
+
+#: src/MapInspector.vala:138
+msgid "Hide callouts"
+msgstr "Dölj kommentarer"
+
+#: src/MapInspector.vala:165
+msgid "Rotate main branch colors"
+msgstr "Rotera huvudgrenens färger"
+
+#: src/MapInspector.vala:197
+msgid "Node Layouts"
+msgstr "Nodlayouter"
+
+#: src/MapInspector.vala:249
+msgid "Node Alignment"
+msgstr "Nodjustering"
+
+#: src/MapInspector.vala:255
+msgid "Align left side of selected nodes"
+msgstr "Justera vänster sida av valda noder"
+
+#: src/MapInspector.vala:261
+msgid "Align horizontal center of selected nodes"
+msgstr "Justera horisontell mittpunkt för valda noder"
+
+#: src/MapInspector.vala:267
+msgid "Align right side of selected nodes"
+msgstr "Justera höger sida av valda noder"
+
+#: src/MapInspector.vala:273
+msgid "Align top side of selected nodes"
+msgstr "Justera ovansidan av valda noder"
+
+#: src/MapInspector.vala:279
+msgid "Align vertical center of selected nodes"
+msgstr "Justera vertikalt centrum för valda noder"
+
+#: src/MapInspector.vala:285
+msgid "Align bottom side of selected nodes"
+msgstr "Justera undersidan av valda noder"
+
+#: src/MapInspector.vala:324
+msgid "Themes"
+msgstr "Teman"
+
+#: src/MapInspector.vala:343
+msgid "Add Custom Theme"
+msgstr "Lägg till anpassat tema"
+
+#: src/MapInspector.vala:362
+msgid "Balance Nodes"
+msgstr "Balansnoder"
+
+#: src/MapInspector.vala:368
+msgid "Fold Completed Tasks"
+msgstr "Vik färdiga uppgifter"
+
+#: src/MapInspector.vala:374
+msgid "Unfold All Nodes"
+msgstr "Visa alla noder"
+
+#: src/MapInspector.vala:468
+msgid "Unsaved"
+msgstr "Inte sparad"
+
+#: src/NodeGroup.vala:148
+msgid "Group Note"
+msgstr "Gruppanteckning"
+
+#: src/NodeInspector.vala:96
+msgid "Node"
+msgstr "Nod"
+
+#: src/NodeInspector.vala:107
+msgid "Task"
+msgstr "Uppgift"
+
+#: src/NodeInspector.vala:125
+msgid "Fold"
+msgstr "Vik samman"
+
+#: src/NodeInspector.vala:143
+msgid "Sequence"
+msgstr "Sekvens"
+
+#: src/NodeInspector.vala:150
+msgid ""
+"When set, automatically numbers child nodes and displays them as a sequence."
+msgstr ""
+"När denna inställning är aktiverad numreras underordnade noder automatiskt "
+"och visas i sekvens."
+
+#: src/NodeInspector.vala:202
+msgid "Override Color"
+msgstr "Åsidosätt färg"
+
+#: src/NodeInspector.vala:291 src/NodeInspector.vala:309
+msgid "Image"
+msgstr "Bild"
+
+#: src/NodeInspector.vala:295
+msgid "Add Image…"
+msgstr "Lägg till bild…"
+
+#: src/NodeInspector.vala:314
+msgid "Edit Image"
+msgstr "Redigera bild"
+
+#: src/NodeInspector.vala:327
+msgid "Resizable"
+msgstr "Kan ändra storlek"
+
+#: src/NodeInspector.vala:427
+msgid "Copy Node To Clipboard"
+msgstr "Kopiera nod till urklipp"
+
+#: src/NodeInspector.vala:431
+msgid "Cut Node To Clipboard"
+msgstr "Klipp ut nod till urklipp"
+
+#: src/NodeInspector.vala:436
+msgid "Detach Node"
+msgstr "Koppla bort nod"
+
+#: src/NodeInspector.vala:441 data/com.github.phase1geo.minder.shortcuts.ui:284
+msgid "Delete Node"
+msgstr "Ta bort nod"
+
+#: src/NodeLink.vala:107 src/NodeLink.vala:110
+msgid "No node found"
+msgstr "Ingen nod hittades"
+
+#: src/NodeMenu.vala:73 src/NodesMenu.vala:49 src/TextMenu.vala:44
+msgid "Copy"
+msgstr "Kopiera"
+
+#: src/NodeMenu.vala:77 src/NodesMenu.vala:53 src/TextMenu.vala:48
+msgid "Cut"
+msgstr "Klipp ut"
+
+#: src/NodeMenu.vala:85 src/NodeMenu.vala:473
+msgid "Paste and Replace Node"
+msgstr "Klistra in och ersätt nod"
+
+#: src/NodeMenu.vala:92
+msgid "Delete Single Node"
+msgstr "Ta bort enstaka nod"
+
+#: src/NodeMenu.vala:95
+msgid "Change Node"
+msgstr "Ändra nod"
+
+#: src/NodeMenu.vala:100
+msgid "Edit Text…"
+msgstr "Redigera text…"
+
+#: src/NodeMenu.vala:108 src/NodeMenu.vala:438
+msgid "Add Task"
+msgstr "Lägg till uppgift"
+
+#: src/NodeMenu.vala:112 src/NodeMenu.vala:460
+#: data/com.github.phase1geo.minder.shortcuts.ui:372
+msgid "Add Image"
+msgstr "Lägg till bild"
+
+#: src/NodeMenu.vala:119 src/NodeMenu.vala:439
+msgid "Add Node Link"
+msgstr "Lägg till nodlänk"
+
+#: src/NodeMenu.vala:123
+msgid "Add Connection"
+msgstr "Lägg till anslutning"
+
+#: src/NodeMenu.vala:127
+msgid "Add Group"
+msgstr "Lägg till grupp"
+
+#: src/NodeMenu.vala:131 src/NodeMenu.vala:441
+msgid "Add Callout"
+msgstr "Lägg till kommentar"
+
+#: src/NodeMenu.vala:134 src/ThemeEditor.vala:132
+msgid "Link Color"
+msgstr "Länkfärg"
+
+#: src/NodeMenu.vala:139 src/NodesMenu.vala:90
+msgid "Set to color…"
+msgstr "Ställ in färg…"
+
+#: src/NodeMenu.vala:142
+msgid "Randomize color"
+msgstr "Slumpmässig färg"
+
+#: src/NodeMenu.vala:145 src/NodesMenu.vala:96
+msgid "Use parent color"
+msgstr "Använd överordnad färg"
+
+#: src/NodeMenu.vala:149 src/NodeMenu.vala:440 src/NodesMenu.vala:65
+#: src/NodesMenu.vala:230
+msgid "Fold Children"
+msgstr "Vik underordnade"
+
+#: src/NodeMenu.vala:153 data/com.github.phase1geo.minder.shortcuts.ui:414
+msgid "Toggle Sequence"
+msgstr "Växla sekvens"
+
+#: src/NodeMenu.vala:156
+msgid "Detach"
+msgstr "Avskilj"
+
+#: src/NodeMenu.vala:159
+msgid "Add Node"
+msgstr "Lägg till nod"
+
+#: src/NodeMenu.vala:166
+msgid "Add Parent Node"
+msgstr "Lägg till överordnad nod"
+
+#: src/NodeMenu.vala:170
+msgid "Add Child Node"
+msgstr "Lägg till underordnad nod"
+
+#: src/NodeMenu.vala:174
+msgid "Add Sibling Node"
+msgstr "Lägg till syskonnod"
+
+#: src/NodeMenu.vala:178
+msgid "Use to Summarize Previous Sibling Nodes"
+msgstr "Används för att sammanfatta tidigare syskon-noder"
+
+#: src/NodeMenu.vala:182 src/QuickEntry.vala:44
+msgid "Quick Entry"
+msgstr "Snabb inmatning"
+
+#: src/NodeMenu.vala:186
+msgid "Insert Nodes"
+msgstr "Infoga noder"
+
+#: src/NodeMenu.vala:190
+msgid "Replace Nodes"
+msgstr "Ersätt noder"
+
+#: src/NodeMenu.vala:199
+msgid "Root Node"
+msgstr "Rotnod"
+
+#: src/NodeMenu.vala:204
+msgid "Next Sibling Node"
+msgstr "Nästa syskonnod"
+
+#: src/NodeMenu.vala:209
+msgid "Previous Sibling Node"
+msgstr "Föregående syskonnod"
+
+#: src/NodeMenu.vala:214
+msgid "Child Node"
+msgstr "Underordnad nod"
+
+#: src/NodeMenu.vala:219 src/NodesMenu.vala:114
+msgid "Child Nodes"
+msgstr "Underordnade noder"
+
+#: src/NodeMenu.vala:224
+msgid "Subtree"
+msgstr "Underträd"
+
+#: src/NodeMenu.vala:229
+msgid "Parent Node"
+msgstr "Övergripande nod"
+
+#: src/NodeMenu.vala:234
+msgid "Linked Node"
+msgstr "Länkad nod"
+
+#: src/NodeMenu.vala:248
+msgid "Center Current Node"
+msgstr "Centrera aktuell nod"
+
+#: src/NodeMenu.vala:252
+msgid "Sort Children"
+msgstr "Sortera underordnade"
+
+#: src/NodeMenu.vala:256
+msgid "Alphabetically"
+msgstr "Alfabetisk ordning"
+
+#: src/NodeMenu.vala:259
+msgid "Randomize"
+msgstr "Slumpmässigt"
+
+#: src/NodeMenu.vala:436
+msgid "Remove Task"
+msgstr "Ta bort uppgift"
+
+#: src/NodeMenu.vala:437
+msgid "Mark Task As Done"
+msgstr "Markera uppgift som klar"
+
+#: src/NodeMenu.vala:439
+msgid "Remove Node Link"
+msgstr "Ta bort nodlänk"
+
+#: src/NodeMenu.vala:440 src/NodesMenu.vala:230
+msgid "Unfold Children"
+msgstr "Vik ut underordnade"
+
+#: src/NodeMenu.vala:441 data/com.github.phase1geo.minder.shortcuts.ui:663
+msgid "Remove Callout"
+msgstr "Ta bort kommentar"
+
+#: src/NodeMenu.vala:466
+msgid "Paste Text As Child Node"
+msgstr "Klistra in text som underordnad nod"
+
+#: src/NodeMenu.vala:467
+msgid "Paste and Replace Node Text"
+msgstr "Klistra in och ersätt nodtext"
+
+#: src/NodeMenu.vala:469
+msgid "Paste Image As Child Node"
+msgstr "Klistra in bild som underordnad nod"
+
+#: src/NodeMenu.vala:470
+msgid "Paste and Replace Node Image"
+msgstr "Klistra in och ersätt nodbild"
+
+#: src/NodeMenu.vala:472
+msgid "Paste Node As Child"
+msgstr "Klistra in nod som underordnad"
+
+#: src/NodesMenu.vala:61
+msgid "Toggle Tasks"
+msgstr "Toggle uppgifter"
+
+#: src/NodesMenu.vala:69
+msgid "Toggle Sequences"
+msgstr "Växla sekvenser"
+
+#: src/NodesMenu.vala:73
+msgid "Connect"
+msgstr "Anslut"
+
+#: src/NodesMenu.vala:77 src/NodesMenu.vala:231
+msgid "Link Nodes"
+msgstr "Länk noder"
+
+#: src/NodesMenu.vala:86 src/ThemeEditor.vala:125
+msgid "Link Colors"
+msgstr "Länkfärger"
+
+#: src/NodesMenu.vala:93
+msgid "Randomize colors"
+msgstr "Slumpmässiga färger"
+
+#: src/NodesMenu.vala:109
+msgid "Parent Nodes"
+msgstr "Överordnade noder"
+
+#: src/NodesMenu.vala:123
+msgid "Align Nodes"
+msgstr "Justera noder"
+
+#: src/NodesMenu.vala:127
+msgid "Align Top"
+msgstr "Justera toppen"
+
+#: src/NodesMenu.vala:131
+msgid "Align Center Horizontally"
+msgstr "Justera centrum horisontellt"
+
+#: src/NodesMenu.vala:135
+msgid "Align Bottom"
+msgstr "Justera botten"
+
+#: src/NodesMenu.vala:139
+msgid "Align Left"
+msgstr "Vänsterjusterad"
+
+#: src/NodesMenu.vala:143
+msgid "Align Center Vertically"
+msgstr "Justera centrum vertikalt"
+
+#: src/NodesMenu.vala:147
+msgid "Align Right"
+msgstr "Högerjusterad"
+
+#: src/NodesMenu.vala:231
+msgid "Remove Node Links"
+msgstr "Ta bort nodlänkar"
+
+#: src/Node.vala:2440
+msgid "Node Title"
+msgstr "Nodens titel"
+
+#: src/Node.vala:2448
+msgid "Node Note"
+msgstr "Nodnotering"
+
+#: src/Node.vala:2458
+msgid "Callout Text"
+msgstr "Callout-text"
+
+#: src/Preferences.vala:47
+msgid "Behavior"
+msgstr "Beteende"
+
+#: src/Preferences.vala:48
+msgid "Appearance"
+msgstr "Utseende"
+
+#: src/Preferences.vala:61
+msgid "Close"
+msgstr "Stäng"
+
+#: src/Preferences.vala:76
+msgid "Create new node from edit mode"
+msgstr "Skapa ny nod från redigeringsläget"
+
+#: src/Preferences.vala:78
+msgid ""
+"Specifies if we should create a new node directly from edit mode if Return "
+"or Tab is pressed."
+msgstr ""
+"Anger om vi ska skapa en ny nod direkt från redigeringsläget när Return "
+"eller Tab trycks ned."
+
+#: src/Preferences.vala:80
+msgid "Automatically make embedded URLs into links"
+msgstr "Omvandla inbäddade URL:er automatiskt till länkar"
+
+#: src/Preferences.vala:82
+msgid ""
+"Specifies if embedded URLs found in node titles should be automatically "
+"highlighted."
+msgstr ""
+"Anger om inbäddade URL:er som finns i nodtitlar ska markeras automatiskt."
+
+#: src/Preferences.vala:84
+msgid "Enable Markdown"
+msgstr "Aktivera Markdown"
+
+#: src/Preferences.vala:87
+msgid "Enable Unicode input"
+msgstr "Aktivera Unicode-inmatning"
+
+#: src/Preferences.vala:89
+msgid ""
+"Specifies if Unicode characters can be input using backslash prefixed "
+"descriptors (ex. \\pi)"
+msgstr ""
+"Anger om Unicode-tecken kan matas in med hjälp av backslash-prefixerade "
+"deskriptorer (t.ex. \\pi)"
+
+#: src/Preferences.vala:91
+msgid "Create connection title on creation"
+msgstr "Skapa anslutningstitel vid skapandet"
+
+#: src/Preferences.vala:93
+msgid ""
+"Specifies if the connection title will be added and put into edit mode "
+"immediately after the connection is made."
+msgstr ""
+"Anger om anslutningens titel ska läggas till och sättas i redigeringsläge "
+"omedelbart efter att anslutningen har upprättats."
+
+#: src/Preferences.vala:95
+msgid "Select items on mouse hover"
+msgstr "Välj objekt när muspekaren hålls över dem"
+
+#: src/Preferences.vala:97
+msgid "If enabled, selects items when mouse cursor hovers over the item."
+msgstr ""
+"Om funktionen är aktiverad markeras objekt när muspekaren hålls över "
+"objektet."
+
+#: src/Preferences.vala:110
+msgid "Hide themes not matching visual style"
+msgstr "Dölj teman som inte matchar den visuella stilen"
+
+#: src/Preferences.vala:114
+msgid "Default theme"
+msgstr "Standardtema"
+
+#: src/Preferences.vala:116
+msgid ""
+"Sets the default theme to use for newly created mindmaps (use Map sidebar "
+"panel to make immediate changes)."
+msgstr ""
+"Ställer in standardtemat som ska användas för nyapplikationer (använd "
+"kartans sidofält för att göra omedelbara ändringar)."
+
+#: src/Preferences.vala:118
+msgid "Enable animations"
+msgstr "Aktivera animeringar"
+
+#: src/Preferences.vala:121
+msgid "Text field font size"
+msgstr "Textfältets teckenstorlek"
+
+#: src/Preferences.vala:124
+msgid ""
+"Specifies the custom font size to use in text editing fields (i.e, quick "
+"entry or notes field)."
+msgstr ""
+"Anger den anpassade teckenstorlek som ska användas i textredigeringsfält "
+"(dvs. snabbinmatnings- eller anteckningsfält)."
+
+#: src/Preferences.vala:126
+msgid "Colorize note fields"
+msgstr "Färglägg anteckningsfält"
+
+#: src/QuickEntry.vala:80
+msgid "Help for inputting node information:"
+msgstr "Hjälp för att mata in nodinformation:"
+
+#: src/QuickEntry.vala:81
+msgid ""
+"Each line of text describes either the title of a node or note information "
+"for a node."
+msgstr ""
+"Varje textrad beskriver antingen titeln på en nod eller "
+"anteckningsinformation för en nod."
+
+#: src/QuickEntry.vala:82
+msgid "Tab"
+msgstr "Flik"
+
+#: src/QuickEntry.vala:83
+msgid "Creates a child node of the previous node."
+msgstr "Skapar en underordnad nod till föregående nod."
+
+#: src/QuickEntry.vala:85
+msgid ""
+"If this character is the first non-whitespace character, makes a new root "
+"node from the title that follows."
+msgstr ""
+"Om detta tecken är det första tecknet som inte är ett blanksteg, skapas en "
+"ny rotnod från titeln som följer."
+
+#: src/QuickEntry.vala:87
+msgid ""
+"If this character is the first non-whitespace character, make a new node "
+"from the title that follows."
+msgstr ""
+"Om detta tecken är det första tecknet som inte är ett blanksteg, skapa en ny "
+"nod från titeln som följer."
+
+#: src/QuickEntry.vala:89
+msgid ""
+"If this character is the first non-whitespace character, the following line "
+"is appended to the previous node's note."
+msgstr ""
+"Om detta tecken är det första tecknet som inte är ett blanksteg, läggs "
+"följande rad till i föregående nods anteckning."
+
+#: src/QuickEntry.vala:90
+msgid "URI"
+msgstr "URI"
+
+#: src/QuickEntry.vala:91
+msgid ""
+"If this character is the first non-whitespace character, adds an image from "
+"the URI to the previous node"
+msgstr ""
+"Om detta tecken är det första tecknet som inte är ett blanksteg, läggs en "
+"bild från URI till den föregående noden"
+
+#: src/QuickEntry.vala:93
+msgid "If this follows *, + or -, the node is made an uncompleted task."
+msgstr "Om detta följer efter *, + eller -, blir noden en oavslutad uppgift."
+
+#: src/QuickEntry.vala:95
+msgid "If this follows *, + or -, the node is made a completed task."
+msgstr "Om detta följer efter *, + eller -, blir noden en slutförd uppgift."
+
+#: src/QuickEntry.vala:126
+msgid "Replace"
+msgstr "Ersätt"
+
+#: src/QuickEntry.vala:140
+msgid "Insert"
+msgstr "Infoga"
+
+#: src/StickerInspector.vala:63
+msgid "Remove From Favorites"
+msgstr "Ta bort från favoriter"
+
+#: src/StickerInspector.vala:70 src/StickerInspector.vala:80
+msgid "Add To Favorites"
+msgstr "Lägg till i favoriter"
+
+#: src/StickerInspector.vala:83
+msgid "Remove Custom Sticker"
+msgstr "Ta bort anpassad klistermärke"
+
+#: src/StickerInspector.vala:99
+msgid ""
+"Drag and drop sticker onto a node or anywhere else in the map to add a "
+"sticker."
+msgstr ""
+"Dra och släpp klistermärket på en nod eller någon annanstans på kartan för "
+"att lägga till ett klistermärke."
+
+#: src/StickerInspector.vala:105
+msgid "Search Stickers"
+msgstr "Sök efter klistermärken"
+
+#: src/StickerInspector.vala:137
+msgid "Favorites"
+msgstr "Favoriter"
+
+#: src/StickerInspector.vala:143
+msgid "Show Custom Sticker Directory"
+msgstr "Visa katalog med anpassade klistermärken"
+
+#: src/StickerInspector.vala:215
+msgid "Add custom stickers"
+msgstr "Lägg till anpassade klistermärken"
+
+#: src/StickerInspector.vala:402
+msgid "Import Sticker(s)"
+msgstr "Importera klistermärken"
+
+#: src/StickerInspector.vala:402 src/StickerSet.vala:353
+msgid "Import"
+msgstr "Importera"
+
+#: src/StickerSet.vala:25 src/StickerSet.vala:68
+msgid "Photo and Video"
+msgstr "Foto och video"
+
+#: src/StickerSet.vala:26 src/StickerSet.vala:126
+msgid "Very Basic"
+msgstr "Mycket grundläggande"
+
+#: src/StickerSet.vala:27 src/StickerSet.vala:130 src/StickerSet.vala:221
+msgid "Business"
+msgstr "Företag"
+
+#: src/StickerSet.vala:28 src/StickerSet.vala:248
+msgid "Industry"
+msgstr "Bransch"
+
+#: src/StickerSet.vala:29 src/StickerSet.vala:285
+msgid "Mobile"
+msgstr "Mobil"
+
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:895
+msgid "Arrows"
+msgstr "Pilar"
+
+#: src/StickerSet.vala:31 src/StickerSet.vala:357
+msgid "Data"
+msgstr "Data"
+
+#: src/StickerSet.vala:33
+msgid "Flash on"
+msgstr "Blixt på"
+
+#: src/StickerSet.vala:34
+msgid "Flash off"
+msgstr "Blixt av"
+
+#: src/StickerSet.vala:35
+msgid "Flash auto"
+msgstr "Automatisk blixt"
+
+#: src/StickerSet.vala:36
+msgid "Panorama"
+msgstr "Panorama"
+
+#: src/StickerSet.vala:37
+msgid "Landscape"
+msgstr "Liggande"
+
+#: src/StickerSet.vala:38
+msgid "Night landscape"
+msgstr "Nattlandskap"
+
+#: src/StickerSet.vala:39
+msgid "Sports mode"
+msgstr "Sportläge"
+
+#: src/StickerSet.vala:40
+msgid "Portrait mode"
+msgstr "Liggande"
+
+#: src/StickerSet.vala:41
+msgid "Night portrait"
+msgstr "Nattporträtt"
+
+#: src/StickerSet.vala:42
+msgid "Close up mode"
+msgstr "Närbildsläge"
+
+#: src/StickerSet.vala:43
+msgid "Selfie"
+msgstr "Selfie"
+
+#: src/StickerSet.vala:44
+msgid "Gallery"
+msgstr "Galleri"
+
+#: src/StickerSet.vala:45
+msgid "Stack of photos"
+msgstr "Stapel med foton"
+
+#: src/StickerSet.vala:46
+msgid "Add image"
+msgstr "Lägg till bild"
+
+#: src/StickerSet.vala:47
+msgid "Edit image"
+msgstr "Redigera bild"
+
+#: src/StickerSet.vala:48
+msgid "Remove image"
+msgstr "Ta bort bild"
+
+#: src/StickerSet.vala:49
+msgid "Compact camera"
+msgstr "Kompaktkamera"
+
+#: src/StickerSet.vala:50
+msgid "Multiple cameras"
+msgstr "Flera kameror"
+
+#: src/StickerSet.vala:51
+msgid "Camera"
+msgstr "Kamera"
+
+#: src/StickerSet.vala:52
+msgid "SLR back side"
+msgstr "SLR baksida"
+
+#: src/StickerSet.vala:53
+msgid "Old time camera"
+msgstr "Gammal kamera"
+
+#: src/StickerSet.vala:54
+msgid "Camera addon"
+msgstr "Kameratillägg"
+
+#: src/StickerSet.vala:55
+msgid "Camera identification"
+msgstr "Kameraidentifiering"
+
+#: src/StickerSet.vala:56
+msgid "Start"
+msgstr "Start"
+
+#: src/StickerSet.vala:57
+msgid "Clapperboard"
+msgstr "Klappbräda"
+
+#: src/StickerSet.vala:58
+msgid "Film"
+msgstr "Film"
+
+#: src/StickerSet.vala:59
+msgid "Camcorder"
+msgstr "Video kamera"
+
+#: src/StickerSet.vala:60
+msgid "Camcorder pro"
+msgstr "Videokamera pro"
+
+#: src/StickerSet.vala:61
+msgid "Webcam"
+msgstr "Webbkamera"
+
+#: src/StickerSet.vala:62
+msgid "Integrated webcam"
+msgstr "Inbyggd webbkamera"
+
+#: src/StickerSet.vala:63
+msgid "Rotate camera"
+msgstr "Rotera kamera"
+
+#: src/StickerSet.vala:64
+msgid "Switch camera"
+msgstr "Byt kamera"
+
+#: src/StickerSet.vala:65
+msgid "Photo reel"
+msgstr "Fotoreel"
+
+#: src/StickerSet.vala:66
+msgid "Film reel"
+msgstr "Filmrulle"
+
+#: src/StickerSet.vala:67
+msgid "Cable release"
+msgstr "Kabelutlösare"
+
+#: src/StickerSet.vala:70
+msgid "Home"
+msgstr "Hem"
+
+#: src/StickerSet.vala:71
+msgid "Icons8 cup"
+msgstr "Icons8-kopp"
+
+#: src/StickerSet.vala:72
+msgid "Globe"
+msgstr "Jordglob"
+
+#: src/StickerSet.vala:73
+msgid "OK"
+msgstr "OK"
+
+#: src/StickerSet.vala:74
+msgid "Checkmark"
+msgstr "Avbockningstecken"
+
+#: src/StickerSet.vala:76
+msgid "Synchronize"
+msgstr "Synkronisera"
+
+#: src/StickerSet.vala:77
+msgid "Refresh"
+msgstr "Uppdatera"
+
+#: src/StickerSet.vala:78
+msgid "Download"
+msgstr "Hämta ner"
+
+#: src/StickerSet.vala:79
+msgid "Upload"
+msgstr "Skicka upp"
+
+#: src/StickerSet.vala:80
+msgid "Empty trash"
+msgstr "Töm papperskorgen"
+
+#: src/StickerSet.vala:81
+msgid "Full trash"
+msgstr "Fullt skräp"
+
+#: src/StickerSet.vala:82
+msgid "Folder"
+msgstr "Mapp"
+
+#: src/StickerSet.vala:83
+msgid "Opened folder"
+msgstr "Öppen mapp"
+
+#: src/StickerSet.vala:84 data/com.github.phase1geo.minder.shortcuts.ui:16
+msgid "File"
+msgstr "Fil"
+
+#: src/StickerSet.vala:85
+msgid "Document"
+msgstr "Dokument"
+
+#: src/StickerSet.vala:86
+msgid "Audio file"
+msgstr "Ljudfil"
+
+#: src/StickerSet.vala:87
+msgid "Image file"
+msgstr "Bildfil"
+
+#: src/StickerSet.vala:88
+msgid "Video file"
+msgstr "Videofil"
+
+#: src/StickerSet.vala:89
+msgid "Print"
+msgstr "Skriv ut"
+
+#: src/StickerSet.vala:90
+msgid "Music"
+msgstr "Musik"
+
+#: src/StickerSet.vala:91
+msgid "Share"
+msgstr "Dela"
+
+#: src/StickerSet.vala:92
+msgid "Cursor"
+msgstr "Markör"
+
+#: src/StickerSet.vala:93
+msgid "Puzzle"
+msgstr "Pussel"
+
+#: src/StickerSet.vala:94
+msgid "Unlock"
+msgstr "Lås upp"
+
+#: src/StickerSet.vala:95
+msgid "Lock"
+msgstr "Lås"
+
+#: src/StickerSet.vala:96
+msgid "Idea"
+msgstr "Idé"
+
+#: src/StickerSet.vala:97
+msgid "No idea"
+msgstr "Ingen aning"
+
+#: src/StickerSet.vala:98
+msgid "Link"
+msgstr "Länk"
+
+#: src/StickerSet.vala:99
+msgid "Broken link"
+msgstr "Trasig länk"
+
+#: src/StickerSet.vala:100
+msgid "Rating"
+msgstr "Betyg"
+
+#: src/StickerSet.vala:101
+msgid "Like placeholder"
+msgstr "Som platshållare"
+
+#: src/StickerSet.vala:102
+msgid "Like"
+msgstr "Gilla"
+
+#: src/StickerSet.vala:103
+msgid "Dislike"
+msgstr "Ogilla"
+
+#: src/StickerSet.vala:104
+msgid "Info"
+msgstr "Info"
+
+#: src/StickerSet.vala:105
+msgid "About"
+msgstr "Om"
+
+#: src/StickerSet.vala:106
+msgid "Picture"
+msgstr "Bild"
+
+#: src/StickerSet.vala:107
+msgid "Clock"
+msgstr "Klocka"
+
+#: src/StickerSet.vala:108
+msgid "Alarm clock"
+msgstr "Väckarklocka"
+
+#: src/StickerSet.vala:109
+msgid "Address book"
+msgstr "Adressbok"
+
+#: src/StickerSet.vala:110
+msgid "Contacts"
+msgstr "Kontakter"
+
+#: src/StickerSet.vala:111
+msgid "News"
+msgstr "Nyheter"
+
+#: src/StickerSet.vala:112
+msgid "Bookmark"
+msgstr "Bokmärke"
+
+#: src/StickerSet.vala:113
+msgid "Binoculars"
+msgstr "Kikare"
+
+#: src/StickerSet.vala:115
+msgid "Ruler"
+msgstr "Linjal"
+
+#: src/StickerSet.vala:116
+msgid "Services"
+msgstr "Tjänster"
+
+#: src/StickerSet.vala:117
+msgid "Settings"
+msgstr "Inställningar"
+
+#: src/StickerSet.vala:118
+msgid "Support"
+msgstr "Support"
+
+#: src/StickerSet.vala:119
+msgid "Frame"
+msgstr "Ram"
+
+#: src/StickerSet.vala:120
+msgid "Menu"
+msgstr "Meny"
+
+#: src/StickerSet.vala:121
+msgid "Key"
+msgstr "Nyckel"
+
+#: src/StickerSet.vala:122
+msgid "Calendar"
+msgstr "Kalender"
+
+#: src/StickerSet.vala:123
+msgid "Calculator"
+msgstr "Kalkylator"
+
+#: src/StickerSet.vala:124
+msgid "Minus"
+msgstr "Minus"
+
+#: src/StickerSet.vala:125
+msgid "Plus"
+msgstr "Plus"
+
+#: src/StickerSet.vala:128
+msgid "Graduation cap"
+msgstr "Examensmössa"
+
+#: src/StickerSet.vala:129
+msgid "Briefcase"
+msgstr "Portfölj"
+
+#: src/StickerSet.vala:131
+msgid "Signature"
+msgstr "Underskrift"
+
+#: src/StickerSet.vala:132
+msgid "Safe"
+msgstr "Kassaskåp"
+
+#: src/StickerSet.vala:133
+msgid "Advertising"
+msgstr "Annonsering"
+
+#: src/StickerSet.vala:134
+msgid "Businessman"
+msgstr "Affärsman"
+
+#: src/StickerSet.vala:135
+msgid "Businesswoman"
+msgstr "Affärskvinna"
+
+#: src/StickerSet.vala:136
+msgid "Manager"
+msgstr "Líder"
+
+#: src/StickerSet.vala:137
+msgid "Online support"
+msgstr "Online support"
+
+#: src/StickerSet.vala:138
+msgid "Assistant"
+msgstr "Assistent"
+
+#: src/StickerSet.vala:139
+msgid "Customer support"
+msgstr "Kundsupport"
+
+#: src/StickerSet.vala:140
+msgid "Reading ebook"
+msgstr "Läser e-bok"
+
+#: src/StickerSet.vala:141
+msgid "Reading"
+msgstr "Läser"
+
+#: src/StickerSet.vala:142
+msgid "Neutral trading"
+msgstr "Neutral handel"
+
+#: src/StickerSet.vala:143
+msgid "Bullish"
+msgstr "Hausseartad"
+
+#: src/StickerSet.vala:144
+msgid "Bearish"
+msgstr "Björnmarknad"
+
+#: src/StickerSet.vala:145
+msgid "High priority"
+msgstr "Hög prioritet"
+
+#: src/StickerSet.vala:146
+msgid "Medium priority"
+msgstr "Medelhög prioritet"
+
+#: src/StickerSet.vala:147
+msgid "Low priority"
+msgstr "Låg prioritet"
+
+#: src/StickerSet.vala:148
+msgid "Make decision"
+msgstr "Fatta beslut"
+
+#: src/StickerSet.vala:149
+msgid "Decision"
+msgstr "Beslut"
+
+#: src/StickerSet.vala:150
+msgid "Good decision"
+msgstr "Bra beslut"
+
+#: src/StickerSet.vala:151
+msgid "Neutral decision"
+msgstr "Neutralt beslut"
+
+#: src/StickerSet.vala:152
+msgid "Bad decision"
+msgstr "Dåligt beslut"
+
+#: src/StickerSet.vala:153
+msgid "Approve"
+msgstr "Godkänn"
+
+#: src/StickerSet.vala:154
+msgid "Disapprove"
+msgstr "Avslå"
+
+#: src/StickerSet.vala:155
+msgid "Podium without speaker"
+msgstr "Podium utan högtalare"
+
+#: src/StickerSet.vala:156
+msgid "Podium with speaker"
+msgstr "Podium med högtalare"
+
+#: src/StickerSet.vala:157
+msgid "Podium with audience"
+msgstr "Podium med publik"
+
+#: src/StickerSet.vala:158
+msgid "Video projector"
+msgstr "Videoprojektor"
+
+#: src/StickerSet.vala:159
+msgid "Statistics"
+msgstr "Statistik"
+
+#: src/StickerSet.vala:160
+msgid "Collaboration"
+msgstr "Samarbete"
+
+#: src/StickerSet.vala:161
+msgid "Voice presentation"
+msgstr "Röstpresentation"
+
+#: src/StickerSet.vala:162
+msgid "Conference call"
+msgstr "Konferenssamtal"
+
+#: src/StickerSet.vala:163
+msgid "Comments"
+msgstr "Kommentarer"
+
+#: src/StickerSet.vala:164
+msgid "FAQ"
+msgstr "FAQ"
+
+#: src/StickerSet.vala:165
+msgid "Reuse"
+msgstr "Återanvändning"
+
+#: src/StickerSet.vala:166
+msgid "Organization"
+msgstr "Organisation"
+
+#: src/StickerSet.vala:167
+msgid "Department"
+msgstr "Avdelning"
+
+#: src/StickerSet.vala:168
+msgid "Library"
+msgstr "Bibliotek"
+
+#: src/StickerSet.vala:169
+msgid "Shop"
+msgstr "Butik"
+
+#: src/StickerSet.vala:170
+msgid "Self service kiosk"
+msgstr "Självbetjäningskiosk"
+
+#: src/StickerSet.vala:171
+msgid "Donate"
+msgstr "Donera"
+
+#: src/StickerSet.vala:172
+msgid "Currency exchange"
+msgstr "Valutaväxling"
+
+#: src/StickerSet.vala:173
+msgid "Debt"
+msgstr "Skuld"
+
+#: src/StickerSet.vala:174
+msgid "Sales performance"
+msgstr "Försäljningsresultat"
+
+#: src/StickerSet.vala:175
+msgid "Invite"
+msgstr "Bjud in"
+
+#: src/StickerSet.vala:176
+msgid "Money transfer"
+msgstr "Pengaröverföring"
+
+#: src/StickerSet.vala:177
+msgid "Feedback"
+msgstr "Feedback"
+
+#: src/StickerSet.vala:178
+msgid "Approval"
+msgstr "Acceptera"
+
+#: src/StickerSet.vala:179
+msgid "Paid"
+msgstr "Betald"
+
+#: src/StickerSet.vala:180
+msgid "In transit"
+msgstr "Under transport"
+
+#: src/StickerSet.vala:181
+msgid "Shipped"
+msgstr "Utskickad"
+
+#: src/StickerSet.vala:182
+msgid "Package"
+msgstr "Paket"
+
+#: src/StickerSet.vala:183
+msgid "Planner"
+msgstr "Planerare"
+
+#: src/StickerSet.vala:184
+msgid "Overtime"
+msgstr "Övertid"
+
+#: src/StickerSet.vala:185
+msgid "Leave"
+msgstr "Lämna"
+
+#: src/StickerSet.vala:186
+msgid "Expired"
+msgstr "Utgången"
+
+#: src/StickerSet.vala:187
+msgid "Process"
+msgstr "Bearbeta"
+
+#: src/StickerSet.vala:188
+msgid "Diploma 1"
+msgstr "Diplom 1"
+
+#: src/StickerSet.vala:189
+msgid "Diploma 2"
+msgstr "Diplom 2"
+
+#: src/StickerSet.vala:190
+msgid "Business contact"
+msgstr "Affärskontakt"
+
+#: src/StickerSet.vala:191
+msgid "Survey"
+msgstr "Enkät"
+
+#: src/StickerSet.vala:192
+msgid "Inspection"
+msgstr "Inspektion"
+
+#: src/StickerSet.vala:193
+msgid "Rules"
+msgstr "Regler"
+
+#: src/StickerSet.vala:194
+msgid "Todo list"
+msgstr "Att göra-lista"
+
+#: src/StickerSet.vala:195
+msgid "Ratings"
+msgstr "Betyg"
+
+#: src/StickerSet.vala:196
+msgid "Questions"
+msgstr "Frågor"
+
+#: src/StickerSet.vala:197
+msgid "Answers"
+msgstr "Svar"
+
+#: src/StickerSet.vala:198
+msgid "Fine print"
+msgstr "Det finstilta"
+
+#: src/StickerSet.vala:199
+msgid "Candle sticks"
+msgstr "Ljusstakar"
+
+#: src/StickerSet.vala:200
+msgid "Serial tasks"
+msgstr "Seriella uppgifter"
+
+#: src/StickerSet.vala:201
+msgid "Parallel tasks"
+msgstr "Parallella uppgifter"
+
+#: src/StickerSet.vala:202
+msgid "Tree structure"
+msgstr "Trädstruktur"
+
+#: src/StickerSet.vala:203
+msgid "Org unit"
+msgstr "Organisationsenhet"
+
+#: src/StickerSet.vala:204
+msgid "Privacy"
+msgstr "Sekretess"
+
+#: src/StickerSet.vala:205
+msgid "Disclaimer"
+msgstr "Ansvarsfriskrivning"
+
+#: src/StickerSet.vala:206
+msgid "Callback"
+msgstr "Callback"
+
+#: src/StickerSet.vala:207
+msgid "Service mark"
+msgstr "Servicemärke"
+
+#: src/StickerSet.vala:208
+msgid "Registered trademark"
+msgstr "Registrerat varumärke"
+
+#: src/StickerSet.vala:209
+msgid "Trademark"
+msgstr "Varumärke"
+
+#: src/StickerSet.vala:210
+msgid "Copyright"
+msgstr "Upphovsrätt"
+
+#: src/StickerSet.vala:211
+msgid "Copyleft"
+msgstr "Copyleft"
+
+#: src/StickerSet.vala:212
+msgid "Sound recording copyright"
+msgstr "Upphovsrätt till ljudinspelningar"
+
+#: src/StickerSet.vala:213
+msgid "Butting in"
+msgstr "Avbryta"
+
+#: src/StickerSet.vala:214
+msgid "Multiple inputs"
+msgstr "Flera ingångar"
+
+#: src/StickerSet.vala:215
+msgid "Collect"
+msgstr "Upphämtning"
+
+#: src/StickerSet.vala:216
+msgid "Internal"
+msgstr "Intern"
+
+#: src/StickerSet.vala:217
+msgid "External"
+msgstr "Extern"
+
+#: src/StickerSet.vala:218
+msgid "VIP"
+msgstr "VIP"
+
+#: src/StickerSet.vala:219
+msgid "Light at the end of tunnel"
+msgstr "Ljuset i slutet av tunneln"
+
+#: src/StickerSet.vala:220
+msgid "Entering heaven alive"
+msgstr "Att komma till himlen medan man fortfarande lever"
+
+#: src/StickerSet.vala:223
+msgid "Biomass"
+msgstr "Biomassa"
+
+#: src/StickerSet.vala:224
+msgid "Display"
+msgstr "Visa"
+
+#: src/StickerSet.vala:225
+msgid "Do not inhale"
+msgstr "Andas inte in"
+
+#: src/StickerSet.vala:226
+msgid "Factory"
+msgstr "Fabrik"
+
+#: src/StickerSet.vala:227
+msgid "Factory breakdown"
+msgstr "Fabriksnedläggning"
+
+#: src/StickerSet.vala:228
+msgid "Crystal oscillator"
+msgstr "Kristalloscillator"
+
+#: src/StickerSet.vala:229
+msgid "Capacitor"
+msgstr "Kondensator"
+
+#: src/StickerSet.vala:230
+msgid "Electricity"
+msgstr "El"
+
+#: src/StickerSet.vala:231
+msgid "Electro devices"
+msgstr "Elektriska apparater"
+
+#: src/StickerSet.vala:232
+msgid "Electrical sensor"
+msgstr "Elektrisk sensor"
+
+#: src/StickerSet.vala:233
+msgid "Electrical threshold"
+msgstr "Elektrisk tröskel"
+
+#: src/StickerSet.vala:234
+msgid "Automotive"
+msgstr "Bil"
+
+#: src/StickerSet.vala:235
+msgid "Feed in"
+msgstr "Matning"
+
+#: src/StickerSet.vala:236
+msgid "Dam"
+msgstr "Dam"
+
+#: src/StickerSet.vala:237
+msgid "Biotech"
+msgstr "Bioteknik"
+
+#: src/StickerSet.vala:238
+msgid "Advance"
+msgstr "Avancerad"
+
+#: src/StickerSet.vala:239
+msgid "Cloth"
+msgstr "Tyg"
+
+#: src/StickerSet.vala:240
+msgid "Electronics"
+msgstr "Elektronik"
+
+#: src/StickerSet.vala:241
+msgid "Deployment"
+msgstr "Distribution"
+
+#: src/StickerSet.vala:242
+msgid "Automatic"
+msgstr "Automatiskt"
+
+#: src/StickerSet.vala:243
+msgid "Do not insert"
+msgstr "Sätt inte in"
+
+#: src/StickerSet.vala:244
+msgid "Do not mix"
+msgstr "Blanda inte"
+
+#: src/StickerSet.vala:245
+msgid "Biohazard"
+msgstr "Biologisk fara"
+
+#: src/StickerSet.vala:246
+msgid "Circuit"
+msgstr "Krets"
+
+#: src/StickerSet.vala:247
+msgid "Engineering"
+msgstr "Teknik"
+
+#: src/StickerSet.vala:250
+msgid "Cell phone"
+msgstr "Mobiltelefon"
+
+#: src/StickerSet.vala:251
+msgid "iPhone"
+msgstr "iPhone"
+
+#: src/StickerSet.vala:252
+msgid "iPad"
+msgstr "iPad"
+
+#: src/StickerSet.vala:253
+msgid "Phone android"
+msgstr "Telefon Android"
+
+#: src/StickerSet.vala:254
+msgid "Tablet android"
+msgstr "Android-surfplatta"
+
+#: src/StickerSet.vala:255
+msgid "Nook"
+msgstr "Nook"
+
+#: src/StickerSet.vala:256
+msgid "Kindle"
+msgstr "Kindle"
+
+#: src/StickerSet.vala:257
+msgid "Two smartphones"
+msgstr "Två smartphones"
+
+#: src/StickerSet.vala:258
+msgid "Multiple devices"
+msgstr "Flera enheter"
+
+#: src/StickerSet.vala:259
+msgid "Multiple smartphones"
+msgstr "Flera smartphones"
+
+#: src/StickerSet.vala:260
+msgid "Smartphone tablet"
+msgstr "Smartphone-surfplatta"
+
+#: src/StickerSet.vala:261
+msgid "Touchscreen smartphone"
+msgstr "Smartphone med pekskärm"
+
+#: src/StickerSet.vala:262
+msgid "Sim card"
+msgstr "Simkort"
+
+#: src/StickerSet.vala:263
+msgid "Sim card chip"
+msgstr "SIM-kortchip"
+
+#: src/StickerSet.vala:264
+msgid "SMS"
+msgstr "SMS"
+
+#: src/StickerSet.vala:265
+msgid "MMS"
+msgstr "MMS"
+
+#: src/StickerSet.vala:266
+msgid "Charge battery"
+msgstr "Ladda batteriet"
+
+#: src/StickerSet.vala:267
+msgid "Full battery"
+msgstr "Fullt batteri"
+
+#: src/StickerSet.vala:268
+msgid "High battery"
+msgstr "Hög batterinivå"
+
+#: src/StickerSet.vala:269
+msgid "Middle battery"
+msgstr "Mellanbatteri"
+
+#: src/StickerSet.vala:270
+msgid "Low battery"
+msgstr "Lågt batteri"
+
+#: src/StickerSet.vala:271
+msgid "Empty battery"
+msgstr "Tomt batteri"
+
+#: src/StickerSet.vala:272
+msgid "Phone"
+msgstr "Telefon"
+
+#: src/StickerSet.vala:273
+msgid "Missed call"
+msgstr "Missat samtal"
+
+#: src/StickerSet.vala:274
+msgid "End call"
+msgstr "Avsluta samtal"
+
+#: src/StickerSet.vala:275
+msgid "Call transfer"
+msgstr "Vidarekoppling"
+
+#: src/StickerSet.vala:276
+msgid "Video call"
+msgstr "Videosamtal"
+
+#: src/StickerSet.vala:277
+msgid "No video"
+msgstr "Ingen video"
+
+#: src/StickerSet.vala:278
+msgid "Rotate to portrait"
+msgstr "Vrid till stående format"
+
+#: src/StickerSet.vala:279
+msgid "Lock portrait"
+msgstr "Lås porträtt"
+
+#: src/StickerSet.vala:280
+msgid "Rotate to landscape"
+msgstr "Vrid till liggande format"
+
+#: src/StickerSet.vala:281
+msgid "Lock landscape"
+msgstr "Lås landskap"
+
+#: src/StickerSet.vala:282
+msgid "Voicemail"
+msgstr "Röstbrevlåda"
+
+#: src/StickerSet.vala:283
+msgid "Speaker"
+msgstr "Talare"
+
+#: src/StickerSet.vala:284
+msgid "Headset"
+msgstr "Headset"
+
+#: src/StickerSet.vala:287
+msgid "Left up"
+msgstr "Vänster upp"
+
+#: src/StickerSet.vala:288
+msgid "Up"
+msgstr "Upp"
+
+#: src/StickerSet.vala:289
+msgid "Right up"
+msgstr "Högre upp"
+
+#: src/StickerSet.vala:290
+msgid "Left"
+msgstr "Vänster"
+
+#: src/StickerSet.vala:291
+msgid "Right"
+msgstr "Höger"
+
+#: src/StickerSet.vala:292
+msgid "Left down"
+msgstr "Vänster nedåt"
+
+#: src/StickerSet.vala:293
+msgid "Down"
+msgstr "Ner"
+
+#: src/StickerSet.vala:294
+msgid "Right down"
+msgstr "Rätt ner"
+
+#: src/StickerSet.vala:295
+msgid "Collapse"
+msgstr "Minimera"
+
+#: src/StickerSet.vala:296
+msgid "Previous"
+msgstr "Föregående"
+
+#: src/StickerSet.vala:297
+msgid "Next"
+msgstr "Nästa"
+
+#: src/StickerSet.vala:298
+msgid "Expand"
+msgstr "Expandera"
+
+#: src/StickerSet.vala:299
+msgid "Left down2"
+msgstr "Vänster nedåt2"
+
+#: src/StickerSet.vala:300
+msgid "Up left"
+msgstr "Uppe till vänster"
+
+#: src/StickerSet.vala:301
+msgid "Down right"
+msgstr "Ner till höger"
+
+#: src/StickerSet.vala:302
+msgid "Right up2"
+msgstr "Högre upp2"
+
+#: src/StickerSet.vala:303
+msgid "Up right"
+msgstr "Upprätt"
+
+#: src/StickerSet.vala:304
+msgid "Right down2"
+msgstr "Rätt ner2"
+
+#: src/StickerSet.vala:305
+msgid "Left up2"
+msgstr "Vänster upp2"
+
+#: src/StickerSet.vala:306
+msgid "Down left"
+msgstr "Ner till vänster"
+
+#: src/StickerSet.vala:311
+msgid "Filing cabinet"
+msgstr "Arkivskåp"
+
+#: src/StickerSet.vala:312
+msgid "Database"
+msgstr "Databas"
+
+#: src/StickerSet.vala:313
+msgid "Accept database"
+msgstr "Acceptera databas"
+
+#: src/StickerSet.vala:314
+msgid "Add database"
+msgstr "Lägg till databas"
+
+#: src/StickerSet.vala:315
+msgid "Delete database"
+msgstr "Ta bort databas"
+
+#: src/StickerSet.vala:316
+msgid "Data backup"
+msgstr "Säkerhetskopiering av data"
+
+#: src/StickerSet.vala:317
+msgid "Data recovery"
+msgstr "Dataåterställning"
+
+#: src/StickerSet.vala:318
+msgid "Data configuration"
+msgstr "Datakonfiguration"
+
+#: src/StickerSet.vala:319
+msgid "Data encryption"
+msgstr "Datakryptering"
+
+#: src/StickerSet.vala:320
+msgid "Data protection"
+msgstr "Dataskydd"
+
+#: src/StickerSet.vala:321
+msgid "Grid"
+msgstr "Rutnät"
+
+#: src/StickerSet.vala:322
+msgid "Data sheet"
+msgstr "Datablad"
+
+#: src/StickerSet.vala:323
+msgid "Add column"
+msgstr "Lägg till kolumn"
+
+#: src/StickerSet.vala:324
+msgid "Delete column"
+msgstr "Radera kolumn"
+
+#: src/StickerSet.vala:325
+msgid "Add row"
+msgstr "Lägg till rad"
+
+#: src/StickerSet.vala:326
+msgid "Delete row"
+msgstr "Radera rad"
+
+#: src/StickerSet.vala:327
+msgid "Generic sorting ascending"
+msgstr "Generisk sortering i stigande ordning"
+
+#: src/StickerSet.vala:328
+msgid "Generic sorting descending"
+msgstr "Generisk sortering i fallande ordning"
+
+#: src/StickerSet.vala:329
+msgid "Alphabetical sorting (A->Z)"
+msgstr "Alfabetisk sortering (A->Z)"
+
+#: src/StickerSet.vala:330
+msgid "Alphabetical sorting (Z->A)"
+msgstr "Alfabetisk sortering (Z->A)"
+
+#: src/StickerSet.vala:331
+msgid "Numerical sorting (2->1)"
+msgstr "Numerisk sortering (2->1)"
+
+#: src/StickerSet.vala:332
+msgid "Numerical sorting (1->2)"
+msgstr "Numerisk sortering (1->2)"
+
+#: src/StickerSet.vala:333
+msgid "Empty filter"
+msgstr "Tomt filter"
+
+#: src/StickerSet.vala:334
+msgid "Filled filter"
+msgstr "Fyllt filter"
+
+#: src/StickerSet.vala:335
+msgid "Clear filters"
+msgstr "Återställ filter"
+
+#: src/StickerSet.vala:336
+msgid "Pie chart"
+msgstr "Cirkeldiagram"
+
+#: src/StickerSet.vala:337
+msgid "Radar plot"
+msgstr "Radardiagram"
+
+#: src/StickerSet.vala:338
+msgid "Heat map"
+msgstr "Värmekarta"
+
+#: src/StickerSet.vala:339
+msgid "Timeline"
+msgstr "Tidslinje"
+
+#: src/StickerSet.vala:340
+msgid "Bar chart"
+msgstr "Stapeldiagram"
+
+#: src/StickerSet.vala:341
+msgid "Area chart"
+msgstr "Områdesdiagram"
+
+#: src/StickerSet.vala:342
+msgid "Scatter plot"
+msgstr "Spridning"
+
+#: src/StickerSet.vala:343
+msgid "Doughnut chart"
+msgstr "Ringdiagram"
+
+#: src/StickerSet.vala:344
+msgid "Combo chart"
+msgstr "Kombinationsdiagram"
+
+#: src/StickerSet.vala:345
+msgid "Flow chart"
+msgstr "Flödesschema"
+
+#: src/StickerSet.vala:346
+msgid "Line chart"
+msgstr "Linjediagram"
+
+#: src/StickerSet.vala:347
+msgid "Genealogy"
+msgstr "Släktforskning"
+
+#: src/StickerSet.vala:348
+msgid "Mind map"
+msgstr "Tankekarta"
+
+#: src/StickerSet.vala:349
+msgid "Workflow"
+msgstr "Arbetsflöde"
+
+#: src/StickerSet.vala:350
+msgid "Positive dynamic"
+msgstr "Positiv dynamik"
+
+#: src/StickerSet.vala:351
+msgid "Negative dynamic"
+msgstr "Negativ dynamik"
+
+#: src/StickerSet.vala:354
+msgid "List"
+msgstr "Lista"
+
+#: src/StickerSet.vala:355
+msgid "Template"
+msgstr "Mall"
+
+#: src/StickerSet.vala:356
+msgid "View details"
+msgstr "Visa detaljer"
+
+#: src/StyleInspector.vala:35
+msgid "All"
+msgstr "Alla"
+
+#: src/StyleInspector.vala:36
+msgid "Selected Nodes"
+msgstr "Valda noder"
+
+#: src/StyleInspector.vala:37
+msgid "Selected Connections"
+msgstr "Valda anslutningar"
+
+#: src/StyleInspector.vala:38
+msgid "Selected Callouts"
+msgstr "Utvalda kommentarer"
+
+#: src/StyleInspector.vala:40
+msgid "Unknown"
+msgstr "Okänd"
+
+#: src/StyleInspector.vala:144
+msgid "Changes affect:"
+msgstr "Ändringarna påverkar:"
+
+#: src/StyleInspector.vala:164
+msgid "Branch Options"
+msgstr "Förgreningsalternativ"
+
+#: src/StyleInspector.vala:248
+msgid "Corner Radius"
+msgstr "Hörnradie"
+
+#: src/StyleInspector.vala:293 src/StyleInspector.vala:653
+msgid "Margin"
+msgstr "Marginal"
+
+#: src/StyleInspector.vala:336
+msgid "Link Options"
+msgstr "Länkalternativ"
+
+#: src/StyleInspector.vala:370 src/StyleInspector.vala:856
+msgid "Line Dash"
+msgstr "Linje Streck"
+
+#: src/StyleInspector.vala:409 src/StyleInspector.vala:933
+msgid "Line Width"
+msgstr "Linjetjocklek"
+
+#: src/StyleInspector.vala:456
+msgid "Link Arrow"
+msgstr "Länkpil"
+
+#: src/StyleInspector.vala:486
+msgid "Node Options"
+msgstr "Nodalternativ"
+
+#: src/StyleInspector.vala:528
+msgid "Border Style"
+msgstr "Ramstil"
+
+#: src/StyleInspector.vala:577
+msgid "Border Width"
+msgstr "Bredd på ram"
+
+#: src/StyleInspector.vala:623
+msgid "Color Fill"
+msgstr "Färgfyllning"
+
+#: src/StyleInspector.vala:628
+msgid ""
+"Fills the node with color when the node\n"
+"border is square, rounded or pill-shaped"
+msgstr ""
+"Fyller noden med färg när nodens kant är fyrkantig, rundad eller pillerformad"
+
+#: src/StyleInspector.vala:695 src/StyleInspector.vala:982
+#: src/StyleInspector.vala:1142
+msgid "Padding"
+msgstr "Mellanrum"
+
+#: src/StyleInspector.vala:735
+msgid "Font"
+msgstr "Typsnitt"
+
+#: src/StyleInspector.vala:764
+msgid "Width"
+msgstr "Bredd"
+
+#: src/StyleInspector.vala:786
+msgid "Enable Markup"
+msgstr "Aktivera markering"
+
+#: src/StyleInspector.vala:816
+msgid "Connection Options"
+msgstr "Anslutningsalternativ"
+
+#: src/StyleInspector.vala:1022
+msgid "Title Font"
+msgstr "Rubrikens typsnitt"
+
+#: src/StyleInspector.vala:1051
+msgid "Title Width"
+msgstr "Titelbredd"
+
+#: src/StyleInspector.vala:1077
+msgid "Callout Options"
+msgstr "Alternativ för utrop"
+
+#: src/StyleInspector.vala:1111
+msgid "Text Font"
+msgstr "Typsnitt"
+
+#: src/StyleInspector.vala:1184
+msgid "Pointer Width"
+msgstr "Pekarens bredd"
+
+#: src/StyleInspector.vala:1226
+msgid "Pointer Length"
+msgstr "Pekarlängd"
+
+#: src/styles/LinkTypeCurved.vala:34
+msgid "Curved"
+msgstr "Böjd"
+
+#: src/styles/LinkTypeRounded.vala:34
+msgid "Rounded"
+msgstr "Avrundad"
+
+#: src/styles/LinkTypeSquared.vala:34
+msgid "Squared"
+msgstr "Fyrkantig"
+
+#: src/styles/LinkTypeStraight.vala:34
+msgid "Straight"
+msgstr "Rakt"
+
+#: src/styles/NodeBorderBracket.vala:34
+msgid "Square Bracket"
+msgstr "Kvadratisk parentes"
+
+#: src/styles/NodeBorderNone.vala:34
+msgid "None"
+msgstr "Ingen"
+
+#: src/styles/NodeBorderPill.vala:34
+msgid "Pill-shaped"
+msgstr "Pillformad"
+
+#: src/styles/NodeBorderRounded.vala:34
+msgid "Rounded Rectangle"
+msgstr "Rundad rektangel"
+
+#: src/styles/NodeBorderSquared.vala:34
+msgid "Squared Off"
+msgstr "Kvadratisk"
+
+#: src/styles/NodeBorderUnderlined.vala:34
+msgid "Underlined"
+msgstr "Understruken"
+
+#: src/Styles.vala:54
+msgid "Solid"
+msgstr "Solid"
+
+#: src/Styles.vala:55
+msgid "Dotted"
+msgstr "Prickad"
+
+#: src/Styles.vala:56
+msgid "Short Dash"
+msgstr "Kort streck"
+
+#: src/Styles.vala:57
+msgid "Long Dash"
+msgstr "Lång streck"
+
+#: src/Tagger.vala:124
+msgid "Add Tag"
+msgstr "Lägg till tagg"
+
+#: src/TextMenu.vala:56
+msgid "Insert Emoji"
+msgstr "Infoga Emoji"
+
+#: src/TextMenu.vala:59
+msgid "Open Link"
+msgstr "Öppna länk"
+
+#: src/TextMenu.vala:63
+msgid "Add Link"
+msgstr "﻿Lägg till länk"
+
+#: src/TextMenu.vala:66
+msgid "Edit Link"
+msgstr "Redigera länk"
+
+#: src/TextMenu.vala:70
+msgid "Remove Link"
+msgstr "Ta bort länk"
+
+#: src/TextMenu.vala:73
+msgid "Restore Link"
+msgstr "Återställ länk"
+
+#: src/TextParser.vala:66
+#, c-format
+msgid "Parser regex error (re: %s, error: %s)\n"
+msgstr "Parser regex-fel (re: %s, fel: %s)\n"
+
+#: src/ThemeEditor.vala:45
+msgid "Customize Theme"
+msgstr "Anpassa tema"
+
+#: src/ThemeEditor.vala:51
+msgid "Name"
+msgstr "Namn"
+
+#: src/ThemeEditor.vala:80
+msgid "Base Colors"
+msgstr "Basfärger"
+
+#: src/ThemeEditor.vala:85
+msgid "Background"
+msgstr "Bakgrund"
+
+#: src/ThemeEditor.vala:86
+msgid "Foreground"
+msgstr "Förgrund"
+
+#: src/ThemeEditor.vala:87
+msgid "Root Node Background"
+msgstr "Rotnodens bakgrund"
+
+#: src/ThemeEditor.vala:88
+msgid "Root Node Foreground"
+msgstr "Rotnod Förgrund"
+
+#: src/ThemeEditor.vala:89
+msgid "Node Select Background"
+msgstr "Välj bakgrund för nod"
+
+#: src/ThemeEditor.vala:90
+msgid "Node Select Foreground"
+msgstr "Välj nod Förgrund"
+
+#: src/ThemeEditor.vala:91
+msgid "Text Select Background"
+msgstr "Text Välj bakgrund"
+
+#: src/ThemeEditor.vala:92
+msgid "Text Select Foreground"
+msgstr "Text Välj förgrund"
+
+#: src/ThemeEditor.vala:93
+msgid "Text Cursor"
+msgstr "Textmarkör"
+
+#: src/ThemeEditor.vala:94
+msgid "Attachable Highlight"
+msgstr "Bifogbar markering"
+
+#: src/ThemeEditor.vala:95
+msgid "Connection Color"
+msgstr "Anslutningsfärg"
+
+#: src/ThemeEditor.vala:96
+msgid "Connection Title Color"
+msgstr "Anslutningens titel Färg"
+
+#: src/ThemeEditor.vala:97
+msgid "Callout Background"
+msgstr "Bakgrund till uppmaningen"
+
+#: src/ThemeEditor.vala:98
+msgid "URL Link Background"
+msgstr "URL-länk Bakgrund"
+
+#: src/ThemeEditor.vala:99
+msgid "URL Link Foreground"
+msgstr "URL-länk Förgrund"
+
+#: src/ThemeEditor.vala:100
+msgid "Tag"
+msgstr "Tagg"
+
+#: src/ThemeEditor.vala:101
+msgid "Markdown Syntax Chars"
+msgstr "Markdown-syntaxtecken"
+
+#: src/ThemeEditor.vala:102
+msgid "Match Background"
+msgstr "Matchbakgrund"
+
+#: src/ThemeEditor.vala:103
+msgid "Match Foreground"
+msgstr "Matcha förgrund"
+
+#: src/ThemeEditor.vala:104
+msgid "Markdown List Item"
+msgstr "Markdown-listobjekt"
+
+#: src/ThemeEditor.vala:110
+msgid "Prefer Dark Mode"
+msgstr "Föredrar mörkt läge"
+
+#: src/ThemeEditor.vala:193
+msgid "Custom"
+msgstr "Anpassad"
+
+#: src/ThemeEditor.vala:211
+msgid "Delete theme?"
+msgstr "Ta bort tema?"
+
+#: src/ThemeEditor.vala:212
+msgid "This operation cannot be undone."
+msgstr "Denna åtgärd kan inte ångras."
+
+#: src/ThemeEditor.vala:217
+msgid "No"
+msgstr "Nej"
+
+#: src/ThemeEditor.vala:220
+msgid "Yes"
+msgstr "Ja"
+
+#: src/ThemeEditor.vala:242
+msgid "Default"
+msgstr "Standard"
+
+#: src/themes/ThemeDark.vala:28
+msgid "Dark"
+msgstr "Mörk"
+
+#: src/themes/ThemeDefault.vala:28
+msgid "Light"
+msgstr "Ljus"
+
+#: src/themes/ThemeSolarizedDark.vala:31
+msgid "Solarized Dark"
+msgstr "Solariserad mörk"
+
+#: src/themes/ThemeSolarizedLight.vala:31
+msgid "Solarized Light"
+msgstr "Solariserat ljus"
+
+#: src/Themes.vala:192
+msgid "Error parsing regular expression"
+msgstr "Fel vid tolkning av reguljärt uttryck"
+
+#: src/Theme.vala:200
+#, c-format
+msgid "Unable to load background color: %s"
+msgstr "Det går inte att läsa in bakgrundsfärgen: %s"
+
+#: src/undo_actions/UndoCalloutResize.vala:32
+msgid "callout resize"
+msgstr "ändra storlek på inflikning"
+
+#: src/undo_actions/UndoCalloutText.vala:32
+msgid "callout text change"
+msgstr "ändring av text i infällning"
+
+#: src/undo_actions/UndoConnectedNode.vala:31
+msgid "connected node"
+msgstr "ansluten nod"
+
+#: src/undo_actions/UndoConnectionAdd.vala:30
+msgid "add connection"
+msgstr "lägg till anslutning"
+
+#: src/undo_actions/UndoConnectionColor.vala:33
+msgid "connection color change"
+msgstr "anslutningsfärgförändring"
+
+#: src/undo_actions/UndoConnectionDelete.vala:30
+msgid "delete connection"
+msgstr "ta bort anslutning"
+
+#: src/undo_actions/UndoConnectionNote.vala:32
+msgid "connection note change"
+msgstr "anslutningsanteckning ändring"
+
+#: src/undo_actions/UndoConnectionsDelete.vala:30
+msgid "delete connections"
+msgstr "ta bort anslutningar"
+
+#: src/undo_actions/UndoConnectionStickerAdd.vala:31
+msgid "add connection sticker"
+msgstr "lägg till anslutningsklistermärke"
+
+#: src/undo_actions/UndoConnectionStickerChange.vala:31
+msgid "change connection sticker"
+msgstr "ändra anslutningsklistermärke"
+
+#: src/undo_actions/UndoConnectionStickerRemove.vala:31
+msgid "remove connection sticker"
+msgstr "ta bort anslutningsetiketten"
+
+#: src/undo_actions/UndoConnectionTitle.vala:32
+msgid "connection title change"
+msgstr "ändring av anslutningstitel"
+
+#: src/undo_actions/UndoGroupAdd.vala:30
+msgid "add group"
+msgstr "lägg till grupp"
+
+#: src/undo_actions/UndoGroupNote.vala:32
+msgid "node group note change"
+msgstr "nodgrupp anteckning ändring"
+
+#: src/undo_actions/UndoGroupRemove.vala:30
+msgid "remove group"
+msgstr "ta bort grupp"
+
+#: src/undo_actions/UndoGroupsColor.vala:33
+msgid "group color change"
+msgstr "gruppens färgändring"
+
+#: src/undo_actions/UndoGroupsMerge.vala:31
+msgid "group merge"
+msgstr "gruppsammanfogning"
+
+#: src/undo_actions/UndoGroupsRemove.vala:30
+msgid "remove groups"
+msgstr "ta bort grupper"
+
+#: src/undo_actions/UndoNodeAddParent.vala:32
+msgid "add parent node"
+msgstr "lägg till överordnad nod"
+
+#: src/undo_actions/UndoNodeAttach.vala:41
+#: src/undo_actions/UndoNodeAttach.vala:58
+msgid "attach node"
+msgstr "fäst nod"
+
+#: src/undo_actions/UndoNodeBalance.vala:61
+msgid "balance nodes"
+msgstr "balansnoder"
+
+#: src/undo_actions/UndoNodeCallout.vala:31
+msgid "node callout changed"
+msgstr "nodmarkering ändrad"
+
+#: src/undo_actions/UndoNodeCut.vala:33
+msgid "cut node"
+msgstr "klipp nod"
+
+#: src/undo_actions/UndoNodeDelete.vala:34
+msgid "delete node"
+msgstr "ta bort nod"
+
+#: src/undo_actions/UndoNodeDetach.vala:34
+msgid "detach node"
+msgstr "frånkoppla nod"
+
+#: src/undo_actions/UndoNodeFolds.vala:30
+#: src/undo_actions/UndoNodeFolds.vala:35
+msgid "node fold changes"
+msgstr "nodviktsförändringar"
+
+#: src/undo_actions/UndoNodeGroup.vala:30
+msgid "node group change"
+msgstr "nodgruppsändring"
+
+#: src/undo_actions/UndoNodeImage.vala:32
+msgid "node image change"
+msgstr "nodbildändring"
+
+#: src/undo_actions/UndoNodeInsert.vala:33
+msgid "insert node"
+msgstr "infoga nod"
+
+#: src/undo_actions/UndoNodeLayout.vala:30
+msgid "change layout"
+msgstr "ändra layout"
+
+#: src/undo_actions/UndoNodeLinkColor.vala:33
+msgid "link color change"
+msgstr "länkfärgsändring"
+
+#: src/undo_actions/UndoNodeLink.vala:32
+msgid "node link change"
+msgstr "nodlänksändring"
+
+#: src/undo_actions/UndoNodeMove.vala:36
+msgid "move node"
+msgstr "flytta nod"
+
+#: src/undo_actions/UndoNodeName.vala:32
+msgid "node name change"
+msgstr "ändring av nodnamn"
+
+#: src/undo_actions/UndoNodeNote.vala:32
+msgid "node note change"
+msgstr "nodnotändring"
+
+#: src/undo_actions/UndoNodePaste.vala:34
+msgid "paste node"
+msgstr "klistra in nod"
+
+#: src/undo_actions/UndoNodeReparentLinkColor.vala:32
+#: src/undo_actions/UndoNodesReparentLinkColor.vala:33
+msgid "node link color reparent"
+msgstr "nodlänkfärg omföräldra"
+
+#: src/undo_actions/UndoNodeReparent.vala:32
+msgid "reparent children"
+msgstr "omplacera underordnade"
+
+#: src/undo_actions/UndoNodeReplace.vala:31
+msgid "replace node"
+msgstr "ersätt nod"
+
+#: src/undo_actions/UndoNodeResize.vala:34
+msgid "node resize"
+msgstr "nodstorleksändring"
+
+#: src/undo_actions/UndoNodesAlign.vala:56
+msgid "node alignment"
+msgstr "nodjustering"
+
+#: src/undo_actions/UndoNodesCut.vala:43
+msgid "cut nodes"
+msgstr "klippta noder"
+
+#: src/undo_actions/UndoNodesDelete.vala:43
+msgid "delete nodes"
+msgstr "ta bort noder"
+
+#: src/undo_actions/UndoNodeSequences.vala:30
+msgid "node sequence changes"
+msgstr "nodsekvensändringar"
+
+#: src/undo_actions/UndoNodesGroup.vala:30
+msgid "change node groups"
+msgstr "ändra nodgrupper"
+
+#: src/undo_actions/UndoNodesInsert.vala:37
+msgid "insert nodes"
+msgstr "infoga noder"
+
+#: src/undo_actions/UndoNodesLinkColor.vala:33
+msgid "node link color changes"
+msgstr "nodlänkens färg ändras"
+
+#: src/undo_actions/UndoNodesLink.vala:31
+msgid "node link changes"
+msgstr "nodlänksändringar"
+
+#: src/undo_actions/UndoNodeSort.vala:56
+msgid "sort nodes"
+msgstr "sortera noder"
+
+#: src/undo_actions/UndoNodesRandLinkColor.vala:33
+msgid "random node link color changes"
+msgstr "slumpmässiga färgförändringar på nodlänkar"
+
+#: src/undo_actions/UndoNodesReplace.vala:31
+msgid "replace nodes"
+msgstr "ersätt noder"
+
+#: src/undo_actions/UndoNodeStickerAdd.vala:31
+msgid "add node sticker"
+msgstr "lägg till nodklistermärke"
+
+#: src/undo_actions/UndoNodeStickerChange.vala:31
+msgid "change node sticker"
+msgstr "ändra nodklistermärke"
+
+#: src/undo_actions/UndoNodeStickerRemove.vala:31
+msgid "remove node sticker"
+msgstr "ta bort nodklistermärke"
+
+#: src/undo_actions/UndoNodeSummaryDelete.vala:32
+msgid "delete summary node"
+msgstr "ta bort sammanfattningsnod"
+
+#: src/undo_actions/UndoNodeSummaryFromNode.vala:31
+msgid "convert to summary node"
+msgstr "konvertera till sammanfattningsnod"
+
+#: src/undo_actions/UndoNodeSummary.vala:32
+msgid "insert summary node"
+msgstr "infoga sammanfattningsnod"
+
+#: src/undo_actions/UndoNodeTasks.vala:30
+msgid "node task changes"
+msgstr "noduppgiftsändringar"
+
+#: src/undo_actions/UndoNodeUnclify.vala:32
+msgid "reparent node"
+msgstr "omföräldra nod"
+
+#: src/undo_actions/UndoStickerAdd.vala:30
+#: src/undo_actions/UndoStickerMove.vala:32
+msgid "add sticker"
+msgstr "lägg till klistermärke"
+
+#: src/undo_actions/UndoStickerChange.vala:31
+msgid "change sticker"
+msgstr "ändra klistermärke"
+
+#: src/undo_actions/UndoStickerRemove.vala:30
+msgid "remove sticker"
+msgstr "ta bort klistermärke"
+
+#: src/undo_actions/UndoStickerResize.vala:31
+msgid "resize sticker"
+msgstr "ändra storlek på klistermärke"
+
+#: src/undo_actions/UndoStyleChange.vala:39
+msgid "style change"
+msgstr "stilförändring"
+
+#: src/undo_actions/UndoTextClearTags.vala:30
+msgid "clear formatting"
+msgstr "töm formatering"
+
+#: src/undo_actions/UndoTextDelete.vala:30
+msgid "text deletion"
+msgstr "textborttagning"
+
+#: src/undo_actions/UndoTextInsert.vala:29
+#: src/undo_actions/UndoTextMultiInsert.vala:33
+msgid "text insertion"
+msgstr "textinmatning"
+
+#: src/undo_actions/UndoTextReplace.vala:31
+msgid "text replacement"
+msgstr "textersättning"
+
+#: src/undo_actions/UndoTextTagAdd.vala:32
+msgid "format tag add"
+msgstr "format tagg lägg till"
+
+#: src/undo_actions/UndoTextTagRemove.vala:32
+msgid "format tag remove"
+msgstr "format tagga bort"
+
+#: src/UndoBuffer.vala:85
+msgid "Undo "
+msgstr "Ångra "
+
+#: src/UndoBuffer.vala:91
+msgid "Redo "
+msgstr "Gör om "
+
+#: src/UrlEditor.vala:43
+msgid "URL"
+msgstr "URL"
+
+#: src/Utils.vala:160
+#, c-format
+msgid "error: %s\n"
+msgstr "fel: %s\n"
+
+#: src/ZoomWidget.vala:97
+msgid "Zoom Actual"
+msgstr "Zooma till faktisk"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:6
+msgid "Minder Shortcuts"
+msgstr "Minder-genvägar"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:12
+#: data/com.github.phase1geo.minder.shortcuts.ui:987
+msgid "General"
+msgstr "Allmänt"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:35
+msgid "Import File"
+msgstr "Importera fil"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:58
+msgid "Print File"
+msgstr "Skriv ut fil"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:67
+msgid "Notebook Tabs"
+msgstr "Anteckningsflikar"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:72
+msgid "Close Current Tab"
+msgstr "Stäng aktuell flik"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:79
+msgid "Go to Next Tab"
+msgstr "Gå till nästa flik"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:86
+msgid "Go to Previous Tab"
+msgstr "Gå till föregående flik"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:95
+msgid "Undo/Redo"
+msgstr "Ångra/gör om"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:99
+msgid "Undo Last Change"
+msgstr "Ångra senaste ändringen"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:106
+msgid "Redo Last Undo"
+msgstr "Återställ senaste ångra"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:115
+msgid "Zooming"
+msgstr "Zoomning"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:133
+msgid "Zoom To Actual Size"
+msgstr "Zooma till faktisk storlek"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:147
+msgid "Zoom To Fit"
+msgstr "Zooma för att passa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:156
+msgid "Properties Sidebar"
+msgstr "Sidofält för egenskaper"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:160
+msgid "Show Current Tab"
+msgstr "Visa aktuell flik"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:167
+msgid "Show Style Tab"
+msgstr "Visa fliken Stil"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:174
+msgid "Show Sticker Tab"
+msgstr "Visa klistermärkesflik"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:181
+msgid "Show Map Tab"
+msgstr "Visa kartfliken"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:190
+#: data/com.github.phase1geo.minder.shortcuts.ui:767
+msgid "Miscellaneous"
+msgstr "Diverse"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:194
+msgid "Toggle Focus Mode"
+msgstr "Växla fokusläge"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:201
+msgid "Search Nodes/Connections"
+msgstr "Sök noder/anslutningar"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:208
+#: data/com.github.phase1geo.minder.shortcuts.ui:991
+msgid "Show Contextual Menu"
+msgstr "Visa kontextmeny"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:215
+msgid "Show Preferences"
+msgstr "Visa inställningar"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:222
+msgid "Show Keyboard Shortcuts"
+msgstr "Visa kortkommandon"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:229
+msgid "Quit Application"
+msgstr "Avsluta applikation"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:241
+msgid "Node Commands"
+msgstr "Nodkommandon"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:245
+msgid "Creation/Deletion"
+msgstr "Skapande/Radering"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:249
+msgid "New Sibling Node"
+msgstr "Ny syskonnod"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:256
+msgid "New Connected Node"
+msgstr "Ny ansluten nod"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:263
+msgid "New Child Node"
+msgstr "Ny underordnad nod"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:270
+msgid "Quick Entry Insertion"
+msgstr "Snabbinmatning"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:277
+msgid "Quick Entry Replacement"
+msgstr "Snabb ersättning"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:293
+#: data/com.github.phase1geo.minder.shortcuts.ui:877
+msgid "Clipboard"
+msgstr "Urklipp"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:297
+msgid "Copy Node"
+msgstr "Kopiera nod"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:304
+msgid "Cut Node"
+msgstr "Klipp nod"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:311
+msgid "Add Child Node With Clipboard"
+msgstr "Lägg till underordnad nod med urklipp"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:318
+msgid "Replace With Clipboard"
+msgstr "Ersätt med urklipp"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:327
+msgid "View"
+msgstr "Visa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:331
+msgid "Center In View"
+msgstr "Centrera i vy"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:338
+#: data/com.github.phase1geo.minder.shortcuts.ui:717
+msgid "Place Into View"
+msgstr "Placera i vy"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:347
+msgid "Changing Current"
+msgstr "Ändrar aktuell"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:351
+#: data/com.github.phase1geo.minder.shortcuts.ui:696
+msgid "Edit Title"
+msgstr "Redigera rubrik"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:365
+msgid "Change Task State"
+msgstr "Ändra uppgiftsstatus"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:379
+msgid "Add URL Link To Text"
+msgstr "Lägg till URL-länk till text"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:386
+#: data/com.github.phase1geo.minder.shortcuts.ui:799
+msgid "Remove URL Link From Text"
+msgstr "Ta bort URL-länk från text"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:393
+msgid "Change Link Color"
+msgstr "Ändra länkens färg"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:400
+msgid "View Properties"
+msgstr "Visa egenskaper"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:407
+msgid "Toggle Fold"
+msgstr "Växla mellan vikning"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:421
+msgid "Toggle Node Link"
+msgstr "Växla nodlänk"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:428
+msgid "Create Link to Selected Node"
+msgstr "Skapa länk till vald nod"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:429
+msgid "[After using this command, 'y' will create the link]"
+msgstr "[Efter att ha använt detta kommando kommer 'y' att skapa länken]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:436
+msgid "Create Group"
+msgstr "Skapa grupp"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:443
+msgid "Create Connection"
+msgstr "Skapa anslutning"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:450
+msgid "Create Callout"
+msgstr "Skapa bildtext"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:459
+#: data/com.github.phase1geo.minder.shortcuts.ui:672
+#: data/com.github.phase1geo.minder.shortcuts.ui:904
+msgid "Selection"
+msgstr "Markering"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:463
+msgid "Select Root"
+msgstr "Välj rot"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:470
+msgid "Select Parent"
+msgstr "Välj överliggande"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:477
+msgid "Select Next Sibling"
+msgstr "Välj nästa syskon"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:484
+msgid "Select Previous Sibling"
+msgstr "Välj föregående syskon"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:491
+msgid "Select Child"
+msgstr "Välj underordnade"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:498
+msgid "Select Children"
+msgstr "Välj underordnade"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:505
+msgid "Select Subtree"
+msgstr "Välj underträd"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:512
+msgid "Select Node Below"
+msgstr "Välj nod nedan"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:519
+msgid "Select Node Above"
+msgstr "Välj nod ovanför"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:526
+msgid "Select Node To Right"
+msgstr "Välj nod till höger"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:533
+msgid "Select Node To Left"
+msgstr "Välj nod till vänster"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:540
+msgid "Select Linked Node"
+msgstr "Välj länkad nod"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:547
+msgid "Select Callout"
+msgstr "Välj Callout"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:554
+msgid "Select Attached Connection"
+msgstr "Välj ansluten anslutning"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:563
+msgid "Move"
+msgstr "Flytta"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:567
+msgid "Swap with Sibling Node to Right"
+msgstr "Byt med systernod till höger"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:574
+msgid "Swap with Sibling Node to Left"
+msgstr "Byt med syskonnod till vänster"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:581
+msgid "Swap with Sibling Node Above"
+msgstr "Byt med syskonnod ovanför"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:588
+msgid "Swap with Sibling Node Below"
+msgstr "Byt med underordnad nod nedan"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:595
+msgid "Sort Child Nodes Alphabetically"
+msgstr "Sortera underordnade noder alfabetiskt"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:604
+msgid "Alignment"
+msgstr "Justering"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:608
+msgid "Align Top Side"
+msgstr "Justera ovansidan"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:615
+msgid "Align Vertical Center"
+msgstr "Justera vertikalt centrum"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:622
+msgid "Align Bottom Side"
+msgstr "Justera undersidan"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:629
+msgid "Align Left Side"
+msgstr "Justera vänster sida"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:636
+msgid "Align Horizontal Center"
+msgstr "Justera horisontellt centrum"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:643
+msgid "Align Right Side"
+msgstr "Justera höger sida"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:655
+msgid "Callout Commands"
+msgstr "Callout-kommandon"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:659
+#: data/com.github.phase1geo.minder.shortcuts.ui:692
+msgid "Change Current"
+msgstr "Ändra aktuell"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:688
+msgid "Connection Commands"
+msgstr "Anslutningskommandon"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:710
+msgid "Show Properties"
+msgstr "Visa egenskaper"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:726
+msgid "Traversal"
+msgstr "Traversering"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:730
+msgid "Select Start Node"
+msgstr "Välj startnod"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:737
+msgid "Select End Node"
+msgstr "Välj slutnod"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:744
+msgid "Select Next Connection"
+msgstr "Välj Nästa anslutning"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:751
+msgid "Select Previous Connection"
+msgstr "Välj föregående anslutning"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:763
+msgid "Text Editing"
+msgstr "Textredigering"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:771
+msgid "Insert Newline Character"
+msgstr "Infoga radbrytningstecken"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:778
+msgid "Insert Tab Character"
+msgstr "Infoga tabbtecken"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:785
+msgid "Show Emoji Picker"
+msgstr "Visa Emoji-väljare"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:792
+msgid "Add URL Link To Selected Text"
+msgstr "Lägg till URL-länk till markerad text"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:806
+msgid "End Editing"
+msgstr "Avsluta redigering"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:815
+msgid "Cursor Movement"
+msgstr "Markörrörelse"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:819
+msgid "Next Character"
+msgstr "Nästa tecken"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:826
+msgid "Previous Character"
+msgstr "Föregående karaktär"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:833
+msgid "Next Word"
+msgstr "Nästa ord"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:840
+msgid "Previous Word"
+msgstr "Föregående ord"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:847
+msgid "Next Line"
+msgstr "Nästa rad"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:854
+msgid "Previous Line"
+msgstr "Föregående rad"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:861
+msgid "Start Of Text"
+msgstr "Textens början"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:868
+msgid "End Of Text"
+msgstr "Slut på texten"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:881
+msgid "Copy Selected Text"
+msgstr "Kopiera markerad text"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:888
+msgid "Cut Selected Text"
+msgstr "Klipp ut markerad text"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:895
+msgid "Paste Text"
+msgstr "Klistra in text"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:908
+msgid "Add Next Character"
+msgstr "Lägg till nästa tecken"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:915
+msgid "Add Previous Character"
+msgstr "Lägg till föregående tecken"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:922
+msgid "Add Next Word"
+msgstr "Lägg till nästa ord"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:929
+msgid "Add Previous Word"
+msgstr "Lägg till föregående ord"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:936
+msgid "Add Next Line"
+msgstr "Lägg till nästa rad"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:943
+msgid "Add Previous Line"
+msgstr "Lägg till föregående rad"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:950
+msgid "Add Start Of Text"
+msgstr "Lägg till textens början"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:957
+msgid "Add End Of Text"
+msgstr "Lägg till slutet av texten"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:964
+msgid "Select All Text"
+msgstr "Markera all text"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:971
+msgid "Clear Selection"
+msgstr "Töm markeringen"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:983
+msgid "Mouse Events"
+msgstr "Mus-händelser"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:992
+msgid "[Right-click when item is selected]"
+msgstr "[Högerklicka när objektet är markerat]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:998
+msgid "Edit Image in Canvas"
+msgstr "Redigera bild på duk"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:999
+msgid "[Double left-click on image]"
+msgstr "[Dubbelklicka med vänster musknapp på bilden]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1007
+msgid "Canvas Movement"
+msgstr "Dukförflyttning"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1011
+msgid "Pan Canvas"
+msgstr "Pan Canvas"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1012
+msgid "[Middle-click + Drag / Alt + Motion]"
+msgstr "[Mittklick + dra / Alt + rörelse]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1018
+msgid "Scroll Vertically"
+msgstr "Rulla vertikalt"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1019
+msgid "[Scrollwheel up/down]"
+msgstr "[Rullhjul upp/ner]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1025
+msgid "Scroll Horizontally"
+msgstr "Rulla horisontellt"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1026
+msgid "[Shift + Scrollwheel up/down]"
+msgstr "[Skift + rullhjul upp/ner]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1034
+msgid "Item Selection"
+msgstr "Val av artikel"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1038
+msgid "Select Single Item"
+msgstr "Välj enstaka artikel"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1039
+msgid "[Left-click on item]"
+msgstr "[Vänsterklicka på objektet]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1045
+msgid "Select Child Nodes"
+msgstr "Välj underordnade noder"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1046
+msgid "[Control + Left-click on parent node]"
+msgstr "[Kontroll + vänsterklicka på överordnad nod]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1052
+msgid "Select Node Tree/Subtree"
+msgstr "Välj nodträd/underträd"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1053
+msgid "[Control + Double left-click on parent node]"
+msgstr "[Kontroll + Dubbelklicka med vänster musknapp på överordnad nod]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1059
+msgid "Select All Nodes at Same Depth Level"
+msgstr "Välj alla noder på samma djupnivå"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1060
+msgid "[Control + Triple left-click on node]"
+msgstr "[Kontroll + Trippelklicka med vänster musknapp på noden]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1066
+msgid "Block Selection"
+msgstr "Blockmarkering"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1067
+msgid "[Left-click + Drag]"
+msgstr "[Vänsterklicka + dra]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1075
+msgid "Item Selection Toggle (Add to/Remove from Selection)"
+msgstr "Välj objekt (lägg till/ta bort från val)"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1079
+msgid "Toggle Selection of Item"
+msgstr "Växla val av objekt"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1080
+msgid "[Shift + Left-click on item]"
+msgstr "[Skift + vänsterklicka på objektet]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1086
+msgid "Toggle Selection of Child Nodes"
+msgstr "Växla val av underordnade noder"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1087
+msgid "[Shift + Control + Left-click on item]"
+msgstr "[Skift + Control + Vänsterklicka på objektet]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1093
+msgid "Toggle Selection of Node Tree/Subtree"
+msgstr "Växla mellan val av nodträd/underträd"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1094
+msgid "[Shift + Control + Double left-click on parent node]"
+msgstr ""
+"[Skift + Control + Dubbelklicka med vänster musknapp på överordnad nod]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1100
+msgid "Toggle Selection of All Nodes at Same Depth Level"
+msgstr "Växla mellan val av alla noder på samma djupnivå"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1101
+msgid "[Shift + Control + Triple left-click on node]"
+msgstr "[Skift + Control + Trippelklicka med vänster musknapp på noden]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1109
+msgid "Text Selection"
+msgstr "Vald text"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1113
+msgid "Set Cursor Insert Point"
+msgstr "Ställ in markörens infogningspunkt"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1114
+msgid "[Left-click anywhere in text]"
+msgstr "[Vänsterklicka var som helst i texten]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1120
+msgid "Select current word"
+msgstr "Välj aktuellt ord"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1121
+msgid "[Double left-click on word]"
+msgstr "[Dubbelklicka med vänster musknapp på ordet]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1127
+msgid "Select all text"
+msgstr "Markera all text"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1128
+msgid "[Triple left-click anywhere in text]"
+msgstr "[Trippelklicka med vänster musknapp var som helst i texten]"
