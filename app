@@ -47,7 +47,6 @@ case $1 in
     ;;
 "generate-i18n")
     grep -rc _\( * | grep ^src | grep -v :0 | cut -d : -f 1 | sort -o po/POTFILES
-    echo "data/com.github.phase1geo.minder.shortcuts.ui" >> po/POTFILES
     initialize
     ninja com.github.phase1geo.minder-pot
     ninja com.github.phase1geo.minder-update-po

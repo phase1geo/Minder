@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-13 20:25-0600\n"
+"POT-Creation-Date: 2025-11-18 09:45-0600\n"
 "PO-Revision-Date: 2024-04-27 15:12+0200\n"
 "Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
 "Language-Team: \n"
@@ -121,7 +121,7 @@ msgstr ""
 msgid "Delete"
 msgstr "Löschen"
 
-#: src/CalloutMenu.vala:36 data/com.github.phase1geo.minder.shortcuts.ui:676
+#: src/CalloutMenu.vala:36
 msgid "Select Node"
 msgstr "Knoten auswählen"
 
@@ -160,8 +160,6 @@ msgid "Edit Title…"
 msgstr "Titel ändern…"
 
 #: src/ConnectionMenu.vala:38 src/GroupsMenu.vala:36 src/NodeMenu.vala:50
-#: data/com.github.phase1geo.minder.shortcuts.ui:358
-#: data/com.github.phase1geo.minder.shortcuts.ui:703
 msgid "Edit Note"
 msgstr "Notiz bearbeiten"
 
@@ -239,13 +237,13 @@ msgid ""
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1333
+#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1334
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
 #: src/ThemeEditor.vala:169 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2209
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2210
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Anwenden"
@@ -254,7 +252,7 @@ msgstr "Anwenden"
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:714 src/MainWindow.vala:2246
+#: src/Document.vala:714 src/MainWindow.vala:2247
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
@@ -345,7 +343,7 @@ msgstr "Export-Optionen"
 msgid "Export As %s"
 msgstr "Als %s exportieren"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1072 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1073 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Export"
 
@@ -571,8 +569,6 @@ msgid "Images"
 msgstr "Bilder"
 
 #: src/KeyCommands.vala:569 src/Shortcuts.vala:796
-#: data/com.github.phase1geo.minder.shortcuts.ui:12
-#: data/com.github.phase1geo.minder.shortcuts.ui:987
 msgid "General"
 msgstr "General"
 
@@ -1109,7 +1105,7 @@ msgstr ""
 msgid "Selects all nodes within current group(s)"
 msgstr ""
 
-#: src/KeyCommands.vala:690 data/com.github.phase1geo.minder.shortcuts.ui:763
+#: src/KeyCommands.vala:690
 msgid "Text Editing"
 msgstr "Test editieren"
 
@@ -1275,7 +1271,6 @@ msgid "Add end of current line to current selection"
 msgstr ""
 
 #: src/KeyCommands.vala:730 src/Shortcuts.vala:821
-#: data/com.github.phase1geo.minder.shortcuts.ui:1127
 msgid "Select all text"
 msgstr "Gesamten Text markieren"
 
@@ -1294,20 +1289,19 @@ msgstr "Verbindungsfarbe auswählen"
 msgid "Manual"
 msgstr "Manuell"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1629
+#: src/MainWindow.vala:183 src/MainWindow.vala:1630
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:242 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:242
 msgid "New File"
 msgstr "Neue Datei"
 
-#: src/MainWindow.vala:247 src/MainWindow.vala:1423
-#: data/com.github.phase1geo.minder.shortcuts.ui:28
+#: src/MainWindow.vala:247 src/MainWindow.vala:1424
 msgid "Open File"
 msgstr "Datei öffnen"
 
-#: src/MainWindow.vala:252 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:252
 msgid "Save File As"
 msgstr "Datei speichern unter"
 
@@ -1319,208 +1313,206 @@ msgstr "Rückgängig"
 msgid "Redo"
 msgstr "Wiederherstellen"
 
-#: src/MainWindow.vala:728
+#: src/MainWindow.vala:729
 msgid "Tag Highlight Mode"
 msgstr ""
 
-#: src/MainWindow.vala:730 src/MainWindow.vala:1142
+#: src/MainWindow.vala:731 src/MainWindow.vala:1143
 msgid "Focus Mode"
 msgstr "Fokusmodus"
 
-#: src/MainWindow.vala:733
+#: src/MainWindow.vala:734
 msgid "Unnamed Document"
 msgstr "Unbenanntes Dokument"
 
-#: src/MainWindow.vala:736
+#: src/MainWindow.vala:737
 msgid "Read-Only"
 msgstr "Nur Lesen"
 
-#: src/MainWindow.vala:755
+#: src/MainWindow.vala:756
 msgid "Zoom to Fit"
 msgstr "Größe einpassen"
 
-#: src/MainWindow.vala:756 data/com.github.phase1geo.minder.shortcuts.ui:140
+#: src/MainWindow.vala:757
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "Größe des ausgewählten Knotenbaums einpassen"
 
-#: src/MainWindow.vala:757
+#: src/MainWindow.vala:758
 msgid "Zoom to Actual Size"
 msgstr "Auf tatsächliche Größe zoomen"
 
-#: src/MainWindow.vala:765
+#: src/MainWindow.vala:766
 msgid "Zoom to Percent"
 msgstr "Auf Prozent vergrößern"
 
-#: src/MainWindow.vala:780 src/ZoomWidget.vala:104
-#: data/com.github.phase1geo.minder.shortcuts.ui:119
+#: src/MainWindow.vala:781 src/ZoomWidget.vala:104
 msgid "Zoom In"
 msgstr "Vergrößern"
 
-#: src/MainWindow.vala:787 src/ZoomWidget.vala:92
-#: data/com.github.phase1geo.minder.shortcuts.ui:126
+#: src/MainWindow.vala:788 src/ZoomWidget.vala:92
 msgid "Zoom Out"
 msgstr "Verkleinern"
 
-#: src/MainWindow.vala:805 src/MainWindow.vala:1694
+#: src/MainWindow.vala:806 src/MainWindow.vala:1695
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoom (%d%%)"
 
-#: src/MainWindow.vala:818
+#: src/MainWindow.vala:819
 msgid "Search Nodes, Callouts and Connections"
 msgstr "Knoten, Callouts und Verbindungen durchsuchen"
 
-#: src/MainWindow.vala:863
+#: src/MainWindow.vala:864
 msgid "Search Criteria"
 msgstr "Suchkriterien"
 
-#: src/MainWindow.vala:867
+#: src/MainWindow.vala:868
 msgid "Search all tabs"
 msgstr "Alle Tabs durchsuchen"
 
-#: src/MainWindow.vala:908 src/StickerSet.vala:114
+#: src/MainWindow.vala:909 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Suchen"
 
-#: src/MainWindow.vala:916
+#: src/MainWindow.vala:917
 msgid "Nodes"
 msgstr "Knoten"
 
-#: src/MainWindow.vala:917
+#: src/MainWindow.vala:918
 msgid "Connections"
 msgstr "Verbindungen"
 
-#: src/MainWindow.vala:918
+#: src/MainWindow.vala:919
 msgid "Callouts"
 msgstr "Callouts"
 
-#: src/MainWindow.vala:919
+#: src/MainWindow.vala:920
 msgid "Groups"
 msgstr "Gruppen"
 
-#: src/MainWindow.vala:920
+#: src/MainWindow.vala:921
 msgid "Titles"
 msgstr "Titel"
 
-#: src/MainWindow.vala:921
+#: src/MainWindow.vala:922
 msgid "Notes"
 msgstr "Notizen"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:923
 msgid "Folded"
 msgstr "Zusammengeklappt"
 
-#: src/MainWindow.vala:923
+#: src/MainWindow.vala:924
 msgid "Unfolded"
 msgstr "Aufgeklappt"
 
-#: src/MainWindow.vala:924
+#: src/MainWindow.vala:925
 msgid "Tasks"
 msgstr "Aufgaben"
 
-#: src/MainWindow.vala:925
+#: src/MainWindow.vala:926
 msgid "Non-tasks"
 msgstr "Nicht-Aufgaben"
 
-#: src/MainWindow.vala:1047
+#: src/MainWindow.vala:1048
 msgid "Print…"
 msgstr "Drucken…"
 
-#: src/MainWindow.vala:1086
+#: src/MainWindow.vala:1087
 msgid "Brain Dump"
 msgstr ""
 
-#: src/MainWindow.vala:1162 src/Preferences.vala:50
+#: src/MainWindow.vala:1163 src/Preferences.vala:50
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: src/MainWindow.vala:1163
+#: src/MainWindow.vala:1164
 msgid "Shortcuts Cheatsheet"
 msgstr "Tastenkombinationen"
 
-#: src/MainWindow.vala:1166
+#: src/MainWindow.vala:1167
 msgid "About Minder"
 msgstr "Über Minder"
 
-#: src/MainWindow.vala:1193 src/MainWindow.vala:1778
+#: src/MainWindow.vala:1194 src/MainWindow.vala:1779
 msgid "Show Property Sidebar"
 msgstr "Eigenschaften-Seitenleiste anzeigen"
 
-#: src/MainWindow.vala:1204 src/MainWindow.vala:1247
+#: src/MainWindow.vala:1205 src/MainWindow.vala:1248
 msgid "Current"
 msgstr "Auswahl"
 
-#: src/MainWindow.vala:1205 src/MainWindow.vala:1248
+#: src/MainWindow.vala:1206 src/MainWindow.vala:1249
 #: src/StyleInspector.vala:363
 msgid "Style"
 msgstr "Stil"
 
-#: src/MainWindow.vala:1206 src/MainWindow.vala:1249 src/Preferences.vala:68
+#: src/MainWindow.vala:1207 src/MainWindow.vala:1250 src/Preferences.vala:68
 msgid "Tags"
 msgstr ""
 
-#: src/MainWindow.vala:1207 src/MainWindow.vala:1250
+#: src/MainWindow.vala:1208 src/MainWindow.vala:1251
 msgid "Stickers"
 msgstr "Aufkleber"
 
-#: src/MainWindow.vala:1208 src/MainWindow.vala:1251
+#: src/MainWindow.vala:1209 src/MainWindow.vala:1252
 msgid "Map"
 msgstr "Mindmap"
 
-#: src/MainWindow.vala:1324
+#: src/MainWindow.vala:1325
 msgid "Save current unnamed document?"
 msgstr "Aktuell unbenanntes Dokument speichern?"
 
-#: src/MainWindow.vala:1325
+#: src/MainWindow.vala:1326
 msgid "Changes will be permanently lost if not saved."
 msgstr "Änderungen gehen dauerhaft verloren, wenn nicht gespeichert wird."
 
-#: src/MainWindow.vala:1330
+#: src/MainWindow.vala:1331
 msgid "Discard Changes"
 msgstr "Änderungen verwerfen"
 
-#: src/MainWindow.vala:1336 src/MainWindow.vala:1625 src/ThemeEditor.vala:174
+#: src/MainWindow.vala:1337 src/MainWindow.vala:1626 src/ThemeEditor.vala:174
 msgid "Save"
 msgstr "Speichern"
 
-#: src/MainWindow.vala:1368
+#: src/MainWindow.vala:1369
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "Die Datei %s wurde außerhalb von der Applikation verändert."
 
-#: src/MainWindow.vala:1369
+#: src/MainWindow.vala:1370
 msgid "What do you want to do?"
 msgstr "Was möchten Sie tun?"
 
-#: src/MainWindow.vala:1374
+#: src/MainWindow.vala:1375
 msgid "Discard Changes and reload"
 msgstr "Änderungen verwerfen und neu laden"
 
-#: src/MainWindow.vala:1377
+#: src/MainWindow.vala:1378
 msgid "Save local version and overwrite"
 msgstr "Überschreibe die Datei mit der lokalen Version"
 
-#: src/MainWindow.vala:1423
+#: src/MainWindow.vala:1424
 msgid "Open Directory"
 msgstr "Verzeichnis öffnen"
 
-#: src/MainWindow.vala:1423
+#: src/MainWindow.vala:1424
 msgid "Open"
 msgstr "Öffnen"
 
-#: src/MainWindow.vala:1625
+#: src/MainWindow.vala:1626
 msgid "Save File"
 msgstr "Datei speichern"
 
-#: src/MainWindow.vala:1724
+#: src/MainWindow.vala:1725
 msgid "Hide Property Sidebar"
 msgstr "Eigenschaften-Seitenleiste ausblenden"
 
-#: src/MainWindow.vala:2200
+#: src/MainWindow.vala:2201
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2201
+#: src/MainWindow.vala:2202
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1528,31 +1520,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2206
+#: src/MainWindow.vala:2207
 #, fuzzy
 msgid "Quit Minder"
 msgstr "Über Minder"
 
-#: src/MainWindow.vala:2226
+#: src/MainWindow.vala:2227
 #, fuzzy
 msgid "Detail"
 msgstr "Abtrennen"
 
-#: src/MainWindow.vala:2234
+#: src/MainWindow.vala:2235
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2235
+#: src/MainWindow.vala:2236
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2236
+#: src/MainWindow.vala:2237
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1560,11 +1552,11 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2243
+#: src/MainWindow.vala:2244
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2268
+#: src/MainWindow.vala:2269
 msgid "Upgrades Needed"
 msgstr ""
 
@@ -1723,7 +1715,7 @@ msgstr "Knoten ausschneiden und in Zwischenablage ablegen"
 msgid "Detach Node"
 msgstr "Koten abtrennen"
 
-#: src/NodeInspector.vala:503 data/com.github.phase1geo.minder.shortcuts.ui:284
+#: src/NodeInspector.vala:503
 msgid "Delete Node"
 msgstr "Knoten löschen"
 
@@ -1773,7 +1765,6 @@ msgid "Add Task"
 msgstr "Aufgabe hinzufügen"
 
 #: src/NodeMenu.vala:53 src/NodeMenu.vala:230
-#: data/com.github.phase1geo.minder.shortcuts.ui:372
 msgid "Add Image"
 msgstr "Bild hinzufügen"
 
@@ -1801,7 +1792,7 @@ msgstr "Verbindungsfarbe"
 msgid "Fold Children"
 msgstr "Kinder zuklappen"
 
-#: src/NodeMenu.vala:61 data/com.github.phase1geo.minder.shortcuts.ui:414
+#: src/NodeMenu.vala:61
 #, fuzzy
 msgid "Toggle Sequence"
 msgstr "Auswahl des Elements umkehren"
@@ -1907,7 +1898,7 @@ msgstr "Knotenverbindung entfernen"
 msgid "Unfold Children"
 msgstr "Kinder aufklappen"
 
-#: src/NodeMenu.vala:229 data/com.github.phase1geo.minder.shortcuts.ui:663
+#: src/NodeMenu.vala:229
 msgid "Remove Callout"
 msgstr "Callout entfernen"
 
@@ -2348,16 +2339,15 @@ msgstr "Einfügen"
 msgid "No Commands Listed"
 msgstr "Knoten-Befehle"
 
-#: src/Shortcuts.vala:794 data/com.github.phase1geo.minder.shortcuts.ui:983
+#: src/Shortcuts.vala:794
 msgid "Mouse Events"
 msgstr "Mausereignisse"
 
-#: src/Shortcuts.vala:797 data/com.github.phase1geo.minder.shortcuts.ui:208
-#: data/com.github.phase1geo.minder.shortcuts.ui:991
+#: src/Shortcuts.vala:797
 msgid "Show Contextual Menu"
 msgstr "Kontextmenü anzeigen"
 
-#: src/Shortcuts.vala:797 data/com.github.phase1geo.minder.shortcuts.ui:992
+#: src/Shortcuts.vala:797
 msgid "[Right-click when item is selected]"
 msgstr "[Rechtsklick, wenn Element ausgewählt ist]"
 
@@ -2366,27 +2356,27 @@ msgstr "[Rechtsklick, wenn Element ausgewählt ist]"
 msgid "[Double left-click image]"
 msgstr "[Doppelklick mit der linken Maustaste auf das Bild]"
 
-#: src/Shortcuts.vala:800 data/com.github.phase1geo.minder.shortcuts.ui:1007
+#: src/Shortcuts.vala:800
 msgid "Canvas Movement"
 msgstr "Arbeitsbereich bewegen"
 
-#: src/Shortcuts.vala:801 data/com.github.phase1geo.minder.shortcuts.ui:1011
+#: src/Shortcuts.vala:801
 msgid "Pan Canvas"
 msgstr "Arbeitsbereich verschieben"
 
-#: src/Shortcuts.vala:801 data/com.github.phase1geo.minder.shortcuts.ui:1012
+#: src/Shortcuts.vala:801
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr "[Mittelklick + Ziehen / Alt + Bewegung]"
 
-#: src/Shortcuts.vala:802 data/com.github.phase1geo.minder.shortcuts.ui:1018
+#: src/Shortcuts.vala:802
 msgid "Scroll Vertically"
 msgstr "Vertikaler Bildlauf"
 
-#: src/Shortcuts.vala:802 data/com.github.phase1geo.minder.shortcuts.ui:1019
+#: src/Shortcuts.vala:802
 msgid "[Scrollwheel up/down]"
 msgstr "[Mausrad auf/ab]"
 
-#: src/Shortcuts.vala:803 data/com.github.phase1geo.minder.shortcuts.ui:1025
+#: src/Shortcuts.vala:803
 msgid "Scroll Horizontally"
 msgstr "Horizontaler Bildlauf"
 
@@ -2394,27 +2384,27 @@ msgstr "Horizontaler Bildlauf"
 msgid "[Scrollwhile left/right]"
 msgstr ""
 
-#: src/Shortcuts.vala:805 data/com.github.phase1geo.minder.shortcuts.ui:1034
+#: src/Shortcuts.vala:805
 msgid "Item Selection"
 msgstr "Elementauswahl"
 
-#: src/Shortcuts.vala:806 data/com.github.phase1geo.minder.shortcuts.ui:1038
+#: src/Shortcuts.vala:806
 msgid "Select Single Item"
 msgstr "Einzelnes Element auswählen"
 
-#: src/Shortcuts.vala:806 data/com.github.phase1geo.minder.shortcuts.ui:1039
+#: src/Shortcuts.vala:806
 msgid "[Left-click on item]"
 msgstr "[Linksklick auf Element]"
 
-#: src/Shortcuts.vala:807 data/com.github.phase1geo.minder.shortcuts.ui:1045
+#: src/Shortcuts.vala:807
 msgid "Select Child Nodes"
 msgstr "Kindknoten auswählen"
 
-#: src/Shortcuts.vala:807 data/com.github.phase1geo.minder.shortcuts.ui:1046
+#: src/Shortcuts.vala:807
 msgid "[Control + Left-click on parent node]"
 msgstr "[Steuerung + Linksklick auf übergeordneten Knoten]"
 
-#: src/Shortcuts.vala:808 data/com.github.phase1geo.minder.shortcuts.ui:1052
+#: src/Shortcuts.vala:808
 msgid "Select Node Tree/Subtree"
 msgstr "Knotenbaum/Teilbaum auswählen"
 
@@ -2423,19 +2413,19 @@ msgstr "Knotenbaum/Teilbaum auswählen"
 msgid "[Control + Double left-click on parent node"
 msgstr "[Steuerung + Doppelter Linksklick auf übergeordneten Knoten]"
 
-#: src/Shortcuts.vala:809 data/com.github.phase1geo.minder.shortcuts.ui:1059
+#: src/Shortcuts.vala:809
 msgid "Select All Nodes at Same Depth Level"
 msgstr "Alle Knoten auf gleicher Ebene auswählen"
 
-#: src/Shortcuts.vala:809 data/com.github.phase1geo.minder.shortcuts.ui:1060
+#: src/Shortcuts.vala:809
 msgid "[Control + Triple left-click on node]"
 msgstr "[Steuerung + Dreifach-Linksklick auf Knoten]"
 
-#: src/Shortcuts.vala:810 data/com.github.phase1geo.minder.shortcuts.ui:1066
+#: src/Shortcuts.vala:810
 msgid "Block Selection"
 msgstr "Blockauswahl"
 
-#: src/Shortcuts.vala:810 data/com.github.phase1geo.minder.shortcuts.ui:1067
+#: src/Shortcuts.vala:810
 msgid "[Left-click + Drag]"
 msgstr "[Linksklick + Ziehen]"
 
@@ -2444,32 +2434,32 @@ msgstr "[Linksklick + Ziehen]"
 msgid "Item Selection Toggle"
 msgstr "Elementauswahl"
 
-#: src/Shortcuts.vala:813 data/com.github.phase1geo.minder.shortcuts.ui:1079
+#: src/Shortcuts.vala:813
 msgid "Toggle Selection of Item"
 msgstr "Auswahl des Elements umkehren"
 
-#: src/Shortcuts.vala:813 data/com.github.phase1geo.minder.shortcuts.ui:1080
+#: src/Shortcuts.vala:813
 msgid "[Shift + Left-click on item]"
 msgstr "[Umschalt + Linksklick auf Element]"
 
-#: src/Shortcuts.vala:814 data/com.github.phase1geo.minder.shortcuts.ui:1086
+#: src/Shortcuts.vala:814
 msgid "Toggle Selection of Child Nodes"
 msgstr "Auswahl von Kindknoten umschalten"
 
-#: src/Shortcuts.vala:814 data/com.github.phase1geo.minder.shortcuts.ui:1087
+#: src/Shortcuts.vala:814
 msgid "[Shift + Control + Left-click on item]"
 msgstr "[Umschalt + Steuerung + Linksklick auf Element]"
 
-#: src/Shortcuts.vala:815 data/com.github.phase1geo.minder.shortcuts.ui:1093
+#: src/Shortcuts.vala:815
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "Auswahl des Knotenbaums/Unterbaums umkehren"
 
-#: src/Shortcuts.vala:815 data/com.github.phase1geo.minder.shortcuts.ui:1094
+#: src/Shortcuts.vala:815
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr ""
 "[Umschalt + Steuerung + Doppelter Linksklick auf übergeordneten Knoten]"
 
-#: src/Shortcuts.vala:816 data/com.github.phase1geo.minder.shortcuts.ui:1100
+#: src/Shortcuts.vala:816
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr "Auswahl aller Knoten auf derselben Tiefenebene umkehren"
 
@@ -2478,11 +2468,11 @@ msgstr "Auswahl aller Knoten auf derselben Tiefenebene umkehren"
 msgid "Shift + Control + Triple-click on node]"
 msgstr "[Umschalt + Steuerung + Dreifach-Linksklick auf Knoten]"
 
-#: src/Shortcuts.vala:818 data/com.github.phase1geo.minder.shortcuts.ui:1109
+#: src/Shortcuts.vala:818
 msgid "Text Selection"
 msgstr "Textauswahl"
 
-#: src/Shortcuts.vala:819 data/com.github.phase1geo.minder.shortcuts.ui:1113
+#: src/Shortcuts.vala:819
 msgid "Set Cursor Insert Point"
 msgstr "Cursor Einfügeposition setzen"
 
@@ -2496,7 +2486,7 @@ msgstr "[Linksklick auf Element]"
 msgid "Select Current Word"
 msgstr "Aktuelles Wort auswählen"
 
-#: src/Shortcuts.vala:820 data/com.github.phase1geo.minder.shortcuts.ui:1121
+#: src/Shortcuts.vala:820
 msgid "[Double left-click on word]"
 msgstr "[Doppelklick mit der linken Maustaste auf ein Wort]"
 
@@ -2769,7 +2759,7 @@ msgstr "Ordner"
 msgid "Opened folder"
 msgstr "Geöffneter Ordner"
 
-#: src/StickerSet.vala:84 data/com.github.phase1geo.minder.shortcuts.ui:16
+#: src/StickerSet.vala:84
 msgid "File"
 msgstr "Datei"
 
@@ -4637,520 +4627,384 @@ msgstr "Fehler: %s\n"
 msgid "Zoom Actual"
 msgstr "Zoom zurücksetzen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:6
-msgid "Minder Shortcuts"
-msgstr "Minder Tastenkombinationen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:35
-msgid "Import File"
-msgstr "Datei importieren"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:58
-msgid "Print File"
-msgstr "Datei drucken"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:67
-msgid "Notebook Tabs"
-msgstr "Notizbuch-Tabs"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:72
-msgid "Close Current Tab"
-msgstr "Aktuelles Tab Schließen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:79
-msgid "Go to Next Tab"
-msgstr "Zum nächsten Tab gehen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:86
-msgid "Go to Previous Tab"
-msgstr "Zum vorherigen Tab gehen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:95
-msgid "Undo/Redo"
-msgstr "Rückgängig/Wiederherstellen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:99
-msgid "Undo Last Change"
-msgstr "Letzte Änderung rückgängig machen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:106
-msgid "Redo Last Undo"
-msgstr "Wiederherstellen der letzten rückgängig gemachten Aktion"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:115
-msgid "Zooming"
-msgstr "Vergrößern"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:133
-msgid "Zoom To Actual Size"
-msgstr "Auf tatsächliche Größe zoomen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:147
-msgid "Zoom To Fit"
-msgstr "Auf Fenstergröße einpassen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:156
-msgid "Properties Sidebar"
-msgstr "Eigenschaften-Seitenleiste"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:160
-msgid "Show Current Tab"
-msgstr "Aktuellen Tab anzeigen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:167
-msgid "Show Style Tab"
-msgstr "Stil-Tab anzeigen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:174
-msgid "Show Sticker Tab"
-msgstr "Aufkleber-Tab zeigen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:181
-msgid "Show Map Tab"
-msgstr "Mindmap-Tab anzeigen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:190
-#: data/com.github.phase1geo.minder.shortcuts.ui:767
-msgid "Miscellaneous"
-msgstr "Sonstiges"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:194
-msgid "Toggle Focus Mode"
-msgstr "Fokusmodus umschalten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:201
-msgid "Search Nodes/Connections"
-msgstr "Knoten/Verbindungen durchsuchen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:215
-msgid "Show Preferences"
-msgstr "Einstellungen anzeigen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:222
-msgid "Show Keyboard Shortcuts"
-msgstr "Tastenkombinationen anzeigen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:229
-msgid "Quit Application"
-msgstr "Applikation beenden"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:241
-msgid "Node Commands"
-msgstr "Knoten-Befehle"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:245
-msgid "Creation/Deletion"
-msgstr "Erstellen/Löschen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:249
-msgid "New Sibling Node"
-msgstr "Neuer Geschwisterknoten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:256
-msgid "New Connected Node"
-msgstr "Neuer verbundener Knoten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:263
-msgid "New Child Node"
-msgstr "Neuer Kinderknoten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:270
-msgid "Quick Entry Insertion"
-msgstr "Schnelleingabe hinzufügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:277
-msgid "Quick Entry Replacement"
-msgstr "Schnelleingabe ersetzen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:293
-#: data/com.github.phase1geo.minder.shortcuts.ui:877
-msgid "Clipboard"
-msgstr "Zwischenablage"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:297
-msgid "Copy Node"
-msgstr "Knoten kopieren"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:304
-msgid "Cut Node"
-msgstr "Knoten ausschneiden"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:311
-msgid "Add Child Node With Clipboard"
-msgstr "Kindknoten aus Zwischenablage hinzufügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:318
-msgid "Replace With Clipboard"
-msgstr "Aus Zwischenablage ersetzen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:327
-msgid "View"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:331
-msgid "Center In View"
-msgstr "Auf Arbeitsfläche zentrieren"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:338
-#: data/com.github.phase1geo.minder.shortcuts.ui:717
-msgid "Place Into View"
-msgstr "Auf Arbeitsfläche platzieren"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:347
-msgid "Changing Current"
-msgstr "Auswahl ändern"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:351
-#: data/com.github.phase1geo.minder.shortcuts.ui:696
-msgid "Edit Title"
-msgstr "Titel ändern"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:365
-msgid "Change Task State"
-msgstr "Aufgabenstatus ändern"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:379
-msgid "Add URL Link To Text"
-msgstr "URL-Link zum Text hinzufügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:386
-#: data/com.github.phase1geo.minder.shortcuts.ui:799
-msgid "Remove URL Link From Text"
-msgstr "URL-Link aus Text entfernen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:393
-msgid "Change Link Color"
-msgstr "Verbindungsfarbe ändern"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:400
-msgid "View Properties"
-msgstr "Eigenschaften ansehen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:407
-msgid "Toggle Fold"
-msgstr "Zusammenklappen umschalten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:421
-msgid "Toggle Node Link"
-msgstr "Knotenlink umschalten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:428
-msgid "Create Link to Selected Node"
-msgstr "Verweis auf ausgewählten Knoten erstellen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:429
-msgid "[After using this command, 'y' will create the link]"
-msgstr ""
-"[Nach der Verwendung dieses Befehls wird mit »y« die Verbindung hergestellt]"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:436
-msgid "Create Group"
-msgstr "Gruppe erstellen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:443
-msgid "Create Connection"
-msgstr "Verbindung erstellen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:450
-msgid "Create Callout"
-msgstr "Callout erstellen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:459
-#: data/com.github.phase1geo.minder.shortcuts.ui:672
-#: data/com.github.phase1geo.minder.shortcuts.ui:904
-msgid "Selection"
-msgstr "Auswahl"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:463
-msgid "Select Root"
-msgstr "Wurzel auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:470
-msgid "Select Parent"
-msgstr "Elter auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:477
-msgid "Select Next Sibling"
-msgstr "Nächten Geschwisterknoten auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:484
-msgid "Select Previous Sibling"
-msgstr "Vorherigen Geschwisterknoten auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:491
-msgid "Select Child"
-msgstr "Kind auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:498
-msgid "Select Children"
-msgstr "Kinder auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:505
-msgid "Select Subtree"
-msgstr "Unterbaum auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:512
-msgid "Select Node Below"
-msgstr "Knoten darunter auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:519
-msgid "Select Node Above"
-msgstr "Knoten darüber auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:526
-msgid "Select Node To Right"
-msgstr "Rechten Knoten auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:533
-msgid "Select Node To Left"
-msgstr "Linken Knoten auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:540
-msgid "Select Linked Node"
-msgstr "Verbundenen Knoten auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:547
-msgid "Select Callout"
-msgstr "Callout auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:554
-msgid "Select Attached Connection"
-msgstr "Dazugehörige Verbindung auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:563
-msgid "Move"
-msgstr "Verschieben"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:567
-msgid "Swap with Sibling Node to Right"
-msgstr "Mit rechten Geschwisterknoten tauschen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:574
-msgid "Swap with Sibling Node to Left"
-msgstr "Mit linken Geschwisterknoten tauschen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:581
-msgid "Swap with Sibling Node Above"
-msgstr "Mit darüber liegenden Geschwisterknoten tauschen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:588
-msgid "Swap with Sibling Node Below"
-msgstr "Mit darunter liegenden Geschwisterknoten tauschen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:595
-msgid "Sort Child Nodes Alphabetically"
-msgstr "Kindknoten alphabetisch sortieren"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:604
-msgid "Alignment"
-msgstr "Ausrichten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:608
-msgid "Align Top Side"
-msgstr "Oberseite ausrichten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:615
-msgid "Align Vertical Center"
-msgstr "Vertikale Mitte ausrichten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:622
-msgid "Align Bottom Side"
-msgstr "Unterseite ausrichten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:629
-msgid "Align Left Side"
-msgstr "Linke Seite ausrichten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:636
-msgid "Align Horizontal Center"
-msgstr "Horizontale Mitte ausrichten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:643
-msgid "Align Right Side"
-msgstr "Rechte Seite ausrichten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:655
-msgid "Callout Commands"
-msgstr "Callout-Befehle"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:659
-#: data/com.github.phase1geo.minder.shortcuts.ui:692
-msgid "Change Current"
-msgstr "Aktuelles Element ändern"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:688
-msgid "Connection Commands"
-msgstr "Verbindungsbefehle"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:710
-msgid "Show Properties"
-msgstr "Eigenschaften anzeigen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:726
-msgid "Traversal"
-msgstr "Traversierung"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:730
-msgid "Select Start Node"
-msgstr "Start-Knoten auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:737
-msgid "Select End Node"
-msgstr "End-Knoten auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:744
-msgid "Select Next Connection"
-msgstr "Nächste Verbindung auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:751
-msgid "Select Previous Connection"
-msgstr "Vorherige Verbindung auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:771
-msgid "Insert Newline Character"
-msgstr "Zeilenumbruchzeichen einfügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:778
-msgid "Insert Tab Character"
-msgstr "Tabulatorzeichen einfügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:785
-msgid "Show Emoji Picker"
-msgstr "Emoji-Auswahl anzeigen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:792
-msgid "Add URL Link To Selected Text"
-msgstr "URL-Link zum ausgewählten Text hinzufügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:806
-msgid "End Editing"
-msgstr "Bearbeitung beenden"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:815
-msgid "Cursor Movement"
-msgstr "Cursor-Bewegung"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:819
-msgid "Next Character"
-msgstr "Nächstes Zeichen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:826
-msgid "Previous Character"
-msgstr "Vorheriges Zeichen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:833
-msgid "Next Word"
-msgstr "Nächstes Wort"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:840
-msgid "Previous Word"
-msgstr "Vorheriges Wort"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:847
-msgid "Next Line"
-msgstr "Nächste Zeile"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:854
-msgid "Previous Line"
-msgstr "Vorherige Zeile"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:861
-msgid "Start Of Text"
-msgstr "Textstart"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:868
-msgid "End Of Text"
-msgstr "Textende"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:881
-msgid "Copy Selected Text"
-msgstr "Ausgewählten Text kopieren"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:888
-msgid "Cut Selected Text"
-msgstr "Ausgewählten Text ausschneiden"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:895
-msgid "Paste Text"
-msgstr "Text einfügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:908
-msgid "Add Next Character"
-msgstr "Nächstes Zeichen hinzufügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:915
-msgid "Add Previous Character"
-msgstr "Vorheriges Zeichen hinzufügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:922
-msgid "Add Next Word"
-msgstr "Nächstes Wort hinzufügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:929
-msgid "Add Previous Word"
-msgstr "Vorheriges Wort hinzufügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:936
-msgid "Add Next Line"
-msgstr "Nächste Zeile hinzufügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:943
-msgid "Add Previous Line"
-msgstr "Vorherige Zeile hinzufügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:950
-msgid "Add Start Of Text"
-msgstr "Start des Textes hinzufügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:957
-msgid "Add End Of Text"
-msgstr "Ende des Textes hinzufügen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:964
-msgid "Select All Text"
-msgstr "Gesamten Text auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:971
-msgid "Clear Selection"
-msgstr "Auswahl löschen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:998
-msgid "Edit Image in Canvas"
-msgstr "Bild im Arbeitsbereich bearbeiten"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:999
-msgid "[Double left-click on image]"
-msgstr "[Doppelklick mit der linken Maustaste auf das Bild]"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1026
-msgid "[Shift + Scrollwheel up/down]"
-msgstr "[Umschalt + Mausrad auf/ab]"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1053
-msgid "[Control + Double left-click on parent node]"
-msgstr "[Steuerung + Doppelter Linksklick auf übergeordneten Knoten]"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1075
-msgid "Item Selection Toggle (Add to/Remove from Selection)"
-msgstr ""
-"Umkehren der Elementauswahl (Zur Auswahl hinzufügen/aus der Auswahl "
-"entfernen)"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1101
-msgid "[Shift + Control + Triple left-click on node]"
-msgstr "[Umschalt + Steuerung + Dreifach-Linksklick auf Knoten]"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1114
-msgid "[Left-click anywhere in text]"
-msgstr "[Linksklick auf beliebiger Stelle im Text]"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1120
-msgid "Select current word"
-msgstr "Aktuelles Wort auswählen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1128
-msgid "[Triple left-click anywhere in text]"
-msgstr "[Dreifacher Linksklick an beliebiger Stelle im Text]"
+#~ msgid "Minder Shortcuts"
+#~ msgstr "Minder Tastenkombinationen"
+
+#~ msgid "Import File"
+#~ msgstr "Datei importieren"
+
+#~ msgid "Print File"
+#~ msgstr "Datei drucken"
+
+#~ msgid "Notebook Tabs"
+#~ msgstr "Notizbuch-Tabs"
+
+#~ msgid "Close Current Tab"
+#~ msgstr "Aktuelles Tab Schließen"
+
+#~ msgid "Go to Next Tab"
+#~ msgstr "Zum nächsten Tab gehen"
+
+#~ msgid "Go to Previous Tab"
+#~ msgstr "Zum vorherigen Tab gehen"
+
+#~ msgid "Undo/Redo"
+#~ msgstr "Rückgängig/Wiederherstellen"
+
+#~ msgid "Undo Last Change"
+#~ msgstr "Letzte Änderung rückgängig machen"
+
+#~ msgid "Redo Last Undo"
+#~ msgstr "Wiederherstellen der letzten rückgängig gemachten Aktion"
+
+#~ msgid "Zooming"
+#~ msgstr "Vergrößern"
+
+#~ msgid "Zoom To Actual Size"
+#~ msgstr "Auf tatsächliche Größe zoomen"
+
+#~ msgid "Zoom To Fit"
+#~ msgstr "Auf Fenstergröße einpassen"
+
+#~ msgid "Properties Sidebar"
+#~ msgstr "Eigenschaften-Seitenleiste"
+
+#~ msgid "Show Current Tab"
+#~ msgstr "Aktuellen Tab anzeigen"
+
+#~ msgid "Show Style Tab"
+#~ msgstr "Stil-Tab anzeigen"
+
+#~ msgid "Show Sticker Tab"
+#~ msgstr "Aufkleber-Tab zeigen"
+
+#~ msgid "Show Map Tab"
+#~ msgstr "Mindmap-Tab anzeigen"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Sonstiges"
+
+#~ msgid "Toggle Focus Mode"
+#~ msgstr "Fokusmodus umschalten"
+
+#~ msgid "Search Nodes/Connections"
+#~ msgstr "Knoten/Verbindungen durchsuchen"
+
+#~ msgid "Show Preferences"
+#~ msgstr "Einstellungen anzeigen"
+
+#~ msgid "Show Keyboard Shortcuts"
+#~ msgstr "Tastenkombinationen anzeigen"
+
+#~ msgid "Quit Application"
+#~ msgstr "Applikation beenden"
+
+#~ msgid "Node Commands"
+#~ msgstr "Knoten-Befehle"
+
+#~ msgid "Creation/Deletion"
+#~ msgstr "Erstellen/Löschen"
+
+#~ msgid "New Sibling Node"
+#~ msgstr "Neuer Geschwisterknoten"
+
+#~ msgid "New Connected Node"
+#~ msgstr "Neuer verbundener Knoten"
+
+#~ msgid "New Child Node"
+#~ msgstr "Neuer Kinderknoten"
+
+#~ msgid "Quick Entry Insertion"
+#~ msgstr "Schnelleingabe hinzufügen"
+
+#~ msgid "Quick Entry Replacement"
+#~ msgstr "Schnelleingabe ersetzen"
+
+#~ msgid "Clipboard"
+#~ msgstr "Zwischenablage"
+
+#~ msgid "Copy Node"
+#~ msgstr "Knoten kopieren"
+
+#~ msgid "Cut Node"
+#~ msgstr "Knoten ausschneiden"
+
+#~ msgid "Add Child Node With Clipboard"
+#~ msgstr "Kindknoten aus Zwischenablage hinzufügen"
+
+#~ msgid "Replace With Clipboard"
+#~ msgstr "Aus Zwischenablage ersetzen"
+
+#~ msgid "Center In View"
+#~ msgstr "Auf Arbeitsfläche zentrieren"
+
+#~ msgid "Place Into View"
+#~ msgstr "Auf Arbeitsfläche platzieren"
+
+#~ msgid "Changing Current"
+#~ msgstr "Auswahl ändern"
+
+#~ msgid "Edit Title"
+#~ msgstr "Titel ändern"
+
+#~ msgid "Change Task State"
+#~ msgstr "Aufgabenstatus ändern"
+
+#~ msgid "Add URL Link To Text"
+#~ msgstr "URL-Link zum Text hinzufügen"
+
+#~ msgid "Remove URL Link From Text"
+#~ msgstr "URL-Link aus Text entfernen"
+
+#~ msgid "Change Link Color"
+#~ msgstr "Verbindungsfarbe ändern"
+
+#~ msgid "View Properties"
+#~ msgstr "Eigenschaften ansehen"
+
+#~ msgid "Toggle Fold"
+#~ msgstr "Zusammenklappen umschalten"
+
+#~ msgid "Toggle Node Link"
+#~ msgstr "Knotenlink umschalten"
+
+#~ msgid "Create Link to Selected Node"
+#~ msgstr "Verweis auf ausgewählten Knoten erstellen"
+
+#~ msgid "[After using this command, 'y' will create the link]"
+#~ msgstr ""
+#~ "[Nach der Verwendung dieses Befehls wird mit »y« die Verbindung "
+#~ "hergestellt]"
+
+#~ msgid "Create Group"
+#~ msgstr "Gruppe erstellen"
+
+#~ msgid "Create Connection"
+#~ msgstr "Verbindung erstellen"
+
+#~ msgid "Create Callout"
+#~ msgstr "Callout erstellen"
+
+#~ msgid "Selection"
+#~ msgstr "Auswahl"
+
+#~ msgid "Select Root"
+#~ msgstr "Wurzel auswählen"
+
+#~ msgid "Select Parent"
+#~ msgstr "Elter auswählen"
+
+#~ msgid "Select Next Sibling"
+#~ msgstr "Nächten Geschwisterknoten auswählen"
+
+#~ msgid "Select Previous Sibling"
+#~ msgstr "Vorherigen Geschwisterknoten auswählen"
+
+#~ msgid "Select Child"
+#~ msgstr "Kind auswählen"
+
+#~ msgid "Select Children"
+#~ msgstr "Kinder auswählen"
+
+#~ msgid "Select Subtree"
+#~ msgstr "Unterbaum auswählen"
+
+#~ msgid "Select Node Below"
+#~ msgstr "Knoten darunter auswählen"
+
+#~ msgid "Select Node Above"
+#~ msgstr "Knoten darüber auswählen"
+
+#~ msgid "Select Node To Right"
+#~ msgstr "Rechten Knoten auswählen"
+
+#~ msgid "Select Node To Left"
+#~ msgstr "Linken Knoten auswählen"
+
+#~ msgid "Select Linked Node"
+#~ msgstr "Verbundenen Knoten auswählen"
+
+#~ msgid "Select Callout"
+#~ msgstr "Callout auswählen"
+
+#~ msgid "Select Attached Connection"
+#~ msgstr "Dazugehörige Verbindung auswählen"
+
+#~ msgid "Move"
+#~ msgstr "Verschieben"
+
+#~ msgid "Swap with Sibling Node to Right"
+#~ msgstr "Mit rechten Geschwisterknoten tauschen"
+
+#~ msgid "Swap with Sibling Node to Left"
+#~ msgstr "Mit linken Geschwisterknoten tauschen"
+
+#~ msgid "Swap with Sibling Node Above"
+#~ msgstr "Mit darüber liegenden Geschwisterknoten tauschen"
+
+#~ msgid "Swap with Sibling Node Below"
+#~ msgstr "Mit darunter liegenden Geschwisterknoten tauschen"
+
+#~ msgid "Sort Child Nodes Alphabetically"
+#~ msgstr "Kindknoten alphabetisch sortieren"
+
+#~ msgid "Alignment"
+#~ msgstr "Ausrichten"
+
+#~ msgid "Align Top Side"
+#~ msgstr "Oberseite ausrichten"
+
+#~ msgid "Align Vertical Center"
+#~ msgstr "Vertikale Mitte ausrichten"
+
+#~ msgid "Align Bottom Side"
+#~ msgstr "Unterseite ausrichten"
+
+#~ msgid "Align Left Side"
+#~ msgstr "Linke Seite ausrichten"
+
+#~ msgid "Align Horizontal Center"
+#~ msgstr "Horizontale Mitte ausrichten"
+
+#~ msgid "Align Right Side"
+#~ msgstr "Rechte Seite ausrichten"
+
+#~ msgid "Callout Commands"
+#~ msgstr "Callout-Befehle"
+
+#~ msgid "Change Current"
+#~ msgstr "Aktuelles Element ändern"
+
+#~ msgid "Connection Commands"
+#~ msgstr "Verbindungsbefehle"
+
+#~ msgid "Show Properties"
+#~ msgstr "Eigenschaften anzeigen"
+
+#~ msgid "Traversal"
+#~ msgstr "Traversierung"
+
+#~ msgid "Select Start Node"
+#~ msgstr "Start-Knoten auswählen"
+
+#~ msgid "Select End Node"
+#~ msgstr "End-Knoten auswählen"
+
+#~ msgid "Select Next Connection"
+#~ msgstr "Nächste Verbindung auswählen"
+
+#~ msgid "Select Previous Connection"
+#~ msgstr "Vorherige Verbindung auswählen"
+
+#~ msgid "Insert Newline Character"
+#~ msgstr "Zeilenumbruchzeichen einfügen"
+
+#~ msgid "Insert Tab Character"
+#~ msgstr "Tabulatorzeichen einfügen"
+
+#~ msgid "Show Emoji Picker"
+#~ msgstr "Emoji-Auswahl anzeigen"
+
+#~ msgid "Add URL Link To Selected Text"
+#~ msgstr "URL-Link zum ausgewählten Text hinzufügen"
+
+#~ msgid "End Editing"
+#~ msgstr "Bearbeitung beenden"
+
+#~ msgid "Cursor Movement"
+#~ msgstr "Cursor-Bewegung"
+
+#~ msgid "Next Character"
+#~ msgstr "Nächstes Zeichen"
+
+#~ msgid "Previous Character"
+#~ msgstr "Vorheriges Zeichen"
+
+#~ msgid "Next Word"
+#~ msgstr "Nächstes Wort"
+
+#~ msgid "Previous Word"
+#~ msgstr "Vorheriges Wort"
+
+#~ msgid "Next Line"
+#~ msgstr "Nächste Zeile"
+
+#~ msgid "Previous Line"
+#~ msgstr "Vorherige Zeile"
+
+#~ msgid "Start Of Text"
+#~ msgstr "Textstart"
+
+#~ msgid "End Of Text"
+#~ msgstr "Textende"
+
+#~ msgid "Copy Selected Text"
+#~ msgstr "Ausgewählten Text kopieren"
+
+#~ msgid "Cut Selected Text"
+#~ msgstr "Ausgewählten Text ausschneiden"
+
+#~ msgid "Paste Text"
+#~ msgstr "Text einfügen"
+
+#~ msgid "Add Next Character"
+#~ msgstr "Nächstes Zeichen hinzufügen"
+
+#~ msgid "Add Previous Character"
+#~ msgstr "Vorheriges Zeichen hinzufügen"
+
+#~ msgid "Add Next Word"
+#~ msgstr "Nächstes Wort hinzufügen"
+
+#~ msgid "Add Previous Word"
+#~ msgstr "Vorheriges Wort hinzufügen"
+
+#~ msgid "Add Next Line"
+#~ msgstr "Nächste Zeile hinzufügen"
+
+#~ msgid "Add Previous Line"
+#~ msgstr "Vorherige Zeile hinzufügen"
+
+#~ msgid "Add Start Of Text"
+#~ msgstr "Start des Textes hinzufügen"
+
+#~ msgid "Add End Of Text"
+#~ msgstr "Ende des Textes hinzufügen"
+
+#~ msgid "Select All Text"
+#~ msgstr "Gesamten Text auswählen"
+
+#~ msgid "Clear Selection"
+#~ msgstr "Auswahl löschen"
+
+#~ msgid "Edit Image in Canvas"
+#~ msgstr "Bild im Arbeitsbereich bearbeiten"
+
+#~ msgid "[Double left-click on image]"
+#~ msgstr "[Doppelklick mit der linken Maustaste auf das Bild]"
+
+#~ msgid "[Shift + Scrollwheel up/down]"
+#~ msgstr "[Umschalt + Mausrad auf/ab]"
+
+#~ msgid "[Control + Double left-click on parent node]"
+#~ msgstr "[Steuerung + Doppelter Linksklick auf übergeordneten Knoten]"
+
+#~ msgid "Item Selection Toggle (Add to/Remove from Selection)"
+#~ msgstr ""
+#~ "Umkehren der Elementauswahl (Zur Auswahl hinzufügen/aus der Auswahl "
+#~ "entfernen)"
+
+#~ msgid "[Shift + Control + Triple left-click on node]"
+#~ msgstr "[Umschalt + Steuerung + Dreifach-Linksklick auf Knoten]"
+
+#~ msgid "[Left-click anywhere in text]"
+#~ msgstr "[Linksklick auf beliebiger Stelle im Text]"
+
+#~ msgid "Select current word"
+#~ msgstr "Aktuelles Wort auswählen"
+
+#~ msgid "[Triple left-click anywhere in text]"
+#~ msgstr "[Dreifacher Linksklick an beliebiger Stelle im Text]"
 
 #, fuzzy
 #~ msgid "Delete Saved Style"

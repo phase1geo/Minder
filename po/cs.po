@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-13 20:25-0600\n"
+"POT-Creation-Date: 2025-11-18 09:45-0600\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -120,7 +120,7 @@ msgstr ""
 msgid "Delete"
 msgstr "Smazat"
 
-#: src/CalloutMenu.vala:36 data/com.github.phase1geo.minder.shortcuts.ui:676
+#: src/CalloutMenu.vala:36
 msgid "Select Node"
 msgstr "Vybrat uzel"
 
@@ -159,8 +159,6 @@ msgid "Edit Title…"
 msgstr "Upravit název…"
 
 #: src/ConnectionMenu.vala:38 src/GroupsMenu.vala:36 src/NodeMenu.vala:50
-#: data/com.github.phase1geo.minder.shortcuts.ui:358
-#: data/com.github.phase1geo.minder.shortcuts.ui:703
 msgid "Edit Note"
 msgstr "Upravit poznámku"
 
@@ -238,13 +236,13 @@ msgid ""
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1333
+#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1334
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
 #: src/ThemeEditor.vala:169 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2209
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2210
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Aplikovat"
@@ -253,7 +251,7 @@ msgstr "Aplikovat"
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:714 src/MainWindow.vala:2246
+#: src/Document.vala:714 src/MainWindow.vala:2247
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
@@ -342,7 +340,7 @@ msgstr "Možnosti exportu"
 msgid "Export As %s"
 msgstr "Exportovat jako %s"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1072 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1073 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Export"
 
@@ -569,8 +567,6 @@ msgid "Images"
 msgstr "Obrázky"
 
 #: src/KeyCommands.vala:569 src/Shortcuts.vala:796
-#: data/com.github.phase1geo.minder.shortcuts.ui:12
-#: data/com.github.phase1geo.minder.shortcuts.ui:987
 msgid "General"
 msgstr "Obecné"
 
@@ -1104,7 +1100,7 @@ msgstr ""
 msgid "Selects all nodes within current group(s)"
 msgstr ""
 
-#: src/KeyCommands.vala:690 data/com.github.phase1geo.minder.shortcuts.ui:763
+#: src/KeyCommands.vala:690
 msgid "Text Editing"
 msgstr "Úprava textu"
 
@@ -1270,7 +1266,6 @@ msgid "Add end of current line to current selection"
 msgstr ""
 
 #: src/KeyCommands.vala:730 src/Shortcuts.vala:821
-#: data/com.github.phase1geo.minder.shortcuts.ui:1127
 msgid "Select all text"
 msgstr "Vybrat celý text"
 
@@ -1289,20 +1284,19 @@ msgstr "Vyberte barvu odkazu"
 msgid "Manual"
 msgstr "Ruční"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1629
+#: src/MainWindow.vala:183 src/MainWindow.vala:1630
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:242 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:242
 msgid "New File"
 msgstr "Nový soubor"
 
-#: src/MainWindow.vala:247 src/MainWindow.vala:1423
-#: data/com.github.phase1geo.minder.shortcuts.ui:28
+#: src/MainWindow.vala:247 src/MainWindow.vala:1424
 msgid "Open File"
 msgstr "Otevřít soubor"
 
-#: src/MainWindow.vala:252 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:252
 msgid "Save File As"
 msgstr "Uložit soubor jako"
 
@@ -1314,213 +1308,211 @@ msgstr "Zpět"
 msgid "Redo"
 msgstr "Znovu"
 
-#: src/MainWindow.vala:728
+#: src/MainWindow.vala:729
 msgid "Tag Highlight Mode"
 msgstr ""
 
-#: src/MainWindow.vala:730 src/MainWindow.vala:1142
+#: src/MainWindow.vala:731 src/MainWindow.vala:1143
 msgid "Focus Mode"
 msgstr "Režim soustředění"
 
-#: src/MainWindow.vala:733
+#: src/MainWindow.vala:734
 msgid "Unnamed Document"
 msgstr "Nepojmenovaný dokument"
 
-#: src/MainWindow.vala:736
+#: src/MainWindow.vala:737
 #, fuzzy
 msgid "Read-Only"
 msgstr "Čtení"
 
-#: src/MainWindow.vala:755
+#: src/MainWindow.vala:756
 msgid "Zoom to Fit"
 msgstr "Vměstnat do okna"
 
-#: src/MainWindow.vala:756 data/com.github.phase1geo.minder.shortcuts.ui:140
+#: src/MainWindow.vala:757
 #, fuzzy
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "Vměstnat do okna vybraný uzel"
 
-#: src/MainWindow.vala:757
+#: src/MainWindow.vala:758
 msgid "Zoom to Actual Size"
 msgstr "Přiblížení na skutečnou velikost"
 
-#: src/MainWindow.vala:765
+#: src/MainWindow.vala:766
 msgid "Zoom to Percent"
 msgstr "Procentuální přiblížení"
 
-#: src/MainWindow.vala:780 src/ZoomWidget.vala:104
-#: data/com.github.phase1geo.minder.shortcuts.ui:119
+#: src/MainWindow.vala:781 src/ZoomWidget.vala:104
 msgid "Zoom In"
 msgstr "Přiblížit"
 
-#: src/MainWindow.vala:787 src/ZoomWidget.vala:92
-#: data/com.github.phase1geo.minder.shortcuts.ui:126
+#: src/MainWindow.vala:788 src/ZoomWidget.vala:92
 msgid "Zoom Out"
 msgstr "Oddálit"
 
-#: src/MainWindow.vala:805 src/MainWindow.vala:1694
+#: src/MainWindow.vala:806 src/MainWindow.vala:1695
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Přiblížení (%d%%)"
 
-#: src/MainWindow.vala:818
+#: src/MainWindow.vala:819
 #, fuzzy
 msgid "Search Nodes, Callouts and Connections"
 msgstr "Hledat uzly a spojení"
 
-#: src/MainWindow.vala:863
+#: src/MainWindow.vala:864
 msgid "Search Criteria"
 msgstr "Kritéria hledání"
 
-#: src/MainWindow.vala:867
+#: src/MainWindow.vala:868
 msgid "Search all tabs"
 msgstr "Prohledat všechny panely"
 
-#: src/MainWindow.vala:908 src/StickerSet.vala:114
+#: src/MainWindow.vala:909 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Hledat"
 
-#: src/MainWindow.vala:916
+#: src/MainWindow.vala:917
 msgid "Nodes"
 msgstr "Uzly"
 
-#: src/MainWindow.vala:917
+#: src/MainWindow.vala:918
 msgid "Connections"
 msgstr "Spojení"
 
-#: src/MainWindow.vala:918
+#: src/MainWindow.vala:919
 msgid "Callouts"
 msgstr ""
 
-#: src/MainWindow.vala:919
+#: src/MainWindow.vala:920
 #, fuzzy
 msgid "Groups"
 msgstr "Přidat skupinu"
 
-#: src/MainWindow.vala:920
+#: src/MainWindow.vala:921
 msgid "Titles"
 msgstr "Názvy"
 
-#: src/MainWindow.vala:921
+#: src/MainWindow.vala:922
 msgid "Notes"
 msgstr "Poznámky"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:923
 msgid "Folded"
 msgstr "Sbalené"
 
-#: src/MainWindow.vala:923
+#: src/MainWindow.vala:924
 msgid "Unfolded"
 msgstr "Rozbalené"
 
-#: src/MainWindow.vala:924
+#: src/MainWindow.vala:925
 msgid "Tasks"
 msgstr "Úkoly"
 
-#: src/MainWindow.vala:925
+#: src/MainWindow.vala:926
 msgid "Non-tasks"
 msgstr "Nejsou úkoly"
 
-#: src/MainWindow.vala:1047
+#: src/MainWindow.vala:1048
 msgid "Print…"
 msgstr "Vytisknout…"
 
-#: src/MainWindow.vala:1086
+#: src/MainWindow.vala:1087
 msgid "Brain Dump"
 msgstr ""
 
-#: src/MainWindow.vala:1162 src/Preferences.vala:50
+#: src/MainWindow.vala:1163 src/Preferences.vala:50
 msgid "Preferences"
 msgstr "Přizpůsobení"
 
-#: src/MainWindow.vala:1163
+#: src/MainWindow.vala:1164
 msgid "Shortcuts Cheatsheet"
 msgstr "Seznam všech zkratek"
 
-#: src/MainWindow.vala:1166
+#: src/MainWindow.vala:1167
 msgid "About Minder"
 msgstr "O Minderu"
 
-#: src/MainWindow.vala:1193 src/MainWindow.vala:1778
+#: src/MainWindow.vala:1194 src/MainWindow.vala:1779
 msgid "Show Property Sidebar"
 msgstr "Zobrazit panel vlastností"
 
-#: src/MainWindow.vala:1204 src/MainWindow.vala:1247
+#: src/MainWindow.vala:1205 src/MainWindow.vala:1248
 msgid "Current"
 msgstr "Současné"
 
-#: src/MainWindow.vala:1205 src/MainWindow.vala:1248
+#: src/MainWindow.vala:1206 src/MainWindow.vala:1249
 #: src/StyleInspector.vala:363
 msgid "Style"
 msgstr "Styl"
 
-#: src/MainWindow.vala:1206 src/MainWindow.vala:1249 src/Preferences.vala:68
+#: src/MainWindow.vala:1207 src/MainWindow.vala:1250 src/Preferences.vala:68
 msgid "Tags"
 msgstr ""
 
-#: src/MainWindow.vala:1207 src/MainWindow.vala:1250
+#: src/MainWindow.vala:1208 src/MainWindow.vala:1251
 msgid "Stickers"
 msgstr "Nálepky"
 
-#: src/MainWindow.vala:1208 src/MainWindow.vala:1251
+#: src/MainWindow.vala:1209 src/MainWindow.vala:1252
 msgid "Map"
 msgstr "Mapa"
 
-#: src/MainWindow.vala:1324
+#: src/MainWindow.vala:1325
 msgid "Save current unnamed document?"
 msgstr "Uložit aktuální nepojmenovaný dokument?"
 
-#: src/MainWindow.vala:1325
+#: src/MainWindow.vala:1326
 msgid "Changes will be permanently lost if not saved."
 msgstr "Pokud soubor neuložíte, provedené změny se navždy ztratí."
 
-#: src/MainWindow.vala:1330
+#: src/MainWindow.vala:1331
 msgid "Discard Changes"
 msgstr "Zahodit změny"
 
-#: src/MainWindow.vala:1336 src/MainWindow.vala:1625 src/ThemeEditor.vala:174
+#: src/MainWindow.vala:1337 src/MainWindow.vala:1626 src/ThemeEditor.vala:174
 msgid "Save"
 msgstr "Uložit"
 
-#: src/MainWindow.vala:1368
+#: src/MainWindow.vala:1369
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "Soubor %s byl upraven mimo tuto aplikaci."
 
-#: src/MainWindow.vala:1369
+#: src/MainWindow.vala:1370
 msgid "What do you want to do?"
 msgstr "Co chcete dělat?"
 
-#: src/MainWindow.vala:1374
+#: src/MainWindow.vala:1375
 msgid "Discard Changes and reload"
 msgstr "Zahodit změny a obnovit"
 
-#: src/MainWindow.vala:1377
+#: src/MainWindow.vala:1378
 msgid "Save local version and overwrite"
 msgstr "Uložit lokální verzi a přepsat"
 
-#: src/MainWindow.vala:1423
+#: src/MainWindow.vala:1424
 #, fuzzy
 msgid "Open Directory"
 msgstr "Otevřít soubor"
 
-#: src/MainWindow.vala:1423
+#: src/MainWindow.vala:1424
 msgid "Open"
 msgstr "Otevřít"
 
-#: src/MainWindow.vala:1625
+#: src/MainWindow.vala:1626
 msgid "Save File"
 msgstr "Uložit soubor"
 
-#: src/MainWindow.vala:1724
+#: src/MainWindow.vala:1725
 msgid "Hide Property Sidebar"
 msgstr "Schovat panel vlastností"
 
-#: src/MainWindow.vala:2200
+#: src/MainWindow.vala:2201
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2201
+#: src/MainWindow.vala:2202
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1528,31 +1520,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2206
+#: src/MainWindow.vala:2207
 #, fuzzy
 msgid "Quit Minder"
 msgstr "O Minderu"
 
-#: src/MainWindow.vala:2226
+#: src/MainWindow.vala:2227
 #, fuzzy
 msgid "Detail"
 msgstr "Odpojit"
 
-#: src/MainWindow.vala:2234
+#: src/MainWindow.vala:2235
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2235
+#: src/MainWindow.vala:2236
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2236
+#: src/MainWindow.vala:2237
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1560,11 +1552,11 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2243
+#: src/MainWindow.vala:2244
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2268
+#: src/MainWindow.vala:2269
 msgid "Upgrades Needed"
 msgstr ""
 
@@ -1726,7 +1718,7 @@ msgstr "Vyjmout uzel do schránky"
 msgid "Detach Node"
 msgstr "Odpojit uzel"
 
-#: src/NodeInspector.vala:503 data/com.github.phase1geo.minder.shortcuts.ui:284
+#: src/NodeInspector.vala:503
 msgid "Delete Node"
 msgstr "Smazat uzel"
 
@@ -1776,7 +1768,6 @@ msgid "Add Task"
 msgstr "Přidat úkol"
 
 #: src/NodeMenu.vala:53 src/NodeMenu.vala:230
-#: data/com.github.phase1geo.minder.shortcuts.ui:372
 msgid "Add Image"
 msgstr "Přidat obrázek"
 
@@ -1805,7 +1796,7 @@ msgstr "Barva odkazu"
 msgid "Fold Children"
 msgstr "Sbalit podřadné uzly"
 
-#: src/NodeMenu.vala:61 data/com.github.phase1geo.minder.shortcuts.ui:414
+#: src/NodeMenu.vala:61
 #, fuzzy
 msgid "Toggle Sequence"
 msgstr "Přepnout výběr položky"
@@ -1911,7 +1902,7 @@ msgstr "Odstranit odkaz uzlu"
 msgid "Unfold Children"
 msgstr "Rozbalit podřadné uzly"
 
-#: src/NodeMenu.vala:229 data/com.github.phase1geo.minder.shortcuts.ui:663
+#: src/NodeMenu.vala:229
 #, fuzzy
 msgid "Remove Callout"
 msgstr "Odstranit úkol"
@@ -2345,16 +2336,15 @@ msgstr "Vložit"
 msgid "No Commands Listed"
 msgstr "Uzlové příkazy"
 
-#: src/Shortcuts.vala:794 data/com.github.phase1geo.minder.shortcuts.ui:983
+#: src/Shortcuts.vala:794
 msgid "Mouse Events"
 msgstr "Události myši"
 
-#: src/Shortcuts.vala:797 data/com.github.phase1geo.minder.shortcuts.ui:208
-#: data/com.github.phase1geo.minder.shortcuts.ui:991
+#: src/Shortcuts.vala:797
 msgid "Show Contextual Menu"
 msgstr "Zobrazit kontextové menu"
 
-#: src/Shortcuts.vala:797 data/com.github.phase1geo.minder.shortcuts.ui:992
+#: src/Shortcuts.vala:797
 msgid "[Right-click when item is selected]"
 msgstr "[Pravé tlačítko, když je položka vybrána]"
 
@@ -2363,27 +2353,27 @@ msgstr "[Pravé tlačítko, když je položka vybrána]"
 msgid "[Double left-click image]"
 msgstr "[Dvojitý poklep levého tlačítka na obrázek]"
 
-#: src/Shortcuts.vala:800 data/com.github.phase1geo.minder.shortcuts.ui:1007
+#: src/Shortcuts.vala:800
 msgid "Canvas Movement"
 msgstr "Pohyb plátna"
 
-#: src/Shortcuts.vala:801 data/com.github.phase1geo.minder.shortcuts.ui:1011
+#: src/Shortcuts.vala:801
 msgid "Pan Canvas"
 msgstr "Natočit plátno"
 
-#: src/Shortcuts.vala:801 data/com.github.phase1geo.minder.shortcuts.ui:1012
+#: src/Shortcuts.vala:801
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr "[Prostřední tlačítko + táhnutí/ alt + táhnutí"
 
-#: src/Shortcuts.vala:802 data/com.github.phase1geo.minder.shortcuts.ui:1018
+#: src/Shortcuts.vala:802
 msgid "Scroll Vertically"
 msgstr "Scrolovat vertikálně"
 
-#: src/Shortcuts.vala:802 data/com.github.phase1geo.minder.shortcuts.ui:1019
+#: src/Shortcuts.vala:802
 msgid "[Scrollwheel up/down]"
 msgstr "[Scroll tlačítko nahoru/dolú]"
 
-#: src/Shortcuts.vala:803 data/com.github.phase1geo.minder.shortcuts.ui:1025
+#: src/Shortcuts.vala:803
 msgid "Scroll Horizontally"
 msgstr "Scrolovat vodorovně"
 
@@ -2391,27 +2381,27 @@ msgstr "Scrolovat vodorovně"
 msgid "[Scrollwhile left/right]"
 msgstr ""
 
-#: src/Shortcuts.vala:805 data/com.github.phase1geo.minder.shortcuts.ui:1034
+#: src/Shortcuts.vala:805
 msgid "Item Selection"
 msgstr "Výběr položek"
 
-#: src/Shortcuts.vala:806 data/com.github.phase1geo.minder.shortcuts.ui:1038
+#: src/Shortcuts.vala:806
 msgid "Select Single Item"
 msgstr "Vybrat jedinou položku"
 
-#: src/Shortcuts.vala:806 data/com.github.phase1geo.minder.shortcuts.ui:1039
+#: src/Shortcuts.vala:806
 msgid "[Left-click on item]"
 msgstr "[Levé kliknutí na položku]"
 
-#: src/Shortcuts.vala:807 data/com.github.phase1geo.minder.shortcuts.ui:1045
+#: src/Shortcuts.vala:807
 msgid "Select Child Nodes"
 msgstr "Vybrat podřadné uzly"
 
-#: src/Shortcuts.vala:807 data/com.github.phase1geo.minder.shortcuts.ui:1046
+#: src/Shortcuts.vala:807
 msgid "[Control + Left-click on parent node]"
 msgstr "[Control + levé tlačítko na nadřazený uzel]"
 
-#: src/Shortcuts.vala:808 data/com.github.phase1geo.minder.shortcuts.ui:1052
+#: src/Shortcuts.vala:808
 msgid "Select Node Tree/Subtree"
 msgstr "Vybrat strom/podřadný strom uzlů"
 
@@ -2420,19 +2410,19 @@ msgstr "Vybrat strom/podřadný strom uzlů"
 msgid "[Control + Double left-click on parent node"
 msgstr "[Control + dvojité pravé kliknutí na nadřazený uzel"
 
-#: src/Shortcuts.vala:809 data/com.github.phase1geo.minder.shortcuts.ui:1059
+#: src/Shortcuts.vala:809
 msgid "Select All Nodes at Same Depth Level"
 msgstr "Vybrat všechny uzly na stejné úrovni"
 
-#: src/Shortcuts.vala:809 data/com.github.phase1geo.minder.shortcuts.ui:1060
+#: src/Shortcuts.vala:809
 msgid "[Control + Triple left-click on node]"
 msgstr "[Control + trojité levé klinutí na uzel]"
 
-#: src/Shortcuts.vala:810 data/com.github.phase1geo.minder.shortcuts.ui:1066
+#: src/Shortcuts.vala:810
 msgid "Block Selection"
 msgstr "Výběr oblasti"
 
-#: src/Shortcuts.vala:810 data/com.github.phase1geo.minder.shortcuts.ui:1067
+#: src/Shortcuts.vala:810
 msgid "[Left-click + Drag]"
 msgstr "[Levé tlačítko + táhnutí]"
 
@@ -2441,31 +2431,31 @@ msgstr "[Levé tlačítko + táhnutí]"
 msgid "Item Selection Toggle"
 msgstr "Výběr položek"
 
-#: src/Shortcuts.vala:813 data/com.github.phase1geo.minder.shortcuts.ui:1079
+#: src/Shortcuts.vala:813
 msgid "Toggle Selection of Item"
 msgstr "Přepnout výběr položky"
 
-#: src/Shortcuts.vala:813 data/com.github.phase1geo.minder.shortcuts.ui:1080
+#: src/Shortcuts.vala:813
 msgid "[Shift + Left-click on item]"
 msgstr "[Shift + levé tlačítko na položku]"
 
-#: src/Shortcuts.vala:814 data/com.github.phase1geo.minder.shortcuts.ui:1086
+#: src/Shortcuts.vala:814
 msgid "Toggle Selection of Child Nodes"
 msgstr "Přepnout výběr souřadných uzlů"
 
-#: src/Shortcuts.vala:814 data/com.github.phase1geo.minder.shortcuts.ui:1087
+#: src/Shortcuts.vala:814
 msgid "[Shift + Control + Left-click on item]"
 msgstr "[Shift + control + levé tlačítko na položku]"
 
-#: src/Shortcuts.vala:815 data/com.github.phase1geo.minder.shortcuts.ui:1093
+#: src/Shortcuts.vala:815
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "Přepnout výběr uzlu/podřadného stromu"
 
-#: src/Shortcuts.vala:815 data/com.github.phase1geo.minder.shortcuts.ui:1094
+#: src/Shortcuts.vala:815
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr "[Shift + control + dvojité pravé kliknutí na nadřazený uzel]"
 
-#: src/Shortcuts.vala:816 data/com.github.phase1geo.minder.shortcuts.ui:1100
+#: src/Shortcuts.vala:816
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr "Přepnout výběr všech uzlů na stejné úrovni"
 
@@ -2474,11 +2464,11 @@ msgstr "Přepnout výběr všech uzlů na stejné úrovni"
 msgid "Shift + Control + Triple-click on node]"
 msgstr "[Shift + control + trojité kliknutí na uzel]"
 
-#: src/Shortcuts.vala:818 data/com.github.phase1geo.minder.shortcuts.ui:1109
+#: src/Shortcuts.vala:818
 msgid "Text Selection"
 msgstr "Výběr textu"
 
-#: src/Shortcuts.vala:819 data/com.github.phase1geo.minder.shortcuts.ui:1113
+#: src/Shortcuts.vala:819
 msgid "Set Cursor Insert Point"
 msgstr "Nastavit místo vložení ukazatele myši"
 
@@ -2492,7 +2482,7 @@ msgstr "[Levé kliknutí na položku]"
 msgid "Select Current Word"
 msgstr "Vybrat současné slovo"
 
-#: src/Shortcuts.vala:820 data/com.github.phase1geo.minder.shortcuts.ui:1121
+#: src/Shortcuts.vala:820
 msgid "[Double left-click on word]"
 msgstr "[dvojité kliknutí na slovo]"
 
@@ -2768,7 +2758,7 @@ msgstr "Složka"
 msgid "Opened folder"
 msgstr "Otevřená složka"
 
-#: src/StickerSet.vala:84 data/com.github.phase1geo.minder.shortcuts.ui:16
+#: src/StickerSet.vala:84
 msgid "File"
 msgstr "Soubor"
 
@@ -4649,526 +4639,389 @@ msgstr "error: %s\n"
 msgid "Zoom Actual"
 msgstr "Aktuální zoom"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:6
-msgid "Minder Shortcuts"
-msgstr "Zkratky Minderu"
+#~ msgid "Minder Shortcuts"
+#~ msgstr "Zkratky Minderu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:35
-msgid "Import File"
-msgstr "Importovat soubor"
+#~ msgid "Import File"
+#~ msgstr "Importovat soubor"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:58
-msgid "Print File"
-msgstr "Vytisknout soubor"
+#~ msgid "Print File"
+#~ msgstr "Vytisknout soubor"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:67
-msgid "Notebook Tabs"
-msgstr "Panely zápisníku"
+#~ msgid "Notebook Tabs"
+#~ msgstr "Panely zápisníku"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:72
-msgid "Close Current Tab"
-msgstr "Zavřít aktuální panel"
+#~ msgid "Close Current Tab"
+#~ msgstr "Zavřít aktuální panel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:79
-msgid "Go to Next Tab"
-msgstr "Přejít na další panel"
+#~ msgid "Go to Next Tab"
+#~ msgstr "Přejít na další panel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:86
-msgid "Go to Previous Tab"
-msgstr "Přejít na předchozí panel"
+#~ msgid "Go to Previous Tab"
+#~ msgstr "Přejít na předchozí panel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:95
-msgid "Undo/Redo"
-msgstr "Zpět/Znovu"
+#~ msgid "Undo/Redo"
+#~ msgstr "Zpět/Znovu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:99
-msgid "Undo Last Change"
-msgstr "Vrátit poslední změnu"
+#~ msgid "Undo Last Change"
+#~ msgstr "Vrátit poslední změnu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:106
-msgid "Redo Last Undo"
-msgstr "Znovu přidat co bylo odebráno"
+#~ msgid "Redo Last Undo"
+#~ msgstr "Znovu přidat co bylo odebráno"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:115
-msgid "Zooming"
-msgstr "Přiblížování"
+#~ msgid "Zooming"
+#~ msgstr "Přiblížování"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:133
-msgid "Zoom To Actual Size"
-msgstr "Přiblížení na skutečnou velikost"
+#~ msgid "Zoom To Actual Size"
+#~ msgstr "Přiblížení na skutečnou velikost"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:147
-msgid "Zoom To Fit"
-msgstr "Vměstnat do okna"
+#~ msgid "Zoom To Fit"
+#~ msgstr "Vměstnat do okna"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:156
-msgid "Properties Sidebar"
-msgstr "Panel vlastností"
+#~ msgid "Properties Sidebar"
+#~ msgstr "Panel vlastností"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:160
-msgid "Show Current Tab"
-msgstr "Zobrazit aktuální panel"
+#~ msgid "Show Current Tab"
+#~ msgstr "Zobrazit aktuální panel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:167
-msgid "Show Style Tab"
-msgstr "Zobrazit panel stylů"
+#~ msgid "Show Style Tab"
+#~ msgstr "Zobrazit panel stylů"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:174
-msgid "Show Sticker Tab"
-msgstr "Zobrazit panel nálepek"
+#~ msgid "Show Sticker Tab"
+#~ msgstr "Zobrazit panel nálepek"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:181
-msgid "Show Map Tab"
-msgstr "Zobrazit panel s mapou"
+#~ msgid "Show Map Tab"
+#~ msgstr "Zobrazit panel s mapou"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:190
-#: data/com.github.phase1geo.minder.shortcuts.ui:767
-msgid "Miscellaneous"
-msgstr "Smíšené"
+#~ msgid "Miscellaneous"
+#~ msgstr "Smíšené"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:194
-msgid "Toggle Focus Mode"
-msgstr "Přepnout režim soustředění"
+#~ msgid "Toggle Focus Mode"
+#~ msgstr "Přepnout režim soustředění"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:201
-msgid "Search Nodes/Connections"
-msgstr "Hledat uzly/spojení"
+#~ msgid "Search Nodes/Connections"
+#~ msgstr "Hledat uzly/spojení"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:215
-msgid "Show Preferences"
-msgstr "Zobrazit možnosti"
+#~ msgid "Show Preferences"
+#~ msgstr "Zobrazit možnosti"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:222
-msgid "Show Keyboard Shortcuts"
-msgstr "Zobrazit klávesové zkratky"
+#~ msgid "Show Keyboard Shortcuts"
+#~ msgstr "Zobrazit klávesové zkratky"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:229
-msgid "Quit Application"
-msgstr "Ukončit aplikaci"
+#~ msgid "Quit Application"
+#~ msgstr "Ukončit aplikaci"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:241
-msgid "Node Commands"
-msgstr "Uzlové příkazy"
+#~ msgid "Node Commands"
+#~ msgstr "Uzlové příkazy"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:245
-msgid "Creation/Deletion"
-msgstr "Vytvoření/smazání"
+#~ msgid "Creation/Deletion"
+#~ msgstr "Vytvoření/smazání"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:249
-msgid "New Sibling Node"
-msgstr "Nový souřadný uzel"
+#~ msgid "New Sibling Node"
+#~ msgstr "Nový souřadný uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:256
-msgid "New Connected Node"
-msgstr "Nový připojený uzel"
+#~ msgid "New Connected Node"
+#~ msgstr "Nový připojený uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:263
-msgid "New Child Node"
-msgstr "Nový podřadný uzel"
+#~ msgid "New Child Node"
+#~ msgstr "Nový podřadný uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:270
-msgid "Quick Entry Insertion"
-msgstr "Vložení Rychlého zadávání"
+#~ msgid "Quick Entry Insertion"
+#~ msgstr "Vložení Rychlého zadávání"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:277
-msgid "Quick Entry Replacement"
-msgstr "Nahrazení Rychlého zadávání"
+#~ msgid "Quick Entry Replacement"
+#~ msgstr "Nahrazení Rychlého zadávání"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:293
-#: data/com.github.phase1geo.minder.shortcuts.ui:877
-msgid "Clipboard"
-msgstr "Schránka"
+#~ msgid "Clipboard"
+#~ msgstr "Schránka"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:297
-msgid "Copy Node"
-msgstr "Zkopírovat uzel"
+#~ msgid "Copy Node"
+#~ msgstr "Zkopírovat uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:304
-msgid "Cut Node"
-msgstr "Vyjmout uzel"
+#~ msgid "Cut Node"
+#~ msgstr "Vyjmout uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:311
-msgid "Add Child Node With Clipboard"
-msgstr "Přidat podřadný uzel ze schránky"
+#~ msgid "Add Child Node With Clipboard"
+#~ msgstr "Přidat podřadný uzel ze schránky"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:318
-msgid "Replace With Clipboard"
-msgstr "Nahradit ze schránky"
+#~ msgid "Replace With Clipboard"
+#~ msgstr "Nahradit ze schránky"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:327
-msgid "View"
-msgstr ""
+#~ msgid "Center In View"
+#~ msgstr "Zarovnat do pohledu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:331
-msgid "Center In View"
-msgstr "Zarovnat do pohledu"
+#~ msgid "Place Into View"
+#~ msgstr "Umístit do pohledu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:338
-#: data/com.github.phase1geo.minder.shortcuts.ui:717
-msgid "Place Into View"
-msgstr "Umístit do pohledu"
+#~ msgid "Changing Current"
+#~ msgstr "Změna současného"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:347
-msgid "Changing Current"
-msgstr "Změna současného"
+#~ msgid "Edit Title"
+#~ msgstr "Upravit název"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:351
-#: data/com.github.phase1geo.minder.shortcuts.ui:696
-msgid "Edit Title"
-msgstr "Upravit název"
+#~ msgid "Change Task State"
+#~ msgstr "Změnit stav úkolu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:365
-msgid "Change Task State"
-msgstr "Změnit stav úkolu"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:379
 #, fuzzy
-msgid "Add URL Link To Text"
-msgstr "Přidat konec textu"
+#~ msgid "Add URL Link To Text"
+#~ msgstr "Přidat konec textu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:386
-#: data/com.github.phase1geo.minder.shortcuts.ui:799
 #, fuzzy
-msgid "Remove URL Link From Text"
-msgstr "Odstranit odkaz"
+#~ msgid "Remove URL Link From Text"
+#~ msgstr "Odstranit odkaz"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:393
 #, fuzzy
-msgid "Change Link Color"
-msgstr "Barva odkazu"
+#~ msgid "Change Link Color"
+#~ msgstr "Barva odkazu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:400
-msgid "View Properties"
-msgstr "Zobrazit vlastnosti"
+#~ msgid "View Properties"
+#~ msgstr "Zobrazit vlastnosti"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:407
-msgid "Toggle Fold"
-msgstr "Přepnout sbalení"
+#~ msgid "Toggle Fold"
+#~ msgstr "Přepnout sbalení"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:421
-msgid "Toggle Node Link"
-msgstr "Přepnout odkaz uzlu"
+#~ msgid "Toggle Node Link"
+#~ msgstr "Přepnout odkaz uzlu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:428
-msgid "Create Link to Selected Node"
-msgstr "Vytvořit nový odkaz na vybraný uzel"
+#~ msgid "Create Link to Selected Node"
+#~ msgstr "Vytvořit nový odkaz na vybraný uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:429
-msgid "[After using this command, 'y' will create the link]"
-msgstr "[Po použití tohoto příkazu vytvoří \"y\" odkaz]"
+#~ msgid "[After using this command, 'y' will create the link]"
+#~ msgstr "[Po použití tohoto příkazu vytvoří \"y\" odkaz]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:436
-msgid "Create Group"
-msgstr "Vytvořit skupinu"
+#~ msgid "Create Group"
+#~ msgstr "Vytvořit skupinu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:443
-msgid "Create Connection"
-msgstr "Vytvořit spojení"
+#~ msgid "Create Connection"
+#~ msgstr "Vytvořit spojení"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:450
 #, fuzzy
-msgid "Create Callout"
-msgstr "Vytvořit skupinu"
+#~ msgid "Create Callout"
+#~ msgstr "Vytvořit skupinu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:459
-#: data/com.github.phase1geo.minder.shortcuts.ui:672
-#: data/com.github.phase1geo.minder.shortcuts.ui:904
-msgid "Selection"
-msgstr "Výběr"
+#~ msgid "Selection"
+#~ msgstr "Výběr"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:463
-msgid "Select Root"
-msgstr "Vybrat kořen"
+#~ msgid "Select Root"
+#~ msgstr "Vybrat kořen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:470
-msgid "Select Parent"
-msgstr "Vybrat nadřazený uzel"
+#~ msgid "Select Parent"
+#~ msgstr "Vybrat nadřazený uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:477
-msgid "Select Next Sibling"
-msgstr "Vybrat další souřadný uzel"
+#~ msgid "Select Next Sibling"
+#~ msgstr "Vybrat další souřadný uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:484
-msgid "Select Previous Sibling"
-msgstr "Vybrat předchozí souřadný uzel"
+#~ msgid "Select Previous Sibling"
+#~ msgstr "Vybrat předchozí souřadný uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:491
-msgid "Select Child"
-msgstr "Vybrat podřadný uzel"
+#~ msgid "Select Child"
+#~ msgstr "Vybrat podřadný uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:498
-msgid "Select Children"
-msgstr "Vybrat podřadné uzly"
+#~ msgid "Select Children"
+#~ msgstr "Vybrat podřadné uzly"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:505
-msgid "Select Subtree"
-msgstr "Vybrat podřadný strom"
+#~ msgid "Select Subtree"
+#~ msgstr "Vybrat podřadný strom"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:512
-msgid "Select Node Below"
-msgstr "Vybrat uzel pod"
+#~ msgid "Select Node Below"
+#~ msgstr "Vybrat uzel pod"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:519
-msgid "Select Node Above"
-msgstr "Vybrat uzel nad"
+#~ msgid "Select Node Above"
+#~ msgstr "Vybrat uzel nad"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:526
-msgid "Select Node To Right"
-msgstr "Vybrat uzel vpravo"
+#~ msgid "Select Node To Right"
+#~ msgstr "Vybrat uzel vpravo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:533
-msgid "Select Node To Left"
-msgstr "Vybrat uzel vlevo"
+#~ msgid "Select Node To Left"
+#~ msgstr "Vybrat uzel vlevo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:540
-msgid "Select Linked Node"
-msgstr "Vybrat spojený uzel"
+#~ msgid "Select Linked Node"
+#~ msgstr "Vybrat spojený uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:547
 #, fuzzy
-msgid "Select Callout"
-msgstr "Vybrat celý text"
+#~ msgid "Select Callout"
+#~ msgstr "Vybrat celý text"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:554
-msgid "Select Attached Connection"
-msgstr "Vybrat připojené spojení"
+#~ msgid "Select Attached Connection"
+#~ msgstr "Vybrat připojené spojení"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:563
-msgid "Move"
-msgstr "Přesunout"
+#~ msgid "Move"
+#~ msgstr "Přesunout"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:567
-msgid "Swap with Sibling Node to Right"
-msgstr "Vyměnit se souřadným uzlem napravo"
+#~ msgid "Swap with Sibling Node to Right"
+#~ msgstr "Vyměnit se souřadným uzlem napravo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:574
-msgid "Swap with Sibling Node to Left"
-msgstr "Vyměnit se souřadným uzlem nalevo"
+#~ msgid "Swap with Sibling Node to Left"
+#~ msgstr "Vyměnit se souřadným uzlem nalevo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:581
-msgid "Swap with Sibling Node Above"
-msgstr "Vyměnit se souřadným uzlem nad"
+#~ msgid "Swap with Sibling Node Above"
+#~ msgstr "Vyměnit se souřadným uzlem nad"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:588
-msgid "Swap with Sibling Node Below"
-msgstr "Vyměnit se souřadným uzlem pod"
+#~ msgid "Swap with Sibling Node Below"
+#~ msgstr "Vyměnit se souřadným uzlem pod"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:595
-msgid "Sort Child Nodes Alphabetically"
-msgstr "Řadit podřadné uzly abecedně"
+#~ msgid "Sort Child Nodes Alphabetically"
+#~ msgstr "Řadit podřadné uzly abecedně"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:604
-msgid "Alignment"
-msgstr "Zarovnání"
+#~ msgid "Alignment"
+#~ msgstr "Zarovnání"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:608
-msgid "Align Top Side"
-msgstr "Zarovnat vrchní stranu"
+#~ msgid "Align Top Side"
+#~ msgstr "Zarovnat vrchní stranu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:615
 #, fuzzy
-msgid "Align Vertical Center"
-msgstr "Zarovnat prostředek svisle"
+#~ msgid "Align Vertical Center"
+#~ msgstr "Zarovnat prostředek svisle"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:622
-msgid "Align Bottom Side"
-msgstr "Zarovnat spodní stranu"
+#~ msgid "Align Bottom Side"
+#~ msgstr "Zarovnat spodní stranu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:629
-msgid "Align Left Side"
-msgstr "Zarovnat levou stranu"
+#~ msgid "Align Left Side"
+#~ msgstr "Zarovnat levou stranu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:636
 #, fuzzy
-msgid "Align Horizontal Center"
-msgstr "Zarovnat prostředek vodorovně"
+#~ msgid "Align Horizontal Center"
+#~ msgstr "Zarovnat prostředek vodorovně"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:643
-msgid "Align Right Side"
-msgstr "Zarovnat pravou stranu"
+#~ msgid "Align Right Side"
+#~ msgstr "Zarovnat pravou stranu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:655
 #, fuzzy
-msgid "Callout Commands"
-msgstr "Uzlové příkazy"
+#~ msgid "Callout Commands"
+#~ msgstr "Uzlové příkazy"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:659
-#: data/com.github.phase1geo.minder.shortcuts.ui:692
-msgid "Change Current"
-msgstr "Změnit současné"
+#~ msgid "Change Current"
+#~ msgstr "Změnit současné"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:688
-msgid "Connection Commands"
-msgstr "Příkazy spojení"
+#~ msgid "Connection Commands"
+#~ msgstr "Příkazy spojení"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:710
-msgid "Show Properties"
-msgstr "Zobrazit panel vlastností"
+#~ msgid "Show Properties"
+#~ msgstr "Zobrazit panel vlastností"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:726
-msgid "Traversal"
-msgstr "Procházení"
+#~ msgid "Traversal"
+#~ msgstr "Procházení"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:730
-msgid "Select Start Node"
-msgstr "Vybrat počáteční uzel"
+#~ msgid "Select Start Node"
+#~ msgstr "Vybrat počáteční uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:737
-msgid "Select End Node"
-msgstr "Vybrat konečný uzel"
+#~ msgid "Select End Node"
+#~ msgstr "Vybrat konečný uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:744
-msgid "Select Next Connection"
-msgstr "Vybrat další spojení"
+#~ msgid "Select Next Connection"
+#~ msgstr "Vybrat další spojení"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:751
-msgid "Select Previous Connection"
-msgstr "Vybrat předchozí spojení"
+#~ msgid "Select Previous Connection"
+#~ msgstr "Vybrat předchozí spojení"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:771
-msgid "Insert Newline Character"
-msgstr "Vložit znak na novém řádku"
+#~ msgid "Insert Newline Character"
+#~ msgstr "Vložit znak na novém řádku"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:778
-msgid "Insert Tab Character"
-msgstr "Vložit znak panelu"
+#~ msgid "Insert Tab Character"
+#~ msgstr "Vložit znak panelu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:785
-msgid "Show Emoji Picker"
-msgstr "Zobrazit výběr emotikonů"
+#~ msgid "Show Emoji Picker"
+#~ msgstr "Zobrazit výběr emotikonů"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:792
 #, fuzzy
-msgid "Add URL Link To Selected Text"
-msgstr "Zkopírovat vybraný text"
+#~ msgid "Add URL Link To Selected Text"
+#~ msgstr "Zkopírovat vybraný text"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:806
-msgid "End Editing"
-msgstr "Ukončit upravování"
+#~ msgid "End Editing"
+#~ msgstr "Ukončit upravování"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:815
-msgid "Cursor Movement"
-msgstr "Pohyb myši"
+#~ msgid "Cursor Movement"
+#~ msgstr "Pohyb myši"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:819
-msgid "Next Character"
-msgstr "Další znak"
+#~ msgid "Next Character"
+#~ msgstr "Další znak"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:826
-msgid "Previous Character"
-msgstr "Předchozí znak"
+#~ msgid "Previous Character"
+#~ msgstr "Předchozí znak"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:833
-msgid "Next Word"
-msgstr "Další slovo"
+#~ msgid "Next Word"
+#~ msgstr "Další slovo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:840
-msgid "Previous Word"
-msgstr "Předchozí slovo"
+#~ msgid "Previous Word"
+#~ msgstr "Předchozí slovo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:847
-msgid "Next Line"
-msgstr "Další řádek"
+#~ msgid "Next Line"
+#~ msgstr "Další řádek"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:854
-msgid "Previous Line"
-msgstr "Předchozí řádek"
+#~ msgid "Previous Line"
+#~ msgstr "Předchozí řádek"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:861
-msgid "Start Of Text"
-msgstr "Začátek textu"
+#~ msgid "Start Of Text"
+#~ msgstr "Začátek textu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:868
-msgid "End Of Text"
-msgstr "Konec textu"
+#~ msgid "End Of Text"
+#~ msgstr "Konec textu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:881
-msgid "Copy Selected Text"
-msgstr "Zkopírovat vybraný text"
+#~ msgid "Copy Selected Text"
+#~ msgstr "Zkopírovat vybraný text"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:888
-msgid "Cut Selected Text"
-msgstr "Vyjmout vybraný text"
+#~ msgid "Cut Selected Text"
+#~ msgstr "Vyjmout vybraný text"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:895
-msgid "Paste Text"
-msgstr "Vložit text"
+#~ msgid "Paste Text"
+#~ msgstr "Vložit text"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:908
-msgid "Add Next Character"
-msgstr "Přidat další znak"
+#~ msgid "Add Next Character"
+#~ msgstr "Přidat další znak"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:915
-msgid "Add Previous Character"
-msgstr "Přidat předchozí znak"
+#~ msgid "Add Previous Character"
+#~ msgstr "Přidat předchozí znak"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:922
-msgid "Add Next Word"
-msgstr "Přidat další slovo"
+#~ msgid "Add Next Word"
+#~ msgstr "Přidat další slovo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:929
-msgid "Add Previous Word"
-msgstr "Přidat předchozí slovo"
+#~ msgid "Add Previous Word"
+#~ msgstr "Přidat předchozí slovo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:936
-msgid "Add Next Line"
-msgstr "Přidat další řádek"
+#~ msgid "Add Next Line"
+#~ msgstr "Přidat další řádek"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:943
-msgid "Add Previous Line"
-msgstr "Přidat předchozí řádek"
+#~ msgid "Add Previous Line"
+#~ msgstr "Přidat předchozí řádek"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:950
-msgid "Add Start Of Text"
-msgstr "Přidat začátek textu"
+#~ msgid "Add Start Of Text"
+#~ msgstr "Přidat začátek textu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:957
-msgid "Add End Of Text"
-msgstr "Přidat konec textu"
+#~ msgid "Add End Of Text"
+#~ msgstr "Přidat konec textu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:964
-msgid "Select All Text"
-msgstr "Vybrat všechen text"
+#~ msgid "Select All Text"
+#~ msgstr "Vybrat všechen text"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:971
-msgid "Clear Selection"
-msgstr "Vyčistit výběr"
+#~ msgid "Clear Selection"
+#~ msgstr "Vyčistit výběr"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:998
-msgid "Edit Image in Canvas"
-msgstr "Upravit obrázek na plátně"
+#~ msgid "Edit Image in Canvas"
+#~ msgstr "Upravit obrázek na plátně"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:999
-msgid "[Double left-click on image]"
-msgstr "[Dvojitý poklep levého tlačítka na obrázek]"
+#~ msgid "[Double left-click on image]"
+#~ msgstr "[Dvojitý poklep levého tlačítka na obrázek]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1026
-msgid "[Shift + Scrollwheel up/down]"
-msgstr "[Shift + scrolovací tlačítko nahoru/dolů]"
+#~ msgid "[Shift + Scrollwheel up/down]"
+#~ msgstr "[Shift + scrolovací tlačítko nahoru/dolů]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1053
-msgid "[Control + Double left-click on parent node]"
-msgstr "[Control + dvojité pravé kliknutí na nadřazený uzel"
+#~ msgid "[Control + Double left-click on parent node]"
+#~ msgstr "[Control + dvojité pravé kliknutí na nadřazený uzel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1075
-msgid "Item Selection Toggle (Add to/Remove from Selection)"
-msgstr "Přepínač vybírání položek (přidat/odebrat z výběru)"
+#~ msgid "Item Selection Toggle (Add to/Remove from Selection)"
+#~ msgstr "Přepínač vybírání položek (přidat/odebrat z výběru)"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1101
-msgid "[Shift + Control + Triple left-click on node]"
-msgstr "[Shift + control + trojité kliknutí na uzel]"
+#~ msgid "[Shift + Control + Triple left-click on node]"
+#~ msgstr "[Shift + control + trojité kliknutí na uzel]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1114
-msgid "[Left-click anywhere in text]"
-msgstr "[levé tlačítko kdekoliv v textu]"
+#~ msgid "[Left-click anywhere in text]"
+#~ msgstr "[levé tlačítko kdekoliv v textu]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1120
-msgid "Select current word"
-msgstr "Vybrat současné slovo"
+#~ msgid "Select current word"
+#~ msgstr "Vybrat současné slovo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1128
-msgid "[Triple left-click anywhere in text]"
-msgstr "[trojité levé kliknutí kdekoliv v textu]"
+#~ msgid "[Triple left-click anywhere in text]"
+#~ msgstr "[trojité levé kliknutí kdekoliv v textu]"
 
 #, fuzzy
 #~ msgid "Delete Saved Style"

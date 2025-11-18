@@ -182,6 +182,7 @@
           <li>Added preference option to control the default style settings used in new mindmaps (Minder default, last
               used, or a saved style template).</li>
           <li>Added preference option to control whether a new node style matches its sibling or parent node.</li>
+          <li>Added Swedish translation (thanks to Daniel Nylander).</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="ru">Изменения</p>

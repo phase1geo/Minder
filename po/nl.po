@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-13 20:25-0600\n"
+"POT-Creation-Date: 2025-11-18 09:45-0600\n"
 "PO-Revision-Date: 2020-04-20 14:26+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: \n"
@@ -117,7 +117,7 @@ msgstr ""
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: src/CalloutMenu.vala:36 data/com.github.phase1geo.minder.shortcuts.ui:676
+#: src/CalloutMenu.vala:36
 msgid "Select Node"
 msgstr "Knoop kiezen"
 
@@ -160,8 +160,6 @@ msgid "Edit Title…"
 msgstr "Titel aanpassen"
 
 #: src/ConnectionMenu.vala:38 src/GroupsMenu.vala:36 src/NodeMenu.vala:50
-#: data/com.github.phase1geo.minder.shortcuts.ui:358
-#: data/com.github.phase1geo.minder.shortcuts.ui:703
 #, fuzzy
 msgid "Edit Note"
 msgstr "Titel aanpassen"
@@ -243,13 +241,13 @@ msgid ""
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1333
+#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1334
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
 #: src/ThemeEditor.vala:169 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2209
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2210
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Toepassen"
@@ -258,7 +256,7 @@ msgstr "Toepassen"
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:714 src/MainWindow.vala:2246
+#: src/Document.vala:714 src/MainWindow.vala:2247
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
@@ -348,7 +346,7 @@ msgstr "Knoopopties"
 msgid "Export As %s"
 msgstr "Exporteren als"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1072 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1073 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Exporteren"
 
@@ -584,8 +582,6 @@ msgid "Images"
 msgstr "Afbeelding"
 
 #: src/KeyCommands.vala:569 src/Shortcuts.vala:796
-#: data/com.github.phase1geo.minder.shortcuts.ui:12
-#: data/com.github.phase1geo.minder.shortcuts.ui:987
 msgid "General"
 msgstr "Algemeen"
 
@@ -1114,7 +1110,7 @@ msgstr ""
 msgid "Selects all nodes within current group(s)"
 msgstr ""
 
-#: src/KeyCommands.vala:690 data/com.github.phase1geo.minder.shortcuts.ui:763
+#: src/KeyCommands.vala:690
 msgid "Text Editing"
 msgstr "Tekst bewerken"
 
@@ -1280,7 +1276,6 @@ msgid "Add end of current line to current selection"
 msgstr ""
 
 #: src/KeyCommands.vala:730 src/Shortcuts.vala:821
-#: data/com.github.phase1geo.minder.shortcuts.ui:1127
 #, fuzzy
 msgid "Select all text"
 msgstr "Tak kiezen"
@@ -1300,20 +1295,19 @@ msgstr "Verbindingskleur kiezen"
 msgid "Manual"
 msgstr "Handmatig"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1629
+#: src/MainWindow.vala:183 src/MainWindow.vala:1630
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:242 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:242
 msgid "New File"
 msgstr "Nieuw bestand"
 
-#: src/MainWindow.vala:247 src/MainWindow.vala:1423
-#: data/com.github.phase1geo.minder.shortcuts.ui:28
+#: src/MainWindow.vala:247 src/MainWindow.vala:1424
 msgid "Open File"
 msgstr "Bestand openen"
 
-#: src/MainWindow.vala:252 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:252
 msgid "Save File As"
 msgstr "Bestand opslaan als"
 
@@ -1325,218 +1319,216 @@ msgstr "Ongedaan maken"
 msgid "Redo"
 msgstr "Opnieuw uitvoeren"
 
-#: src/MainWindow.vala:728
+#: src/MainWindow.vala:729
 msgid "Tag Highlight Mode"
 msgstr ""
 
-#: src/MainWindow.vala:730 src/MainWindow.vala:1142
+#: src/MainWindow.vala:731 src/MainWindow.vala:1143
 msgid "Focus Mode"
 msgstr "Focusmodus"
 
-#: src/MainWindow.vala:733
+#: src/MainWindow.vala:734
 msgid "Unnamed Document"
 msgstr "Naamloos document"
 
-#: src/MainWindow.vala:736
+#: src/MainWindow.vala:737
 #, fuzzy
 msgid "Read-Only"
 msgstr "Opvulling"
 
-#: src/MainWindow.vala:755
+#: src/MainWindow.vala:756
 msgid "Zoom to Fit"
 msgstr "Passend zoomen"
 
-#: src/MainWindow.vala:756 data/com.github.phase1geo.minder.shortcuts.ui:140
+#: src/MainWindow.vala:757
 #, fuzzy
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "Zoomen om gekozen knoop te laten passen"
 
-#: src/MainWindow.vala:757
+#: src/MainWindow.vala:758
 msgid "Zoom to Actual Size"
 msgstr "Ware grootte"
 
-#: src/MainWindow.vala:765
+#: src/MainWindow.vala:766
 msgid "Zoom to Percent"
 msgstr "Percentage zoomen"
 
-#: src/MainWindow.vala:780 src/ZoomWidget.vala:104
-#: data/com.github.phase1geo.minder.shortcuts.ui:119
+#: src/MainWindow.vala:781 src/ZoomWidget.vala:104
 msgid "Zoom In"
 msgstr "Inzoomen"
 
-#: src/MainWindow.vala:787 src/ZoomWidget.vala:92
-#: data/com.github.phase1geo.minder.shortcuts.ui:126
+#: src/MainWindow.vala:788 src/ZoomWidget.vala:92
 msgid "Zoom Out"
 msgstr "Uitzoomen"
 
-#: src/MainWindow.vala:805 src/MainWindow.vala:1694
+#: src/MainWindow.vala:806 src/MainWindow.vala:1695
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr ""
 
-#: src/MainWindow.vala:818
+#: src/MainWindow.vala:819
 #, fuzzy
 msgid "Search Nodes, Callouts and Connections"
 msgstr "Knopen en verbindingen zoeken"
 
-#: src/MainWindow.vala:863
+#: src/MainWindow.vala:864
 msgid "Search Criteria"
 msgstr "Zoeken naar"
 
-#: src/MainWindow.vala:867
+#: src/MainWindow.vala:868
 #, fuzzy
 msgid "Search all tabs"
 msgstr "Zoeken naar"
 
-#: src/MainWindow.vala:908 src/StickerSet.vala:114
+#: src/MainWindow.vala:909 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Zoeken"
 
-#: src/MainWindow.vala:916
+#: src/MainWindow.vala:917
 msgid "Nodes"
 msgstr "Knopen"
 
-#: src/MainWindow.vala:917
+#: src/MainWindow.vala:918
 msgid "Connections"
 msgstr "Verbindingen"
 
-#: src/MainWindow.vala:918
+#: src/MainWindow.vala:919
 msgid "Callouts"
 msgstr ""
 
-#: src/MainWindow.vala:919
+#: src/MainWindow.vala:920
 msgid "Groups"
 msgstr ""
 
-#: src/MainWindow.vala:920
+#: src/MainWindow.vala:921
 msgid "Titles"
 msgstr "Titels"
 
-#: src/MainWindow.vala:921
+#: src/MainWindow.vala:922
 msgid "Notes"
 msgstr "Aantekeningen"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:923
 msgid "Folded"
 msgstr "Ingeklapt"
 
-#: src/MainWindow.vala:923
+#: src/MainWindow.vala:924
 msgid "Unfolded"
 msgstr "Uitgeklapt"
 
-#: src/MainWindow.vala:924
+#: src/MainWindow.vala:925
 msgid "Tasks"
 msgstr "Taken"
 
-#: src/MainWindow.vala:925
+#: src/MainWindow.vala:926
 msgid "Non-tasks"
 msgstr "Niet-taken"
 
-#: src/MainWindow.vala:1047
+#: src/MainWindow.vala:1048
 #, fuzzy
 msgid "Print…"
 msgstr "Afdrukken"
 
-#: src/MainWindow.vala:1086
+#: src/MainWindow.vala:1087
 msgid "Brain Dump"
 msgstr ""
 
-#: src/MainWindow.vala:1162 src/Preferences.vala:50
+#: src/MainWindow.vala:1163 src/Preferences.vala:50
 msgid "Preferences"
 msgstr ""
 
-#: src/MainWindow.vala:1163
+#: src/MainWindow.vala:1164
 msgid "Shortcuts Cheatsheet"
 msgstr "Sneltoetsoverzicht"
 
-#: src/MainWindow.vala:1166
+#: src/MainWindow.vala:1167
 #, fuzzy
 msgid "About Minder"
 msgstr "Meeneembare Minder"
 
-#: src/MainWindow.vala:1193 src/MainWindow.vala:1778
+#: src/MainWindow.vala:1194 src/MainWindow.vala:1779
 #, fuzzy
 msgid "Show Property Sidebar"
 msgstr "Eigenschappen tonen"
 
-#: src/MainWindow.vala:1204 src/MainWindow.vala:1247
+#: src/MainWindow.vala:1205 src/MainWindow.vala:1248
 msgid "Current"
 msgstr "Huidige"
 
-#: src/MainWindow.vala:1205 src/MainWindow.vala:1248
+#: src/MainWindow.vala:1206 src/MainWindow.vala:1249
 #: src/StyleInspector.vala:363
 msgid "Style"
 msgstr "Stijl"
 
-#: src/MainWindow.vala:1206 src/MainWindow.vala:1249 src/Preferences.vala:68
+#: src/MainWindow.vala:1207 src/MainWindow.vala:1250 src/Preferences.vala:68
 msgid "Tags"
 msgstr ""
 
-#: src/MainWindow.vala:1207 src/MainWindow.vala:1250
+#: src/MainWindow.vala:1208 src/MainWindow.vala:1251
 msgid "Stickers"
 msgstr ""
 
-#: src/MainWindow.vala:1208 src/MainWindow.vala:1251
+#: src/MainWindow.vala:1209 src/MainWindow.vala:1252
 msgid "Map"
 msgstr "Kaart"
 
-#: src/MainWindow.vala:1324
+#: src/MainWindow.vala:1325
 msgid "Save current unnamed document?"
 msgstr "Wil je het huidige naamloze document opslaan?"
 
-#: src/MainWindow.vala:1325
+#: src/MainWindow.vala:1326
 msgid "Changes will be permanently lost if not saved."
 msgstr "Als je dat niet doen, gaan de aanpassingen permanent verloren."
 
-#: src/MainWindow.vala:1330
+#: src/MainWindow.vala:1331
 msgid "Discard Changes"
 msgstr "Aanpassingen verwerpen"
 
-#: src/MainWindow.vala:1336 src/MainWindow.vala:1625 src/ThemeEditor.vala:174
+#: src/MainWindow.vala:1337 src/MainWindow.vala:1626 src/ThemeEditor.vala:174
 msgid "Save"
 msgstr "Opslaan"
 
-#: src/MainWindow.vala:1368
+#: src/MainWindow.vala:1369
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr ""
 
-#: src/MainWindow.vala:1369
+#: src/MainWindow.vala:1370
 msgid "What do you want to do?"
 msgstr ""
 
-#: src/MainWindow.vala:1374
+#: src/MainWindow.vala:1375
 #, fuzzy
 msgid "Discard Changes and reload"
 msgstr "Aanpassingen verwerpen"
 
-#: src/MainWindow.vala:1377
+#: src/MainWindow.vala:1378
 msgid "Save local version and overwrite"
 msgstr ""
 
-#: src/MainWindow.vala:1423
+#: src/MainWindow.vala:1424
 #, fuzzy
 msgid "Open Directory"
 msgstr "Bestand openen"
 
-#: src/MainWindow.vala:1423
+#: src/MainWindow.vala:1424
 msgid "Open"
 msgstr "Openen"
 
-#: src/MainWindow.vala:1625
+#: src/MainWindow.vala:1626
 msgid "Save File"
 msgstr "Bestand opslaan"
 
-#: src/MainWindow.vala:1724
+#: src/MainWindow.vala:1725
 #, fuzzy
 msgid "Hide Property Sidebar"
 msgstr "Eigenschappen"
 
-#: src/MainWindow.vala:2200
+#: src/MainWindow.vala:2201
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2201
+#: src/MainWindow.vala:2202
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1544,31 +1536,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2206
+#: src/MainWindow.vala:2207
 #, fuzzy
 msgid "Quit Minder"
 msgstr "Meeneembare Minder"
 
-#: src/MainWindow.vala:2226
+#: src/MainWindow.vala:2227
 #, fuzzy
 msgid "Detail"
 msgstr "Losmaken"
 
-#: src/MainWindow.vala:2234
+#: src/MainWindow.vala:2235
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2235
+#: src/MainWindow.vala:2236
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2236
+#: src/MainWindow.vala:2237
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1576,11 +1568,11 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2243
+#: src/MainWindow.vala:2244
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2268
+#: src/MainWindow.vala:2269
 msgid "Upgrades Needed"
 msgstr ""
 
@@ -1742,7 +1734,7 @@ msgstr "Knoop knippen naar klembord"
 msgid "Detach Node"
 msgstr "Knoop losmaken"
 
-#: src/NodeInspector.vala:503 data/com.github.phase1geo.minder.shortcuts.ui:284
+#: src/NodeInspector.vala:503
 msgid "Delete Node"
 msgstr "Knoop verwijderen"
 
@@ -1794,7 +1786,6 @@ msgid "Add Task"
 msgstr "Taak toevoegen"
 
 #: src/NodeMenu.vala:53 src/NodeMenu.vala:230
-#: data/com.github.phase1geo.minder.shortcuts.ui:372
 msgid "Add Image"
 msgstr "Afbeelding toevoegen"
 
@@ -1822,7 +1813,7 @@ msgstr "Verbindingskleur"
 msgid "Fold Children"
 msgstr "Subknopen inklappen"
 
-#: src/NodeMenu.vala:61 data/com.github.phase1geo.minder.shortcuts.ui:414
+#: src/NodeMenu.vala:61
 #, fuzzy
 msgid "Toggle Sequence"
 msgstr "Selectie"
@@ -1934,7 +1925,7 @@ msgstr "Verbindingsknooop verwijderen"
 msgid "Unfold Children"
 msgstr "Subknopen uitklappen"
 
-#: src/NodeMenu.vala:229 data/com.github.phase1geo.minder.shortcuts.ui:663
+#: src/NodeMenu.vala:229
 #, fuzzy
 msgid "Remove Callout"
 msgstr "Taak verwijderen"
@@ -2364,16 +2355,15 @@ msgstr "knoop invoegen"
 msgid "No Commands Listed"
 msgstr "Verbindingsopdrachten"
 
-#: src/Shortcuts.vala:794 data/com.github.phase1geo.minder.shortcuts.ui:983
+#: src/Shortcuts.vala:794
 msgid "Mouse Events"
 msgstr ""
 
-#: src/Shortcuts.vala:797 data/com.github.phase1geo.minder.shortcuts.ui:208
-#: data/com.github.phase1geo.minder.shortcuts.ui:991
+#: src/Shortcuts.vala:797
 msgid "Show Contextual Menu"
 msgstr ""
 
-#: src/Shortcuts.vala:797 data/com.github.phase1geo.minder.shortcuts.ui:992
+#: src/Shortcuts.vala:797
 msgid "[Right-click when item is selected]"
 msgstr ""
 
@@ -2381,30 +2371,30 @@ msgstr ""
 msgid "[Double left-click image]"
 msgstr ""
 
-#: src/Shortcuts.vala:800 data/com.github.phase1geo.minder.shortcuts.ui:1007
+#: src/Shortcuts.vala:800
 #, fuzzy
 msgid "Canvas Movement"
 msgstr "Cursorverplaatsing"
 
-#: src/Shortcuts.vala:801 data/com.github.phase1geo.minder.shortcuts.ui:1011
+#: src/Shortcuts.vala:801
 #, fuzzy
 msgid "Pan Canvas"
 msgstr "Afbeelding bewerken"
 
-#: src/Shortcuts.vala:801 data/com.github.phase1geo.minder.shortcuts.ui:1012
+#: src/Shortcuts.vala:801
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr ""
 
-#: src/Shortcuts.vala:802 data/com.github.phase1geo.minder.shortcuts.ui:1018
+#: src/Shortcuts.vala:802
 #, fuzzy
 msgid "Scroll Vertically"
 msgstr "Verticaal"
 
-#: src/Shortcuts.vala:802 data/com.github.phase1geo.minder.shortcuts.ui:1019
+#: src/Shortcuts.vala:802
 msgid "[Scrollwheel up/down]"
 msgstr ""
 
-#: src/Shortcuts.vala:803 data/com.github.phase1geo.minder.shortcuts.ui:1025
+#: src/Shortcuts.vala:803
 #, fuzzy
 msgid "Scroll Horizontally"
 msgstr "Horizontaal"
@@ -2413,30 +2403,30 @@ msgstr "Horizontaal"
 msgid "[Scrollwhile left/right]"
 msgstr ""
 
-#: src/Shortcuts.vala:805 data/com.github.phase1geo.minder.shortcuts.ui:1034
+#: src/Shortcuts.vala:805
 #, fuzzy
 msgid "Item Selection"
 msgstr "Selectie"
 
-#: src/Shortcuts.vala:806 data/com.github.phase1geo.minder.shortcuts.ui:1038
+#: src/Shortcuts.vala:806
 #, fuzzy
 msgid "Select Single Item"
 msgstr "Knoop verwijderen"
 
-#: src/Shortcuts.vala:806 data/com.github.phase1geo.minder.shortcuts.ui:1039
+#: src/Shortcuts.vala:806
 msgid "[Left-click on item]"
 msgstr ""
 
-#: src/Shortcuts.vala:807 data/com.github.phase1geo.minder.shortcuts.ui:1045
+#: src/Shortcuts.vala:807
 #, fuzzy
 msgid "Select Child Nodes"
 msgstr "Subknoop kiezen"
 
-#: src/Shortcuts.vala:807 data/com.github.phase1geo.minder.shortcuts.ui:1046
+#: src/Shortcuts.vala:807
 msgid "[Control + Left-click on parent node]"
 msgstr ""
 
-#: src/Shortcuts.vala:808 data/com.github.phase1geo.minder.shortcuts.ui:1052
+#: src/Shortcuts.vala:808
 #, fuzzy
 msgid "Select Node Tree/Subtree"
 msgstr "Beginknoop kiezen"
@@ -2445,20 +2435,20 @@ msgstr "Beginknoop kiezen"
 msgid "[Control + Double left-click on parent node"
 msgstr ""
 
-#: src/Shortcuts.vala:809 data/com.github.phase1geo.minder.shortcuts.ui:1059
+#: src/Shortcuts.vala:809
 msgid "Select All Nodes at Same Depth Level"
 msgstr ""
 
-#: src/Shortcuts.vala:809 data/com.github.phase1geo.minder.shortcuts.ui:1060
+#: src/Shortcuts.vala:809
 msgid "[Control + Triple left-click on node]"
 msgstr ""
 
-#: src/Shortcuts.vala:810 data/com.github.phase1geo.minder.shortcuts.ui:1066
+#: src/Shortcuts.vala:810
 #, fuzzy
 msgid "Block Selection"
 msgstr "Selectie"
 
-#: src/Shortcuts.vala:810 data/com.github.phase1geo.minder.shortcuts.ui:1067
+#: src/Shortcuts.vala:810
 msgid "[Left-click + Drag]"
 msgstr ""
 
@@ -2467,34 +2457,34 @@ msgstr ""
 msgid "Item Selection Toggle"
 msgstr "Selectie"
 
-#: src/Shortcuts.vala:813 data/com.github.phase1geo.minder.shortcuts.ui:1079
+#: src/Shortcuts.vala:813
 #, fuzzy
 msgid "Toggle Selection of Item"
 msgstr "Selectie"
 
-#: src/Shortcuts.vala:813 data/com.github.phase1geo.minder.shortcuts.ui:1080
+#: src/Shortcuts.vala:813
 msgid "[Shift + Left-click on item]"
 msgstr ""
 
-#: src/Shortcuts.vala:814 data/com.github.phase1geo.minder.shortcuts.ui:1086
+#: src/Shortcuts.vala:814
 #, fuzzy
 msgid "Toggle Selection of Child Nodes"
 msgstr "Subknoop kiezen"
 
-#: src/Shortcuts.vala:814 data/com.github.phase1geo.minder.shortcuts.ui:1087
+#: src/Shortcuts.vala:814
 msgid "[Shift + Control + Left-click on item]"
 msgstr ""
 
-#: src/Shortcuts.vala:815 data/com.github.phase1geo.minder.shortcuts.ui:1093
+#: src/Shortcuts.vala:815
 #, fuzzy
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "Beginknoop kiezen"
 
-#: src/Shortcuts.vala:815 data/com.github.phase1geo.minder.shortcuts.ui:1094
+#: src/Shortcuts.vala:815
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr ""
 
-#: src/Shortcuts.vala:816 data/com.github.phase1geo.minder.shortcuts.ui:1100
+#: src/Shortcuts.vala:816
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr ""
 
@@ -2502,12 +2492,12 @@ msgstr ""
 msgid "Shift + Control + Triple-click on node]"
 msgstr ""
 
-#: src/Shortcuts.vala:818 data/com.github.phase1geo.minder.shortcuts.ui:1109
+#: src/Shortcuts.vala:818
 #, fuzzy
 msgid "Text Selection"
 msgstr "Selectie"
 
-#: src/Shortcuts.vala:819 data/com.github.phase1geo.minder.shortcuts.ui:1113
+#: src/Shortcuts.vala:819
 msgid "Set Cursor Insert Point"
 msgstr ""
 
@@ -2520,7 +2510,7 @@ msgstr ""
 msgid "Select Current Word"
 msgstr "Tak kiezen"
 
-#: src/Shortcuts.vala:820 data/com.github.phase1geo.minder.shortcuts.ui:1121
+#: src/Shortcuts.vala:820
 msgid "[Double left-click on word]"
 msgstr ""
 
@@ -2805,7 +2795,7 @@ msgstr "Ingeklapt"
 msgid "Opened folder"
 msgstr "Bestand openen"
 
-#: src/StickerSet.vala:84 data/com.github.phase1geo.minder.shortcuts.ui:16
+#: src/StickerSet.vala:84
 msgid "File"
 msgstr "Bestand"
 
@@ -4785,563 +4775,387 @@ msgstr ""
 msgid "Zoom Actual"
 msgstr "Ware grootte"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:6
-msgid "Minder Shortcuts"
-msgstr "Minder-sneltoetsen"
+#~ msgid "Minder Shortcuts"
+#~ msgstr "Minder-sneltoetsen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:35
 #, fuzzy
-msgid "Import File"
-msgstr "Bestand openen"
+#~ msgid "Import File"
+#~ msgstr "Bestand openen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:58
 #, fuzzy
-msgid "Print File"
-msgstr "Afdrukken"
+#~ msgid "Print File"
+#~ msgstr "Afdrukken"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:67
-msgid "Notebook Tabs"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:72
 #, fuzzy
-msgid "Close Current Tab"
-msgstr "Huidige tak"
+#~ msgid "Close Current Tab"
+#~ msgstr "Huidige tak"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:79
-msgid "Go to Next Tab"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:86
 #, fuzzy
-msgid "Go to Previous Tab"
-msgstr "Vorige woord"
+#~ msgid "Go to Previous Tab"
+#~ msgstr "Vorige woord"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:95
-msgid "Undo/Redo"
-msgstr "Ongedaan maken/Opnieuw"
+#~ msgid "Undo/Redo"
+#~ msgstr "Ongedaan maken/Opnieuw"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:99
-msgid "Undo Last Change"
-msgstr "Recentste aanpassing ongedaan maken"
+#~ msgid "Undo Last Change"
+#~ msgstr "Recentste aanpassing ongedaan maken"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:106
-msgid "Redo Last Undo"
-msgstr "Recentste aanpassing opnieuw uitvoeren"
+#~ msgid "Redo Last Undo"
+#~ msgstr "Recentste aanpassing opnieuw uitvoeren"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:115
-msgid "Zooming"
-msgstr "Zoomen"
+#~ msgid "Zooming"
+#~ msgstr "Zoomen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:133
-msgid "Zoom To Actual Size"
-msgstr "Ware grootte"
+#~ msgid "Zoom To Actual Size"
+#~ msgstr "Ware grootte"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:147
 #, fuzzy
-msgid "Zoom To Fit"
-msgstr "Passend zoomen"
+#~ msgid "Zoom To Fit"
+#~ msgstr "Passend zoomen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:156
 #, fuzzy
-msgid "Properties Sidebar"
-msgstr "Eigenschappen"
+#~ msgid "Properties Sidebar"
+#~ msgstr "Eigenschappen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:160
 #, fuzzy
-msgid "Show Current Tab"
-msgstr "Huidige tak"
+#~ msgid "Show Current Tab"
+#~ msgstr "Huidige tak"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:167
 #, fuzzy
-msgid "Show Style Tab"
-msgstr "Emojikiezer tonen"
+#~ msgid "Show Style Tab"
+#~ msgstr "Emojikiezer tonen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:174
 #, fuzzy
-msgid "Show Sticker Tab"
-msgstr "Emojikiezer tonen"
+#~ msgid "Show Sticker Tab"
+#~ msgstr "Emojikiezer tonen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:181
 #, fuzzy
-msgid "Show Map Tab"
-msgstr "Huidige tak"
+#~ msgid "Show Map Tab"
+#~ msgstr "Huidige tak"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:190
-#: data/com.github.phase1geo.minder.shortcuts.ui:767
-msgid "Miscellaneous"
-msgstr "Overig"
+#~ msgid "Miscellaneous"
+#~ msgstr "Overig"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:194
-msgid "Toggle Focus Mode"
-msgstr "Focusmodus aan/uit"
+#~ msgid "Toggle Focus Mode"
+#~ msgstr "Focusmodus aan/uit"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:201
-msgid "Search Nodes/Connections"
-msgstr "Knopen en verbindingen zoeken"
+#~ msgid "Search Nodes/Connections"
+#~ msgstr "Knopen en verbindingen zoeken"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:215
 #, fuzzy
-msgid "Show Preferences"
-msgstr "Eigenschappen tonen"
+#~ msgid "Show Preferences"
+#~ msgstr "Eigenschappen tonen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:222
 #, fuzzy
-msgid "Show Keyboard Shortcuts"
-msgstr "Minder-sneltoetsen"
+#~ msgid "Show Keyboard Shortcuts"
+#~ msgstr "Minder-sneltoetsen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:229
-msgid "Quit Application"
-msgstr "Afsluiten"
+#~ msgid "Quit Application"
+#~ msgstr "Afsluiten"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:241
 #, fuzzy
-msgid "Node Commands"
-msgstr "Verbindingsopdrachten"
+#~ msgid "Node Commands"
+#~ msgstr "Verbindingsopdrachten"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:245
-msgid "Creation/Deletion"
-msgstr "Toevoegen/Verwijderen"
+#~ msgid "Creation/Deletion"
+#~ msgstr "Toevoegen/Verwijderen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:249
-msgid "New Sibling Node"
-msgstr "Nieuwe afgeleide knoop"
+#~ msgid "New Sibling Node"
+#~ msgstr "Nieuwe afgeleide knoop"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:256
 #, fuzzy
-msgid "New Connected Node"
-msgstr "Nieuwe subknoop"
+#~ msgid "New Connected Node"
+#~ msgstr "Nieuwe subknoop"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:263
-msgid "New Child Node"
-msgstr "Nieuwe subknoop"
+#~ msgid "New Child Node"
+#~ msgstr "Nieuwe subknoop"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:270
 #, fuzzy
-msgid "Quick Entry Insertion"
-msgstr "Snel toevoegen"
+#~ msgid "Quick Entry Insertion"
+#~ msgstr "Snel toevoegen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:277
 #, fuzzy
-msgid "Quick Entry Replacement"
-msgstr "Snel toevoegen"
+#~ msgid "Quick Entry Replacement"
+#~ msgstr "Snel toevoegen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:293
-#: data/com.github.phase1geo.minder.shortcuts.ui:877
-msgid "Clipboard"
-msgstr "Klembord"
+#~ msgid "Clipboard"
+#~ msgstr "Klembord"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:297
-msgid "Copy Node"
-msgstr "Knoop kopiëren"
+#~ msgid "Copy Node"
+#~ msgstr "Knoop kopiëren"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:304
-msgid "Cut Node"
-msgstr "Knoop knippen"
+#~ msgid "Cut Node"
+#~ msgstr "Knoop knippen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:311
 #, fuzzy
-msgid "Add Child Node With Clipboard"
-msgstr "Knoop knippen naar klembord"
+#~ msgid "Add Child Node With Clipboard"
+#~ msgstr "Knoop knippen naar klembord"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:318
 #, fuzzy
-msgid "Replace With Clipboard"
-msgstr "Knoop knippen naar klembord"
+#~ msgid "Replace With Clipboard"
+#~ msgstr "Knoop knippen naar klembord"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:327
-msgid "View"
-msgstr ""
+#~ msgid "Center In View"
+#~ msgstr "Centreren"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:331
-msgid "Center In View"
-msgstr "Centreren"
+#~ msgid "Place Into View"
+#~ msgstr "In weergave plaatsen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:338
-#: data/com.github.phase1geo.minder.shortcuts.ui:717
-msgid "Place Into View"
-msgstr "In weergave plaatsen"
+#~ msgid "Changing Current"
+#~ msgstr "Huidige aanpassen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:347
-msgid "Changing Current"
-msgstr "Huidige aanpassen"
+#~ msgid "Edit Title"
+#~ msgstr "Titel aanpassen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:351
-#: data/com.github.phase1geo.minder.shortcuts.ui:696
-msgid "Edit Title"
-msgstr "Titel aanpassen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:365
 #, fuzzy
-msgid "Change Task State"
-msgstr "De aanpassingen hebben betrekking op:"
+#~ msgid "Change Task State"
+#~ msgstr "De aanpassingen hebben betrekking op:"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:379
 #, fuzzy
-msgid "Add URL Link To Text"
-msgstr "Einde van de tekst toevoegen"
+#~ msgid "Add URL Link To Text"
+#~ msgstr "Einde van de tekst toevoegen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:386
-#: data/com.github.phase1geo.minder.shortcuts.ui:799
 #, fuzzy
-msgid "Remove URL Link From Text"
-msgstr "Verbindingsknooop verwijderen"
+#~ msgid "Remove URL Link From Text"
+#~ msgstr "Verbindingsknooop verwijderen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:393
 #, fuzzy
-msgid "Change Link Color"
-msgstr "Verbindingskleur"
+#~ msgid "Change Link Color"
+#~ msgstr "Verbindingskleur"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:400
-msgid "View Properties"
-msgstr "Weergave-eigenschappen"
+#~ msgid "View Properties"
+#~ msgstr "Weergave-eigenschappen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:407
-msgid "Toggle Fold"
-msgstr "In-/Uitklappen"
+#~ msgid "Toggle Fold"
+#~ msgstr "In-/Uitklappen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:421
-msgid "Toggle Node Link"
-msgstr "Verbindingsknoop aan/uit"
+#~ msgid "Toggle Node Link"
+#~ msgstr "Verbindingsknoop aan/uit"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:428
 #, fuzzy
-msgid "Create Link to Selected Node"
-msgstr "Zoomen om gekozen knoop te laten passen"
+#~ msgid "Create Link to Selected Node"
+#~ msgstr "Zoomen om gekozen knoop te laten passen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:429
-msgid "[After using this command, 'y' will create the link]"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:436
 #, fuzzy
-msgid "Create Group"
-msgstr "Aantekening wissen"
+#~ msgid "Create Group"
+#~ msgstr "Aantekening wissen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:443
-msgid "Create Connection"
-msgstr "Verbinding maken"
+#~ msgid "Create Connection"
+#~ msgstr "Verbinding maken"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:450
 #, fuzzy
-msgid "Create Callout"
-msgstr "Aantekening wissen"
+#~ msgid "Create Callout"
+#~ msgstr "Aantekening wissen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:459
-#: data/com.github.phase1geo.minder.shortcuts.ui:672
-#: data/com.github.phase1geo.minder.shortcuts.ui:904
-msgid "Selection"
-msgstr "Selectie"
+#~ msgid "Selection"
+#~ msgstr "Selectie"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:463
-msgid "Select Root"
-msgstr "Beginpunt kiezen"
+#~ msgid "Select Root"
+#~ msgstr "Beginpunt kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:470
-msgid "Select Parent"
-msgstr "Tak kiezen"
+#~ msgid "Select Parent"
+#~ msgstr "Tak kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:477
-msgid "Select Next Sibling"
-msgstr "Volgende afgeleide kiezen"
+#~ msgid "Select Next Sibling"
+#~ msgstr "Volgende afgeleide kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:484
-msgid "Select Previous Sibling"
-msgstr "Vorige afgeleide kiezen"
+#~ msgid "Select Previous Sibling"
+#~ msgstr "Vorige afgeleide kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:491
-msgid "Select Child"
-msgstr "Subknoop kiezen"
+#~ msgid "Select Child"
+#~ msgstr "Subknoop kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:498
 #, fuzzy
-msgid "Select Children"
-msgstr "Subknoop kiezen"
+#~ msgid "Select Children"
+#~ msgstr "Subknoop kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:505
 #, fuzzy
-msgid "Select Subtree"
-msgstr "Beginknoop kiezen"
+#~ msgid "Select Subtree"
+#~ msgstr "Beginknoop kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:512
-msgid "Select Node Below"
-msgstr "Onderstaande knoop kiezen"
+#~ msgid "Select Node Below"
+#~ msgstr "Onderstaande knoop kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:519
-msgid "Select Node Above"
-msgstr "Bovenstaande knoop kiezen"
+#~ msgid "Select Node Above"
+#~ msgstr "Bovenstaande knoop kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:526
-msgid "Select Node To Right"
-msgstr "Rechterknoop kiezen"
+#~ msgid "Select Node To Right"
+#~ msgstr "Rechterknoop kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:533
-msgid "Select Node To Left"
-msgstr "Linkerknoop kiezen"
+#~ msgid "Select Node To Left"
+#~ msgstr "Linkerknoop kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:540
-msgid "Select Linked Node"
-msgstr "Verbindingsknoop kiezen"
+#~ msgid "Select Linked Node"
+#~ msgstr "Verbindingsknoop kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:547
 #, fuzzy
-msgid "Select Callout"
-msgstr "Tak kiezen"
+#~ msgid "Select Callout"
+#~ msgstr "Tak kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:554
-msgid "Select Attached Connection"
-msgstr "Vastgemaakte verbinding kiezen"
+#~ msgid "Select Attached Connection"
+#~ msgstr "Vastgemaakte verbinding kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:563
-msgid "Move"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:567
 #, fuzzy
-msgid "Swap with Sibling Node to Right"
-msgstr "Nieuwe afgeleide knoop"
+#~ msgid "Swap with Sibling Node to Right"
+#~ msgstr "Nieuwe afgeleide knoop"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:574
 #, fuzzy
-msgid "Swap with Sibling Node to Left"
-msgstr "Nieuwe afgeleide knoop"
+#~ msgid "Swap with Sibling Node to Left"
+#~ msgstr "Nieuwe afgeleide knoop"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:581
 #, fuzzy
-msgid "Swap with Sibling Node Above"
-msgstr "Nieuwe afgeleide knoop"
+#~ msgid "Swap with Sibling Node Above"
+#~ msgstr "Nieuwe afgeleide knoop"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:588
 #, fuzzy
-msgid "Swap with Sibling Node Below"
-msgstr "Nieuwe afgeleide knoop"
+#~ msgid "Swap with Sibling Node Below"
+#~ msgstr "Nieuwe afgeleide knoop"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:595
-msgid "Sort Child Nodes Alphabetically"
-msgstr "Subknopen alfabetisch sorteren"
+#~ msgid "Sort Child Nodes Alphabetically"
+#~ msgstr "Subknopen alfabetisch sorteren"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:604
 #, fuzzy
-msgid "Alignment"
-msgstr "naam wijzigen"
+#~ msgid "Alignment"
+#~ msgstr "naam wijzigen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:608
 #, fuzzy
-msgid "Align Top Side"
-msgstr "Knopen uitlijnen"
+#~ msgid "Align Top Side"
+#~ msgstr "Knopen uitlijnen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:615
-msgid "Align Vertical Center"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:622
 #, fuzzy
-msgid "Align Bottom Side"
-msgstr "Knopen uitlijnen"
+#~ msgid "Align Bottom Side"
+#~ msgstr "Knopen uitlijnen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:629
 #, fuzzy
-msgid "Align Left Side"
-msgstr "Knopen uitlijnen"
+#~ msgid "Align Left Side"
+#~ msgstr "Knopen uitlijnen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:636
 #, fuzzy
-msgid "Align Horizontal Center"
-msgstr "Horizontaal"
+#~ msgid "Align Horizontal Center"
+#~ msgstr "Horizontaal"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:643
-msgid "Align Right Side"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:655
 #, fuzzy
-msgid "Callout Commands"
-msgstr "Verbindingsopdrachten"
+#~ msgid "Callout Commands"
+#~ msgstr "Verbindingsopdrachten"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:659
-#: data/com.github.phase1geo.minder.shortcuts.ui:692
-msgid "Change Current"
-msgstr "Huidige aanpassen"
+#~ msgid "Change Current"
+#~ msgstr "Huidige aanpassen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:688
-msgid "Connection Commands"
-msgstr "Verbindingsopdrachten"
+#~ msgid "Connection Commands"
+#~ msgstr "Verbindingsopdrachten"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:710
-msgid "Show Properties"
-msgstr "Eigenschappen tonen"
+#~ msgid "Show Properties"
+#~ msgstr "Eigenschappen tonen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:726
-msgid "Traversal"
-msgstr "Traversieel"
+#~ msgid "Traversal"
+#~ msgstr "Traversieel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:730
-msgid "Select Start Node"
-msgstr "Beginknoop kiezen"
+#~ msgid "Select Start Node"
+#~ msgstr "Beginknoop kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:737
-msgid "Select End Node"
-msgstr "Eindknoop kiezen"
+#~ msgid "Select End Node"
+#~ msgstr "Eindknoop kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:744
-msgid "Select Next Connection"
-msgstr "Volgende verbinding kiezen"
+#~ msgid "Select Next Connection"
+#~ msgstr "Volgende verbinding kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:751
-msgid "Select Previous Connection"
-msgstr "Vorige verbinding kiezen"
+#~ msgid "Select Previous Connection"
+#~ msgstr "Vorige verbinding kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:771
 #, fuzzy
-msgid "Insert Newline Character"
-msgstr "Volgende teken"
+#~ msgid "Insert Newline Character"
+#~ msgstr "Volgende teken"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:778
 #, fuzzy
-msgid "Insert Tab Character"
-msgstr "Volgende teken"
+#~ msgid "Insert Tab Character"
+#~ msgstr "Volgende teken"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:785
-msgid "Show Emoji Picker"
-msgstr "Emojikiezer tonen"
+#~ msgid "Show Emoji Picker"
+#~ msgstr "Emojikiezer tonen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:792
 #, fuzzy
-msgid "Add URL Link To Selected Text"
-msgstr "Geselecteerde tekst kopiëren"
+#~ msgid "Add URL Link To Selected Text"
+#~ msgstr "Geselecteerde tekst kopiëren"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:806
-msgid "End Editing"
-msgstr "Stoppen met bewerken"
+#~ msgid "End Editing"
+#~ msgstr "Stoppen met bewerken"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:815
-msgid "Cursor Movement"
-msgstr "Cursorverplaatsing"
+#~ msgid "Cursor Movement"
+#~ msgstr "Cursorverplaatsing"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:819
-msgid "Next Character"
-msgstr "Volgende teken"
+#~ msgid "Next Character"
+#~ msgstr "Volgende teken"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:826
-msgid "Previous Character"
-msgstr "Vorige teken"
+#~ msgid "Previous Character"
+#~ msgstr "Vorige teken"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:833
 #, fuzzy
-msgid "Next Word"
-msgstr "Volgende woord toevoegen"
+#~ msgid "Next Word"
+#~ msgstr "Volgende woord toevoegen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:840
-msgid "Previous Word"
-msgstr "Vorige woord"
+#~ msgid "Previous Word"
+#~ msgstr "Vorige woord"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:847
-msgid "Next Line"
-msgstr "Volgende regel"
+#~ msgid "Next Line"
+#~ msgstr "Volgende regel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:854
-msgid "Previous Line"
-msgstr "Vorige regel"
+#~ msgid "Previous Line"
+#~ msgstr "Vorige regel"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:861
-msgid "Start Of Text"
-msgstr "Begin van de tekst"
+#~ msgid "Start Of Text"
+#~ msgstr "Begin van de tekst"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:868
-msgid "End Of Text"
-msgstr "Einde van de tekst"
+#~ msgid "End Of Text"
+#~ msgstr "Einde van de tekst"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:881
-msgid "Copy Selected Text"
-msgstr "Geselecteerde tekst kopiëren"
+#~ msgid "Copy Selected Text"
+#~ msgstr "Geselecteerde tekst kopiëren"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:888
-msgid "Cut Selected Text"
-msgstr "Geselecteerde tekst knippen"
+#~ msgid "Cut Selected Text"
+#~ msgstr "Geselecteerde tekst knippen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:895
-msgid "Paste Text"
-msgstr "Tekst plakken"
+#~ msgid "Paste Text"
+#~ msgstr "Tekst plakken"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:908
-msgid "Add Next Character"
-msgstr "Volgende teken toevoegen"
+#~ msgid "Add Next Character"
+#~ msgstr "Volgende teken toevoegen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:915
-msgid "Add Previous Character"
-msgstr "Vorige teken toevoegen"
+#~ msgid "Add Previous Character"
+#~ msgstr "Vorige teken toevoegen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:922
-msgid "Add Next Word"
-msgstr "Volgende woord toevoegen"
+#~ msgid "Add Next Word"
+#~ msgstr "Volgende woord toevoegen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:929
-msgid "Add Previous Word"
-msgstr "Vorige woord toevoegen"
+#~ msgid "Add Previous Word"
+#~ msgstr "Vorige woord toevoegen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:936
-msgid "Add Next Line"
-msgstr "Volgende regel toevoegen"
+#~ msgid "Add Next Line"
+#~ msgstr "Volgende regel toevoegen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:943
-msgid "Add Previous Line"
-msgstr "Vorige regel toevoegen"
+#~ msgid "Add Previous Line"
+#~ msgstr "Vorige regel toevoegen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:950
-msgid "Add Start Of Text"
-msgstr "Begin van de tekst toevoegen"
+#~ msgid "Add Start Of Text"
+#~ msgstr "Begin van de tekst toevoegen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:957
-msgid "Add End Of Text"
-msgstr "Einde van de tekst toevoegen"
+#~ msgid "Add End Of Text"
+#~ msgstr "Einde van de tekst toevoegen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:964
 #, fuzzy
-msgid "Select All Text"
-msgstr "Tak kiezen"
+#~ msgid "Select All Text"
+#~ msgstr "Tak kiezen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:971
 #, fuzzy
-msgid "Clear Selection"
-msgstr "Selectie"
+#~ msgid "Clear Selection"
+#~ msgstr "Selectie"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:998
 #, fuzzy
-msgid "Edit Image in Canvas"
-msgstr "Afbeelding bewerken"
+#~ msgid "Edit Image in Canvas"
+#~ msgstr "Afbeelding bewerken"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:999
-msgid "[Double left-click on image]"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1026
-msgid "[Shift + Scrollwheel up/down]"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1053
-msgid "[Control + Double left-click on parent node]"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1075
-msgid "Item Selection Toggle (Add to/Remove from Selection)"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1101
-msgid "[Shift + Control + Triple left-click on node]"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1114
-msgid "[Left-click anywhere in text]"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1120
 #, fuzzy
-msgid "Select current word"
-msgstr "Tak kiezen"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:1128
-msgid "[Triple left-click anywhere in text]"
-msgstr ""
+#~ msgid "Select current word"
+#~ msgstr "Tak kiezen"
 
 #, fuzzy
 #~ msgid "Delete Saved Style"
