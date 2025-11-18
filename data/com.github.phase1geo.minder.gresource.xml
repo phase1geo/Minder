@@ -2,7 +2,6 @@
 <gresources>
   <gresource prefix="/com/github/phase1geo/minder">
     <file alias="Application.css" compressed="true">Application.css</file>
-    <file alias="shortcuts.ui" compressed="true">com.github.phase1geo.minder.shortcuts.ui</file>
     <file alias="minder-logo.svg">icons/scalable/com.github.phase1geo.minder.svg</file>
     <file alias="README.md">custom_sticker_readme.md</file>
 

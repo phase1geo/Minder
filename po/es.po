@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 09:45-0600\n"
+"POT-Creation-Date: 2025-11-18 10:01-0600\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Félix Brezo <felixbrezo@disroot.org>\n"
 "Language-Team: none\n"
@@ -120,7 +120,7 @@ msgstr "Eliminar"
 msgid "Select Node"
 msgstr "Seleccionar nodo"
 
-#: src/Callout.vala:131 src/KeyCommands.vala:675 src/NodeMenu.vala:93
+#: src/Callout.vala:131 src/KeyCommands.vala:677 src/NodeMenu.vala:93
 msgid "Callout"
 msgstr ""
 
@@ -129,7 +129,7 @@ msgstr ""
 msgid "No text found"
 msgstr "Palabra siguiente"
 
-#: src/ConnectionInspector.vala:77 src/KeyCommands.vala:677
+#: src/ConnectionInspector.vala:77 src/KeyCommands.vala:680
 #: src/NodeMenu.vala:92
 msgid "Connection"
 msgstr "Conexión"
@@ -522,7 +522,7 @@ msgstr "JPEG"
 msgid "Export to clipboard"
 msgstr "Cortar imagen al portapapeles"
 
-#: src/GroupInspector.vala:73 src/KeyCommands.vala:683
+#: src/GroupInspector.vala:73 src/KeyCommands.vala:686
 msgid "Group"
 msgstr ""
 
@@ -587,712 +587,712 @@ msgstr "Seleccionar imagen"
 msgid "Images"
 msgstr "Imágenes"
 
-#: src/KeyCommands.vala:569 src/Shortcuts.vala:796
+#: src/KeyCommands.vala:571 src/Shortcuts.vala:796
 msgid "General"
 msgstr "General"
 
-#: src/KeyCommands.vala:570
+#: src/KeyCommands.vala:572
 #, fuzzy
 msgid "File Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:571
+#: src/KeyCommands.vala:573
 #, fuzzy
 msgid "Create new mindmap"
 msgstr "Crear conexión"
 
-#: src/KeyCommands.vala:572
+#: src/KeyCommands.vala:574
 msgid "Open saved mindmap"
 msgstr ""
 
-#: src/KeyCommands.vala:573
+#: src/KeyCommands.vala:575
 msgid "Create mindmap from directory structure"
 msgstr ""
 
-#: src/KeyCommands.vala:574
+#: src/KeyCommands.vala:576
 msgid "Save mindmap to current file"
 msgstr ""
 
-#: src/KeyCommands.vala:575
+#: src/KeyCommands.vala:577
 msgid "Save mindmap to new file"
 msgstr ""
 
-#: src/KeyCommands.vala:576
+#: src/KeyCommands.vala:578
 msgid "Show print dialog for current mindmap"
 msgstr ""
 
-#: src/KeyCommands.vala:577
+#: src/KeyCommands.vala:579
 #, fuzzy
 msgid "Tab Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:578
+#: src/KeyCommands.vala:580
 #, fuzzy
 msgid "Select next tab"
 msgstr "Seleccionar hermano siguiente"
 
-#: src/KeyCommands.vala:579
+#: src/KeyCommands.vala:581
 #, fuzzy
 msgid "Select previous tab"
 msgstr "Seleccionar hermano anterior"
 
-#: src/KeyCommands.vala:580
+#: src/KeyCommands.vala:582
 #, fuzzy
 msgid "Close the current mindmap"
 msgstr "Árbol actual"
 
-#: src/KeyCommands.vala:581
+#: src/KeyCommands.vala:583
 #, fuzzy
 msgid "Undo/Redo Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:582
+#: src/KeyCommands.vala:584
 #, fuzzy
 msgid "Undo last action"
 msgstr "Deshacer último cambio"
 
-#: src/KeyCommands.vala:583
+#: src/KeyCommands.vala:585
 #, fuzzy
 msgid "Redo last undone action"
 msgstr "Rehacer último cambio"
 
-#: src/KeyCommands.vala:584
+#: src/KeyCommands.vala:586
 #, fuzzy
 msgid "Zoom Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:585
+#: src/KeyCommands.vala:587
 #, fuzzy
 msgid "Zoom in"
 msgstr "Ampliar"
 
-#: src/KeyCommands.vala:586
+#: src/KeyCommands.vala:588
 #, fuzzy
 msgid "Zoom out"
 msgstr "Reducir"
 
-#: src/KeyCommands.vala:587
+#: src/KeyCommands.vala:589
 msgid "Zoom to fit entire mindmap in viewer"
 msgstr ""
 
-#: src/KeyCommands.vala:588
+#: src/KeyCommands.vala:590
 #, fuzzy
 msgid "Zoom selected node subtree in viewer"
 msgstr "Ajustar escala al nodo seleccionado"
 
-#: src/KeyCommands.vala:589
+#: src/KeyCommands.vala:591
 #, fuzzy
 msgid "Zoom to 100%"
 msgstr "Mejor ajuste"
 
-#: src/KeyCommands.vala:590
+#: src/KeyCommands.vala:592
 #, fuzzy
 msgid "Sidebar Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:591
+#: src/KeyCommands.vala:593
 #, fuzzy
 msgid "Show current tab in sidebar"
 msgstr "Árbol actual"
 
-#: src/KeyCommands.vala:592
+#: src/KeyCommands.vala:594
 #, fuzzy
 msgid "Show style tab in sidebar"
 msgstr "Mostrar selector de emoji"
 
-#: src/KeyCommands.vala:593
+#: src/KeyCommands.vala:595
 #, fuzzy
 msgid "Show tag tab in sidebar"
 msgstr "Mostrar propiedades"
 
-#: src/KeyCommands.vala:594
+#: src/KeyCommands.vala:596
 #, fuzzy
 msgid "Show sticker tab in sidebar"
 msgstr "Mostrar selector de emoji"
 
-#: src/KeyCommands.vala:595
+#: src/KeyCommands.vala:597
 #, fuzzy
 msgid "Show map tab in sidebar"
 msgstr "Mostrar propiedades"
 
-#: src/KeyCommands.vala:596
+#: src/KeyCommands.vala:598
 #, fuzzy
 msgid "Show currently select node/connection/group information in sidebar"
 msgstr "<big>Seleccione un nodo para ver o editar su información</big>"
 
-#: src/KeyCommands.vala:597
+#: src/KeyCommands.vala:599
 #, fuzzy
 msgid "Map Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:598
+#: src/KeyCommands.vala:600
 #, fuzzy
 msgid "Show/Hide Connections"
 msgstr "Ocultar conexiones"
 
-#: src/KeyCommands.vala:599
+#: src/KeyCommands.vala:601
 #, fuzzy
 msgid "Show/Hide Callouts"
 msgstr "Disposiciones de los nodos"
 
-#: src/KeyCommands.vala:600
+#: src/KeyCommands.vala:602
 msgid "Balance nodes in vertical/horizontal layouts"
 msgstr ""
 
-#: src/KeyCommands.vala:601
+#: src/KeyCommands.vala:603
 #, fuzzy
 msgid "Fold all completed tasks"
 msgstr "plegar tareas completadas"
 
-#: src/KeyCommands.vala:602
+#: src/KeyCommands.vala:604
 #, fuzzy
 msgid "Unfold all folded nodes"
 msgstr "Desplegar todos los nodos"
 
-#: src/KeyCommands.vala:603
+#: src/KeyCommands.vala:605
 #, fuzzy
 msgid "Miscellaneous Commands"
 msgstr "Misceláneo"
 
-#: src/KeyCommands.vala:604
+#: src/KeyCommands.vala:606
 #, fuzzy
 msgid "Show preferences window"
 msgstr "Mostrar propiedades"
 
-#: src/KeyCommands.vala:605
+#: src/KeyCommands.vala:607
 #, fuzzy
 msgid "Show shortcuts cheatsheet"
 msgstr "Lista de atajos"
 
-#: src/KeyCommands.vala:606
+#: src/KeyCommands.vala:608
 msgid "Show contextual menu"
 msgstr ""
 
-#: src/KeyCommands.vala:607
-msgid "Show find popup"
-msgstr ""
-
-#: src/KeyCommands.vala:608
-#, fuzzy
-msgid "Show About window"
-msgstr "Minder portable"
-
 #: src/KeyCommands.vala:609
-msgid "Toggle braindump input mode"
+msgid "Show find popup"
 msgstr ""
 
 #: src/KeyCommands.vala:610
 #, fuzzy
-msgid "Toggle focus mode"
-msgstr "Conmutar modo de concentración"
+msgid "Show About window"
+msgstr "Minder portable"
 
 #: src/KeyCommands.vala:611
-msgid "Edit note of current item"
+msgid "Toggle braindump input mode"
 msgstr ""
 
 #: src/KeyCommands.vala:612
-msgid "Edit currently selected item"
-msgstr ""
+#, fuzzy
+msgid "Toggle focus mode"
+msgstr "Conmutar modo de concentración"
 
 #: src/KeyCommands.vala:613
-msgid "Show currently selected item"
+msgid "Edit note of current item"
 msgstr ""
 
 #: src/KeyCommands.vala:614
-msgid "Remove sticker from current node or connection"
+msgid "Edit currently selected item"
 msgstr ""
 
 #: src/KeyCommands.vala:615
+msgid "Show currently selected item"
+msgstr ""
+
+#: src/KeyCommands.vala:616
+msgid "Remove sticker from current node or connection"
+msgstr ""
+
+#: src/KeyCommands.vala:617
 #, fuzzy
 msgid "Quit the application"
 msgstr "Salir de la aplicación"
 
-#: src/KeyCommands.vala:616 src/NodeInspector.vala:100
+#: src/KeyCommands.vala:618 src/NodeInspector.vala:100
 #, fuzzy
 msgid "Node"
 msgstr "Nodos"
 
-#: src/KeyCommands.vala:617
+#: src/KeyCommands.vala:619
 #, fuzzy
 msgid "Creation/Deletion Commands"
 msgstr "Creación/Borrado"
 
-#: src/KeyCommands.vala:618
+#: src/KeyCommands.vala:620
 #, fuzzy
 msgid "Add root node"
 msgstr "Añadir nodo raíz"
 
-#: src/KeyCommands.vala:619
+#: src/KeyCommands.vala:621
 msgid "Add sibling node after current node"
 msgstr ""
 
-#: src/KeyCommands.vala:620
+#: src/KeyCommands.vala:622
 msgid "Add sibling node before current node"
 msgstr ""
 
-#: src/KeyCommands.vala:621
+#: src/KeyCommands.vala:623
 msgid "Add child node to current node"
 msgstr ""
 
-#: src/KeyCommands.vala:622
+#: src/KeyCommands.vala:624
 #, fuzzy
 msgid "Add parent node to current node"
 msgstr "añadir nodo padre"
 
-#: src/KeyCommands.vala:623
+#: src/KeyCommands.vala:625
 #, fuzzy
 msgid "Use quick entry to insert nodes"
 msgstr "Inserción de entrada rápida"
 
-#: src/KeyCommands.vala:624
+#: src/KeyCommands.vala:626
 #, fuzzy
 msgid "Use quick entry to replace current node"
 msgstr "Reemplazo de entrada rápida"
 
-#: src/KeyCommands.vala:625
+#: src/KeyCommands.vala:627
 msgid "Remove selected node only (leave subtree)"
 msgstr ""
 
-#: src/KeyCommands.vala:626 src/KeyCommands.vala:697
+#: src/KeyCommands.vala:628 src/KeyCommands.vala:700
 #, fuzzy
 msgid "Clipboard Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:627
+#: src/KeyCommands.vala:629
 msgid "Paste node link from clipboard into current node"
 msgstr ""
 
-#: src/KeyCommands.vala:628
+#: src/KeyCommands.vala:630
 #, fuzzy
 msgid "Replace current node with clipboard content"
 msgstr "Reemplazar con portapapeles"
 
-#: src/KeyCommands.vala:629
+#: src/KeyCommands.vala:631
 #, fuzzy
 msgid "View Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:630
+#: src/KeyCommands.vala:632
 #, fuzzy
 msgid "Center current node in map canvas"
 msgstr "Centrar el nodo actual"
 
-#: src/KeyCommands.vala:631 src/KeyCommands.vala:684
+#: src/KeyCommands.vala:633 src/KeyCommands.vala:687
 #, fuzzy
 msgid "Change Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:632
+#: src/KeyCommands.vala:634
 msgid "Change task status of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:633
+#: src/KeyCommands.vala:635
 msgid "Add/Edit image of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:634
+#: src/KeyCommands.vala:636
 msgid "Remove image from current node"
 msgstr ""
 
-#: src/KeyCommands.vala:635
+#: src/KeyCommands.vala:637
 #, fuzzy
 msgid "Change link color of current node"
 msgstr "cambiar color de enlace de nodo"
 
-#: src/KeyCommands.vala:636
+#: src/KeyCommands.vala:638
 #, fuzzy
 msgid "Randomize the current node link color"
 msgstr "cambios de color de enlace aleatorios"
 
-#: src/KeyCommands.vala:637
+#: src/KeyCommands.vala:639
 #, fuzzy
 msgid "Set current node link color to match parent node"
 msgstr "cambios de color de enlace aleatorios"
 
-#: src/KeyCommands.vala:638
+#: src/KeyCommands.vala:640
 msgid "Toggle folding of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:639
+#: src/KeyCommands.vala:641
 #, fuzzy
 msgid "Toggle folding of current node subtree"
 msgstr "Seleccionar nodo inicial"
 
-#: src/KeyCommands.vala:640
+#: src/KeyCommands.vala:642
 #, fuzzy
 msgid "Toggle the node link state"
 msgstr "Conmutar enlace de nodo"
 
-#: src/KeyCommands.vala:641
+#: src/KeyCommands.vala:643
 msgid "Add group for current node and its subtree"
 msgstr ""
 
-#: src/KeyCommands.vala:642
+#: src/KeyCommands.vala:644
 msgid "Start creation of connection from current node"
 msgstr ""
 
-#: src/KeyCommands.vala:643
+#: src/KeyCommands.vala:645
 msgid "Add/Remove callout for current node"
 msgstr ""
 
-#: src/KeyCommands.vala:644
+#: src/KeyCommands.vala:646
 msgid "Toggle sequence state of children of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:645 src/KeyCommands.vala:678 src/KeyCommands.vala:687
-#: src/KeyCommands.vala:717
+#: src/KeyCommands.vala:647 src/KeyCommands.vala:678 src/KeyCommands.vala:681
+#: src/KeyCommands.vala:690 src/KeyCommands.vala:720
 #, fuzzy
 msgid "Selection Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:646
+#: src/KeyCommands.vala:648
 #, fuzzy
 msgid "Select root node of current node"
 msgstr "Seleccionar un ancestro"
 
-#: src/KeyCommands.vala:647
+#: src/KeyCommands.vala:649
 #, fuzzy
 msgid "Select parent node of current node"
 msgstr "Seleccionar un ancestro"
 
-#: src/KeyCommands.vala:648
+#: src/KeyCommands.vala:650
 #, fuzzy
 msgid "Select all child nodes of current node"
 msgstr "Crea un nodo hijo del nodo previo."
 
-#: src/KeyCommands.vala:649
+#: src/KeyCommands.vala:651
 #, fuzzy
 msgid "Select single child node of current node"
 msgstr "Crea un nodo hijo del nodo previo."
 
-#: src/KeyCommands.vala:650
+#: src/KeyCommands.vala:652
 msgid "Select all nodes in subtree of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:651
+#: src/KeyCommands.vala:653
 msgid "Select next sibling node of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:652
+#: src/KeyCommands.vala:654
 #, fuzzy
 msgid "Select previous sibling node of current node"
 msgstr "Seleccionar hermano anterior"
 
-#: src/KeyCommands.vala:653
+#: src/KeyCommands.vala:655
 msgid "Select node to the left of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:654
+#: src/KeyCommands.vala:656
 msgid "Select node to the right of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:655
+#: src/KeyCommands.vala:657
 #, fuzzy
 msgid "Select node above current node"
 msgstr "Seleccionar un ancestro"
 
-#: src/KeyCommands.vala:656
+#: src/KeyCommands.vala:658
 #, fuzzy
 msgid "Select node below current node"
 msgstr "Seleccionar un ancestro"
 
-#: src/KeyCommands.vala:657
+#: src/KeyCommands.vala:659
 #, fuzzy
 msgid "Select linked node of current node"
 msgstr "Seleccionar un ancestro"
 
-#: src/KeyCommands.vala:658
+#: src/KeyCommands.vala:660
 #, fuzzy
 msgid "Select connection of current node"
 msgstr "Seleccionar un ancestro"
 
-#: src/KeyCommands.vala:659
+#: src/KeyCommands.vala:661
 #, fuzzy
 msgid "Select callout of current node"
 msgstr "Seleccionar un ancestro"
 
-#: src/KeyCommands.vala:660
+#: src/KeyCommands.vala:662
 #, fuzzy
 msgid "Move Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:661
+#: src/KeyCommands.vala:663
 msgid "Swap current node with right node"
 msgstr ""
 
-#: src/KeyCommands.vala:662
+#: src/KeyCommands.vala:664
 msgid "Swap current node with left node"
 msgstr ""
 
-#: src/KeyCommands.vala:663
+#: src/KeyCommands.vala:665
 msgid "Swap current node with above node"
 msgstr ""
 
-#: src/KeyCommands.vala:664
+#: src/KeyCommands.vala:666
 msgid "Swap current node with below node"
 msgstr ""
 
-#: src/KeyCommands.vala:665
+#: src/KeyCommands.vala:667
 #, fuzzy
 msgid "Sort child nodes of current node alphabetically"
 msgstr "Ordenar nodos hijos alfabéticamente"
 
-#: src/KeyCommands.vala:666
+#: src/KeyCommands.vala:668
 msgid "Sort child nodes of current node randomly"
 msgstr ""
 
-#: src/KeyCommands.vala:667
-msgid "Detaches current node and its subtree"
-msgstr ""
-
-#: src/KeyCommands.vala:668
-#, fuzzy
-msgid "Alignment Commands"
-msgstr "Alineación"
-
 #: src/KeyCommands.vala:669
-msgid "Align selected node top edges"
+msgid "Detaches current node and its subtree"
 msgstr ""
 
 #: src/KeyCommands.vala:670
 #, fuzzy
-msgid "Align selected node vertical centers"
-msgstr "Alinear centro verticalmente"
+msgid "Alignment Commands"
+msgstr "Alineación"
 
 #: src/KeyCommands.vala:671
-msgid "Align selected node bottom edges"
+msgid "Align selected node top edges"
 msgstr ""
 
 #: src/KeyCommands.vala:672
+#, fuzzy
+msgid "Align selected node vertical centers"
+msgstr "Alinear centro verticalmente"
+
+#: src/KeyCommands.vala:673
+msgid "Align selected node bottom edges"
+msgstr ""
+
+#: src/KeyCommands.vala:674
 msgid "Align selected node left edges"
 msgstr ""
 
-#: src/KeyCommands.vala:673
+#: src/KeyCommands.vala:675
 #, fuzzy
 msgid "Align selected node horizontal centers"
 msgstr "Alinear centro horizontalmente"
 
-#: src/KeyCommands.vala:674
+#: src/KeyCommands.vala:676
 msgid "Align selected node right edges"
 msgstr ""
 
-#: src/KeyCommands.vala:676
+#: src/KeyCommands.vala:679
 #, fuzzy
 msgid "Select callout node"
 msgstr "Seleccionar un ancestro"
 
-#: src/KeyCommands.vala:679
+#: src/KeyCommands.vala:682
 #, fuzzy
 msgid "Select connection source node"
 msgstr "Borrar conexión"
 
-#: src/KeyCommands.vala:680
+#: src/KeyCommands.vala:683
 #, fuzzy
 msgid "Select connection target node"
 msgstr "Borrar conexión"
 
-#: src/KeyCommands.vala:681
+#: src/KeyCommands.vala:684
 #, fuzzy
 msgid "Select next connection in map"
 msgstr "Seleccionar conexión posterior"
 
-#: src/KeyCommands.vala:682
+#: src/KeyCommands.vala:685
 #, fuzzy
 msgid "Select previous connection in map"
 msgstr "Seleccionar conexión anterior"
 
-#: src/KeyCommands.vala:685
+#: src/KeyCommands.vala:688
 msgid "Change the color of the current group"
 msgstr ""
 
-#: src/KeyCommands.vala:686
+#: src/KeyCommands.vala:689
 msgid "Merge current groups into single group"
 msgstr ""
 
-#: src/KeyCommands.vala:688
+#: src/KeyCommands.vala:691
 msgid "Select main node(s) of current group(s)"
 msgstr ""
 
-#: src/KeyCommands.vala:689
+#: src/KeyCommands.vala:692
 msgid "Selects all nodes within current group(s)"
 msgstr ""
 
-#: src/KeyCommands.vala:690
+#: src/KeyCommands.vala:693
 msgid "Text Editing"
 msgstr "Edición de texto"
 
-#: src/KeyCommands.vala:691
+#: src/KeyCommands.vala:694
 #, fuzzy
 msgid "Insertion/Deletion Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:692
+#: src/KeyCommands.vala:695
 #, fuzzy
 msgid "Insert newline character"
 msgstr "Carácter siguiente"
 
-#: src/KeyCommands.vala:693
+#: src/KeyCommands.vala:696
 #, fuzzy
 msgid "Insert TAB character"
 msgstr "Carácter siguiente"
 
-#: src/KeyCommands.vala:694
+#: src/KeyCommands.vala:697
 #, fuzzy
 msgid "Insert emoji"
 msgstr "Insertar emoji"
 
-#: src/KeyCommands.vala:695
+#: src/KeyCommands.vala:698
 #, fuzzy
 msgid "Remove next word"
 msgstr "mover nodo"
 
-#: src/KeyCommands.vala:696
+#: src/KeyCommands.vala:699
 #, fuzzy
 msgid "Remove previous word"
 msgstr "Palabra anterior"
 
-#: src/KeyCommands.vala:698
+#: src/KeyCommands.vala:701
 #, fuzzy
 msgid "Copy selected nodes or text"
 msgstr "Copiar texto seleccionado"
 
-#: src/KeyCommands.vala:699
+#: src/KeyCommands.vala:702
 #, fuzzy
 msgid "Cut selected nodes or text"
 msgstr "Cortar texto seleccionado"
 
-#: src/KeyCommands.vala:700
+#: src/KeyCommands.vala:703
 #, fuzzy
 msgid "Paste nodes or text from clipboard"
 msgstr "Pegar imagen desde el portapapeles"
 
-#: src/KeyCommands.vala:701
+#: src/KeyCommands.vala:704
 #, fuzzy
 msgid "URL Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:702
+#: src/KeyCommands.vala:705
 msgid "Open URL link at current cursor position"
 msgstr ""
 
-#: src/KeyCommands.vala:703
+#: src/KeyCommands.vala:706
 msgid "Add URL link at current cursor position"
 msgstr ""
 
-#: src/KeyCommands.vala:704
+#: src/KeyCommands.vala:707
 msgid "Change URL link at current cursor position"
 msgstr ""
 
-#: src/KeyCommands.vala:705
+#: src/KeyCommands.vala:708
 msgid "Remove URL link at current cursor position"
 msgstr ""
 
-#: src/KeyCommands.vala:706
+#: src/KeyCommands.vala:709
 #, fuzzy
 msgid "Cursor Commands"
 msgstr "Comandos de conexión"
 
-#: src/KeyCommands.vala:707
+#: src/KeyCommands.vala:710
 msgid "Move cursor to next character"
 msgstr ""
 
-#: src/KeyCommands.vala:708
+#: src/KeyCommands.vala:711
 #, fuzzy
 msgid "Move cursor to previous character"
 msgstr "Carácter anterior"
 
-#: src/KeyCommands.vala:709
+#: src/KeyCommands.vala:712
 msgid "Move cursor up one line"
 msgstr ""
 
-#: src/KeyCommands.vala:710
+#: src/KeyCommands.vala:713
 msgid "Move cursor down one line"
 msgstr ""
 
-#: src/KeyCommands.vala:711
+#: src/KeyCommands.vala:714
 msgid "Move cursor to beginning of next word"
 msgstr ""
 
-#: src/KeyCommands.vala:712
+#: src/KeyCommands.vala:715
 msgid "Move cursor to beginning of previous word"
 msgstr ""
 
-#: src/KeyCommands.vala:713
+#: src/KeyCommands.vala:716
 msgid "Move cursor to start of text"
 msgstr ""
 
-#: src/KeyCommands.vala:714
+#: src/KeyCommands.vala:717
 msgid "Move cursor to end of text"
 msgstr ""
 
-#: src/KeyCommands.vala:715
+#: src/KeyCommands.vala:718
 msgid "Move cursor to start of current line"
 msgstr ""
 
-#: src/KeyCommands.vala:716
+#: src/KeyCommands.vala:719
 msgid "Move cursor to end of current line"
 msgstr ""
 
-#: src/KeyCommands.vala:718
+#: src/KeyCommands.vala:721
 msgid "Add next character to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:719
+#: src/KeyCommands.vala:722
 #, fuzzy
 msgid "Add previous character to current selection"
 msgstr "Añadir carácter anterior"
 
-#: src/KeyCommands.vala:720
+#: src/KeyCommands.vala:723
 msgid "Add line up to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:721
+#: src/KeyCommands.vala:724
 msgid "Add line down to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:722
+#: src/KeyCommands.vala:725
 msgid "Add next word to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:723
+#: src/KeyCommands.vala:726
 msgid "Add previous word to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:724
+#: src/KeyCommands.vala:727
 msgid "Add start of text to current selection (Control-Up)"
 msgstr ""
 
-#: src/KeyCommands.vala:725
+#: src/KeyCommands.vala:728
 msgid "Add start of text to current selection (Control-Home)"
 msgstr ""
 
-#: src/KeyCommands.vala:726
+#: src/KeyCommands.vala:729
 msgid "Add end of text to current selection (Control-Down)"
 msgstr ""
 
-#: src/KeyCommands.vala:727
+#: src/KeyCommands.vala:730
 msgid "Add end of text to current selection (Control-End)"
 msgstr ""
 
-#: src/KeyCommands.vala:728
+#: src/KeyCommands.vala:731
 msgid "Add start of current line to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:729
+#: src/KeyCommands.vala:732
 msgid "Add end of current line to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:730 src/Shortcuts.vala:821
+#: src/KeyCommands.vala:733 src/Shortcuts.vala:821
 #, fuzzy
 msgid "Select all text"
 msgstr "Seleccionar un ancestro"
 
-#: src/KeyCommands.vala:731
+#: src/KeyCommands.vala:734
 #, fuzzy
 msgid "Deselect all text"
 msgstr "Seleccionar un ancestro"
 
-#: src/KeyCommands.vala:1871
+#: src/KeyCommands.vala:1876
 #, fuzzy
 msgid "Select a group color"
 msgstr "Seleccionar color de enlace"
@@ -2395,8 +2395,8 @@ msgstr "Insertar"
 
 #: src/Shortcuts.vala:773 src/Shortcuts.vala:779
 #, fuzzy
-msgid "No Commands Listed"
-msgstr "Comandos de conexión"
+msgid "No Shortcuts Set"
+msgstr "Atajos de Minder"
 
 #: src/Shortcuts.vala:794
 msgid "Mouse Events"
@@ -4812,6 +4812,10 @@ msgstr ""
 #, fuzzy
 msgid "Zoom Actual"
 msgstr "Escala real"
+
+#, fuzzy
+#~ msgid "No Commands Listed"
+#~ msgstr "Comandos de conexión"
 
 #~ msgid "Minder Shortcuts"
 #~ msgstr "Atajos de Minder"

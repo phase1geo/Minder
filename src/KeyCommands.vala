@@ -151,7 +151,9 @@ public enum KeyCommand {
     NODE_ALIGN_END,
   NODE_END,
   CALLOUT_START,
-    CALLOUT_SELECT_NODE,
+    CALLOUT_SELECT_START,
+      CALLOUT_SELECT_NODE,
+    CALLOUT_SELECT_END,
     CALLOUT_REMOVE,
   CALLOUT_END,
   CONNECTION_START,
@@ -673,6 +675,7 @@ public enum KeyCommand {
       case NODE_ALIGN_HCENTER        :  return( _( "Align selected node horizontal centers" ) );
       case NODE_ALIGN_RIGHT          :  return( _( "Align selected node right edges" ) );
       case CALLOUT_START             :  return( _( "Callout" ) );
+      case CALLOUT_SELECT_START      :  return( _( "Selection Commands" ) );
       case CALLOUT_SELECT_NODE       :  return( _( "Select callout node" ) );
       case CONNECTION_START          :  return( _( "Connection" ) );
       case CONNECTION_SELECT_START   :  return( _( "Selection Commands" ) );
@@ -1124,6 +1127,7 @@ public enum KeyCommand {
       case NODE_ALIGN_START        :
       case CONNECTION_EXIST_START  :
       case CONNECTION_SELECT_START :
+      case CALLOUT_SELECT_START    :
       case GROUP_CHANGE_START      :
       case GROUP_SELECT_START      :
       case EDIT_TEXT_START         :
@@ -1159,6 +1163,7 @@ public enum KeyCommand {
       case NODE_ALIGN_END        :
       case CONNECTION_EXIST_END  :
       case CONNECTION_SELECT_END :
+      case CALLOUT_SELECT_END    :
       case GROUP_CHANGE_END      :
       case GROUP_SELECT_END      :
       case EDIT_TEXT_END         :
