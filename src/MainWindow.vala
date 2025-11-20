@@ -2348,7 +2348,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
 
     // Save the tab state if we did something
-    if( tab_skipped ) {
+    if( (tabs == 0) || tab_skipped ) {
       save_tab_state( _nb.page );
     }
 

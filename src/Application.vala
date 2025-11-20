@@ -121,7 +121,7 @@ public class Minder : Gtk.Application {
     string? cl_import = null;
     string? cl_export = null;
 
-    var context      = new OptionContext( "- Minder Options" );
+    var context      = new OptionContext( "[files]" );
     var options      = new OptionEntry[10];
     var transparent  = false;
     var compression  = 0;
