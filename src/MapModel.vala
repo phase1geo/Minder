@@ -204,6 +204,7 @@ public class MapModel {
     _tags = new Tags();
 
     /* Set the theme to the default theme */
+    _theme = new Theme();
     set_theme( _map.win.themes.get_theme( _map.settings.get_string( "default-theme" ) ), false );
 
     // Initialize variables
@@ -223,16 +224,14 @@ public class MapModel {
   //-------------------------------------------------------------
   // Sets the theme to the given value.
   public void set_theme( Theme theme, bool save ) {
-    if( _theme == theme ) return;
-    Theme? orig_theme = _theme;
-    _theme        = theme;
-    _theme.index  = (orig_theme != null) ? orig_theme.index : -1;
-    _theme.rotate = _map.settings.get_boolean( "rotate-main-link-colors" );
-    FormattedText.set_theme( theme );
-    update_css();
-    if( orig_theme != null ) {
-      update_theme_colors( orig_theme );
+    if( _theme.name == theme.name ) return;
+    if( _theme.index != -1 ) {
+      update_theme_colors( theme );
     }
+    _theme.copy( theme );
+    _theme.rotate = _map.settings.get_boolean( "rotate-main-link-colors" );
+    FormattedText.set_theme( _theme );
+    update_css();
     theme_changed();
     queue_draw();
     if( save ) {
@@ -245,16 +244,16 @@ public class MapModel {
   public void update_css() {
     StyleContext.add_provider_for_display(
       Display.get_default(),
-      get_theme().get_css_provider( _map.win.text_size ),
+      _theme.get_css_provider( _map.win.text_size ),
       STYLE_PROVIDER_PRIORITY_APPLICATION
     );
   }
 
   //-------------------------------------------------------------
   // Updates all nodes with the new theme colors.
-  private void update_theme_colors( Theme old_theme ) {
+  private void update_theme_colors( Theme new_theme ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).update_theme_colors( old_theme, _theme );
+      _nodes.index( i ).update_theme_colors( _theme, new_theme );
     }
   }
 
@@ -332,7 +331,8 @@ public class MapModel {
     }
 
     /* Get the theme */
-    _theme = _map.win.themes.get_theme( theme.name );
+    _theme.copy( _map.win.themes.get_theme( theme.name ) );
+    _theme.index = theme.index;
 
     /* If we are the current drawarea, update the CSS and indicate the theme change */
     if( _map.win.get_current_map() == _map ) {

@@ -80,10 +80,9 @@ public class Theme : Object {
   public void copy( Theme theme ) {
     name        = theme.name;
     label       = theme.label;
-    index       = theme.index;
     prefer_dark = theme.prefer_dark;
     temporary   = theme.temporary;
-    rotate      = theme.rotate;
+    custom      = theme.custom;
     _colors     = new HashMap<string,RGBA?>();
     var it = theme._colors.map_iterator();
     while( it.next() ) {
