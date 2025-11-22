@@ -335,7 +335,6 @@ public class MapModel {
 
     // If we are the current drawarea, update the CSS and indicate the theme change
     if( _map.win.get_current_map() == _map ) {
-      stdout.printf( "In load_theme, calling update_css, theme.name: %s\n", theme.name );
       update_css();
       theme_changed();
     }
