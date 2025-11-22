@@ -229,7 +229,6 @@ public class MapModel {
       update_theme_colors( theme );
     }
     _theme.copy( theme );
-    _theme.rotate = _map.settings.get_boolean( "rotate-main-link-colors" );
     FormattedText.set_theme( _theme );
     update_css();
     theme_changed();
@@ -314,9 +313,8 @@ public class MapModel {
   private void load_theme( Xml.Node* n ) {
 
     /* Load the theme */
-    var theme       = new Theme.from_theme( _map.win.themes.get_theme( "default" ) );
+    var theme = new Theme.from_theme( _map.win.themes.get_theme( "default" ) );
     theme.temporary = true;
-    theme.rotate    = _map.settings.get_boolean( "rotate-main-link-colors" );
 
     var valid = theme.load( n );
 

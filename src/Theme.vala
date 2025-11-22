@@ -33,7 +33,6 @@ public class Theme : Object {
   public bool   prefer_dark { set; get; default = false; }
   public bool   custom      { protected set; get; default = true; }
   public bool   temporary   { set; get; default = false; }
-  public bool   rotate      { set; get; default = true; }
 
   //-------------------------------------------------------------
   // Default constructor.
@@ -145,7 +144,7 @@ public class Theme : Object {
   public RGBA? next_color() {
     if( index == -1 ) {
       index = 0;
-    } else if( rotate ) {
+    } else if( Minder.settings.get_boolean( "rotate-main-link-colors" ) ) {
       index = (index + 1) % 8;
     }
     return( link_color( index  ) );
