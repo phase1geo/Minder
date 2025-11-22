@@ -1683,6 +1683,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void on_current_changed( MindMap map ) {
     action_set_enabled( "win.action_zoom_selected", (map.get_current_node() != null) );
     _focus_btn.active = map.focus_mode;
+    map.model.update_css();
   }
 
   //-------------------------------------------------------------
