@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 10:01-0600\n"
+"POT-Creation-Date: 2025-11-21 19:24-0600\n"
 "PO-Revision-Date: 2025-11-14 08:53+0100\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -32,77 +32,77 @@ msgstr "Авторские права © 2018-2025 Trevor Williams"
 msgid "Minder in AppCenter"
 msgstr "Minder в AppCenter"
 
-#: src/Application.vala:148
+#: src/Application.vala:133
 #, c-format
 msgid "Import file from format (%s)"
 msgstr "Импортировать файл в формате %s"
 
-#: src/Application.vala:149
+#: src/Application.vala:134
 #, c-format
 msgid "Export mindmap as format (%s)"
 msgstr "Экспортировать ментальную карту в формат %s"
 
-#: src/Application.vala:154
+#: src/Application.vala:139
 msgid "Display version number"
 msgstr "Показать номер версии"
 
-#: src/Application.vala:155
+#: src/Application.vala:140
 msgid "Display help"
 msgstr "Показать справку"
 
-#: src/Application.vala:156
+#: src/Application.vala:141
 msgid "Starts Minder with a new file"
 msgstr "Запустить Minder и создать карту"
 
-#: src/Application.vala:159
+#: src/Application.vala:144
 #, fuzzy
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
 msgstr "Включить прозрачный фон для изображений PNG"
 
-#: src/Application.vala:160
+#: src/Application.vala:145
 #, fuzzy
 msgid "PNG compression value (0-9). Default is 0."
 msgstr "Степень сжатия PNG (0-9)"
 
-#: src/Application.vala:161
+#: src/Application.vala:146
 msgid "JPEG quality (0-100). Default is 90."
 msgstr "Качество JPEG (0-100). 90 по умолчанию."
 
-#: src/Application.vala:162
+#: src/Application.vala:147
 msgid "Enables image links in exported Markdown"
 msgstr "Включает ссылки на изображения в экспортированном Markdown"
 
-#: src/Application.vala:171
+#: src/Application.vala:156
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "Ошибка: %s\n"
 
-#: src/Application.vala:172
+#: src/Application.vala:157
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr ""
 "Введите команду '%s --help', чтобы посмотреть корректные варианты запуска "
 "программы\n"
 
-#: src/Application.vala:195
+#: src/Application.vala:180
 msgid "ERROR: Unable to import file"
 msgstr "Ошибка: не удалось открыть импортировать файл"
 
-#: src/Application.vala:199
+#: src/Application.vala:184
 msgid "ERROR: Import is missing filename to import"
 msgstr "Ошибка: отсутствует имя импортируемого файла"
 
-#: src/Application.vala:222
+#: src/Application.vala:207
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr "Ошибка: для экспорта не хватает исходного и/или экспортируемого файла"
 
-#: src/Application.vala:232
+#: src/Application.vala:217
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "Ошибка: не удалось открыть файл '%s'\n"
 
-#: src/Application.vala:266
+#: src/Application.vala:251
 #, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "Ошибка: не удалось загрузить файл Minder, %s"
@@ -243,7 +243,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2210
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2211
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Применить"
@@ -252,7 +252,7 @@ msgstr "Применить"
 msgid "Don't show this dialog again"
 msgstr "Больше не показывать этот диалог"
 
-#: src/Document.vala:714 src/MainWindow.vala:2247
+#: src/Document.vala:714 src/MainWindow.vala:2248
 msgid "<small>This can be changed in preferences</small>"
 msgstr "<small>Это можно поменять в настройках программы</small>"
 
@@ -295,7 +295,7 @@ msgstr "смену конечной точки соединения"
 msgid "connection drag"
 msgstr "перетаскивание соединения"
 
-#: src/DrawArea.vala:2251 src/MapModel.vala:1826 src/MapModel.vala:1841
+#: src/DrawArea.vala:2251 src/MapModel.vala:1825 src/MapModel.vala:1840
 msgid "Another Idea"
 msgstr "Ещё одна идея"
 
@@ -1253,7 +1253,7 @@ msgid "Select a group color"
 msgstr "Выбрать цвет группы"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:289
-#: src/MapInspector.vala:547 src/MapModel.vala:2304
+#: src/MapInspector.vala:547 src/MapModel.vala:2313
 msgid "Manual"
 msgstr "Вручную"
 
@@ -1321,7 +1321,7 @@ msgstr "Приблизить"
 msgid "Zoom Out"
 msgstr "Отдалить"
 
-#: src/MainWindow.vala:806 src/MainWindow.vala:1695
+#: src/MainWindow.vala:806 src/MainWindow.vala:1696
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Масштаб (%d%%)"
@@ -1402,7 +1402,7 @@ msgstr "Справка по горячим клавишам"
 msgid "About Minder"
 msgstr "О программе"
 
-#: src/MainWindow.vala:1194 src/MainWindow.vala:1779
+#: src/MainWindow.vala:1194 src/MainWindow.vala:1780
 msgid "Show Property Sidebar"
 msgstr "Показать панель свойств"
 
@@ -1472,15 +1472,15 @@ msgstr "Открыть"
 msgid "Save File"
 msgstr "Сохранить файл"
 
-#: src/MainWindow.vala:1725
+#: src/MainWindow.vala:1726
 msgid "Hide Property Sidebar"
 msgstr "Скрыть панель свойств"
 
-#: src/MainWindow.vala:2201
+#: src/MainWindow.vala:2202
 msgid "File upgrades needed"
 msgstr "Необходимо обновить файлы"
 
-#: src/MainWindow.vala:2202
+#: src/MainWindow.vala:2203
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1492,16 +1492,16 @@ msgstr ""
 "\n"
 "Выберите способ обновления."
 
-#: src/MainWindow.vala:2207
+#: src/MainWindow.vala:2208
 msgid "Quit Minder"
 msgstr "Выйти из Minder"
 
-#: src/MainWindow.vala:2227
+#: src/MainWindow.vala:2228
 #, fuzzy
 msgid "Detail"
 msgstr "Открепить"
 
-#: src/MainWindow.vala:2235
+#: src/MainWindow.vala:2236
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
@@ -1511,7 +1511,7 @@ msgstr ""
 "необратимо, более старые версии программы не смогут прочитать обновленные "
 "файлы.</small>"
 
-#: src/MainWindow.vala:2236
+#: src/MainWindow.vala:2237
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
@@ -1520,7 +1520,7 @@ msgstr ""
 "<small>Обновит каждый открытый в прошлом сеансе файл Minder, но сохранит "
 "копию старого, оригинального файла в то же каталоге.</small>"
 
-#: src/MainWindow.vala:2237
+#: src/MainWindow.vala:2238
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1532,11 +1532,11 @@ msgstr ""
 "его в новом формате кнопкой «Сохранить как» на панели, чтобы получить "
 "возможность изменять.</small>"
 
-#: src/MainWindow.vala:2244
+#: src/MainWindow.vala:2245
 msgid "Use the selected option when future older Minder files are opened"
 msgstr "Использовать этот выбор при открытии других старых файлов"
 
-#: src/MainWindow.vala:2269
+#: src/MainWindow.vala:2270
 msgid "Upgrades Needed"
 msgstr "Необходимо обновление"
 
@@ -4227,12 +4227,12 @@ msgstr "Светлая Solarized"
 msgid "Error parsing regular expression"
 msgstr "Ошибка при разборе регулярного выражения"
 
-#: src/Theme.vala:214
+#: src/Theme.vala:212
 #, c-format
 msgid "Unable to load background color: %s"
 msgstr "Не удалось загрузить цвет фона: %s"
 
-#: src/Theme.vala:323
+#: src/Theme.vala:321
 msgid "Root"
 msgstr "Корень"
 

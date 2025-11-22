@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 10:01-0600\n"
+"POT-Creation-Date: 2025-11-21 19:24-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,25 +17,25 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/com.github.phase1geo.minder.desktop.in:2
+#: data/com.github.phase1geo.minder.desktop.in:3
 #: data/com.github.phase1geo.minder.appdata.xml.in:7
 msgid "Minder"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.desktop.in:3
+#: data/com.github.phase1geo.minder.desktop.in:4
 msgid "Mind-mapper"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.desktop.in:4
+#: data/com.github.phase1geo.minder.desktop.in:5
 #: data/com.github.phase1geo.minder.appdata.xml.in:8
 msgid "Create, develop and visualize your ideas"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.desktop.in:13
+#: data/com.github.phase1geo.minder.desktop.in:14
 msgid "Mind;Mapping;"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.desktop.in:17
+#: data/com.github.phase1geo.minder.desktop.in:18
 msgid "New Document"
 msgstr ""
 
@@ -627,7 +627,7 @@ msgstr ""
 #: data/com.github.phase1geo.minder.appdata.xml.in:208
 msgid ""
 "Fixed issue where application would crash when hovering over node note icon "
-"on systems that installed Discount version >= 3.0."
+"on systems that installed Discount version &gt;= 3.0."
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:209

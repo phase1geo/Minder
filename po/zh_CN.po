@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 10:01-0600\n"
+"POT-Creation-Date: 2025-11-21 19:24-0600\n"
 "PO-Revision-Date: 2023-10-10 17:50+0800\n"
 "Last-Translator: Aerowolf <aerowolf@tom.com>\n"
 "Language-Team: 简体中文\n"
@@ -32,79 +32,79 @@ msgstr "版权所有 © 2018-2021 Trevor Williams"
 msgid "Minder in AppCenter"
 msgstr "在 AppCenter 中打开 Minder"
 
-#: src/Application.vala:148
+#: src/Application.vala:133
 #, c-format
 msgid "Import file from format (%s)"
 msgstr "导入 %s 格式文件"
 
-#: src/Application.vala:149
+#: src/Application.vala:134
 #, fuzzy, c-format
 msgid "Export mindmap as format (%s)"
 msgstr "将思维导图导出为 %s 格式"
 
-#: src/Application.vala:154
+#: src/Application.vala:139
 msgid "Display version number"
 msgstr "显示版本号"
 
-#: src/Application.vala:155
+#: src/Application.vala:140
 #, fuzzy
 msgid "Display help"
 msgstr "显示"
 
-#: src/Application.vala:156
+#: src/Application.vala:141
 msgid "Starts Minder with a new file"
 msgstr "启动 Minder 并新建空文件"
 
-#: src/Application.vala:159
+#: src/Application.vala:144
 #, fuzzy
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
 msgstr "为 PNG 图像启用透明背景"
 
-#: src/Application.vala:160
+#: src/Application.vala:145
 #, fuzzy
 msgid "PNG compression value (0-9). Default is 0."
 msgstr "PNG 压缩值 （0-9）"
 
-#: src/Application.vala:161
+#: src/Application.vala:146
 #, fuzzy
 msgid "JPEG quality (0-100). Default is 90."
 msgstr "JPEG 质量 （0-100）"
 
-#: src/Application.vala:162
+#: src/Application.vala:147
 msgid "Enables image links in exported Markdown"
 msgstr "在导出的 Markdown 中启用图像链接"
 
-#: src/Application.vala:171
+#: src/Application.vala:156
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "错误： %s\n"
 
-#: src/Application.vala:172
+#: src/Application.vala:157
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "运行 “%s --help”可查看有效选项\n"
 
-#: src/Application.vala:195
+#: src/Application.vala:180
 msgid "ERROR: Unable to import file"
 msgstr "错误：无法导入文件"
 
-#: src/Application.vala:199
+#: src/Application.vala:184
 #, fuzzy
 msgid "ERROR: Import is missing filename to import"
 msgstr "错误：导出缺少文件名"
 
-#: src/Application.vala:222
+#: src/Application.vala:207
 #, fuzzy
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr "错误：导出缺少输入文件和/或导出输出文件"
 
-#: src/Application.vala:232
+#: src/Application.vala:217
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "错误：无法打开文件“%s”\n"
 
-#: src/Application.vala:266
+#: src/Application.vala:251
 #, fuzzy, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "错误：不能载入Minder输入文件%s"
@@ -246,7 +246,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "取消"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2210
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2211
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "应用"
@@ -255,7 +255,7 @@ msgstr "应用"
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:714 src/MainWindow.vala:2247
+#: src/Document.vala:714 src/MainWindow.vala:2248
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
@@ -298,7 +298,7 @@ msgstr "连接端点修改"
 msgid "connection drag"
 msgstr "连接拖动"
 
-#: src/DrawArea.vala:2251 src/MapModel.vala:1826 src/MapModel.vala:1841
+#: src/DrawArea.vala:2251 src/MapModel.vala:1825 src/MapModel.vala:1840
 msgid "Another Idea"
 msgstr "其他想法"
 
@@ -1283,7 +1283,7 @@ msgid "Select a group color"
 msgstr "选择链接颜色"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:289
-#: src/MapInspector.vala:547 src/MapModel.vala:2304
+#: src/MapInspector.vala:547 src/MapModel.vala:2313
 msgid "Manual"
 msgstr "手动"
 
@@ -1351,7 +1351,7 @@ msgstr "放大"
 msgid "Zoom Out"
 msgstr "缩小"
 
-#: src/MainWindow.vala:806 src/MainWindow.vala:1695
+#: src/MainWindow.vala:806 src/MainWindow.vala:1696
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "缩放 （%d%%）"
@@ -1433,7 +1433,7 @@ msgstr "快捷键"
 msgid "About Minder"
 msgstr "关于 Minder"
 
-#: src/MainWindow.vala:1194 src/MainWindow.vala:1779
+#: src/MainWindow.vala:1194 src/MainWindow.vala:1780
 msgid "Show Property Sidebar"
 msgstr "显示属性侧边栏"
 
@@ -1503,15 +1503,15 @@ msgstr "打开"
 msgid "Save File"
 msgstr "保存文件"
 
-#: src/MainWindow.vala:1725
+#: src/MainWindow.vala:1726
 msgid "Hide Property Sidebar"
 msgstr "隐藏属性侧边栏"
 
-#: src/MainWindow.vala:2201
+#: src/MainWindow.vala:2202
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2202
+#: src/MainWindow.vala:2203
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1519,31 +1519,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2207
+#: src/MainWindow.vala:2208
 #, fuzzy
 msgid "Quit Minder"
 msgstr "关于 Minder"
 
-#: src/MainWindow.vala:2227
+#: src/MainWindow.vala:2228
 #, fuzzy
 msgid "Detail"
 msgstr "拆分"
 
-#: src/MainWindow.vala:2235
+#: src/MainWindow.vala:2236
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2236
+#: src/MainWindow.vala:2237
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2237
+#: src/MainWindow.vala:2238
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1551,11 +1551,11 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2244
+#: src/MainWindow.vala:2245
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2269
+#: src/MainWindow.vala:2270
 msgid "Upgrades Needed"
 msgstr ""
 
@@ -4252,12 +4252,12 @@ msgstr "日光亮色"
 msgid "Error parsing regular expression"
 msgstr "分析正则表达式时出错"
 
-#: src/Theme.vala:214
+#: src/Theme.vala:212
 #, c-format
 msgid "Unable to load background color: %s"
 msgstr "无法加载背景色： %s"
 
-#: src/Theme.vala:323
+#: src/Theme.vala:321
 msgid "Root"
 msgstr "根"
 

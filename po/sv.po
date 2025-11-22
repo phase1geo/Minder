@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 10:01-0600\n"
+"POT-Creation-Date: 2025-11-21 19:24-0600\n"
 "PO-Revision-Date: 2025-11-18 10:17+0100\n"
 "Last-Translator: Daniel Nylander <github@danielnylander.se>\n"
 "Language-Team: sv\n"
@@ -30,75 +30,75 @@ msgstr "Copyright © 2018-2024 Trevor Williams"
 msgid "Minder in AppCenter"
 msgstr "Minder i AppCenter"
 
-#: src/Application.vala:148
+#: src/Application.vala:133
 #, c-format
 msgid "Import file from format (%s)"
 msgstr "Importera fil från format (%s)"
 
-#: src/Application.vala:149
+#: src/Application.vala:134
 #, c-format
 msgid "Export mindmap as format (%s)"
 msgstr "Exportera mindmap som format (%s)"
 
-#: src/Application.vala:154
+#: src/Application.vala:139
 msgid "Display version number"
 msgstr "Visa versionsnummer"
 
-#: src/Application.vala:155
+#: src/Application.vala:140
 msgid "Display help"
 msgstr "Visa hjälp"
 
-#: src/Application.vala:156
+#: src/Application.vala:141
 msgid "Starts Minder with a new file"
 msgstr "Startar Minder med en ny fil"
 
-#: src/Application.vala:159
+#: src/Application.vala:144
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
 msgstr ""
 "Aktiverar en transparent bakgrund för PNG-bilder. Standardinställningen är "
 "ingen transparens."
 
-#: src/Application.vala:160
+#: src/Application.vala:145
 msgid "PNG compression value (0-9). Default is 0."
 msgstr "PNG-komprimeringsvärde (0-9). Standardvärdet är 0."
 
-#: src/Application.vala:161
+#: src/Application.vala:146
 msgid "JPEG quality (0-100). Default is 90."
 msgstr "JPEG-kvalitet (0-100). Standardvärdet är 90."
 
-#: src/Application.vala:162
+#: src/Application.vala:147
 msgid "Enables image links in exported Markdown"
 msgstr "Aktiverar bildlänkar i exporterad Markdown"
 
-#: src/Application.vala:171
+#: src/Application.vala:156
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "FEL: %s\n"
 
-#: src/Application.vala:172
+#: src/Application.vala:157
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "Kör '%s --help' för att se giltiga flaggor\n"
 
-#: src/Application.vala:195
+#: src/Application.vala:180
 msgid "ERROR: Unable to import file"
 msgstr "FEL: Det går inte att importera filen"
 
-#: src/Application.vala:199
+#: src/Application.vala:184
 msgid "ERROR: Import is missing filename to import"
 msgstr "FEL: Importen saknar filnamn att importera"
 
-#: src/Application.vala:222
+#: src/Application.vala:207
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr "FEL: Exporten saknar inmatningsfil och/eller exportutmatningsfil"
 
-#: src/Application.vala:232
+#: src/Application.vala:217
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "FEL: Det går inte att öppna filen '%s'\n"
 
-#: src/Application.vala:266
+#: src/Application.vala:251
 #, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "FEL:  Det går inte att läsa in Minder-inmatningsfilen %s"
@@ -240,7 +240,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2210
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2211
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Tillämpa"
@@ -249,7 +249,7 @@ msgstr "Tillämpa"
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:714 src/MainWindow.vala:2247
+#: src/Document.vala:714 src/MainWindow.vala:2248
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
@@ -292,7 +292,7 @@ msgstr "ändring av anslutningsändpunkt"
 msgid "connection drag"
 msgstr "anslutningsdrag"
 
-#: src/DrawArea.vala:2251 src/MapModel.vala:1826 src/MapModel.vala:1841
+#: src/DrawArea.vala:2251 src/MapModel.vala:1825 src/MapModel.vala:1840
 msgid "Another Idea"
 msgstr "En annan idé"
 
@@ -1274,7 +1274,7 @@ msgid "Select a group color"
 msgstr "Välj en länkfärg"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:289
-#: src/MapInspector.vala:547 src/MapModel.vala:2304
+#: src/MapInspector.vala:547 src/MapModel.vala:2313
 msgid "Manual"
 msgstr "Manuell"
 
@@ -1342,7 +1342,7 @@ msgstr "Zooma in"
 msgid "Zoom Out"
 msgstr "Zooma ut"
 
-#: src/MainWindow.vala:806 src/MainWindow.vala:1695
+#: src/MainWindow.vala:806 src/MainWindow.vala:1696
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zooma (%d%%)"
@@ -1423,7 +1423,7 @@ msgstr "Genvägslathund"
 msgid "About Minder"
 msgstr "Om Minder"
 
-#: src/MainWindow.vala:1194 src/MainWindow.vala:1779
+#: src/MainWindow.vala:1194 src/MainWindow.vala:1780
 msgid "Show Property Sidebar"
 msgstr "Visa sidofält för egenskaper"
 
@@ -1493,15 +1493,15 @@ msgstr "Öppen"
 msgid "Save File"
 msgstr "Spara fil"
 
-#: src/MainWindow.vala:1725
+#: src/MainWindow.vala:1726
 msgid "Hide Property Sidebar"
 msgstr "Dölj sidofält för egenskaper"
 
-#: src/MainWindow.vala:2201
+#: src/MainWindow.vala:2202
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2202
+#: src/MainWindow.vala:2203
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1509,31 +1509,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2207
+#: src/MainWindow.vala:2208
 #, fuzzy
 msgid "Quit Minder"
 msgstr "Om Minder"
 
-#: src/MainWindow.vala:2227
+#: src/MainWindow.vala:2228
 #, fuzzy
 msgid "Detail"
 msgstr "Avskilj"
 
-#: src/MainWindow.vala:2235
+#: src/MainWindow.vala:2236
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2236
+#: src/MainWindow.vala:2237
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2237
+#: src/MainWindow.vala:2238
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1541,11 +1541,11 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2244
+#: src/MainWindow.vala:2245
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2269
+#: src/MainWindow.vala:2270
 msgid "Upgrades Needed"
 msgstr ""
 
@@ -4264,12 +4264,12 @@ msgstr "Solariserat ljus"
 msgid "Error parsing regular expression"
 msgstr "Fel vid tolkning av reguljärt uttryck"
 
-#: src/Theme.vala:214
+#: src/Theme.vala:212
 #, c-format
 msgid "Unable to load background color: %s"
 msgstr "Det går inte att läsa in bakgrundsfärgen: %s"
 
-#: src/Theme.vala:323
+#: src/Theme.vala:321
 msgid "Root"
 msgstr "Rot"
 
