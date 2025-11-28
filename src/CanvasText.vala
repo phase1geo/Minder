@@ -508,13 +508,23 @@ public class CanvasText : Object {
 
   //-------------------------------------------------------------
   // Adjusts the cursor by the given amount of characters
-  private void cursor_by_char( int dir ) {
+  private void cursor_by_char( int dir, bool selection = false ) {
     var cpos = _cursor;
     if( _selstart != _selend ) {
-      if( calc_direction( dir ) > 0 ) {
-        cpos = _selend;
+      if( selection ) {
+        var last = text.text.char_count();
+        cpos += calc_direction( dir );
+        if( cpos < 0 ) {
+          cpos = 0;
+        } else if( cpos > last ) {
+          cpos = last;
+        }
       } else {
-        cpos = _selstart;
+        if( calc_direction( dir ) > 0 ) {
+          cpos = _selend;
+        } else {
+          cpos = _selstart;
+        }
       }
     } else {
       var last      = text.text.char_count();
@@ -546,7 +556,7 @@ public class CanvasText : Object {
   // Adjusts the selection by the given cursor
   public void selection_by_char( int dir ) {
     var last_cursor = _cursor;
-    cursor_by_char( dir );
+    cursor_by_char( dir, true );
     adjust_selection( last_cursor );
   }
 
