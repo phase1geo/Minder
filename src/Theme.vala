@@ -203,7 +203,7 @@ public class Theme : Object {
                      "@define-color colorAccent #603461; " +
                      "@define-color tab_base_color " + get_color( "background" ).to_string() + ";" +
                      tv_size +
-                     ".tab { color: " + Utils.color_from_rgba( foreground ) + "; }" +
+                     // ".tab { color: " + Utils.color_from_rgba( foreground ) + "; }" +
                      ".theme-selected { background: #087DFF; } " +
                      ".canvas { background: " + get_color( "background" ).to_string() + "; }" +
                      ".highlighted { background: rgba(255, 255, 129, " + (prefer_dark ? "0.15" : "1.0") + "); }";
