@@ -1500,6 +1500,8 @@ public class MapModel {
     var          isroot             = current.is_root();
     var          isleaf             = current.is_leaf();
 
+    _map.animator.add_nodes( _nodes, false, "attach_current_node" );
+
     // Remove the current node from its current location
     if( isroot ) {
       for( int i=0; i<_nodes.length; i++ ) {
@@ -1549,7 +1551,7 @@ public class MapModel {
       _map.add_undo( new UndoNodeAttach( current, orig_parent, _map.canvas.get_orig_side(), orig_index, _map.canvas.orig_info, orig_summary, orig_summary_index, orig_style ) );
     }
 
-    queue_draw();
+    _map.animator.animate();
     auto_save();
     current_changed();
 
