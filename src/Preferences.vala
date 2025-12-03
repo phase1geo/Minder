@@ -193,8 +193,12 @@ public class Preferences : Granite.Dialog {
     grid.attach( make_info( _( "Sets the default theme to use for newly created mindmaps (use Map sidebar panel to make immediate changes)." ) ), 3, row );
     row++;
 
-    grid.attach( make_label( _( "Enable animations" ) ),  0, row );
+    grid.attach( make_label( _( "Enable mindmap animations" ) ),  0, row );
     grid.attach( make_switch( "enable-animations" ), 1, row );
+    row++;
+
+    grid.attach( make_label( _( "Enable window animations" ) ), 0, row );
+    grid.attach( make_switch( "enable-ui-animations" ), 1, row );
     row++;
 
     grid.attach( make_label( _( "Text field font size" ) ), 0, row );
