@@ -1233,6 +1233,23 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   //-------------------------------------------------------------
+  // Starts the autopan process.
+  private void start_autopan() {
+    if( _autopan_id == 0 ) {
+      _autopan_id = Timeout.add( autopan_frame_rate, do_autopan );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Ends the autopan process.
+  private void stop_autopan() {
+    if( _autopan_id > 0 ) {
+      Source.remove( _autopan_id );
+      _autopan_id = 0;
+    }
+  }
+
+  //-------------------------------------------------------------
   // Performs autopan based on the position of the mouse cursor.
   private bool do_autopan() {
 
@@ -1317,12 +1334,9 @@ public class DrawArea : Gtk.DrawingArea {
         double diff_y = _scaled_y - last_y;
         var edge = autopan_inner_edge;
         if( !Utils.is_within_bounds( x, y, edge, edge, (get_allocated_width() - (edge * 2)), (get_allocated_height() - (edge * 2)) ) ) {
-          if( _autopan_id == 0 ) {
-            _autopan_id = Timeout.add( autopan_frame_rate, do_autopan );
-          }
-        } else if( _autopan_id > 0 ) {
-          Source.remove( _autopan_id );
-          _autopan_id = 0;
+          start_autopan();
+        } else {
+          stop_autopan();
         }
       }
 
@@ -1678,6 +1692,9 @@ public class DrawArea : Gtk.DrawingArea {
     var current_conn    = _map.selected.current_connection();
     var current_sticker = _map.selected.current_sticker();
     var current_callout = _map.selected.current_callout();
+
+    // Stop the autopan process, if it is running
+    stop_autopan();
 
     _pressed = false;
 
