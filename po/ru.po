@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 11:16-0600\n"
+"POT-Creation-Date: 2025-12-03 09:32-0600\n"
 "PO-Revision-Date: 2025-11-14 08:53+0100\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -260,16 +260,16 @@ msgstr "<small>Это можно поменять в настройках про
 msgid "Upgrade Needed"
 msgstr "Необходимо обновление"
 
-#: src/DrawArea.vala:1506
+#: src/DrawArea.vala:1520
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% завершено"
 
-#: src/DrawArea.vala:1524
+#: src/DrawArea.vala:1538
 msgid "Drag to resize node"
 msgstr "Перетащите для смены размера узла"
 
-#: src/DrawArea.vala:1526
+#: src/DrawArea.vala:1540
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -277,25 +277,25 @@ msgstr ""
 "Перетаскивание меняет размер узла и изображения.\n"
 "Ctrl+перетаскивание меняет размер только узла."
 
-#: src/DrawArea.vala:1668
+#: src/DrawArea.vala:1682
 #, c-format
 msgid "Children: %u\n"
 msgstr "Потомки: %u\n"
 
-#: src/DrawArea.vala:1669
+#: src/DrawArea.vala:1683
 #, c-format
 msgid "Total: %d"
 msgstr "Всего: %d"
 
-#: src/DrawArea.vala:1719
+#: src/DrawArea.vala:1736
 msgid "connection endpoint change"
 msgstr "смену конечной точки соединения"
 
-#: src/DrawArea.vala:1726
+#: src/DrawArea.vala:1743
 msgid "connection drag"
 msgstr "перетаскивание соединения"
 
-#: src/DrawArea.vala:2251 src/MapModel.vala:1825 src/MapModel.vala:1840
+#: src/DrawArea.vala:2268 src/MapModel.vala:1827 src/MapModel.vala:1842
 msgid "Another Idea"
 msgstr "Ещё одна идея"
 
@@ -1253,7 +1253,7 @@ msgid "Select a group color"
 msgstr "Выбрать цвет группы"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:289
-#: src/MapInspector.vala:547 src/MapModel.vala:2313
+#: src/MapInspector.vala:547 src/MapModel.vala:2315
 msgid "Manual"
 msgstr "Вручную"
 
@@ -2099,14 +2099,20 @@ msgid ""
 msgstr ""
 
 #: src/Preferences.vala:196
-msgid "Enable animations"
+#, fuzzy
+msgid "Enable mindmap animations"
 msgstr "Включить анимацию"
 
 #: src/Preferences.vala:200
+#, fuzzy
+msgid "Enable window animations"
+msgstr "Включить анимацию"
+
+#: src/Preferences.vala:204
 msgid "Text field font size"
 msgstr "Размер шрифта в текстовых полях"
 
-#: src/Preferences.vala:203
+#: src/Preferences.vala:207
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
@@ -2114,101 +2120,101 @@ msgstr ""
 "Какой заказной кегль шрифта использовать в любых полях ввода, например, в "
 "поле примечаний и поле быстрого ввода"
 
-#: src/Preferences.vala:206
+#: src/Preferences.vala:210
 msgid "Colorize note fields"
 msgstr "Раскрашивать поля заметок"
 
-#: src/Preferences.vala:210
+#: src/Preferences.vala:214
 msgid "Default global style"
 msgstr "Глобальный стиль по умолчанию"
 
-#: src/Preferences.vala:212
+#: src/Preferences.vala:216
 msgid "Specifies the global style to use for newly created mindmaps."
 msgstr ""
 
-#: src/Preferences.vala:235
+#: src/Preferences.vala:239
 msgid "Tags in this list will be the starting list of tags for new mindmaps."
 msgstr ""
 
-#: src/Preferences.vala:335
+#: src/Preferences.vala:339
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
 msgstr ""
 
-#: src/Preferences.vala:336
+#: src/Preferences.vala:340
 msgid "Escape to cancel.  Press key combination to set."
 msgstr ""
 
-#: src/Preferences.vala:344
+#: src/Preferences.vala:348
 msgid "Set Minder Defaults"
 msgstr ""
 
-#: src/Preferences.vala:347
+#: src/Preferences.vala:351
 msgid "Clear All Shortcuts"
 msgstr "Очистить все горячие клавиши"
 
-#: src/Preferences.vala:356
+#: src/Preferences.vala:360
 msgid "Search commands"
 msgstr "Операции с поиском"
 
-#: src/Preferences.vala:358
+#: src/Preferences.vala:362
 #, fuzzy
 msgid "Search shortcuts"
 msgstr "Горячие клавиши в Minder"
 
-#: src/Preferences.vala:466
+#: src/Preferences.vala:470
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr ""
 
-#: src/Preferences.vala:470
+#: src/Preferences.vala:474
 msgid "Show temporary directory containing current mindmap in map sidebar"
 msgstr ""
 
-#: src/Preferences.vala:480
+#: src/Preferences.vala:484
 msgid "Default file upgrade action"
 msgstr ""
 
-#: src/Preferences.vala:554 src/styles/NodeBorderNone.vala:34 src/Tags.vala:47
+#: src/Preferences.vala:558 src/styles/NodeBorderNone.vala:34 src/Tags.vala:47
 msgid "None"
 msgstr "Нет"
 
-#: src/Preferences.vala:555
+#: src/Preferences.vala:559
 #, fuzzy
 msgid "Enter shortcut"
 msgstr "Горячие клавиши в Minder"
 
-#: src/Preferences.vala:723
+#: src/Preferences.vala:727
 msgid "Unable to set new shortcut due to conflicts"
 msgstr ""
 
-#: src/Preferences.vala:724
+#: src/Preferences.vala:728
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr ""
 
-#: src/Preferences.vala:789
+#: src/Preferences.vala:793
 #, fuzzy
 msgid "Clear all shortcuts?"
 msgstr "Горячие клавиши в Minder"
 
-#: src/Preferences.vala:789 src/Preferences.vala:800
+#: src/Preferences.vala:793 src/Preferences.vala:804
 msgid "Current shortcut settings will be lost"
 msgstr ""
 
-#: src/Preferences.vala:800
+#: src/Preferences.vala:804
 #, fuzzy
 msgid "Use Minder Default Shortcuts?"
 msgstr "Горячие клавиши в Minder"
 
-#: src/Preferences.vala:832 src/Preferences.vala:850
+#: src/Preferences.vala:836 src/Preferences.vala:854
 #, fuzzy
 msgid "Minder Default"
 msgstr "По умолчанию"
 
-#: src/Preferences.vala:835 src/Preferences.vala:851
+#: src/Preferences.vala:839 src/Preferences.vala:855
 msgid "Last Used"
 msgstr "Последний использованный"
 
-#: src/Preferences.vala:837 src/Preferences.vala:855
+#: src/Preferences.vala:841 src/Preferences.vala:859
 #, c-format
 msgid "Named Style: %s"
 msgstr ""
