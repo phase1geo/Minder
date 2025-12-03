@@ -439,7 +439,7 @@ public class QuickEntry : Gtk.Window {
       case Key.Tab          :  return( handle_tab( false ) );
       case Key.ISO_Left_Tab :  return( handle_tab( true ) );
       default             :
-        if( ch.isprint() ) {
+        if( ch.isalnum() || ch.ismark() ) {
           return( handle_printable( ch.to_string() ) );
         }
         break;
