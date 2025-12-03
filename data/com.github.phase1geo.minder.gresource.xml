@@ -56,6 +56,12 @@
     <file alias="minder-braindump-dark-symbolic.svg">icons/scalable/minder-braindump-dark-symbolic.svg</file>
     <file alias="minder-eye-light-symbolic.svg">icons/scalable/minder-eye-light-symbolic.svg</file>
     <file alias="minder-eye-dark-symbolic.svg">icons/scalable/minder-eye-dark-symbolic.svg</file>
+    <file alias="minder-align-horizontal-left-symbolic.svg">icons/scalable/minder-align-horizontal-left-symbolic.svg</file>
+    <file alias="minder-align-horizontal-center-symbolic.svg">icons/scalable/minder-align-horizontal-center-symbolic.svg</file>
+    <file alias="minder-align-horizontal-right-symbolic.svg">icons/scalable/minder-align-horizontal-right-symbolic.svg</file>
+    <file alias="minder-align-vertical-top-symbolic.svg">icons/scalable/minder-align-vertical-top-symbolic.svg</file>
+    <file alias="minder-align-vertical-center-symbolic.svg">icons/scalable/minder-align-vertical-center-symbolic.svg</file>
+    <file alias="minder-align-vertical-bottom-symbolic.svg">icons/scalable/minder-align-vertical-bottom-symbolic.svg</file>
 
     <file alias="data_encryption">icons/flat-color-icons/svg/data_encryption.svg</file>
     <file alias="factory_breakdown">icons/flat-color-icons/svg/factory_breakdown.svg</file>
