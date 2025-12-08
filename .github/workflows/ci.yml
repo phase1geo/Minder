@@ -39,10 +39,10 @@ jobs:
         cache-key: "flatpak-builder-${{ github.sha }}"
         arch: ${{ matrix.configuration.arch }}
 
-      # You can automatically run any of the tests you've created as part of this workflow
-      run-tests: true
+    # You can automatically run any of the tests you've created as part of this workflow
+    run-tests: true
 
-      # These lines specify the location of the elementary Runtime and Sdk
-      repository-name: appcenter
-      repository-url: https://flatpak.elementary.io/repo.flatpakrepo
-      cache-key: "flatpak-builder-${{ github.sha }}"
+    # These lines specify the location of the elementary Runtime and Sdk
+    repository-name: appcenter
+    repository-url: https://flatpak.elementary.io/repo.flatpakrepo
+    cache-key: "flatpak-builder-${{ github.sha }}"
