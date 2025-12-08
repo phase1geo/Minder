@@ -23,8 +23,9 @@ public class LayoutLeft : Layout {
 
   /* Default constructor */
   public LayoutLeft() {
-    name = _( "To left" );
-    icon = "minder-layout-left-symbolic";
+    name        = _( "To left" );
+    light_icon  = "minder-layout-left-light-symbolic";
+    dark_icon   = "minder-layout-left-dark-symbolic";
     balanceable = false;
   }
 

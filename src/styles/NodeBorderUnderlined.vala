@@ -34,9 +34,14 @@ public class NodeBorderUnderlined : Object, NodeBorder {
     return( _( "Underlined" ) );
   }
 
-  /* Returns the name of the icon */
-  public string icon_name() {
-    return( "minder-node-border-underlined-symbolic" );
+  /* Returns the name of the light-mode icon */
+  public string light_icon_name() {
+    return( "minder-node-border-underlined-light-symbolic" );
+  }
+
+  /* Returns the name of the light-mode icon */
+  public string? dark_icon_name() {
+    return( "minder-node-border-underlined-dark-symbolic" );
   }
 
   /* Indicate that this border is not fillable */

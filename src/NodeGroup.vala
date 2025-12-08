@@ -52,15 +52,15 @@ public class NodeGroup : Object {
   }
 
   /* Default constructor */
-  public NodeGroup( DrawArea da, Node node ) {
-    color  = node.link_color ?? da.get_theme().get_color( "root_background" );
+  public NodeGroup( MindMap map, Node node ) {
+    color  = node.link_color ?? map.get_theme().get_color( "root_background" );
     _nodes = new Array<Node>();
     add_node( node );
   }
 
   /* Constructor */
-  public NodeGroup.array( DrawArea da, Array<Node> nodes ) {
-    color  = nodes.index( 0 ).link_color ?? da.get_theme().get_color( "root_background" );
+  public NodeGroup.array( MindMap map, Array<Node> nodes ) {
+    color  = nodes.index( 0 ).link_color ?? map.get_theme().get_color( "root_background" );
     _nodes = new Array<Node>();
     for( int i=0; i<nodes.length; i++ ) {
       add_node( nodes.index( i ) );
@@ -77,9 +77,9 @@ public class NodeGroup : Object {
   }
 
   /* Constructor from XML */
-  public NodeGroup.from_xml( DrawArea da, Xml.Node* n ) {
+  public NodeGroup.from_xml( MindMap map, Xml.Node* n, Array<Node> nodes ) {
     _nodes = new Array<Node>();
-    load( da, n );
+    load( map, n, nodes );
   }
 
   /* Adds the given node to this node group */
@@ -103,6 +103,17 @@ public class NodeGroup : Object {
       if( _nodes.index( i ) == node ) {
         node.group = false;
         _nodes.remove_index( i );
+        return( true );
+      }
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this node group contains the given node.
+  public bool within_node( Node node ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      if( (nodes.index( i ) == node) || nodes.index( i ).is_descendant_of( node ) ) {
         return( true );
       }
     }
@@ -164,29 +175,29 @@ public class NodeGroup : Object {
   }
 
   /* Loads the given group information */
-  public void load( DrawArea da, Xml.Node* g ) {
+  public void load( MindMap map, Xml.Node* g, Array<Node> nodes ) {
     string? c = g->get_prop( "color" );
     if( c != null ) {
-      RGBA clr = {1.0, 1.0, 1.0, 1.0};
+      RGBA clr = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
       clr.parse( c );
       color = clr;
     }
     for( Xml.Node* it = g->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch (it->name ) {
-          case "node"      :  load_node( da, it );  break;
-          case "groupnote" :  load_note( it );      break;
+          case "node"      :  load_node( map, it, nodes );  break;
+          case "groupnote" :  load_note( it );             break;
         }
       }
     }
   }
 
   /* Loads the given node */
-  private void load_node( DrawArea da, Xml.Node* n ) {
+  private void load_node( MindMap map, Xml.Node* n, Array<Node> nodes ) {
     string? i = n->get_prop( "id" );
     if( i != null ) {
       var id   = int.parse( i );
-      var node = da.get_node( da.get_nodes(), id );
+      var node = map.model.get_node( nodes, id );
       if( node != null ) {
         node.group = true;
         _nodes.append_val( node );

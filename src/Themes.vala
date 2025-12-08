@@ -69,9 +69,13 @@ public class Themes : Object {
   }
 
   /* Returns a list of icons associated with each of the loaded themes */
-  public void icons( ref Array<Image> icons ) {
+  public void icons( ref Array<Picture> icons ) {
     for( int i=0; i<_themes.length; i++ ) {
-      icons.append_val( new Image.from_surface( _themes.index( i ).make_icon() ) );
+      var picture = new Picture.for_paintable( _themes.index( i ).make_icon() ) {
+        margin_top = 10,
+        can_shrink = false
+      };
+      icons.append_val( picture );
     }
   }
 

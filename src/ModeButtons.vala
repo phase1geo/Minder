@@ -1,0 +1,114 @@
+/*
+* Copyright (c) 2024 (https://github.com/phase1geo/Minder)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Trevor Williams <phase1geo@gmail.com>
+*/
+
+using Gtk;
+
+public class ModeButtons : Box {
+
+  private int _selected = -1;
+
+  public int selected {
+    get {
+      return( _selected );
+    }
+    set {
+      if( _selected != value ) {
+        _selected = value;
+        var button = (ToggleButton)Utils.get_child_at_index( this, value );
+        button.active = true;
+      }
+    }
+  }
+
+  public signal void changed( int index );
+
+  public signal void update_icons();
+  public signal void editable_changed( bool editable );
+
+  //-------------------------------------------------------------
+  // Default constructor
+  public ModeButtons() {
+    add_css_class( Granite.STYLE_CLASS_LINKED );
+  }
+
+  //-------------------------------------------------------------
+  // Add a button to this model
+  public void add_button( string light_icon_name, string? dark_icon_name, string tooltip ) {
+
+    var image = new Image.from_icon_name( light_icon_name );
+
+    if( dark_icon_name != null ) {
+      update_icons.connect(() => {
+        image.icon_name = Utils.use_dark_mode( this ) ? dark_icon_name : light_icon_name;
+      });
+    }
+
+    var button = new ToggleButton() {
+      child        = image,
+      tooltip_text = tooltip
+    };
+
+    button.clicked.connect(() => {
+      _selected = Utils.get_child_index( this, button );
+      changed( _selected );
+    });
+
+    editable_changed.connect((editable) => {
+      button.set_sensitive( editable );
+    });
+
+    // This the checkbutton to the group
+    var first = get_first_child();
+    if( first != null ) {
+      button.set_group( (ToggleButton)first );
+    } else {
+      button.active = true;
+    }
+
+    append( button );
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds a label tab to this ModeButton item.
+  public void add_stack_tab( string label ) {
+
+    var button = new ToggleButton.with_label( label ) {
+      halign = Align.CENTER
+    };
+
+    button.clicked.connect(() => {
+      _selected = Utils.get_child_index( this, button );
+      changed( _selected );
+    });
+
+    var first = get_first_child();
+    if( first != null ) {
+      button.set_group( (ToggleButton)first );
+    } else {
+      button.active = true;
+    }
+
+    append( button );
+
+  }
+
+}

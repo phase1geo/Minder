@@ -37,24 +37,24 @@ public class UndoNodesLink : UndoItem {
     }
   }
 
-  private void toggle( DrawArea da ) {
+  private void toggle( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       var tmp = _nodes.index( i ).linked_node;
       _nodes.index( i ).linked_node = _linked.index( i );
       _linked.data[i] = tmp;
     }
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Undoes a node image change */
-  public override void undo( DrawArea da ) {
-    toggle( da );
+  public override void undo( MindMap map ) {
+    toggle( map );
   }
 
   /* Redoes a node image change */
-  public override void redo( DrawArea da ) {
-    toggle( da );
+  public override void redo( MindMap map ) {
+    toggle( map );
   }
 
 }

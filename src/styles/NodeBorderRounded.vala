@@ -34,9 +34,14 @@ public class NodeBorderRounded : Object, NodeBorder {
     return( _( "Rounded Rectangle" ) );
   }
 
-  /* Returns the name of the icon */
-  public string icon_name() {
-    return( "minder-node-border-rounded-symbolic" );
+  /* Returns the name of the light-mode icon */
+  public string light_icon_name() {
+    return( "minder-node-border-rounded-light-symbolic" );
+  }
+
+  /* Returns the name of the dark-mode icon */
+  public string? dark_icon_name() {
+    return( "minder-node-border-rounded-dark-symbolic" );
   }
 
   /* Indicate that this node is fillable */
@@ -46,13 +51,13 @@ public class NodeBorderRounded : Object, NodeBorder {
 
   /* Draw method for the node border */
   public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding ) {
-    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, padding );
+    Utils.draw_rounded_rectangle( ctx, x, y, w, h, padding );
     ctx.stroke();
   }
 
   /* Draw method for the node fill */
   public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding ) {
-    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, padding );
+    Utils.draw_rounded_rectangle( ctx, x, y, w, h, padding );
     ctx.fill();
   }
 

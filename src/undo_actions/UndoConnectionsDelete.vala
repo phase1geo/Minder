@@ -25,7 +25,8 @@ public class UndoConnectionsDelete : UndoItem {
 
   Array<Connection> _conns;
 
-  /* Constructor for deleting connections */
+  //-------------------------------------------------------------
+  // Constructor for deleting connections.
   public UndoConnectionsDelete( Array<Connection> conns ) {
     base( _( "delete connections" ) );
     _conns = new Array<Connection>();
@@ -34,26 +35,24 @@ public class UndoConnectionsDelete : UndoItem {
     }
   }
 
-  /* Undoes connection deletions */
-  public override void undo( DrawArea da ) {
-    var selections = da.get_selections();
-    selections.clear();
-    for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().add_connection( _conns.index( i ) );
-      selections.add_connection( _conns.index( i ) );
-    }
-    da.queue_draw();
-    da.auto_save();
+  //-------------------------------------------------------------
+  // Undoes connection deletions.
+  public override void undo( MindMap map ) {
+    var selected = map.selected;
+    selected.clear();
+    map.connections.add_connections( _conns );
+    selected.add_connections( _conns );
+    map.queue_draw();
+    map.auto_save();
   }
 
-  /* Redoes connection deletions */
-  public override void redo( DrawArea da ) {
-    for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().remove_connection( _conns.index( i ), false );
-    }
-    da.get_selections().clear_connections();
-    da.queue_draw();
-    da.auto_save();
+  //-------------------------------------------------------------
+  // Redoes connection deletions.
+  public override void redo( MindMap map ) {
+    map.connections.remove_connections( _conns, false );
+    map.selected.clear_connections();
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

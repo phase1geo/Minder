@@ -25,23 +25,23 @@ using Granite.Widgets;
 
 public class ConnectionInspector : Box {
 
-  private const Gtk.TargetEntry[] DRAG_TARGETS = {
-    {"text/uri-list", 0, 0}
-  };
-
   private ScrolledWindow _sw;
   private ColorButton    _color;
   private Button         _reset;
   private NoteView       _note;
-  private DrawArea?      _da         = null;
+  private MindMap?       _map        = null;
   private string         _orig_note  = "";
   private Connection?    _connection = null;
 
+  public signal void editable_changed();
+
+  //-------------------------------------------------------------
+  // Default constructor
   public ConnectionInspector( MainWindow win ) {
 
-    Object( orientation:Orientation.VERTICAL, spacing:10 );
+    Object( orientation: Orientation.VERTICAL, spacing: 10 );
 
-    /* Create the node widgets */
+    // Create the node widgets
     create_title();
     create_color();
     create_note( win );
@@ -49,189 +49,227 @@ public class ConnectionInspector : Box {
 
     win.canvas_changed.connect( tab_changed );
 
-    show_all();
+    editable_changed.connect( connection_changed );
 
   }
 
   /* Called whenever the tab in the main window changes */
-  private void tab_changed( DrawArea? da ) {
-    if( _da != null ) {
-      _da.current_changed.disconnect( connection_changed );
+  private void tab_changed( MindMap? map ) {
+    if( _map != null ) {
+      _map.current_changed.disconnect( connection_changed );
     }
-    if( da != null ) {
-      da.current_changed.connect( connection_changed );
+    _map = map;
+    if( map != null ) {
+      map.current_changed.connect( connection_changed );
     }
-    _da = da;
   }
 
-  /* Sets the width of this inspector to the given value */
+  //-------------------------------------------------------------
+  // Sets the width of this inspector to the given value.
   public void set_width( int width ) {
     _sw.width_request = width;
   }
 
+  //-------------------------------------------------------------
+  // Creates the title label
   private void create_title() {
 
-    var title = new Label( "<big>" + _( "Connection" ) + "</big>" );
-    title.use_markup = true;
-    title.justify    = Justification.CENTER;
+    var title = new Label( "<big>" + _( "Connection" ) + "</big>" ) {
+      use_markup = true,
+      justify    = Justification.CENTER
+    };
 
-    pack_start( title, false, true );
+    append( title );
 
   }
 
+  //-------------------------------------------------------------
+  // Creates the connection color widget
   private void create_color() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( Utils.make_title( _( "Color" ) ) );
+    var lbl = new Label( _( "Color" ) ) {
+      halign = Align.START,
+      xalign = (float)0,
+    };
+    lbl.add_css_class( "titled" );
 
-    box.homogeneous = true;
-    lbl.xalign      = (float)0;
-    lbl.use_markup  = true;
-
-    var bbox = new Box( Orientation.HORIZONTAL, 5 );
-
-    _color = new ColorButton();
+    _color = new ColorButton() {
+      hexpand = true
+    };
     _color.color_set.connect(() => {
-      _da.change_current_connection_color( _color.rgba );
+      _map.model.change_current_connection_color( _color.rgba );
     });
 
-    _reset = new Button.from_icon_name( "edit-undo-symbolic", IconSize.SMALL_TOOLBAR );
-    _reset.set_tooltip_text( _( "Use Theme Default Color" ) );
+    _reset = new Button.from_icon_name( "edit-undo-symbolic" ) {
+      tooltip_text = _( "Use Theme Default Color" )
+    };
     _reset.clicked.connect(() => {
-      _da.change_current_connection_color( null );
+      _map.model.change_current_connection_color( null );
     });
 
-    bbox.pack_start( _color, true,  true,  0 );
-    bbox.pack_start( _reset, false, false, 0 );
+    var bbox = new Box( Orientation.HORIZONTAL, 5 ) {
+      halign = Align.END
+    };
+    bbox.append( _color );
+    bbox.append( _reset );
 
-    box.pack_start( lbl,  false, true, 0 );
-    box.pack_end(   bbox, true,  true, 0 );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( bbox );
 
-    pack_start( box, false, true );
+    append( box );
 
   }
 
-  /* Creates the note widget */
+  //-------------------------------------------------------------
+  // Creates the note widget
   private void create_note( MainWindow win ) {
 
-    Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( Utils.make_title( _( "Note" ) ) );
+    var lbl = new Label( _( "Note" ) ) {
+      valign = Align.START,
+      xalign = (float)0,
+    };
+    lbl.add_css_class( "titled" );
 
-    lbl.xalign     = (float)0;
-    lbl.use_markup = true;
+    _note = new NoteView() {
+      valign    = Align.FILL,
+      vexpand   = true,
+      wrap_mode = Gtk.WrapMode.WORD
+    };
 
-    _note = new NoteView();
-    _note.set_wrap_mode( Gtk.WrapMode.WORD );
     _note.add_unicode_completion( win, win.unicoder );
     _note.buffer.text = "";
     _note.buffer.changed.connect( note_changed );
-    _note.focus_in_event.connect( note_focus_in );
-    _note.focus_out_event.connect( note_focus_out );
+
+    var focus = new EventControllerFocus();
+    _note.add_controller( focus );
+    focus.enter.connect( note_focus_in );
+    focus.leave.connect( note_focus_out );
+
     _note.node_link_added.connect( note_node_link_added );
     _note.node_link_clicked.connect( note_node_link_clicked );
     _note.node_link_hover.connect( note_node_link_hover );
 
-    _sw = new ScrolledWindow( null, null );
-    _sw.min_content_width  = 300;
-    _sw.min_content_height = 100;
-    _sw.add( _note );
+    _sw = new ScrolledWindow() {
+      halign             = Align.FILL,
+      valign             = Align.FILL,
+      min_content_width  = 300,
+      min_content_height = 100,
+      child              = _note
+    };
 
-    box.pack_start( lbl, false, false );
-    box.pack_start( _sw,  true,  true );
+    var box = new Box( Orientation.VERTICAL, 10 ) {
+      halign = Align.FILL,
+      valign = Align.FILL,
+      margin_bottom = 5
+    };
+    box.append( lbl );
+    box.append( _sw );
 
-    box.margin_bottom = 20;
-
-    pack_start( box, true, true );
+    append( box );
 
   }
 
-  /* Creates the node editing button grid and adds it to the popover */
+  //-------------------------------------------------------------
+  // Creates the node editing button grid and adds it to the popover
   private void create_buttons() {
 
-    var grid = new Grid();
-    grid.column_homogeneous = true;
-    grid.column_spacing     = 5;
+    var grid = new Grid() {
+      column_homogeneous = true,
+      column_spacing     = 5
+    };
 
     /* Create the node deletion button */
-    var del_btn = new Button.from_icon_name( "edit-delete-symbolic", IconSize.SMALL_TOOLBAR );
-    del_btn.set_tooltip_text( _( "Delete Connection" ) );
+    var del_btn = new Button.from_icon_name( "edit-delete-symbolic" ) {
+      tooltip_text = _( "Delete Connection" )
+    };
     del_btn.clicked.connect( connection_delete );
 
     /* Add the buttons to the button grid */
-    grid.attach( del_btn, 0, 0, 1, 1 );
+    grid.attach( del_btn, 0, 0 );
 
     /* Add the button grid to the popover */
     // pack_start( grid, false, true );
 
   }
 
-  /*
-   Called whenever the text widget is changed.  Updates the current node
-   and redraws the canvas when needed.
-  */
+  //-------------------------------------------------------------
+  // Called whenever the text widget is changed.  Updates the
+  // current node and redraws the canvas when needed.
   private void note_changed() {
-    _da.change_current_connection_note( _note.buffer.text );
+    _map.model.change_current_connection_note( _note.buffer.text );
   }
 
-  /* Saves the original version of the node's note so that we can */
-  private bool note_focus_in( EventFocus e ) {
-    _connection = _da.get_current_connection();
+  //-------------------------------------------------------------
+  // Saves the original version of the node's note so that we can
+  private void note_focus_in() {
+    _connection = _map.get_current_connection();
     _orig_note  = _note.buffer.text;
-    return( false );
   }
 
-  /* When the note buffer loses focus, save the note change to the undo buffer */
-  private bool note_focus_out( EventFocus e ) {
+  //-------------------------------------------------------------
+  // When the note buffer loses focus, save the note change to
+  // the undo buffer
+  private void note_focus_out() {
     if( (_connection != null) && (_connection.note != _orig_note) ) {
-      _da.undo_buffer.add_item( new UndoConnectionNote( _connection, _orig_note ) );
+      _map.add_undo( new UndoConnectionNote( _connection, _orig_note ) );
     }
-    return( false );
   }
 
-  /* When a node link is added, tell the current node */
+  //-------------------------------------------------------------
+  // When a node link is added, tell the current node
   private int note_node_link_added( NodeLink link, out string text ) {
-    return( _da.add_note_node_link( link, out text ) );
+    return( _map.model.add_note_node_link( link, out text ) );
   }
 
-  /* Handles a click on the node link with the given ID */
+  //-------------------------------------------------------------
+  // Handles a click on the node link with the given ID
   private void note_node_link_clicked( int id ) {
-    _da.note_node_link_clicked( id );
+    _map.model.note_node_link_clicked( id );
   }
 
-  /* Handles a hover over a node link */
+  //-------------------------------------------------------------
+  // Handles a hover over a node link
   private void note_node_link_hover( int id ) {
-    var link = _da.node_links.get_node_link( id );
+    var link = _map.model.node_links.get_node_link( id );
     if( link != null ) {
-      _note.show_tooltip( link.get_tooltip( _da ) );
+      _note.show_tooltip( link.get_tooltip( _map ) );
     }
   }
 
-  /* Deletes the current connection */
+  //-------------------------------------------------------------
+  // Deletes the current connection
   private void connection_delete() {
-    _da.delete_connection();
+    _map.model.delete_connection();
   }
 
-  /* Grabs the focus on the note widget */
+  //-------------------------------------------------------------
+  // Grabs the focus on the note widget
   public void grab_note() {
     _note.grab_focus();
   }
 
-  /* Called whenever the user changes the current node in the canvas */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the current node in the canvas
   private void connection_changed() {
 
-    Connection? current = _da.get_current_connection();
+    Connection? current = _map.get_current_connection();
 
     if( current != null ) {
       var note = current.note;
-      _color.rgba          = (current.color != null) ? current.color : _da.get_theme().get_color( "connection_background" );
-      _color.alpha         = 65535;
-      _note.buffer.text    = note;
-      _reset.set_sensitive( current.color != null );
+      _color.rgba       = (current.color != null) ? current.color : _map.get_theme().get_color( "connection_background" );
+      _color.sensitive  = _map.editable;
+      _note.buffer.text = note;
+      _note.sensitive   = _map.editable;
+      _reset.set_sensitive( (current.color != null) && _map.editable );
     }
 
   }
 
-  /* Sets the input focus on the first widget in this inspector */
+  //-------------------------------------------------------------
+  // Sets the input focus on the first widget in this inspector
   public void grab_first() {
     _color.grab_focus();
   }

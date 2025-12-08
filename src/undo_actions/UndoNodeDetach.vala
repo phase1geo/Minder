@@ -29,7 +29,8 @@ public class UndoNodeDetach : UndoItem {
   private int      _old_index;
   private int      _root_index;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoNodeDetach( Node n, int root_index, Node old_parent, NodeSide old_side, int old_index ) {
     base( _( "detach node" ) );
     _n          = n;
@@ -39,26 +40,27 @@ public class UndoNodeDetach : UndoItem {
     _old_index  = old_index;
   }
 
-  /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
-    da.animator.add_nodes( da.get_nodes(), "undo detach" );
-    da.remove_root( _root_index );
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data
+  public override void undo( MindMap map ) {
+    map.animator.add_nodes( map.get_nodes(), false, "undo detach" );
+    map.model.remove_root( _root_index );
     _old_parent.layout.propagate_side( _n, _old_side );
     _n.attach( _old_parent, _old_index, null, false );
-    da.set_current_node( _n );
-    da.animator.animate();
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_node( _n );
+    map.animator.animate();
+    map.auto_save();
   }
 
-  /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
-    da.animator.add_nodes( da.get_nodes(), "redo detach" );
+  //-------------------------------------------------------------
+  // Performs a redo operation
+  public override void redo( MindMap map ) {
+    map.animator.add_nodes( map.get_nodes(), false, "redo detach" );
     _n.detach( _old_side );
-    da.add_root( _n, _root_index );
-    da.set_current_node( _n );
-    da.animator.animate();
-    da.auto_save();
+    map.model.add_root( _n, _root_index );
+    map.set_current_node( _n );
+    map.animator.animate();
+    map.auto_save();
   }
 
 }

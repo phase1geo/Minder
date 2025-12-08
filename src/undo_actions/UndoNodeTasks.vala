@@ -31,7 +31,8 @@ public class UndoNodeTasks : UndoItem {
     _task_info = task_info;
   }
 
-  private void update( DrawArea da ) {
+  private void update( MindMap map ) {
+    map.animator.add_nodes( map.get_nodes(), false, "UndoNodeTasks update" );
     for( int i=0; i<_task_info.length; i++ ) {
       assert( _task_info.index( i ) != null );
       var node    = _task_info.index( i ).node;
@@ -43,19 +44,19 @@ public class UndoNodeTasks : UndoItem {
       _task_info.index( i ).enabled = enabled;
       _task_info.index( i ).done    = done;
     }
-    da.queue_draw();
-    da.current_changed( da );
-    da.auto_save();
+    map.current_changed( map );
+    map.animator.animate();
+    map.auto_save();
   }
 
   /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
-    update( da );
+  public override void undo( MindMap map ) {
+    update( map );
   }
 
   /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
-    update( da );
+  public override void redo( MindMap map ) {
+    update( map );
   }
 
 }

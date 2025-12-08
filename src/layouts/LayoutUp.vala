@@ -23,8 +23,9 @@ public class LayoutUp : Layout {
 
   /* Default constructor */
   public LayoutUp() {
-    name = _( "Upwards" );
-    icon = "minder-layout-up-symbolic";
+    name        = _( "Upwards" );
+    light_icon  = "minder-layout-up-light-symbolic";
+    dark_icon   = "minder-layout-up-dark-symbolic";
     balanceable = false;
   }
 

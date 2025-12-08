@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -24,7 +24,7 @@ using Gdk;
 using GLib;
 using Gee;
 
-public class Minder : Granite.Application {
+public class Minder : Gtk.Application {
 
   private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
 
@@ -33,8 +33,13 @@ public class Minder : Granite.Application {
   private        GLib.Settings       touch_settings;
 
   public  static GLib.Settings settings;
-  public  static string        version = "1.17";
+  public  static string        version       = "2.0.0";
+  public  static bool          debug         = false;
+  public  static bool          debug_advance = false;
+  public  static int           debug_count   = 0;
 
+  //-------------------------------------------------------------
+  // Default constructor
   public Minder () {
 
     Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.HANDLES_COMMAND_LINE );
@@ -49,40 +54,24 @@ public class Minder : Granite.Application {
 
   }
 
-  /* First method called in the startup process */
+  //-------------------------------------------------------------
+  // First method called in the startup process.
   private void start_application() {
 
-    /* Initialize the settings */
+    // Initialize the settings
     settings = new GLib.Settings( "com.github.phase1geo.minder" );
 
-    /* Add the application-specific icons */
-    weak IconTheme default_theme = IconTheme.get_default();
+    // Add the application-specific icons
+    weak IconTheme default_theme = IconTheme.get_for_display( Gdk.Display.get_default() );
     default_theme.add_resource_path( "/com/github/phase1geo/minder" );
 
-    /* Create the main window */
+    // Create the main window
     appwin = new MainWindow( this, settings );
 
-    /* Load the tab data */
+    // Load the tab data
     appwin.load_tab_state();
 
-    /* Handle any changes to the position of the window */
-    appwin.configure_event.connect(() => {
-      int root_x, root_y;
-      int size_w, size_h;
-      appwin.get_position( out root_x, out root_y );
-      appwin.get_size( out size_w, out size_h );
-      settings.set_int( "window-x", root_x );
-      settings.set_int( "window-y", root_y );
-      settings.set_int( "window-w", size_w );
-      settings.set_int( "window-h", size_h );
-      return( false );
-    });
-
-    appwin.destroy.connect(() => {
-      quit();
-    });
-
-    /* Initialize desktop interface settings */
+    // Initialize desktop interface settings
     string[] names = {"font-name", "text-scaling-factor"};
     iface_settings = new GLib.Settings( INTERFACE_SCHEMA );
     foreach( string name in names ) {
@@ -96,6 +85,8 @@ public class Minder : Granite.Application {
 
   }
 
+  //-------------------------------------------------------------
+  // Called when the command-line argument handler exits.
   private int end_cl( ApplicationCommandLine cl, int status ) {
     // If we are the primary instance, exit now
     if( !cl.get_is_remote() ) {
@@ -107,14 +98,15 @@ public class Minder : Granite.Application {
     return( status );
   }
 
-  /* Parse the command-line arguments */
+  //-------------------------------------------------------------
+  // Parse the command-line arguments.
   private int handle_command_line( ApplicationCommandLine cl ) {
 
     string? open_file = null;
     string? cl_import = null;
     string? cl_export = null;
 
-    var context      = new OptionContext( "- Minder Options" );
+    var context      = new OptionContext( "[files]" );
     var options      = new OptionEntry[10];
     var transparent  = false;
     var compression  = 0;
@@ -127,7 +119,7 @@ public class Minder : Granite.Application {
     var show_help    = false;
     var new_file     = false;
 
-    /* Get the list of import and export formats */
+    // Get the list of import and export formats
     for( int i=0; i<exports.length(); i++ ) {
       var export = exports.index( i );
       if( export.importable ) {
@@ -143,7 +135,7 @@ public class Minder : Granite.Application {
 
     var args = cl.get_arguments();
 
-    /* Create the command-line options */
+    // Create the command-line options
     options[0] = {"version", 0, 0, OptionArg.NONE, ref show_version, _( "Display version number" ), null};
     options[1] = {"help", 0, 0, OptionArg.NONE, ref show_help, _( "Display help" ), null};
     options[2] = {"new", 'n', 0, OptionArg.NONE, ref new_file, _( "Starts Minder with a new file" ), null};
@@ -155,7 +147,7 @@ public class Minder : Granite.Application {
     options[8] = {"markdown-include-image-links", 0, 0, OptionArg.NONE, ref image_links, _( "Enables image links in exported Markdown" ), null};
     options[9] = {null};
 
-    /* Parse the arguments */
+    // Parse the arguments
     try {
       context.set_help_enabled( false );
       context.add_main_entries( options, null );
@@ -171,13 +163,13 @@ public class Minder : Granite.Application {
       return( end_cl( cl, 0 ) );
     }
 
-    /* If the version was specified, output it and then exit */
+    // If the version was specified, output it and then exit
     if( show_version ) {
       stdout.printf( version + "\n" );
       return( end_cl( cl, 0 ) );
     }
 
-    /* If we see files on the command-line */
+    // If we see files on the command-line
     if( args.length >= 2 ) {
       open_file = args[1];
     }
@@ -233,7 +225,8 @@ public class Minder : Granite.Application {
 
   }
 
-  /* Exports the given mindmap from the command-line */
+  //-------------------------------------------------------------
+  // Exports the given mindmap from the command-line.
   private bool export_as( string format, HashMap<string,int> options, string infile, string outfile ) {
 
     var exports = appwin.exports;
@@ -249,14 +242,15 @@ public class Minder : Granite.Application {
           }
           return( true );
         });
-        var da = appwin.create_da();
-        da.get_doc().load_filename( infile, false );
-        if( da.get_doc().load() ) {
-          return( export.export( outfile, da ) );
-        } else {
-          stderr.printf( _( "ERROR:  Unable to load Minder input file %s" ).printf( infile ) + "\n" );
-          return( false );
-        }
+        var map = appwin.create_map();
+        map.doc.load_filename( infile, false );
+        map.doc.load( true, (loaded) => {
+          if( loaded ) {
+            export.export( outfile, map );
+          } else {
+            stderr.printf( _( "ERROR:  Unable to load Minder input file %s" ).printf( infile ) + "\n" );
+          }
+        });
       }
     }
 
@@ -266,8 +260,12 @@ public class Minder : Granite.Application {
 
   }
 
-  /* Main routine which gets everything started */
+  //-------------------------------------------------------------
+  // Main routine which gets everything started.
   public static int main( string[] args ) {
+
+    // Initialize the GtkSource infrastructure
+    GtkSource.init();
 
     var app = new Minder();
     return( app.run( args ) );

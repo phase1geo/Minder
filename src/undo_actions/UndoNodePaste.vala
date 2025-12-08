@@ -28,12 +28,15 @@ public class UndoNodePaste : UndoItem {
   private Array<Node>       _nodes;
   private Array<int>        _indices;
   private Array<Connection> _conns;
+  private Array<NodeGroup>  _groups;
 
-  /* Default constructor */
-  public UndoNodePaste( Array<Node> nodes, Array<Connection> conns ) {
+  //-------------------------------------------------------------
+  // Default constructor.
+  public UndoNodePaste( Array<Node> nodes, Array<Connection> conns, Array<NodeGroup> groups ) {
     base( _( "paste node" ) );
     _nodes   = nodes;
     _conns   = conns;
+    _groups  = groups;
     _indices = new Array<int>();
     _parents = new Array<Node?>();
     for( int i=0; i<nodes.length; i++ ) {
@@ -43,30 +46,40 @@ public class UndoNodePaste : UndoItem {
     }
   }
 
-  /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data.
+  public override void undo( MindMap map ) {
+    map.animator.add_nodes( map.get_nodes(), false, "undo node paste" );
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).detach( _nodes.index( i ).side );
     }
     for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().remove_connection( _conns.index( i ), false );
+      map.connections.remove_connection( _conns.index( i ), false );
     }
-    da.set_current_node( null );
-    da.queue_draw();
-    da.auto_save();
+    for( int i=0; i<_groups.length; i++ ) {
+      map.groups.remove_group( _groups.index( i ) );
+    }
+    map.set_current_node( null );
+    map.animator.animate();
+    map.auto_save();
   }
 
-  /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Performs a redo operation.
+  public override void redo( MindMap map ) {
+    map.animator.add_nodes( map.get_nodes(), false, "redo node paste" );
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).attach( _parents.index( i ), _indices.index( i ), null );
     }
     for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().add_connection( _conns.index( i ) );
+      map.connections.add_connection( _conns.index( i ) );
     }
-    da.set_current_node( _nodes.index( 0 ) );
-    da.queue_draw();
-    da.auto_save();
+    for( int i=0; i<_groups.length; i++ ) {
+      map.groups.add_group( _groups.index( i ) );
+    }
+    map.set_current_node( _nodes.index( 0 ) );
+    map.animator.animate();
+    map.auto_save();
   }
 
 }

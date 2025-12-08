@@ -27,8 +27,11 @@ public interface LinkType : Object {
   /* Returns the display name of the link type (should be a translatable string) */
   public abstract string display_name();
 
-  /* Returns the name of the link icon */
-  public abstract string icon_name();
+  /* Returns the name of the light-mode link icon */
+  public abstract string light_icon_name();
+
+  /* Returns the name of the dark-mode link icon */
+  public abstract string dark_icon_name();
 
   protected double adjust_a( Style style ) {
     return( style.link_arrow ? ((style.link_width / 2) + ((style.node_borderwidth / 2) + 2)) : 0 );

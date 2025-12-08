@@ -26,11 +26,11 @@ public class UndoStyleBranchRadius : UndoStyleChange {
   GenericArray<int> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleBranchRadius( StyleAffects affects, int branch_radius, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleBranchRadius( StyleAffects affects, int branch_radius, MindMap map ) {
+    base( affects, map );
     _values = new GenericArray<int>();
     _values.add( branch_radius );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

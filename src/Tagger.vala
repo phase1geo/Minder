@@ -24,23 +24,26 @@ using Gee;
 
 public class Tagger {
 
-  private DrawArea             _da;
+  private MindMap              _map;
   private HashMap<string,bool> _pre_tags;
   private HashMap<string,int>  _tags;
   private Gtk.SearchEntry      _entry;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public Tagger( DrawArea da ) {
-    _da   = da;
+    _map  = da.map;
     _tags = new HashMap<string,int>();
   }
 
-  /* Loads the tags prior to edits being made */
+  //-------------------------------------------------------------
+  // Loads the tags prior to edits being made
   public void preedit_load_tags( FormattedText text ) {
     _pre_tags = text.get_extras_for_tag( FormatTag.TAG );
   }
 
-  /* Updates the stored list of tags in use. */
+  //-------------------------------------------------------------
+  // Updates the stored list of tags in use.
   public void postedit_load_tags( FormattedText text ) {
     var tags = text.get_extras_for_tag( FormatTag.TAG );
     var it   = tags.map_iterator();
@@ -63,7 +66,8 @@ public class Tagger {
     }
   }
 
-  /* Gets the list of matching keys */
+  //-------------------------------------------------------------
+  // Gets the list of matching keys
   public GLib.List<TextCompletionItem> get_matches( string partial ) {
     var it = _tags.map_iterator();
     var matches = new GLib.List<TextCompletionItem>();
@@ -78,7 +82,8 @@ public class Tagger {
     return( matches );
   }
 
-  /* Returns the XML version of this class for saving purposes */
+  //-------------------------------------------------------------
+  // Returns the XML version of this class for saving purposes
   public Xml.Node* save() {
     Xml.Node* tags = new Xml.Node( null, "tags" );
     var it = _tags.map_iterator();
@@ -91,7 +96,8 @@ public class Tagger {
     return( tags );
   }
 
-  /* Loads the tag information from the XML save file */
+  //-------------------------------------------------------------
+  // Loads the tag information from the XML save file
   public void load( Xml.Node* tags ) {
     for( Xml.Node* it = tags->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tag") ) {
@@ -104,10 +110,11 @@ public class Tagger {
     }
   }
 
-  /* Creates the UI for selecting/creating tags */
+  //-------------------------------------------------------------
+  // Creates the UI for selecting/creating tags
   public void show_add_ui() {
 
-    var    name = _da.get_current_node().name;
+    var    name = _map.get_current_node().name;
     double left, top, bottom;
     int    line;
     name.get_char_pos( name.text.text.char_count(), out left, out top, out bottom, out line );
@@ -115,51 +122,55 @@ public class Tagger {
     var int_bottom = (int)bottom;
     Gdk.Rectangle rect = {int_left, int_bottom, 1, 1};
 
-    var popover = new Popover( _da );
-    popover.pointing_to = rect;
-    popover.position    = PositionType.BOTTOM;
-
-    var box = new Box( Orientation.VERTICAL, 0 );
-
     var lbl = new Label( _( "Add Tag" ) );
 
-    var listbox = new ListBox();
-    listbox.selection_mode = SelectionMode.BROWSE;
-    listbox.halign         = Align.START;
-    listbox.valign         = Align.START;
-    listbox.row_activated.connect( (row) => {
+    _entry = new SearchEntry() {
+      max_width_chars = 30
+    };
+    _entry.insert_text.connect( filter_tag_text );
+
+    var listbox = new ListBox() {
+      halign         = Align.START,
+      valign         = Align.START,
+      selection_mode = SelectionMode.BROWSE
+    };
+
+    var scroll = new ScrolledWindow() {
+      vscrollbar_policy  = PolicyType.AUTOMATIC,
+      hscrollbar_policy  = PolicyType.EXTERNAL,
+      min_content_height = 200,
+      child              = listbox
+    };
+
+    var box = new Box( Orientation.VERTICAL, 0 );
+    box.append( lbl );
+    box.append( _entry );
+    box.append( scroll );
+
+    var popover = new Popover() {
+      pointing_to = rect,
+      position    = PositionType.BOTTOM,
+      child       = box
+    };
+
+    listbox.row_activated.connect((row) => {
       var label = (Label)row.get_child();
       var value = label.get_text();
-      _da.add_tag( value );
-      Utils.hide_popover( popover );
+      _map.canvas.add_tag( value );
+      popover.popdown();
     });
 
-    var scroll = new ScrolledWindow( null, null );
-    scroll.vscrollbar_policy  = PolicyType.AUTOMATIC;
-    scroll.hscrollbar_policy  = PolicyType.EXTERNAL;
-    scroll.min_content_height = 200;
-    scroll.add( listbox );
-
-    _entry = new SearchEntry();
-    _entry.max_width_chars  = 30;
-    _entry.activate.connect( () => {
-      var value = _entry.text;
-      _da.add_tag( value );
-      Utils.hide_popover( popover );
-    });
-    _entry.insert_text.connect( filter_tag_text );
     _entry.search_changed.connect( () => {
       populate_listbox( listbox, get_matches( _entry.text ) );
     });
 
-    box.pack_start( lbl,    false, true, 5 );
-    box.pack_start( _entry, false, true, 5 );
-    box.pack_start( scroll, true,  true, 5 );
-    box.show_all();
+    _entry.activate.connect( () => {
+      var value = _entry.text;
+      _map.canvas.add_tag( value );
+      popover.popdown();
+    });
 
-    popover.add( box );
-
-    Utils.show_popover( popover );
+    popover.popup();
 
     /* Preload the tags */
     populate_listbox( listbox, get_matches( "" ) );
@@ -178,14 +189,11 @@ public class Tagger {
   }
 
   private void populate_listbox( ListBox listbox, GLib.List<TextCompletionItem> tags ) {
-    listbox.foreach( (w) => {
-      listbox.remove( w );
-    });
+    Utils.clear_listbox( listbox );
     foreach( TextCompletionItem item in tags ) {
       var box = item.create_row();
-      listbox.add( box );
+      listbox.append( box );
     }
-    listbox.show_all();
   }
 
 }

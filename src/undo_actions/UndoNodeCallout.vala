@@ -33,22 +33,22 @@ public class UndoNodeCallout : UndoItem {
     _prev_callout = node.callout;
   }
 
-  private void change( DrawArea da ) {
+  private void change( MindMap map ) {
     var current = _node.callout;
     _node.callout = _prev_callout;
     _prev_callout = current;
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Undoes a node callout add/remove */
-  public override void undo( DrawArea da ) {
-    change( da );
+  public override void undo( MindMap map ) {
+    change( map );
   }
 
   /* Redoes a node callout add/remove */
-  public override void redo( DrawArea da ) {
-    change( da );
+  public override void redo( MindMap map ) {
+    change( map );
   }
 
 }

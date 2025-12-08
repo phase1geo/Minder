@@ -38,9 +38,10 @@ public class UndoNodesDelete : UndoItem {
   Array<Connection>      _conns;
   Array<UndoNodeGroups?> _groups;
 
-  /* Default constructor */
-  public UndoNodesDelete( Array<Node> nodes, Array<Connection> conns, Array<UndoNodeGroups?> groups ) {
-    base( _( "delete nodes" ) );
+  //-------------------------------------------------------------
+  // Default constructor.
+  public UndoNodesDelete( Array<Node> nodes, Array<Connection> conns, Array<UndoNodeGroups?> groups, string label = _( "delete nodes" ) ) {
+    base( label );
     _nodes = new Array<NodeInfo>();
     for( int i=0; i<nodes.length; i++ ) {
       _nodes.append_val( new NodeInfo( nodes.index( i ) ) );
@@ -49,35 +50,39 @@ public class UndoNodesDelete : UndoItem {
     _groups = groups;
   }
 
-  /* Undoes a node deletion */
-  public override void undo( DrawArea da ) {
-    da.get_selections().clear();
+  //-------------------------------------------------------------
+  // Undoes a node deletion.
+  public override void undo( MindMap map ) {
+    map.selected.clear();
+    map.animator.add_nodes( map.get_nodes(), false, "UndoNodesDelete.undo" );
     for( int i=0; i<_nodes.length; i++ ) {
       var ni = _nodes.index( i );
       ni.node.attach_only( ni.parent, ni.index );
-      da.get_selections().add_node( ni.node );
+      map.selected.add_node( ni.node );
     }
-    for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().add_connection( _conns.index( i ) );
-    }
-    da.groups.apply_undos( _groups );
-    da.queue_draw();
-    da.auto_save();
+    map.connections.add_connections( _conns );
+    map.groups.apply_undos( _groups );
+    map.animator.animate();
+    map.auto_save();
   }
 
-  /* Redoes a node deletion */
-  public override void redo( DrawArea da ) {
-    da.get_selections().clear();
+  //-------------------------------------------------------------
+  // Redoes a node deletion.
+  public override void redo( MindMap map ) {
+    map.selected.clear();
+    for( int i=0; i<_nodes.length; i++ ) {
+      map.selected.add_node( _nodes.index( i ).node, true, false );
+    }
+    map.animator.add_nodes( map.get_nodes(), true, "UndoNodesDelete.redo" );
+    map.selected.clear_nodes( false );
     for( int i=0; i<_nodes.length; i++ ) {
       UndoNodeGroups? tmp_group = null;
       _nodes.index( i ).node.delete_only();
-      da.groups.remove_node( _nodes.index( i ).node, ref tmp_group );
+      map.groups.remove_node( _nodes.index( i ).node, ref tmp_group );
     }
-    for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().remove_connection( _conns.index( i ), false );
-    }
-    da.queue_draw();
-    da.auto_save();
+    map.connections.remove_connections( _conns, false );
+    map.animator.animate();
+    map.auto_save();
   }
 
 }

@@ -28,29 +28,34 @@ public enum StickerMode {
   DROPPABLE   // Sticker is a dropzone for another sticker
 }
 
-public class Sticker {
+public class Sticker : Object {
 
-  private DrawArea _da;
-  private string   _name;
-  private Pixbuf   _buf;
-  private double   _posx = 0.0;
-  private double   _posy = 0.0;
+  private MindMap _map;
+  private string  _name;
+  private Pixbuf  _buf;
+  private double  _posx = 0.0;
+  private double  _posy = 0.0;
 
+  public string name {
+    get {
+      return( _name );
+    }
+  }
   public StickerMode mode { get; set; default = StickerMode.NONE; }
   public double posx {
     get {
-      return( _posx + _da.origin_x );
+      return( _posx + _map.origin_x );
     }
     set {
-      _posx = value - _da.origin_x;
+      _posx = value - _map.origin_x;
     }
   }
   public double posy {
     get {
-      return( _posy + _da.origin_y );
+      return( _posy + _map.origin_y );
     }
     set {
-      _posy = value - _da.origin_y;
+      _posy = value - _map.origin_y;
     }
   }
   public double width {
@@ -65,8 +70,8 @@ public class Sticker {
   }
 
   /* Default constructor */
-  public Sticker( DrawArea da, string n, double x, double y, int width = -1 ) {
-    _da   = da;
+  public Sticker( MindMap map, string n, double x, double y, int width = -1 ) {
+    _map  = map;
     _name = n;
     posx  = x;
     posy  = y;
@@ -74,8 +79,8 @@ public class Sticker {
   }
 
   /* Constructor from XML */
-  public Sticker.from_xml( DrawArea da, Xml.Node* n ) {
-    _da = da;
+  public Sticker.from_xml( MindMap map, Xml.Node* n ) {
+    _map = map;
     load( n );
   }
 

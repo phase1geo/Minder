@@ -26,7 +26,8 @@ public class UndoNodeBalance : UndoItem {
     private Array<Node>     _nodes;
     private Array<NodeSide> _sides;
 
-    /* Stores the given node into this class */
+    //-------------------------------------------------------------
+    // Stores the given node into this class.
     public BalanceNodes( Node n ) {
       _nodes = new Array<Node>();
       _sides = new Array<NodeSide>();
@@ -36,7 +37,8 @@ public class UndoNodeBalance : UndoItem {
       }
     }
 
-    /* Performs an undo operation for the stored nodes */
+    //-------------------------------------------------------------
+    // Performs an undo operation for the stored nodes.
     public void change( Node parent ) {
       for( int i=0; i<_nodes.length; i++ ) {
         Node n = _nodes.index( i );
@@ -56,47 +58,51 @@ public class UndoNodeBalance : UndoItem {
   private Array<BalanceNodes>? _new  = null;
   private Node?                _root = null;
 
-  /* Default constructor */
-  public UndoNodeBalance( DrawArea da, Node? root_node ) {
+  //-------------------------------------------------------------
+  // Default constructor.
+  public UndoNodeBalance( MindMap map, Node? root_node ) {
     base( _( "balance nodes" ) );
     _root = root_node;
     _old  = new Array<BalanceNodes>();
     if( root_node == null ) {
-      for( int i=0; i<da.get_nodes().length; i++ ) {
-        _old.append_val( new BalanceNodes( da.get_nodes().index( i ) ) );
+      for( int i=0; i<map.get_nodes().length; i++ ) {
+        _old.append_val( new BalanceNodes( map.get_nodes().index( i ) ) );
       }
     } else {
       _old.append_val( new BalanceNodes( root_node ) );
     }
   }
 
-  /* Perform the swap */
-  private void change( DrawArea da, Array<BalanceNodes> nodes ) {
-    da.animator.add_nodes( da.get_nodes(), "undo balance nodes" );
+  //-------------------------------------------------------------
+  // Perform the swap.
+  private void change( MindMap map, Array<BalanceNodes> nodes ) {
+    map.animator.add_nodes( map.get_nodes(), false, "undo balance nodes" );
     if( _root == null ) {
-      for( int i=0; i<da.get_nodes().length; i++ ) {
-        nodes.index( i ).change( da.get_nodes().index( i ) );
+      for( int i=0; i<map.get_nodes().length; i++ ) {
+        nodes.index( i ).change( map.get_nodes().index( i ) );
       }
     } else {
       nodes.index( 0 ).change( _root );
     }
-    da.animator.animate();
+    map.animator.animate();
   }
 
-  /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data.
+  public override void undo( MindMap map ) {
     if( _new == null ) {
       _new = new Array<BalanceNodes>();
-      for( int i=0; i<da.get_nodes().length; i++ ) {
-        _new.append_val( new BalanceNodes( da.get_nodes().index( i ) ) );
+      for( int i=0; i<map.get_nodes().length; i++ ) {
+        _new.append_val( new BalanceNodes( map.get_nodes().index( i ) ) );
       }
     }
-    change( da, _old );
+    change( map, _old );
   }
 
-  /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
-    change( da, _new );
+  //-------------------------------------------------------------
+  // Performs a redo operation.
+  public override void redo( MindMap map ) {
+    change( map, _new );
   }
 
 }

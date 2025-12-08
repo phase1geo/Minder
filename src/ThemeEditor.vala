@@ -32,54 +32,71 @@ public class ThemeEditor : Gtk.Box {
   private Entry                       _name;
   private HashMap<string,ColorButton> _btns;
   private Switch                      _prefer_dark;
-  private Revealer                    _delrev;
+  private Button                      _del;
+  private bool                        _ignore = false;
 
   public ThemeEditor( MainWindow win ) {
 
-    Object( orientation:Orientation.VERTICAL, spacing:10 );
+    Object(
+      orientation:   Orientation.VERTICAL,
+      spacing:       10,
+      margin_start:  10,
+      margin_end:    10,
+      margin_top:    10,
+      margin_bottom: 10
+    );
 
     _win  = win;
     _btns = new HashMap<string,ColorButton>();
 
     /* Add title */
-    var title = new Label( Utils.make_title( _( "Customize Theme" ) + "\n" ) );
-    title.use_markup = true;
-    pack_start( title, false, true );
+    var title = new Label( _( "Customize Theme" ) + "\n" );
+    title.add_css_class( "titled" );
+    append( title );
 
     /* Add name label */
-    var nbox = new Box( Orientation.HORIZONTAL, 10 );
-    var nlbl = new Label( Utils.make_title( _( "Name" ) + ":" ) );
-    nlbl.xalign     = (float)0;
-    nlbl.use_markup = true;
-    _name    = new Entry();
-    _name.focus_out_event.connect((e) => {
+    var nlbl = new Label( _( "Name" ) + ":" ) {
+      xalign = (float)0,
+    };
+    nlbl.add_css_class( "titled" );
+    _name = new Entry();
+    var entry_focus = new EventControllerFocus();
+    _name.add_controller( entry_focus );
+    entry_focus.leave.connect(() => {
       if( !_edit || (_name.text != _orig_theme.name) ) {
         _name.text = _win.themes.uniquify_name( _name.text );
       }
-      return( false );
     });
 
-    nbox.pack_start( nlbl,  false, false );
-    nbox.pack_start( _name, true, true );
-    pack_start( nbox, false, true );
-
-    /* Create scrollable options grid */
-    var sw = new ScrolledWindow( null, null );
-    var vp = new Viewport( null, null );
-    vp.set_size_request( 180, 600 );
-    sw.add( vp );
-    pack_start( sw, true, true );
+    var nbox = new Box( Orientation.HORIZONTAL, 10 ) {
+      halign = Align.FILL
+    };
+    nbox.append( nlbl );
+    nbox.append( _name );
+    append( nbox );
 
     /* Add theme options to grid */
-    var grid = new Grid();
-    grid.row_spacing    = 5;
-    grid.column_spacing = 30;
-    grid.border_width   = 5;
-    vp.add( grid );
+    var grid = new Grid() {
+      row_spacing    = 5,
+      column_spacing = 30,
+      margin_start   = 5,
+      margin_end     = 5,
+      margin_top     = 5,
+      margin_bottom  = 5
+    };
 
-    var color_lbl = new Label( Utils.make_title( _( "Base Colors" ) + "\n" ) );
-    color_lbl.xalign     = (float)0;
-    color_lbl.use_markup = true;
+    /* Create scrollable options grid */
+    var sw = new ScrolledWindow() {
+      vexpand = true,
+      child = grid
+    };
+    sw.child.set_size_request( 180, 600 );
+    append( sw );
+
+    var color_lbl = new Label( _( "Base Colors" ) + "\n" ) {
+      xalign = (float)0,
+    };
+    color_lbl.add_css_class( "titled" );
     grid.attach( color_lbl, 0, 0, 2 );
 
     add_color( _( "Background" ),             "background",            grid, 1 );
@@ -107,24 +124,28 @@ public class ThemeEditor : Gtk.Box {
 
     grid.attach( new Label( "" ), 0, row );
 
-    var dark_lbl        = new Label( Utils.make_title( _( "Prefer Dark Mode" ) ) );
-    dark_lbl.xalign     = (float)0;
-    dark_lbl.use_markup = true;
+    var dark_lbl = new Label( _( "Prefer Dark Mode" ) ) {
+      xalign = (float)0,
+    };
+    dark_lbl.add_css_class( "titled" );
 
-    _prefer_dark = new Switch();
-    _prefer_dark.button_release_event.connect((e) => {
-      _theme.prefer_dark = !_theme.prefer_dark;
-      _win.get_current_da().set_theme( _theme, true );
-      return( false );
+    _prefer_dark = new Switch() {
+      margin_top = 20
+    };
+    _prefer_dark.notify["active"].connect((e) => {
+      if( _ignore ) return;
+      _theme.prefer_dark = _prefer_dark.active;
+      _win.get_current_map().model.set_theme( _theme, true );
     });
 
     grid.attach( dark_lbl,     0, (row + 1) );
     grid.attach( _prefer_dark, 1, (row + 1) );
     grid.attach( new Label( "" ), 0, (row + 2) );
 
-    var link_lbl = new Label( Utils.make_title( _( "Link Colors" ) + "\n" ) );
-    link_lbl.xalign     = (float)0;
-    link_lbl.use_markup = true;
+    var link_lbl = new Label( _( "Link Colors" ) + "\n" ) {
+      xalign = (float)0,
+    };
+    link_lbl.add_css_class( "titled" );
     grid.attach( link_lbl, 0, (row + 3), 2 );
 
     /* Add link colors */
@@ -133,45 +154,54 @@ public class ThemeEditor : Gtk.Box {
     }
 
     /* Create the button bar */
-    var bbox = new Box( Orientation.HORIZONTAL, 5 );
+    _del = new Button.with_label( _( "Delete" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      visible = false
+    };
+    _del.add_css_class( "destructive-action" );
+    _del.clicked.connect( confirm_deletion );
 
-    _delrev = new Revealer();
-    var del = new Button.with_label( _( "Delete" ) );
-    del.get_style_context().add_class( "destructive-action" );
-    del.clicked.connect( confirm_deletion );
-    _delrev.add( del );
+    var l = new Label( "" ) {
+      hexpand = true
+    };
 
-    var cancel = new Button.with_label( _( "Cancel" ) );
+    var cancel = new Button.with_label( _( "Cancel" ) ) {
+      halign = Align.END
+    };
     cancel.clicked.connect( close_window );
 
-    var save = new Button.with_label( _( "Save" ) );
-    save.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+    var save = new Button.with_label( _( "Save" ) ) {
+      halign = Align.END
+    };
+    save.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
     save.clicked.connect( save_theme );
 
-    bbox.pack_start( _delrev, false, false );
-    bbox.pack_end(   save,    false, false );
-    bbox.pack_end(   cancel,  false, false );
+    var bbox = new Box( Orientation.HORIZONTAL, 5 ) {
+      valign = Align.FILL
+    };
+    bbox.append( _del );
+    bbox.append( l );
+    bbox.append( cancel );
+    bbox.append( save );
 
-    pack_end( bbox, false, true );
-
-    border_width = 10;
-
-    show_all();
+    append( bbox );
 
   }
 
   /* Adds a coloring row */
   private void add_color( string lbl_str, string name, Grid grid, int row ) {
 
-    // var lbl        = new Label( Utils.make_title( lbl_str ) );
-    var lbl        = new Label( "  " + lbl_str );
-    lbl.xalign     = (float)0;
-    // lbl.use_markup = true;
+    var lbl = new Label( "  " + lbl_str ) {
+      xalign = (float)0
+    };
 
-    var btn = new ColorButton();
+    var btn = new ColorButton() {
+      valign = Align.CENTER
+    };
     btn.color_set.connect(() => {
       _theme.set_color( name, btn.rgba );
-      _win.get_current_da().set_theme( _theme, true );
+      _win.get_current_map().model.set_theme( _theme, true );
     });
     _btns.set( name, btn );
 
@@ -193,6 +223,8 @@ public class ThemeEditor : Gtk.Box {
       _theme.name = _theme.label = _win.themes.uniquify_name( _( "Custom" ) + " #1" );
     }
 
+    _ignore = true;
+
     /* Initialize the UI */
     var colors = _theme.colors();
     for( int i=0; i<colors.length; i++ ) {
@@ -200,7 +232,9 @@ public class ThemeEditor : Gtk.Box {
     }
     _name.text = _theme.name;
     _prefer_dark.set_active( _theme.prefer_dark );
-    _delrev.reveal_child = edit && !theme.temporary;
+    _del.visible = edit && !theme.temporary;
+
+    _ignore = false;
 
   }
 
@@ -218,35 +252,34 @@ public class ThemeEditor : Gtk.Box {
     dialog.add_action_widget( no, ResponseType.CANCEL );
 
     var yes = new Button.with_label( _( "Yes" ) );
-    yes.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+    yes.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
     dialog.add_action_widget( yes, ResponseType.ACCEPT );
 
     dialog.set_transient_for( _win );
     dialog.set_default_response( ResponseType.ACCEPT );
     dialog.set_title( "" );
 
-    dialog.show_all();
+    dialog.response.connect((id) => {
+      if( id == ResponseType.ACCEPT ) {
+        delete_theme();
+      }
+      dialog.close();
+    });
 
-    var res = dialog.run();
-
-    dialog.destroy();
-
-    if( res == ResponseType.ACCEPT ) {
-      delete_theme();
-    }
+    dialog.present();
 
   }
 
   /* Deletes the current theme */
   private void delete_theme() {
-    _win.get_current_da().set_theme( _win.themes.get_theme( _( "Default" ) ), true );
+    _win.get_current_map().model.set_theme( _win.themes.get_theme( _( "Default" ) ), true );
     _win.themes.delete_theme( _orig_theme.name );
     _win.hide_theme_editor();
   }
 
   /* Hides the theme editor panel without saving */
   private void close_window() {
-    _win.get_current_da().set_theme( _orig_theme, true );
+    _win.get_current_map().model.set_theme( _orig_theme, true );
     _win.hide_theme_editor();
   }
 

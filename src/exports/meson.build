@@ -16,6 +16,7 @@ sources += files(
     'ExportPrint.vala',
     'ExportSVG.vala',
     'ExportText.vala',
+    'ExportWebP.vala',
     'ExportXMind8.vala',
     'ExportXMind2021.vala',
     'ExportYed.vala',

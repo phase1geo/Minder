@@ -32,80 +32,117 @@ public class Animator : Object {
 
   public bool enable { set; get; default = true; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public Animator( DrawArea da ) {
     _da      = da;
     _actions = new Queue<AnimatorAction>();
     _running = false;
   }
 
-  /* Returns true if there is currently an animation in progress */
+  //-------------------------------------------------------------
+  // Returns true if there is currently an animation in progress
   public bool is_running() {
     return( _running );
   }
 
-  /* Animates all of the specified nodes */
-  public void add_nodes( Array<Node> n, string name ) {
+  //-------------------------------------------------------------
+  // Animates all of the specified nodes
+  public void add_nodes( Array<Node> n, bool exclude_selected, string name ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.NODES) ) {
-      _actions.push_tail( new AnimatorNodes( _da, n, name ) );
+      _actions.push_tail( new AnimatorNodes( _da, n, exclude_selected, name ) );
     }
   }
 
-  /* Animates the specified node on the canvas */
+  //-------------------------------------------------------------
+  // Animates the specified node on the canvas
   public void add_node( Node n, string name ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.NODE) ) {
       var ns = new Array<Node>();
       ns.append_val( n );
-      _actions.push_tail( new AnimatorNodes( _da, ns, name ) );
+      _actions.push_tail( new AnimatorNodes( _da, ns, false, name ) );
     }
   }
 
-  /* Animates a fade in/out on the given set of callouts */
+  //-------------------------------------------------------------
+  // Animates a fold of the given set of nodes
+  public void add_nodes_fold( Array<Node> n, Array<Node> nodes, string name ) {
+    if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.FOLD) ) {
+      _actions.push_tail( new AnimatorFold( _da, n, nodes, name ) );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Animates a fade in/out on the given set of callouts
   public void add_callouts_fade( Array<Node> n, bool fade_out, string name ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.FADE) ) {
       _actions.push_tail( new AnimatorFade( _da, n, fade_out, name ) );
     }
   }
 
-  /* Animates a change to the canvas scale */
+  //-------------------------------------------------------------
+  // Animates a change to the canvas scale
   public void add_scale( string name ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.SCALE) ) {
       _actions.push_tail( new AnimatorScale( _da, name ) );
     }
   }
 
-  /* Animates a change to the canvas pan */
+  //-------------------------------------------------------------
+  // Animates a change to the canvas pan
   public void add_pan( string name ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.PAN) ) {
       _actions.push_tail( new AnimatorPan( _da, name ) );
     }
   }
 
-  /* Animates a change to both the canvas scale and pan */
+  //-------------------------------------------------------------
+  // Animates a change to both the canvas scale and pan
   public void add_pan_scale( string name ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.PANSCALE) ) {
       _actions.push_tail( new AnimatorPanScale( _da, name ) );
     }
   }
 
-  /* Animates a change to both the canvas scale while keeping a screen location stable */
+  //-------------------------------------------------------------
+  // Animates a change to both the canvas scale while keeping a
+  // screen location stable
   public void add_scale_in_place( string name, double ssx, double ssy ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.PANSCALE) ) {
       _actions.push_tail( new AnimatorScaleInPlace( _da, name, ssx, ssy ) );
     }
   }
 
-  /* Cancels the last add operation */
-  public void cancel_last_add() {
+  //-------------------------------------------------------------
+  // Clears the save on completion indicator of the last action.
+  public void clear_last_save() {
     if( _actions.length > 0 ) {
-      _actions.pop_tail();
+      _actions.peek_tail().clear_save();
     }
   }
 
-  /*
-   This should be called whenever the drawing area wants to queue an immediate draw.
-   This function will force all of the queued animations to complete immediately.
-  */
+  //-------------------------------------------------------------
+  // Cancels the last add operation if it can be cancelled; otherwise,
+  // force the animation.
+  public void cancel_last_add() {
+    if( _actions.length > 0 ) {
+      var action = _actions.pop_tail();
+      if( action.can_cancel() ) {
+        if( action.save() ) {
+          _da.map.auto_save();
+        }
+        _da.queue_draw();
+      } else {
+        _actions.push_tail( action );
+        animate();
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // This should be called whenever the drawing area wants to
+  // queue an immediate draw.  This function will force all of
+  // the queued animations to complete immediately.
   public void flush() {
     if( _id > 0 ) {
       Source.remove( _id );
@@ -120,13 +157,14 @@ public class Animator : Object {
       }
       _running = false;
       if( save_needed ) {
-        _da.auto_save();
+        _da.map.auto_save();
       }
       _da.queue_draw();
     }
   }
 
-  /* User method which performs the animation */
+  //-------------------------------------------------------------
+  // User method which performs the animation
   public void animate() {
     if( !enable ) {
       var save_needed = false;
@@ -136,7 +174,7 @@ public class Animator : Object {
         action.on_completion( _da );
       }
       if( save_needed ) {
-        _da.auto_save();
+        _da.map.auto_save();
       }
       _da.queue_draw();
       return;
@@ -149,13 +187,14 @@ public class Animator : Object {
     _actions.peek_tail().adjust( _da );
   }
 
-  /* Perform the animation */
+  //-------------------------------------------------------------
+  // Perform the animation
   private bool animate_action() {
     _actions.peek_head().adjust( _da );
     if( _actions.peek_head().done() ) {
       _actions.peek_head().on_completion( _da );
       if( _actions.peek_head().save() ) {
-        _da.auto_save();
+        _da.map.auto_save();
       }
       _actions.pop_head();
     }

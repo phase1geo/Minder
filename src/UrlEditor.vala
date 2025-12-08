@@ -22,73 +22,75 @@
 using Gtk;
 using Gdk;
 
-public class UrlEditor : Popover {
+public class UrlEditor {
 
-  private DrawArea _da;
-  private bool     _add = true;
-  private Entry    _entry;
-  private Button   _apply;
+  private MindMap _map;
+  private Popover _popover;
+  private bool    _add = true;
+  private Entry   _entry;
+  private Button  _apply;
 
   /* Default constructor */
   public UrlEditor( DrawArea da ) {
 
-    _da = da;
+    _map = da.map;
 
-    relative_to = da;
-
-    var box   = new Box( Orientation.VERTICAL, 5 );
-    box.border_width = 5;
-
-    var ebox  = new Box( Orientation.HORIZONTAL, 5 );
-    var lbl   = new Label( _( "URL" ) + ":" );
-    _entry = new Entry();
-    _entry.width_chars = 50;
-    _entry.input_purpose = InputPurpose.URL;
+    var lbl = new Label( _( "URL" ) + ":" );
+    _entry = new Entry() {
+      width_chars   = 50,
+      input_purpose = InputPurpose.URL
+    };
     _entry.activate.connect(() => {
       _apply.activate();
     });
     _entry.changed.connect( check_entry );
 
-    ebox.pack_start( lbl,    false, false );
-    ebox.pack_start( _entry, true,  false );
+    var ebox = new Box( Orientation.HORIZONTAL, 5 );
+    ebox.append( lbl );
+    ebox.append( _entry );
 
-    _apply = new Button.with_label( _( "Apply" ) );
-    _apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+    _apply = new Button.with_label( _( "Apply" ) ) {
+      halign = Align.END,
+      sensitive = false
+    };
+    _apply.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
     _apply.clicked.connect(() => {
       set_url();
-      Utils.hide_popover( this );
+      _popover.popdown();
     });
 
-    var cancel = new Button.with_label( _( "Cancel" ) );
+    var cancel = new Button.with_label( _( "Cancel" ) ) {
+      halign = Align.END,
+      hexpand = true
+    };
     cancel.clicked.connect(() => {
-      var ct = current_text();
+      var ct = _map.get_current_text();
       if( ct != null ) {
         ct.clear_selection();
       }
-      Utils.hide_popover( this );
+      _popover.popdown();
     });
 
     var bbox = new Box( Orientation.HORIZONTAL, 5 );
-    bbox.pack_end( _apply, false, false );
-    bbox.pack_end( cancel, false, false );
+    bbox.append( cancel );
+    bbox.append( _apply );
 
-    box.pack_start( ebox, false, true );
-    box.pack_start( bbox, false, true );
-    box.show_all();
+    var box = new Box( Orientation.VERTICAL, 5 ) {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
+    box.append( ebox );
+    box.append( bbox );
 
-    add( box );
+    // Popover
+    _popover = new Popover() {
+      position = PositionType.TOP,
+      child = box
+    };
+    _popover.set_parent( da );
 
-  }
-
-  /* Returns the current canvas text to operate on */
-  private CanvasText? current_text() {
-    CanvasText? ct = null;
-    if( _da.get_current_node() != null ) {
-      ct = _da.get_current_node().name;
-    } else if( _da.get_current_callout() != null ) {
-      ct = _da.get_current_callout().text;
-    }
-    return( ct );
   }
 
   /*
@@ -104,43 +106,49 @@ public class UrlEditor : Popover {
    popover entry.
   */
   private void set_url() {
-    var node     = _da.get_current_node();
-    var callout  = _da.get_current_callout();
-    var ct       = current_text();
+    var node       = _map.get_current_node();
+    var connection = _map.get_current_connection();
+    var callout    = _map.get_current_callout();
+    var ct         = _map.get_current_text();
     var selected = false;
     if( node != null ) {
       selected = node.mode == NodeMode.CURRENT;
       if( selected ) {
-        _da.set_node_mode( node, NodeMode.EDITABLE );
+        _map.model.set_node_mode( node, NodeMode.EDITABLE );
+      }
+    } else if( connection != null ) {
+      selected = connection.mode == ConnMode.SELECTED;
+      if( selected ) {
+        _map.model.set_connection_mode( connection, ConnMode.EDITABLE );
       }
     } else if( callout != null ) {
       selected = callout.mode == CalloutMode.SELECTED;
       if( selected ) {
-        _da.set_callout_mode( callout, CalloutMode.EDITABLE );
+        _map.model.set_callout_mode( callout, CalloutMode.EDITABLE );
       }
     }
     if( ct != null ) {
       if( !_add ) {
-        ct.remove_tag( FormatTag.URL, _da.undo_text );
+        ct.remove_tag( FormatTag.URL, _map.undo_text );
       }
-      ct.add_tag( FormatTag.URL, _entry.text, false, _da.undo_text );
+      ct.add_tag( FormatTag.URL, _entry.text, false, _map.undo_text );
       ct.clear_selection();
       if( selected ) {
         if( node != null ) {
-          _da.set_node_mode( node, NodeMode.CURRENT );
+          _map.model.set_node_mode( node, NodeMode.CURRENT );
         } else if( callout != null ) {
-          _da.set_callout_mode( callout, CalloutMode.SELECTED );
+          _map.model.set_callout_mode( callout, CalloutMode.SELECTED );
         }
       }
-      _da.queue_draw();
-      _da.auto_save();
+      _map.queue_draw();
+      _map.auto_save();
     }
   }
 
   /* Called when we want to add a URL to the currently selected text of the given node. */
   public void add_url() {
 
-    var ct = current_text();
+    var ct = _map.get_current_text();
 
     int selstart, selend, cursor;
     ct.get_cursor_info( out cursor, out selstart, out selend );
@@ -152,47 +160,44 @@ public class UrlEditor : Popover {
     var int_left = (int)left;
     var int_top  = (int)top;
     Gdk.Rectangle rect = {int_left, int_top, 1, 1};
-    pointing_to = rect;
 
-    _add        = true;
-    _entry.text = get_url_from_clipboard();
+    _add = true;
+    set_url_from_clipboard();
 
-    /* Force a check of the entry data */
-    check_entry();
-
-    Utils.show_popover( this );
+    _popover.pointing_to = rect;
+    _popover.popup();
 
   }
 
   /* Removes the current URLs from the given node */
   public void remove_url() {
-    var ct       = current_text();
-    var node     = _da.get_current_node();
-    var callout  = _da.get_current_callout();
+    var ct       = _map.get_current_text();
+    var node     = _map.get_current_node();
+    var callout  = _map.get_current_callout();
     var selected = false;
     if( node != null ) {
       selected = node.mode == NodeMode.CURRENT;
       if( selected ) {
-        _da.set_node_mode( node, NodeMode.EDITABLE );
+        _map.model.set_node_mode( node, NodeMode.EDITABLE );
       }
     } else if( callout != null ) {
       selected = callout.mode == CalloutMode.SELECTED;
       if( selected ) {
-        _da.set_callout_mode( callout, CalloutMode.EDITABLE );
+        _map.model.set_callout_mode( callout, CalloutMode.EDITABLE );
       }
     }
     if( ct != null ) {
-      ct.remove_tag( FormatTag.URL, _da.undo_text );
+      ct.remove_tag( FormatTag.URL, _map.undo_text );
       ct.clear_selection();
       if( selected ) {
         if( node != null ) {
-          _da.set_node_mode( node, NodeMode.CURRENT );
+          _map.model.set_node_mode( node, NodeMode.CURRENT );
         } else if( callout != null ) {
-          _da.set_callout_mode( callout, CalloutMode.SELECTED );
+          _map.model.set_callout_mode( callout, CalloutMode.SELECTED );
         }
       }
-      _da.queue_draw();
-      _da.auto_save();
+      _map.queue_draw();
+      _map.auto_save();
     }
   }
 
@@ -200,16 +205,25 @@ public class UrlEditor : Popover {
    Returns the URL that is in the clipboard (if one exists); otherwise,
    returns the empty string.
   */
-  private string get_url_from_clipboard() {
-    var clipboard = Clipboard.get_default( Display.get_default() );
-    var text = clipboard.wait_for_text();
-    return( ((text != null) && Utils.is_url( text )) ? text : "" );
+  private void set_url_from_clipboard() {
+    var clipboard   = Display.get_default().get_clipboard();
+    if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
+      try {
+        clipboard.read_text_async.begin( null, (obj, res) => {
+          var text = clipboard.read_text_async.end( res );
+          if( text != null ) {
+            _entry.text = text;
+            check_entry();
+          }
+        });
+      } catch( Error e ) {}
+    }
   }
 
   /* Called when we want to edit the URL of the current node */
   public void edit_url() {
 
-    var ct = current_text();
+    var ct = _map.get_current_text();
 
     int selstart, selend, cursor;
     ct.get_cursor_info( out cursor, out selstart, out selend );
@@ -222,13 +236,13 @@ public class UrlEditor : Popover {
     var int_left = (int)left;
     var int_top  = (int)top;
     Gdk.Rectangle rect = {int_left, int_top, 1, 1};
-    pointing_to = rect;
 
     _add        = false;
     _entry.text = links.index( 0 ).extra;
     _apply.set_sensitive( true );
 
-    Utils.show_popover( this );
+    _popover.pointing_to = rect;
+    _popover.popup();
 
   }
 

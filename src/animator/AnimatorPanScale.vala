@@ -35,6 +35,8 @@ public class AnimatorPanScale : AnimatorAction {
     base( name, false );
     da.get_origin( out _sox, out _soy );
     _sscale = da.sfactor;
+    _sox    = _sox * _sscale;
+    _soy    = _soy * _sscale;
   }
 
   /* Returns the NODES types */
@@ -46,17 +48,26 @@ public class AnimatorPanScale : AnimatorAction {
   public override void capture( DrawArea da ) {
     da.get_origin( out _eox, out _eoy );
     _escale = da.sfactor;
+    _eox    = _eox * _escale;
+    _eoy    = _eoy * _escale;
   }
 
   /* Adjusts the origin for the given frame */
   public override void adjust( DrawArea da ) {
     double divisor = index / frames;
     index++;
-    double origin_x = _sox + ((_eox - _sox) * divisor);
-    double origin_y = _soy + ((_eoy - _soy) * divisor);
     double sf       = _sscale + ((_escale - _sscale) * divisor);
+    double origin_x = (_sox + ((_eox - _sox) * divisor)) / sf;
+    double origin_y = (_soy + ((_eoy - _soy) * divisor)) / sf;
     da.sfactor = sf;
     da.set_origin( origin_x, origin_y );
+  }
+
+  //-------------------------------------------------------------
+  // Only allow this action to be cancelled if the start and
+  // end origin values haven't changed.
+  public override bool can_cancel() {
+    return( (_sox == _eox) && (_soy == _eoy) );
   }
 
 }

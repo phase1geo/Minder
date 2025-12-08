@@ -25,11 +25,11 @@ public class UndoStyleCalloutPointerWidth : UndoStyleChange {
 
   GenericArray<int> _values;
 
-  public UndoStyleCalloutPointerWidth( StyleAffects affects, int pwidth, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleCalloutPointerWidth( StyleAffects affects, int pwidth, MindMap map ) {
+    base( affects, map );
     _values = new GenericArray<int>();
     _values.add( pwidth );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

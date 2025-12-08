@@ -21,124 +21,48 @@
 
 using Gtk;
 
-public class GroupsMenu : Gtk.Menu {
+public class GroupsMenu : BaseMenu {
 
-  DrawArea     _da;
-  Gtk.MenuItem _delete;
-  Gtk.MenuItem _merge;
-  Gtk.MenuItem _note;
-  Gtk.MenuItem _color;
-  Gtk.MenuItem _selnodes;
-  Gtk.MenuItem _selmain;
+  //-------------------------------------------------------------
+  // Default constructor
+  public GroupsMenu( Gtk.Application app, DrawArea da ) {
 
-  /* Default constructor */
-  public GroupsMenu( DrawArea da, AccelGroup accel_group ) {
+    base( app, da, "groups" );
 
-    _da = da;
+    var del_menu = new GLib.Menu();
+    append_menu_item( del_menu, KeyCommand.GROUP_REMOVE, _( "Delete" ) );
 
-    _delete = new Gtk.MenuItem();
-    _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
-    _delete.activate.connect( delete_groups );
+    var change_menu = new GLib.Menu();
+    append_menu_item( change_menu, KeyCommand.EDIT_NOTE, _( "Edit Note" ) );
+    append_menu_item( change_menu, KeyCommand.GROUP_CHANGE_COLOR, _( "Change color…" ) );
+    append_menu_item( change_menu, KeyCommand.GROUP_MERGE,        _( "Merge" ) );
 
-    _merge = new Gtk.MenuItem.with_label( _( "Merge" ) );
-    _merge.activate.connect( merge_groups );
+    var sel_submenu = new GLib.Menu();
+    append_menu_item( sel_submenu, KeyCommand.GROUP_SELECT_MAIN, _( "Top Nodes" ) );
+    append_menu_item( sel_submenu, KeyCommand.GROUP_SELECT_ALL,  _( "All Grouped Nodes" ) );
 
-    _note = new Gtk.MenuItem();
-    _note.add( new Granite.AccelLabel( _( "Edit Note" ), "<Shift>e" ) );
-    _note.activate.connect( edit_note );
+    var sel_menu = new GLib.Menu();
+    sel_menu.append_submenu( _( "Select" ), sel_submenu );
 
-    _color = new Gtk.MenuItem.with_label( _( "Change color…" ) );
-    _color.activate.connect( change_color );
-
-    var selmenu = new Gtk.Menu();
-    var select = new Gtk.MenuItem.with_label( _( "Select" ) );
-    select.set_submenu( selmenu );
-
-    _selmain = new Gtk.MenuItem.with_label( _( "Top Nodes" ) );
-    _selmain.activate.connect( select_main );
-
-    _selnodes = new Gtk.MenuItem.with_label( _( "All Grouped Nodes" ) );
-    _selnodes.activate.connect( select_all );
-
-    selmenu.add( _selmain );
-    selmenu.add( _selnodes );
-
-    /* Add the menu items to the menu */
-    add( _delete );
-    add( new SeparatorMenuItem() );
-    add( _note );
-    add( _color );
-    add( _merge );
-    add( new SeparatorMenuItem() );
-    add( select );
-
-    /* Make the menu visible */
-    show_all();
-
-    /* Make sure that we handle menu state when we are popped up */
-    show.connect( on_popup );
+    menu.append_section( null, del_menu );
+    menu.append_section( null, change_menu );
+    menu.append_section( null, sel_menu );
 
   }
 
-  /* Called when the menu is popped up */
-  private void on_popup() {
+  //-------------------------------------------------------------
+  // Called when the menu is popped up.
+  protected override void on_popup() {
 
-    var groups = _da.get_selected_groups();
+    var groups = map.get_selected_groups();
     var num    = groups.length;
 
-    /* Set the menu sensitivity */
-    _merge.set_sensitive( num > 1 );
+    // Set the menu sensitivity
+    set_enabled( KeyCommand.GROUP_REMOVE, map.editable );
+    set_enabled( KeyCommand.EDIT_NOTE,    map.editable );
+    set_enabled( KeyCommand.GROUP_CHANGE_COLOR, map.editable );
+    set_enabled( KeyCommand.GROUP_MERGE,  ((num > 1) && map.editable) );
 
-  }
-
-  /* Deletes the current group */
-  private void delete_groups() {
-    _da.remove_groups();
-  }
-
-  /* Merges two or more groups into a single group */
-  private void merge_groups() {
-    _da.add_group();
-  }
-
-  /* Edits the group note */
-  private void edit_note() {
-    _da.show_properties( "current", PropertyGrab.NOTE );
-  }
-
-  /* Allows the user to change the color of the selected groups */
-  private void change_color() {
-    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
-    if( color_picker.run() == ResponseType.OK ) {
-      _da.change_group_color( color_picker.get_rgba() );
-    }
-    color_picker.close();
-  }
-
-  /* Selects the top-most nodes in each selected node group */
-  private void select_main() {
-    var groups   = _da.get_selected_groups();
-    var selected = _da.get_selections();
-    for( int i=0; i<groups.length; i++ ) {
-      var nodes = groups.index( i ).nodes;
-      for( int j=0; j<nodes.length; j++ ) {
-        selected.add_node( nodes.index( j ), false );
-      }
-    }
-    selected.clear_groups();
-  }
-
-  /* Selects all of the nodes within the group */
-  private void select_all() {
-    var groups   = _da.get_selected_groups();
-    var selected = _da.get_selections();
-    for( int i=0; i<groups.length; i++ ) {
-      var nodes = groups.index( i ).nodes;
-      for( int j=0; j<nodes.length; j++ ) {
-        selected.add_node_tree( nodes.index( j ), false );
-      }
-    }
-    selected.clear_groups();
   }
 
 }

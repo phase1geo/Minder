@@ -51,14 +51,16 @@ public class TextParser {
 
   public signal void enable_changed();
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public TextParser( string name ) {
     _name   = name;
     _res    = new Array<ReCallback?>();
     _enable = true;
   }
 
-  /* Adds a regular expression to this parser */
+  //-------------------------------------------------------------
+  // Adds a regular expression to this parser
   protected void add_regex( string re, TextMatchCallback func ) {
     try {
       _res.append_val( { new Regex( re, RegexCompileFlags.MULTILINE ), func } );
@@ -68,19 +70,41 @@ public class TextParser {
     }
   }
 
-  /* Helper function that adds the tag for the given parenthesis match */
+  //-------------------------------------------------------------
+  // Helper function that adds the tag for the given parenthesis
+  // match.
   protected void add_tag( FormattedText text, MatchInfo matches, int paren, FormatTag tag, string? extra = null ) {
     int start, end;
     matches.fetch_pos( paren, out start, out end );
     text.add_tag( tag, start, end, true, extra );
   }
 
-  /* Helper function that returns the matched string */
+  //-------------------------------------------------------------
+  // Removes all tags in the range of the given matched parenthesis.
+  protected void remove_tags( FormattedText text, MatchInfo matches, int paren ) {
+    int start, end;
+    matches.fetch_pos( paren, out start, out end );
+    stdout.printf( "Removing all tags from %d to %d\n", start, end );
+    text.remove_all_tags( start, end );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given match range contains the given tag.
+  protected bool within_tag( FormattedText text, MatchInfo matches, int paren, FormatTag tag ) {
+    int start, end;
+    matches.fetch_pos( paren, out start, out end );
+    return( text.is_tag_applied_at_index( tag, start ) );
+  }
+
+  //-------------------------------------------------------------
+  // Helper function that returns the matched string.
   protected string get_text( MatchInfo matches, int paren ) {
     return( matches.fetch( paren ) );
   }
 
-  /* Called to parse the text within the given FormattedText element */
+  //-------------------------------------------------------------
+  // Called to parse the text within the given FormattedText
+  // element.
   public void parse( FormattedText text ) {
     if( !_enable ) return;
     for( int i=0; i<_res.length; i++ ) {
@@ -97,17 +121,21 @@ public class TextParser {
     }
   }
 
-  /* Returns true if the associated tag should enable the associated FormatBar button */
+  //-------------------------------------------------------------
+  // Returns true if the associated tag should enable the associated
+  // FormatBar button.
   public virtual bool tag_handled( FormatTag tag ) {
     return( false );
   }
 
-  /* This is called when the associated FormatBar button is clicked */
+  //-------------------------------------------------------------
+  // This is called when the associated FormatBar button is clicked.
   public virtual void insert_tag( CanvasText ct, FormatTag tag, int start_pos, int end_pos, UndoTextBuffer undo_buffer, string? extra = null ) {
     ct.text.add_tag( tag, start_pos, end_pos, false, extra );
   }
 
-  /* This is called when the associated FormatBar button is unclicked */
+  //-------------------------------------------------------------
+  // This is called when the associated FormatBar button is unclicked.
   public virtual void remove_all_tags( CanvasText ct, int start_pos, int end_pos, UndoTextBuffer undo_buffer ) {
     ct.text.remove_all_tags( start_pos, end_pos );
   }

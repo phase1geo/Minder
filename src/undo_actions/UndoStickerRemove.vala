@@ -25,25 +25,28 @@ public class UndoStickerRemove : UndoItem {
 
   private Sticker _sticker;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoStickerRemove( Sticker sticker ) {
     base( _( "remove sticker" ) );
     _sticker = sticker;
   }
 
-  /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
-    da.stickers.add_sticker( _sticker );
-    da.set_current_sticker( _sticker );
-    da.queue_draw();
-    da.auto_save();
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data.
+  public override void undo( MindMap map ) {
+    map.stickers.add_sticker( _sticker );
+    map.set_current_sticker( _sticker );
+    map.queue_draw();
+    map.auto_save();
   }
 
-  /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
-    da.stickers.remove_sticker( _sticker );
-    da.queue_draw();
-    da.auto_save();
+  //-------------------------------------------------------------
+  // Performs a redo operation.
+  public override void redo( MindMap map ) {
+    map.stickers.remove_sticker( _sticker );
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

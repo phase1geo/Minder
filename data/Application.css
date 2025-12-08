@@ -36,3 +36,31 @@
 .highlighted {
   background: yellow;
 }
+
+.titled {
+  font-weight: bold;
+}
+
+.shortcut-unselected {
+  border: 2px solid transparent;
+}
+
+.shortcut-selected {
+  border: 2px solid grey;
+}
+
+.dim-icon {
+  opacity: 0.3;
+}
+
+.frameless {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+}
+ 
+.widget-selected {
+  background-color: mix(@theme_base_color, @theme_fg_color, 0.08);
+  /* color: @theme_selected_fg_color; */
+}

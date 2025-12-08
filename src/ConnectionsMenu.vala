@@ -21,31 +21,26 @@
 
 using Gtk;
 
-public class ConnectionsMenu : Gtk.Menu {
+public class ConnectionsMenu : BaseMenu {
 
-  DrawArea     _da;
-  Gtk.MenuItem _delete;
+  //-------------------------------------------------------------
+  // Default constructor.
+  public ConnectionsMenu( Gtk.Application app, DrawArea da ) {
 
-  /* Default constructor */
-  public ConnectionsMenu( DrawArea da, AccelGroup accel_group ) {
+    base( app, da, "conns" );
 
-    _da = da;
+    var del_menu = new GLib.Menu();
+    append_menu_item( del_menu, KeyCommand.CONNECTION_REMOVE, _( "Delete" ) );
 
-    _delete = new Gtk.MenuItem();
-    _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
-    _delete.activate.connect( delete_connections );
-
-    /* Add the menu items to the menu */
-    add( _delete );
-
-    /* Make the menu visible */
-    show_all();
+    menu.append_section( null, del_menu );
 
   }
 
-  /* Deletes the current node */
-  private void delete_connections() {
-    _da.delete_connections();
+  //-------------------------------------------------------------
+  // Update state of menu items based on the current state of the
+  // mind map.
+  protected override void on_popup() {
+    set_enabled( KeyCommand.CONNECTION_REMOVE, map.editable );
   }
 
 }

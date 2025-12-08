@@ -23,15 +23,14 @@ using GLib;
 using Gtk;
 using Gee;
 
-public class ImageManager {
+public delegate void ImageIdFunc( int id );
 
-  /* Returns the web pathname used to store downloaded images */
-  private static string get_storage_path() {
-    return( GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "images" ) );
-  }
+public class ImageManager {
 
   /* Private class used by the image manager to store image information */
   private class ImageItem {
+
+    private ImageManager _manager;
 
     public int    id    { set; get; default = -1; }
     public string uri   { set; get; default = ""; }
@@ -39,7 +38,8 @@ public class ImageManager {
     public bool   valid { set; get; default = false; }
 
     /* Default constructor */
-    public ImageItem( string uri ) {
+    public ImageItem( ImageManager manager, string uri ) {
+      _manager   = manager;
       this.id    = Minder.settings.get_int( "image-id" );
       this.uri   = uri;
       this.ext   = get_extension();
@@ -48,7 +48,8 @@ public class ImageManager {
     }
 
     /* Loads the item information from given XML node */
-    public ImageItem.from_xml( Xml.Node* n ) {
+    public ImageItem.from_xml( ImageManager manager, Xml.Node* n ) {
+      _manager = manager;
       string? i = n->get_prop( "id" );
       if( i != null ) {
         id = int.parse( i );
@@ -95,7 +96,7 @@ public class ImageManager {
     /* Returns the full pathname to the given fname */
     public string get_path() {
       var basename = "img%06x%s".printf( id, ext );
-      return( GLib.Path.build_filename( get_storage_path(), basename ) );
+      return( GLib.Path.build_filename( _manager.get_image_dir(), basename ) );
     }
 
     /* Copies the given URI to the given filename in the storage directory */
@@ -121,20 +122,33 @@ public class ImageManager {
   }
 
   private Array<ImageItem> _images;
-  private bool             _available = true;
   private HashMap<int,int> _id_map;
+  private string?          _image_dir = null;
 
   /* Default constructor */
   public ImageManager() {
 
     /* Create the images directory if it does not exist */
-    if( DirUtils.create_with_parents( get_storage_path(), 0775 ) == 0 ) {
-      _available = true;
-    }
+    set_image_dir( get_image_dir() );
 
     /* Allocate the images array */
     _images = new Array<ImageItem>();
     _id_map = new HashMap<int,int>();
+
+  }
+
+  /* Returns the web pathname used to store downloaded images */
+  public string? get_image_dir() {
+    return( _image_dir );
+  }
+
+  /* Sets the image dir to the specified path (pass null to use the default system path) */
+  public void set_image_dir( string? image_dir ) {
+
+    _image_dir = image_dir ?? GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "images" );
+
+    /* Create the images directory if it does not exist */
+    DirUtils.create_with_parents( _image_dir, 0775 );
 
   }
 
@@ -143,7 +157,7 @@ public class ImageManager {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "image" ) {
-          var ii = new ImageItem.from_xml( it );
+          var ii = new ImageItem.from_xml( this, it );
           if( !_id_map.has_key( ii.id ) ) {
             _images.append_val( ii );
           }
@@ -163,8 +177,7 @@ public class ImageManager {
 
   /*
    Searches the list of stored image items, returning the array index
-   of the item that matches.  If no match is found, a value of -1 is
-   returned.
+   of the item that matches.  If no match is found, a value of -1 is returned.
   */
   private ImageItem? find_match( int id ) {
     for( int i=0; i<_images.length; i++ ) {
@@ -196,7 +209,7 @@ public class ImageManager {
   public int add_image( string uri, int? orig_id = null ) {
     var item = find_uri_match( uri );
     if( item == null ) {
-      item = new ImageItem( uri );
+      item = new ImageItem( this, uri );
       if( !item.copy_file() ) return( -1 );
       _images.append_val( item );
     } else if( !item.exists() ) {
@@ -215,7 +228,7 @@ public class ImageManager {
    value of -1.
   */
   public int add_pixbuf( Gdk.Pixbuf buf, int? orig_id = null ) {
-    var item = new ImageItem( "" );
+    var item = new ImageItem( this, "" );
     try {
       buf.save( item.get_path(), "png", null );
       _images.append_val( item );
@@ -293,32 +306,35 @@ public class ImageManager {
    adds the image to the manager and returns the image ID to the calling function.
    If no image was selected, a value of -1 will be returned.
   */
-  public int choose_image( Gtk.Window parent ) {
+  public void choose_image( Gtk.Window parent, ImageIdFunc func ) {
 
     int id = -1;
 
-    var dialog = new FileChooserNative( _( "Select Image" ), parent, FileChooserAction.OPEN, _( "Select" ), _( "Cancel" ) );
-    Utils.set_chooser_folder( dialog );
+    var dialog = Utils.make_file_chooser( _( "Select Image" ), _( "Select" ) );
+    // Utils.set_chooser_folder( dialog );
 
     /* Allow pixbuf image types */
-    FileFilter filter = new FileFilter();
+    var filter  = new FileFilter();
     filter.set_filter_name( _( "Images" ) );
     filter.add_pattern( "*.bmp" );
     filter.add_pattern( "*.png" );
     filter.add_pattern( "*.jpg" );
     filter.add_pattern( "*.jpeg" );
     filter.add_pattern( "*.svg" );
-    dialog.add_filter( filter );
 
-    if( dialog.run() == ResponseType.ACCEPT ) {
-      id = add_image( dialog.get_uri() );
-      Utils.store_chooser_folder( dialog.get_filename(), false );
-    }
+    var filters = new GLib.ListStore( typeof(FileFilter) );
+    filters.append( filter );
+    dialog.set_filters( filters );
 
-    /* Close the dialog */
-    dialog.destroy();
-
-    return( id );
+    dialog.open.begin( parent, null, (obj, res) => {
+      try {
+        var file = dialog.open.end( res );
+        if( file != null ) {
+          id = add_image( file.get_uri() );
+          func( id );
+        }
+      } catch( Error e ) {}
+    });
 
   }
 

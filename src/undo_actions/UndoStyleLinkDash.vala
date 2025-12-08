@@ -26,11 +26,11 @@ public class UndoStyleLinkDash : UndoStyleChange {
   GenericArray<LinkDash> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleLinkDash( StyleAffects affects, LinkDash link_dash, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleLinkDash( StyleAffects affects, LinkDash link_dash, MindMap map ) {
+    base( affects, map );
     _values = new GenericArray<LinkDash>();
     _values.add( link_dash );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

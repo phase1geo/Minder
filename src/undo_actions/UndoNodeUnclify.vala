@@ -27,7 +27,8 @@ public class UndoNodeUnclify : UndoItem {
   private Node _parent;
   private int  _index;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoNodeUnclify( Node node ) {
     base( _( "reparent node" ) );
     _node   = node;
@@ -35,19 +36,23 @@ public class UndoNodeUnclify : UndoItem {
     _index  = node.index();
   }
 
-  /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
-    da.animator.add_nodes( da.get_nodes(), "undo_make_parent_sibling" );
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data.
+  public override void undo( MindMap map ) {
+    map.animator.add_nodes( map.get_nodes(), false, "undo_make_parent_sibling" );
     _node.detach( _node.side );
     _node.attach( _parent, _index, null );
-    da.animator.animate();
-    da.auto_save();
+    map.animator.animate();
+    map.auto_save();
   }
 
-  /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
-    _node.make_parent_sibling( _node.parent, false );
-    da.auto_save();
+  //-------------------------------------------------------------
+  // Performs a redo operation.
+  public override void redo( MindMap map ) {
+    map.animator.add_nodes( map.get_nodes(), false, "redo_make_parent_sibling" );
+    _node.make_parent_sibling();
+    map.animator.animate();
+    map.auto_save();
   }
 
 }

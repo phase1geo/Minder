@@ -21,6 +21,8 @@
 
 using Gtk;
 
+//-------------------------------------------------------------
+// Undo/Redo when moving a node within the same parent.
 public class UndoNodeMove : UndoItem {
 
   private Node         _n;
@@ -31,7 +33,8 @@ public class UndoNodeMove : UndoItem {
   private int          _new_index;
   private SummaryNode? _new_summary;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoNodeMove( Node n, NodeSide old_side, int old_index, SummaryNode? old_summary ) {
     base( _( "move node" ) );
     _n           = n;
@@ -43,10 +46,11 @@ public class UndoNodeMove : UndoItem {
     _new_summary = n.summary_node();
   }
 
-  /* Perform the node move change */
-  public void change( DrawArea da, NodeSide old_side, SummaryNode? old_summary, NodeSide new_side, int new_index, SummaryNode? new_summary ) {
+  //-------------------------------------------------------------
+  // Perform the node move change.
+  public void change( MindMap map, NodeSide old_side, SummaryNode? old_summary, NodeSide new_side, int new_index, SummaryNode? new_summary ) {
     Node parent = _n.parent;
-    da.animator.add_nodes( da.get_nodes(), "undo move" );
+    map.animator.add_nodes( map.model.get_nodes(), false, "undo move" );
     _n.detach( old_side );
     if( old_summary != null ) {
       old_summary.remove_node( _n );
@@ -57,17 +61,20 @@ public class UndoNodeMove : UndoItem {
     if( new_summary != null ) {
       new_summary.add_node( _n );
     }
-    da.animator.animate();
+    map.animator.animate();
+    map.auto_save();
   }
 
-  /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
-    change( da, _new_side, _new_summary, _old_side, _old_index, _old_summary );
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data.
+  public override void undo( MindMap map ) {
+    change( map, _new_side, _new_summary, _old_side, _old_index, _old_summary );
   }
 
-  /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
-    change( da, _old_side, _old_summary, _new_side, _new_index, _new_summary );
+  //-------------------------------------------------------------
+  // Performs a redo operation.
+  public override void redo( MindMap map ) {
+    change( map, _old_side, _old_summary, _new_side, _new_index, _new_summary );
   }
 
 }

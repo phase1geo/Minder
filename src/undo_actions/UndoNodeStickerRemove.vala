@@ -34,17 +34,17 @@ public class UndoNodeStickerRemove : UndoItem {
   }
 
   /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     _node.sticker = _name;
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     _node.sticker = null;
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

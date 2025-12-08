@@ -1,5 +1,6 @@
 src/About.vala
 src/Application.vala
+src/Braindump.vala
 src/CalloutMenu.vala
 src/Callout.vala
 src/CanvasText.vala
@@ -9,7 +10,6 @@ src/ConnectionsMenu.vala
 src/Connection.vala
 src/Document.vala
 src/DrawArea.vala
-src/DynamicNotebook.vala
 src/EmptyInspector.vala
 src/EmptyMenu.vala
 src/Exporter.vala
@@ -29,15 +29,18 @@ src/exports/ExportPNG.vala
 src/exports/ExportPortableMinder.vala
 src/exports/ExportSVG.vala
 src/exports/ExportText.vala
+src/exports/ExportWebP.vala
 src/exports/ExportXMind2021.vala
 src/exports/ExportXMind8.vala
 src/exports/ExportYed.vala
 src/Exports.vala
+src/Export.vala
 src/FormattedText.vala
 src/GroupInspector.vala
 src/GroupsMenu.vala
 src/ImageEditor.vala
 src/ImageManager.vala
+src/KeyCommands.vala
 src/layouts/LayoutDown.vala
 src/layouts/LayoutHorizontal.vala
 src/layouts/LayoutLeft.vala
@@ -47,6 +50,8 @@ src/layouts/LayoutUp.vala
 src/layouts/LayoutVertical.vala
 src/MainWindow.vala
 src/MapInspector.vala
+src/MapModel.vala
+src/MindMap.vala
 src/NodeGroup.vala
 src/NodeInspector.vala
 src/NodeLink.vala
@@ -55,6 +60,7 @@ src/NodesMenu.vala
 src/Node.vala
 src/Preferences.vala
 src/QuickEntry.vala
+src/Shortcuts.vala
 src/StickerInspector.vala
 src/StickerSet.vala
 src/StyleInspector.vala
@@ -69,7 +75,13 @@ src/styles/NodeBorderRounded.vala
 src/styles/NodeBorderSquared.vala
 src/styles/NodeBorderUnderlined.vala
 src/Styles.vala
+src/TagEditor.vala
 src/Tagger.vala
+src/TagInspector.vala
+src/Tags.vala
+src/TemplateEditor.vala
+src/TemplateGroup.vala
+src/Templates.vala
 src/TextMenu.vala
 src/TextParser.vala
 src/ThemeEditor.vala
@@ -120,6 +132,7 @@ src/undo_actions/UndoNodeReparent.vala
 src/undo_actions/UndoNodeReplace.vala
 src/undo_actions/UndoNodeResize.vala
 src/undo_actions/UndoNodesAlign.vala
+src/undo_actions/UndoNodesAttach.vala
 src/undo_actions/UndoNodesCut.vala
 src/undo_actions/UndoNodesDelete.vala
 src/undo_actions/UndoNodeSequences.vala
@@ -131,6 +144,8 @@ src/undo_actions/UndoNodeSort.vala
 src/undo_actions/UndoNodesRandLinkColor.vala
 src/undo_actions/UndoNodesReparentLinkColor.vala
 src/undo_actions/UndoNodesReplace.vala
+src/undo_actions/UndoNodesTagAdd.vala
+src/undo_actions/UndoNodesTagRemove.vala
 src/undo_actions/UndoNodeStickerAdd.vala
 src/undo_actions/UndoNodeStickerChange.vala
 src/undo_actions/UndoNodeStickerRemove.vala
@@ -145,6 +160,9 @@ src/undo_actions/UndoStickerMove.vala
 src/undo_actions/UndoStickerRemove.vala
 src/undo_actions/UndoStickerResize.vala
 src/undo_actions/UndoStyleChange.vala
+src/undo_actions/UndoTagChange.vala
+src/undo_actions/UndoTagsAdd.vala
+src/undo_actions/UndoTagsRemove.vala
 src/undo_actions/UndoTextClearTags.vala
 src/undo_actions/UndoTextDelete.vala
 src/undo_actions/UndoTextInsert.vala
@@ -157,4 +175,3 @@ src/UnicodeInsert.vala
 src/UrlEditor.vala
 src/Utils.vala
 src/ZoomWidget.vala
-data/com.github.phase1geo.minder.shortcuts.ui

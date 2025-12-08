@@ -27,13 +27,15 @@ public class EmptyInspector : Box {
 
   public EmptyInspector( MainWindow win ) {
 
-    var empty_lbl = new Label( "<big>" + _( "Select a node, connection or group\nto view/edit information" ) + "</big>" );
-    empty_lbl.use_markup = true;
-    empty_lbl.justify    = Justification.CENTER;
+    var empty_lbl = new Label( "<big>" + _( "Select a node, connection or group\nto view/edit information" ) + "</big>" ) {
+      halign     = Align.FILL,
+      hexpand    = true,
+      valign     = Align.CENTER,
+      use_markup = true,
+      justify    = Justification.CENTER
+    };
 
-    pack_start( empty_lbl, true, true );
-
-    show_all();
+    append( empty_lbl );
 
   }
 

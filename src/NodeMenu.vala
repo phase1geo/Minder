@@ -21,703 +21,287 @@
 
 using Gtk;
 
-public class NodeMenu : Gtk.Menu {
+public class NodeMenu : BaseMenu {
 
-  DrawArea     _da;
-  Gtk.MenuItem _copy;
-  Gtk.MenuItem _cut;
-  Gtk.MenuItem _paste;
-  Gtk.MenuItem _replace;
-  Gtk.MenuItem _delete;
-  Gtk.MenuItem _delonly;
-  Gtk.MenuItem _edit;
-  Gtk.MenuItem _task;
-  Gtk.MenuItem _note;
-  Gtk.MenuItem _image;
-  Gtk.MenuItem _sticker;
-  Gtk.MenuItem _link;
-  Gtk.MenuItem _conn;
-  Gtk.MenuItem _group;
-  Gtk.MenuItem _callout;
-  Gtk.MenuItem _link_color;
-  Gtk.MenuItem _parent_link_color;
-  Gtk.MenuItem _fold;
-  Gtk.MenuItem _sequence;
-  Gtk.MenuItem _detach;
-  Gtk.MenuItem _root;
-  Gtk.MenuItem _parent;
-  Gtk.MenuItem _child;
-  Gtk.MenuItem _sibling;
-  Gtk.MenuItem _summarize;
-  Gtk.MenuItem _quick_insert;
-  Gtk.MenuItem _quick_replace;
-  Gtk.MenuItem _sortby;
-  Gtk.MenuItem _selroot;
-  Gtk.MenuItem _selnext;
-  Gtk.MenuItem _selprev;
-  Gtk.MenuItem _selchild;
-  Gtk.MenuItem _selchildren;
-  Gtk.MenuItem _seltree;
-  Gtk.MenuItem _selparent;
-  Gtk.MenuItem _selconn;
-  Gtk.MenuItem _sellink;
-  Gtk.MenuItem _selcallout;
-  Gtk.MenuItem _center;
+  private GLib.Menu _edit_menu;
+  private GLib.Menu _change_submenu;
 
-  /* Default constructor */
-  public NodeMenu( DrawArea da, AccelGroup accel_group ) {
+  //-------------------------------------------------------------
+  // Default constructor
+  public NodeMenu( Gtk.Application app, DrawArea da ) {
 
-    _da = da;
+    base( app, da, "node" );
 
-    _copy = new Gtk.MenuItem();
-    _copy.add( new Granite.AccelLabel( _( "Copy" ), "<Control>c" ) );
-    _copy.activate.connect( copy );
+    _edit_menu = new GLib.Menu();
+    append_menu_item( _edit_menu, KeyCommand.EDIT_COPY,          _( "Copy" ) );
+    append_menu_item( _edit_menu, KeyCommand.EDIT_CUT,           _( "Cut" ) );
+    append_menu_item( _edit_menu, KeyCommand.EDIT_PASTE,         _( "Paste" ) );
+    append_menu_item( _edit_menu, KeyCommand.NODE_PASTE_REPLACE, _( "Paste and Replace Node" ) );
+    append_menu_item( _edit_menu, KeyCommand.NODE_REMOVE,        _( "Delete" ) );
+    append_menu_item( _edit_menu, KeyCommand.NODE_REMOVE_ONLY,   _( "Delete Single Node" ) );
 
-    _cut = new Gtk.MenuItem();
-    _cut.add( new Granite.AccelLabel( _( "Cut" ), "<Control>x" ) );
-    _cut.activate.connect( cut );
+    var color_menu = new GLib.Menu();
+    append_menu_item( color_menu, KeyCommand.NODE_CHANGE_LINK_COLOR,    _( "Set to color…" ) );
+    append_menu_item( color_menu, KeyCommand.NODE_RANDOMIZE_LINK_COLOR, _( "Randomize color" ) );
+    append_menu_item( color_menu, KeyCommand.NODE_REPARENT_LINK_COLOR,  _( "Use parent color" ) );
 
-    _paste = new Gtk.MenuItem();
-    _paste.add( new Granite.AccelLabel( _( "Paste" ), "<Control>v" ) );
-    _paste.activate.connect( paste );
+    _change_submenu = new GLib.Menu();
+    append_menu_item( _change_submenu, KeyCommand.EDIT_SELECTED,       _( "Edit Text…" ) );
+    append_menu_item( _change_submenu, KeyCommand.EDIT_NOTE,           _( "Edit Note" ), false );
+    append_menu_item( _change_submenu, KeyCommand.SHOW_TAG_SIDEBAR,    _( "Edit Tags" ), false );
+    append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_TASK,    _( "Add Task" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_IMAGE,   _( "Add Image" ) );
+    append_menu_item( _change_submenu, KeyCommand.REMOVE_STICKER_SELECTED, _( "Remove Sticker" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_LINKS,   _( "Add Node Link" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_ADD_CONNECTION, _( "Add Connection" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_ADD_GROUP,      _( "Add Group" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_CALLOUT, _( "Add Callout" ) );
+    _change_submenu.append_submenu( _( "Link Color" ), color_menu );
+    append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, _( "Fold Children" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_SEQUENCE,      _( "Toggle Sequence" ) );
 
-    _replace = new Gtk.MenuItem();
-    _replace.add( new Granite.AccelLabel( _( "Paste and Replace Node" ), "<Control><Shift>v" ) );
-    _replace.activate.connect( replace );
+    var change_menu = new GLib.Menu();
+    change_menu.append_submenu( _( "Change Node" ), _change_submenu );
 
-    _delete = new Gtk.MenuItem();
-    _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
-    _delete.activate.connect( delete_node );
+    var add_submenu = new GLib.Menu();
+    append_menu_item( add_submenu, KeyCommand.NODE_ADD_ROOT,          _( "Add Root Node" ) );
+    append_menu_item( add_submenu, KeyCommand.NODE_ADD_PARENT,        _( "Add Parent Node" ) );
+    append_menu_item( add_submenu, KeyCommand.NODE_ADD_CHILD,         _( "Add Child Node" ) );
+    append_menu_item( add_submenu, KeyCommand.NODE_ADD_SIBLING_AFTER, _( "Add Sibling Node" ) );
 
-    _delonly = new Gtk.MenuItem.with_label( _( "Delete Single Node" ) );
-    _delonly.activate.connect( delete_node_only );
+    var quick_menu = new GLib.Menu();
+    append_menu_item( quick_menu, KeyCommand.NODE_QUICK_ENTRY_INSERT,  _( "Insert Nodes" ), false );
+    append_menu_item( quick_menu, KeyCommand.NODE_QUICK_ENTRY_REPLACE, _( "Replace Nodes" ), false );
 
-    var change = new Gtk.MenuItem.with_label( _( "Change Node" ) );
-    var change_menu = new Gtk.Menu();
-    change.set_submenu( change_menu );
+    var add_menu = new GLib.Menu();
+    add_menu.append_submenu( _( "Add Node" ), add_submenu );
+    // add_menu.append( _( "Use to Summarize Previous Sibling Nodes" ), "node.action_convert_to_summary_node" );
+    add_menu.append_submenu( _( "Quick Entry" ), quick_menu );
 
-    _edit = new Gtk.MenuItem();
-    _edit.add( new Granite.AccelLabel( _( "Edit Text…" ), "e" ) );
-    _edit.activate.connect( edit_node );
+    var sel_node_menu = new GLib.Menu();
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_ROOT,         _( "Root Node" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_SIBLING_NEXT, _( "Next Sibling Node" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_SIBLING_PREV, _( "Previous Sibling Node" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_CHILD,        _( "Child Node" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_CHILDREN,     _( "Child Nodes" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_TREE,         _( "Subtree" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_PARENT,       _( "Parent Node" ) );
+    append_menu_item( sel_node_menu, KeyCommand.NODE_SELECT_LINKED,       _( "Linked Node" ) );
 
-    _note = new Gtk.MenuItem();
-    _note.add( new Granite.AccelLabel( _( "Edit Note" ), "<Shift>e" ) );
-    _note.activate.connect( edit_note );
+    var sel_other_menu = new GLib.Menu();
+    append_menu_item( sel_other_menu, KeyCommand.NODE_SELECT_CONNECTION, _( "Connection" ) );
+    append_menu_item( sel_other_menu, KeyCommand.NODE_SELECT_CALLOUT,    _( "Callout" ) );
 
-    _task = new Gtk.MenuItem();
-    _task.add( new Granite.AccelLabel( _( "Add Task" ), "t" ) );
-    _task.activate.connect( change_task );
+    var sel_submenu = new GLib.Menu();
+    sel_submenu.append_section( null, sel_node_menu );
+    sel_submenu.append_section( null, sel_other_menu );
 
-    _image = new Gtk.MenuItem();
-    _image.add( new Granite.AccelLabel( _( "Add Image" ), "<Shift>i" ) );
-    _image.activate.connect( change_image );
+    var sel_menu = new GLib.Menu();
+    sel_menu.append_submenu( _( "Select" ), sel_submenu );
+    append_menu_item( sel_menu, KeyCommand.NODE_CENTER, _( "Center Current Node" ) );
 
-    _sticker = new Gtk.MenuItem.with_label( _( "Remove Sticker" ) );
-    _sticker.activate.connect( remove_sticker );
+    var sort_submenu = new GLib.Menu();
+    append_menu_item( sort_submenu, KeyCommand.NODE_SORT_ALPHABETICALLY, _( "Alphabetically" ) );
+    append_menu_item( sort_submenu, KeyCommand.NODE_SORT_RANDOMLY,       _( "Randomly" ) );
 
-    _link = new Gtk.MenuItem();
-    _link.add( new Granite.AccelLabel( _( "Add Node Link" ), "y" ) );
-    _link.activate.connect( change_link );
+    var sort_menu = new GLib.Menu();
+    sort_menu.append_submenu( _( "Sort Children" ), sort_submenu );
 
-    _conn = new Gtk.MenuItem();
-    _conn.add( new Granite.AccelLabel( _( "Add Connection" ), "x" ) );
-    _conn.activate.connect( add_connection );
+    var detach_menu = new GLib.Menu();
+    append_menu_item( detach_menu, KeyCommand.NODE_DETACH, _( "Detach" ) );
 
-    _group = new Gtk.MenuItem();
-    _group.add( new Granite.AccelLabel( _( "Add Group" ), "g" ) );
-    _group.activate.connect( add_group );
-
-    _callout = new Gtk.MenuItem();
-    _callout.add( new Granite.AccelLabel( _( "Add Callout" ), "o" ) );
-    _callout.activate.connect( add_callout );
-
-    _link_color = new Gtk.MenuItem.with_label( _( "Link Color" ) );
-    var link_color_menu = new Gtk.Menu();
-    _link_color.set_submenu( link_color_menu );
-
-    var set_link_color = new Gtk.MenuItem();
-    set_link_color.add( new Granite.AccelLabel( _( "Set to color…" ), "<Shift>l" ) );
-    set_link_color.activate.connect( change_link_color );
-
-    var rand_link_color = new Gtk.MenuItem.with_label( _( "Randomize color" ) );
-    rand_link_color.activate.connect( randomize_link_color );
-
-    _parent_link_color = new Gtk.MenuItem.with_label( _( "Use parent color" ) );
-    _parent_link_color.activate.connect( reparent_link_color );
-
-    _fold = new Gtk.MenuItem();
-    _fold.add( new Granite.AccelLabel( _( "Fold Children" ), "f" ) );
-    _fold.activate.connect( fold_node );
-
-    _sequence = new Gtk.MenuItem();
-    _sequence.add( new Granite.AccelLabel( _( "Toggle Sequence" ), "numbersign" ) );
-    _sequence.activate.connect( toggle_sequence );
-
-    _detach = new Gtk.MenuItem.with_label( _( "Detach" ) );
-    _detach.activate.connect( detach_node );
-
-    var addnode = new Gtk.MenuItem.with_label( _( "Add Node" ) );
-    var addmenu = new Gtk.Menu();
-    addnode.set_submenu( addmenu );
-
-    _root = new Gtk.MenuItem.with_label( _( "Add Root Node" ) );
-    _root.activate.connect( add_root_node );
-
-    _parent = new Gtk.MenuItem.with_label( _( "Add Parent Node" ) );
-    _parent.activate.connect( add_parent_node );
-
-    _child = new Gtk.MenuItem();
-    _child.add( new Granite.AccelLabel( _( "Add Child Node" ), "Tab" ) );
-    _child.activate.connect( add_child_node );
-
-    _sibling = new Gtk.MenuItem();
-    _sibling.add( new Granite.AccelLabel( _( "Add Sibling Node" ), "Return" ) );
-    _sibling.activate.connect( add_sibling_node );
-
-    _summarize = new Gtk.MenuItem();
-    _summarize.add( new Granite.AccelLabel( _( "Use to Summarize Previous Sibling Nodes" ), "<Shift>Tab" ) );
-    _summarize.activate.connect( convert_to_summary_node );
-
-    var quick_menu = new Gtk.Menu();
-    var quick = new Gtk.MenuItem.with_label( _( "Quick Entry" ) );
-    quick.set_submenu( quick_menu );
-
-    _quick_insert = new Gtk.MenuItem();
-    _quick_insert.add( new Granite.AccelLabel( _( "Insert Nodes" ), "<Control><Shift>e" ) );
-    _quick_insert.activate.connect( quick_entry_insert );
-
-    _quick_replace = new Gtk.MenuItem();
-    _quick_replace.add( new Granite.AccelLabel( _( "Replace Nodes" ), "<Control><Shift>r" ) );
-    _quick_replace.activate.connect( quick_entry_replace );
-    // Utils.add_accel_label( _quick_replace, 'r', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK) );
-
-    var selnode = new Gtk.MenuItem.with_label( _( "Select" ) );
-    var selmenu = new Gtk.Menu();
-    selnode.set_submenu( selmenu );
-
-    _selroot = new Gtk.MenuItem();
-    _selroot.add( new Granite.AccelLabel( _( "Root Node" ), "m" ) );
-    _selroot.activate.connect( select_root_node );
-    // Utils.add_accel_label( _selroot, 'm', 0 );
-
-    _selnext = new Gtk.MenuItem();
-    _selnext.add( new Granite.AccelLabel( _( "Next Sibling Node" ), "n" ) );
-    _selnext.activate.connect( select_next_sibling_node );
-    // Utils.add_accel_label( _selnext, 'n', 0 );
-
-    _selprev = new Gtk.MenuItem();
-    _selprev.add( new Granite.AccelLabel( _( "Previous Sibling Node" ), "p" ) );
-    _selprev.activate.connect( select_previous_sibling_node );
-    // Utils.add_accel_label( _selprev, 'p', 0 );
-
-    _selchild = new Gtk.MenuItem();
-    _selchild.add( new Granite.AccelLabel( _( "Child Node" ), "c" ) );
-    _selchild.activate.connect( select_child_node );
-    // Utils.add_accel_label( _selchild, 'c', 0 );
-
-    _selchildren = new Gtk.MenuItem();
-    _selchildren.add( new Granite.AccelLabel( _( "Child Nodes" ), "d" ) );
-    _selchildren.activate.connect( select_child_nodes );
-    // Utils.add_accel_label( _selchildren, 'd', 0 );
-
-    _seltree = new Gtk.MenuItem();
-    _seltree.add( new Granite.AccelLabel( _( "Subtree" ), "<Shift>d" ) );
-    _seltree.activate.connect( select_node_tree );
-    // Utils.add_accel_label( _seltree, 'd', Gdk.ModifierType.SHIFT_MASK );
-
-    _selparent = new Gtk.MenuItem();
-    _selparent.add( new Granite.AccelLabel( _( "Parent Node" ), "a" ) );
-    _selparent.activate.connect( select_parent_nodes );
-    // Utils.add_accel_label( _selparent, 'a', 0 );
-
-    _sellink = new Gtk.MenuItem();
-    _sellink.add( new Granite.AccelLabel( _( "Linked Node" ), "<Shift>y" ) );
-    _sellink.activate.connect( select_linked_node );
-    // Utils.add_accel_label( _sellink, 'Y', Gdk.ModifierType.SHIFT_MASK );
-
-    _selconn = new Gtk.MenuItem();
-    _selconn.add( new Granite.AccelLabel( _( "Connection" ), "<Shift>x" ) );
-    _selconn.activate.connect( select_connection );
-    // Utils.add_accel_label( _selconn, 'X', Gdk.ModifierType.SHIFT_MASK );
-
-    _selcallout = new Gtk.MenuItem();
-    _selcallout.add( new Granite.AccelLabel( _( "Callout" ), "<Shift>o" ) );
-    _selcallout.activate.connect( select_callout );
-
-    _center = new Gtk.MenuItem();
-    _center.add( new Granite.AccelLabel( _( "Center Current Node" ), "<Shift>c" ) );
-    _center.activate.connect( center_current_node );
-    // Utils.add_accel_label( _center, 'C', Gdk.ModifierType.SHIFT_MASK );
-
-    _sortby = new Gtk.MenuItem.with_label( _( "Sort Children" ) );
-    var sortmenu = new Gtk.Menu();
-    _sortby.set_submenu( sortmenu );
-
-    var sort_alpha = new Gtk.MenuItem.with_label( _( "Alphabetically" ) );
-    sort_alpha.activate.connect( sort_alphabetically );
-
-    var sort_rand = new Gtk.MenuItem.with_label( _( "Randomize" ) );
-    sort_rand.activate.connect( sort_randomly );
-
-    /* Add the menu items to the menu */
-    add( _copy );
-    add( _cut );
-    add( _paste );
-    add( _replace );
-    add( _delete );
-    add( _delonly );
-    add( new SeparatorMenuItem() );
-    add( change );
-    add( new SeparatorMenuItem() );
-    add( addnode );
-    // add( _summarize );
-    add( quick );
-    add( new SeparatorMenuItem() );
-    add( selnode );
-    add( _center );
-    add( new SeparatorMenuItem() );
-    add( _sortby );
-    add( new SeparatorMenuItem() );
-    add( _detach );
-
-    /* Add the items to the change node menu */
-    change_menu.add( _edit );
-    change_menu.add( _note );
-    change_menu.add( _task );
-    change_menu.add( _image );
-    change_menu.add( _sticker );
-    change_menu.add( _link );
-    change_menu.add( _conn );
-    change_menu.add( _group );
-    change_menu.add( _callout );
-    change_menu.add( _link_color );
-    change_menu.add( _fold );
-    change_menu.add( _sequence );
-
-    /* Add the items to the add node menu */
-    addmenu.add( _root );
-    addmenu.add( _parent );
-    addmenu.add( _child );
-    addmenu.add( _sibling );
-
-    /* Add the items to the sort menu */
-    sortmenu.add( sort_alpha );
-    sortmenu.add( sort_rand );
-
-    /* Add the items to the selection menu */
-    selmenu.add( _selroot );
-    selmenu.add( _selnext );
-    selmenu.add( _selprev );
-    selmenu.add( _selchild );
-    selmenu.add( _selchildren );
-    selmenu.add( _seltree );
-    selmenu.add( _selparent );
-    selmenu.add( _sellink );
-    selmenu.add( new SeparatorMenuItem() );
-    selmenu.add( _selconn );
-    selmenu.add( _selcallout );
-
-    /* Add the items to the link color menu */
-    link_color_menu.add( set_link_color );
-    link_color_menu.add( rand_link_color );
-    link_color_menu.add( _parent_link_color );
-
-    /* Add the items to the quick entry menu */
-    quick_menu.add( _quick_insert );
-    quick_menu.add( _quick_replace );
-
-    /* Make the menu visible */
-    show_all();
-
-    /* Make sure that we handle menu state when we are popped up */
-    show.connect( on_popup );
+    menu.append_section( null, _edit_menu );
+    menu.append_section( null, change_menu );
+    menu.append_section( null, add_menu );
+    menu.append_section( null, sel_menu );
+    menu.append_section( null, sort_menu );
+    menu.append_section( null, detach_menu );
 
   }
 
-  /* Returns true if the currently selected node is a task */
+  //-------------------------------------------------------------
+  // Returns true if the currently selected node is a task
   private bool node_is_task() {
-    Node? current = _da.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && current.task_enabled() );
   }
 
-  /* Returns true if the currently selected node task is marked as done */
+  //-------------------------------------------------------------
+  // Returns true if the currently selected node task is marked
+  // as done.
   private bool node_task_is_done() {
-    Node? current = _da.get_current_node();
+    Node? current = map.get_current_node();
     return( node_is_task() && current.task_done() );
   }
 
-  /* Returns true if a note is associated with the currently selected node */
+  //-------------------------------------------------------------
+  // Returns true if a note is associated with the currently
+  // selected node.
   private bool node_has_note() {
-    Node? current = _da.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && (current.note != "") );
   }
 
-  /* Returns true if an image is associated with the currently selected node */
+  //-------------------------------------------------------------
+  // Returns true if an image is associated with the currently
+  // selected node.
   private bool node_has_image() {
-    Node? current = _da.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && (current.image != null) );
   }
 
-  /* Returns true if an node link is associated with the currently selected node */
+  //-------------------------------------------------------------
+  // Returns true if an node link is associated with the currently
+  // selected node.
   private bool node_has_link() {
-    Node? current = _da.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && (current.linked_node != null) );
   }
 
-  /* Returns true if a callout is associated with the currently selected node */
+  //-------------------------------------------------------------
+  // Returns true if a callout is associated with the currently
+  // selected node.
   private bool node_has_callout() {
-    var current = _da.get_current_node();
-    return( (current != null) && (current.callout != null) );
+    return( map.model.node_has_callout() );
   }
 
-  /* Returns true if there is a currently selected node that is foldable */
+  //-------------------------------------------------------------
+  // Returns true if there is a currently selected node that is
+  // foldable.
   private bool node_foldable() {
-    Node? current = _da.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && !current.is_leaf() );
   }
 
-  /* Returns true if there are two or more nodes in the map and one is selected */
+  //-------------------------------------------------------------
+  // Returns true if there are two or more nodes in the map and
+  // one is selected.
   private bool node_linkable() {
-    Node? current = _da.get_current_node();
-    return( (current != null) && (!current.is_root() || (_da.get_nodes().length > 1)) );
+    Node? current = map.get_current_node();
+    return( (current != null) && (!current.is_root() || (map.get_nodes().length > 1)) );
   }
 
-  /* Returns true if the currently selected node can have a parent node added */
+  //-------------------------------------------------------------
+  // Returns true if the currently selected node can have a parent
+  // node added.
   private bool node_parentable() {
-    Node? current = _da.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && !current.is_root() );
   }
 
-  /* Returns true if the currently selected node has more than one child node */
+  //-------------------------------------------------------------
+  // Returns true if the currently selected node has more than
+  // one child node.
   private bool node_sortable() {
-    Node? current = _da.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && (current.children().length > 1) );
   }
 
-  /*
-   Returns true if there is a currently selected node that is currently
-   folded.
-  */
+  //-------------------------------------------------------------
+  // Returns true if there is a currently selected node that is
+  // currently folded.
   private bool node_is_folded() {
-    Node? current = _da.get_current_node();
+    Node? current = map.get_current_node();
     return( (current != null) && current.folded );
   }
 
-  /* Called when the menu is popped up */
-  private void on_popup() {
+  //-------------------------------------------------------------
+  // Changes the menu item at the given position in the given Menu
+  // to the new name.
+  private void change_menu( GLib.Menu menu, int pos, string new_name, string action ) {
+    menu.remove( pos );
+    menu.insert( pos, new_name, action );
+  }
 
-    var current = _da.get_current_node();
+  //-------------------------------------------------------------
+  // Called when the menu is popped up.
+  protected override void on_popup() {
 
-    /* Set the menu sensitivity */
-    _paste.set_sensitive( true );
-    _replace.set_sensitive( true );
-    _conn.set_sensitive( !_da.get_connections().hide );
-    _parent.set_sensitive( node_parentable() );
-    _link_color.set_sensitive( !current.is_root() );
-    _parent_link_color.set_sensitive( !current.main_branch() && current.link_color_root );
-    _fold.set_sensitive( node_foldable() );
-    _sequence.set_sensitive( _da.sequences_togglable() );
-    _link.set_sensitive( node_linkable() );
-    _detach.set_sensitive( _da.detachable() );
-    _sortby.set_sensitive( node_sortable() );
-    _selroot.set_sensitive( _da.root_selectable() );
-    _selnext.set_sensitive( _da.sibling_selectable() );
-    _selprev.set_sensitive( _da.sibling_selectable() );
-    _selchild.set_sensitive( _da.children_selectable() );
-    _selparent.set_sensitive( _da.parent_selectable() );
-    _sellink.set_sensitive( node_has_link() );
-    _selcallout.set_sensitive( node_has_callout() );
-    _sticker.set_sensitive( current.sticker != null );
-    _sibling.set_sensitive( !current.is_summary() );
-    _summarize.set_sensitive( _da.node_summarizable() );
+    var current = map.get_current_node();
 
-    /* Set the menu item labels */
+    // Set the menu item labels
     var task_lbl    = node_is_task()   ?
                       node_task_is_done() ? _( "Remove Task" ) :
                                             _( "Mark Task As Done" ) :
                                             _( "Add Task" );
-    var link_lbl    = node_has_link()  ? _( "Remove Node Link" ) : _( "Add Node Link" );
-    var fold_lbl    = node_is_folded() ? _( "Unfold Children" )  : _( "Fold Children" );
+    var link_lbl    = node_has_link()    ? _( "Remove Node Link" ) : _( "Add Node Link" );
+    var fold_lbl    = node_is_folded()   ? _( "Unfold Children" )  : _( "Fold Children" );
     var callout_lbl = node_has_callout() ? _( "Remove Callout" ) : _( "Add Callout" );
-    var task_acc    = (Granite.AccelLabel)_task.get_child();
-    var link_acc    = (Granite.AccelLabel)_link.get_child();
-    var fold_acc    = (Granite.AccelLabel)_fold.get_child();
-    var callout_acc = (Granite.AccelLabel)_callout.get_child();
+    var img_lbl     = node_has_image()   ? _( "Remove Image" )   : _( "Add Image" );
 
-    _task.get_child().destroy();
-    _task.add( new Granite.AccelLabel( task_lbl, task_acc.accel_string ) );
-    _link.get_child().destroy();
-    _link.add( new Granite.AccelLabel( link_lbl, link_acc.accel_string ) );
-    _fold.get_child().destroy();
-    _fold.add( new Granite.AccelLabel( fold_lbl, fold_acc.accel_string ) );
-    _callout.get_child().destroy();
-    _callout.add( new Granite.AccelLabel( callout_lbl, callout_acc.accel_string ) );
+    change_menu_item_label( _change_submenu, KeyCommand.NODE_CHANGE_TASK,          task_lbl );
+    change_menu_item_label( _change_submenu, KeyCommand.NODE_CHANGE_IMAGE,         img_lbl );
+    change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_LINKS,         link_lbl );
+    change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_CALLOUT,       callout_lbl );
+    change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, fold_lbl );
 
-    _image.get_child().destroy();
-    if( node_has_image() ) {
-      _image.add( new Granite.AccelLabel( _( "Remove Image" ), null ) );
+    // Set the paste and replace text
+    if( MinderClipboard.node_pasteable() ) {
+      change_menu_item_label( _edit_menu, KeyCommand.EDIT_PASTE,         _( "Paste Node As Child" ) );
+      change_menu_item_label( _edit_menu, KeyCommand.NODE_PASTE_REPLACE, _( "Paste and Replace Node" ) );
+    } else if( MinderClipboard.image_pasteable() ) {
+      change_menu_item_label( _edit_menu, KeyCommand.EDIT_PASTE,         _( "Paste Image As Child Node" ) );
+      change_menu_item_label( _edit_menu, KeyCommand.NODE_PASTE_REPLACE, _( "Paste and Replace Node Image" ) );
+    } else if( MinderClipboard.text_pasteable() ) {
+      change_menu_item_label( _edit_menu, KeyCommand.EDIT_PASTE,         _( "Paste Text As Child Node" ) );
+      change_menu_item_label( _edit_menu, KeyCommand.NODE_PASTE_REPLACE, _( "Paste and Replace Node Text" ) );
     } else {
-      _image.add( new Granite.AccelLabel( _( "Add Image" ), "<Shift>i" ) );
+      change_menu_item_label( _edit_menu, KeyCommand.EDIT_PASTE,         _( "Paste" ) );
+      change_menu_item_label( _edit_menu, KeyCommand.NODE_PASTE_REPLACE, _( "Paste and Replace Node" ) );
+      set_enabled( KeyCommand.EDIT_PASTE, false );
+      set_enabled( KeyCommand.NODE_PASTE_REPLACE, false );
     }
 
-    /* Set the paste and replace text */
-    var clipboard = Clipboard.get_default( get_display() );
-    if( clipboard.wait_is_text_available() ) {
-      _paste.label   = _( "Paste Text As Child Node" );
-      _replace.label = _( "Paste and Replace Node Text" );
-    } else if( clipboard.wait_is_image_available() ) {
-      _paste.label   = _( "Paste Image As Child Node" );
-      _replace.label = _( "Paste and Replace Node Image" );
-    } else if( _da.node_pasteable() ) {
-      _paste.label   = _( "Paste Node As Child" );
-      _replace.label = _( "Paste and Replace Node" );
-    } else {
-      _paste.set_sensitive( false );
-      _replace.set_sensitive( false );
-    }
+    var node_pasteable = MinderClipboard.node_pasteable();
 
-    show_all();
+    // Set the menu sensitivity
+    set_enabled( KeyCommand.EDIT_CUT,                  map.editable );
+    set_enabled( KeyCommand.EDIT_PASTE,                (node_pasteable && map.editable) );
+    set_enabled( KeyCommand.NODE_PASTE_REPLACE,        (node_pasteable && map.editable) );
+    set_enabled( KeyCommand.NODE_REMOVE,               map.editable );
+    set_enabled( KeyCommand.NODE_REMOVE_ONLY,          map.editable );
+    set_enabled( KeyCommand.EDIT_SELECTED,             map.editable );
+    set_enabled( KeyCommand.EDIT_NOTE,                 map.editable );
+    set_enabled( KeyCommand.NODE_CHANGE_TASK,          map.editable );
+    set_enabled( KeyCommand.NODE_CHANGE_IMAGE,         map.editable );
+    set_enabled( KeyCommand.NODE_ADD_CONNECTION,       (!map.model.connections.hide && map.editable) );
+    set_enabled( KeyCommand.NODE_ADD_PARENT,           (node_parentable() && map.editable) );
+    set_enabled( KeyCommand.NODE_ADD_GROUP,            map.editable );
+    set_enabled( KeyCommand.NODE_ADD_ROOT,             map.editable );
+    set_enabled( KeyCommand.NODE_ADD_CHILD,            map.editable );
+    set_enabled( KeyCommand.NODE_QUICK_ENTRY_INSERT,   map.editable );
+    set_enabled( KeyCommand.NODE_QUICK_ENTRY_REPLACE,  map.editable );
+    set_enabled( KeyCommand.NODE_CHANGE_LINK_COLOR,    (!current.is_root() && map.editable) );
+    set_enabled( KeyCommand.NODE_RANDOMIZE_LINK_COLOR, (!current.is_root() && map.editable) );
+    set_enabled( KeyCommand.NODE_REPARENT_LINK_COLOR,  (!current.is_root() && !current.main_branch() && current.link_color_root && map.editable) );
+    set_enabled( KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, (node_foldable() && map.editable) );
+    set_enabled( KeyCommand.NODE_TOGGLE_SEQUENCE,      (map.model.sequences_togglable() && map.editable) );
+    set_enabled( KeyCommand.NODE_TOGGLE_LINKS,         (node_linkable() && map.editable) );
+    set_enabled( KeyCommand.NODE_TOGGLE_CALLOUT,       map.editable );
+    set_enabled( KeyCommand.NODE_DETACH,               (map.model.detachable() && map.editable) );
+    set_enabled( KeyCommand.NODE_SORT_ALPHABETICALLY,  (node_sortable() && map.editable) );
+    set_enabled( KeyCommand.NODE_SORT_RANDOMLY,        (node_sortable() && map.editable) );
+    set_enabled( KeyCommand.NODE_SELECT_ROOT,          map.root_selectable() );
+    set_enabled( KeyCommand.NODE_SELECT_SIBLING_NEXT,  map.model.sibling_exists( current ) );
+    set_enabled( KeyCommand.NODE_SELECT_SIBLING_PREV,  map.model.sibling_exists( current ) );
+    set_enabled( KeyCommand.NODE_SELECT_CHILD,         map.children_selectable() );
+    set_enabled( KeyCommand.NODE_SELECT_CHILDREN,      map.children_selectable() );
+    set_enabled( KeyCommand.NODE_SELECT_PARENT,        map.parent_selectable() );
+    set_enabled( KeyCommand.NODE_SELECT_LINKED,        node_has_link() );
+    set_enabled( KeyCommand.NODE_SELECT_CALLOUT,       node_has_callout() );
+    set_enabled( KeyCommand.NODE_SELECT_CONNECTION,    map.editable );
+    set_enabled( KeyCommand.NODE_SELECT_CALLOUT,       map.editable );
+    set_enabled( KeyCommand.REMOVE_STICKER_SELECTED,   ((current.sticker != null) && map.editable) );
+    set_enabled( KeyCommand.NODE_ADD_SIBLING_AFTER,    (!current.is_summary() && map.editable) );
 
-  }
-
-  /* Copies the current node to the clipboard */
-  private void copy() {
-    _da.do_copy();
-  }
-
-  /* Cuts the current node to the clipboard */
-  private void cut() {
-    _da.do_cut();
   }
 
   /*
-   Pastes the node stored in the clipboard as either a root node (if no
-   node is currently selected) or attaches it to the currently selected
-   node.
-  */
-  private void paste() {
-    _da.do_paste( false );
-  }
-
-  /*
-   Replaces the node's text, image or entire node with the contents stored
-   in the clipboard.
-  */
-  private void replace() {
-    _da.do_paste( true );
-  }
-
-  /* Deletes the current node */
-  private void delete_node() {
-    _da.delete_node();
-  }
-
-  /* Deletes just the node that is selected */
-  private void delete_node_only() {
-    _da.delete_nodes();
-  }
-
-  /* Displays the sidebar to edit the node properties */
-  private void edit_node() {
-    var current = _da.get_current_node();
-    _da.set_node_mode( current, NodeMode.EDITABLE );
-    _da.queue_draw();
-  }
-
-  /* Changes the task status of the currently selected node */
-  private void change_task() {
-    if( node_is_task() ) {
-      if( node_task_is_done() ) {
-        _da.change_current_task( false, false );
-      } else {
-        _da.change_current_task( true, true );
-      }
-    } else {
-      _da.change_current_task( true, false );
-    }
-    _da.current_changed( _da );
-  }
-
-  /* Changes the note status of the currently selected node */
-  private void edit_note() {
-    _da.show_properties( "current", PropertyGrab.NOTE );
-  }
-
-  /* Changes the image of the currently selected node */
-  private void change_image() {
-    if( node_has_image() ) {
-      _da.delete_current_image();
-    } else {
-      _da.add_current_image();
-    }
-    _da.current_changed( _da );
-  }
-
-  /* Removes the sticker from the node */
-  private void remove_sticker() {
-    var current = _da.get_current_node();
-    _da.undo_buffer.add_item( new UndoNodeStickerRemove( current ) );
-    current.sticker = null;
-    _da.queue_draw();
-    _da.auto_save();
-  }
-
-  /* Changes the node link of the currently selected node */
-  private void change_link() {
-    if( node_has_link() ) {
-      _da.delete_links();
-    } else {
-      _da.start_connection( false, true );
-    }
-  }
-
-  /* Changes the connection of the currently selected node */
-  private void add_connection() {
-    _da.start_connection( false, false );
-  }
-
-  /* Creates a group from the currently selected node */
-  private void add_group() {
-    _da.add_group();
-  }
-
-  /* Adds a callback to the currently selected node */
-  private void add_callout() {
-    if( node_has_callout() ) {
-      _da.remove_callout();
-    } else {
-      _da.add_callout();
-    }
-  }
-
-  /* Fold the currently selected node */
-  private void fold_node() {
-    _da.change_current_fold( !node_is_folded() );
-  }
-
   //-------------------------------------------------------------
-  // Toggles the sequence indicator of the current node
-  private void toggle_sequence() {
-    _da.toggle_sequence();
+  // Converts the current node into a summary node.
+  private void action_convert_to_summary_node() {
+    map.model.add_summary_node_from_current();
   }
-
-  /* Creates a new root node */
-  private void add_root_node() {
-    _da.add_root_node();
-  }
-
-  /* Creates a new parent node for the current node */
-  private void add_parent_node() {
-    _da.add_parent_node();
-  }
-
-  /* Creates a new child node from the current node */
-  private void add_child_node() {
-    _da.add_child_node();
-  }
-
-  /* Creates a sibling node of the current node */
-  private void add_sibling_node() {
-    _da.add_sibling_node( false );
-  }
-
-  /* Converts the current node into a summary node */
-  private void convert_to_summary_node() {
-    _da.add_summary_node_from_current();
-  }
-
-  /* Show the quick entry insert window */
-  private void quick_entry_insert() {
-    _da.handle_control_E();
-  }
-
-  /* Show the quick entry replace window */
-  private void quick_entry_replace() {
-    _da.handle_control_R();
-  }
-
-  /* Detaches the currently selected node and make it a root node */
-  private void detach_node() {
-    _da.detach();
-  }
-
-  /* Selects the current root node */
-  private void select_root_node() {
-    _da.select_root_node();
-  }
-
-  /* Selects the next sibling node of the current node */
-  private void select_next_sibling_node() {
-    _da.select_sibling_node( 1 );
-  }
-
-  /* Selects the previous sibling node of the current node */
-  private void select_previous_sibling_node() {
-    _da.select_sibling_node( -1 );
-  }
-
-  /* Selects the first child node of the current node */
-  private void select_child_node() {
-    _da.select_child_node();
-  }
-
-  /* Selects all of the child nodes of the current node */
-  private void select_child_nodes() {
-    _da.select_child_nodes();
-  }
-
-  /* Selects all of the descendant nodes of the current node */
-  private void select_node_tree() {
-    _da.select_node_tree();
-  }
-
-  /* Selects the parent node of the current node */
-  private void select_parent_nodes() {
-    _da.select_parent_nodes();
-  }
-
-  /* Selects the node the current node is linked to */
-  private void select_linked_node() {
-    _da.select_linked_node();
-  }
-
-  /* Selects the one of the connections attached to the current node */
-  private void select_connection() {
-    _da.select_attached_connection();
-  }
-
-  /* Selects the associated callout */
-  private void select_callout() {
-    _da.select_callout();
-  }
-
-  /* Centers the current node */
-  private void center_current_node() {
-    _da.center_current_node();
-  }
-
-  private void sort_alphabetically() {
-    _da.sort_alphabetically();
-  }
-
-  private void sort_randomly() {
-    _da.sort_randomly();
-  }
-
-  public void change_link_color() {
-    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
-    if( color_picker.run() == ResponseType.OK ) {
-      _da.change_current_link_color( color_picker.get_rgba() );
-    }
-    color_picker.close();
-  }
-
-  private void randomize_link_color() {
-    _da.randomize_current_link_color();
-  }
-
-  private void reparent_link_color() {
-    _da.reparent_current_link_color();
-  }
+  */
 
 }

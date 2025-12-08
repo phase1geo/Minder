@@ -36,19 +36,19 @@ public class UndoNodeNote : UndoItem {
   }
 
   /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     _node.note = _old_note;
-    da.queue_draw();
-    da.current_changed( da );
-    da.auto_save();
+    map.queue_draw();
+    map.current_changed( map );
+    map.auto_save();
   }
 
   /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     _node.note = _new_note;
-    da.queue_draw();
-    da.current_changed( da );
-    da.auto_save();
+    map.queue_draw();
+    map.current_changed( map );
+    map.auto_save();
   }
 
 }

@@ -34,21 +34,21 @@ public class UndoStickerChange : UndoItem {
   }
 
   /* Changes out the stickers */
-  private void change( DrawArea da, Sticker prev, Sticker next ) {
-    da.stickers.remove_sticker( prev );
-    da.stickers.add_sticker( next );
-    da.queue_draw();
-    da.auto_save();
+  private void change( MindMap map, Sticker prev, Sticker next ) {
+    map.stickers.remove_sticker( prev );
+    map.stickers.add_sticker( next );
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
-    change( da, _new_sticker, _old_sticker );
+  public override void undo( MindMap map ) {
+    change( map, _new_sticker, _old_sticker );
   }
 
   /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
-    change( da, _old_sticker, _new_sticker );
+  public override void redo( MindMap map ) {
+    change( map, _old_sticker, _new_sticker );
   }
 
 }

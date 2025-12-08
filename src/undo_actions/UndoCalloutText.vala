@@ -28,29 +28,29 @@ public class UndoCalloutText : UndoItem {
   private CanvasText _orig_text;
 
   /* Constructor for a node name change */
-  public UndoCalloutText( DrawArea da, Callout callout, CanvasText orig_text ) {
+  public UndoCalloutText( MindMap map, Callout callout, CanvasText orig_text ) {
     base( _( "callout text change" ) );
     _callout   = callout;
-    _text      = new CanvasText( da );
-    _orig_text = new CanvasText( da );
+    _text      = new CanvasText( map );
+    _orig_text = new CanvasText( map );
     _text.copy( callout.text );
     _orig_text.copy( orig_text );
   }
 
   /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     _callout.text.copy( _orig_text );
-    da.queue_draw();
-    da.current_changed( da );
-    da.auto_save();
+    map.queue_draw();
+    map.current_changed( map );
+    map.auto_save();
   }
 
   /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     _callout.text.copy( _text );
-    da.queue_draw();
-    da.current_changed( da );
-    da.auto_save();
+    map.queue_draw();
+    map.current_changed( map );
+    map.auto_save();
   }
 
 }

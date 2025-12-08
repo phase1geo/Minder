@@ -45,6 +45,7 @@ public class Exports {
     add( new ExportPortableMinder(), save_settings );
     add( new ExportSVG(), save_settings );
     add( new ExportText(), save_settings );
+    add( new ExportWebP(), save_settings );
     add( new ExportXMind8(), save_settings );
     add( new ExportXMind2021(), save_settings );
     add( new ExportYed(), save_settings );
@@ -81,6 +82,18 @@ public class Exports {
       }
     }
     return( null );
+  }
+
+  /*
+   Returns the index of the export with the given name.
+  */
+  public int get_index_by_name( string name ) {
+    for( int i=0; i<_exports.length; i++ ) {
+      if (_exports.index( i ).name == name ) {
+        return( i );
+      }
+    }
+    return( -1 );
   }
 
   /* Gets the save filename and creates the parent directory if it doesn't exist */

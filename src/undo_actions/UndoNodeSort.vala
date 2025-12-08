@@ -51,31 +51,35 @@ public class UndoNodeSort : UndoItem {
   private SortNodes? _new    = null;
   private Node       _parent;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoNodeSort( Node parent ) {
     base( _( "sort nodes" ) );
     _parent = parent;
     _old    = new SortNodes( parent );
   }
 
-  /* Perform the swap */
-  private void change( DrawArea da, SortNodes nodes ) {
-    da.animator.add_nodes( da.get_nodes(), "undo sorted nodes" );
+  //-------------------------------------------------------------
+  // Perform the swap.
+  private void change( MindMap map, SortNodes nodes ) {
+    map.animator.add_nodes( map.get_nodes(), false, "undo sorted nodes" );
     nodes.change( _parent );
-    da.animator.animate();
+    map.animator.animate();
   }
 
-  /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data.
+  public override void undo( MindMap map ) {
     if( _new == null ) {
       _new = new SortNodes( _parent );
     }
-    change( da, _old );
+    change( map, _old );
   }
 
-  /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
-    change( da, _new );
+  //-------------------------------------------------------------
+  // Performs a redo operation.
+  public override void redo( MindMap map ) {
+    change( map, _new );
   }
 
 }

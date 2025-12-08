@@ -26,11 +26,8 @@ using Cairo;
 
 public class NodeImage {
 
-  public const int EDIT_WIDTH  = 600;
-  public const int EDIT_HEIGHT = 600;
-
-  private ImageSurface _surface;
-  private Pixbuf       _buf;
+  private Pixbuf _orig;
+  private Pixbuf _buf;
 
   public int  id     { get; set; default = -1; }
   public bool valid  { get; private set; default = false; }
@@ -38,6 +35,16 @@ public class NodeImage {
   public int  crop_y { get; set; default = 0; }
   public int  crop_w { get; set; default = 0; }
   public int  crop_h { get; set; default = 0; }
+  public int  orig_width {
+    get {
+      return( _orig.width );
+    }
+  }
+  public int orig_height {
+    get {
+      return( _orig.height );
+    }
+  }
   public int  width  {
     get {
       return( _buf.width );
@@ -50,14 +57,16 @@ public class NodeImage {
   }
   public bool resizable { get; set; default = true; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public NodeImage( ImageManager im, int id, int width ) {
     if( load( im, id, true ) ) {
       set_width( width );
     }
   }
 
-  /* Constructor from a URI */
+  //-------------------------------------------------------------
+  // Constructor from a URI
   public NodeImage.from_uri( ImageManager im, string uri, int width ) {
     int id = im.add_image( uri );
     if( id != -1 ) {
@@ -69,7 +78,8 @@ public class NodeImage {
     }
   }
 
-  /* Constructor from a pixbuf */
+  //-------------------------------------------------------------
+  // Constructor from a pixbuf
   public NodeImage.from_pixbuf( ImageManager im, Pixbuf buf, int width ) {
     int id = im.add_pixbuf( buf );
     if( id != -1 ) {
@@ -81,7 +91,8 @@ public class NodeImage {
     }
   }
 
-  /* Constructor from another node image */
+  //-------------------------------------------------------------
+  // Constructor from another node image
   public NodeImage.from_node_image( ImageManager im, NodeImage ni, int width ) {
     string uri = im.get_uri( ni.id );
     if( uri != "" ) {
@@ -100,7 +111,8 @@ public class NodeImage {
     }
   }
 
-  /* Constructor from XML file */
+  //-------------------------------------------------------------
+  // Constructor from XML file
   public NodeImage.from_xml( ImageManager im, Xml.Node* n, int width ) {
 
     var resize = false;
@@ -136,7 +148,7 @@ public class NodeImage {
       width  = int.parse( s );
     }
 
-    /* Allocate the image */
+    // Allocate the image
     if( id != -1 ) {
       if( load( im, id, false ) ) {
         set_width( width );
@@ -147,32 +159,32 @@ public class NodeImage {
 
   }
 
-  /* Loads the current file into this structure */
+  //-------------------------------------------------------------
+  // Loads the current file into this structure
   private bool load( ImageManager im, int id, bool init ) {
 
     this.id    = id;
     this.valid = true;
 
-    /* Get the file into the stored pixbuf */
+    // Get the file into the stored pixbuf
     try {
 
-      /* Get the name of the file to read from the ImageManager */
+      // Get the name of the file to read from the ImageManager
       var fname = im.get_file( id );
       if( fname == null ) {
         this.valid = false;
         return( false );
       }
 
-      /* Read in the file into the given buffer */
-      var buf   = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
-      _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
+      // Read in the file into the given buffer
+      _orig = new Pixbuf.from_file( fname );
 
-      /* Initialize the variables */
+      // Initialize the variables
       if( init ) {
         crop_x = 0;
         crop_y = 0;
-        crop_w = _surface.get_width();
-        crop_h = _surface.get_height();
+        crop_w = _orig.width;
+        crop_h = _orig.height;
       }
 
     } catch( Error e ) {
@@ -183,36 +195,19 @@ public class NodeImage {
 
   }
 
-  /*
-   Sets the width of the buffer based to the given value. We will always generate
-   the buffer from the stored surface so that we don't lose resolution when scaling
-   up.
-  */
+  //-------------------------------------------------------------
+  // Sets the width of the buffer based to the given value. We
+  // will always generate the buffer from the stored surface so
+  // that we don't lose resolution when scaling up.
   public void set_width( int width ) {
 
     if( !resizable ) return;
 
-    // Validate crop dimensions to prevent division by zero and invalid scaling
-    if( crop_w <= 0 || crop_h <= 0 ) {
-      stderr.printf( "Warning: Invalid crop dimensions (w=%d, h=%d), skipping resize\n", crop_w, crop_h );
+    if( (crop_w <= 0) || (crop_h <= 0) || (width <= 0) ) {
       return;
     }
 
-    // Ensure target width is positive
-    if( width <= 0 ) {
-      stderr.printf( "Warning: Invalid target width (%d), skipping resize\n", width );
-      return;
-    }
-
-    var scale = (width * 1.0) / crop_w;
-    var buf   = pixbuf_get_from_surface( _surface, crop_x, crop_y, crop_w, crop_h );
-    
-    // Validate the extracted pixbuf
-    if( buf == null ) {
-      stderr.printf( "Warning: Failed to extract pixbuf from surface, skipping resize\n" );
-      return;
-    }
-    
+    var scale      = (width * 1.0) / crop_w;
     var int_crop_h = (int)(crop_h * scale);
     
     // Ensure scaled height is valid for GdkPixbuf
@@ -221,55 +216,64 @@ public class NodeImage {
       int_crop_h = 1;
     }
 
-    // Perform the scaling with validated parameters
-    var scaled_buf = buf.scale_simple( width, int_crop_h, InterpType.BILINEAR );
-    if( scaled_buf != null ) {
-      _buf = scaled_buf;
-    } else {
-      stderr.printf( "Error: GdkPixbuf scaling failed, keeping original buffer\n" );
+    var tmp = new Pixbuf.subpixbuf( _orig, crop_x, crop_y, crop_w, crop_h );
+    if( (tmp == null) || (int_crop_h <= 0) ) {
+      return;
     }
 
+    _buf = tmp.scale_simple( width, int_crop_h, InterpType.BILINEAR ) ?? _buf;
+
   }
 
-  /* Returns the original pixbuf */
-  public ImageSurface? get_surface() {
-    return( _surface );
+  //-------------------------------------------------------------
+  // Returns the original pixbuf
+  public Pixbuf? get_orig_pixbuf() {
+    return( _orig );
   }
 
-  /* Returns a pixbuf */
+  //-------------------------------------------------------------
+  // Returns a pixbuf
   public Pixbuf? get_pixbuf() {
     return( _buf );
   }
 
-  /* Draws the image to the given context */
+  //-------------------------------------------------------------
+  // Draws the image to the given context
   public void draw( Context ctx, double x, double y, double opacity ) {
     cairo_set_source_pixbuf( ctx, _buf, x, y );
     ctx.paint_with_alpha( opacity );
   }
 
-
-  /* Sets the given image widget to the stored pixbuf */
-  public void set_image( Image img ) {
+  //-------------------------------------------------------------
+  // Sets the given image widget to the stored pixbuf
+  public void set_image( Picture img ) {
 
     var scale_width  = 300.0 / _buf.width;
     var scale_height = 300.0 / _buf.height;
     var w            = 300;
     var h            = 300;
 
-    /* Calculate the width and height of the required image */
+    // Calculate the width and height of the required image
     if( scale_width < scale_height ) {
       h = (int)(scale_width * _buf.height);
     } else {
       w = (int)(scale_height * _buf.width);
     }
 
-    /* Create the pixbuf thumbnail and set it in the given image widget */
-    var buf = _buf.scale_simple( w, h, InterpType.BILINEAR );
-    img.set_from_pixbuf( buf );
+    var tmp = new Pixbuf.subpixbuf( _orig, crop_x, crop_y, crop_w, crop_h );
+    if( tmp == null ) {
+      return;
+    }
+
+    // Create the pixbuf thumbnail and set it in the given image widget
+    var buf     = tmp.scale_simple( w, h, InterpType.BILINEAR );
+    var texture = Texture.for_pixbuf( buf );
+    img.set_paintable( (Paintable)texture );
 
   }
 
-  /* Saves the given node image in the given XML node */
+  //-------------------------------------------------------------
+  // Saves the given node image in the given XML node
   public virtual void save( Xml.Node* parent ) {
 
     Xml.Node* n = new Xml.Node( null, "nodeimage" );

@@ -23,8 +23,9 @@ public class LayoutVertical : Layout {
 
   /* Default constructor */
   public LayoutVertical() {
-    name = _( "Vertical" );
-    icon = "minder-layout-vertical-symbolic";
+    name        = _( "Vertical" );
+    light_icon  = "minder-layout-vertical-light-symbolic";
+    dark_icon   = "minder-layout-vertical-dark-symbolic";
     balanceable = true;
   }
 

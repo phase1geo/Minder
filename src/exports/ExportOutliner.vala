@@ -25,23 +25,23 @@ public class ExportOutliner : Export {
 
   /* Constructor */
   public ExportOutliner() {
-    base( "outliner", _( "Outliner" ), { ".outliner" }, true, true, false );
+    base( "outliner", _( "Outliner" ), { ".outliner" }, true, true, false, false );
   }
 
   /* Exports the given drawing area to the file of the given name */
-  public override bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, MindMap map ) {
     Xml.Doc*  doc      = new Xml.Doc( "1.0" );
     Xml.Node* outliner = new Xml.Node( null, "outliner" );
 
     outliner->new_prop( "condensed",   "false" );
-    outliner->new_prop( "show-tasks",  show_tasks( da ).to_string() );
+    outliner->new_prop( "show-tasks",  show_tasks( map ).to_string() );
     outliner->new_prop( "show-depth",  "false" );
-    outliner->new_prop( "markdown",    da.markdown_parser.enable.to_string() );
+    outliner->new_prop( "markdown",    map.markdown_parser.enable.to_string() );
     outliner->new_prop( "blank-rows",  "false" );
     outliner->new_prop( "auto-sizing", "false" );
 
-    outliner->add_child( export_theme( da ) );
-    outliner->add_child( export_top_nodes( da ) );
+    outliner->add_child( export_theme( map ) );
+    outliner->add_child( export_top_nodes( map ) );
     doc->set_root_element( outliner );
     doc->save_format_file( fname, 1 );
     delete doc;
@@ -49,8 +49,8 @@ public class ExportOutliner : Export {
   }
 
   /* Returns true if tasks should be displayed in Outliner */
-  private bool show_tasks( DrawArea da ) {
-    var nodes = da.get_nodes();
+  private bool show_tasks( MindMap map ) {
+    var nodes = map.get_nodes();
     for( int i=0; i<nodes.length; i++ ) {
       if( nodes.index( i ).task_count > 0 ) {
         return( true );
@@ -60,17 +60,17 @@ public class ExportOutliner : Export {
   }
 
   /* Outputs the theme to use */
-  private Xml.Node* export_theme( DrawArea da ) {
+  private Xml.Node* export_theme( MindMap map ) {
     Xml.Node* node = new Xml.Node( null, "theme" );
-    var theme = da.get_theme();
+    var theme = map.get_theme();
     node->set_prop( "name", theme.custom ? "default" : theme.name );
     return( node );
   }
 
   /* Outputs the top-level nodes */
-  private Xml.Node* export_top_nodes( DrawArea da ) {
+  private Xml.Node* export_top_nodes( MindMap map ) {
     Xml.Node* n = new Xml.Node( null, "nodes" );
-    var nodes = da.get_nodes();
+    var nodes = map.get_nodes();
     for( int i=0; i<nodes.length; i++ ) {
       n->add_child( export_node( nodes.index( i ) ) );
     }
@@ -129,7 +129,7 @@ public class ExportOutliner : Export {
    Reads the contents of an Outliner file and creates a new document based on
    the stored information.
   */
-  public override bool import( string fname, DrawArea da ) {
+  public override bool import( string fname, MindMap map ) {
 
     /* Read in the contents of the OPML file */
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
@@ -139,23 +139,23 @@ public class ExportOutliner : Export {
 
     /* Get the dimensions of the window */
     int width, height;
-    da.get_dimensions( out width, out height );
+    map.get_saved_dimensions( out width, out height );
 
     /* Create the root node */
-    var root = new Node.with_name( da, da.get_doc().label, da.layouts.get_default() );
-    root.style = StyleInspector.styles.get_global_style();
+    var root = new Node.with_name( map, map.doc.label, map.layouts.get_default() );
+    root.style = map.global_style;
     root.posx = (width  / 2) - 30;
     root.posy = (height / 2) - 10;
 
     /* Add the root node */
-    da.get_nodes().append_val( root );
+    map.get_nodes().append_val( root );
 
     /* Load the contents of the file */
     for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "theme" :  import_theme( it, da );        break;
-          case "nodes" :  import_nodes( it, da, root );  break;
+          case "theme" :  import_theme( it, map );        break;
+          case "nodes" :  import_nodes( it, map, root );  break;
         }
       }
     }
@@ -167,40 +167,40 @@ public class ExportOutliner : Export {
 
   }
 
-  private void import_theme( Xml.Node* n, DrawArea da ) {
+  private void import_theme( Xml.Node* n, MindMap map ) {
     var m = n->get_prop( "name" );
     if( m != null ) {
-      da.set_theme( da.win.themes.get_theme( m ), false );
+      map.model.set_theme( map.win.themes.get_theme( m ), false );
     }
   }
 
-  private void import_nodes( Xml.Node* n, DrawArea da, Node? parent ) {
+  private void import_nodes( Xml.Node* n, MindMap map, Node? parent ) {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "node") ) {
-        import_node( it, da, parent );
+        import_node( it, map, parent );
       }
     }
   }
 
-  private void import_node( Xml.Node* n, DrawArea da, Node? parent ) {
-    var node = new Node( da, null );
+  private void import_node( Xml.Node* n, MindMap map, Node? parent ) {
+    var node = new Node( map, null );
     var e = n->get_prop( "expanded" );
     if( e != null ) {
       node.folded = !bool.parse( e );
     }
-    node.layout = da.layouts.get_default();
-    node.style  = StyleInspector.styles.get_global_style();
+    node.layout = map.layouts.get_default();
+    node.style  = map.global_style;
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           case "name"  :  import_name( it, node );  break;
           case "note"  :  import_note( it, node );  break;
-          case "nodes" :  import_nodes( it, da, node );  break;
+          case "nodes" :  import_nodes( it, map, node );  break;
         }
       }
     }
     if( (node.name.text.text.strip() != "") || (node.children().length > 0) ) {
-      node.attach( parent, -1, da.get_theme() );
+      node.attach( parent, -1, map.get_theme() );
       var t = n->get_prop( "task" );
       if( (t != null) && node.is_leaf() ) {
         node.enable_task( true );

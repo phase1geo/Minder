@@ -26,7 +26,8 @@ using Gdk;
 using GLib.Math;
 using Gee;
 
-/* Connection mode value for the Connection.mode property */
+//-------------------------------------------------------------
+// Connection mode value for the Connection.mode property.
 public enum ConnMode {
   NONE = 0,    // Normally drawn mode
   LINKING,     // Indicates that the connection is being used to create a node link
@@ -34,13 +35,17 @@ public enum ConnMode {
   SELECTED,    // Indicates that the connection is currently selected
   ADJUSTING,   // Indicates that we are moving the drag handle to change the line shape
   EDITABLE,    // Indicates that the connection title is in edit mode
-  DROPPABLE    // Indicates that the connection is a drop zone for stickers
+  DROPPABLE;   // Indicates that the connection is a drop zone for stickers
+
+  public bool is_connecting() {
+    return( (this == LINKING) || (this == CONNECTING) );
+  }
 }
 
 public class Connection : Object {
 
   private int         RADIUS     = 6;
-  private DrawArea    _da;
+  private MindMap     _map;
   private ConnMode    _mode      = ConnMode.NONE;
   private Node?       _from_node = null;
   private Node?       _to_node   = null;
@@ -118,6 +123,7 @@ public class Connection : Object {
     set {
       if( _style.copy( value ) && (_title != null) ) {
         _title.set_font( _style.connection_font.get_family(), (_style.connection_font.get_size() / Pango.SCALE) );
+        _title.set_text_alignment( _style.connection_text_align );
         _title.max_width = _style.connection_title_width;
         position_title();
       }
@@ -168,36 +174,40 @@ public class Connection : Object {
   public double extent_x2 { get; private set; default = 0.0; }
   public double extent_y2 { get; private set; default = 0.0; }
 
-  /* Default constructor */
-  public Connection( DrawArea da, Node from_node ) {
+  //-------------------------------------------------------------
+  // Default constructor
+  public Connection( MindMap map, Node from_node ) {
     double x, y, w, h;
     from_node.node_bbox( out x, out y, out w, out h );
-    _da        = da;
+    _map       = map;
     _posx      = x + (w / 2);
     _posy      = y + (h / 2);
     _from_node = from_node;
     connect_node( _from_node );
     position_title();
-    _curve     = new Bezier.with_endpoints( da, _posx, _posy, _posx, _posy );
-    style      = StyleInspector.styles.get_global_style();
+    _curve     = new Bezier.with_endpoints( map, _posx, _posy, _posx, _posy );
+    style      = map.global_style;
   }
 
-  /* Constructs a connection based on another connection */
-  public Connection.from_connection( DrawArea da, Connection conn ) {
-    _da    = da;
-    _curve = new Bezier( da );
-    copy( da, conn );
+  //-------------------------------------------------------------
+  // Constructs a connection based on another connection.
+  public Connection.from_connection( MindMap map, Connection conn ) {
+    _map   = map;
+    _curve = new Bezier( map );
+    copy( map, conn );
   }
 
-  /* Constructor from XML data */
-  public Connection.from_xml( DrawArea da, Xml.Node* n, Array<Node> nodes ) {
-    _da   = da;
-    style = StyleInspector.styles.get_global_style();
-    load( da, n, nodes );
+  //-------------------------------------------------------------
+  // Constructor from XML data.
+  public Connection.from_xml( MindMap map, Xml.Node* n, Array<Node> nodes ) {
+    _map  = map;
+    style = map.global_style;
+    load( map, n, nodes );
   }
 
-  /* Copies the given connection to this instance */
-  public void copy( DrawArea da, Connection conn ) {
+  //-------------------------------------------------------------
+  // Copies the given connection to this instance.
+  public void copy( MindMap map, Connection conn ) {
     _from_node = conn._from_node;
     _to_node   = conn._to_node;
     position_title();
@@ -209,7 +219,7 @@ public class Connection : Object {
       _title = null;
     } else {
       if( title == null ) {
-        _title = new CanvasText( da );
+        _title = new CanvasText( map );
         _title.resized.connect( position_title );
       }
       _title.copy( conn.title );
@@ -219,33 +229,47 @@ public class Connection : Object {
     color = conn.color;
   }
 
+  //-------------------------------------------------------------
+  // Returns the width of the embedded sticker (if it exists).
   private int sticker_width( bool add_padding ) {
     var padding = add_padding ? (style.connection_padding ?? 0) : 0;
     return( (_sticker_buf != null) ? (_sticker_buf.width + padding) : 0 );
   }
 
+  //-------------------------------------------------------------
+  // Returns the height of the embedded sticker (if it exists).
   private int sticker_height() {
     return( (_sticker_buf != null) ? _sticker_buf.height : 0 );
   }
 
+  //-------------------------------------------------------------
+  // Returns the width of the connection title (if it exists).
   private int title_width( bool add_padding ) {
     var padding = add_padding ? (style.connection_padding ?? 0) : 0;
     return( (_title != null) ? ((int)_title.width + padding) : 0 );
   }
 
+  //-------------------------------------------------------------
+  // Returns the height of the connection title (if it exists).
   private int title_height() {
     return( (_title != null) ? (int)_title.height : 0 );
   }
 
+  //-------------------------------------------------------------
+  // Returns the width of the note indicator (if it exists).
   private int note_width( bool add_padding ) {
     var padding = add_padding ? (style.connection_padding ?? 0) : 0;
     return( (note.length > 0) ? (11 + padding) : 0 );
   }
 
+  //-------------------------------------------------------------
+  // Returns the height of the note indicator (if it exists).
   private int note_height() {
     return( (note.length > 0) ? 11 : 0 );
   }
 
+  //-------------------------------------------------------------
+  // Returns the overall width of the connection title box.
   private int get_width() {
     var sw = sticker_width( false );
     var tw = title_width( sw > 0 );
@@ -253,6 +277,8 @@ public class Connection : Object {
     return( sw + tw + nw );
   }
 
+  //-------------------------------------------------------------
+  // Returns the overall height of the connection title box.
   private int get_height() {
     int sh = sticker_height();
     int th = title_height();
@@ -262,7 +288,9 @@ public class Connection : Object {
     else                                { return( nh ); }
   }
 
-  /* Returns the canvas box that contains both the from and to nodes */
+  //-------------------------------------------------------------
+  // Returns the canvas box that contains both the from and to
+  // nodes.
   public void bbox( out double x, out double y, out double w, out double h ) {
     double fx, fy, fw, fh;
     double tx, ty, tw, th;
@@ -285,31 +313,34 @@ public class Connection : Object {
     }
   }
 
-  /* Makes sure that the title is ready to be edited */
-  public void edit_title_begin( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Makes sure that the title is ready to be edited.
+  public void edit_title_begin( MindMap map ) {
     if( _title != null ) return;
-    _title = new CanvasText.with_text( da, "" );
+    _title = new CanvasText.with_text( map, "" );
     _title.resized.connect( position_title );
     _title.set_font( style.connection_font.get_family(), (style.connection_font.get_size() / Pango.SCALE) );
     position_title();
   }
 
-  /* Called when the title text is done being edited */
+  //-------------------------------------------------------------
+  // Called when the title text is done being edited.
   public void edit_title_end() {
     if( (_title == null) || (_title.text.text != "") ) return;
     _title.resized.disconnect( position_title );
     _title = null;
   }
 
-  /* Adds a title */
-  public void change_title( DrawArea da, string title, bool allow_empty = false ) {
+  //-------------------------------------------------------------
+  // Adds a title.
+  public void change_title( MindMap map, string title, bool allow_empty = false ) {
     if( (title == "") && !allow_empty ) {
       if( _title != null ) {
         _title.resized.disconnect( position_title );
       }
       _title = null;
     } else if( _title == null ) {
-      _title = new CanvasText.with_text( da, title );
+      _title = new CanvasText.with_text( map, title );
       _title.resized.connect( position_title );
       _title.set_font( style.connection_font.get_family(), (style.connection_font.get_size() / Pango.SCALE) );
       position_title();
@@ -318,7 +349,9 @@ public class Connection : Object {
     }
   }
 
-  /* Positions the given title according to the location of the dragx and dragy values */
+  //-------------------------------------------------------------
+  // Positions the given title according to the location of the
+  // dragx and dragy values.
   private void position_title() {
     if( title != null ) {
       var width   = get_width();
@@ -333,22 +366,24 @@ public class Connection : Object {
     }
   }
 
-  /*
-   This should be called by this class whenever the drag handle needs to be moved.
-   We will automatically update the position of the title after this has been done.
-  */
+  //-------------------------------------------------------------
+  // This should be called by this class whenever the drag handle
+  // needs to be moved.  We will automatically update the position
+  // of the title after this has been done.
   private void set_drag_handle( double dragx, double dragy ) {
     _curve.update_control_from_drag_handle( dragx, dragy );
     position_title();
   }
 
-  /* Connects to the given node */
+  //-------------------------------------------------------------
+  // Connects to the given node.
   public void connect_node( Node node ) {
     node.moved.connect( this.end_moved );
     node.resized.connect( this.end_resized );
   }
 
-  /* Disconnects from the given node */
+  //-------------------------------------------------------------
+  // Disconnects from the given node.
   public void disconnect_node( Node node ) {
     node.moved.disconnect( this.end_moved );
     node.resized.disconnect( this.end_resized );
@@ -357,7 +392,8 @@ public class Connection : Object {
     }
   }
 
-  /* Completes the connection */
+  //-------------------------------------------------------------
+  // Completes the connection.
   public void connect_to( Node node ) {
     double fx, fy, tx, ty;
     double x, y, w, h;
@@ -377,7 +413,8 @@ public class Connection : Object {
     set_connect_point( node );
   }
 
-  /* Called when disconnecting a connection from a node */
+  //-------------------------------------------------------------
+  // Called when disconnecting a connection from a node.
   public void disconnect_from_node( bool from ) {
     if( from ) {
       _curve.get_from_point( out _posx, out _posy );
@@ -391,7 +428,8 @@ public class Connection : Object {
     mode = ConnMode.CONNECTING;
   }
 
-  /* Draws the connections to the given point */
+  //-------------------------------------------------------------
+  // Draws the connections to the given point.
   public void draw_to( double x, double y ) {
     double nx, ny;
     Node node = (_from_node != null) ? _from_node : _to_node;
@@ -404,10 +442,12 @@ public class Connection : Object {
     set_connect_point( node );
   }
 
-  /* Returns true if the currently selected node is a common parent to both the from and to nodes */
+  //-------------------------------------------------------------
+  // Returns true if the currently selected node is a common
+  // parent to both the from and to nodes.
   private bool common_parent_moved( Node node ) {
     var parents = new Array<Node>();
-    _da.get_selections().get_parents( ref parents );
+    _map.selected.get_parents( ref parents );
     for( int i=0; i<parents.length; i++ ) {
       if( node.is_descendant_of( parents.index( i ) ) ) {
         return( true );
@@ -416,7 +456,8 @@ public class Connection : Object {
     return( false );
   }
 
-  /* Handles any position changes of either the to or from node */
+  //-------------------------------------------------------------
+  // Handles any position changes of either the to or from node.
   private void end_moved( Node node, double diffx, double diffy ) {
     double x, y, w, h, dragx, dragy;
     node.node_bbox( out x, out y, out w, out h );
@@ -438,7 +479,8 @@ public class Connection : Object {
     }
   }
 
-  /* Handles any resizing changes of either the to or from node */
+  //-------------------------------------------------------------
+  // Handles any resizing changes of either the to or from node.
   private void end_resized( Node node, double diffw, double diffh ) {
     double x, y, w, h, dragx, dragy;
     node.node_bbox( out x, out y, out w, out h );
@@ -448,15 +490,19 @@ public class Connection : Object {
     dragy += (diffh / 2);
     set_drag_handle( dragx, dragy );
     set_connect_point( _from_node );
-    set_connect_point( _to_node );
+    if( _to_node != null ) {
+      set_connect_point( _to_node );
+    }
   }
 
-  /* Returns true if we are attached to the given node */
+  //-------------------------------------------------------------
+  // Returns true if we are attached to the given node.
   public bool attached_to_node( Node node ) {
     return( (_from_node == node) || (_to_node == node) );
   }
 
-  /* Returns the point to add the connection to based on the node */
+  //-------------------------------------------------------------
+  // Returns the point to add the connection to based on the node.
   private void set_connect_point( Node node ) {
 
     double x, y, w, h;
@@ -476,17 +522,22 @@ public class Connection : Object {
 
   }
 
-  /* Returns true if the given point is within proximity to the stored curve */
+  //-------------------------------------------------------------
+  // Returns true if the given point is within proximity to the
+  // stored curve.
   public bool on_curve( double x, double y ) {
     return( _curve.within_range( x, y ) );
   }
 
-  /* Returns true if the given x/y point lies within a handle located at hx/hy */
+  //-------------------------------------------------------------
+  // Returns true if the given x/y point lies within a handle
+  // located at hx/hy.
   private bool within_handle( double hx, double hy, double x, double y ) {
     return( ((hx - RADIUS) <= x) && (x <= (hx + RADIUS)) && ((hy - RADIUS) <= y) && (y <= (hy + RADIUS)) );
   }
 
-  /* Returns true if the given point is within the drag handle */
+  //-------------------------------------------------------------
+  // Returns true if the given point is within the drag handle.
   public bool within_drag_handle( double x, double y ) {
     if( mode == ConnMode.SELECTED ) {
       double dragx, dragy;
@@ -502,17 +553,23 @@ public class Connection : Object {
     return( false );
   }
 
-  /* Returns true if the given point lies within the from connection handle */
+  //-------------------------------------------------------------
+  // Returns true if the given point lies within the from
+  // connection handle.
   public bool within_from_handle( double x, double y ) {
     return( within_endpoint_handle( true, x, y ) );
   }
 
-  /* Returns true if the given point lies within the from connection handle */
+  //-------------------------------------------------------------
+  // Returns true if the given point lies within the from
+  // connection handle.
   public bool within_to_handle( double x, double y ) {
     return( within_endpoint_handle( false, x, y ) );
   }
 
-  /* Returns true if the given point lies within the from connection handle */
+  //-------------------------------------------------------------
+  // Returns true if the given point lies within the from
+  // connection handle.
   private bool within_endpoint_handle( bool from, double x, double y ) {
     if( mode == ConnMode.SELECTED ) {
       double px, py;
@@ -526,6 +583,8 @@ public class Connection : Object {
     return( false );
   }
 
+  //-------------------------------------------------------------
+  // Returns true if the cursor position lies within the title box.
   public bool within_title_box( double x, double y ) {
     if( (_sticker_buf == null) && (_title == null) && (note.length == 0) ) return( false );
     double bx, by, bw, bh;
@@ -533,12 +592,16 @@ public class Connection : Object {
     return( Utils.is_within_bounds( x, y, bx, by, bw, bh ) );
   }
 
-  /* Returns true if the given coordinates are within the title text area. */
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates are within the title
+  // text area.
   public bool within_title( double x, double y ) {
     return( (_title != null) && _title.is_within( x, y ) );
   }
 
-  /* Returns true if the given coordinates lies within the connection note */
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates lies within the
+  // connection note.
   public bool within_note( double x, double y ) {
     if( note.length == 0 ) return( false );
     double nx, ny, nw, nh;
@@ -546,7 +609,9 @@ public class Connection : Object {
     return( Utils.is_within_bounds( x, y, nx, ny, nw, nh ) );
   }
 
-  /* Returns true if the given coordinates lies within the connection sticker */
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates lies within the
+  // connection sticker.
   public bool within_sticker( double x, double y ) {
     if( _sticker_buf == null ) return( false );
     double sx, sy, sw, sh;
@@ -554,7 +619,8 @@ public class Connection : Object {
     return( Utils.is_within_bounds( x, y, sw, sy, sw, sh ) );
   }
 
-  /* Returns the bounding box for the sticker, title and note icon */
+  //-------------------------------------------------------------
+  // Returns the bounding box for the sticker, title and note icon.
   private void title_bbox( out double x, out double y, out double w, out double h ) {
     var padding = style.connection_padding ?? 0;
     var width   = get_width();
@@ -569,7 +635,9 @@ public class Connection : Object {
     h = height + (padding * 2);
   }
 
-  /* Returns the positional information for where the note item is located (if it exists) */
+  //-------------------------------------------------------------
+  // Returns the positional information for where the note item
+  // is located (if it exists).
   private void note_bbox( out double x, out double y, out double w, out double h ) {
     var width   = get_width();
     var nwidth  = note_width( false );
@@ -584,7 +652,9 @@ public class Connection : Object {
     h = nheight;
   }
 
-  /* Returns the position information for where the sticker item is located (if it exists) */
+  //-------------------------------------------------------------
+  // Returns the position information for where the sticker item
+  // is located (if it exists).
   private void sticker_bbox( out double x, out double y, out double w, out double h ) {
     var width   = get_width();
     var swidth  = sticker_width( false );
@@ -599,7 +669,8 @@ public class Connection : Object {
     h = sheight;
   }
 
-  /* Updates the location of the drag handle */
+  //-------------------------------------------------------------
+  // Updates the location of the drag handle.
   public void move_drag_handle( double x, double y ) {
     mode = ConnMode.ADJUSTING;
     if( title != null ) {
@@ -612,31 +683,32 @@ public class Connection : Object {
     set_connect_point( _to_node );
   }
 
-  /* Loads the connection information */
-  private void load( DrawArea da, Xml.Node* node, Array<Node> nodes ) {
+  //-------------------------------------------------------------
+  // Loads the connection information.
+  private void load( MindMap map, Xml.Node* node, Array<Node> nodes ) {
 
     double dragx = 0, dragy = 0;
 
     string? f = node->get_prop( "from_id" );
     if( f != null ) {
-      _from_node = da.get_node( nodes, int.parse( f ) );
+      _from_node = map.model.get_node( nodes, int.parse( f ) );
       connect_node( _from_node );
     }
 
     string? t = node->get_prop( "to_id" );
     if( t != null ) {
-      _to_node = da.get_node( nodes, int.parse( t ) );
+      _to_node = map.model.get_node( nodes, int.parse( t ) );
       connect_node( _to_node );
     }
 
     string? x = node->get_prop( "drag_x" );
     if( x != null ) {
-      dragx = double.parse( x ) + _da.origin_x;
+      dragx = double.parse( x ) + _map.origin_x;
     }
 
     string? y = node->get_prop( "drag_y" );
     if( y != null ) {
-      dragy = double.parse( y ) + _da.origin_y;
+      dragy = double.parse( y ) + _map.origin_y;
     }
 
     string? n = node->get_prop( "note" );
@@ -646,7 +718,7 @@ public class Connection : Object {
 
     string? c = node->get_prop( "color" );
     if( c != null ) {
-      _color = da.get_theme().get_color( "connection_background" );
+      _color = map.get_theme().get_color( "connection_background" );
       _color.parse( c );
     }
 
@@ -660,7 +732,7 @@ public class Connection : Object {
     double tx, ty, tw, th;
     _from_node.node_bbox( out fx, out fy, out fw, out fh );
     _to_node.node_bbox(   out tx, out ty, out tw, out th );
-    _curve = new Bezier.with_endpoints( _da, (fx + (fw / 2)), (fy + (fh / 2)), (tx + (tw / 2)), (ty + (th / 2)) );
+    _curve = new Bezier.with_endpoints( _map, (fx + (fw / 2)), (fy + (fh / 2)), (tx + (tw / 2)), (ty + (th / 2)) );
     _curve.update_control_from_drag_handle( dragx, dragy );
     set_connect_point( _from_node );
     set_connect_point( _to_node );
@@ -672,7 +744,7 @@ public class Connection : Object {
           case "style" :  style.load_connection( it );  break;
           case "title" :
            if( (it->children != null) && (it->children->type == Xml.ElementType.TEXT_NODE) ) {
-             change_title( da, it->children->get_content() );
+             change_title( map, it->children->get_content() );
            }
            break;
           case "note"  :
@@ -686,13 +758,14 @@ public class Connection : Object {
 
   }
 
-  /* Saves the connection information to the given XML node */
+  //-------------------------------------------------------------
+  // Saves the connection information to the given XML node.
   public void save( Xml.Node* parent ) {
 
     double dragx, dragy;
     _curve.get_drag_point( out dragx, out dragy );
-    dragx -= _da.origin_x;
-    dragy -= _da.origin_y;
+    dragx -= _map.origin_x;
+    dragy -= _map.origin_y;
 
     Xml.Node* n = new Xml.Node( null, "connection" );
     n->set_prop( "from_id", _from_node.id().to_string() );
@@ -718,10 +791,9 @@ public class Connection : Object {
 
   }
 
-  /*
-   Populates the given ListStore with all nodes that have names that match
-   the given string pattern.
-  */
+  //-------------------------------------------------------------
+  // Populates the given ListStore with all nodes that have names
+  // that match the given string pattern.
   public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     var tab = Utils.rootname( tabname );
     if( search_opts[SearchOptions.TITLES] && (title != null) ) {
@@ -742,7 +814,8 @@ public class Connection : Object {
     }
   }
 
-  /* Draws the connection to the given context */
+  //-------------------------------------------------------------
+  // Draws the connection to the given context.
   public virtual void draw( Cairo.Context ctx, Theme theme, bool exporting ) {
 
     /* If either the from or to node is hidden, don't bother to draw ourselves */
@@ -804,10 +877,10 @@ public class Connection : Object {
     /* Draw the arrow */
     if( (mode != ConnMode.SELECTED) || exporting ) {
       if( (style.connection_arrow == "fromto") || (style.connection_arrow == "both") ) {
-        draw_arrow( ctx, style.connection_line_width, end_x, end_y, cx, cy );
+        draw_arrow( ctx, style.connection_line_width, end_x, end_y, cx, cy, style.connection_arrow_size );
       }
       if( (style.connection_arrow == "tofrom") || (style.connection_arrow == "both") ) {
-        draw_arrow( ctx, style.connection_line_width, start_x, start_y, cx, cy );
+        draw_arrow( ctx, style.connection_line_width, start_x, start_y, cx, cy, style.connection_arrow_size );
       }
     }
 
@@ -857,7 +930,8 @@ public class Connection : Object {
 
   }
 
-  /* Draws the sticker associated with this connection, if necessary */
+  //-------------------------------------------------------------
+  // Draws the sticker associated with this connection, if necessary.
   private void draw_sticker( Cairo.Context ctx, Theme theme ) {
 
     if( _sticker_buf != null ) {
@@ -873,9 +947,8 @@ public class Connection : Object {
 
   }
 
-  /*
-   Draws the connection title if it has been enabled.
-  */
+  //-------------------------------------------------------------
+  // Draws the connection title if it has been enabled.
   private void draw_title( Cairo.Context ctx, Theme theme, bool exporting ) {
 
     var    ccolor  = (_color != null) ? _color : theme.get_color( "connection_background" );
@@ -898,14 +971,14 @@ public class Connection : Object {
 
     /* Draw the box */
     ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
-    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
+    Utils.draw_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
     ctx.fill();
 
     /* Draw the droppable indicator, if necessary */
     if( (mode == ConnMode.DROPPABLE) && !exporting ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
       ctx.set_line_width( 4 );
-      Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
+      Utils.draw_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
       ctx.stroke();
     }
 
@@ -937,7 +1010,9 @@ public class Connection : Object {
 
   }
 
-  /* Draws the icon indicating that a note is associated with this node */
+  //-------------------------------------------------------------
+  // Draws the icon indicating that a note is associated with
+  // this node.
   private void draw_note( Cairo.Context ctx, RGBA color ) {
 
     if( note.length > 0 ) {
@@ -966,16 +1041,15 @@ public class Connection : Object {
 
   }
 
-  /*
-   Draws arrow point to the "to" node.  The tailx/y values should be the
-   bezier control point closest to the "to" node.
-  */
-  public static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy, double tailx, double taily, double arrowLength = 0 ) {
+  //-------------------------------------------------------------
+  // Draws arrow point to the "to" node.  The tailx/y values
+  // should be the bezier control point closest to the "to" node.
+  public static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy, double tailx, double taily, int? arrow_size = 0, double arrowLength = 0 ) {
 
     double extlen[8] = {12, 13, 14, 15, 16, 17, 18, 18};
 
     if( arrowLength == 0 ) {
-      arrowLength = extlen[line_width-1];
+      arrowLength = extlen[line_width-1] + ((arrow_size != null) ? (arrow_size * 3) : 0);
     }
 
     var dx = tipx - tailx;
@@ -991,7 +1065,7 @@ public class Connection : Object {
     var x2   = tipx - arrowLength * Math.cos( theta + phi2 );
     var y2   = tipy - arrowLength * Math.sin( theta + phi2 );
 
-    /* Draw the arrow */
+    // Draw the arrow
     ctx.set_line_width( 1 );
     ctx.move_to( tipx, tipy );
     ctx.line_to( x1, y1 );
@@ -1001,27 +1075,32 @@ public class Connection : Object {
 
   }
 
-  /* Makes an icon for the given dash */
-  public static Cairo.Surface make_arrow_icon( string type ) {
+  //-------------------------------------------------------------
+  // Makes an icon for the given dash.
+  public static Paintable make_arrow_icon( string type, bool dark ) {
 
-    Cairo.ImageSurface surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 100, 20 );
-    Cairo.Context      ctx     = new Cairo.Context( surface );
+    var rect = Graphene.Rect.alloc();
+    rect.init( (float)0.0, (float)0.0, (float)100, (float)20 );
 
-    ctx.set_source_rgba( 0.5, 0.5, 0.5, 1 );
-    ctx.set_line_width( 4 );
+    var snapshot = new Gtk.Snapshot();
+    var ctx      = snapshot.append_cairo( rect );
+    var color    = dark ? 1.0 : 0.0;
+
+    ctx.set_source_rgba( color, color, color, 1 );
+    ctx.set_line_width( 2 );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( 15, 10 );
     ctx.line_to( 85, 10 );
     ctx.stroke();
 
     if( (type == "fromto") || (type == "both") ) {
-      draw_arrow( ctx, 4, 90, 10, 10, 10 );
+      draw_arrow( ctx, 2, 90, 10, 10, 10 );
     }
     if( (type == "tofrom") || (type == "both") ) {
-      draw_arrow( ctx, 4, 10, 10, 90, 10 );
+      draw_arrow( ctx, 2, 10, 10, 90, 10 );
     }
 
-    return( surface );
+    return( snapshot.free_to_paintable( null ) );
 
   }
 

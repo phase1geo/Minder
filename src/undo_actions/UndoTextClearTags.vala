@@ -25,7 +25,8 @@ public class UndoTextClearTags : UndoTextItem {
   public int                end   { private set; get; }
   public Array<UndoTagInfo> tags  { private set; get; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoTextClearTags( int start, int end, Array<UndoTagInfo> tags, int cursor ) {
     base( _( "clear formatting" ), UndoTextOp.TAGCLEAR, cursor, cursor );
     this.start = start;
@@ -33,16 +34,17 @@ public class UndoTextClearTags : UndoTextItem {
     this.tags  = tags;
   }
 
-  /* Causes the stored item to be put into the before state */
-  public override void undo_text( DrawArea da, CanvasText ct ) {
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state.
+  public override void undo_text( MindMap map, CanvasText ct ) {
     ct.text.apply_tags( tags, start );
-    da.queue_draw();
+    map.queue_draw();
   }
 
   /* Causes the stored item to be put into the after state */
-  public override void redo_text( DrawArea da, CanvasText ct ) {
+  public override void redo_text( MindMap map, CanvasText ct ) {
     ct.text.remove_all_tags( start, end );
-    da.queue_draw();
+    map.queue_draw();
   }
 
   /* Merges the given item with the current one */

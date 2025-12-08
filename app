@@ -27,7 +27,7 @@ function test {
     initialize
 
     export DISPLAY=:0
-    ./com.github.phase1geo.minder --run-tests
+    tests/minder-regress
     result=$?
 
     export DISPLAY=":0.0"
@@ -47,7 +47,6 @@ case $1 in
     ;;
 "generate-i18n")
     grep -rc _\( * | grep ^src | grep -v :0 | cut -d : -f 1 | sort -o po/POTFILES
-    echo "data/com.github.phase1geo.minder.shortcuts.ui" >> po/POTFILES
     initialize
     ninja com.github.phase1geo.minder-pot
     ninja com.github.phase1geo.minder-update-po
@@ -84,8 +83,8 @@ case $1 in
     ;;
 "debug")
     initialize
-    G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.minder "${@:2}"
-    # G_DEBUG=fatal-warnings gdb --args ./com.github.phase1geo.minder "${@:2}"
+    # G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.minder "${@:2}"
+    G_DEBUG=fatal-warnings gdb --args ./com.github.phase1geo.minder "${@:2}"
     ;;
 "flatpak-debug")
     echo "Run command at prompt: G_DEBUG=fatal-criticals gdb /app/bin/com.github.phase1geo.minder"
@@ -94,16 +93,16 @@ case $1 in
 "test")
     test
     ;;
-"test-run")
-    test
-    ./com.github.phase1geo.minder "${@:2}"
-    ;;
 "uninstall")
     initialize
     sudo ninja uninstall
     ;;
-"flatpak")
-    flatpak-builder --user --install --force-clean ../build-minder com.github.phase1geo.minder.yml
+"elementary")
+    flatpak-builder --user --install --force-clean ../build-minder-elementary com.github.phase1geo.minder.elementary.yml
+    flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" com.github.phase1geo.minder.Debug
+    ;;
+"flathub")
+    flatpak-builder --user --install --force-clean ../build-minder-flathub com.github.phase1geo.minder.flathub.yml
     flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" com.github.phase1geo.minder.Debug
     ;;
 *)
@@ -117,7 +116,6 @@ case $1 in
     echo "  install-deps      Installs missing build dependencies"
     echo "  run               Builds and runs the application (must run install once before successive calls to this command)"
     echo "  test              Builds and runs testing for the application"
-    echo "  test-run          Builds application, runs testing and if successful application is started"
     echo "  uninstall         Removes the application from the system (requires sudo)"
     echo "  flatpak           Builds and installs the Flatpak version of the application"
     ;;

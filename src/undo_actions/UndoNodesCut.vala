@@ -21,66 +21,19 @@
 
 using Gtk;
 
-public class UndoNodesCut : UndoItem {
+public class UndoNodesCut : UndoNodesDelete {
 
-  private class NodeInfo {
-    public Node  node;
-    public Node? parent;
-    public int   index;
-    public NodeInfo( Node n ) {
-      node   = n;
-      parent = n.parent;
-      index  = n.index();
-    }
-  }
-
-  Array<NodeInfo>        _nodes;
-  Array<Connection>      _conns;
-  Array<UndoNodeGroups?> _groups;
-
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoNodesCut( Array<Node> nodes, Array<Connection> conns, Array<UndoNodeGroups?> groups ) {
-    base( _( "cut nodes" ) );
-    _nodes = new Array<NodeInfo>();
-    for( int i=0; i<nodes.length; i++ ) {
-      _nodes.append_val( new NodeInfo( nodes.index( i ) ) );
-    }
-    _conns  = conns;
-    _groups = groups;
+    base( nodes, conns, groups, _( "cut nodes" ) );
   }
 
-  /* Undoes a node deletion */
-  public override void undo( DrawArea da ) {
-    var clipboard = Clipboard.get_default( da.get_display() );
-    clipboard.clear();
-    da.get_selections().clear();
-    for( int i=0; i<_nodes.length; i++ ) {
-      var ni = _nodes.index( i );
-      ni.node.attach_only( ni.parent, ni.index );
-      da.get_selections().add_node( ni.node );
-    }
-    for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().add_connection( _conns.index( i ) );
-    }
-    da.groups.apply_undos( _groups );
-    da.queue_draw();
-    da.auto_save();
-  }
-
-  /* Redoes a node deletion */
-  public override void redo( DrawArea da ) {
-    MinderClipboard.copy_nodes( da );
-    da.get_selections().clear();
-    for( int i=0; i<_nodes.length; i++ ) {
-      UndoNodeGroups? tmp_group = null;
-      _nodes.index( i ).node.delete_only();
-      da.groups.remove_node( _nodes.index( i ).node, ref tmp_group );
-    }
-    for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().remove_connection( _conns.index( i ), false );
-    }
-    da.queue_draw();
-    da.auto_save();
+  //-------------------------------------------------------------
+  // Redoes a node deletion.
+  public override void redo( MindMap map ) {
+    MinderClipboard.copy_nodes( map );
+    base.redo( map );
   }
 
 }

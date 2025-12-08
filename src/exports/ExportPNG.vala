@@ -27,18 +27,18 @@ public class ExportPNG : Export {
 
   /* Constructor */
   public ExportPNG() {
-    base( "png", _( "PNG" ), { ".png" }, true, false, false );
+    base( "png", _( "PNG" ), { ".png" }, true, false, false, true );
   }
 
   /* Default constructor */
-  public override bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, MindMap map ) {
 
     var transparent = get_bool( "transparent" );
     var scale       = get_zoom( "zoom" ) / 100.0;
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
-    da.document_rectangle( out x, out y, out w, out h );
+    map.model.document_rectangle( out x, out y, out w, out h );
 
     w *= scale;
     h *= scale;
@@ -49,7 +49,7 @@ public class ExportPNG : Export {
 
     /* Recreate the image */
     if( !transparent ) {
-      da.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
+      map.canvas.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
     }
 
     /* Translate the image */
@@ -59,7 +59,7 @@ public class ExportPNG : Export {
     context.scale( scale, scale );
 
     /* Draw the image */
-    da.draw_all( context, true );
+    map.model.draw_all( context, true, false );
 
     /* Write the pixbuf to the file */
     var pixbuf = pixbuf_get_from_surface( surface, 0, 0, ((int)w + 20), ((int)h + 20) );
@@ -71,7 +71,13 @@ public class ExportPNG : Export {
     option_keys += "compression";  option_values += value.to_string();
 
     try {
-      pixbuf.savev( fname, "png", option_keys, option_values );
+      if( send_to_clipboard() ) {
+        uint8[] img_data;
+        pixbuf.save_to_bufferv( out img_data, "png", option_keys, option_values );
+        MinderClipboard.copy_image_buffer( img_data );
+      } else {
+        pixbuf.savev( fname, "png", option_keys, option_values );
+      }
     } catch( Error e ) {
       stdout.printf( "Error writing %s: %s\n", name, e.message );
       return( false );

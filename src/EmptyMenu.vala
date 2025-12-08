@@ -21,91 +21,37 @@
 
 using Gtk;
 
-public class EmptyMenu : Gtk.Menu {
-
-  DrawArea     _da;
-  Gtk.MenuItem _paste;
-  Gtk.MenuItem _root;
-  Gtk.MenuItem _quick;
-  Gtk.MenuItem _selroot;
+public class EmptyMenu : BaseMenu {
 
   /* Default constructor */
-  public EmptyMenu( DrawArea da, AccelGroup accel_group ) {
+  public EmptyMenu( Gtk.Application app, DrawArea da ) {
 
-    _da = da;
+    base( app, da, "empty" );
 
-    _paste = new Gtk.MenuItem();
-    _paste.add( new Granite.AccelLabel( _( "Paste" ), "<Control>v" ) );
-    _paste.activate.connect( paste );
+    var edit_menu = new GLib.Menu();
+    append_menu_item( edit_menu, KeyCommand.EDIT_PASTE, _( "Paste" ) );
 
-    _root = new Gtk.MenuItem();
-    _root.add( new Granite.AccelLabel( _( "Add Root Node" ), "Return" ) );
-    _root.activate.connect( add_root_node );
+    var add_menu = new GLib.Menu();
+    append_menu_item( add_menu, KeyCommand.NODE_ADD_SIBLING_AFTER, _( "Add Root Node" ) );
+    append_menu_item( add_menu, KeyCommand.NODE_QUICK_ENTRY_INSERT, _( "Add Nodes With Quick Entry" ) );
 
-    _quick = new Gtk.MenuItem();
-    _quick.add( new Granite.AccelLabel( _( "Add Nodes With Quick Entry" ), "<Control><Shift>e" ) );
-    _quick.activate.connect( add_quick_entry );
+    var sel_menu = new GLib.Menu();
+    append_menu_item( sel_menu, KeyCommand.NODE_SELECT_ROOT, _( "Select First Root Node" ) );
 
-    var selnode = new Gtk.MenuItem.with_label( _( "Select Node" ) );
-    var selmenu = new Gtk.Menu();
-    selnode.set_submenu( selmenu );
+    menu.append_section( null, edit_menu );
+    menu.append_section( null, add_menu );
+    menu.append_section( null, sel_menu );
 
-    _selroot = new Gtk.MenuItem();
-    _selroot.add( new Granite.AccelLabel( _( "Root" ), "m" ) );
-    _selroot.activate.connect( select_root_node );
-
-    /* Add the menu items to the menu */
-    add( _paste );
-    add( new SeparatorMenuItem() );
-    add( _root );
-    add( _quick );
-    add( new SeparatorMenuItem() );
-    add( selnode );
-
-    /* Add the items to the selection menu */
-    selmenu.add( _selroot );
-
-    /* Make the menu visible */
-    show_all();
-
-    /* Make sure that we handle menu state when we are popped up */
-    show.connect( on_popup );
-
-  }
-
-  /* Returns true if there is a currently selected connection */
-  private bool connection_selected() {
-    return( _da.get_current_connection() != null );
   }
 
   /* Called when the menu is popped up */
-  private void on_popup() {
+  protected override void on_popup() {
 
-    /* Set the menu sensitivity */
-    _paste.set_sensitive( _da.node_pasteable() );
-    _root.set_sensitive( !connection_selected() );
-    _selroot.set_sensitive( _da.root_selectable() );
+    set_enabled( KeyCommand.EDIT_PASTE,              (map.model.node_pasteable() && map.editable) );
+    set_enabled( KeyCommand.NODE_ADD_SIBLING_AFTER,  ((map.get_current_connection() == null) && map.editable) );
+    set_enabled( KeyCommand.NODE_QUICK_ENTRY_INSERT, map.editable );
+    set_enabled( KeyCommand.NODE_SELECT_ROOT,        map.root_selectable() );
 
-  }
-
-  /* Pastes node tree as root from clipboard */
-  private void paste() {
-    _da.do_paste( false );
-  }
-
-  /* Creates a new root node */
-  private void add_root_node() {
-    _da.add_root_node();
-  }
-
-  /* Adds top-level nodes via the quick entry facility */
-  private void add_quick_entry() {
-    _da.handle_control_E();
-  }
-
-  /* Selects the current root node */
-  private void select_root_node() {
-    _da.select_root_node();
   }
 
 }

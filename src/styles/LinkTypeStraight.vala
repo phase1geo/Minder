@@ -34,9 +34,14 @@ public class LinkTypeStraight : Object, LinkType {
     return( _( "Straight" ) );
   }
 
-  /* Returns the name of the icon */
-  public string icon_name() {
-    return( "minder-link-straight-symbolic" );
+  /* Returns the name of the light-mode icon */
+  public string light_icon_name() {
+    return( "minder-link-straight-light-symbolic" );
+  }
+
+  /* Returns the name of the dark-mode icon */
+  public string dark_icon_name() {
+    return( "minder-link-straight-dark-symbolic" );
   }
 
   private double adjust_b( NodeSide side, double adjust, double x, double y ) {

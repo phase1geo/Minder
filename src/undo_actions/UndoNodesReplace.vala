@@ -37,25 +37,25 @@ public class UndoNodesReplace : UndoItem {
   }
 
   /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
-    da.replace_node( _new_nodes.index( 0 ), _orig_node );
+  public override void undo( MindMap map ) {
+    map.model.replace_node( _new_nodes.index( 0 ), _orig_node );
     for( int i=1; i<_new_nodes.length; i++ ) {
-      da.remove_root_node( _new_nodes.index( i ) );
+      map.model.remove_root_node( _new_nodes.index( i ) );
     }
-    da.set_current_node( _orig_node );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_node( _orig_node );
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
-    da.replace_node( _orig_node, _new_nodes.index( 0 ) );
+  public override void redo( MindMap map ) {
+    map.model.replace_node( _orig_node, _new_nodes.index( 0 ) );
     for( int i=1; i<_new_nodes.length; i++ ) {
-      da.add_root( _new_nodes.index( i ), -1 );
+      map.model.add_root( _new_nodes.index( i ), -1 );
     }
-    da.set_current_node( _new_nodes.index( 0 ) );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_node( _new_nodes.index( 0 ) );
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

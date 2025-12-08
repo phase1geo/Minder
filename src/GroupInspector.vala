@@ -25,142 +25,162 @@ using Granite.Widgets;
 
 public class GroupInspector : Box {
 
-  private const Gtk.TargetEntry[] DRAG_TARGETS = {
-    {"text/uri-list", 0, 0}
-  };
-
   private ScrolledWindow _sw;
   private NoteView       _note;
-  private DrawArea?      _da        = null;
+  private MindMap?       _map       = null;
   private string         _orig_note = "";
   private NodeGroup?     _group     = null;
 
+  public signal void editable_changed();
+
+  //-------------------------------------------------------------
+  // Constructor
   public GroupInspector( MainWindow win ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
 
-    /* Create the group widgets */
+    // Create the group widgets
     create_title();
     create_note( win );
 
     win.canvas_changed.connect( tab_changed );
-
-    show_all();
+    editable_changed.connect( group_changed );
 
   }
 
-  /* Called whenever the tab in the main window changes */
-  private void tab_changed( DrawArea? da ) {
-    if( _da != null ) {
-      _da.current_changed.disconnect( group_changed );
+  //-------------------------------------------------------------
+  // Called whenever the tab in the main window changes.
+  private void tab_changed( MindMap? map ) {
+    if( _map != null ) {
+      _map.current_changed.disconnect( group_changed );
     }
-    if( da != null ) {
-      da.current_changed.connect( group_changed );
+    _map = map;
+    if( map != null ) {
+      map.current_changed.connect( group_changed );
     }
-    _da = da;
   }
 
-  /* Sets the width of this inspector to the given value */
+  //-------------------------------------------------------------
+  // Sets the width of this inspector to the given value
   public void set_width( int width ) {
     _sw.width_request = width;
   }
 
+  //-------------------------------------------------------------
+  // Creates the title widget
   private void create_title() {
 
-    var title = new Label( "<big>" + _( "Group" ) + "</big>" );
-    title.use_markup = true;
-    title.justify    = Justification.CENTER;
+    var title = new Label( "<big>" + _( "Group" ) + "</big>" ) {
+      use_markup = true,
+      justify    = Justification.CENTER
+    };
 
-    pack_start( title, false, true );
+    append( title );
 
   }
 
-  /* Creates the note widget */
+  //-------------------------------------------------------------
+  // Creates the note widget
   private void create_note( MainWindow win ) {
 
-    Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( Utils.make_title( _( "Note" ) ) );
+    Label lbl = new Label( _( "Note" ) ) {
+      xalign = (float)0,
+    };
+    lbl.add_css_class( "titled" );
 
-    lbl.xalign     = (float)0;
-    lbl.use_markup = true;
-
-    _note = new NoteView();
-    _note.set_wrap_mode( Gtk.WrapMode.WORD );
+    _note = new NoteView() {
+      vexpand   = true,
+      wrap_mode = Gtk.WrapMode.WORD
+    };
     _note.add_unicode_completion( win, win.unicoder );
     _note.buffer.text = "";
-    _note.focus_in_event.connect( note_focus_in );
-    _note.focus_out_event.connect( note_focus_out );
+
+    var focus = new EventControllerFocus();
+    _note.add_controller( focus );
+    focus.enter.connect( note_focus_in );
+    focus.leave.connect( note_focus_out );
+
     _note.node_link_added.connect( note_node_link_added );
     _note.node_link_clicked.connect( note_node_link_clicked );
     _note.node_link_hover.connect( note_node_link_hover );
 
-    _sw = new ScrolledWindow( null, null );
-    _sw.min_content_width  = 300;
-    _sw.min_content_height = 100;
-    _sw.add( _note );
+    _sw = new ScrolledWindow() {
+      min_content_width  = 300,
+      min_content_height = 100,
+      child              = _note
+    };
 
-    box.pack_start( lbl, false, false );
-    box.pack_start( _sw,  true,  true );
+    var box = new Box( Orientation.VERTICAL, 10 ) {
+      margin_bottom = 5
+    };
+    box.append( lbl );
+    box.append( _sw );
 
-    box.margin_bottom = 20;
-
-    pack_start( box, true, true );
+    append( box );
 
   }
 
-  /* Saves the original version of the node's note so that we can */
-  private bool note_focus_in( EventFocus e ) {
-    _group     = _da.get_current_group();
+  //-------------------------------------------------------------
+  // Saves the original version of the node's note so that we can
+  private void note_focus_in() {
+    _group     = _map.get_current_group();
     _orig_note = _note.buffer.text;
-    return( false );
   }
 
-  /* When the note buffer loses focus, save the note change to the undo buffer */
-  private bool note_focus_out( EventFocus e ) {
+  //-------------------------------------------------------------
+  // When the note buffer loses focus, save the note change to
+  // the undo buffer.
+  private void note_focus_out() {
     if( (_group != null) && (_note.buffer.text != _orig_note) ) {
       _group.note = _note.buffer.text;
-      _da.undo_buffer.add_item( new UndoGroupNote( _group, _orig_note ) );
-      _da.auto_save();
+      _map.add_undo( new UndoGroupNote( _group, _orig_note ) );
+      _map.auto_save();
     }
-    return( false );
   }
 
-  /* When a node link is added, tell the current node */
+  //-------------------------------------------------------------
+  // When a node link is added, tell the current node
   private int note_node_link_added( NodeLink link, out string text ) {
-    return( _da.add_note_node_link( link, out text ) );
+    return( _map.model.add_note_node_link( link, out text ) );
   }
 
-  /* Handles a click on the node link with the given ID */
+  //-------------------------------------------------------------
+  // Handles a click on the node link with the given ID
   private void note_node_link_clicked( int id ) {
-    _da.note_node_link_clicked( id );
+    _map.model.note_node_link_clicked( id );
   }
 
-  /* Handles a hover over a node link */
+  //-------------------------------------------------------------
+  // Handles a hover over a node link
   private void note_node_link_hover( int id ) {
-    var link = _da.node_links.get_node_link( id );
+    var link = _map.model.node_links.get_node_link( id );
     if( link != null ) {
-      _note.show_tooltip( link.get_tooltip( _da ) );
+      _note.show_tooltip( link.get_tooltip( _map ) );
     }
   }
 
-  /* Grabs the focus on the note widget */
+  //-------------------------------------------------------------
+  // Grabs the focus on the note widget
   public void grab_note() {
     _note.grab_focus();
   }
 
-  /* Called whenever the user changes the current node in the canvas */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the current node in the canvas
   private void group_changed() {
 
-    NodeGroup? current = _da.get_current_group();
+    NodeGroup? current = _map.get_current_group();
 
     if( current != null ) {
       var note = current.note;
       _note.buffer.text = note;
+      _note.editable    = _map.editable;
     }
 
   }
 
-  /* Sets the input focus on the first widget in this inspector */
+  //-------------------------------------------------------------
+  // Sets the input focus on the first widget in this inspector
   public void grab_first() {
     grab_note();
   }

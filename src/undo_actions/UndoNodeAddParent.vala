@@ -35,27 +35,29 @@ public class UndoNodeAddParent : UndoItem {
   }
 
   /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     var parent = _parent.parent;
     var index  = _parent.index();
+    map.animator.add_nodes( map.get_nodes(), false, "UndoNodeAddParent.undo" );
     _child.detach( _child.side );
     _parent.detach( _parent.side );
     _child.attach( parent, index, null );
-    da.set_current_node( _child );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_node( _child );
+    map.animator.animate();
+    map.auto_save();
   }
 
   /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     var parent = _child.parent;
     var index  = _child.index();
+    map.animator.add_nodes( map.get_nodes(), false, "UndoNodeAddParent.redo" );
     _child.detach( _child.side );
     _parent.attach( parent, index, null );
     _child.attach( _parent, -1, null );
-    da.set_current_node( _parent );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_node( _parent );
+    map.animator.animate();
+    map.auto_save();
   }
 
 }

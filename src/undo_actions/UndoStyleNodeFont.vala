@@ -27,14 +27,14 @@ public class UndoStyleNodeFont : UndoStyleChange {
   GenericArray<FontDescription> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleNodeFont( StyleAffects affects, string family, int size, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleNodeFont( StyleAffects affects, string family, int size, MindMap map ) {
+    base( affects, map );
     var node_font = new FontDescription();
     node_font.set_family( family );
     node_font.set_size( size );
     _values = new GenericArray<FontDescription>();
     _values.add( node_font );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

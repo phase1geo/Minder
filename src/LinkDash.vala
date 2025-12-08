@@ -37,20 +37,24 @@ public class LinkDash : Object {
   }
  
   /* Makes an icon for the given dash */
-  public Cairo.Surface make_icon() {
+  public Gdk.Paintable make_icon( bool dark ) {
 
-    Cairo.ImageSurface surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 100, 20 );
-    Cairo.Context      ctx     = new Cairo.Context( surface );
+    var rect = Graphene.Rect.alloc();
+    rect.init( (float)0.0, (float)0.0, (float)100, (float) 20 );
 
-    ctx.set_source_rgba( 0.5, 0.5, 0.5, 1 );
+    var snapshot = new Gtk.Snapshot();
+    var ctx      = snapshot.append_cairo( rect );
+    var color    = dark ? 1.0 : 0.0;
+
+    ctx.set_source_rgba( color, color, color, 1 );
     ctx.set_dash( pattern, 0 );
-    ctx.set_line_width( 4 );
+    ctx.set_line_width( 2 );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( 10, 10 );
     ctx.line_to( 90, 10 );
     ctx.stroke();
 
-    return( surface );
+    return( snapshot.free_to_paintable( null ) );
 
   }
 

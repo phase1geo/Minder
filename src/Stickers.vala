@@ -89,10 +89,10 @@ public class Stickers {
   }
 
   /* Loads the sticker from the XML tree */
-  public void load( DrawArea da, Xml.Node* n ) {
+  public void load( MindMap map, Xml.Node* n ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "sticker") ) {
-        var sticker = new Sticker.from_xml( da, it );
+        var sticker = new Sticker.from_xml( map, it );
         _stickers.append_val( sticker );
       }
     }

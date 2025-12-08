@@ -27,9 +27,10 @@ public enum StyleAffects {
   ALL = 0,               // Applies changes to all nodes and connections
   SELECTED_NODES,        // Applies changes to selected nodes
   SELECTED_CONNECTIONS,  // Applies changes to selected connections
-  SELECTED_CALLOUTS;     // Applies changes to selected callouts
+  SELECTED_CALLOUTS,     // Applies changes to selected callouts
+  NUM;
 
-  /* Displays the label to display for this enumerated value */
+  // Displays the label to display for this enumerated value
   public string label() {
     switch( this ) {
       case ALL                  :  return( _( "All" ) );
@@ -44,64 +45,76 @@ public enum StyleAffects {
 
 public class StyleInspector : Box {
 
-  private DrawArea?                  _da = null;
-  private GLib.Settings              _settings;
-  private Revealer                   _branch_radius_revealer;
-  private Scale                      _branch_radius;
-  private Scale                      _branch_margin;
-  private Granite.Widgets.ModeButton _link_types;
-  private Scale                      _link_width;
-  private Switch                     _link_arrow;
-  private Image                      _link_dash;
-  private Granite.Widgets.ModeButton _node_borders;
-  private Scale                      _node_borderwidth;
-  private Switch                     _node_fill;
-  private Scale                      _node_margin;
-  private Scale                      _node_padding;
-  private FontButton                 _node_font;
-  private SpinButton                 _node_width;
-  private Switch                     _node_markup;
-  private Image                      _conn_dash;
-  private Image                      _conn_arrow;
-  private Scale                      _conn_lwidth;
-  private Scale                      _conn_padding;
-  private FontButton                 _conn_font;
-  private SpinButton                 _conn_twidth;
-  private FontButton                 _callout_font;
-  private Scale                      _callout_padding;
-  private Scale                      _callout_ptr_width;
-  private Scale                      _callout_ptr_length;
-  private StyleAffects               _affects;
-  private Label                      _affects_label;
-  private Box                        _branch_group;
-  private Box                        _link_group;
-  private Box                        _node_group;
-  private Box                        _conn_group;
-  private Box                        _callout_group;
-  private Expander                   _conn_exp;
-  private Expander                   _callout_exp;
-  private bool                       _change_add = true;
-  private bool                       _ignore     = false;
+  private MainWindow       _win;
+  private MindMap?         _map = null;
+  private GLib.Settings    _settings;
+  private Revealer         _branch_radius_revealer;
+  private Scale            _branch_radius;
+  private Scale            _branch_margin;
+  private ModeButtons      _link_types;
+  private Scale            _link_width;
+  private Switch           _link_arrow;
+  private Scale            _link_arrow_size;
+  private ImageMenu        _link_dash;
+  private ModeButtons      _node_borders;
+  private Scale            _node_borderwidth;
+  private Switch           _node_fill;
+  private Scale            _node_margin;
+  private Scale            _node_padding;
+  private FontDialogButton _node_font;
+  private ModeButtons      _node_text_align;
+  private SpinButton       _node_width;
+  private Switch           _node_markup;
+  private ImageMenu        _conn_dash;
+  private ImageMenu        _conn_arrow;
+  private Scale            _conn_arrow_size;
+  private Scale            _conn_lwidth;
+  private Scale            _conn_padding;
+  private FontDialogButton _conn_font;
+  private ModeButtons      _conn_text_align;
+  private SpinButton       _conn_twidth;
+  private FontDialogButton _callout_font;
+  private ModeButtons      _callout_text_align;
+  private Scale            _callout_padding;
+  private Scale            _callout_ptr_width;
+  private Scale            _callout_ptr_length;
+  private StyleAffects     _affects;
+  private Label            _affects_label;
+  private Box              _branch_group;
+  private Box              _link_group;
+  private Box              _node_group;
+  private Box              _conn_group;
+  private Box              _callout_group;
+  private Expander         _conn_exp;
+  private Expander         _callout_exp;
+  private bool             _change_add = true;
+  private bool             _ignore     = false;
+  private Style?           _curr_style = null;
+  private Button           _paste_btn;
+  private MenuButton       _template_btn;
+  private Style?           _clipboard_style  = null;
+  private StyleAffects?    _clipboard_affect = null;
 
   public static Styles styles = new Styles();
+  public static Style? last_global_style = null;
 
+  public signal void update_icons();
+  public signal void editable_changed();
+
+  //-------------------------------------------------------------
+  // Default constructor
   public StyleInspector( MainWindow win, GLib.Settings settings ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:20 );
 
+    _win      = win;
     _settings = settings;
 
-    /* Initialize the affects */
+    // Initialize the affects
     _affects = StyleAffects.ALL;
 
-    /* Create the UI for nodes */
+    // Create the UI for nodes
     var affect = create_affect_ui();
-    var box    = new Box( Orientation.VERTICAL, 0 );
-    var sw     = new ScrolledWindow( null, null );
-    var vp     = new Viewport( null, null );
-    vp.set_size_request( 200, 600 );
-    vp.add( box );
-    sw.add( vp );
 
     _branch_group  = create_branch_ui();
     _link_group    = create_link_ui();
@@ -109,308 +122,475 @@ public class StyleInspector : Box {
     _conn_group    = create_connection_ui();
     _callout_group = create_callout_ui();
 
-    /* Pack the scrollwindow */
-    box.pack_start( _branch_group,  false, true );
-    box.pack_start( _link_group,    false, true );
-    box.pack_start( _node_group,    false, true );
-    box.pack_start( _conn_group,    false, true );
-    box.pack_start( _callout_group, false, true );
+    // Pack the scrollwindow
+    var box = new Box( Orientation.VERTICAL, 10 );
+    box.append( _branch_group );
+    box.append( _link_group );
+    box.append( _node_group );
+    box.append( _conn_group );
+    box.append( _callout_group );
 
-    /* Pack the elements into this widget */
-    pack_start( affect, false, true );
-    pack_start( sw,     true,  true, 10 );
+    var sw = new ScrolledWindow() {
+      vexpand = true,
+      child = box
+    };
+    sw.child.set_size_request( 200, 600 );
 
-    /* Listen for changes to the current tab in the main window */
+    // Pack the elements into this widget
+    append( affect );
+    append( sw );
+
+    // Listen for changes to the current tab in the main window
     win.canvas_changed.connect( tab_changed );
+    editable_changed.connect( handle_current_changed );
+
+    // Add the template menus
+    _win.templates.add_menus( TemplateType.STYLE_GENERAL,    this, win, add_style_template, load_style_template, delete_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_NODE,       this, win, add_style_template, load_style_template, delete_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_CONNECTION, this, win, add_style_template, load_style_template, delete_style_template );
+    _win.templates.add_menus( TemplateType.STYLE_CALLOUT,    this, win, add_style_template, load_style_template, delete_style_template );
 
   }
 
-  /* Listen for any changes to the current tab in the main window */
-  private void tab_changed( DrawArea? da ) {
-    if( _da != null ) {
-      _da.current_changed.disconnect( handle_current_changed );
+  //-------------------------------------------------------------
+  // Listen for any changes to the current tab in the main window
+  private void tab_changed( MindMap? map ) {
+    if( _map != null ) {
+      _map.current_changed.disconnect( handle_current_changed );
     }
-    if( da != null ) {
-      da.current_changed.connect( handle_current_changed );
+    if( map != null ) {
+      map.current_changed.connect( handle_current_changed );
     }
-    _da = da;
+    _map = map;
     handle_ui_changed();
   }
 
-  /* Creates the menubutton that changes the affect */
+  //-------------------------------------------------------------
+  // Creates a save as template dialog and displays it to the user
+  // If the user successfully adds a name, adds it to the list of
+  // templates and saves it to the application template file.
+  private void add_style_template( Template template ) {
+
+    var style_template = (StyleTemplate)template;
+    style_template.update_from_style( _curr_style );
+
+    // If we are adding a new general style template, add the template
+    // to the other styles as well.
+    if( style_template.ttype == TemplateType.STYLE_GENERAL ) {
+
+      // Add the node style
+      var node_style = new StyleTemplate( TemplateType.STYLE_NODE, template.name );
+      node_style.update_from_style( style_template.style );
+      _win.templates.add_template( node_style );
+
+      // Add the connection style
+      var conn_style = new StyleTemplate( TemplateType.STYLE_CONNECTION, template.name );
+      conn_style.update_from_style( style_template.style );
+      _win.templates.add_template( conn_style );
+
+      // Add the callout style
+      var call_style = new StyleTemplate( TemplateType.STYLE_CALLOUT, template.name );
+      call_style.update_from_style( style_template.style );
+      _win.templates.add_template( call_style );
+
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Loads the given template into this widget.
+  private void load_style_template( Template template ) {
+    var style_template = (StyleTemplate)template;
+    update_from_style( style_template.style );
+  }
+
+  //-------------------------------------------------------------
+  // Handles a deletion request from the template editor.  We will check
+  // to see if we are deleting a global style template that is being used
+  // by the default style preferences option.  If we are, display a dialog
+  // alerting the user about this
+  private void delete_style_template() {
+
+    if( (_affects == StyleAffects.ALL) && (Minder.settings.get_int( "default-global-style" ) == 2) ) {
+
+      var name  = Minder.settings.get_string( "default-global-style-name" );
+      var group = _win.templates.get_template_group( TemplateType.STYLE_GENERAL );
+      var names = group.get_names();
+      for( int i=0; i<names.length; i++ ) {
+        if( names.index( i ) == name ) {
+          return;
+        }
+      }
+
+      // We didn't find the default global style in preferences, set it to default Minder style
+      // and tell the user about it
+      Minder.settings.set_int( "default-global-style", 0 );
+      Minder.settings.set_string( "default-global-style-name", "" );
+      show_global_style_dialog( name );
+
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Displays a dialog that will prompt the user to select a new
+  // default global style value.
+  private void show_global_style_dialog( string name ) {
+
+    // Force the default to be "use the default Minder global style"
+    Minder.settings.set_int( "default-global-style", 0 );
+
+    var dialog = new Granite.MessageDialog.with_image_from_icon_name(
+      _( "Deleted preferences default global style" ),
+      _( "The default global style '%s' was deleted.  Setting default global style in preferences to use the default Minder global style." ).printf( name ),
+      "dialog-warning",
+      ButtonsType.NONE
+    ) {
+      transient_for = _win,
+      title         = "",
+    };
+
+    dialog.set_default_response( ResponseType.CLOSE );
+
+    var close = new Button.with_label( _( "Close" ) );
+    close.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    dialog.add_action_widget( close, ResponseType.CLOSE );
+
+    dialog.response.connect((id) => {
+      dialog.close();
+    });
+
+    dialog.show();
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the menubutton that changes the affect
   private Box create_affect_ui() {
 
-    var box  = new Box( Orientation.HORIZONTAL, 10 );
-    var lbl  = new Label( Utils.make_title( _( "Changes affect:" ) ) );
-    lbl.use_markup = true;
+    var lbl = new Label( _( "Changes affect:" ) ) {
+      halign = Align.START
+    };
+    lbl.add_css_class( "titled" );
 
-    _affects_label = new Label( "" );
+    _affects_label = new Label( "" ) {
+      halign = Align.START,
+      hexpand = true
+    };
 
-    /* Pack the menubutton box */
-    box.pack_start( lbl,            false, false );
-    box.pack_start( _affects_label, true,  true );
+    var copy_btn = new Button.from_icon_name( "edit-copy-symbolic" ) {
+      halign = Align.END,
+      tooltip_text = _( "Copy current style" )
+    };
+
+    copy_btn.clicked.connect(() => {
+      _clipboard_style = new Style();
+      _clipboard_style.copy( _curr_style );
+      _clipboard_affect = _affects;
+      _paste_btn.sensitive = true;
+    });
+
+    _paste_btn = new Button.from_icon_name( "edit-paste-symbolic" ) {
+      halign       = Align.END,
+      tooltip_text = _( "Paste copied style" ),
+      sensitive    = false
+    };
+
+    _paste_btn.clicked.connect(() => {
+      update_from_style( _clipboard_style );
+    });
+
+    _template_btn = new MenuButton() {
+      halign       = Align.END,
+      icon_name    = "folder-templates-symbolic",
+      tooltip_text = _( "Style Templates" )
+    };
+
+    // Pack the menubutton box
+    var box = new Box( Orientation.HORIZONTAL, 10 );
+    box.append( lbl );
+    box.append( _affects_label );
+    box.append( copy_btn );
+    box.append( _paste_btn );
+    box.append( _template_btn );
 
     return( box );
 
   }
 
-  /* Adds the options to manipulate line options */
+  //-------------------------------------------------------------
+  // Adds the options to manipulate line options.
   private Box create_branch_ui() {
-
-    var box = new Box( Orientation.VERTICAL, 0 );
-    var sep = new Separator( Orientation.HORIZONTAL );
-
-    /* Create expander */
-    var exp = new Expander( "  " + Utils.make_title( _( "Branch Options" ) ) );
-    exp.use_markup = true;
-    exp.expanded   = _settings.get_boolean( "style-branch-options-expanded" );
-    exp.activate.connect(() => {
-      _settings.set_boolean( "style-branch-options-expanded", !exp.expanded );
-    });
-
-    var cbox = new Box( Orientation.VERTICAL, 10 );
-    cbox.homogeneous  = true;
-    cbox.border_width = 10;
 
     var branch_type   = create_branch_type_ui();
     var branch_radius = create_branch_radius_ui();
     var branch_margin = create_branch_margin_ui();
 
-    cbox.pack_start( branch_type,   false, false );
-    cbox.pack_start( branch_radius, false, true );
-    cbox.pack_start( branch_margin, false, false );
+    var cbox = new Box( Orientation.VERTICAL, 0 ) {
+      homogeneous  = true,
+      margin_start = 10,
+      margin_end   = 10,
+      margin_top   = 10,
+    };
+    cbox.append( branch_type );
+    cbox.append( branch_radius );
+    cbox.append( branch_margin );
 
-    exp.add( cbox );
+    // Create expander
+    var exp = new Expander( "  " + _( "Branch Options" ) ) {
+      expanded = _settings.get_boolean( "style-branch-options-expanded" ),
+      child    = cbox
+    };
+    exp.add_css_class( "titled" );
+    exp.activate.connect(() => {
+      _settings.set_boolean( "style-branch-options-expanded", !exp.expanded );
+    });
 
-    box.pack_start( exp, false, true );
-    box.pack_start( sep, false, true, 10 );
+    var sep = new Separator( Orientation.HORIZONTAL );
+
+    var box = new Box( Orientation.VERTICAL, 5 );
+    box.append( exp );
+    box.append( sep );
 
     return( box );
 
   }
 
-  /* Create the branch type UI */
+  //-------------------------------------------------------------
+  // Create the branch type UI
   private Box create_branch_type_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Style" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Style" ) );
-    lbl.xalign = (float)0;
+    _link_types = new ModeButtons() {
+      halign = Align.END,
+      valign = Align.CENTER
+    };
+    _link_types.changed.connect( action_set_link_type );
 
-    /* Create the line types mode button */
-    _link_types = new Granite.Widgets.ModeButton();
-    _link_types.has_tooltip = true;
-    _link_types.button_release_event.connect( branch_type_changed );
-    _link_types.query_tooltip.connect( branch_type_show_tooltip );
+    update_icons.connect(() => {
+      _link_types.update_icons();
+    });
 
     var link_types = styles.get_link_types();
     for( int i=0; i<link_types.length; i++ ) {
-      _link_types.append_icon( link_types.index( i ).icon_name(), IconSize.SMALL_TOOLBAR );
+      var link_type = link_types.index( i );
+      _link_types.add_button( link_type.light_icon_name(), link_type.dark_icon_name(), link_type.display_name() );
     }
 
-    box.pack_start( lbl,         false, true );
-    box.pack_end(   _link_types, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 10 ) {
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _link_types );
 
     return( box );
 
   }
 
-  /* Called whenever the user changes the current layout */
-  private bool branch_type_changed( Gdk.EventButton e ) {
+  //-------------------------------------------------------------
+  // Called whenever the user changes the current layout
+  private void action_set_link_type( int index ) {
     var link_types = styles.get_link_types();
-    if( _link_types.selected < link_types.length ) {
+    if( index < link_types.length ) {
       var link_type = link_types.index( _link_types.selected );
-      _da.undo_buffer.add_item( new UndoStyleLinkType( _affects, link_type, _da ) );
+      _curr_style.link_type = link_type;
+      _map.undo_buffer.add_item( new UndoStyleLinkType( _affects, link_type, _map ) );
     }
-    return( false );
   }
 
-  /* Called whenever the tooltip needs to be displayed for the layout selector */
-  private bool branch_type_show_tooltip( int x, int y, bool keyboard, Tooltip tooltip ) {
-    if( keyboard ) {
-      return( false );
-    }
-    var link_types = styles.get_link_types();
-    int button_width = (int)(_link_types.get_allocated_width() / link_types.length);
-    if( (x / button_width) < link_types.length ) {
-      tooltip.set_text( link_types.index( x / button_width ).display_name() );
-      return( true );
-    }
-    return( false );
-  }
-
+  //-------------------------------------------------------------
+  // Creates the UI for changing the branch drawing type.
   private Revealer create_branch_radius_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Corner Radius" ) ) {
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Corner Radius" ) );
-    lbl.xalign = (float)0;
-
-    _branch_radius = new Scale.with_range( Orientation.HORIZONTAL, 10, 40, 1 );
-    _branch_radius.draw_value = true;
+    _branch_radius = new Scale.with_range( Orientation.HORIZONTAL, 10, 40, 1 ) {
+      halign     = Align.FILL,
+      draw_value = true
+    };
     _branch_radius.change_value.connect( branch_radius_changed );
-    _branch_radius.button_release_event.connect( branch_radius_released );
 
-    box.pack_start( lbl,            false, true );
-    box.pack_end(   _branch_radius, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 10 ) {
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _branch_radius );
 
-    _branch_radius_revealer = new Revealer();
-    _branch_radius_revealer.reveal_child = false;
-    _branch_radius_revealer.add( box );
+    _branch_radius_revealer = new Revealer() {
+      reveal_child = false,
+      child        = box
+    };
 
     return( _branch_radius_revealer );
 
   }
 
-  /* Called whenever the branch radius value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the branch radius value is changed
   private bool branch_radius_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 40 ) {
       return( false );
     }
-    var margin = new UndoStyleBranchRadius( _affects, intval, _da );
+    var margin = new UndoStyleBranchRadius( _affects, intval, _map );
+    _curr_style.branch_radius = intval;
     if( _change_add ) {
-      _da.undo_buffer.add_item( margin );
+      _map.undo_buffer.add_item( margin );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( margin );
+      _map.undo_buffer.replace_item( margin );
     }
     return( false );
   }
 
-  private bool branch_radius_released( EventButton e ) {
-    _change_add = true;
-    return( false );
-  }
-
+  //-------------------------------------------------------------
+  // Creates the branch margin UI.
   private Box create_branch_margin_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Margin" ) ) {
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Margin" ) );
-    lbl.xalign = (float)0;
-
-    _branch_margin = new Scale.with_range( Orientation.HORIZONTAL, 20, 150, 10 );
-    _branch_margin.draw_value = true;
+    _branch_margin = new Scale.with_range( Orientation.HORIZONTAL, 20, 150, 10 ) {
+      halign     = Align.FILL,
+      draw_value = true
+    };
     _branch_margin.change_value.connect( branch_margin_changed );
-    _branch_margin.button_release_event.connect( branch_margin_released );
 
-    box.pack_start( lbl,          false, true );
-    box.pack_end(   _branch_margin, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 10 ) {
+      halign      = Align.FILL,
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _branch_margin );
 
     return( box );
 
   }
 
-  /* Called whenever the node margin value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the node margin value is changed
   private bool branch_margin_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 150 ) {
       return( false );
     }
-    var margin = new UndoStyleBranchMargin( _affects, intval, _da );
+    var margin = new UndoStyleBranchMargin( _affects, intval, _map );
+    _curr_style.branch_margin = intval;
     if( _change_add ) {
-      _da.undo_buffer.add_item( margin );
+      _map.undo_buffer.add_item( margin );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( margin );
+      _map.undo_buffer.replace_item( margin );
     }
     return( false );
   }
 
-  private bool branch_margin_released( EventButton e ) {
-    _change_add = true;
-    return( false );
-  }
-
-  /* Adds the options to manipulate line options */
+  //-------------------------------------------------------------
+  // Adds the options to manipulate line options
   private Box create_link_ui() {
-
-    var box = new Box( Orientation.VERTICAL, 0 );
-    var sep = new Separator( Orientation.HORIZONTAL );
-
-    /* Create expander */
-    var exp = new Expander( "  " + Utils.make_title( _( "Link Options" ) ) );
-    exp.use_markup = true;
-    exp.expanded   = _settings.get_boolean( "style-link-options-expanded" );
-    exp.activate.connect(() => {
-      _settings.set_boolean( "style-link-options-expanded", !exp.expanded );
-    });
-
-    var cbox = new Box( Orientation.VERTICAL, 10 );
-    cbox.homogeneous  = true;
-    cbox.border_width = 10;
 
     var link_dash  = create_link_dash_ui();
     var link_width = create_link_width_ui();
     var link_arrow = create_link_arrow_ui();
+    var link_arrow_size = create_link_arrow_size_ui();
 
-    cbox.pack_start( link_dash,  false, false );
-    cbox.pack_start( link_width, false, false );
-    cbox.pack_start( link_arrow, false, false );
+    var cbox = new Box( Orientation.VERTICAL, 0 ) {
+      homogeneous   = true,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
+    };
+    cbox.append( link_dash );
+    cbox.append( link_width );
+    cbox.append( link_arrow );
+    cbox.append( link_arrow_size );
 
-    exp.add( cbox );
+    // Create expander
+    var exp = new Expander( "  " + _( "Link Options" ) ) {
+      expanded = _settings.get_boolean( "style-link-options-expanded" ),
+      child    = cbox
+    };
+    exp.add_css_class( "titled" );
+    exp.activate.connect(() => {
+      _settings.set_boolean( "style-link-options-expanded", !exp.expanded );
+    });
 
-    box.pack_start( exp, false, true );
-    box.pack_start( sep, false, true, 10 );
+    var sep = new Separator( Orientation.HORIZONTAL );
+
+    var box = new Box( Orientation.VERTICAL, 0 );
+    box.append( exp );
+    box.append( sep );
 
     return( box );
 
   }
 
-  /* Create the link dash widget */
+  //-------------------------------------------------------------
+  // Create the link dash widget
   private Box create_link_dash_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Line Dash" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Line Dash" ) );
-    lbl.xalign = (float)0;
-
-    var menu   = new Gtk.Menu();
     var dashes = styles.get_link_dashes();
 
-    _link_dash = new Image.from_surface( dashes.index( 0 ).make_icon() );
+    _link_dash = new ImageMenu() {
+      halign = Align.END
+    };
+
+    _link_dash.changed.connect((index) => {
+      _curr_style.link_dash = dashes.index( index );
+      _map.undo_buffer.add_item( new UndoStyleLinkDash( _affects, dashes.index( index ), _map ) );
+    });
+
+    update_icons.connect(() => {
+      _link_dash.update_icons();
+    });
 
     for( int i=0; i<dashes.length; i++ ) {
       var dash = dashes.index( i );
-      var img  = new Image.from_surface( dash.make_icon() );
-      var mi   = new Gtk.MenuItem();
-      mi.activate.connect(() => {
-        _da.undo_buffer.add_item( new UndoStyleLinkDash( _affects, dash, _da ) );
-        _link_dash.surface = img.surface;
-      });
-      mi.add( img );
-      menu.add( mi );
+      _link_dash.add_image( dash.make_icon( false ), dash.make_icon( true ) );
     }
 
-    menu.show_all();
-
-    var mb = new MenuButton();
-    mb.add( _link_dash );
-    mb.popup = menu;
-
-    box.pack_start( lbl, false, true );
-    box.pack_end(   mb,  false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign      = Align.FILL,
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _link_dash );
 
     return( box );
 
   }
 
-  /* Create widget for handling the width of a link */
+  //-------------------------------------------------------------
+  // Create widget for handling the width of a link
   private Box create_link_width_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Line Width" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Line Width" ) );
-    lbl.xalign = (float)0;
-
-    _link_width = new Scale.with_range( Orientation.HORIZONTAL, 2, 8, 1 );
-    _link_width.draw_value = false;
+    _link_width = new Scale.with_range( Orientation.HORIZONTAL, 2, 8, 1 ) {
+      halign     = Align.FILL,
+      draw_value = false
+    };
 
     for( int i=2; i<=8; i++ ) {
       if( (i % 2) == 0 ) {
@@ -421,78 +601,116 @@ public class StyleInspector : Box {
     }
 
     _link_width.change_value.connect( link_width_changed );
-    _link_width.button_release_event.connect( link_width_released );
 
-    box.pack_start( lbl,         false, true );
-    box.pack_end(   _link_width, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _link_width );
 
     return( box );
 
   }
 
-  /* Called whenever the user changes the link width value */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the link width value
   private bool link_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
     var int_value  = (int)value;
-    var link_width = new UndoStyleLinkWidth( _affects, int_value, _da );
+    var link_width = new UndoStyleLinkWidth( _affects, int_value, _map );
+    _curr_style.link_width = int_value;
     if( _change_add ) {
-      _da.undo_buffer.add_item( link_width );
+      _map.undo_buffer.add_item( link_width );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( link_width );
+      _map.undo_buffer.replace_item( link_width );
     }
     return( false );
   }
 
-  private bool link_width_released( EventButton e ) {
-    _change_add = true;
-    return( false );
-  }
-
-  /* Creates the link arrow UI element */
+  //-------------------------------------------------------------
+  // Creates the link arrow UI element
   private Box create_link_arrow_ui() {
 
+    var lbl = new Label( _( "Link Arrow" ) ) {
+      halign  = Align.START,
+      hexpand = true
+    };
+
+    _link_arrow = new Switch() {
+      halign = Align.END,
+      valign = Align.CENTER,
+      active = false
+    };
+    _link_arrow.notify["active"].connect( link_arrow_changed );
+
     var box = new Box( Orientation.HORIZONTAL, 5 );
-    var lbl = new Label( _( "Link Arrow" ) );
-
-    _link_arrow = new Switch();
-    _link_arrow.set_active( false );  /* TBD */
-    _link_arrow.button_release_event.connect( link_arrow_changed );
-
-    box.pack_start( lbl,       false, false );
-    box.pack_end( _link_arrow, false, false );
+    box.append( lbl );
+    box.append( _link_arrow );
 
     return( box );
 
   }
 
-  /* Called when the user clicks on the link arrow switch */
-  private bool link_arrow_changed( Gdk.EventButton e ) {
-    bool val = !_link_arrow.get_active();
-    Idle.add(() => {
-      _da.undo_buffer.add_item( new UndoStyleLinkArrow( _affects, val, _da ) );
-      return( Source.REMOVE );
-    });
+  //-------------------------------------------------------------
+  // Called when the user clicks on the link arrow switch
+  private void link_arrow_changed() {
+    if( !_ignore ) {
+      bool val = _link_arrow.get_active();
+      _curr_style.link_arrow = val;
+      _map.undo_buffer.add_item( new UndoStyleLinkArrow( _affects, val, _map ) );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Creates the link arrow size UI.
+  private Box create_link_arrow_size_ui() {
+
+    var lbl = new Label( _( "Link Arrow Size" ) ) {
+      halign  = Align.START,
+      hexpand = true
+    };
+
+    _link_arrow_size = new Scale.with_range( Orientation.HORIZONTAL, 0, 3, 1 ) {
+      halign     = Align.FILL,
+      draw_value = false
+    };
+
+    _link_arrow_size.add_mark( 0, PositionType.BOTTOM, "S" );
+    _link_arrow_size.add_mark( 1, PositionType.BOTTOM, "M" );
+    _link_arrow_size.add_mark( 2, PositionType.BOTTOM, "L" );
+    _link_arrow_size.add_mark( 3, PositionType.BOTTOM, "XL" );
+    _link_arrow_size.change_value.connect( link_arrow_size_changed );
+
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _link_arrow_size );
+
+    return( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever the user changes the link arrow size value
+  private bool link_arrow_size_changed( ScrollType scroll, double value ) {
+    if( value > 3 ) value = 3;
+    var int_value       = (int)value;
+    var link_arrow_size = new UndoStyleLinkArrowSize( _affects, int_value, _map );
+    _curr_style.link_arrow_size = int_value;
+    if( _change_add ) {
+      _map.undo_buffer.add_item( link_arrow_size );
+      _change_add = false;
+    } else {
+      _map.undo_buffer.replace_item( link_arrow_size );
+    }
     return( false );
   }
 
-  /* Creates the options to manipulate node options */
+  //-------------------------------------------------------------
+  // Creates the options to manipulate node options
   private Box create_node_ui() {
-
-    var box = new Box( Orientation.VERTICAL, 5 );
-    var sep = new Separator( Orientation.HORIZONTAL );
-
-    /* Create expander */
-    var exp = new Expander( "  " + Utils.make_title( _( "Node Options" ) ) );
-    exp.use_markup = true;
-    exp.expanded   = _settings.get_boolean( "style-node-options-expanded" );
-    exp.activate.connect(() => {
-      _settings.set_boolean( "style-node-options-expanded", !exp.expanded );
-    });
-
-    var cbox = new Box( Orientation.VERTICAL, 10 );
-    cbox.homogeneous  = true;
-    cbox.border_width = 10;
 
     var node_border      = create_node_border_ui();
     var node_borderwidth = create_node_borderwidth_ui();
@@ -500,85 +718,104 @@ public class StyleInspector : Box {
     var node_margin      = create_node_margin_ui();
     var node_padding     = create_node_padding_ui();
     var node_font        = create_node_font_ui();
+    var node_text_align  = create_node_text_align_ui();
     var node_width       = create_node_width_ui();
     var node_markup      = create_node_markup_ui();
 
-    cbox.pack_start( node_border,      false, false );
-    cbox.pack_start( node_borderwidth, false, false );
-    cbox.pack_start( node_fill,        false, false );
-    cbox.pack_start( node_margin,      false, false );
-    cbox.pack_start( node_padding,     false, false );
-    cbox.pack_start( node_font,        false, false );
-    cbox.pack_start( node_width,       false, false );
-    cbox.pack_start( node_markup,      false, false );
+    var cbox = new Box( Orientation.VERTICAL, 0 ) {
+      homogeneous   = true,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
+    };
+    cbox.append( node_border );
+    cbox.append( node_borderwidth );
+    cbox.append( node_fill );
+    cbox.append( node_margin );
+    cbox.append( node_padding );
+    cbox.append( node_font );
+    cbox.append( node_text_align );
+    cbox.append( node_width );
+    cbox.append( node_markup );
 
-    exp.add( cbox );
+    // Create expander
+    var exp = new Expander( "  " + _( "Node Options" ) ) {
+      expanded = _settings.get_boolean( "style-node-options-expanded" ),
+      child    = cbox
+    };
+    exp.add_css_class( "titled" );
+    exp.activate.connect(() => {
+      _settings.set_boolean( "style-node-options-expanded", !exp.expanded );
+    });
 
-    box.pack_start( exp, false, true );
-    box.pack_start( sep, false, true, 10 );
+    var sep = new Separator( Orientation.HORIZONTAL );
+
+    var box = new Box( Orientation.VERTICAL, 5 );
+    box.append( exp );
+    box.append( sep );
 
     return( box );
 
   }
 
-  /* Creates the node border panel */
+  //-------------------------------------------------------------
+  // Creates the node border panel
   private Box create_node_border_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Border Style" ) );
+    var lbl = new Label( _( "Border Style" ) ) {
+      halign  = Align.START,
+      hexpand = true
+    };
 
-    /* Create the line types mode button */
-    _node_borders = new Granite.Widgets.ModeButton();
-    _node_borders.has_tooltip = true;
-    _node_borders.button_release_event.connect( node_border_changed );
-    _node_borders.query_tooltip.connect( node_border_show_tooltip );
+    _node_borders = new ModeButtons() {
+      halign = Align.END,
+      valign = Align.CENTER
+    };
+    _node_borders.changed.connect( set_node_border );
+
+    update_icons.connect(() => {
+      _node_borders.update_icons();
+    });
 
     var node_borders = styles.get_node_borders();
     for( int i=0; i<node_borders.length; i++ ) {
-      _node_borders.append_icon( node_borders.index( i ).icon_name(), IconSize.SMALL_TOOLBAR );
+      var node_border = node_borders.index( i );
+      _node_borders.add_button( node_border.light_icon_name(), node_border.dark_icon_name(), node_border.display_name() );
     }
 
-    box.pack_start( lbl,           false, false );
-    box.pack_end(   _node_borders, false, false );
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.append( lbl );
+    box.append( _node_borders );
 
     return( box );
 
   }
 
-  /* Called whenever the user changes the current layout */
-  private bool node_border_changed( Gdk.EventButton e ) {
+  //-------------------------------------------------------------
+  // Called whenever the user changes the current layout
+  private void set_node_border( int index ) {
     var node_borders = styles.get_node_borders();
-    if( _node_borders.selected < node_borders.length ) {
-      _da.undo_buffer.add_item( new UndoStyleNodeBorder( _affects, node_borders.index( _node_borders.selected ), _da ) );
+    if( index < node_borders.length ) {
+      _curr_style.node_border = node_borders.index( index );
+      _map.undo_buffer.add_item( new UndoStyleNodeBorder( _affects, node_borders.index( index ), _map ) );
     }
-    return( false );
   }
 
-  /* Called whenever the tooltip needs to be displayed for the layout selector */
-  private bool node_border_show_tooltip( int x, int y, bool keyboard, Tooltip tooltip ) {
-    if( keyboard ) {
-      return( false );
-    }
-    var node_borders = styles.get_node_borders();
-    int button_width = (int)(_node_borders.get_allocated_width() / node_borders.length);
-    if( (x / button_width) < node_borders.length ) {
-      tooltip.set_text( node_borders.index( x / button_width ).display_name() );
-      return( true );
-    }
-    return( false );
-  }
-
-  /* Create widget for handling the width of a link */
+  //-------------------------------------------------------------
+  // Create widget for handling the width of a link
   private Box create_node_borderwidth_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Border Width" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Border Width" ) );
-    lbl.xalign = (float)0;
-
-    _node_borderwidth = new Scale.with_range( Orientation.HORIZONTAL, 2, 8, 1 );
-    _node_borderwidth.draw_value = false;
+    _node_borderwidth = new Scale.with_range( Orientation.HORIZONTAL, 2, 8, 1 ) {
+      halign     = Align.FILL,
+      draw_value = false
+    };
 
     for( int i=2; i<=8; i++ ) {
       if( (i % 2) == 0 ) {
@@ -589,352 +826,498 @@ public class StyleInspector : Box {
     }
 
     _node_borderwidth.change_value.connect( node_borderwidth_changed );
-    _node_borderwidth.button_release_event.connect( node_borderwidth_released );
 
-    box.pack_start( lbl,               false, true );
-    box.pack_end(   _node_borderwidth, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _node_borderwidth );
 
     return( box );
 
   }
 
-  /* Called whenever the user changes the link width value */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the link width value
   private bool node_borderwidth_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
-    var borderwidth = new UndoStyleNodeBorderwidth( _affects, intval, _da );
+    var borderwidth = new UndoStyleNodeBorderwidth( _affects, intval, _map );
+    _curr_style.node_borderwidth = intval;
     if( _change_add ) {
-      _da.undo_buffer.add_item( borderwidth );
+      _map.undo_buffer.add_item( borderwidth );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( borderwidth );
+      _map.undo_buffer.replace_item( borderwidth );
     }
     return( false );
   }
 
-  private bool node_borderwidth_released( EventButton e ) {
-    _change_add = true;
-    return( false );
-  }
-
-  /* Create the node fill UI */
+  //-------------------------------------------------------------
+  // Create the node fill UI
   private Box create_node_fill_ui() {
 
+    var lbl = new Label( _( "Color Fill") ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
+
+    _node_fill = new Switch() {
+      halign       = Align.END,
+      valign       = Align.CENTER,
+      tooltip_text = _("Fills the node with color when the node\nborder is square, rounded or pill-shaped" )
+    };
+    _node_fill.notify["active"].connect( node_fill_changed );
+
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Color Fill") );
-    lbl.xalign = (float)0;
-
-    _node_fill = new Switch();
-    _node_fill.button_release_event.connect( node_fill_changed );
-    _node_fill.set_tooltip_text( _("Fills the node with color when the node\nborder is square, rounded or pill-shaped") );
-
-    box.pack_start( lbl,        false, true );
-    box.pack_end(   _node_fill, false, true );
+    box.append( lbl );
+    box.append( _node_fill );
 
     return( box );
 
   }
 
-  /* Called whenever the node fill status changes */
-  private bool node_fill_changed( Gdk.EventButton e ) {
-    bool val = !_node_fill.get_active();
-    Idle.add(() => {
-      _da.undo_buffer.add_item( new UndoStyleNodeFill( _affects, val, _da ) );
-      return( Source.REMOVE );
-    });
-    return( false );
+  //-------------------------------------------------------------
+  // Called whenever the node fill status changes
+  private void node_fill_changed() {
+    if( !_ignore ) {
+      bool val = _node_fill.get_active();
+      _curr_style.node_fill = val;
+      _map.undo_buffer.add_item( new UndoStyleNodeFill( _affects, val, _map ) );
+    }
   }
 
-  /* Allows the user to change the node margin */
+  //-------------------------------------------------------------
+  // Allows the user to change the node margin
   private Box create_node_margin_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Margin" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Margin" ) );
-    lbl.xalign = (float)0;
-
-    _node_margin = new Scale.with_range( Orientation.HORIZONTAL, 1, 20, 1 );
-    _node_margin.draw_value = true;
+    _node_margin = new Scale.with_range( Orientation.HORIZONTAL, 1, 20, 1 ) {
+      halign     = Align.FILL,
+      draw_value = true
+    };
     _node_margin.change_value.connect( node_margin_changed );
-    _node_margin.button_release_event.connect( node_margin_released );
 
-    box.pack_start( lbl,          false, true );
-    box.pack_end(   _node_margin, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _node_margin );
 
     return( box );
 
   }
 
-  /* Called whenever the node margin value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the node margin value is changed
   private bool node_margin_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 20 ) {
       return( false );
     }
-    var margin = new UndoStyleNodeMargin( _affects, intval, _da );
+    var margin = new UndoStyleNodeMargin( _affects, intval, _map );
+    _curr_style.node_margin = intval;
     if( _change_add ) {
-      _da.undo_buffer.add_item( margin );
+      _map.undo_buffer.add_item( margin );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( margin );
+      _map.undo_buffer.replace_item( margin );
     }
     return( false );
   }
 
-  private bool node_margin_released( EventButton e ) {
-    _change_add = true;
-    return( false );
-  }
-
-  /* Allows the user to change the node padding */
+  //-------------------------------------------------------------
+  // Allows the user to change the node padding
   private Box create_node_padding_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Padding" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Padding" ) );
-    lbl.xalign = (float)0;
-
-    _node_padding = new Scale.with_range( Orientation.HORIZONTAL, 5, 20, 2 );
-    _node_padding.draw_value = true;
+    _node_padding = new Scale.with_range( Orientation.HORIZONTAL, 5, 20, 2 ) {
+      halign     = Align.FILL,
+      draw_value = true
+    };
     _node_padding.change_value.connect( node_padding_changed );
-    _node_padding.button_release_event.connect( node_padding_released );
 
-    box.pack_start( lbl,           false, true );
-    box.pack_end(   _node_padding, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _node_padding );
 
     return( box );
 
   }
 
-  /* Called whenever the node margin value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the node margin value is changed
   private bool node_padding_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 20 ) {
       return( false );
     }
-    var padding = new UndoStyleNodePadding( _affects, intval, _da );
+    var padding = new UndoStyleNodePadding( _affects, intval, _map );
+    _curr_style.node_padding = intval;
     if( _change_add ) {
-      _da.undo_buffer.add_item( padding );
+      _map.undo_buffer.add_item( padding );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( padding );
+      _map.undo_buffer.replace_item( padding );
     }
     return( false );
   }
 
-  private bool node_padding_released( EventButton e ) {
-    _change_add = true;
-    return( false );
-  }
-
-  /* Creates the node font selector */
+  //-------------------------------------------------------------
+  // Creates the node font selector
   private Box create_node_font_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Font" ) );
-    lbl.xalign = (float)0;
+    var lbl = new Label( _( "Font" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    _node_font = new FontButton();
-    _node_font.use_font = true;
-    _node_font.show_style = false;
-    _node_font.set_filter_func( (family, face) => {
-      var fd     = face.describe();
-      var weight = fd.get_weight();
-      var style  = fd.get_style();
-      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+    var font_dialog = new FontDialog();
+    _node_font = new FontDialogButton( font_dialog ) {
+      valign   = Align.CENTER,
+      use_font = true,
+      use_size = false
+    };
+    var font_filter = new CustomFilter((obj) => {
+      var font_face = (obj as Pango.FontFace);
+      if( font_face != null ) {
+        var fd     = font_face.describe();
+        var weight = fd.get_weight();
+        var style  = fd.get_style();
+        return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+      }
+      return( false );
     });
-    _node_font.font_set.connect(() => {
-      var family = _node_font.get_font_family().get_name();
-      var size   = _node_font.get_font_size();
-      _da.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _da ) );
+    font_dialog.set_filter( font_filter );
+    _node_font.notify["font-desc"].connect(() => {
+      var family = _node_font.font_desc.get_family();
+      var size   = _node_font.font_desc.get_size();
+      _curr_style.node_font = _node_font.font_desc.copy();
+      _map.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _map ) );
     });
 
-    box.pack_start( lbl,      false, true );
-    box.pack_end( _node_font, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign = Align.FILL
+    };
+    box.append( lbl );
+    box.append( _node_font );
 
     return( box );
 
   }
 
-  /* Creates the node width selector */
-  private Box create_node_width_ui() {
+  //-------------------------------------------------------------
+  // Creates the UI for the node text alignment widget.
+  private Box create_node_text_align_ui() {
+
+    var lbl = new Label( _( "Text Alignment" ) ) {
+      halign  = Align.START,
+      hexpand = true
+    };
+
+    _node_text_align = new ModeButtons() {
+      halign = Align.END,
+      valign = Align.CENTER
+    };
+    _node_text_align.changed.connect( set_node_text_align );
+
+    _node_text_align.add_button( "format-justify-left-symbolic",   null, _( "Left" ) );
+    _node_text_align.add_button( "format-justify-center-symbolic", null, _( "Center" ) );
+    _node_text_align.add_button( "format-justify-right-symbolic",  null, _( "Right" ) );
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Width" ) );
-    lbl.xalign = (float)0;
+    box.append( lbl );
+    box.append( _node_text_align );
 
-    _node_width = new SpinButton.with_range( 200, 1000, 100 );
-    _node_width.set_value( _settings.get_int( "style-node-width" ) );
+    return( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Sets the node text alignment value.
+  private void set_node_text_align( int index ) {
+    Pango.Alignment? align = null;
+    switch( index ) {
+      case 0 :  align = Pango.Alignment.LEFT;    break;
+      case 1 :  align = Pango.Alignment.CENTER;  break;
+      case 2 :  align = Pango.Alignment.RIGHT;   break;
+    }
+    if( align != null ) {
+      _curr_style.node_text_align = align;
+      _map.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, align, _map ) );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Creates the node width selector
+  private Box create_node_width_ui() {
+
+    var lbl = new Label( _( "Width" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
+
+    _node_width = new SpinButton.with_range( 200, 1000, 100 ) {
+      halign = Align.END,
+      valign = Align.CENTER,
+    };
     _node_width.value_changed.connect(() => {
       if( !_ignore ) {
         var width = (int)_node_width.get_value();
-        _da.undo_buffer.replace_item( new UndoStyleNodeWidth( _affects, width, _da ) );
+        _curr_style.node_width = width;
+        _map.undo_buffer.replace_item( new UndoStyleNodeWidth( _affects, width, _map ) );
       }
     });
 
-    box.pack_start( lbl,       false, true );
-    box.pack_end( _node_width, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign = Align.FILL
+    };
+    box.append( lbl );
+    box.append( _node_width );
 
     return( box );
 
   }
 
+  //-------------------------------------------------------------
+  // Create the node markup style setting
   private Box create_node_markup_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Enable Markup" ) );
-    lbl.xalign = (float)0;
+    var lbl = new Label( _( "Enable Markup" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    _node_markup = new Switch();
-    _node_markup.button_release_event.connect( node_markup_changed );
+    _node_markup = new Switch() {
+      halign = Align.END,
+      valign = Align.CENTER
+    };
+    _node_markup.notify["active"].connect( node_markup_changed );
 
-    box.pack_start( lbl,        false, true );
-    box.pack_end( _node_markup, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign = Align.FILL
+    };
+    box.append( lbl );
+    box.append( _node_markup );
 
     return( box );
 
   }
 
-  /* Called whenever the node fill status changes */
-  private bool node_markup_changed( Gdk.EventButton e ) {
-    bool val = !_node_markup.get_active();
-    Idle.add(() => {
-      _da.undo_buffer.add_item( new UndoStyleNodeMarkup( _affects, val, _da ) );
-      return( Source.REMOVE );
-    });
-    return( false );
+  //-------------------------------------------------------------
+  // Called whenever the node fill status changes
+  private void node_markup_changed() {
+    if( !_ignore ) {
+      var val = _node_markup.get_active();
+      _map.undo_buffer.add_item( new UndoStyleNodeMarkup( _affects, val, _map ) );
+    }
   }
 
-  /* Creates the connection style UI */
+  //-------------------------------------------------------------
+  // Creates the connection style UI
   private Box create_connection_ui() {
 
-    var box = new Box( Orientation.VERTICAL, 0 );
-    var sep = new Separator( Orientation.HORIZONTAL );
+    var conn_dash       = create_connection_dash_ui();
+    var conn_arrow      = create_connection_arrow_ui();
+    var conn_arrow_size = create_connection_arrow_size_ui();
+    var conn_lwidth     = create_connection_line_width_ui();
+    var conn_padding    = create_connection_padding_ui();
+    var conn_font       = create_connection_font_ui();
+    var conn_text_align = create_connection_text_align_ui();
+    var conn_twidth     = create_connection_title_width_ui();
 
-    /* Create expander */
-    _conn_exp = new Expander( "  " + Utils.make_title( _( "Connection Options" ) ) );
-    _conn_exp.use_markup = true;
-    _conn_exp.expanded   = _settings.get_boolean( "style-connection-options-expanded" );
+    var cbox = new Box( Orientation.VERTICAL, 0 ) {
+      homogeneous   = true,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
+    };
+    cbox.append( conn_dash );
+    cbox.append( conn_arrow );
+    cbox.append( conn_arrow_size );
+    cbox.append( conn_lwidth );
+    cbox.append( conn_padding );
+    cbox.append( conn_font );
+    cbox.append( conn_text_align );
+    cbox.append( conn_twidth );
+
+    // Create expander
+    _conn_exp = new Expander( "  " + _( "Connection Options" ) ) {
+      expanded = _settings.get_boolean( "style-connection-options-expanded" ),
+      child    = cbox
+    };
+    _conn_exp.add_css_class( "titled" );
     _conn_exp.activate.connect(() => {
       _settings.set_boolean( "style-connection-options-expanded", !_conn_exp.expanded );
     });
 
-    var cbox = new Box( Orientation.VERTICAL, 10 );
-    cbox.homogeneous  = true;
-    cbox.border_width = 10;
+    var sep = new Separator( Orientation.HORIZONTAL );
 
-    var conn_dash    = create_connection_dash_ui();
-    var conn_arrow   = create_connection_arrow_ui();
-    var conn_lwidth  = create_connection_line_width_ui();
-    var conn_padding = create_connection_padding_ui();
-    var conn_font    = create_connection_font_ui();
-    var conn_twidth  = create_connection_title_width_ui();
-
-    cbox.pack_start( conn_dash,    false, false );
-    cbox.pack_start( conn_arrow,   false, false );
-    cbox.pack_start( conn_lwidth,  false, false );
-    cbox.pack_start( conn_padding, false, false );
-    cbox.pack_start( conn_font,    false, false );
-    cbox.pack_start( conn_twidth,  false, false );
-
-    _conn_exp.add( cbox );
-
-    box.pack_start( _conn_exp, false, true );
-    box.pack_start( sep,       false, true, 10 );
+    var box = new Box( Orientation.VERTICAL, 5 );
+    box.append( _conn_exp );
+    box.append( sep );
 
     return( box );
 
   }
 
-  /* Create the connection dash widget */
+  //-------------------------------------------------------------
+  // Create the connection dash widget
   private Box create_connection_dash_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Line Dash" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Line Dash" ) );
-    lbl.xalign = (float)0;
-
-    var menu   = new Gtk.Menu();
     var dashes = styles.get_link_dashes();
 
-    _conn_dash = new Image.from_surface( dashes.index( 0 ).make_icon() );
+    _conn_dash = new ImageMenu() {
+      halign = Align.END
+    };
+
+    _conn_dash.changed.connect((index) => {
+      _curr_style.connection_dash = dashes.index( index );
+      _map.undo_buffer.add_item( new UndoStyleConnectionDash( _affects, dashes.index( index ), _map ) );
+    });
+
+    update_icons.connect(() => {
+      _conn_dash.update_icons();
+    });
 
     for( int i=0; i<dashes.length; i++ ) {
       var dash = dashes.index( i );
-      var img  = new Image.from_surface( dash.make_icon() );
-      var mi   = new Gtk.MenuItem();
-      mi.activate.connect(() => {
-        _da.undo_buffer.add_item( new UndoStyleConnectionDash( _affects, dash, _da ) );
-        _conn_dash.surface = img.surface;
-      });
-      mi.add( img );
-      menu.add( mi );
+      _conn_dash.add_image( dash.make_icon( false ), dash.make_icon( true ) );
     }
 
-    menu.show_all();
-
-    var mb = new MenuButton();
-    mb.add( _conn_dash );
-    mb.popup = menu;
-
-    box.pack_start( lbl, false, true );
-    box.pack_end(   mb,  false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign      = Align.FILL,
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _conn_dash );
 
     return( box );
 
   }
 
-  /* Creates the connection arrow position UI */
+  //-------------------------------------------------------------
+  // Creates the connection arrow position UI
   private Box create_connection_arrow_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Arrows" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Arrows" ) );
-    lbl.xalign = (float)0;
-
-    var menu         = new Gtk.Menu();
     string arrows[4] = {"none", "fromto", "tofrom", "both"};
 
-    _conn_arrow = new Image.from_surface( Connection.make_arrow_icon( "fromto" ) );
+    _conn_arrow = new ImageMenu() {
+      halign = Align.END
+    };
+
+    _conn_arrow.changed.connect((index) => {
+      _curr_style.connection_arrow = arrows[index];
+      _map.undo_buffer.add_item( new UndoStyleConnectionArrow( _affects, arrows[index], _map ) );
+    });
+
+    update_icons.connect(() => {
+      _conn_arrow.update_icons();
+    });
 
     foreach (string arrow in arrows) {
-      var img = new Image.from_surface( Connection.make_arrow_icon( arrow ) );
-      var mi  = new Gtk.MenuItem();
-      mi.activate.connect(() => {
-        _da.undo_buffer.add_item( new UndoStyleConnectionArrow( _affects, arrow, _da ) );
-        _conn_arrow.surface = img.surface;
-      });
-      mi.add( img );
-      menu.add( mi );
+      _conn_arrow.add_image( Connection.make_arrow_icon( arrow, false ), Connection.make_arrow_icon( arrow, true ) );
     }
 
-    menu.show_all();
-
-    var mb = new MenuButton();
-    mb.add( _conn_arrow );
-    mb.popup = menu;
-
-    box.pack_start( lbl, false, true );
-    box.pack_end(   mb,  false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign      = Align.FILL,
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _conn_arrow );
 
     return( box );
 
   }
 
-  /* Create widget for handling the width of a connection */
+  //-------------------------------------------------------------
+  // Creates the link arrow size UI.
+  private Box create_connection_arrow_size_ui() {
+
+    var lbl = new Label( _( "Arrow Size" ) ) {
+      halign  = Align.START,
+      hexpand = true
+    };
+
+    _conn_arrow_size = new Scale.with_range( Orientation.HORIZONTAL, 0, 3, 1 ) {
+      halign     = Align.FILL,
+      draw_value = false
+    };
+
+    _conn_arrow_size.add_mark( 0, PositionType.BOTTOM, "S" );
+    _conn_arrow_size.add_mark( 1, PositionType.BOTTOM, "M" );
+    _conn_arrow_size.add_mark( 2, PositionType.BOTTOM, "L" );
+    _conn_arrow_size.add_mark( 3, PositionType.BOTTOM, "XL" );
+    _conn_arrow_size.change_value.connect( connection_arrow_size_changed );
+
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _conn_arrow_size );
+
+    return( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever the user changes the connection arrow size value
+  private bool connection_arrow_size_changed( ScrollType scroll, double value ) {
+    if( value > 3 ) value = 3;
+    var int_value       = (int)value;
+    var conn_arrow_size = new UndoStyleConnectionArrowSize( _affects, int_value, _map );
+    _curr_style.connection_arrow_size = int_value;
+    if( _change_add ) {
+      _map.undo_buffer.add_item( conn_arrow_size );
+      _change_add = false;
+    } else {
+      _map.undo_buffer.replace_item( conn_arrow_size );
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Create widget for handling the width of a connection
   private Box create_connection_line_width_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Line Width" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Line Width" ) );
-    lbl.xalign = (float)0;
-
-    _conn_lwidth = new Scale.with_range( Orientation.HORIZONTAL, 1, 8, 1 );
-    _conn_lwidth.draw_value = false;
+    _conn_lwidth = new Scale.with_range( Orientation.HORIZONTAL, 1, 8, 1 ) {
+      halign     = Align.FILL,
+      draw_value = false
+    };
 
     for( int i=2; i<=8; i++ ) {
       if( (i % 2) == 0 ) {
@@ -945,328 +1328,513 @@ public class StyleInspector : Box {
     }
 
     _conn_lwidth.change_value.connect( connection_line_width_changed );
-    _conn_lwidth.button_release_event.connect( connection_line_width_released );
 
-    box.pack_start( lbl,          false, true );
-    box.pack_end(   _conn_lwidth, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign      = Align.FILL,
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _conn_lwidth );
 
     return( box );
 
   }
 
-  /* Called whenever the user changes the link width value */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the link width value.
   private bool connection_line_width_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 8 ) intval = 8;
-    var width = new UndoStyleConnectionLineWidth( _affects, intval, _da );
+    var width = new UndoStyleConnectionLineWidth( _affects, intval, _map );
+    _curr_style.connection_line_width = intval;
     if( _change_add ) {
-      _da.undo_buffer.add_item( width );
+      _map.undo_buffer.add_item( width );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( width );
+      _map.undo_buffer.replace_item( width );
     }
     return( false );
   }
 
-  private bool connection_line_width_released( EventButton e ) {
-    _change_add = true;
-    return( false );
-  }
-
-  /* Allows the user to change the node padding */
+  //-------------------------------------------------------------
+  // Allows the user to change the node padding
   private Box create_connection_padding_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Padding" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Padding" ) );
-    lbl.xalign = (float)0;
-
-    _conn_padding = new Scale.with_range( Orientation.HORIZONTAL, 2, 10, 2 );
-    _conn_padding.draw_value = true;
+    _conn_padding = new Scale.with_range( Orientation.HORIZONTAL, 2, 10, 2 ) {
+      halign     = Align.FILL,
+      draw_value = true
+    };
     _conn_padding.change_value.connect( connection_padding_changed );
-    _conn_padding.button_release_event.connect( connection_padding_released );
 
-    box.pack_start( lbl,           false, true );
-    box.pack_end(   _conn_padding, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign      = Align.FILL,
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _conn_padding );
 
     return( box );
 
   }
 
-  /* Called whenever the node margin value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the node margin value is changed
   private bool connection_padding_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 20 ) {
       return( false );
     }
-    var padding = new UndoStyleConnectionPadding( _affects, intval, _da );
+    var padding = new UndoStyleConnectionPadding( _affects, intval, _map );
+    _curr_style.connection_padding = intval;
     if( _change_add ) {
-      _da.undo_buffer.add_item( padding );
+      _map.undo_buffer.add_item( padding );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( padding );
+      _map.undo_buffer.replace_item( padding );
     }
     return( false );
   }
 
-  private bool connection_padding_released( EventButton e ) {
-    _change_add = true;
-    return( false );
-  }
-
-  /* Creates the node font selector */
+  //-------------------------------------------------------------
+  // Creates the node font selector
   private Box create_connection_font_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Title Font" ) );
-    lbl.xalign = (float)0;
+    var lbl = new Label( _( "Title Font" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    _conn_font = new FontButton();
-    _conn_font.use_font = true;
-    _conn_font.show_style = false;
-    _conn_font.set_filter_func( (family, face) => {
-      var fd     = face.describe();
-      var weight = fd.get_weight();
-      var style  = fd.get_style();
-      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+    var font_dialog = new FontDialog();
+    _conn_font = new FontDialogButton( font_dialog ) {
+      valign   = Align.CENTER,
+      use_font = true,
+      use_size = false
+    };
+    var font_filter = new CustomFilter((obj) => {
+      var font_face = (obj as Pango.FontFace);
+      if( font_face != null ) {
+        var fd     = font_face.describe();
+        var weight = fd.get_weight();
+        var style  = fd.get_style();
+        return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+      }
+      return( false );
     });
-    _conn_font.font_set.connect(() => {
-      var family = _conn_font.get_font_family().get_name();
-      var size   = _conn_font.get_font_size();
-      _da.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _da ) );
+    font_dialog.set_filter( font_filter );
+    _conn_font.notify["font-desc"].connect(() => {
+      var family = _conn_font.font_desc.get_family();
+      var size   = _conn_font.font_desc.get_size();
+      _curr_style.connection_font = _conn_font.font_desc.copy();
+      _map.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _map ) );
     });
 
-    box.pack_start( lbl,      false, true );
-    box.pack_end( _conn_font, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign = Align.FILL
+    };
+    box.append( lbl );
+    box.append( _conn_font );
 
     return( box );
 
   }
 
-  /* Creates the connection title width selector */
-  private Box create_connection_title_width_ui() {
+  //-------------------------------------------------------------
+  // Creates the UI for the connection text alignment widget.
+  private Box create_connection_text_align_ui() {
+
+    var lbl = new Label( _( "Text Alignment" ) ) {
+      halign  = Align.START,
+      hexpand = true
+    };
+
+    _conn_text_align = new ModeButtons() {
+      halign = Align.END,
+      valign = Align.CENTER
+    };
+    _conn_text_align.changed.connect( set_connection_text_align );
+
+    _conn_text_align.add_button( "format-justify-left-symbolic",   null, _( "Left" ) );
+    _conn_text_align.add_button( "format-justify-center-symbolic", null, _( "Center" ) );
+    _conn_text_align.add_button( "format-justify-right-symbolic",  null, _( "Right" ) );
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Title Width" ) );
-    lbl.xalign = (float)0;
+    box.append( lbl );
+    box.append( _conn_text_align );
 
-    _conn_twidth = new SpinButton.with_range( 100, 400, 50 );
-    _conn_twidth.set_value( _settings.get_int( "style-connection-title-width" ) );
+    return( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Sets the connection text alignment value.
+  private void set_connection_text_align( int index ) {
+    Pango.Alignment? align = null;
+    switch( index ) {
+      case 0 :  align = Pango.Alignment.LEFT;    break;
+      case 1 :  align = Pango.Alignment.CENTER;  break;
+      case 2 :  align = Pango.Alignment.RIGHT;   break;
+    }
+    if( align != null ) {
+      _curr_style.connection_text_align = align;
+      _map.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, align, _map ) );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Creates the connection title width selector
+  private Box create_connection_title_width_ui() {
+
+    var lbl = new Label( _( "Title Width" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
+
+    _conn_twidth = new SpinButton.with_range( 100, 400, 50 ) {
+      halign = Align.END,
+      valign = Align.CENTER,
+    };
     _conn_twidth.value_changed.connect(() => {
       if( !_ignore ) {
         var width = (int)_conn_twidth.get_value();
-        _da.undo_buffer.replace_item( new UndoStyleConnectionTitleWidth( _affects, width, _da ) );
+        _curr_style.connection_title_width = width;
+        _map.undo_buffer.replace_item( new UndoStyleConnectionTitleWidth( _affects, width, _map ) );
       }
     });
 
-    box.pack_start( lbl,        false, true );
-    box.pack_end( _conn_twidth, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign = Align.FILL
+    };
+    box.append( lbl );
+    box.append( _conn_twidth );
 
     return( box );
 
   }
 
-  /* Creates the callout style UI */
+  //-------------------------------------------------------------
+  // Creates the callout style UI
   private Box create_callout_ui() {
 
-    var box = new Box( Orientation.VERTICAL, 0 );
-    var sep = new Separator( Orientation.HORIZONTAL );
+    var callout_font       = create_callout_font_ui();
+    var callout_text_align = create_callout_text_align_ui();
+    var callout_padding    = create_callout_padding_ui();
+    var callout_pwidth     = create_callout_pointer_width_ui();
+    var callout_plength    = create_callout_pointer_length_ui();
 
-    /* Create expander */
-    _callout_exp = new Expander( "  " + Utils.make_title( _( "Callout Options" ) ) );
-    _callout_exp.use_markup = true;
-    _callout_exp.expanded   = _settings.get_boolean( "style-callout-options-expanded" );
+    var cbox = new Box( Orientation.VERTICAL, 0 ) {
+      homogeneous   = true,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
+    };
+    cbox.append( callout_font );
+    cbox.append( callout_text_align );
+    cbox.append( callout_padding );
+    cbox.append( callout_pwidth );
+    cbox.append( callout_plength );
+
+    // Create expander
+    _callout_exp = new Expander( "  " + _( "Callout Options" ) ) {
+      use_markup = true,
+      expanded   = _settings.get_boolean( "style-callout-options-expanded" ),
+      child      = cbox
+    };
+    _callout_exp.add_css_class( "titled" );
     _callout_exp.activate.connect(() => {
       _settings.set_boolean( "style-callout-options-expanded", !_callout_exp.expanded );
     });
 
-    var cbox = new Box( Orientation.VERTICAL, 10 );
-    cbox.homogeneous  = true;
-    cbox.border_width = 10;
+    var sep = new Separator( Orientation.HORIZONTAL );
 
-    var callout_font    = create_callout_font_ui();
-    var callout_padding = create_callout_padding_ui();
-    var callout_pwidth  = create_callout_pointer_width_ui();
-    var callout_plength = create_callout_pointer_length_ui();
-
-    cbox.pack_start( callout_font,    false, false );
-    cbox.pack_start( callout_padding, false, false );
-    cbox.pack_start( callout_pwidth,  false, false );
-    cbox.pack_start( callout_plength, false, false );
-
-    _callout_exp.add( cbox );
-
-    box.pack_start( _callout_exp, false, true );
-    box.pack_start( sep,          false, true, 10 );
+    var box = new Box( Orientation.VERTICAL, 5 );
+    box.append( _callout_exp );
+    box.append( sep );
 
     return( box );
 
   }
 
-  /* Creates the callout font selector */
+  //-------------------------------------------------------------
+  // Creates the callout font selector
   private Box create_callout_font_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Text Font" ) );
-    lbl.xalign = (float)0;
+    var lbl = new Label( _( "Text Font" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    _callout_font = new FontButton();
-    _callout_font.use_font = true;
-    _callout_font.show_style = false;
-    _callout_font.set_filter_func( (family, face) => {
-      var fd     = face.describe();
-      var weight = fd.get_weight();
-      var style  = fd.get_style();
-      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+    var font_dialog = new FontDialog();
+    _callout_font = new FontDialogButton( font_dialog ) {
+      valign   = Align.CENTER,
+      use_font = true,
+      use_size = false
+    };
+    var font_filter = new CustomFilter((obj) => {
+      var font_face = (obj as Pango.FontFace);
+      if( font_face != null ) {
+        var fd     = font_face.describe();
+        var weight = fd.get_weight();
+        var style  = fd.get_style();
+        return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+      }
+      return( false );
     });
-    _callout_font.font_set.connect(() => {
-      var family = _callout_font.get_font_family().get_name();
-      var size   = _callout_font.get_font_size();
-      _da.undo_buffer.add_item( new UndoStyleCalloutFont( _affects, family, size, _da ) );
+    font_dialog.set_filter( font_filter );
+    _callout_font.notify["font-desc"].connect(() => {
+      var family = _callout_font.font_desc.get_family();
+      var size   = _callout_font.font_desc.get_size();
+      _curr_style.callout_font = _callout_font.font_desc.copy();
+      _map.add_undo( new UndoStyleCalloutFont( _affects, family, size, _map ) );
     });
 
-    box.pack_start( lbl,         false, true );
-    box.pack_end( _callout_font, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign = Align.FILL
+    };
+    box.append( lbl );
+    box.append( _callout_font );
 
     return( box );
 
   }
 
-  /* Allows the user to change the callout padding */
+  //-------------------------------------------------------------
+  // Creates the UI for the callout text alignment widget.
+  private Box create_callout_text_align_ui() {
+
+    var lbl = new Label( _( "Text Alignment" ) ) {
+      halign  = Align.START,
+      hexpand = true
+    };
+
+    _callout_text_align = new ModeButtons() {
+      halign = Align.END,
+      valign = Align.CENTER
+    };
+    _callout_text_align.changed.connect( set_callout_text_align );
+
+    _callout_text_align.add_button( "format-justify-left-symbolic",   null, _( "Left" ) );
+    _callout_text_align.add_button( "format-justify-center-symbolic", null, _( "Center" ) );
+    _callout_text_align.add_button( "format-justify-right-symbolic",  null, _( "Right" ) );
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.append( lbl );
+    box.append( _callout_text_align );
+
+    return( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Sets the callout text alignment value.
+  private void set_callout_text_align( int index ) {
+    Pango.Alignment? align = null;
+    switch( index ) {
+      case 0 :  align = Pango.Alignment.LEFT;    break;
+      case 1 :  align = Pango.Alignment.CENTER;  break;
+      case 2 :  align = Pango.Alignment.RIGHT;   break;
+    }
+    if( align != null ) {
+      _curr_style.callout_text_align = align;
+      _map.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, align, _map ) );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Allows the user to change the callout padding
   private Box create_callout_padding_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Padding" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Padding" ) );
-    lbl.xalign = (float)0;
-
-    _callout_padding = new Scale.with_range( Orientation.HORIZONTAL, 4, 20, 2 );
-    _callout_padding.draw_value = true;
+    _callout_padding = new Scale.with_range( Orientation.HORIZONTAL, 4, 20, 2 ) {
+      halign     = Align.FILL,
+      draw_value = true
+    };
     _callout_padding.change_value.connect( callout_padding_changed );
-    _callout_padding.button_release_event.connect( callout_padding_released );
 
-    box.pack_start( lbl,              false, true );
-    box.pack_end(   _callout_padding, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign      = Align.FILL,
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _callout_padding );
 
     return( box );
 
   }
 
-  /* Called whenever the callout padding value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the callout padding value is changed
   private bool callout_padding_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 20 ) {
       return( false );
     }
-    var padding = new UndoStyleCalloutPadding( _affects, intval, _da );
+    var padding = new UndoStyleCalloutPadding( _affects, intval, _map );
+    _curr_style.callout_padding = intval;
     if( _change_add ) {
-      _da.undo_buffer.add_item( padding );
+      _map.undo_buffer.add_item( padding );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( padding );
+      _map.undo_buffer.replace_item( padding );
     }
     return( false );
   }
 
-  private bool callout_padding_released( EventButton e ) {
-    _change_add = true;
-    return( false );
-  }
-
-  /* Allows the user to change the callout padding */
+  //-------------------------------------------------------------
+  // Allows the user to change the callout padding
   private Box create_callout_pointer_width_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Pointer Width" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Pointer Width" ) );
-    lbl.xalign = (float)0;
-
-    _callout_ptr_width = new Scale.with_range( Orientation.HORIZONTAL, 10, 30, 5 );
-    _callout_ptr_width.draw_value = true;
+    _callout_ptr_width = new Scale.with_range( Orientation.HORIZONTAL, 10, 30, 5 ) {
+      halign     = Align.FILL,
+      draw_value = true
+    };
     _callout_ptr_width.change_value.connect( callout_pointer_width_changed );
-    _callout_ptr_width.button_release_event.connect( callout_pointer_width_released );
 
-    box.pack_start( lbl,                false, true );
-    box.pack_end(   _callout_ptr_width, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign      = Align.FILL,
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _callout_ptr_width );
 
     return( box );
 
   }
 
-  /* Called whenever the callout padding value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the callout padding value is changed
   private bool callout_pointer_width_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 30 ) {
       return( false );
     }
-    var pwidth = new UndoStyleCalloutPointerWidth( _affects, intval, _da );
+    var pwidth = new UndoStyleCalloutPointerWidth( _affects, intval, _map );
+    _curr_style.callout_ptr_width = intval;
     if( _change_add ) {
-      _da.undo_buffer.add_item( pwidth );
+      _map.undo_buffer.add_item( pwidth );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( pwidth );
+      _map.undo_buffer.replace_item( pwidth );
     }
     return( false );
   }
 
-  private bool callout_pointer_width_released( EventButton e ) {
-    _change_add = true;
-    return( false );
-  }
-
-  /* Allows the user to change the callout padding */
+  //-------------------------------------------------------------
+  // Allows the user to change the callout padding
   private Box create_callout_pointer_length_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
+    var lbl = new Label( _( "Pointer Length" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
 
-    var lbl = new Label( _( "Pointer Length" ) );
-    lbl.xalign = (float)0;
-
-    _callout_ptr_length = new Scale.with_range( Orientation.HORIZONTAL, 10, 100, 5 );
-    _callout_ptr_length.draw_value = true;
+    _callout_ptr_length = new Scale.with_range( Orientation.HORIZONTAL, 10, 100, 5 ) {
+      halign     = Align.FILL,
+      draw_value = true
+    };
     _callout_ptr_length.change_value.connect( callout_pointer_length_changed );
-    _callout_ptr_length.button_release_event.connect( callout_pointer_length_released );
 
-    box.pack_start( lbl,                 false, true );
-    box.pack_end(   _callout_ptr_length, false, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign      = Align.FILL,
+      homogeneous = true
+    };
+    box.append( lbl );
+    box.append( _callout_ptr_length );
 
     return( box );
 
   }
 
-  /* Called whenever the callout padding value is changed */
+  //-------------------------------------------------------------
+  // Called whenever the callout padding value is changed
   private bool callout_pointer_length_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
     if( intval > 100 ) {
       return( false );
     }
-    var plength = new UndoStyleCalloutPointerLength( _affects, intval, _da );
+    var plength = new UndoStyleCalloutPointerLength( _affects, intval, _map );
+    _curr_style.callout_ptr_length = intval;
     if( _change_add ) {
-      _da.undo_buffer.add_item( plength );
+      _map.undo_buffer.add_item( plength );
       _change_add = false;
     } else {
-      _da.undo_buffer.replace_item( plength );
+      _map.undo_buffer.replace_item( plength );
     }
     return( false );
   }
 
-  private bool callout_pointer_length_released( EventButton e ) {
-    _change_add = true;
-    return( false );
+  //-------------------------------------------------------------
+  // Update style from template style.
+  private void update_from_style( Style style ) {
+    switch( _affects ) {
+      case StyleAffects.ALL :
+        var nodes = _map.get_nodes();
+        var conns = _map.connections.connections;
+        for( int i=0; i<nodes.length; i++ ) {
+          nodes.index( i ).set_style_for_tree( style );
+        }
+        for( int i=0; i<conns.length; i++ ) {
+          conns.index( i ).style = style;
+        }
+        break;
+      case StyleAffects.SELECTED_NODES :
+        var nodes = _map.selected.nodes();
+        for( int i=0; i<nodes.length; i++ ) {
+          nodes.index( i ).style = style;
+        }
+        break;
+      case StyleAffects.SELECTED_CONNECTIONS :
+        var conns = _map.selected.connections();
+        for( int i=0; i<conns.length; i++ ) {
+          conns.index( i ).style = style;
+        }
+        break;
+      case StyleAffects.SELECTED_CALLOUTS :
+        var callouts = _map.selected.callouts();
+        for( int i=0; i<callouts.length; i++ ) {
+          callouts.index( i ).style = style;
+        }
+        break;
+    }
+    update_ui_with_style( style );
+    _map.queue_draw();
+    _map.auto_save();
   }
 
-  /* Sets the affects value and save the change to the settings */
+  //-------------------------------------------------------------
+  // Sets the affects value and save the change to the settings
   private void set_affects( StyleAffects affects ) {
-    var selected         = _da.get_selections();
+    var selected         = _map.selected;
+    if( _clipboard_affect != null ) {
+      _paste_btn.sensitive = ((_clipboard_affect == affects) || (_clipboard_affect == StyleAffects.ALL));
+    }
     _affects             = affects;
     _affects_label.label = affects.label();
     switch( _affects ) {
       case StyleAffects.ALL     :
-        update_ui_with_style( styles.get_global_style() );
+        _curr_style            = _map.global_style;
+        last_global_style      = _curr_style;
         _branch_group.visible  = true;
         _link_group.visible    = true;
         _node_group.visible    = true;
@@ -1274,37 +1842,44 @@ public class StyleInspector : Box {
         _callout_group.visible = true;
         _conn_exp.expanded     = _settings.get_boolean( "style-connection-options-expanded" );
         _callout_exp.expanded  = _settings.get_boolean( "style-callout-options-expanded" ); 
+        _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_GENERAL );
         break;
       case StyleAffects.SELECTED_NODES :
-        update_ui_with_style( selected.nodes().index( 0 ).style );
+        _curr_style = selected.nodes().index( 0 ).style;
         _branch_group.visible  = true;
         _link_group.visible    = true;
         _node_group.visible    = true;
         _conn_group.visible    = false;
         _callout_group.visible = false;
+        _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_NODE );
         break;
       case StyleAffects.SELECTED_CONNECTIONS :
-        update_ui_with_style( selected.connections().index( 0 ).style );
+        _curr_style = selected.connections().index( 0 ).style;
         _branch_group.visible  = false;
         _link_group.visible    = false;
         _node_group.visible    = false;
         _conn_group.visible    = true;
         _callout_group.visible = false;
         _conn_exp.expanded     = true;
+        _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_CONNECTION );
         break;
       case StyleAffects.SELECTED_CALLOUTS :
-        update_ui_with_style( selected.callouts().index( 0 ).style );
+        _curr_style = selected.callouts().index( 0 ).style;
         _branch_group.visible  = false;
         _link_group.visible    = false;
         _node_group.visible    = false;
         _conn_group.visible    = false;
         _callout_group.visible = true;
         _callout_exp.expanded  = true;
+        _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_CALLOUT );
         break;
     }
+    update_ui_with_style( _curr_style );
   }
 
-  /* Checks the nodes in the given tree at the specified level to see if there are any non-leaf nodes */
+  //-------------------------------------------------------------
+  // Checks the nodes in the given tree at the specified level to
+  // see if there are any non-leaf nodes.
   private bool check_level_for_branches( Node node, int levels, int level ) {
     if( (levels & (1 << level)) != 0 ) {
       return( !node.is_leaf() );
@@ -1318,86 +1893,174 @@ public class StyleInspector : Box {
     }
   }
 
-  /* We need to disable the link types widget if our affected nodes are leaf nodes only */
+  //-------------------------------------------------------------
+  // We need to disable the link types widget if our affected
+  // nodes are leaf nodes only.
   private void update_link_types_state() {
     bool sensitive = false;
     switch( _affects ) {
       case StyleAffects.ALL :
-        for( int i=0; i<_da.get_nodes().length; i++ ) {
-          if( !_da.get_nodes().index( i ).is_leaf() ) {
+        for( int i=0; i<_map.get_nodes().length; i++ ) {
+          if( !_map.get_nodes().index( i ).is_leaf() ) {
             sensitive = true;
             break;
           }
         }
         break;
       case StyleAffects.SELECTED_NODES :
-        for( int i=0; i<_da.get_selected_nodes().length; i++ ) {
-          if( _da.get_selected_nodes().index( i ).children().length > 0 ) {
+        for( int i=0; i<_map.get_selected_nodes().length; i++ ) {
+          if( _map.get_selected_nodes().index( i ).children().length > 0 ) {
             sensitive = true;
             break;
           }
         }
         break;
     }
-    _link_types.set_sensitive( sensitive );
+    _link_types.set_sensitive( sensitive && _map.editable );
   }
 
+  //-------------------------------------------------------------
+  // Updates the state of the link types modebutton widget with the
+  // link type style information.
   private void update_link_types_with_style( Style style ) {
-    var link_types = styles.get_link_types();
-    for( int i=0; i<link_types.length; i++ ) {
-      if( link_types.index( i ).name() == style.link_type.name() ) {
-        _link_types.selected = i;
-        break;
+    if( style.link_type != null ) {
+      var link_types = styles.get_link_types();
+      for( int i=0; i<link_types.length; i++ ) {
+        if( link_types.index( i ).name() == style.link_type.name() ) {
+          _link_types.selected = i;
+          break;
+        }
       }
+      _branch_radius_revealer.visible      = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
+      _branch_radius_revealer.reveal_child = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
     }
     update_link_types_state();
-    _branch_radius_revealer.visible      = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
-    _branch_radius_revealer.reveal_child = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
   }
 
+  //-------------------------------------------------------------
+  // Updates the state of the link dashes modebutton widget with
+  // the link dashes style information.
   private void update_link_dashes_with_style( Style style ) {
-    var link_dashes = styles.get_link_dashes();
-    for( int i=0; i<link_dashes.length; i++ ) {
-      if( link_dashes.index( i ).name == style.link_dash.name ) {
-        _link_dash.surface = link_dashes.index( i ).make_icon();
-        break;
+    if( style.link_dash != null ) {
+      var link_dashes = styles.get_link_dashes();
+      for( int i=0; i<link_dashes.length; i++ ) {
+        if( link_dashes.index( i ).name == style.link_dash.name ) {
+          _link_dash.selected = i;
+          break;
+        }
       }
     }
+    _link_dash.editable_changed( _map.editable );
   }
 
+  //-------------------------------------------------------------
+  // Updates the state of the node borders modebutton widget with
+  // the node border style information.
   private void update_node_borders_with_style( Style style ) {
-    var node_borders = styles.get_node_borders();
-    for( int i=0; i<node_borders.length; i++ ) {
-      if( node_borders.index( i ).name() == style.node_border.name() ) {
-        _node_borders.selected = i;
-        break;
+    if( style.node_border != null ) {
+      var node_borders = styles.get_node_borders();
+      for( int i=0; i<node_borders.length; i++ ) {
+        if( node_borders.index( i ).name() == style.node_border.name() ) {
+          _node_borders.selected = i;
+          break;
+        }
       }
     }
+    _node_borders.editable_changed( _map.editable );
   }
 
+  //-------------------------------------------------------------
+  // Updates the state of the node text alignment modebutton widget
+  // with the node text alignment style information.
+  private void update_node_text_align_with_style( Style style ) {
+    if( style.node_text_align != null ) {
+      switch( style.node_text_align ) {
+        case Pango.Alignment.LEFT   :  _node_text_align.selected = 0;  break;
+        case Pango.Alignment.CENTER :  _node_text_align.selected = 1;  break;
+        case Pango.Alignment.RIGHT  :  _node_text_align.selected = 2;  break;
+      }
+    }
+    _node_text_align.editable_changed( _map.editable );
+  }
+
+  //-------------------------------------------------------------
+  // Updates the state of the connection dash modebutton widget
+  // with the connection dash style information.
   private void update_conn_dashes_with_style( Style style ) {
-    var link_dashes = styles.get_link_dashes();
-    for( int i=0; i<link_dashes.length; i++ ) {
-      if( link_dashes.index( i ).name == style.connection_dash.name ) {
-        _conn_dash.surface = link_dashes.index( i ).make_icon();
-        break;
+    if( style.connection_dash != null ) {
+      var link_dashes = styles.get_link_dashes();
+      for( int i=0; i<link_dashes.length; i++ ) {
+        if( link_dashes.index( i ).name == style.connection_dash.name ) {
+          _conn_dash.selected = i;
+          break;
+        }
       }
     }
+    _conn_dash.editable_changed( _map.editable );
   }
 
-  /* Update the user interface elements to match the selected level */
+  //-------------------------------------------------------------
+  // Updates the state of the connection arrow style dropdown
+  // widget based on the connection arrow style information.
+  private void update_conn_arrows_with_style( Style style ) {
+    if( style.connection_arrow != null ) {
+      string arrows[4] = {"none", "fromto", "tofrom", "both"};
+      var i = 0;
+      foreach( var arrow in arrows ) {
+        if( arrow == style.connection_arrow ) {
+          _conn_arrow.selected = i;
+          break;
+        }
+        i++;
+      }
+    }
+    _conn_arrow.editable_changed( _map.editable );
+  }
+
+  //-------------------------------------------------------------
+  // Updates the state of the connection text alignment modebutton
+  // widget based on the connection text alignment style information.
+  private void update_conn_text_align_with_style( Style style ) {
+    if( style.connection_text_align != null ) {
+      switch( style.connection_text_align ) {
+        case Pango.Alignment.LEFT   :  _conn_text_align.selected = 0;  break;
+        case Pango.Alignment.CENTER :  _conn_text_align.selected = 1;  break;
+        case Pango.Alignment.RIGHT  :  _conn_text_align.selected = 2;  break;
+      }
+    }
+    _conn_text_align.editable_changed( _map.editable );
+  }
+
+  //-------------------------------------------------------------
+  // Updates the state of the callout text alignment modebutton
+  // widget based on the callout text alignment style information.
+  private void update_callout_text_align_with_style( Style style ) {
+    if( style.callout_text_align != null ) {
+      switch( style.callout_text_align ) {
+        case Pango.Alignment.LEFT   :  _callout_text_align.selected = 0;  break;
+        case Pango.Alignment.CENTER :  _callout_text_align.selected = 1;  break;
+        case Pango.Alignment.RIGHT  :  _callout_text_align.selected = 2;  break;
+      }
+    }
+    _callout_text_align.editable_changed( _map.editable );
+  }
+
+  //-------------------------------------------------------------
+  // Update the user interface elements to match the selected level
   private void update_ui_with_style( Style style ) {
 
     var branch_margin   = style.branch_margin;
     var branch_radius   = style.branch_radius;
     var link_width      = style.link_width;
     var link_arrow      = style.link_arrow;
+    var link_arrow_size = style.link_arrow_size;
     var node_bw         = style.node_borderwidth;
     var node_fill       = style.node_fill;
     var node_margin     = style.node_margin;
     var node_padding    = style.node_padding;
     var node_width      = style.node_width;
     var node_markup     = style.node_markup;
+    var conn_arrow_size = style.connection_arrow_size;
     var conn_line_width = style.connection_line_width;
     var conn_padding    = style.connection_padding;
     var callout_padding = style.callout_padding;
@@ -1405,50 +2068,133 @@ public class StyleInspector : Box {
     var callout_plength = style.callout_ptr_length;
 
     _ignore = true;
-    _branch_margin.set_value( (double)branch_margin );
-    _branch_radius.set_value( (double)branch_radius );
-    update_link_types_with_style( style );
-    update_link_dashes_with_style( style );
-    update_node_borders_with_style( style );
-    update_conn_dashes_with_style( style );
-    _link_width.set_value( (double)link_width );
-    _link_arrow.set_active( (bool)link_arrow );
-    _node_borderwidth.set_value( (double)node_bw );
-    _node_fill.set_active( (bool)node_fill );
-    _node_fill.set_sensitive( style.node_border.is_fillable() );
-    _node_margin.set_value( (double)node_margin );
-    _node_padding.set_value( (double)node_padding );
-    _node_font.set_font( style.node_font.to_string() );
-    _node_width.set_value( (float)node_width );
-    _node_markup.set_active( (bool)node_markup );
-    _conn_arrow.surface = Connection.make_arrow_icon( style.connection_arrow );
-    _conn_lwidth.set_value( (double)conn_line_width );
-    _conn_font.set_font( style.connection_font.to_string() );
-    _conn_twidth.set_value( style.connection_title_width );
-    _conn_padding.set_value( (double)conn_padding );
-    _callout_font.set_font( style.callout_font.to_string() );
-    _callout_padding.set_value( (double)callout_padding );
-    _callout_ptr_width.set_value( (double)callout_pwidth );
-    _callout_ptr_length.set_value( (double)callout_plength );
+
+    // Nodes
+    if( (_affects == StyleAffects.ALL) || (_affects == StyleAffects.SELECTED_NODES) ) {
+      if( branch_margin != null ) {
+        _branch_margin.set_value( (double)branch_margin );
+      }
+      if( branch_radius != null ) {
+        _branch_radius.set_value( (double)branch_radius );
+      }
+      if( link_width != null ) {
+        _link_width.set_value( (double)link_width );
+      }
+      if( link_arrow != null ) {
+        _link_arrow.set_active( (bool)link_arrow );
+      }
+      if( link_arrow_size != null ) {
+        _link_arrow_size.set_value( (double)link_arrow_size );
+      }
+      update_link_types_with_style( style );
+      update_link_dashes_with_style( style );
+      if( node_bw != null ) {
+        _node_borderwidth.set_value( (double)node_bw );
+      }
+      if( node_fill != null ) {
+        _node_fill.set_active( (bool)node_fill );
+      }
+      if( node_margin != null ) {
+        _node_margin.set_value( (double)node_margin );
+      }
+      if( node_padding != null ) {
+        _node_padding.set_value( (double)node_padding );
+      }
+      if( style.node_font != null ) {
+        _node_font.set_font_features( style.node_font.to_string() );
+      }
+      if( node_width != null ) {
+        _node_width.set_value( (float)node_width );
+      }
+      if( node_markup != null ) {
+        _node_markup.set_active( (bool)node_markup );
+      }
+      update_node_borders_with_style( style );
+      update_node_text_align_with_style( style );
+    }
+
+    // Connections
+    if( (_affects == StyleAffects.ALL) || (_affects == StyleAffects.SELECTED_CONNECTIONS) ) {
+      update_conn_dashes_with_style( style );
+      update_conn_arrows_with_style( style );
+      update_conn_text_align_with_style( style );
+      if( conn_arrow_size != null ) {
+        _conn_arrow_size.set_value( (double)conn_arrow_size );
+      }
+      if( conn_line_width != null ) {
+        _conn_lwidth.set_value( (double)conn_line_width );
+      }
+      if( style.connection_font != null ) {
+        _conn_font.set_font_features( style.connection_font.to_string() );
+      }
+      if( style.connection_title_width != null ) {
+        _conn_twidth.set_value( style.connection_title_width );
+      }
+      if( conn_padding != null ) {
+        _conn_padding.set_value( (double)conn_padding );
+      }
+    }
+
+    // Callout
+    if( (_affects == StyleAffects.ALL) || (_affects == StyleAffects.SELECTED_CALLOUTS) ) {
+      update_callout_text_align_with_style( style );
+      if( style.callout_font != null ) {
+        _callout_font.set_font_features( style.callout_font.to_string() );
+      }
+      if( callout_padding != null ) {
+        _callout_padding.set_value( (double)callout_padding );
+      }
+      if( callout_pwidth != null ) {
+        _callout_ptr_width.set_value( (double)callout_pwidth );
+      }
+      if( callout_plength != null ) {
+        _callout_ptr_length.set_value( (double)callout_plength );
+      }
+    }
+
     _ignore = false;
+
+    // Handle editable changes
+    _branch_margin.set_sensitive( _map.editable );
+    _branch_radius.set_sensitive( _map.editable );
+    _link_width.set_sensitive( _map.editable );
+    _link_arrow.set_sensitive( _map.editable );
+    _link_arrow_size.set_sensitive( _map.editable );
+    _node_borderwidth.set_sensitive( _map.editable );
+    _node_fill.set_sensitive( (style.node_border != null) && style.node_border.is_fillable() && _map.editable );
+    _node_margin.set_sensitive( _map.editable );
+    _node_padding.set_sensitive( _map.editable );
+    _node_font.set_sensitive( _map.editable );
+    _node_width.set_sensitive( _map.editable );
+    _node_markup.set_sensitive( _map.editable );
+    _conn_lwidth.set_sensitive( _map.editable );
+    _conn_font.set_sensitive( _map.editable );
+    _conn_twidth.set_sensitive( _map.editable );
+    _conn_padding.set_sensitive( _map.editable );
+    _callout_font.set_sensitive( _map.editable );
+    _callout_padding.set_sensitive( _map.editable );
+    _callout_ptr_width.set_sensitive( _map.editable );
+    _callout_ptr_length.set_sensitive( _map.editable );
 
   }
 
-  /* Called whenever the current node changes */
+  //-------------------------------------------------------------
+  // Called whenever the current node changes
   private void handle_current_changed() {
-    if( _da.get_current_node() != null ) {
-      update_ui_with_style( _da.get_current_node().style );
-    } else if( _da.get_current_connection() != null ) {
-      update_ui_with_style( _da.get_current_connection().style );
-    } else if( _da.get_current_callout() != null ) {
-      update_ui_with_style( _da.get_current_callout().style );
+    if( _map.get_current_node() != null ) {
+      update_ui_with_style( _map.get_current_node().style );
+    } else if( _map.get_current_connection() != null ) {
+      update_ui_with_style( _map.get_current_connection().style );
+    } else if( _map.get_current_callout() != null ) {
+      update_ui_with_style( _map.get_current_callout().style );
     }
     handle_ui_changed();
   }
 
-  /* Called whenever the current node or connection changes */
+  //-------------------------------------------------------------
+  // Called whenever the current node or connection changes
   private void handle_ui_changed() {
-    var selected = _da.get_selections();
+    var selected = _map.selected;
     if( selected.num_nodes() > 0 ) {
       set_affects( StyleAffects.SELECTED_NODES );
     } else if( selected.num_connections() > 0 ) {
@@ -1460,7 +2206,8 @@ public class StyleInspector : Box {
     }
   }
 
-  /* Grabbing focus on the first UI element */
+  //-------------------------------------------------------------
+  // Grabbing focus on the first UI element
   public void grab_first() {
     _link_types.grab_focus();
   }

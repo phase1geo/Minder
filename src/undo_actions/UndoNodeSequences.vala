@@ -31,24 +31,24 @@ public class UndoNodeSequences : UndoItem {
     _nodes = nodes;
   }
 
-  private void update( DrawArea da ) {
+  private void update( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
       node.sequence = !node.sequence;
     }
-    da.queue_draw();
-    da.current_changed( da );
-    da.auto_save();
+    map.queue_draw();
+    map.current_changed( map );
+    map.auto_save();
   }
 
   /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
-    update( da );
+  public override void undo( MindMap map ) {
+    update( map );
   }
 
   /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
-    update( da );
+  public override void redo( MindMap map ) {
+    update( map );
   }
 
 }

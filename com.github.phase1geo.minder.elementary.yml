@@ -1,0 +1,52 @@
+ # This is the same ID that you've used in meson.build and other files
+app-id: com.github.phase1geo.minder
+
+# Instead of manually specifying a long list of build and runtime dependencies,
+# we can use a convenient pre-made runtime and SDK. For this example, we'll be
+# using the runtime and SDK provided by elementary.
+runtime: io.elementary.Platform
+runtime-version: '8.2'
+sdk: io.elementary.Sdk
+
+# This should match the exec line in your .desktop file and usually is the same
+# as your app ID
+command: com.github.phase1geo.minder
+
+# Here we can specify the kinds of permissions our app needs to run. Since we're
+# not using hardware like webcams, making sound, or reading external files, we
+# only need permission to draw our app on screen using either X11 or Wayland.
+finish-args:
+  - '--share=ipc'
+  - '--socket=fallback-x11'
+  - '--socket=wayland'
+  - '--filesystem=home'
+
+# This section is where you list all the source code required to build your app.
+# If we had external dependencies that weren't included in our SDK, we would list
+# them here.
+modules:
+  - name: libmarkdown
+    buildsystem: simple
+    build-commands:
+      - ./configure.sh --shared --prefix=/app --pkg-config
+      - make -j${FLATPAK_BUILDER_N_JOBS}
+      - sed -e 's|/sbin/ldconfig|/sbin/ldconfig -n|' -i librarian.sh
+      - make install
+    sources:
+      - type: archive
+        url: https://github.com/Orc/discount/archive/refs/tags/v2.2.4.tar.gz
+        sha256: 918905377e6ed3d0a7158cac0a4a18ed3c4cc0cad8ee95dddd82cb86ba9dd044
+
+  - name: gtksourceview
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://github.com/GNOME/gtksourceview.git
+        tag: '5.12.0'
+
+  - name: minder
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: .
+

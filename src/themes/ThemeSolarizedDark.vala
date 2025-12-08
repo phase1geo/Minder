@@ -53,7 +53,7 @@ public class ThemeSolarizedDark : Theme {
     set_color( "markdown_listitem",     color_from_string( "Red" ) );
     set_color( "callout_background",    color_from_string( "#f9c440" ) );
 
-    set_color( "link_color0", color_from_string( "#DC322F" ) );
+    set_color( "link_color0", color_from_string( "#a3242a" ) );
     set_color( "link_color1", color_from_string( "#CB4B16" ) );
     set_color( "link_color2", color_from_string( "#B58900" ) );
     set_color( "link_color3", color_from_string( "#859900" ) );

@@ -36,17 +36,17 @@ public class UndoGroupNote : UndoItem {
   }
 
   /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     _group.note = _old_note;
-    da.current_changed( da );
-    da.auto_save();
+    map.current_changed( map );
+    map.auto_save();
   }
 
   /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     _group.note = _new_note;
-    da.current_changed( da );
-    da.auto_save();
+    map.current_changed( map );
+    map.auto_save();
   }
 
 }

@@ -24,17 +24,13 @@ using Gdk;
 
 public class QuickEntry : Gtk.Window {
 
-  public static const Gtk.TargetEntry[] DRAG_TARGETS = {
-    {"text/uri-list", 0, DragTypes.URI},
-  };
-
-  private DrawArea         _da;
+  private MindMap          _map;
   private TextView         _entry;
   private Button           _apply;
   private Array<NodeHier?> _node_stack = null;
   private ExportText       _export;
 
-  public QuickEntry( DrawArea da, bool replace, GLib.Settings settings ) {
+  public QuickEntry( MindMap map, bool replace, GLib.Settings settings ) {
 
     /* Configure the window */
     default_width   = 500;
@@ -42,41 +38,52 @@ public class QuickEntry : Gtk.Window {
     modal           = true;
     deletable       = false;
     title           = _( "Quick Entry" );
-    transient_for   = da.win;
-    window_position = WindowPosition.CENTER_ON_PARENT;
+    transient_for   = map.win;
 
     /* Initialize member variables */
-    _da     = da;
-    _export = (ExportText)da.win.exports.get_by_name( "text" );
+    _map    = map;
+    _export = (ExportText)map.win.exports.get_by_name( "text" );
 
     /* Add window elements */
     var box = new Box( Orientation.VERTICAL, 0 );
 
     /* Create the text entry area */
-    _entry = new TextView();
-    _entry.border_width  = 5;
-    _entry.bottom_margin = 0;
-    _entry.set_wrap_mode( Gtk.WrapMode.WORD );
-    _entry.get_style_context().add_class( "textfield" );
-    _entry.key_press_event.connect( on_keypress );
+    _entry = new TextView() {
+      bottom_margin = 0,
+      wrap_mode     = Gtk.WrapMode.WORD
+    };
+    _entry.add_css_class( "textfield" );
+
+    var key = new EventControllerKey();
+    _entry.add_controller( key );
+    key.key_pressed.connect( on_keypress );
+
+    var drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
+    _entry.add_controller( drop );
+    drop.motion.connect( handle_drag_motion );
+    drop.drop.connect( handle_drop );
+
     _entry.buffer.insert_text.connect( handle_text_insertion );
     _entry.buffer.create_tag( "node", "background_rgba", Utils.color_from_string( "grey90" ), null );
 
-    /* Handle any changes to the side of the entry */
-    _entry.size_allocate.connect((alloc) => {
-      var new_margin = ((alloc.height - 100) < 0) ? 0 : (alloc.height - 100);
-      if( _entry.bottom_margin != new_margin ) {
-        _entry.bottom_margin = new_margin;
-      }
-    });
-
     /* Create the scrolled window for the text entry area */
-    var sw = new ScrolledWindow( null, null );
-    sw.add( _entry );
+    var sw = new ScrolledWindow() {
+      margin_start = 10,
+      margin_end   = 10,
+      margin_top   = 10,
+      margin_bottom = 10,
+      halign  = Align.FILL,
+      valign  = Align.FILL,
+      vexpand = true,
+      child   = _entry
+    };
 
-    var helprev    = new Revealer();
-    var helpgrid   = new Grid();
-    helpgrid.border_width = 5;
+    var helpgrid = new Grid() {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
     var help_title = make_help_label( _( "Help for inputting node information:" ) + "\n" );
     var help_line  = make_help_label( "  - " + _( "Each line of text describes either the title of a node or note information for a node." ) );
     var help_tab0  = make_help_label( "  - <b>" + _( "Tab" ) + "</b>:" );
@@ -109,75 +116,101 @@ public class QuickEntry : Gtk.Window {
     helpgrid.attach( help_utsk1, 1, 7 );
     helpgrid.attach( help_ctsk0, 0, 8 );
     helpgrid.attach( help_ctsk1, 1, 8 );
-    helprev.reveal_child = false;
-    helprev.add( helpgrid );
 
-    var bbox = new Box( Orientation.HORIZONTAL, 5 );
-    bbox.border_width = 5;
+    var helprev = new Revealer() {
+      halign       = Align.FILL,
+      valign       = Align.END,
+      reveal_child = false,
+      child        = helpgrid
+    };
 
-    var info = new Button.from_icon_name( "dialog-information-symbolic", IconSize.BUTTON );
-    info.relief = ReliefStyle.NONE;
+    var info = new Button.from_icon_name( "dialog-information-symbolic" ) {
+      halign    = Align.START,
+      hexpand   = true,
+      has_frame = false
+    };
     info.clicked.connect(() => {
       helprev.reveal_child = !helprev.reveal_child;
     });
-    bbox.pack_start( info, false, false );
 
     if( replace ) {
-      _apply = new Button.with_label( _( "Replace" ) );
-      _apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+      _apply = new Button.with_label( _( "Replace" ) ) {
+        halign = Align.END
+      };
+      _apply.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
       _apply.clicked.connect( () => {
         if( handle_replace() ) {
           close();
         } else {
           helprev.reveal_child = true;
-          help_node0.get_style_context().add_class( "highlighted" );
-          help_node1.get_style_context().add_class( "highlighted" );
+          help_node0.add_css_class( "highlighted" );
+          help_node1.add_css_class( "highlighted" );
         }
       });
-      if( !da.is_node_selected() ) _apply.set_sensitive( false );
-      bbox.pack_end( _apply, false, false );
+      if( !_map.is_node_selected() ) _apply.set_sensitive( false );
     } else {
-      _apply = new Button.with_label( _( "Insert" ) );
-      _apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+      _apply = new Button.with_label( _( "Insert" ) ) {
+        halign = Align.END
+      };
+      _apply.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
       _apply.clicked.connect(() => {
         if( handle_insert() ) {
           close();
         } else {
           helprev.reveal_child = true;
-          help_node0.get_style_context().add_class( "highlighted" );
-          help_node1.get_style_context().add_class( "highlighted" );
+          help_node0.add_css_class( "highlighted" );
+          help_node1.add_css_class( "highlighted" );
         }
       });
-      bbox.pack_end( _apply, false, false );
     }
 
-    var cancel = new Button.with_label( _( "Cancel" ) );
+    var cancel = new Button.with_label( _( "Cancel" ) ) {
+      halign = Align.END
+    };
     cancel.clicked.connect(() => {
       close();
     });
-    bbox.pack_end( cancel, false, false );
 
-    box.pack_start( sw,      true,  true );
-    box.pack_end(   bbox,    false, true );
-    box.pack_end(   helprev, false, true );
+    var bbox = new Box( Orientation.HORIZONTAL, 5 ) {
+      halign        = Align.FILL,
+      valign        = Align.END,
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
+    bbox.append( info );
+    bbox.append( cancel );
+    bbox.append( _apply );
 
-    add( box );
+    box.append( sw );
+    box.append( helprev );
+    box.append( bbox );
 
-    show_all();
+    child = box;
 
-    /* Set ourselves up to be a drag target */
-    Gtk.drag_dest_set( _entry, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
-
-    _entry.drag_motion.connect( handle_drag_motion );
-    _entry.drag_data_received.connect( handle_drag_data_received );
+    present();
 
   }
 
+  //-------------------------------------------------------------
+  // Called when the size of the window changes.
+  public override void size_allocate( int width, int height, int baseline ) {
+    base.size_allocate( width, height, baseline );
+    var new_margin = ((height - 100) < 0) ? 0 : (height - 100);
+    if( _entry.bottom_margin != new_margin ) {
+      _entry.bottom_margin = new_margin;
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Creates a help label with the given string label.
   private Label make_help_label( string str ) {
-    var lbl = new Label( str );
-    lbl.use_markup = true;
-    lbl.xalign     = (float)0;
-    lbl.get_style_context().add_class( "greyed-label" );
+    var lbl = new Label( str ) {
+      use_markup = true,
+      xalign     = (float)0,
+    };
+    lbl.add_css_class( "greyed-label" );
     return( lbl );
   }
 
@@ -206,11 +239,11 @@ public class QuickEntry : Gtk.Window {
   }
 
   /* Called whenever we drag something over the canvas */
-  private bool handle_drag_motion( Gdk.DragContext ctx, int x, int y, uint t ) {
+  private DragAction handle_drag_motion( double x, double y ) {
 
     if( _node_stack == null ) {
       _node_stack = new Array<NodeHier>();
-      if( !_export.parse_text( _da, _entry.buffer.text, _da.settings.get_int( "quick-entry-spaces-per-tab" ), _node_stack ) ) {
+      if( !_export.parse_text( _map, _entry.buffer.text, _map.settings.get_int( "quick-entry-spaces-per-tab" ), _node_stack ) ) {
         _node_stack = null;
       }
     }
@@ -223,7 +256,7 @@ public class QuickEntry : Gtk.Window {
       TextIter iter, first, last;
       int first_line, last_line, line_top;
 
-      _entry.get_line_at_y( out iter, y, out line_top );
+      _entry.get_line_at_y( out iter, (int)y, out line_top );
       var node_info = _export.get_node_at_line( _node_stack, iter.get_line() );
 
       if( node_info != null ) {
@@ -232,55 +265,54 @@ public class QuickEntry : Gtk.Window {
         _entry.buffer.apply_tag_by_name( "node", first, last );
       }
 
+      return( Gdk.DragAction.COPY );
+
     }
 
-    return( _node_stack != null );
+    return( 0 );
 
   }
 
   /* Called when something is dropped on the DrawArea */
-  private void handle_drag_data_received( Gdk.DragContext ctx, int x, int y, Gtk.SelectionData data, uint info, uint t ) {
+  private bool handle_drop( Value val, double x, double y ) {
 
-    if( info == DragTypes.URI ) {
+    TextIter iter;
+    Node     node;
+    int      line_top;
+    string   prefix;
 
-      TextIter iter;
-      Node     node;
-      int      line_top;
-      string   prefix;
+    _entry.get_line_at_y( out iter, (int)y, out line_top );
+    var node_info = _export.get_node_at_line( _node_stack, iter.get_line() );
 
-      _entry.get_line_at_y( out iter, y, out line_top );
-      var node_info = _export.get_node_at_line( _node_stack, iter.get_line() );
+    if( node_info != null ) {
 
-      if( node_info != null ) {
+      TextIter first, last;
+      var node_str = "";
 
-        TextIter first, last;
-        var node_str = "";
-
-        foreach( var uri in data.get_uris() ) {
-          var node_image = new NodeImage.from_uri( _da.image_manager, uri, 200 );
-          node_info.node.set_image( _da.image_manager, node_image );
-          if( node_str != "" ) {
-            node_str += "\n";
-          }
-          node_str += _export.export_node( _da, node_info.node, string.nfill( node_info.spaces, ' ' ) );
-        }
-
-        /* Perform the text substitution */
-        _entry.buffer.get_iter_at_line( out first, node_info.first_line );
-        _entry.buffer.get_iter_at_line( out last,  (node_info.last_line + 1) );
-        _entry.buffer.delete( ref first, ref last );
-        _entry.buffer.insert( ref first, node_str, node_str.length );
-
-        /* Make sure that we clear the node stack */
-        _node_stack = null;
-
+      var uri        = ((File)val).get_uri();
+      var node_image = new NodeImage.from_uri( _map.image_manager, uri, 200 );
+      node_info.node.set_image( _map.image_manager, node_image );
+      if( node_str != "" ) {
+        node_str += "\n";
       }
+      node_str += _export.export_node( _map, node_info.node, string.nfill( node_info.spaces, ' ' ) );
+
+      /* Perform the text substitution */
+      _entry.buffer.get_iter_at_line( out first, node_info.first_line );
+      _entry.buffer.get_iter_at_line( out last,  (node_info.last_line + 1) );
+      _entry.buffer.delete( ref first, ref last );
+      _entry.buffer.insert( ref first, node_str, node_str.length );
+
+      /* Make sure that we clear the node stack */
+      _node_stack = null;
+
+      return( true );
 
     }
 
-    Gtk.drag_finish( ctx, true, false, t );
-
     clear_node_tag();
+
+    return( false );
 
   }
 
@@ -395,19 +427,20 @@ public class QuickEntry : Gtk.Window {
   }
 
   /* Handles any keypresses in the quick entry text field */
-  private bool on_keypress( EventKey e ) {
+  private bool on_keypress( uint keyval, uint keycode, ModifierType state ) {
 
-    var control = (bool)(e.state & ModifierType.CONTROL_MASK);
-    var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
+    var control = (bool)(state & ModifierType.CONTROL_MASK);
+    var shift   = (bool)(state & ModifierType.SHIFT_MASK);
+    var ch      = (unichar)keyval;
 
-    switch( e.keyval ) {
+    switch( keyval ) {
       case Key.space        :  return( handle_space() );
       case Key.Return       :  return( handle_return( control ) );
       case Key.Tab          :  return( handle_tab( false ) );
       case Key.ISO_Left_Tab :  return( handle_tab( true ) );
       default             :
-        if( e.str.get_char().isprint() ) {
-          return( handle_printable( e.str ) );
+        if( ch.isalnum() || ch.ismark() ) {
+          return( handle_printable( ch.to_string() ) );
         }
         break;
     }
@@ -512,31 +545,12 @@ public class QuickEntry : Gtk.Window {
 
   /* Inserts the specified nodes into the given drawing area */
   private bool handle_insert() {
-    var nodes  = new Array<Node>();
-    var node   = _da.get_current_node();
-    _export.import_text( _entry.buffer.text, _da.settings.get_int( "quick-entry-spaces-per-tab" ), _da, false, nodes );
-    if( nodes.length == 0 ) return( false );
-    _da.undo_buffer.add_item( new UndoNodesInsert( _da, nodes ) );
-    _da.set_current_node( nodes.index( 0 ) );
-    _da.queue_draw();
-    _da.auto_save();
-    _da.see();
-    return( true );
+    return( _map.model.insert_text_as_node( _map.get_current_node(), _entry.buffer.text ) );
   }
 
   /* Replaces the specified nodes into the given drawing area */
   private bool handle_replace() {
-    var nodes  = new Array<Node>();;
-    var node   = _da.get_current_node();
-    var parent = node.parent;
-    _export.import_text( _entry.buffer.text, _da.settings.get_int( "quick-entry-spaces-per-tab" ), _da, true, nodes );
-    if( nodes.length == 0 ) return( false );
-    _da.undo_buffer.add_item( new UndoNodesReplace( node, nodes ) );
-    _da.set_current_node( nodes.index( 0 ) );
-    _da.queue_draw();
-    _da.auto_save();
-    _da.see();
-    return( true );
+    return( _map.model.replace_text_as_node( _map.get_current_node(), _entry.buffer.text ) );
   }
 
   /* Preloads the text buffer with the given text */

@@ -21,41 +21,30 @@
 
 using Gtk;
 
-public class CalloutMenu : Gtk.Menu {
+public class CalloutMenu : BaseMenu {
 
-  DrawArea _da;
+  //-------------------------------------------------------------
+  // Default constructor
+  public CalloutMenu( Gtk.Application app, DrawArea da ) {
 
-  /* Default constructor */
-  public CalloutMenu( DrawArea da, AccelGroup accel_group ) {
+    base( app, da, "callout" );
 
-    _da = da;
+    var del_menu = new GLib.Menu();
+    append_menu_item( del_menu, KeyCommand.EDIT_DELETE, _( "Delete" ) );
 
-    var del = new Gtk.MenuItem();
-    del.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
-    del.activate.connect( delete_callout );
+    var sel_menu = new GLib.Menu();
+    append_menu_item( sel_menu, KeyCommand.CALLOUT_SELECT_NODE, _( "Select Node" ) );
 
-    var selnode = new Gtk.MenuItem();
-    selnode.add( new Granite.AccelLabel( _( "Select Node" ), "<Shift>o" ) );
-    selnode.activate.connect( select_node );
-
-    /* Add the menu items to the menu */
-    add( del );
-    add( new SeparatorMenuItem() );
-    add( selnode );
-
-    /* Make the menu visible */
-    show_all();
+    menu.append_section( null, del_menu );
+    menu.append_section( null, sel_menu );
 
   }
 
-  /* Deletes the current group */
-  private void delete_callout() {
-    _da.remove_callout();
-  }
-
-  /* Selects the top-most nodes in each selected node group */
-  private void select_node() {
-    _da.select_callout_node();
+  //-------------------------------------------------------------
+  // Update the enable status for menu items that need to be disabled
+  // based on the current state.
+  protected override void on_popup() {
+    set_enabled( KeyCommand.EDIT_DELETE, map.editable );
   }
 
 }

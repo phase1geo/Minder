@@ -1,7 +1,14 @@
 name: CI
 
-# This workflow will run for any pull request or pushed commit
-on: [push, pull_request]
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    branches:
+      - master
+      - beta
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -20,13 +27,15 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so the job can access it
     - uses: actions/checkout@v3
 
-      # Builds your flatpak manifest using the Flatpak Builder action
-    - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
-      with:
-        # This is the name of the Bundle file we're building and can be anything you like
-        bundle: minder.flatpak
-        # This uses your app's RDNN ID
-        manifest-path: com.github.phase1geo.minder.yml
+      - name: Build
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6.5
+        with:
+          bundle: minder.flatpak
+          manifest-path: com.github.phase1geo.minder.elementary.yml
+          repository-name: appcenter
+          repository-url: https://flatpak.elementary.io/repo.flatpakrepo
+          cache-key: "flatpak-builder-${{ github.sha }}"
+          arch: ${{ matrix.configuration.arch }}
 
         # You can automatically run any of the tests you've created as part of this workflow
         run-tests: true

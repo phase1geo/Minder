@@ -21,141 +21,50 @@
 
 using Gtk;
 
-public class ConnectionMenu : Gtk.Menu {
+public class ConnectionMenu : BaseMenu {
 
-  DrawArea     _da;
-  Gtk.MenuItem _delete;
-  Gtk.MenuItem _edit;
-  Gtk.MenuItem _note;
-  Gtk.MenuItem _sticker;
-  Gtk.MenuItem _selstart;
-  Gtk.MenuItem _selend;
-  Gtk.MenuItem _selnext;
-  Gtk.MenuItem _selprev;
+  //-------------------------------------------------------------
+  // Default constructor
+  public ConnectionMenu( Gtk.Application app, DrawArea da ) {
 
-  /* Default constructor */
-  public ConnectionMenu( DrawArea da, AccelGroup accel_group ) {
+    base( app, da, "conn" );
 
-    _da = da;
+    // Create the menu
+    var del_menu = new GLib.Menu();
+    append_menu_item( del_menu, KeyCommand.CONNECTION_REMOVE, _( "Delete" ) );
 
-    _delete = new Gtk.MenuItem();
-    _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
-    _delete.activate.connect( delete_connection );
+    var edit_menu = new GLib.Menu();
+    append_menu_item( edit_menu, KeyCommand.EDIT_SELECTED,           _( "Edit Title…" ) );
+    append_menu_item( edit_menu, KeyCommand.EDIT_NOTE,               _( "Edit Note" ) );
+    append_menu_item( edit_menu, KeyCommand.REMOVE_STICKER_SELECTED, _( "Remove Sticker" ) );
 
-    _edit = new Gtk.MenuItem();
-    _edit.add( new Granite.AccelLabel( _( "Edit Title…" ), "e" ) );
-    _edit.activate.connect( edit_title );
+    var sel_node_menu = new GLib.Menu();
+    append_menu_item( sel_node_menu, KeyCommand.CONNECTION_SELECT_FROM, _( "Start Node" ) );
+    append_menu_item( sel_node_menu, KeyCommand.CONNECTION_SELECT_TO,   _( "End Node" ) );
 
-    _note = new Gtk.MenuItem();
-    _note.add( new Granite.AccelLabel( _( "Edit Note" ), "<Shift>e" ) );
-    _note.activate.connect( edit_note );
+    var sel_conn_menu = new GLib.Menu();
+    append_menu_item( sel_conn_menu, KeyCommand.CONNECTION_SELECT_NEXT, _( "Next Connection" ) );
+    append_menu_item( sel_conn_menu, KeyCommand.CONNECTION_SELECT_PREV, _( "Previous Connection" ) );
 
-    _sticker = new Gtk.MenuItem.with_label( _( "Remove Sticker" ) );
-    _sticker.activate.connect( remove_sticker );
+    var sel_submenu = new GLib.Menu();
+    sel_submenu.append_section( null, sel_node_menu );
+    sel_submenu.append_section( null, sel_conn_menu );
 
-    var selnode = new Gtk.MenuItem.with_label( _( "Select" ) );
-    var selmenu = new Gtk.Menu();
-    selnode.set_submenu( selmenu );
+    var sel_menu = new GLib.Menu();
+    sel_menu.append_submenu( _( "Select" ), sel_submenu );
 
-    _selstart = new Gtk.MenuItem();
-    _selstart.add( new Granite.AccelLabel( _( "Start Node" ), "f" ) );
-    _selstart.activate.connect( select_start_node );
-
-    _selend = new Gtk.MenuItem();
-    _selend.add( new Granite.AccelLabel( _( "End Node" ), "t" ) );
-    _selend.activate.connect( select_end_node );
-
-    _selnext = new Gtk.MenuItem();
-    _selnext.add( new Granite.AccelLabel( _( "Next Connection" ), "Right" ) );
-    _selnext.activate.connect( select_next_connection );
-
-    _selprev = new Gtk.MenuItem();
-    _selprev.add( new Granite.AccelLabel( _( "Previous Connection" ), "Left" ) );
-    _selprev.activate.connect( select_prev_connection );
-
-    /* Add the menu items to the menu */
-    add( _delete );
-    add( new SeparatorMenuItem() );
-    add( _edit );
-    add( _note );
-    add( _sticker );
-    add( new SeparatorMenuItem() );
-    add( selnode );
-
-    /* Add the items to the selection menu */
-    selmenu.add( _selstart );
-    selmenu.add( _selend );
-    selmenu.add( new SeparatorMenuItem() );
-    selmenu.add( _selnext );
-    selmenu.add( _selprev );
-
-    /* Make the menu visible */
-    show_all();
-
-    /* Make sure that we handle menu state when we are popped up */
-    show.connect( on_popup );
+    menu.append_section( null, del_menu );
+    menu.append_section( null, edit_menu );
+    menu.append_section( null, sel_menu );
 
   }
 
-  /* Returns true if a note is associated with the currently selected node */
-  private bool connection_has_note() {
-    Connection? current = _da.get_current_connection();
-    return( (current != null) && (current.note != "") );
-  }
-
-  /* Called when the menu is popped up */
-  private void on_popup() {
-
-    _sticker.set_sensitive( _da.get_current_connection().sticker != null );
-
-  }
-
-  /* Deletes the current node */
-  private void delete_connection() {
-    _da.delete_connection();
-  }
-
-  /* Displays the sidebar to edit the node properties */
-  private void edit_title() {
-    Connection conn = _da.get_current_connection();
-    if( conn.title == null ) {
-      conn.change_title( _da, "", true );
-    }
-    _da.set_connection_mode( conn, ConnMode.EDITABLE );
-  }
-
-  /* Changes the note status of the currently selected node */
-  private void edit_note() {
-    _da.show_properties( "current", PropertyGrab.NOTE );
-  }
-
-  /* Removes the sticker attached to the connection */
-  private void remove_sticker() {
-    var current = _da.get_current_connection();
-    _da.undo_buffer.add_item( new UndoConnectionStickerRemove( current ) );
-    current.sticker = null;
-    _da.queue_draw();
-    _da.auto_save();
-  }
-
-  /* Selects the next sibling node of the current node */
-  private void select_start_node() {
-    _da.select_connection_node( true );
-  }
-
-  /* Selects the previous sibling node of the current node */
-  private void select_end_node() {
-    _da.select_connection_node( false );
-  }
-
-  /* Selects the next connection in the mind map */
-  private void select_next_connection() {
-    _da.select_connection( 1 );
-  }
-
-  /* Selects the previous connection in the mind map */
-  private void select_prev_connection() {
-    _da.select_connection( -1 );
+  protected override void on_popup() {
+    var current = map.get_current_connection();
+    set_enabled( KeyCommand.CONNECTION_REMOVE,       map.editable );
+    set_enabled( KeyCommand.EDIT_SELECTED,           map.editable );
+    set_enabled( KeyCommand.EDIT_NOTE,               map.editable );
+    set_enabled( KeyCommand.REMOVE_STICKER_SELECTED, ((current != null) && (current.sticker != null) && map.editable) );
   }
 
 }

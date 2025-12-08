@@ -33,22 +33,22 @@ public class UndoConnectionStickerChange : UndoItem {
     _name = orig_name;
   }
 
-  private void toggle( DrawArea da ) {
+  private void toggle( MindMap map ) {
     var name = _conn.sticker;
     _conn.sticker = _name;
     _name = name;
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
-    toggle( da );
+  public override void undo( MindMap map ) {
+    toggle( map );
   }
 
   /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
-    toggle( da );
+  public override void redo( MindMap map ) {
+    toggle( map );
   }
 
 }

@@ -25,35 +25,36 @@ using Granite.Widgets;
 
 public class NodeInspector : Box {
 
-  private const Gtk.TargetEntry[] DRAG_TARGETS = {
-    {"text/uri-list", 0, 0}
-  };
-
   private ScrolledWindow _sw;
   private Switch         _task;
   private Switch         _fold;
   private Switch         _sequence;
-  private Revealer       _link_reveal;
+  private Box            _link_box;
   private ColorButton    _link_color;
   private NoteView       _note;
-  private DrawArea?      _da = null;
+  private MindMap?       _map = null;
   private Button         _detach_btn;
   private string         _orig_note = "";
   private Node?          _node = null;
   private Stack          _image_stack;
-  private Image          _image;
+  private Picture        _image;
   private Button         _image_btn;
   private Label          _image_loc;
   private Switch         _override;
   private ColorButton    _root_color;
-  private Revealer       _root_color_reveal;
+  private Box            _root_color_box;
   private Revealer       _color_reveal;
   private ToggleButton   _resize;
-  private bool           _ignore_changes = false;
+  private bool           _ignore = false;
 
+  public signal void update_icons();
+  public signal void editable_changed();
+
+  //-------------------------------------------------------------
+  // Constructor.
   public NodeInspector( MainWindow win ) {
 
-    Object( orientation:Orientation.VERTICAL, spacing:0 );
+    Object( orientation: Orientation.VERTICAL, spacing: 10 );
 
     /* Create the node widgets */
     create_title();
@@ -66,335 +67,387 @@ public class NodeInspector : Box {
     create_image();
     create_buttons();
 
-    show_all();
-
     win.canvas_changed.connect( tab_changed );
 
   }
 
-  /* Called whenever the user clicks on a tab in the tab bar */
-  private void tab_changed( DrawArea? da ) {
-    if( _da != null ) {
-      _da.current_changed.disconnect( node_changed );
-      _da.theme_changed.disconnect( theme_changed );
+  //-------------------------------------------------------------
+  // Called whenever the user clicks on a tab in the tab bar.
+  private void tab_changed( MindMap? map ) {
+    if( _map != null ) {
+      _map.current_changed.disconnect( node_changed );
+      _map.theme_changed.disconnect( theme_changed );
     }
-    _da = da;
-    if( da != null ) {
-      da.current_changed.connect( node_changed );
-      da.theme_changed.connect( theme_changed );
+    _map = map;
+    if( map != null ) {
+      map.current_changed.connect( node_changed );
+      map.theme_changed.connect( theme_changed );
       node_changed();
+      editable_changed();
     }
   }
 
-  /* Sets the width of this inspector to the given value */
+  //-------------------------------------------------------------
+  // Sets the width of this inspector to the given value.
   public void set_width( int width ) {
     _sw.width_request = width;
   }
 
+  //-------------------------------------------------------------
+  // Creates a label with text displayed as a title.
   private void create_title() {
 
-    var title = new Label( "<big>" + _( "Node" ) + "</big>" );
-    title.use_markup = true;
-    title.justify    = Justification.CENTER;
-
-    pack_start( title, false, true );
-
-  }
-
-  /* Creates the task UI elements */
-  private void create_task() {
-
-    var lbl  = new Label( Utils.make_title( _( "Task" ) ) );
-    lbl.xalign     = (float)0;
-    lbl.use_markup = true;
-
-    _task = new Switch();
-    _task.button_release_event.connect( task_changed );
-
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.pack_start( lbl,   false, true, 0 );
-    box.pack_end(   _task, false, true, 0 );
-
-    pack_start( box, false, true, 5 );
-
-  }
-
-  /* Creates the fold UI elements */
-  private void create_fold() {
-
-    var lbl = new Label( Utils.make_title( _( "Fold" ) ) );
-    lbl.xalign     = (float)0;
-    lbl.use_markup = true;
-
-    _fold = new Switch();
-    _fold.button_release_event.connect( fold_changed );
-
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.pack_start( lbl,   false, true, 0 );
-    box.pack_end(   _fold, false, true, 0 );
-
-    pack_start( box, false, true, 5 );
-
-  }
-
-  /* Creates the sequence UI elements */
-  private void create_sequence() {
-
-    var lbl = new Label( Utils.make_title( _( "Sequence" ) ) ) {
-      xalign     = (float)0,
-      use_markup = true
+    var title = new Label( "<big>" + _( "Node" ) + "</big>" ) {
+      halign     = Align.FILL,
+      use_markup = true,
+      justify    = Justification.CENTER
     };
 
-    var info = new Image.from_icon_name( "dialog-information-symbolic", IconSize.MENU ) {
+    append( title );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the task UI elements.
+  private void create_task() {
+
+    var lbl = new Label( _( "Task" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
+    lbl.add_css_class( "titled" );
+
+    _task = new Switch() {
+      halign = Align.END
+    };
+    _task.notify["active"].connect( task_changed );
+
+    var box = new Box( Orientation.HORIZONTAL, 5 ) {
+      halign = Align.FILL
+    };
+    box.append( lbl );
+    box.append( _task );
+
+    append( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the fold UI elements.
+  private void create_fold() {
+
+    var lbl = new Label( _( "Fold" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
+    };
+    lbl.add_css_class( "titled" );
+
+    _fold = new Switch() {
+      halign = Align.END
+    };
+    _fold.notify["active"].connect( fold_changed );
+
+    var box = new Box( Orientation.HORIZONTAL, 5 ) {
+      halign = Align.FILL
+    };
+    box.append( lbl );
+    box.append( _fold );
+
+    append( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the sequence UI elements.
+  private void create_sequence() {
+
+    var lbl = new Label( _( "Sequence" ) ) {
+      halign = Align.START,
+      xalign = (float)0,
+    };
+    lbl.add_css_class( "titled" );
+
+    var info = new Image.from_icon_name( "dialog-information-symbolic" ) {
       halign       = Align.START,
+      hexpand      = true,
       tooltip_text = _( "When set, automatically numbers child nodes and displays them as a sequence." )
     };
 
-    _sequence = new Switch();
-    _sequence.button_release_event.connect( sequence_changed );
+    _sequence = new Switch() {
+      halign = Align.END
+    };
+    _sequence.notify["active"].connect( sequence_changed );
 
-    var box = new Box( Orientation.HORIZONTAL, 5 );
-    box.pack_start( lbl,       false, true, 0 );
-    box.pack_start( info,      false, true, 0 );
-    box.pack_end(   _sequence, false, true, 0 );
+    var box = new Box( Orientation.HORIZONTAL, 5 ) {
+      halign = Align.FILL
+    };
+    box.append( lbl );
+    box.append( info );
+    box.append( _sequence );
 
-    pack_start( box, false, true, 5 );
+    append( box );
     
   }
 
-
-  /*
-   Allows the user to select a different color for the current link
-   and tree.
-  */
+  //-------------------------------------------------------------
+  // Allows the user to select a different color for the current
+  // link and tree.
   private void create_link() {
 
-    var lbl = new Label( Utils.make_title( _( "Color" ) ) );
-    lbl.xalign     = (float)0;
-    lbl.use_markup = true;
+    var lbl = new Label( _( "Color" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0,
+    };
+    lbl.add_css_class( "titled" );
 
-    _link_color = new ColorButton();
+    _link_color = new ColorButton() {
+      halign = Align.FILL
+    };
     _link_color.color_set.connect(() => {
-      _da.change_current_link_color( _link_color.rgba );
+      _map.model.change_current_link_color( _link_color.rgba );
     });
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous   = true;
-    box.margin_top    = 5;
-    box.margin_bottom = 5;
-    box.pack_start( lbl,         false, true, 0 );
-    box.pack_end(   _link_color, true,  true, 0 );
+    _link_box = new Box( Orientation.HORIZONTAL, 5 ) {
+      homogeneous   = true,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
+    _link_box.append( lbl );
+    _link_box.append( _link_color );
 
-    _link_reveal = new Revealer();
-    _link_reveal.transition_type = RevealerTransitionType.NONE;
-    _link_reveal.add( box );
-
-    pack_start( _link_reveal, false, true );
+    append( _link_box );
 
   }
 
-  /*
-   Allows the user to select a different color for the current root
-   node.
-  */
+  //-------------------------------------------------------------
+  // Allows the user to select a different color for the current
+  // root node.
   private void create_color() {
 
-    var lbl = new Label( Utils.make_title( _( "Override Color" ) ) );
-    lbl.xalign     = (float)0;
-    lbl.use_markup = true;
+    var lbl = new Label( _( "Override Color" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0,
+    };
+    lbl.add_css_class( "titled" );
 
-    _override = new Switch();
-    _override.button_release_event.connect( root_color_changed );
+    _override = new Switch() {
+      halign = Align.END
+    };
+    _override.notify["active"].connect( root_color_changed );
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.margin_top    = 5;
-    box.margin_bottom = 5;
-    box.pack_start( lbl, false, true, 0 );
-    box.pack_end( _override, false, true, 0 );
+    var box = new Box( Orientation.HORIZONTAL, 5 ) {
+      halign        = Align.FILL,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
+    box.append( lbl );
+    box.append( _override );
 
-    var l = new Label("");
+    var l = new Label( "" );
 
-    _root_color = new ColorButton();
+    _root_color = new ColorButton() {
+      halign = Align.FILL
+    };
     _root_color.color_set.connect(() => {
-      _da.change_current_link_color( _root_color.rgba );
+      _map.model.change_current_link_color( _root_color.rgba );
     });
 
-    var cbox = new Box( Orientation.HORIZONTAL, 0 );
-    cbox.homogeneous = true;
-    cbox.margin_bottom = 5;
-    cbox.pack_start( l, false, true, 0 );
-    cbox.pack_end( _root_color, false, true, 0 );
+    var cbox = new Box( Orientation.HORIZONTAL, 5 ) {
+      homogeneous   = true,
+      margin_bottom = 5
+    };
+    cbox.append( l );
+    cbox.append( _root_color );
 
-    _color_reveal = new Revealer();
-    _color_reveal.add( cbox );
+    _color_reveal = new Revealer() {
+      child = cbox
+    };
 
-    var hbox = new Box( Orientation.VERTICAL, 0 );
-    hbox.margin_bottom = 5;
-    hbox.pack_start( box, false, true, 0 );
-    hbox.pack_start( _color_reveal, false, true, 0 );
+    _root_color_box = new Box( Orientation.VERTICAL, 5 ) {
+      margin_bottom = 5
+    };
+    _root_color_box.append( box );
+    _root_color_box.append( _color_reveal );
 
-    _root_color_reveal = new Revealer();
-    _root_color_reveal.transition_type = RevealerTransitionType.NONE;
-    _root_color_reveal.add( hbox );
-
-    pack_start( _root_color_reveal, false, true );
+    append( _root_color_box );
 
   }
 
-  /* Creates the note widget */
+  //-------------------------------------------------------------
+  // Creates the note widget.
   private void create_note( MainWindow win ) {
 
-    Label lbl = new Label( Utils.make_title( _( "Note" ) ) );
+    var lbl = new Label( _( "Note" ) ) {
+      xalign = (float)0,
+    };
+    lbl.add_css_class( "titled" );
 
-    lbl.xalign     = (float)0;
-    lbl.use_markup = true;
-
-    _note = new NoteView();
-    _note.set_wrap_mode( Gtk.WrapMode.WORD );
+    _note = new NoteView() {
+      valign    = Align.FILL,
+      vexpand   = true,
+      wrap_mode = Gtk.WrapMode.WORD
+    };
     _note.add_unicode_completion( win, win.unicoder );
     _note.buffer.text = "";
     _note.buffer.changed.connect( note_changed );
-    _note.focus_in_event.connect( note_focus_in );
-    _note.focus_out_event.connect( note_focus_out );
+
+    var focus = new EventControllerFocus();
+    _note.add_controller( focus );
+    focus.enter.connect( note_focus_in );
+    focus.leave.connect( note_focus_out );
+
     _note.node_link_added.connect( note_node_link_added );
     _note.node_link_clicked.connect( note_node_link_clicked );
     _note.node_link_hover.connect( note_node_link_hover );
 
-    _sw = new ScrolledWindow( null, null );
-    _sw.min_content_width  = 300;
-    _sw.min_content_height = 100;
-    _sw.add( _note );
+    _sw = new ScrolledWindow() {
+      min_content_width  = 300,
+      min_content_height = 100,
+      child              = _note
+    };
 
-    var box = new Box( Orientation.VERTICAL, 10 );
-    box.pack_start( lbl, false, false );
-    box.pack_start( _sw, true,  true );
+    var box = new Box( Orientation.VERTICAL, 10 ) {
+      halign = Align.FILL,
+      valign = Align.FILL
+    };
+    box.append( lbl );
+    box.append( _sw );
 
-    pack_start( box, true, true, 5 );
+    append( box );
 
   }
 
+  //-------------------------------------------------------------
+  // Creates the image editing UI.
   private void create_image() {
 
-    _image_stack = new Stack();
-    _image_stack.transition_type = StackTransitionType.NONE;
-    _image_stack.homogeneous     = false;
+    _image_stack = new Stack() {
+      halign          = Align.FILL,
+      transition_type = StackTransitionType.NONE,
+      hhomogeneous    = false,
+      vhomogeneous    = false
+    };
     _image_stack.add_named( create_image_add(),  "add" );
     _image_stack.add_named( create_image_edit(), "edit" );
 
-    pack_start( _image_stack, false, true, 5 );
+    append( _image_stack );
 
   }
 
-  /* Creates the add image widget */
+  //-------------------------------------------------------------
+  // Creates the add image widget.
   private Box create_image_add() {
 
-    var lbl  = new Label( Utils.make_title( _( "Image" ) ) );
-    lbl.xalign     = (float)0;
-    lbl.use_markup = true;
+    var lbl = new Label( _( "Image" ) ) {
+      halign = Align.FILL,
+      xalign = (float)0,
+    };
+    lbl.add_css_class( "titled" );
 
     var btn = new Button.with_label( _( "Add Image…" ) );
     btn.clicked.connect( image_button_clicked );
+    editable_changed.connect(() => {
+      btn.sensitive = _map.editable;
+    });
 
     var box = new Box( Orientation.VERTICAL, 10 );
-    box.pack_start( lbl, false, false );
-    box.pack_start( btn, false, true );
+    box.append( lbl );
+    box.append( btn );
 
     return( box );
 
   }
 
-  /* Creates the edit image widget */
+  //-------------------------------------------------------------
+  // Creates the edit image widget.
   private Box create_image_edit() {
 
-    var lbl  = new Label( Utils.make_title( _( "Image" ) ) );
-    lbl.xalign     = (float)0;
-    lbl.use_markup = true;
+    var lbl = new Label( _( "Image" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0,
+    };
+    lbl.add_css_class( "titled" );
 
-    var btn_edit = new Button.from_icon_name( "document-edit-symbolic" );
-    btn_edit.set_tooltip_text( _( "Edit Image" ) );
+    var btn_edit = new Button.from_icon_name( "document-edit-symbolic" ) {
+      halign       = Align.END,
+      tooltip_text = _( "Edit Image" )
+    };
     btn_edit.clicked.connect(() => {
-      _da.edit_current_image();
+      _map.model.edit_current_image();
     });
 
-    var btn_del = new Button.from_icon_name( "edit-delete-symbolic" );
-    btn_del.set_tooltip_text( _( "Remove Image" ) );
+    var btn_del = new Button.from_icon_name( "edit-delete-symbolic" ) {
+      halign       = Align.END,
+      tooltip_text = _( "Remove Image" )
+    };
     btn_del.clicked.connect(() => {
-      _da.delete_current_image();
+      _map.model.delete_current_image();
     });
 
-    _resize = new ToggleButton();
-    _resize.image = new Image.from_icon_name( "view-fullscreen-symbolic", IconSize.SMALL_TOOLBAR );
-    _resize.set_tooltip_text( _( "Resizable" ) );
+    _resize = new ToggleButton() {
+      halign       = Align.END,
+      icon_name    = "view-fullscreen-symbolic",
+      tooltip_text =  _( "Resizable" )
+    };
     _resize.toggled.connect(() => {
-      var current = _da.get_current_node();
+      var current = _map.get_current_node();
       if( current != null ) {
         current.image_resizable = _resize.get_active();
-        _da.auto_save();
+        _map.auto_save();
       }
     });
 
-    var image_btn_box = new Box( Orientation.HORIZONTAL, 10 );
-    image_btn_box.pack_start( _resize,  false, false );
-    image_btn_box.pack_start( btn_edit, false, false );
-    image_btn_box.pack_start( btn_del,  false, false );
-
-    // var resize_lbl = new Label( Utils.make_title( _( "Resizable" ) ) );
-    // var resize_lbl = new Label( _( "Resizable" ) );
-    //resize_lbl.xalign     = (float)0;
-    //resize_lbl.use_markup = true;
-
-//    _resize = new Switch();
- //   _resize.button_release_event.connect( resize_changed );
-
-//    var resize_box = new Box( Orientation.HORIZONTAL, 10 );
-    //resize_box.margin_left  = 20;
-    //resize_box.margin_right = 20;
- //   resize_box.pack_start( resize_lbl, false, false, 0 );
-  //  resize_box.pack_start( _resize,    false, false, 0 );
+    var image_btn_box = new Box( Orientation.HORIZONTAL, 10 ) {
+      halign = Align.END
+    };
+    image_btn_box.append( _resize );
+    image_btn_box.append( btn_edit );
+    image_btn_box.append( btn_del );
 
     var tbox = new Box( Orientation.HORIZONTAL, 10 );
-    tbox.pack_start( lbl,         false, false );
-    tbox.pack_end( image_btn_box, false, false );
-   // tbox.pack_end( resize_box,    false, false );
+    tbox.append( lbl );
+    tbox.append( image_btn_box );
 
-    _image = new Image();
-    _image.margin_bottom = 20;
-
-//    _image_loc = new Label( "" );
-//    _image_loc.use_markup = true;
-//    _image_loc.wrap       = true;
-//    _image_loc.max_width_chars = 40;
-//    _image_loc.activate_link.connect( image_link_clicked );
+    _image = new Picture() {
+      margin_bottom = 20
+    };
 
     var box  = new Box( Orientation.VERTICAL, 10 );
-    box.pack_start( tbox,       false, false );
-    box.pack_start( _image,     true,  true );
-    // box.pack_start( _image_loc, false, true );
-    // box.pack_start( resize_box, false, true );
+    box.append( tbox );
+    box.append( _image );
+
+    editable_changed.connect(() => {
+      btn_edit.sensitive = _map.editable;
+      btn_del.sensitive  = _map.editable;
+    });
 
     /* Set ourselves up to be a drag target */
-    Gtk.drag_dest_set( _image, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
+    var drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
+    _image.add_controller( drop );
 
-    _image.drag_data_received.connect((ctx, x, y, data, info, t) => {
-      if( data.get_uris().length == 1 ) {
-        if( _da.update_current_image( data.get_uris()[0] ) ) {
-          Gtk.drag_finish( ctx, true, false, t );
-        }
-      }
+    drop.accept.connect((d) => { return( _map.editable ); });
+    drop.drop.connect((val, x, y) => {
+      var file = (File)val;
+      return( _map.model.update_current_image( file.get_uri() ) );
     });
 
     return( box );
 
   }
 
-  /* Called when the user clicks on the image button */
+  //-------------------------------------------------------------
+  // Called when the user clicks on the image button.
   private void image_button_clicked() {
-
-    _da.add_current_image();
-
+    _map.model.add_current_image();
   }
 
-  /* Called if the user clicks on the image URI */
+  //-------------------------------------------------------------
+  // Called if the user clicks on the image URI.
   private bool image_link_clicked( string uri ) {
 
     File file = File.new_for_uri( uri );
@@ -416,179 +469,202 @@ public class NodeInspector : Box {
 
   }
 
-  /* Creates the node editing button grid and adds it to the popover */
+  //-------------------------------------------------------------
+  // Creates the node editing button grid and adds it to the popover.
   private void create_buttons() {
 
-    var grid = new Grid();
-    grid.column_homogeneous = true;
-    grid.column_spacing     = 5;
+    var grid = new Grid() {
+      column_homogeneous = true,
+      column_spacing     = 5
+    };
 
-    var copy_btn = new Button.from_icon_name( "edit-copy-symbolic", IconSize.SMALL_TOOLBAR );
-    copy_btn.set_tooltip_text( _( "Copy Node To Clipboard" ) );
+    var copy_btn = new Button.from_icon_name( "edit-copy-symbolic" ) {
+      tooltip_text = _( "Copy Node To Clipboard" )
+    };
     copy_btn.clicked.connect( node_copy );
 
-    var cut_btn = new Button.from_icon_name( "edit-cut-symbolic", IconSize.SMALL_TOOLBAR );
-    cut_btn.set_tooltip_text( _( "Cut Node To Clipboard" ) );
+    var cut_btn = new Button.from_icon_name( "edit-cut-symbolic" ) {
+      tooltip_text = _( "Cut Node To Clipboard" )
+    };
     cut_btn.clicked.connect( node_cut );
 
     /* Create the detach button */
-    _detach_btn = new Button.from_icon_name( "minder-detach-symbolic", IconSize.SMALL_TOOLBAR );
-    _detach_btn.set_tooltip_text( _( "Detach Node" ) );
+    _detach_btn = new Button.from_icon_name( "minder-detach-light-symbolic" ) {
+      tooltip_text = _( "Detach Node" )
+    };
     _detach_btn.clicked.connect( node_detach );
 
+    update_icons.connect(() => {
+      _detach_btn.icon_name = Utils.use_dark_mode( _detach_btn ) ? "minder-detach-dark-symbolic" : "minder-detach-light-symbolic";
+    });
+
     /* Create the node deletion button */
-    var del_btn = new Button.from_icon_name( "edit-delete-symbolic", IconSize.SMALL_TOOLBAR );
-    del_btn.set_tooltip_text( _( "Delete Node" ) );
+    var del_btn = new Button.from_icon_name( "edit-delete-symbolic" ) {
+      tooltip_text = _( "Delete Node" )
+    };
     del_btn.clicked.connect( node_delete );
 
     /* Add the buttons to the button grid */
-    grid.attach( copy_btn,    0, 0, 1, 1 );
-    grid.attach( cut_btn,     1, 0, 1, 1 );
-    grid.attach( _detach_btn, 2, 0, 1, 1 );
-    grid.attach( del_btn,     3, 0, 1, 1 );
+    grid.attach( copy_btn,    0, 0 );
+    grid.attach( cut_btn,     1, 0 );
+    grid.attach( _detach_btn, 2, 0 );
+    grid.attach( del_btn,     3, 0 );
 
     /* Add the button grid to the popover */
     // pack_start( grid, false, true );
 
   }
 
-  /* Called whenever the task enable switch is changed within the inspector */
-  private bool task_changed( Gdk.EventButton e ) {
-    var current = _da.get_current_node();
+  //-------------------------------------------------------------
+  // Called whenever the task enable switch is changed within the
+  // inspector.
+  private void task_changed() {
+    if( _ignore ) return;
+    var current = _map.get_current_node();
     if( current != null ) {
-      _da.change_current_task( !current.task_enabled(), false );
+      _map.model.change_current_task( !current.task_enabled(), false );
     }
-    return( false );
   }
 
-  /* Called whenever the fold switch is changed within the inspector */
-  private bool fold_changed( Gdk.EventButton e ) {
-    var current = _da.get_current_node();
+  //-------------------------------------------------------------
+  // Called whenever the fold switch is changed within the inspector.
+  private void fold_changed() {
+    if( _ignore ) return;
+    var current = _map.get_current_node();
     if( current != null ) {
-      _da.change_current_fold( !current.folded );
+      _map.model.toggle_folds();
     }
-    return( false );
   }
 
-  /* Called whenever the sequence switch is changed within the inspector */
-  private bool sequence_changed( Gdk.EventButton e ) {
-    var current = _da.get_current_node();
+  //-------------------------------------------------------------
+  // Called whenever the sequence switch is changed within the
+  // inspector.
+  private void sequence_changed() {
+    if( _ignore ) return;
+    var current = _map.get_current_node();
     if( current != null ) {
       current.sequence = !current.sequence;
-      _da.auto_save();
-      _da.queue_draw();
+      _map.auto_save();
+      _map.queue_draw();
     }
-    return( false );
   }
 
-  /*
-   Called whenever the user chooses to override the root color via
-   this sidebar.  We will show/hide the color changer.
-  */
-  private bool root_color_changed( Gdk.EventButton e ) {
-    var current = _da.get_current_node();
+  //-------------------------------------------------------------
+  // Called whenever the user chooses to override the root color
+  // via this sidebar.  We will show/hide the color changer.
+  private void root_color_changed() {
+    if( _ignore ) return;
+    var current = _map.get_current_node();
     if( _color_reveal.reveal_child ) {
       _color_reveal.reveal_child = false;
       if( current != null ) {
-        _da.change_current_link_color( null );
+        _map.model.change_current_link_color( null );
       }
     } else {
       _color_reveal.reveal_child = true;
-      if( (current != null) && (_root_color.rgba != _da.get_theme().get_color( "root_background" )) ) {
-        _da.change_current_link_color( _root_color.get_rgba() );
+      if( (current != null) && (_root_color.rgba != _map.get_theme().get_color( "root_background" )) ) {
+        _map.model.change_current_link_color( _root_color.get_rgba() );
       }
     }
-    return( false );
   }
 
-  /*
-   Called whenever the text widget is changed.  Updates the current node
-   and redraws the canvas when needed.
-  */
+  //-------------------------------------------------------------
+  // Called whenever the text widget is changed.  Updates the
+  // current node and redraws the canvas when needed.
   private void note_changed() {
-    if( _ignore_changes ) return;
-    _da.change_current_node_note( _note.buffer.text );
+    if( _ignore ) return;
+    _map.model.change_current_node_note( _note.buffer.text );
   }
 
-  /* Saves the original version of the node's note so that we can */
-  private bool note_focus_in( EventFocus e ) {
-    _node      = _da.get_current_node();
+  //-------------------------------------------------------------
+  // Saves the original version of the node's note so that we can
+  private void note_focus_in() {
+    _node      = _map.get_current_node();
     _orig_note = _note.buffer.text;
-    return( false );
   }
 
-  /* When the note buffer loses focus, save the note change to the undo buffer */
-  private bool note_focus_out( EventFocus e ) {
+  //-------------------------------------------------------------
+  // When the note buffer loses focus, save the note change to
+  // the undo buffer.
+  private void note_focus_out() {
     if( (_node != null) && (_node.note != _orig_note) ) {
-      _da.undo_buffer.add_item( new UndoNodeNote( _node, _orig_note ) );
+      _map.add_undo( new UndoNodeNote( _node, _orig_note ) );
     }
-    return( false );
   }
 
-  /* When a node link is added, tell the current node */
+  //-------------------------------------------------------------
+  // When a node link is added, tell the current node.
   private int note_node_link_added( NodeLink link, out string text ) {
-    return( _da.add_note_node_link( link, out text ) );
+    return( _map.model.add_note_node_link( link, out text ) );
   }
 
-  /* Handles a click on the node link with the given ID */
+  //-------------------------------------------------------------
+  // Handles a click on the node link with the given ID.
   private void note_node_link_clicked( int id ) {
-    _da.note_node_link_clicked( id );
+    _map.model.note_node_link_clicked( id );
   }
 
-  /* Handles a hover over a node link */
+  //-------------------------------------------------------------
+  // Handles a hover over a node link.
   private void note_node_link_hover( int id ) {
-    var link = _da.node_links.get_node_link( id );
+    var link = _map.model.node_links.get_node_link( id );
     if( link != null ) {
-      _note.show_tooltip( link.get_tooltip( _da ) );
+      _note.show_tooltip( link.get_tooltip( _map ) );
     }
   }
 
-  /* Copies the current node to the clipboard */
+  //-------------------------------------------------------------
+  // Copies the current node to the clipboard.
   private void node_copy() {
-    MinderClipboard.copy_nodes( _da );
+    MinderClipboard.copy_nodes( _map );
   }
 
-  /* Cuts the current node to the clipboard */
+  //-------------------------------------------------------------
+  // Cuts the current node to the clipboard.
   private void node_cut() {
-    _da.cut_node_to_clipboard();
+    _map.model.cut_node_to_clipboard();
   }
 
-  /* Detaches the current node and makes it a parent node */
+  //-------------------------------------------------------------
+  // Detaches the current node and makes it a parent node.
   private void node_detach() {
-    _da.detach();
+    _map.model.detach();
     _detach_btn.set_sensitive( false );
   }
 
-  /* Deletes the current node */
+  //-------------------------------------------------------------
+  // Deletes the current node.
   private void node_delete() {
-    _da.delete_node();
+    _map.model.delete_node();
   }
 
-  /* Grabs the focus on the note widget */
+  //-------------------------------------------------------------
+  // Grabs the focus on the note widget.
   public void grab_note() {
     _note.grab_focus();
     node_changed();
   }
 
-  /* Called whenever the fold switch is changed within the inspector */
-  private bool resize_changed( Gdk.EventButton e ) {
-    var current = _da.get_current_node();
+  //-------------------------------------------------------------
+  // Called whenever the fold switch is changed within the inspector
+  private void resize_changed() {
+    var current = _map.get_current_node();
     if( current != null ) {
       current.image_resizable = !current.image_resizable;
-      _da.auto_save();
+      _map.auto_save();
     }
-    return( false );
   }
 
-  /* Called whenever the theme is changed */
-  private void theme_changed( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Called whenever the theme is changed.
+  private void theme_changed( MindMap map ) {
 
     int    num_colors = Theme.num_link_colors();
     RGBA[] colors     = new RGBA[num_colors];
 
     /* Gather the theme colors into an RGBA array */
     for( int i=0; i<num_colors; i++ ) {
-      colors[i] = _da.get_theme().link_color( i );
+      colors[i] = _map.get_theme().link_color( i );
     }
 
     /* Clear the palette */
@@ -599,61 +675,64 @@ public class NodeInspector : Box {
 
   }
 
-  /* Called whenever the user changes the current node in the canvas */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the current node in the canvas.
   private void node_changed() {
 
-    Node? current = _da.get_current_node();
+    Node? current = _map.get_current_node();
 
-    _ignore_changes = true;
+    _ignore = true;
 
     if( current != null ) {
       _task.set_active( current.task_enabled() );
+      _task.set_sensitive( _map.editable );
       if( current.is_leaf() ) {
         _fold.set_active( false );
         _fold.set_sensitive( false );
       } else {
         _fold.set_active( current.folded );
-        _fold.set_sensitive( true );
+        _fold.set_sensitive( _map.editable );
       }
       if( current.is_root() ) {
         _sequence.set_active( false );
         _sequence.set_sensitive( false );
       } else {
         _sequence.set_active( current.sequence );
-        _sequence.set_sensitive( true );
+        _sequence.set_sensitive( _map.editable );
       }
       if( current.is_root() ) {
-        _link_reveal.reveal_child       = false;
-        _root_color_reveal.reveal_child = true;
+        _link_box.visible = false;
+        _root_color_box.visible = true;
         _override.set_active( current.link_color_set );
+        _override.set_sensitive( _map.editable );
         _color_reveal.reveal_child = current.link_color_set;
-        _root_color.rgba  = current.link_color_set ? current.link_color : _da.get_theme().get_color( "root_background" );
-        _root_color.alpha = 65535;
+        _root_color.rgba = current.link_color_set ? current.link_color : _map.get_theme().get_color( "root_background" );
       } else {
-        _link_reveal.reveal_child       = true;
-        _root_color_reveal.reveal_child = false;
-        _link_color.rgba  = current.link_color;
-        _link_color.alpha = 65535;
+        _link_box.visible = true;
+        _root_color_box.visible = false;
+        _link_color.rgba = current.link_color;
       }
-      _detach_btn.set_sensitive( current.parent != null );
+      _detach_btn.set_sensitive( (current.parent != null) && _map.editable );
       var note = current.note;
       _note.buffer.text = note;
+      _note.editable    = _map.editable;
       if( current.image != null ) {
-        var url = _da.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
+        var url = _map.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
         var str = "<a href=\"" + url + "\">" + url + "</a>";
         current.image.set_image( _image );
-        _resize.set_active( current.image_resizable );
+        _resize.set_active( current.image_resizable && _map.editable );
         _image_stack.visible_child_name = "edit";
       } else {
         _image_stack.visible_child_name = "add";
       }
     }
 
-    _ignore_changes = false;
+    _ignore = false;
 
   }
 
-  /* Sets the input focus on the first widget in this inspector */
+  //-------------------------------------------------------------
+  // Sets the input focus on the first widget in this inspector
   public void grab_first() {
     _task.grab_focus();
     node_changed();

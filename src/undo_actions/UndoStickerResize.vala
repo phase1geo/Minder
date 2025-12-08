@@ -26,30 +26,31 @@ public class UndoStickerResize : UndoItem {
   private Sticker _sticker;
   private int     _width;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoStickerResize( Sticker sticker, int orig_width ) {
     base( _( "resize sticker" ) );
     _sticker = sticker;
     _width   = orig_width;
   }
 
-  private void toggle( DrawArea da ) {
+  private void toggle( MindMap map ) {
     var width = (int)_sticker.width;
     _sticker.set_pixbuf( _width );
     _width = width;
-    da.set_current_sticker( _sticker );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_sticker( _sticker );
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
-    toggle( da );
+  public override void undo( MindMap map ) {
+    toggle( map );
   }
 
   /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
-    toggle( da );
+  public override void redo( MindMap map ) {
+    toggle( map );
   }
 
 }

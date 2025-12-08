@@ -23,16 +23,36 @@ using Gtk;
 using Gdk;
 using Cairo;
 
+public delegate void ConfirmationDialogFunc();
+
 public class Utils {
 
-  /* Creates the given directory (and all parent directories) with appropriate permissions */
+  //-------------------------------------------------------------
+  // Determines if we are executing this within the Pantheon desktop.
+  // If we are, we need to use icons in the header bar that contain
+  // color.
+  public static bool on_elementary() {
+    var desktop = Environment.get_variable( "XDG_CURRENT_DESKTOP" );
+    return( desktop == "Pantheon" );
+  }
+
+  //-------------------------------------------------------------
+  // Determines if we are using the adwaita theme.
+  public static bool using_adwaita() {
+    var settings = Gtk.Settings.get_default();
+    var theme    = settings.gtk_theme_name;
+    return( (theme != null) && theme.contains( "Adwaita" ) );
+  }
+
+  //-------------------------------------------------------------
+  // Creates the given directory (and all parent directories) with
+  // appropriate permissions
   public static bool create_dir( string path ) {
     return( DirUtils.create_with_parents( path, 0755 ) == 0 );
   }
 
-  /*
-   Returns a regular expression useful for parsing clickable URLs.
-  */
+  //-------------------------------------------------------------
+  // Returns a regular expression useful for parsing clickable URLs.
   public static string url_re() {
     string[] res = {
       "mailto:.+@[a-z0-9-]+\\.[a-z0-9.-]+",
@@ -42,35 +62,37 @@ public class Utils {
     return( "(" + string.joinv( "|",res ) + ")" );
   }
 
-  /*
-   Helper function for converting an RGBA color value to a stringified color
-   that can be used by a markup parser.
-  */
+  //-------------------------------------------------------------
+  // Helper function for converting an RGBA color value to a
+  // stringified color that can be used by a markup parser.
   public static string color_from_rgba( RGBA rgba ) {
     return( "#%02x%02x%02x".printf( (int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255) ) );
   }
 
-  /* Returns the RGBA color for the given color value */
+  //-------------------------------------------------------------
+  // Returns the RGBA color for the given color value
   public static RGBA color_from_string( string value ) {
-    RGBA c = {1.0, 1.0, 1.0, 1.0};
+    RGBA c = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
     c.parse( value );
     return( c );
   }
 
-  /* Sets the context source color to the given color value */
+  //-------------------------------------------------------------
+  // Sets the context source color to the given color value
   public static void set_context_color( Context ctx, RGBA color ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
   }
 
-  /*
-   Sets the context source color to the given color value overriding the
-   alpha value with the given value.
-  */
+  //-------------------------------------------------------------
+  // Sets the context source color to the given color value
+  // overriding the alpha value with the given value.
   public static void set_context_color_with_alpha( Context ctx, RGBA color, double alpha ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
   }
 
-  /* Returns the red, green and blue color values that are needed by the Pango color attributes */
+  //-------------------------------------------------------------
+  // Returns the red, green and blue color values that are needed
+  // by the Pango color attributes
   public static void get_attribute_color( RGBA color, out uint16 red, out uint16 green, out uint16 blue ) {
     var maxval = 65535;
     red   = (uint16)(color.red   * maxval);
@@ -78,54 +100,38 @@ public class Utils {
     blue  = (uint16)(color.blue  * maxval);
   }
 
-  /*
-   Adds the given accelerator label to the given menu item.
-  */
-  public static void add_accel_label( Gtk.MenuItem item, uint key, Gdk.ModifierType mods ) {
-
-    /* Convert the menu item to an accelerator label */
-    AccelLabel? label = item.get_child() as AccelLabel;
-
-    if( label == null ) return;
-
-    /* Add the accelerator to the label */
-    label.set_accel( key, mods );
-    label.refetch();
-
-  }
-
-  /*
-   Checks the given string to see if it is a match to the given pattern.  If
-   it is, the matching portion of the string appended to the list of matches.
-
-   See : https://valadoc.org/glib-2.0/string.substring.html
-  */
+  //-------------------------------------------------------------
+  // Checks the given string to see if it is a match to the given
+  // pattern.  If it is, the matching portion of the string
+  // appended to the list of matches.
+  //
+  // See : https://valadoc.org/glib-2.0/string.substring.html
   public static string match_string( string pattern, string value) {
-      int pattern_byte_idx = value.casefold().index_of( pattern );
-      if( pattern_byte_idx != -1 ) {
-        unichar  c = 0;
-        int i = 0;
-        int current_index = pattern_byte_idx;
-        while (value.get_prev_char(ref current_index, out c) && i < 10) {
-          i++;
-        }
-        int start = i < 10 ? 0 : current_index;
-        i = 0;
-        current_index = pattern_byte_idx + pattern.length;
-        while (value.get_next_char(ref current_index, out c) && i < 10) {
-          i++;
-        }
-        int end = i < 10 ? -1 : current_index - ( pattern_byte_idx + pattern.length );
-        string str = (start > 0 ? "..." : "") +
-        value.substring(start, pattern_byte_idx - start) +
-        "<u>" + pattern + "</u>" +
-        value.substring(pattern_byte_idx + pattern.length);
-        return str;
+    int pattern_byte_idx = value.casefold().index_of( pattern );
+    if( pattern_byte_idx != -1 ) {
+      unichar  c = 0;
+      int i = 0;
+      int current_index = pattern_byte_idx;
+      while (value.get_prev_char(ref current_index, out c) && i < 10) {
+        i++;
       }
+      int start = i < 10 ? 0 : current_index;
+      i = 0;
+      current_index = pattern_byte_idx + pattern.length;
+      while (value.get_next_char(ref current_index, out c) && i < 10) {
+        i++;
+      }
+      int end = i < 10 ? -1 : current_index - ( pattern_byte_idx + pattern.length );
+      string str = (start > 0 ? "..." : "") +
+        value.substring(start, pattern_byte_idx - start) + "<u>" + pattern + "</u>" +
+        value.substring(pattern_byte_idx + pattern.length);
+      return str;
+    }
     return "";
   }
 
-  /* Returns the rootname of the given filename */
+  //-------------------------------------------------------------
+  // Returns the rootname of the given filename
   public static string rootname( string filename ) {
     var basename = GLib.Path.get_basename( filename );
     var parts    = basename.split( "." );
@@ -136,23 +142,23 @@ public class Utils {
     }
   }
 
-  /* Returns true if the given coordinates are within the specified bounds */
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates are within the specified
+  // bounds
   public static bool is_within_bounds( double x, double y, double bx, double by, double bw, double bh ) {
     return( (bx < x) && (x < (bx + bw)) && (by < y) && (y < (by + bh)) );
   }
 
-  /* Returns a string that is suitable to use as an inspector title */
-  public static string make_title( string str ) {
-    return( "<b>" + str + "</b>" );
-  }
-
-  /* Returns a string that is used to display a tooltip with displayed accelerator */
+  //-------------------------------------------------------------
+  // Returns a string that is used to display a tooltip with
+  // displayed accelerator.
   public static string tooltip_with_accel( string tooltip, string accel ) {
     string[] accels = {accel};
     return( Granite.markup_accel_tooltip( accels, tooltip ) );
   }
 
-  /* Opens the given URL in the proper external default application */
+  //-------------------------------------------------------------
+  // Opens the given URL in the proper external default application
   public static void open_url( string url ) {
     try {
       AppInfo.launch_default_for_uri( url, null );
@@ -161,7 +167,8 @@ public class Utils {
     }
   }
 
-  /* Prepares the given note string for use in a markup tooltip */
+  //-------------------------------------------------------------
+  // Prepares the given note string for use in a markup tooltip.
   public static string prepare_note_markup( string note ) {
     var str = markdown_to_html( note );  // .replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
     // stdout.printf( "---------------\n%s--------------\n", str );
@@ -226,7 +233,8 @@ public class Utils {
     return( str.replace( "\n\n\n", "\n\n" ) );
   }
 
-  /* Converts the given Markdown into HTML */
+  //-------------------------------------------------------------
+  // Converts the given Markdown into HTML.
   public static string markdown_to_html( string md, string? tag = null ) {
     string html;
 #if MD30
@@ -253,7 +261,9 @@ public class Utils {
     }
   }
 
-  /* Returns the line height of the first line of the given pango layout */
+  //-------------------------------------------------------------
+  // Returns the line height of the first line of the given pango
+  // layout.
   public static double get_line_height( Pango.Layout layout ) {
     int height;
     var line = layout.get_line_readonly( 0 );
@@ -268,7 +278,8 @@ public class Utils {
     return( height / Pango.SCALE );
   }
 
-  /* Searches for the beginning or ending word */
+  //-------------------------------------------------------------
+  // Searches for the beginning or ending word.
   public static int find_word( string str, int cursor, bool wordstart ) {
     try {
       MatchInfo match_info;
@@ -283,57 +294,241 @@ public class Utils {
     return( -1 );
   }
 
-  /* Returns true if the given string is a valid URL */
+  //-------------------------------------------------------------
+  // Returns true if the given string is a valid URL.
   public static bool is_url( string str ) {
     return( Regex.match_simple( url_re(), str ) );
   }
 
-  /* Returns true if the given file is read-only */
+  //-------------------------------------------------------------
+  // Returns true if the given file is read-only.
   public static bool is_read_only( string fname ) {
     var file = File.new_for_path( fname );
-    var src  = new Gtk.SourceFile();
+    var src  = new GtkSource.File();
     src.set_location( file );
     src.check_file_on_disk();
     return( src.is_readonly() );
   }
 
-  /* Show the specified popover */
-  public static void show_popover( Popover popover ) {
-#if GTK322
-    popover.popup();
-#else
-    popover.show();
-#endif
-  }
-
-  /* Hide the specified popover */
-  public static void hide_popover( Popover popover ) {
-#if GTK322
-    popover.popdown();
-#else
-    popover.hide();
-#endif
-  }
-
-  /* Pops up the given menu */
-  public static void popup_menu( Gtk.Menu menu, Event e ) {
-#if GTK322
-    menu.popup_at_pointer( e );
-#else
-    menu.popup( null, null, null, e.button, e.time );
-#endif
-  }
-
-  public static void set_chooser_folder( FileChooser chooser ) {
+  //-------------------------------------------------------------
+  // Sets the default folder in the given file dialog to the
+  // last directory used.
+  public static void set_chooser_folder( FileDialog dialog ) {
     var dir = Minder.settings.get_string( "last-directory" );
     if( dir != "" ) {
-      chooser.set_current_folder( dir );
+      var file = File.new_for_path( dir );
+      dialog.set_initial_folder( file );
     }
   }
 
+  //-------------------------------------------------------------
+  // Stores the last used directory in GLib settings.
   public static void store_chooser_folder( string file, bool is_dir ) {
     var dir = is_dir ? file : GLib.Path.get_dirname( file );
     Minder.settings.set_string( "last-directory", dir );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the child widget at the given index of the parent
+  // widget (or null if one does not exist)
+  public static Widget? get_child_at_index( Widget parent, int index ) {
+    var child = parent.get_first_child();
+    while( (child != null) && (index-- > 0) ) {
+      child = child.get_next_sibling();
+    }
+    return( child );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the index of the given child within the parent
+  public static int get_child_index( Widget parent, Widget child ) {
+    var index = 0;
+    var current_child = parent.get_first_child();
+    while( (current_child != null) && (child != current_child) ) {
+      current_child = current_child.get_next_sibling();
+      index++;
+    }
+    return( (current_child == null) ? -1 : index );
+  }
+
+  //-------------------------------------------------------------
+  // Creates a file chooser dialog and returns it to the code
+  public static Gtk.FileDialog make_file_chooser( string user_title, string user_accept_label ) {
+      
+    var gtk_settings = Gtk.Settings.get_default();
+
+    var use_header = gtk_settings.gtk_dialogs_use_header;
+    gtk_settings.gtk_dialogs_use_header = true;
+   
+    var dialog = new FileDialog() {
+      title = user_title,
+      accept_label = user_accept_label
+    };
+    gtk_settings.gtk_dialogs_use_header = use_header;
+  
+    return( dialog );
+    
+  }
+
+  //-------------------------------------------------------------
+  // Clears the given box widget
+  public static void clear_box( Box box ) {
+    while( box.get_first_child() != null ) {
+      box.remove( box.get_first_child() );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Clears the given listbox widget
+  public static void clear_listbox( ListBox box ) {
+    box.remove_all();
+  }
+
+  //-------------------------------------------------------------
+  // Reads the string from the input stream
+  public static string read_stream( InputStream stream ) {
+    var str = "";
+    var dis = new DataInputStream( stream );
+    try {
+      do {
+        var line = dis.read_line();
+        if( line != null ) {
+          str += line + "\n";
+        }
+      } while( dis.get_available() > 0 );
+    } catch( IOError e ) {
+      return( "" );
+    }
+    return( str );
+  }
+
+  //-------------------------------------------------------------
+  // Creates a pixbuf from a Texture
+  public static Gdk.Pixbuf? texture_to_pixbuf( Gdk.Texture texture ) {
+
+    FileIOStream iostream;
+
+    try {
+      var tmp = File.new_tmp( null, out iostream );
+      texture.save_to_png( tmp.get_path() );
+      var pixbuf = new Pixbuf.from_file( tmp.get_path() );
+      return( pixbuf );
+    } catch( Error e ) {
+      return( null );
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Draws a rounded rectangle on the given context
+  public static void draw_rounded_rectangle( Cairo.Context ctx, double x, double y, double w, double h, double radius ) {
+
+    var deg = Math.PI / 180.0;
+
+    ctx.new_sub_path();
+    ctx.arc( (x + w - radius), (y + radius),     radius, (-90 * deg), (0 * deg) );
+    ctx.arc( (x + w - radius), (y + h - radius), radius, (0 * deg),   (90 * deg) );
+    ctx.arc( (x + radius),     (y + h - radius), radius, (90 * deg),  (180 * deg) );
+    ctx.arc( (x + radius),     (y + radius),     radius, (180 * deg), (270 * deg) );
+    ctx.close_path();
+
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given widget should be using a dark mode.
+  public static bool use_dark_mode( Widget w ) {
+    var color = Utils.color_from_rgba( Granite.contrasting_foreground_color( w.get_color() ) );
+    return( color == "#000000" );
+  }
+
+  //-------------------------------------------------------------
+  // Creates a confirmation dialog window.  If the user accepts
+  // message, executes function.
+  public static void create_confirmation_dialog( Gtk.Window win, string message, string detail, ConfirmationDialogFunc confirm_func ) {
+
+    var dialog = new Granite.MessageDialog.with_image_from_icon_name(
+      message,
+      detail,
+      "dialog-warning",
+      ButtonsType.NONE
+    );
+
+    var no = new Button.with_label( _( "No" ) );
+    dialog.add_action_widget( no, ResponseType.CANCEL );
+
+    var yes = new Button.with_label( _( "Yes" ) );
+    yes.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    dialog.add_action_widget( yes, ResponseType.ACCEPT );
+
+    dialog.set_transient_for( win );
+    dialog.set_default_response( ResponseType.CANCEL );
+    dialog.set_title( "" );
+
+    dialog.response.connect((id) => {
+      if( id == ResponseType.ACCEPT ) {
+        confirm_func();
+      }
+      dialog.close();
+    });
+
+    dialog.present();
+
+  }
+
+  //-------------------------------------------------------------
+  // Compares to version strings.  Returns 0 if they match, returns
+  // -1 if version A is less than version B, or returns 1 if version A
+  // is less than version B.
+  public static int compare_versions( string a, string b ) {
+
+    string[] parts_a = a.split( "." );
+    string[] parts_b = b.split( "." );
+
+    int len = int.max( parts_a.length, parts_b.length );
+
+    for( int i=0; i<len; i++ ) {
+      // Missing parts are treated as 0
+      int val_a = (i < parts_a.length) ? int.parse( parts_a[i] ) : 0;
+      int val_b = (i < parts_b.length) ? int.parse( parts_b[i] ) : 0;
+
+      if (val_a < val_b) {
+        return -1;
+      } else if (val_a > val_b) {
+        return 1;
+      }
+    }
+
+    return 0;
+
+  }
+
+  //-------------------------------------------------------------
+  // Causes the given switcher to adjust tab widths to be the same
+  // based on the largest tab.
+  public static void set_switcher_tab_widths( Widget switcher ) {
+
+    Widget child;
+    var    i = 0;
+    uint   max_width = 0;
+    int    min, nat, min_bl, nat_bl;
+
+    // Force creation of child buttons
+    switcher.show ();
+
+    child = Utils.get_child_at_index( switcher, i++ );
+    while( child != null ) {
+      child.measure( Orientation.HORIZONTAL, -1, out min, out nat, out min_bl, out nat_bl );
+      max_width = uint.max( max_width, (uint)nat );
+      child     = Utils.get_child_at_index( switcher, i++ );
+    }
+
+    i     = 0;
+    child = Utils.get_child_at_index( switcher, i++ );
+    while( child != null ) {
+      child.set_size_request( (int)max_width, -1 );
+      child = Utils.get_child_at_index( switcher, i++ );
+    }
+
   }
 
 }

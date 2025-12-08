@@ -26,40 +26,46 @@ public class TextCompletionItem {
   public string label { get; private set; default = ""; }
   public string alt   { get; private set; default = ""; }
 
+  //-------------------------------------------------------------
   // Constructor
   public TextCompletionItem( string label ) {
     this.label = label;
   }
 
+  //-------------------------------------------------------------
   // Constructor
   public TextCompletionItem.with_alt( string label, string alt ) {
     this.label = label;
     this.alt   = alt;
   }
 
+  //-------------------------------------------------------------
   // Creates the row for the listbox
   public Box create_row() {
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( label );
-    lbl.xalign       = 0;
-    lbl.margin       = 5;
-    lbl.margin_start = 10;
-    lbl.margin_end   = 10;
-    box.pack_start( lbl, false, true );
+    var lbl = new Label( label ) {
+      xalign        = 0,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
+    box.append( lbl );
     if( alt != "" ) {
-      var albl = new Label( alt );
-      albl.xalign       = 0;
-      albl.margin       = 5;
-      albl.margin_start = 10;
-      albl.margin_end   = 10;
-      box.pack_start( albl, false, true );
+      var albl = new Label( alt ) {
+        xalign        = 0,
+        margin_start  = 10,
+        margin_end    = 10,
+        margin_top    = 5,
+        margin_bottom = 5
+      };
+      box.append( albl );
     }
     return( box );
   }
 
   public static string get_text( Box box ) {
-    var children = box.get_children();
-    var lbl      = (Label)children.nth_data( children.length() - 1 );
+    var lbl = (Label)box.get_last_child();
     return( lbl.get_text() );
   }
 
@@ -71,13 +77,13 @@ public class TextCompletionItem {
 
 public class TextCompletion {
 
-  private DrawArea     _da;
-  private CanvasText   _ct;
-  private ListBox      _list;
-  private bool         _shown     = false;
-  private int          _size      = 0;
-  private int          _start_pos = 0;
-  private int          _end_pos   = 0;
+  private MindMap    _map;
+  private CanvasText _ct;
+  private ListBox    _list;
+  private bool       _shown     = false;
+  private int        _size      = 0;
+  private int        _start_pos = 0;
+  private int        _end_pos   = 0;
 
   public bool shown {
     get {
@@ -85,17 +91,20 @@ public class TextCompletion {
     }
   }
 
-  /* Default constructor */
-  public TextCompletion( DrawArea da ) {
-    _da   = da;
-    _list = new ListBox();
-    _list.selection_mode = SelectionMode.BROWSE;
-    _list.halign         = Align.START;
-    _list.valign         = Align.START;
+  //-------------------------------------------------------------
+  // Default constructor
+  public TextCompletion( MindMap map ) {
+    _map  = map;
+    _list = new ListBox() {
+      selection_mode = SelectionMode.BROWSE,
+      halign         = Align.START,
+      valign         = Align.START
+    };
     _list.row_activated.connect( activate_row );
   }
 
-  /* Displays the auto-completion text with the given list */
+  //-------------------------------------------------------------
+  // Displays the auto-completion text with the given list
   public void show( CanvasText ct, List<TextCompletionItem> list, int start, int end ) {
 
     /* If there is nothing to show, hide the contents */
@@ -105,7 +114,7 @@ public class TextCompletion {
     }
 
     /* Get the maximum number of items that we will display */
-    var max_items = _da.win.settings.get_int( "max-auto-completion-items" );
+    var max_items = _map.settings.get_int( "max-auto-completion-items" );
 
     /* Remember the text positions that will be replaced */
     _ct        = ct;
@@ -118,10 +127,10 @@ public class TextCompletion {
     ct.get_cursor_pos( out x, out ytop, out ybot );
 
     /* Calculate the position of the widget */
-    var lbl_height = _da.win.get_label_height();
+    var lbl_height = _map.win.get_label_height();
     var height     = _size * (lbl_height + 10);
     int win_top, win_bottom;
-    _da.get_window_ys( out win_top, out win_bottom );
+    _map.canvas.get_window_ys( out win_top, out win_bottom );
     var below = (ybot + (max_items * (lbl_height + 10))) <= win_bottom;
 
     /* Set the position */
@@ -134,11 +143,9 @@ public class TextCompletion {
     }
 
     /* Populate the list */
-    _list.foreach( (w) => {
-      _list.remove( w );
-    });
+    Utils.clear_listbox( _list );
     foreach( TextCompletionItem item in list ) {
-      _list.add( item.create_row() );
+      _list.append( item.create_row() );
       if( --max_items <= 0 ) {
         break;
       }
@@ -147,12 +154,9 @@ public class TextCompletion {
     /* Select the first row */
     _list.select_row( _list.get_row_at_index( below ? 0 : (_size - 1) ) );
 
-    /* Make sure that everything is seen */
-    _list.show_all();
-
     /* If the list isn't being shown, show it */
     if( !_shown ) {
-      var overlay = (Overlay)_da.get_parent();
+      var overlay = (Overlay)_map.canvas.get_parent();
       overlay.add_overlay( _list );
     }
 
@@ -160,14 +164,16 @@ public class TextCompletion {
 
   }
 
-  /* Hides the auto-completion box */
+  //-------------------------------------------------------------
+  // Hides the auto-completion box
   public void hide() {
     if( !_shown ) return;
     _list.unparent();
     _shown = false;
   }
 
-  /* Moves the selection down by one row */
+  //-------------------------------------------------------------
+  // Moves the selection down by one row
   public void down() {
     if( !_shown ) return;
     var row = _list.get_selected_row();
@@ -176,7 +182,8 @@ public class TextCompletion {
     }
   }
 
-  /* Moves the selection up by one row */
+  //-------------------------------------------------------------
+  // Moves the selection up by one row
   public void up() {
     if( !_shown ) return;
     var row = _list.get_selected_row();
@@ -185,20 +192,22 @@ public class TextCompletion {
     }
   }
 
-  /* Substitutes the currently selected entry */
+  //-------------------------------------------------------------
+  // Substitutes the currently selected entry
   public void select() {
     if( !_shown ) return;
     activate_row( _list.get_selected_row() );
   }
 
-  /* Handle a mouse event on the listbox */
+  //-------------------------------------------------------------
+  // Handle a mouse event on the listbox
   private void activate_row( ListBoxRow row ) {
     var box   = (Box)row.get_child();
     var value = TextCompletionItem.get_text( box );
     if( _start_pos == _end_pos ) {
-      _ct.insert( value, _da.undo_text );
+      _ct.insert( value, _map.undo_text );
     } else {
-      _ct.replace( _start_pos, _end_pos, value, _da.undo_text );
+      _ct.replace( _start_pos, _end_pos, value, _map.undo_text );
     }
     hide();
   }

@@ -27,14 +27,14 @@ public class UndoStyleConnectionFont : UndoStyleChange {
   GenericArray<FontDescription> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleConnectionFont( StyleAffects affects, string family, int size, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleConnectionFont( StyleAffects affects, string family, int size, MindMap map ) {
+    base( affects, map );
     var conn_font = new FontDescription();
     conn_font.set_family( family );
     conn_font.set_size( size );
     _values = new GenericArray<FontDescription>();
     _values.add( conn_font );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

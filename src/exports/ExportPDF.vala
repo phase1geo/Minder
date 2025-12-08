@@ -25,11 +25,11 @@ public class ExportPDF : Export {
 
   /* Constructor */
   public ExportPDF() {
-    base( "pdf", _( "PDF" ), { ".pdf" }, true, false, false );
+    base( "pdf", _( "PDF" ), { ".pdf" }, true, false, false, false );
   }
 
   /* Default constructor */
-  public override bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, MindMap map ) {
 
     /* Get the width and height of the page */
     double page_width  = 8.5 * 72;
@@ -42,7 +42,7 @@ public class ExportPDF : Export {
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
-    da.document_rectangle( out x, out y, out w, out h );
+    map.model.document_rectangle( out x, out y, out w, out h );
 
     /* Calculate the required scaling factor to get the document to fit */
     double width  = (page_width  - (2 * margin)) / w;
@@ -54,10 +54,10 @@ public class ExportPDF : Export {
     context.translate( ((0 - x) + (margin / sf)), ((0 - y) + (margin / sf)) );
 
     /* Draw background */
-    da.get_style_context().render_background( context, x, y, w, h );
+    map.canvas.get_style_context().render_background( context, x, y, w, h );
 
     /* Recreate the image */
-    da.draw_all( context, true );
+    map.model.draw_all( context, true, false );
 
     /* Draw the page to the PDF file */
     context.show_page();
