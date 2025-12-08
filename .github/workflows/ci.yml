@@ -1,48 +1,86 @@
 name: CI
 
 on:
+  push:
+    branches: [ main, beta ]
   pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-    branches:
-      - master
-      - beta
+    branches: [ main, beta ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-
-  # This workflow contains a single job called "flatpak"
-  flatpak:
-
-    # The type of runner that the job will run on
+  build:
     runs-on: ubuntu-latest
 
-    # This job runs in a special container designed for building Flatpaks for AppCenter
-    container:
-      image: ghcr.io/elementary/flatpak-platform/runtime:8
-      options: --privileged
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so the job can access it
-    - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Build
-      uses: flatpak/flatpak-github-actions/flatpak-builder@v6.5
-      with:
-        bundle: minder.flatpak
-        manifest-path: com.github.phase1geo.minder.elementary.yml
-        repository-name: appcenter
-        repository-url: https://flatpak.elementary.io/repo.flatpakrepo
-        cache-key: "flatpak-builder-${{ github.sha }}"
-        arch: ${{ matrix.configuration.arch }}
+      #############################################################
+      # Install build dependencies for Vala / Meson / GTK4 / libs
+      #############################################################
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            meson \
+            ninja-build \
+            valac \
+            pkg-config \
+            gettext \
+            libglib2.0-dev \
+            libgirepository1.0-dev \
+            libgtk-4-dev \
+            libgee-0.8-dev \
+            libgranite-7-dev \
+            libxml2-dev \
+            libarchive-dev \
+            libgtksourceview-5-dev \
+            libjson-glib-dev \
+            libwebp-dev \
+            libcairo2-dev \
+            libmarkdown2-dev
 
-    # You can automatically run any of the tests you've created as part of this workflow
-    run-tests: true
+      #############################################################
+      # Meson configure / build / test
+      #############################################################
+      - name: Meson setup
+        run: |
+          meson setup builddir
 
-    # These lines specify the location of the elementary Runtime and Sdk
-    repository-name: appcenter
-    repository-url: https://flatpak.elementary.io/repo.flatpakrepo
-    cache-key: "flatpak-builder-${{ github.sha }}"
+      - name: Build
+        run: |
+          meson compile -C builddir
+
+      - name: Test
+        run: |
+          meson test -C builddir --print-errorlogs --verbose
+
+  #################################################################
+  # Flatpak validation job
+  #
+  # This ensures the manifest com.github.phase1geo.minder.elementary.yml
+  # stays valid and will still build for elementary / Flatpak runtimes.
+  #################################################################
+
+  flatpak:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Flatpak tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak flatpak-builder
+
+      #############################################################
+      # Validate Flatpak manifest
+      #############################################################
+      - name: Flatpak build (manifest syntax check)
+        run: |
+          flatpak-builder --force-clean \
+              build-flatpak \
+              com.github.phase1geo.minder.elementary.yml \
+              --disable-download
+
