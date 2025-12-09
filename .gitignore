@@ -1,7 +1,6 @@
 build-flatpak/
 build/
 .flatpak-builder
-./com.github.phase1geo.minder.yml
 *.swp
 src/*.o
 src/*.c

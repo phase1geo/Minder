@@ -98,16 +98,12 @@ case $1 in
     sudo ninja uninstall
     ;;
 "elementary")
-    ln -sf elementary/com.github.phase1geo.minder.yml .
-    flatpak-builder --user --install --force-clean ../build-minder-elementary com.github.phase1geo.minder.yml
+    flatpak-builder --user --install --force-clean ../build-minder-elementary elementary/com.github.phase1geo.minder.yml
     flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" com.github.phase1geo.minder.Debug
-    rm -rf com.github.phase1geo.minder.yml
     ;;
 "flathub")
-    ln -sf flathub/com.github.phase1geo.minder.yml .
-    flatpak-builder --user --install --force-clean ../build-minder-flathub com.github.phase1geo.minder.yml
+    flatpak-builder --user --install --force-clean ../build-minder-flathub flathub/com.github.phase1geo.minder.yml
     flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" com.github.phase1geo.minder.Debug
-    rm -rf com.github.phase1geo.minder.yml
     ;;
 *)
     echo "Usage:"
