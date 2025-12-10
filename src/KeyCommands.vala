@@ -89,6 +89,7 @@ public enum KeyCommand {
       NODE_ADD_SIBLING_BEFORE,  // 60
       NODE_ADD_CHILD,
       NODE_ADD_PARENT,
+      NODE_ADD_SUMMARY,
       NODE_QUICK_ENTRY_INSERT,
       NODE_QUICK_ENTRY_REPLACE,
       NODE_REMOVE,
@@ -293,6 +294,7 @@ public enum KeyCommand {
       case NODE_ADD_SIBLING_BEFORE   :  return( "node-shift-return" );
       case NODE_ADD_CHILD            :  return( "node-tab" );
       case NODE_ADD_PARENT           :  return( "node-shift-tab" );
+      case NODE_ADD_SUMMARY          :  return( "node-add-summary" );
       case NODE_QUICK_ENTRY_INSERT   :  return( "node-quick-entry-insert" );
       case NODE_QUICK_ENTRY_REPLACE  :  return( "node-quick-entry-replace" );
       case NODE_REMOVE               :  return( "node-remove" );
@@ -456,6 +458,7 @@ public enum KeyCommand {
       case "node-shift-return"         :  return( NODE_ADD_SIBLING_BEFORE );
       case "node-tab"                  :  return( NODE_ADD_CHILD );
       case "node-shift-tab"            :  return( NODE_ADD_PARENT );
+      case "node-add-summary"          :  return( NODE_ADD_SUMMARY );
       case "node-quick-entry-insert"   :  return( NODE_QUICK_ENTRY_INSERT );
       case "node-quick-entry-replace"  :  return( NODE_QUICK_ENTRY_REPLACE );
       case "node-remove"               :  return( NODE_REMOVE );
@@ -622,6 +625,7 @@ public enum KeyCommand {
       case NODE_ADD_SIBLING_BEFORE   :  return( _( "Add sibling node before current node" ) );
       case NODE_ADD_CHILD            :  return( _( "Add child node to current node" ) );
       case NODE_ADD_PARENT           :  return( _( "Add parent node to current node" ) );
+      case NODE_ADD_SUMMARY          :  return( _( "Add summary node for selected nodes" ) );
       case NODE_QUICK_ENTRY_INSERT   :  return( _( "Use quick entry to insert nodes" ) );
       case NODE_QUICK_ENTRY_REPLACE  :  return( _( "Use quick entry to replace current node" ) );
       case NODE_REMOVE_ONLY          :  return( _( "Remove selected node only (leave subtree)" ) );
@@ -787,6 +791,7 @@ public enum KeyCommand {
       case NODE_ADD_SIBLING_BEFORE   :  return( node_shift_return );
       case NODE_ADD_CHILD            :  return( node_tab );
       case NODE_ADD_PARENT           :  return( node_shift_tab );
+      case NODE_ADD_SUMMARY          :  return( node_add_summary );
       case NODE_QUICK_ENTRY_INSERT   :  return( node_quick_entry_insert );
       case NODE_QUICK_ENTRY_REPLACE  :  return( node_quick_entry_replace );
       case NODE_REMOVE               :  return( node_remove );
@@ -1725,6 +1730,11 @@ public enum KeyCommand {
   public static void node_sort_randomly( MindMap map ) {
     if( !map.editable ) return;
     map.model.sort_randomly();
+  }
+
+  public static void node_add_summary( MindMap map ) {
+    if( !map.editable ) return;
+    map.model.add_summary_node_from_selected();
   }
 
   public static void node_quick_entry_insert( MindMap map ) {

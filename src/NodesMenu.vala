@@ -49,7 +49,7 @@ public class NodesMenu : BaseMenu {
     var link_menu = new GLib.Menu();
     append_menu_item( link_menu, KeyCommand.NODE_ADD_CONNECTION, _( "Connect" ) );
     append_menu_item( link_menu, KeyCommand.NODE_TOGGLE_LINKS,   _( "Link Nodes" ) );
-    // link_menu.append( _( "Add Summary Node" ), "nodes.action_summarize" );
+    append_menu_item( link_menu, KeyCommand.NODE_ADD_SUMMARY,    _( "Add Summary Node" ) );
 
     var sel_submenu = new GLib.Menu();
     append_menu_item( sel_submenu, KeyCommand.NODE_SELECT_PARENT,   _( "Parent Nodes" ) );
@@ -132,6 +132,7 @@ public class NodesMenu : BaseMenu {
     set_enabled( KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, ((foldable || unfoldable) && map.editable) );
     set_enabled( KeyCommand.NODE_TOGGLE_SEQUENCE,      (map.model.sequences_togglable() && map.editable) );
     set_enabled( KeyCommand.NODE_TOGGLE_LINKS,         map.editable );
+    set_enabled( KeyCommand.NODE_ADD_SUMMARY,          summarizable );
     set_enabled( KeyCommand.NODE_ADD_CONNECTION,       ((node_num == 2) && map.editable) );
     set_enabled( KeyCommand.NODE_REPARENT_LINK_COLOR,  (link_colors_parentable() && map.editable) );
     set_enabled( KeyCommand.NODE_ALIGN_TOP,            (alignable && map.editable) );
