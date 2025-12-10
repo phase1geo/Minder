@@ -175,4 +175,3 @@ src/UnicodeInsert.vala
 src/UrlEditor.vala
 src/Utils.vala
 src/ZoomWidget.vala
-data/com.github.phase1geo.minder.shortcuts.ui

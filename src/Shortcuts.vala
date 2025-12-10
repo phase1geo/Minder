@@ -770,13 +770,13 @@ public class Shortcuts {
       if( command.viewable() ) {
         if( command.is_section_start() ) {
           if( (group != null) && (commands == 0) ) {
-            group->add_child( make_mouse_shortcut( _( "No Commands Listed" ), "" ) );
+            group->add_child( make_mouse_shortcut( _( "No Shortcuts Set" ), "" ) );
           }
           window->add_child( make_section( command, out section ) );
           group = null;
         } else if( command.is_group_start() ) {
           if( (group != null) && (commands == 0) ) {
-            group->add_child( make_mouse_shortcut( _( "No Commands Listed" ), "" ) );
+            group->add_child( make_mouse_shortcut( _( "No Shortcuts Set" ), "" ) );
           }
           commands = 0;
           section->add_child( make_group( command, out group ) );

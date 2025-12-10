@@ -209,6 +209,12 @@ public class NodeImage {
 
     var scale      = (width * 1.0) / crop_w;
     var int_crop_h = (int)(crop_h * scale);
+    
+    // Ensure scaled height is valid for GdkPixbuf
+    if( int_crop_h <= 0 ) {
+      stderr.printf( "Warning: Calculated height (%d) invalid, using minimum height of 1\n", int_crop_h );
+      int_crop_h = 1;
+    }
 
     var tmp = new Pixbuf.subpixbuf( _orig, crop_x, crop_y, crop_w, crop_h );
     if( (tmp == null) || (int_crop_h <= 0) ) {

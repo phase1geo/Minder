@@ -52,6 +52,8 @@ public class DrawArea : Gtk.DrawingArea {
   private const uint   autopan_frame_rate = 20;
 
   private MindMap               _map;
+  private double                _motion_x;
+  private double                _motion_y;
   private double                _press_x;
   private double                _press_y;
   private double                _scaled_x;
@@ -1231,6 +1233,23 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   //-------------------------------------------------------------
+  // Starts the autopan process.
+  private void start_autopan() {
+    if( _autopan_id == 0 ) {
+      _autopan_id = Timeout.add( autopan_frame_rate, do_autopan );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Ends the autopan process.
+  private void stop_autopan() {
+    if( _autopan_id > 0 ) {
+      Source.remove( _autopan_id );
+      _autopan_id = 0;
+    }
+  }
+
+  //-------------------------------------------------------------
   // Performs autopan based on the position of the mouse cursor.
   private bool do_autopan() {
 
@@ -1270,6 +1289,9 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Handle mouse motion.
   private void on_motion( double x, double y ) {
+
+    _motion_x = x;
+    _motion_y = y;
 
     // Clear the hover
     if( _select_hover_id > 0 ) {
@@ -1312,12 +1334,9 @@ public class DrawArea : Gtk.DrawingArea {
         double diff_y = _scaled_y - last_y;
         var edge = autopan_inner_edge;
         if( !Utils.is_within_bounds( x, y, edge, edge, (get_allocated_width() - (edge * 2)), (get_allocated_height() - (edge * 2)) ) ) {
-          if( _autopan_id == 0 ) {
-            _autopan_id = Timeout.add( autopan_frame_rate, do_autopan );
-          }
-        } else if( _autopan_id > 0 ) {
-          Source.remove( _autopan_id );
-          _autopan_id = 0;
+          start_autopan();
+        } else {
+          stop_autopan();
         }
       }
 
@@ -1674,6 +1693,9 @@ public class DrawArea : Gtk.DrawingArea {
     var current_sticker = _map.selected.current_sticker();
     var current_callout = _map.selected.current_callout();
 
+    // Stop the autopan process, if it is running
+    stop_autopan();
+
     _pressed = false;
 
     if( _select_box.valid ) {
@@ -2023,20 +2045,18 @@ public class DrawArea : Gtk.DrawingArea {
   // adjust the origin to give the canvas the appearance of
   // scrolling.
   private bool on_scroll( double delta_x, double delta_y ) {
-    
+
     // Swap the deltas if the SHIFT key is held down
     if( _shift && !_control ) {
       double tmp = delta_x;
       delta_x = delta_y;
       delta_y = tmp;
+
     } else if( _control ) {
-      double x, y;
-      var e = _scroll.get_current_event();
-      e.get_position( out x, out y );
       if( delta_y < 0 ) {
-        zoom_in_coords( x, y );
+        zoom_in_coords( _motion_x, _motion_y );
       } else if( delta_y > 0 ) {
-        zoom_out_coords( x, y );
+        zoom_out_coords( _motion_x, _motion_y );
       }
       return( false );
     }
@@ -2045,7 +2065,7 @@ public class DrawArea : Gtk.DrawingArea {
     move_origin( ((0 - delta_x) * 120), ((0 - delta_y) * 120) );
     queue_draw();
 
-    /* Scroll save */
+    // Scroll save
     scroll_save();
 
     return( false );

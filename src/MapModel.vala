@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -177,24 +177,25 @@ public class MapModel {
   public signal void queue_draw();
   public signal void see( bool animate = true, double width_adjust = 0, double pad = 100.0 );
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public MapModel( MindMap map ) {
 
     _map = map;
 
-    /* Create the array of root nodes in the map */
+    // Create the array of root nodes in the map
     _nodes = new Array<Node>();
 
-    /* Create the connections */
+    // Create the connections
     _connections = new Connections();
 
-    /* Create the stickers */
+    // Create the stickers
     _stickers = new Stickers();
 
-    /* Create groups */
+    // Create groups
     _groups = new NodeGroups();
 
-    /* Allocate the note node links manager */
+    // Allocate the note node links manager
     _node_links = new NodeLinks();
 
     // Create the braindump list
@@ -203,7 +204,8 @@ public class MapModel {
     // Create the mindmap tags
     _tags = new Tags();
 
-    /* Set the theme to the default theme */
+    // Set the theme to the default theme
+    _theme = new Theme();
     set_theme( _map.win.themes.get_theme( _map.settings.get_string( "default-theme" ) ), false );
 
     // Initialize variables
@@ -223,16 +225,13 @@ public class MapModel {
   //-------------------------------------------------------------
   // Sets the theme to the given value.
   public void set_theme( Theme theme, bool save ) {
-    if( _theme == theme ) return;
-    Theme? orig_theme = _theme;
-    _theme        = theme;
-    _theme.index  = (orig_theme != null) ? orig_theme.index : -1;
-    _theme.rotate = _map.settings.get_boolean( "rotate-main-link-colors" );
-    FormattedText.set_theme( theme );
-    update_css();
-    if( orig_theme != null ) {
-      update_theme_colors( orig_theme );
+    if( _theme.name == theme.name ) return;
+    if( _theme.index != -1 ) {
+      update_theme_colors( theme );
     }
+    _theme.copy( theme );
+    FormattedText.set_theme( _theme );
+    update_css();
     theme_changed();
     queue_draw();
     if( save ) {
@@ -245,16 +244,16 @@ public class MapModel {
   public void update_css() {
     StyleContext.add_provider_for_display(
       Display.get_default(),
-      get_theme().get_css_provider( _map.win.text_size ),
+      _theme.get_css_provider( _map.win.text_size ),
       STYLE_PROVIDER_PRIORITY_APPLICATION
     );
   }
 
   //-------------------------------------------------------------
   // Updates all nodes with the new theme colors.
-  private void update_theme_colors( Theme old_theme ) {
+  private void update_theme_colors( Theme new_theme ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).update_theme_colors( old_theme, _theme );
+      _nodes.index( i ).update_theme_colors( _theme, new_theme );
     }
   }
 
@@ -314,14 +313,13 @@ public class MapModel {
   // Loads the given theme from the list of available options.
   private void load_theme( Xml.Node* n ) {
 
-    /* Load the theme */
-    var theme       = new Theme.from_theme( _map.win.themes.get_theme( "default" ) );
+    // Load the theme
+    var theme = new Theme.from_theme( _map.win.themes.get_theme( "default" ) );
     theme.temporary = true;
-    theme.rotate    = _map.settings.get_boolean( "rotate-main-link-colors" );
 
     var valid = theme.load( n );
 
-    /* If this theme does not currently exist, add the theme temporarily */
+    // If this theme does not currently exist, add the theme temporarily
     if( !_map.win.themes.exists( theme ) ) {
       if( valid ) {
         theme.name = _map.win.themes.uniquify_name( theme.name );
@@ -331,10 +329,11 @@ public class MapModel {
       }
     }
 
-    /* Get the theme */
-    _theme = _map.win.themes.get_theme( theme.name );
+    // Get the theme
+    _theme.copy( _map.win.themes.get_theme( theme.name ) );
+    _theme.index = theme.index;
 
-    /* If we are the current drawarea, update the CSS and indicate the theme change */
+    // If we are the current drawarea, update the CSS and indicate the theme change
     if( _map.win.get_current_map() == _map ) {
       update_css();
       theme_changed();
@@ -386,14 +385,14 @@ public class MapModel {
 
     Layout? use_layout = null;
 
-    /* Disable animations while we are loading */
+    // Disable animations while we are loading
     var animate = _map.animator.enable;
     _map.animator.enable = false;
 
-    /* Clear the existing nodes */
+    // Clear the existing nodes
     _nodes.remove_range( 0, _nodes.length );
 
-    /* Load the contents of the file */
+    // Load the contents of the file
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
@@ -436,21 +435,21 @@ public class MapModel {
       }
     }
 
-    /* Perform the layout process again to make sure that everything is accounted for */
+    // Perform the layout process again to make sure that everything is accounted for
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).layout.initialize( _nodes.index( i ) );
     }
 
     queue_draw();
 
-    /* Indicate to anyone listening that we have loaded a new file */
+    // Indicate to anyone listening that we have loaded a new file
     is_loaded = true;
     loaded();
 
-    /* Make sure that the inspector is updated */
+    // Make sure that the inspector is updated
     current_changed();
 
-    /* Reset the animator enable */
+    // Reset the animator enable
     _map.animator.enable = animate;
 
   }
@@ -508,7 +507,7 @@ public class MapModel {
     double x2 = -10000000;
     double y2 = -10000000;
 
-    /* Calculate the overall size of the map */
+    // Calculate the overall size of the map
     for( int i=0; i<_nodes.length; i++ ) {
       var nb = _nodes.index( i ).tree_bbox;
       x1 = (x1 < nb.x) ? x1 : nb.x;
@@ -517,11 +516,11 @@ public class MapModel {
       y2 = (y2 < (nb.y + nb.height)) ? (nb.y + nb.height) : y2;
     }
 
-    /* Include the connection and sticker extents */
+    // Include the connection and sticker extents
     _connections.add_extents( ref x1, ref y1, ref x2, ref y2 );
     _stickers.add_extents( ref x1, ref y1, ref x2, ref y2 );
 
-    /* Set the outputs */
+    // Set the outputs
     x      = x1;
     y      = y1;
     width  = (x2 - x1);
@@ -534,16 +533,16 @@ public class MapModel {
   // will be loaded.
   public void initialize() {
 
-    /* Clear the list of existing nodes */
+    // Clear the list of existing nodes
     _nodes.remove_range( 0, _nodes.length );
 
-    /* Clear the list of connections */
+    // Clear the list of connections
     _connections.clear_all_connections();
 
-    /* Clear the stickers */
+    // Clear the stickers
     _stickers.clear();
 
-    /* Clear the groups */
+    // Clear the groups
     _groups.clear();
 
   }
@@ -1436,12 +1435,12 @@ public class MapModel {
   // Draws all of the root node trees.
   public void draw_all( Context ctx, bool exporting, bool moving_node ) {
 
-    /* Draw the links first */
+    // Draw the links first
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).draw_links( ctx, _theme );
     }
 
-    /* Draw groups next */
+    // Draw groups next
     _groups.draw_all( ctx, _theme, exporting );
 
     var current_node = _map.selected.current_node();
@@ -1450,18 +1449,18 @@ public class MapModel {
       _nodes.index( i ).draw_all( ctx, _theme, current_node, false, exporting );
     }
 
-    /* Draw the current node on top of all others */
+    // Draw the current node on top of all others
     if( (current_node != null) && (current_node.folded_ancestor() == null) ) {
       current_node.draw_all( ctx, _theme, null, (!_map.is_node_editable() && moving_node), exporting );
     }
 
-    /* Draw the current connection on top of everything else */
+    // Draw the current connection on top of everything else
     _connections.draw_all( ctx, _theme, exporting );
     if( current_conn != null ) {
       current_conn.draw( ctx, _theme, exporting );
     }
 
-    /* Draw the floating stickers */
+    // Draw the floating stickers
     _stickers.draw_all( ctx, _theme, 1.0, exporting );
 
   }
@@ -1501,7 +1500,9 @@ public class MapModel {
     var          isroot             = current.is_root();
     var          isleaf             = current.is_leaf();
 
-    /* Remove the current node from its current location */
+    _map.animator.add_nodes( _nodes, false, "attach_current_node" );
+
+    // Remove the current node from its current location
     if( isroot ) {
       for( int i=0; i<_nodes.length; i++ ) {
         if( _nodes.index( i ) == current ) {
@@ -1540,17 +1541,17 @@ public class MapModel {
       set_style_after_parent_attach( current );
     }
 
-    /* Attach the node */
+    // Attach the node
     set_attach_node( null );
 
-    /* Add the attachment information to the undo buffer */
+    // Add the attachment information to the undo buffer
     if( isroot ) {
       _map.add_undo( new UndoNodeAttach.for_root( current, orig_index, _map.canvas.orig_info, orig_style ) );
     } else {
       _map.add_undo( new UndoNodeAttach( current, orig_parent, _map.canvas.get_orig_side(), orig_index, _map.canvas.orig_info, orig_summary, orig_summary_index, orig_style ) );
     }
 
-    queue_draw();
+    _map.animator.animate();
     auto_save();
     current_changed();
 
@@ -1928,7 +1929,9 @@ public class MapModel {
     return( false );
   }
 
-  /* Adds a summary node to the first and last nodes in the selected range */
+  //-------------------------------------------------------------
+  // Adds a summary node to the first and last nodes in the
+  // selected range
   public void add_summary_node_from_selected() {
     if( !nodes_summarizable() ) return;
     var nodes = _map.selected.nodes();
@@ -1965,7 +1968,7 @@ public class MapModel {
     var parent = orig_node.parent;
     var index  = (parent == null) ? root_index( orig_node ) : orig_node.index();
 
-    /* Perform the replacement */
+    // Perform the replacement
     if( parent == null ) {
       remove_root_node( orig_node );
       add_root( new_node, index );
@@ -1976,7 +1979,7 @@ public class MapModel {
       new_node.attach( parent, index, null );
     }
 
-    /* Copy over a few attributes */
+    // Copy over a few attributes
     if( new_node.main_branch() ) {
       new_node.link_color = orig_node.link_color;
     }
@@ -2185,7 +2188,8 @@ public class MapModel {
     }
   }
 
-  /* Returns the node to the left of the given node */
+  //-------------------------------------------------------------
+  // Returns the node to the left of the given node
   public Node? get_node_left( Node node ) {
     if( node.is_root() ) {
       if( node.side.horizontal() ) {
@@ -2211,7 +2215,8 @@ public class MapModel {
     }
   }
 
-  /* Returns the node above the given node */
+  //-------------------------------------------------------------
+  // Returns the node above the given node
   public Node? get_node_up( Node node ) {
     if( node.is_root() ) {
       if( node.side.vertical() ) {
@@ -2236,7 +2241,8 @@ public class MapModel {
     }
   }
 
-  /* Returns the node below the given node */
+  //-------------------------------------------------------------
+  // Returns the node below the given node
   public Node? get_node_down( Node node ) {
     if( node.is_root() ) {
       if( node.side.vertical() ) {
@@ -2261,7 +2267,8 @@ public class MapModel {
     }
   }
 
-  /* Returns the node at the top of the sibling list */
+  //-------------------------------------------------------------
+  // Returns the node at the top of the sibling list
   public Node? get_node_pageup( Node node ) {
     if( node.is_root() ) {
       return( (_nodes.length > 0) ? _nodes.index( 0 ) : null );
@@ -2270,7 +2277,8 @@ public class MapModel {
     }
   }
 
-  /* Returns the node at the bottom of the sibling list */
+  //-------------------------------------------------------------
+  // Returns the node at the bottom of the sibling list
   public Node? get_node_pagedn( Node node ) {
     if( node.is_root() ) {
       return( (_nodes.length > 0) ? _nodes.index( _nodes.length - 1 ) : null );
@@ -2285,17 +2293,20 @@ public class MapModel {
     return( _map.selected.current_node() != null );
   }
 
-  /* Returns true if we can perform a node cut operation */
+  //-------------------------------------------------------------
+  // Returns true if we can perform a node cut operation
   public bool node_cuttable() {
     return( _map.selected.current_node() != null );
   }
 
-  /* Returns true if we can perform a node paste operation */
+  //-------------------------------------------------------------
+  // Returns true if we can perform a node paste operation
   public bool node_pasteable() {
     return( MinderClipboard.node_pasteable() );
   }
 
-  /* Returns true if the currently selected nodes are alignable */
+  //-------------------------------------------------------------
+  // Returns true if the currently selected nodes are alignable
   public bool nodes_alignable() {
     var nodes = _map.selected.nodes();
     if( nodes.length < 2 ) return( false );
@@ -2308,7 +2319,8 @@ public class MapModel {
     return( true );
   }
 
-  /* Serializes the current node tree */
+  //-------------------------------------------------------------
+  // Serializes the current node tree
   public string serialize_for_copy( Array<Node> nodes, Connections conns, NodeGroups groups ) {
     string    str;
     var       nodelinks = new NodeLinks();
@@ -2341,7 +2353,8 @@ public class MapModel {
     return( str );
   }
 
-  /* Deserializes the paste string and returns the list of nodes */
+  //-------------------------------------------------------------
+  // Deserializes the paste string and returns the list of nodes
   public void deserialize_for_paste( string str, Array<Node> nodes, Array<Connection> conns, Array<NodeGroup> groups ) {
     Xml.Doc* doc = Xml.Parser.parse_doc( str );
     if( doc == null ) return;

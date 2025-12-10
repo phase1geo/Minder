@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -33,7 +33,7 @@ public class Minder : Gtk.Application {
   private        GLib.Settings       touch_settings;
 
   public  static GLib.Settings settings;
-  public  static string        version       = "2.0";
+  public  static string        version       = "2.0.0";
   public  static bool          debug         = false;
   public  static bool          debug_advance = false;
   public  static int           debug_count   = 0;
@@ -71,21 +71,6 @@ public class Minder : Gtk.Application {
     // Load the tab data
     appwin.load_tab_state();
 
-    // Handle any changes to the position of the window
-    /*
-    appwin.configure_event.connect(() => {
-      int root_x, root_y;
-      int size_w, size_h;
-      appwin.get_position( out root_x, out root_y );
-      appwin.get_size( out size_w, out size_h );
-      settings.set_int( "window-x", root_x );
-      settings.set_int( "window-y", root_y );
-      settings.set_int( "window-w", size_w );
-      settings.set_int( "window-h", size_h );
-      return( false );
-    });
-    */
-
     // Initialize desktop interface settings
     string[] names = {"font-name", "text-scaling-factor"};
     iface_settings = new GLib.Settings( INTERFACE_SCHEMA );
@@ -121,7 +106,7 @@ public class Minder : Gtk.Application {
     string? cl_import = null;
     string? cl_export = null;
 
-    var context      = new OptionContext( "- Minder Options" );
+    var context      = new OptionContext( "[files]" );
     var options      = new OptionEntry[10];
     var transparent  = false;
     var compression  = 0;

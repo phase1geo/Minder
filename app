@@ -47,7 +47,6 @@ case $1 in
     ;;
 "generate-i18n")
     grep -rc _\( * | grep ^src | grep -v :0 | cut -d : -f 1 | sort -o po/POTFILES
-    echo "data/com.github.phase1geo.minder.shortcuts.ui" >> po/POTFILES
     initialize
     ninja com.github.phase1geo.minder-pot
     ninja com.github.phase1geo.minder-update-po
@@ -99,11 +98,11 @@ case $1 in
     sudo ninja uninstall
     ;;
 "elementary")
-    flatpak-builder --user --install --force-clean ../build-minder-elementary com.github.phase1geo.minder.elementary.yml
+    flatpak-builder --user --install --force-clean ../build-minder-elementary elementary/com.github.phase1geo.minder.yml
     flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" com.github.phase1geo.minder.Debug
     ;;
 "flathub")
-    flatpak-builder --user --install --force-clean ../build-minder-flathub com.github.phase1geo.minder.flathub.yml
+    flatpak-builder --user --install --force-clean ../build-minder-flathub flathub/com.github.phase1geo.minder.yml
     flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" com.github.phase1geo.minder.Debug
     ;;
 *)

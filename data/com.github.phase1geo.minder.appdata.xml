@@ -158,7 +158,7 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
-    <release version="2.0.0" date="2025-11-18">
+    <release version="2.0.0" date="2025-12-07">
       <description>
         <p>New</p>
         <p xml:lang="pt">Novo</p>
@@ -182,6 +182,7 @@
           <li>Added preference option to control the default style settings used in new mindmaps (Minder default, last
               used, or a saved style template).</li>
           <li>Added preference option to control whether a new node style matches its sibling or parent node.</li>
+          <li>Added Swedish translation (thanks to Daniel Nylander).</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="ru">Изменения</p>

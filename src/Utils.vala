@@ -505,7 +505,7 @@ public class Utils {
   //-------------------------------------------------------------
   // Causes the given switcher to adjust tab widths to be the same
   // based on the largest tab.
-  public static void set_switcher_tab_widths( StackSwitcher switcher ) {
+  public static void set_switcher_tab_widths( Widget switcher ) {
 
     Widget child;
     var    i = 0;

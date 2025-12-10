@@ -33,7 +33,6 @@ public class Theme : Object {
   public bool   prefer_dark { set; get; default = false; }
   public bool   custom      { protected set; get; default = true; }
   public bool   temporary   { set; get; default = false; }
-  public bool   rotate      { set; get; default = true; }
 
   //-------------------------------------------------------------
   // Default constructor.
@@ -80,10 +79,9 @@ public class Theme : Object {
   public void copy( Theme theme ) {
     name        = theme.name;
     label       = theme.label;
-    index       = theme.index;
     prefer_dark = theme.prefer_dark;
     temporary   = theme.temporary;
-    rotate      = theme.rotate;
+    custom      = theme.custom;
     _colors     = new HashMap<string,RGBA?>();
     var it = theme._colors.map_iterator();
     while( it.next() ) {
@@ -146,7 +144,7 @@ public class Theme : Object {
   public RGBA? next_color() {
     if( index == -1 ) {
       index = 0;
-    } else if( rotate ) {
+    } else if( Minder.settings.get_boolean( "rotate-main-link-colors" ) ) {
       index = (index + 1) % 8;
     }
     return( link_color( index  ) );
@@ -205,7 +203,7 @@ public class Theme : Object {
                      "@define-color colorAccent #603461; " +
                      "@define-color tab_base_color " + get_color( "background" ).to_string() + ";" +
                      tv_size +
-                     ".tab { color: " + Utils.color_from_rgba( foreground ) + "; }" +
+                     // ".tab { color: " + Utils.color_from_rgba( foreground ) + "; }" +
                      ".theme-selected { background: #087DFF; } " +
                      ".canvas { background: " + get_color( "background" ).to_string() + "; }" +
                      ".highlighted { background: rgba(255, 255, 129, " + (prefer_dark ? "0.15" : "1.0") + "); }";

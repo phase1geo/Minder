@@ -87,4 +87,28 @@ public class ModeButtons : Box {
 
   }
 
+  //-------------------------------------------------------------
+  // Adds a label tab to this ModeButton item.
+  public void add_stack_tab( string label ) {
+
+    var button = new ToggleButton.with_label( label ) {
+      halign = Align.CENTER
+    };
+
+    button.clicked.connect(() => {
+      _selected = Utils.get_child_index( this, button );
+      changed( _selected );
+    });
+
+    var first = get_first_child();
+    if( first != null ) {
+      button.set_group( (ToggleButton)first );
+    } else {
+      button.active = true;
+    }
+
+    append( button );
+
+  }
+
 }

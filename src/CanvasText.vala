@@ -27,14 +27,14 @@ using Pango;
 
 public class CanvasText : Object {
 
-  /* Member variables */
+  // Member variables
   private MindMap       _map;
   private double        _posx         = 0.0;
   private double        _posy         = 0.0;
   private FormattedText _text;
   private bool          _edit         = false;
-  private int           _cursor       = 0;   /* Location of the cursor when editing */
-  private int           _column       = 0;   /* Character column to use when moving vertically */
+  private int           _cursor       = 0;   // Location of the cursor when editing
+  private int           _column       = 0;   // Character column to use when moving vertically
   private Pango.Layout  _pango_layout = null;
   private Pango.Layout  _line_layout  = null;
   private int           _selstart     = 0;
@@ -46,12 +46,12 @@ public class CanvasText : Object {
   private bool          _debug        = false;
   private int           _font_size    = 12;
 
-  /* Signals */
+  // Signals
   public signal void resized();
   public signal void select_mode( bool mode );
   public signal void cursor_changed();
 
-  /* Properties */
+  // Properties
   public FormattedText text {
     get {
       return( _text );
@@ -302,7 +302,7 @@ public class CanvasText : Object {
       _pango_layout.set_width( int_max_width * Pango.SCALE );
     }
 
-    /* Load the text and formatting */
+    // Load the text and formatting
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "text" ) )  {
         _text.load( it );
@@ -508,13 +508,23 @@ public class CanvasText : Object {
 
   //-------------------------------------------------------------
   // Adjusts the cursor by the given amount of characters
-  private void cursor_by_char( int dir ) {
+  private void cursor_by_char( int dir, bool selection = false ) {
     var cpos = _cursor;
     if( _selstart != _selend ) {
-      if( calc_direction( dir ) > 0 ) {
-        cpos = _selend;
+      if( selection ) {
+        var last = text.text.char_count();
+        cpos += calc_direction( dir );
+        if( cpos < 0 ) {
+          cpos = 0;
+        } else if( cpos > last ) {
+          cpos = last;
+        }
       } else {
-        cpos = _selstart;
+        if( calc_direction( dir ) > 0 ) {
+          cpos = _selend;
+        } else {
+          cpos = _selstart;
+        }
       }
     } else {
       var last      = text.text.char_count();
@@ -546,7 +556,7 @@ public class CanvasText : Object {
   // Adjusts the selection by the given cursor
   public void selection_by_char( int dir ) {
     var last_cursor = _cursor;
-    cursor_by_char( dir );
+    cursor_by_char( dir, true );
     adjust_selection( last_cursor );
   }
 
@@ -1046,24 +1056,24 @@ public class CanvasText : Object {
       stdout.printf( "In change_selection, msg: %s\n", msg );
     }
 
-    /* Get the selection state prior to changing it */
+    // Get the selection state prior to changing it
     var old_selected = (_selstart != _selend);
 
-    /* Update the selection range */
+    // Update the selection range
     _selstart = selstart ?? _selstart;
     _selend   = selend   ?? _selend;
 
-    /* Get the selection state after the change */
+    // Get the selection state after the change
     var new_selected = (_selstart != _selend);
 
-    /* Update the selection tag */
+    // Update the selection tag
     if( new_selected ) {
       _text.replace_tag( FormatTag.SELECT, text.text.index_of_nth_char( _selstart ), text.text.index_of_nth_char( _selend ), false );
     } else if( old_selected ) {
       _text.remove_tag_all( FormatTag.SELECT );
     }
 
-    /* Alert anyone listening if the selection mode changed */
+    // Alert anyone listening if the selection mode changed
     if( old_selected && !new_selected ) {
       select_mode( false );
     } else if( !old_selected && new_selected ) {
@@ -1097,13 +1107,13 @@ public class CanvasText : Object {
     Pango.Rectangle ink_rect, log_rect;
     layout.get_extents( out ink_rect, out log_rect );
 
-    /* Output the text */
+    // Output the text
     ctx.move_to( (posx - (log_rect.x / Pango.SCALE)), posy );
     Utils.set_context_color_with_alpha( ctx, fg, alpha );
     Pango.cairo_show_layout( ctx, layout );
     ctx.new_path();
 
-    /* Draw the insertion cursor if we are in the 'editable' state */
+    // Draw the insertion cursor if we are in the 'editable' state
     if( edit && !copy_layout ) {
       var cpos = text.text.index_of_nth_char( _cursor );
       var rect = layout.index_to_pos( cpos );

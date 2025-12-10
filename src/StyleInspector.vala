@@ -327,7 +327,6 @@ public class StyleInspector : Box {
     var branch_margin = create_branch_margin_ui();
 
     var cbox = new Box( Orientation.VERTICAL, 0 ) {
-      vexpand      = true,
       homogeneous  = true,
       margin_start = 10,
       margin_end   = 10,

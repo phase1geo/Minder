@@ -487,7 +487,7 @@ public class Document : Object {
   // Archives the contents of the opened Minder directory.
   public bool save() {
 
-    stdout.printf( "Saving...\n" );
+    // stdout.printf( "Saving...\n" );
 
     var bak_file = get_bak_file();
     var backed   = false;
