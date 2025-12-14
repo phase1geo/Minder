@@ -48,8 +48,8 @@ public class StyleInspector : Box {
   private MainWindow       _win;
   private MindMap?         _map = null;
   private GLib.Settings    _settings;
-  private Revealer         _branch_radius_revealer;
   private Scale            _branch_radius;
+  private Box              _branch_radius_box;
   private Scale            _branch_margin;
   private ModeButtons      _link_types;
   private Scale            _link_width;
@@ -405,7 +405,7 @@ public class StyleInspector : Box {
 
   //-------------------------------------------------------------
   // Creates the UI for changing the branch drawing type.
-  private Revealer create_branch_radius_ui() {
+  private Box create_branch_radius_ui() {
 
     var lbl = new Label( _( "Corner Radius" ) ) {
       hexpand = true,
@@ -418,18 +418,14 @@ public class StyleInspector : Box {
     };
     _branch_radius.change_value.connect( branch_radius_changed );
 
-    var box = new Box( Orientation.HORIZONTAL, 10 ) {
-      homogeneous = true
+    _branch_radius_box = new Box( Orientation.HORIZONTAL, 10 ) {
+      homogeneous = true,
+      visible     = false
     };
-    box.append( lbl );
-    box.append( _branch_radius );
+    _branch_radius_box.append( lbl );
+    _branch_radius_box.append( _branch_radius );
 
-    _branch_radius_revealer = new Revealer() {
-      reveal_child = false,
-      child        = box
-    };
-
-    return( _branch_radius_revealer );
+    return( _branch_radius_box );
 
   }
 
@@ -1926,6 +1922,7 @@ public class StyleInspector : Box {
   // Updates the state of the link types modebutton widget with the
   // link type style information.
   private void update_link_types_with_style( Style style ) {
+    update_link_types_state();
     if( style.link_type != null ) {
       var link_types = styles.get_link_types();
       for( int i=0; i<link_types.length; i++ ) {
@@ -1934,10 +1931,8 @@ public class StyleInspector : Box {
           break;
         }
       }
-      _branch_radius_revealer.visible      = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
-      _branch_radius_revealer.reveal_child = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
+      _branch_radius_box.visible = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
     }
-    update_link_types_state();
   }
 
   //-------------------------------------------------------------

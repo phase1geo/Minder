@@ -1467,9 +1467,9 @@ public class MapModel {
 
   //-------------------------------------------------------------
   // Selects all nodes within the given rectangle.
-  public void select_nodes_within_rectangle( Gdk.Rectangle box ) {
+  public void get_nodes_within_rectangle( Gdk.Rectangle box, Array<Node> nodes ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).select_within_box( box, _map.selected );
+      _nodes.index( i ).get_nodes_within_box( box, nodes );
     }
   }
 

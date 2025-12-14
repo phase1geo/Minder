@@ -1329,7 +1329,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
   
       // Pan the canvas if we are dragging something that is draggable
-      if( _map.selected.is_any_draggable_selected() ) {
+      if( _map.selected.is_any_draggable_selected() && !_select_box.valid ) {
         double diff_x = _scaled_x - last_x;
         double diff_y = _scaled_y - last_y;
         var edge = autopan_inner_edge;
@@ -1446,7 +1446,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
       }
 
-      if( _motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within_node( _scaled_x, _scaled_y ) && _map.editable ) {
+      if( _motion && !_resize && !_select_box.valid && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within_node( _scaled_x, _scaled_y ) && _map.editable ) {
         if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) ) {
           current_node.set_alpha_only( 0.3 );
         } else {
@@ -1701,6 +1701,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( _select_box.valid ) {
       _select_box = {0, 0, 0, 0, false};
       queue_draw();
+      return;
     }
 
     /* Return the cursor to the default cursor */

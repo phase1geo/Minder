@@ -727,16 +727,23 @@ public class MindMap {
   //-------------------------------------------------------------
   // Selects all nodes within the selected box.
   public void select_nodes_within_box( SelectBox select_box, bool shift ) {
+
     Gdk.Rectangle box = {
       (int)((select_box.w < 0) ? (select_box.x + select_box.w) : select_box.x),
       (int)((select_box.h < 0) ? (select_box.y + select_box.h) : select_box.y),
       (int)((select_box.w < 0) ? (0 - select_box.w) : select_box.w),
       (int)((select_box.h < 0) ? (0 - select_box.h) : select_box.h)
     };
+
+    var nodes = new Array<Node>();
+    _model.get_nodes_within_rectangle( box, nodes );
+
     if( !shift ) {
-      _selected.clear_nodes();
+      _selected.change_nodes( nodes );
+    } else {
+      _selected.add_nodes( nodes );
     }
-    _model.select_nodes_within_rectangle( box );
+
   }
 
   //-------------------------------------------------------------
