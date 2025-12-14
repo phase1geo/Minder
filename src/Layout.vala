@@ -105,39 +105,47 @@ public class Layout : Object {
       }
     }
 
+    // If the node is a summarized node, we need to adjust the treebox to include the summary node and its tree.
     if( parent.is_summarized() ) {
+
+      stdout.printf( "Setting summarized treebox: %s\n", parent.name.text.text );
 
       var summary = parent.summary_node();
       var sb      = summary.tree_bbox;
 
       if( parent.first_summarized() ) {
+        stdout.printf( "  first\n" );
         nb.x = (parent.side.vertical()   && (nb.x > sb.x)) ? sb.x : nb.x;
         nb.y = (parent.side.horizontal() && (nb.y > sb.y)) ? sb.y : nb.y;
-        /*
         x2   = ((parent.side == NodeSide.RIGHT)  && (x2 < (sb.x + sb.width)))  ? (sb.x + sb.width)  : x2;
         y2   = ((parent.side == NodeSide.BOTTOM) && (y2 < (sb.y + sb.height))) ? (sb.y + sb.height) : y2;
-        */
       } else if( parent.last_summarized() ) {
-        /*
+        stdout.printf( "  last\n" );
         nb.x = ((parent.side == NodeSide.LEFT) && (nb.x > sb.x)) ? sb.x : nb.x;
         nb.y = ((parent.side == NodeSide.TOP)  && (nb.y > sb.y)) ? sb.y : nb.y;
-        */
-        x2   = (parent.side.vertical()   && (x2 < (sb.x + sb.width)))  ? (sb.x + sb.width)  : x2;
-        y2   = (parent.side.horizontal() && (y2 < (sb.y + sb.height))) ? (sb.y + sb.height) : y2;
-        /*
+        stdout.printf( "      vertical: %s, x2: %g, sb.x: %g, sb.width: %g\n", parent.side.vertical().to_string(), x2, sb.x, sb.width );
+        //x2   = (parent.side.horizontal() && (x2 < (sb.x + sb.width)))  ? (sb.x + sb.width)  : x2;
+        //y2   = (parent.side.vertical()   && (y2 < (sb.y + sb.height))) ? (sb.y + sb.height) : y2;
+        x2   = (x2 < (sb.x + sb.width))  ? (sb.x + sb.width)  : x2;
+        y2   = (y2 < (sb.y + sb.height)) ? (sb.y + sb.height) : y2;
       } else if( parent.side.horizontal() ) {
+        stdout.printf( "  other\n" );
         nb.x = (nb.x < sb.x) ? nb.x : sb.x;
         x2   = (x2 < (sb.x + sb.width)) ? (sb.x + sb.width) : x2;
       } else {
+        stdout.printf( "  other\n" );
         nb.y = (nb.y < sb.y) ? nb.y : sb.y;
         y2   = (y2 < (sb.y + sb.height)) ? (sb.y + sb.height) : y2;
-        */
       }
 
+    } else if( parent.is_summary() ) {
+      stdout.printf( "Setting summary treebox\n" );
     }
 
     nb.width  = (x2 - nb.x);
     nb.height = (y2 - nb.y);
+
+    stdout.printf( "    x: %g, y: %g, w: %g, h: %g, name: %s\n", nb.x, nb.y, nb.width, nb.height, parent.name.text.text );
 
     return( nb );
 
@@ -171,9 +179,12 @@ public class Layout : Object {
       double xy1, xy2;
       (parent as SummaryNode).get_extents( out xy1, out xy2 );
 
+      stdout.printf( "In GET_ADJUST, summary extents, xy1: %g, xy2: %g, size: %g, name: %s\n", xy1, xy2, (xy2 - xy1), parent.name.text.text );
+
       var extent_size    = xy2 - xy1;
       var orig_tree_size = (extent_size < parent.tree_size) ? parent.tree_size : extent_size;
       update_tree_size( parent );
+      stdout.printf( "  retval: %g\n", ((extent_size < parent.tree_size) ? (parent.tree_size - orig_tree_size) : 0) );
       return( (extent_size < parent.tree_size) ? (parent.tree_size - orig_tree_size) : 0 );
 
     } else {
@@ -187,7 +198,7 @@ public class Layout : Object {
   }
 
   //-------------------------------------------------------------
-  // Adjusts the given tree by the given amount
+  // Adjusts the given tree by the given amount.
   public virtual void adjust_tree( Node parent, int child_index, int side_mask, double amount ) {
 
     for( int i=0; i<parent.children().length; i++ ) {
@@ -211,7 +222,7 @@ public class Layout : Object {
   }
 
   //-------------------------------------------------------------
-  // Adjust the entire tree
+  // Adjust the entire tree by traversing the tree towards the root.
   public virtual void adjust_tree_all( Node n, NodeBounds p, double amount, string msg ) {
 
     var parent = n.parent;
@@ -403,6 +414,8 @@ public class Layout : Object {
   //-------------------------------------------------------------
   // Called when we are inserting a node within a parent.
   public virtual void handle_update_by_insert( Node parent, Node child, int pos ) {
+
+    stdout.printf( "In handle_update_by_insert, child: %s\n", child.name.text.text );
 
     double ox, oy, ow, oh;
     double adjust;

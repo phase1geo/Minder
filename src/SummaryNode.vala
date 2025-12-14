@@ -27,72 +27,88 @@ public class SummaryNode : Node {
   private double?    _first_xy = null;
   private double?    _last_xy  = null;
 
-  /*
-   If this is set to true, the summary line will be drawn in the attachable color to indicate that
-   releasing a node that is being moved will be a part of the summary node.
-  */
+  //-------------------------------------------------------------
+  // If this is set to true, the summary line will be drawn in the
+  // attachable color to indicate that releasing a node that is
+  // being moved will be a part of the summary node.
   public bool attachable { set; get; default = false; }
 
-  /* Remembers the last selected summarized node when the selection changed to us */
+  //-------------------------------------------------------------
+  // Remembers the last selected summarized node when the selection
+  // changed to us
   public Node? last_selected_node { get; set; default = null; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public SummaryNode( MindMap map, Layout? layout ) {
     base( map, layout );
     _nodes = new List<Node>();
   }
 
-  /* Converts the given node into a summary node that summarizes its sibling nodes */
+  //-------------------------------------------------------------
+  // Converts the given node into a summary node that summarizes
+  // its sibling nodes
   public SummaryNode.from_node( MindMap map, Node node, ImageManager im ) {
     base.copy( map, node, im );
     _nodes = new List<Node>();
   }
 
-  /* Constructor from XML data */
+  //-------------------------------------------------------------
+  // Constructor from XML data
   public SummaryNode.from_xml( MindMap map, Layout? layout, Xml.Node* node, ref Array<Node> siblings ) {
     base( map, layout );
     _nodes = new List<Node>();
     load( map, node, false, null, ref siblings );
   }
 
-  /* Connects the node to signals */
+  //-------------------------------------------------------------
+  // Connects the node to signals
   private void connect_node( Node node ) {
     node.moved.connect( nodes_changed_moved );
     node.resized.connect( nodes_changed_resized );
   }
 
-  /* Disconnects the node from signals */
+  //-------------------------------------------------------------
+  // Disconnects the node from signals
   private void disconnect_node( Node node ) {
     node.moved.disconnect( nodes_changed_moved );
     node.resized.disconnect( nodes_changed_resized );
   }
 
-  /* Returns the number of nodes that this node summarizes */
+  //-------------------------------------------------------------
+  // Returns the number of nodes that this node summarizes
   public int summarized_count() {
     return( (int)_nodes.length() );
   }
 
-  /* Returns the first node that is summarized */
+  //-------------------------------------------------------------
+  // Returns the first node that is summarized
   public Node first_node() {
     return( _nodes.first().data );
   }
 
-  /* Returns the last node that is summarized */
+  //-------------------------------------------------------------
+  // Returns the last node that is summarized
   public Node last_node() {
     return( _nodes.last().data );
   }
 
-  /* Returns the index of the given node in the list of summarized nodes.  Returns -1 if the node could not be found. */
+  //-------------------------------------------------------------
+  // Returns the index of the given node in the list of summarized
+  // nodes.  Returns -1 if the node could not be found.
   public int node_index( Node node ) {
     return( _nodes.index( node ) );
   }
 
-  /* Returns true to indicate that this is a summary node */
+  //-------------------------------------------------------------
+  // Returns true to indicate that this is a summary node
   public override bool is_summary() {
     return( true );
   }
 
-  /* Returns true if the given coordinates is within the horizontal/vertical extents of the list of summarized nodes */
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates is within the
+  // horizontal/vertical extents of the list of summarized nodes
   public bool is_within_summarized( double x, double y ) {
     if( _first_xy == null ) return( false );
     if( side.horizontal() ) {
@@ -102,13 +118,16 @@ public class SummaryNode : Node {
     }
   }
 
-  /* Clears the extents */
+  //-------------------------------------------------------------
+  // Clears the extents
   public void clear_extents() {
     _first_xy = null;
     _last_xy  = null;
   }
 
-  /* Returns the top/bottom or left/right extents of the summarized nodes */
+  //-------------------------------------------------------------
+  // Returns the top/bottom or left/right extents of the summarized
+  // nodes
   public void get_extents( out double xy1, out double xy2 ) {
 
     if( _nodes.length() == 0 ) {
@@ -127,7 +146,9 @@ public class SummaryNode : Node {
 
   }
 
-  /* Updates the stored summarized extents based on the current layout and first/last position */
+  //-------------------------------------------------------------
+  // Updates the stored summarized extents based on the current
+  // layout and first/last position
   public void set_extents() {
 
     /* If we don't have any nodes, this is bad */
@@ -145,7 +166,8 @@ public class SummaryNode : Node {
 
   }
 
-  /* Comparison function of two double types */
+  //-------------------------------------------------------------
+  // Comparison function of two double types
   private static int compare_pos( double pos1, double pos2 ) {
     return( (pos1 == pos2) ? 0 : (pos1 < pos2) ? -1 : 1 );
   }
@@ -158,7 +180,9 @@ public class SummaryNode : Node {
     nodes_changed( fx, fy, "resized" );
   }
 
-  /* Called whenever the first or last summarized nodes changes in position or size, we need to adjust our location */
+  //-------------------------------------------------------------
+  // Called whenever the first or last summarized nodes changes
+  // in position or size, we need to adjust our location
   public void nodes_changed( double fx, double fy, string msg = "" ) {
 
     var margin = style.branch_margin ?? 0;
@@ -197,11 +221,13 @@ public class SummaryNode : Node {
 
   }
 
-  /* Attach ourself to the list of nodes */
+  //-------------------------------------------------------------
+  // Attach ourself to the list of nodes
   public void attach_nodes( Node p, Array<Node> nodes, bool sort, Theme? theme ) {
     assert( nodes.length > 0 );
     for( int i=0; i<nodes.length; i++ ) {
       var node = nodes.index( i );
+      stdout.printf( "  Adding summarized node: %s\n", node.name.text.text );
       _nodes.append( node );
       node.children().append_val( this );
       connect_node( node );
@@ -225,10 +251,10 @@ public class SummaryNode : Node {
     }
   }
 
-  /*
-   We attach ourself to the given node and all of its siblings that are on the same side, contain no children and are not
-   already summarized.
-  */
+  //-------------------------------------------------------------
+  // We attach ourself to the given node and all of its siblings
+  // that are on the same side, contain no children and are not
+  // already summarized.
   public void attach_siblings( Node node, Theme? theme ) {
     var sibling = node;
     var nodes   = new Array<Node>();
@@ -239,7 +265,9 @@ public class SummaryNode : Node {
     attach_nodes( node.parent, nodes, false, theme );
   }
 
-  /* We just attach our existing nodes back to their original values (used in undo/redo operations) */
+  //-------------------------------------------------------------
+  // We just attach our existing nodes back to their original
+  // values (used in undo/redo operations)
   public void attach_all() {
     foreach( var node in _nodes ) {
       node.children().append_val( this );
@@ -249,7 +277,8 @@ public class SummaryNode : Node {
     parent = last_node();
   }
 
-  /* We just detach ourselves from the node list */
+  //-------------------------------------------------------------
+  // We just detach ourselves from the node list
   public void detach_all() {
     first_node().parent.moved.disconnect( parent_moved );
     foreach( var node in _nodes ) {
@@ -259,7 +288,8 @@ public class SummaryNode : Node {
     parent = null;
   }
 
-  /* Overrides the standard detachment */
+  //-------------------------------------------------------------
+  // Overrides the standard detachment
   public override void detach( NodeSide side ) {
     detach_all();
     /*
@@ -269,7 +299,8 @@ public class SummaryNode : Node {
     */
   }
 
-  /* Update the tree_bbox structures of the summarized nodes */
+  //-------------------------------------------------------------
+  // Update the tree_bbox structures of the summarized nodes
   private void update_tree_bboxes() {
     foreach( var node in _nodes ) {
       node.tree_bbox = layout.bbox( node, -1, "update_tree_bboxes" );
@@ -277,7 +308,9 @@ public class SummaryNode : Node {
     }
   }
 
-  /* Re-sorts nodes that are fixed in their location and updates the parent */
+  //-------------------------------------------------------------
+  // Re-sorts nodes that are fixed in their location and updates
+  // the parent
   private void sort_nodes() {
     _nodes.sort((a, b) => {
       return( (a.index() == b.index()) ? 0 :
@@ -287,7 +320,8 @@ public class SummaryNode : Node {
     update_tree_bboxes();
   }
 
-  /* Adds the given node to the list of summarized nodes */
+  //-------------------------------------------------------------
+  // Adds the given node to the list of summarized nodes
   public void add_node( Node node ) {
 
     _nodes.append( node );
@@ -299,7 +333,8 @@ public class SummaryNode : Node {
 
   }
 
-  /* Moves the given node from its current location to a new location */
+  //-------------------------------------------------------------
+  // Moves the given node from its current location to a new location
   public void node_moved( Node node ) {
 
     sort_nodes();
@@ -308,8 +343,11 @@ public class SummaryNode : Node {
 
   }
 
-  /* Removes the given node from the list of summarized nodes */
+  //-------------------------------------------------------------
+  // Removes the given node from the list of summarized nodes
   public void remove_node( Node node ) {
+
+    stdout.printf( "Removing node\n" );
 
     var update_color = (node == parent);
 
@@ -326,18 +364,21 @@ public class SummaryNode : Node {
 
   }
 
-  /* Removes all summarized nodes from this node so that it can be deleted */
+  //-------------------------------------------------------------
+  // Removes all summarized nodes from this node so that it can
+  // be deleted
   public override void delete() {
     detach_all();
   }
 
-  /* Draws the link to the left of the summarized nodes */
+  //-------------------------------------------------------------
+  // Draws the link to the left of the summarized nodes
   private void draw_link_left( Context ctx ) {
 
     double x, y, w, h;
     node_bbox( out x, out y, out w, out h );
 
-    /* Get the smallest X value */
+    // Get the smallest X value
     var sx = first_node().posx;
     foreach( var node in _nodes ) {
       if( sx > node.posx ) {
@@ -366,13 +407,14 @@ public class SummaryNode : Node {
 
   }
 
-  /* Draws the link to the right of the summarized nodes */
+  //-------------------------------------------------------------
+  // Draws the link to the right of the summarized nodes
   private void draw_link_right( Context ctx ) {
 
     double x, y, w, h;
     node_bbox( out x, out y, out w, out h );
 
-    /* Get the smallest X value */
+    // Get the smallest X value
     var sx = first_node().posx;
     foreach( var node in _nodes ) {
       if( sx < (node.posx + node.total_width) ) {
@@ -401,13 +443,14 @@ public class SummaryNode : Node {
 
   }
 
-  /* Draws the summary bracket above the nodes */
+  //-------------------------------------------------------------
+  // Draws the summary bracket above the nodes
   private void draw_link_above( Context ctx ) {
 
     double x, y, w, h;
     node_bbox( out x, out y, out w, out h );
 
-    /* Get the smallest X value */
+    // Get the smallest X value
     var sy = first_node().posy;
     foreach( var node in _nodes ) {
       if( sy > node.posy ) {
@@ -435,13 +478,14 @@ public class SummaryNode : Node {
 
   }
 
-  /* Draws the summary bracket above the nodes */
+  //-------------------------------------------------------------
+  // Draws the summary bracket above the nodes
   private void draw_link_below( Context ctx ) {
 
     double x, y, w, h;
     node_bbox( out x, out y, out w, out h );
 
-    /* Get the smallest X value */
+    // Get the smallest X value
     var sy = first_node().posy;
     foreach( var node in _nodes ) {
       if( sy < (node.posy + node.total_height) ) {
@@ -469,7 +513,8 @@ public class SummaryNode : Node {
 
   }
 
-  /* Draw the summary link that spans the first and last node */
+  //-------------------------------------------------------------
+  // Draw the summary link that spans the first and last node
   public override void draw_link( Context ctx, Theme theme ) {
 
     var color = link_color;

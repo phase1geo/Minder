@@ -609,7 +609,6 @@ public class Node : Object {
     _name.resized.connect( position_text_and_update_size );
     _tags      = new Tags();
     set_parsers();
-    siblings.append_val( this );
     load( map, n, isroot, sibling_parent, ref siblings );
   }
 
@@ -3404,7 +3403,15 @@ public class Node : Object {
 
     // Draw tree_bbox
     if( is_summarized() || is_summary() ) {
-      Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.1 );
+      if( first_summarized() ) {
+        Utils.set_context_color_with_alpha( ctx, theme.get_color( "link_color0" ), 0.1 );
+      } else if( last_summarized() ) {
+        Utils.set_context_color_with_alpha( ctx, theme.get_color( "link_color3" ), 0.1 );
+      } else if( is_summarized() ) {
+        Utils.set_context_color_with_alpha( ctx, theme.get_color( "link_color6" ), 0.1 );
+      } else {
+        Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.1 );
+      }
       ctx.rectangle( tree_bbox.x, tree_bbox.y, tree_bbox.width, tree_bbox.height );
       ctx.fill();
     }
