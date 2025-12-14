@@ -385,7 +385,7 @@ public class MapInspector : Box {
       vexpand = true,
       child   = tb
     };
-    sw.set_size_request( 200, 600 );
+    // sw.set_size_request( 200, 600 );
 
     /* Add the themes to the theme box */
     update_themes();

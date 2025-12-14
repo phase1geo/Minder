@@ -92,7 +92,7 @@ public class StickerInspector : Box {
       child = box
     };
     var vp = (Viewport)sw.child;
-    vp.set_size_request( 200, 600 );
+    // vp.set_size_request( 200, 600 );
 
     // Create search result flowbox
     _matched_box = create_icon_box( "" );

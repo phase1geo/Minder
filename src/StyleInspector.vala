@@ -134,7 +134,7 @@ public class StyleInspector : Box {
       vexpand = true,
       child = box
     };
-    sw.child.set_size_request( 200, 600 );
+    // sw.child.set_size_request( 200, 600 );
 
     // Pack the elements into this widget
     append( affect );
