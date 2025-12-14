@@ -246,6 +246,7 @@ public class DrawArea : Gtk.DrawingArea {
     };
     this.add_controller( middle_click );
     middle_click.pressed.connect((n_press, x, y) => { on_press( n_press, x, y, Gdk.BUTTON_MIDDLE ); });
+    middle_click.released.connect( on_release );
 
     var right_click = new GestureClick() {
       button = Gdk.BUTTON_SECONDARY
