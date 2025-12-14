@@ -1599,6 +1599,7 @@ public class Node : Object {
   // Loads the style information from the given XML node.
   private void load_style( Xml.Node* n ) {
     _style.load_node( n );
+    _name.set_text_alignment( _style.node_text_align );
     _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
     if( _sequence_num != null ) {
       _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );

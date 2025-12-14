@@ -1845,7 +1845,8 @@ public class StyleInspector : Box {
         _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_GENERAL );
         break;
       case StyleAffects.SELECTED_NODES :
-        _curr_style = selected.nodes().index( 0 ).style;
+        _curr_style = new Style();
+        _curr_style.copy( selected.nodes().index( 0 ).style );
         _branch_group.visible  = true;
         _link_group.visible    = true;
         _node_group.visible    = true;
@@ -1854,7 +1855,8 @@ public class StyleInspector : Box {
         _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_NODE );
         break;
       case StyleAffects.SELECTED_CONNECTIONS :
-        _curr_style = selected.connections().index( 0 ).style;
+        _curr_style = new Style();
+        _curr_style.copy( selected.connections().index( 0 ).style );
         _branch_group.visible  = false;
         _link_group.visible    = false;
         _node_group.visible    = false;
@@ -1864,7 +1866,8 @@ public class StyleInspector : Box {
         _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_CONNECTION );
         break;
       case StyleAffects.SELECTED_CALLOUTS :
-        _curr_style = selected.callouts().index( 0 ).style;
+        _curr_style = new Style();
+        _curr_style.copy( selected.callouts().index( 0 ).style );
         _branch_group.visible  = false;
         _link_group.visible    = false;
         _node_group.visible    = false;
