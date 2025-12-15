@@ -30,7 +30,6 @@ public class Theme : Object {
   public string name        { set; get; }
   public string label       { set; get; }
   public int    index       { set; get; default = -1; }
-  public bool   prefer_dark { set; get; default = false; }
   public bool   custom      { protected set; get; default = true; }
   public bool   temporary   { set; get; default = false; }
 
@@ -79,7 +78,6 @@ public class Theme : Object {
   public void copy( Theme theme ) {
     name        = theme.name;
     label       = theme.label;
-    prefer_dark = theme.prefer_dark;
     temporary   = theme.temporary;
     custom      = theme.custom;
     _colors     = new HashMap<string,RGBA?>();
@@ -113,7 +111,6 @@ public class Theme : Object {
             return( false );
           }
         }
-        return( prefer_dark == theme.prefer_dark );
       }
       return( true );
     }
@@ -193,20 +190,19 @@ public class Theme : Object {
   //-------------------------------------------------------------
   // Returns the CSS provider for this theme.
   public CssProvider get_css_provider( int text_size ) {
-    CssProvider provider = new CssProvider();
-    var foreground = Granite.contrasting_foreground_color( get_color( "background" ) );
+    var provider     = new CssProvider();
+    var foreground   = Granite.contrasting_foreground_color( get_color( "background" ) );
+    var gtk_settings = Gtk.Settings.get_default();
     try {
       var tv_size  = (text_size == -1) ? ".textfield { font: 1em \"Sans\"; } " :
                                          ".textfield { font: %dpx \"Sans\"; } ".printf( text_size );
       var css_data = "@define-color colorPrimary #603461; " +
                      "@define-color textColorPrimary @SILVER_100; " +
                      "@define-color colorAccent #603461; " +
-                     "@define-color tab_base_color " + get_color( "background" ).to_string() + ";" +
                      tv_size +
-                     // ".tab { color: " + Utils.color_from_rgba( foreground ) + "; }" +
                      ".theme-selected { background: #087DFF; } " +
                      ".canvas { background: " + get_color( "background" ).to_string() + "; }" +
-                     ".highlighted { background: rgba(255, 255, 129, " + (prefer_dark ? "0.15" : "1.0") + "); }";
+                     ".highlighted { background: rgba(255, 255, 129, " + (gtk_settings.gtk_application_prefer_dark_theme ? "0.15" : "1.0") + "); }";
       provider.load_from_string( css_data );
     } catch( GLib.Error e ) {
       stdout.printf( _( "Unable to load background color: %s" ), e.message );
@@ -253,12 +249,6 @@ public class Theme : Object {
       }
     }
 
-    string? d = n->get_prop( "prefer_dark" );
-    if( d != null ) {
-      prefer_dark   = bool.parse( d );
-      contains_data = true;
-    }
-
     return( contains_data );
 
   }
@@ -275,15 +265,11 @@ public class Theme : Object {
     n->new_prop( "index", index.to_string() );
 
     if( custom ) {
-
       var cs = colors();
       for( int i=0; i<cs.length; i++ ) {
         var name = cs.index( i );
         n->new_prop( name, Utils.color_from_rgba( get_color( name ) ) );
       }
-
-      n->new_prop( "prefer_dark", prefer_dark.to_string() );
-
     }
 
     return( n );

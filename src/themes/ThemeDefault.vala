@@ -59,8 +59,6 @@ public class ThemeDefault : Theme {
     set_color( "link_color6", color_from_string( "#715344" ) );
     set_color( "link_color7", color_from_string( "#333333" ) );
 
-    prefer_dark = false;
-
   }
 
 }

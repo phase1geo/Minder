@@ -79,15 +79,6 @@ public class MapInspector : Box {
       _read_only.set_sensitive( !_map.doc.read_only );
     });
 
-    // Listen for preference changes
-    _settings.changed.connect( settings_changed );
-
-    // Listen for changes to the system dark mode
-    var granite_settings = Granite.Settings.get_default();
-    granite_settings.notify["prefers-color-scheme"].connect( () => {
-      update_themes();
-    });
-
   }
 
   //-------------------------------------------------------------
@@ -113,15 +104,6 @@ public class MapInspector : Box {
       _map_dir.uri   = "file://" + _map.doc.temp_dir;
     }
     update_theme_layout();
-  }
-
-  //-------------------------------------------------------------
-  // Called whenever the preferences change values.  We will
-  // update the displayed themes based on the hide setting.
-  private void settings_changed( string key ) {
-    switch( key ) {
-      case "hide-themes-not-matching-visual-style" :  update_themes();  break;
-    }
   }
 
   //-------------------------------------------------------------
@@ -479,11 +461,8 @@ public class MapInspector : Box {
     }
 
     // Get the theme information to display
-    var names    = new Array<string>();
-    var icons    = new Array<Picture>();
-    var hide     = _settings.get_boolean( "hide-themes-not-matching-visual-style" );
-    var settings = Granite.Settings.get_default();
-    var dark     = settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+    var names = new Array<string>();
+    var icons = new Array<Picture>();
 
     _win.themes.names( ref names );
     _win.themes.icons( ref icons );
@@ -493,30 +472,28 @@ public class MapInspector : Box {
     for( int i=0; i<names.length; i++ ) {
       var name  = names.index( i );
       var theme = _win.themes.get_theme( name );
-      if( !hide || (dark == theme.prefer_dark) ) {
-        var label = new Label( theme_label( name ) );
-        var item  = new Box( Orientation.VERTICAL, 0 ) {
-          margin_start  = 5,
-          margin_end    = 5,
-          margin_top    = 5,
-          margin_bottom = 5
-        };
-        item.append( icons.index( i ) );
-        item.append( label );
-        var click = new GestureClick();
-        item.add_controller( click );
-        click.pressed.connect((n_press, x, y) => {
-          if( _map.editable ) {
-            select_theme( name );
-            _map.model.set_theme( theme, true );
-            if( theme.custom && (n_press == 2) ) {
-              edit_current_theme();
-            }
+      var label = new Label( theme_label( name ) );
+      var item  = new Box( Orientation.VERTICAL, 0 ) {
+        margin_start  = 5,
+        margin_end    = 5,
+        margin_top    = 5,
+        margin_bottom = 5
+      };
+      item.append( icons.index( i ) );
+      item.append( label );
+      var click = new GestureClick();
+      item.add_controller( click );
+      click.pressed.connect((n_press, x, y) => {
+        if( _map.editable ) {
+          select_theme( name );
+          _map.model.set_theme( theme, true );
+          if( theme.custom && (n_press == 2) ) {
+            edit_current_theme();
           }
-        });
-        _theme_grid.attach( item, (index % 2), (index / 2) );
-        index++;
-      }
+        }
+      });
+      _theme_grid.attach( item, (index % 2), (index / 2) );
+      index++;
     }
 
     // Make sure that the current theme is selected
@@ -562,35 +539,21 @@ public class MapInspector : Box {
   // Makes sure that only the given theme is selected in the UI.
   private void select_theme( string name ) {
 
-    var names    = new Array<string>();
-    var shown    = new Array<string>();
-    var hide     = _settings.get_boolean( "hide-themes-not-matching-visual-style" );
-    var settings = Granite.Settings.get_default();
-    var dark     = settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
-
+    var names = new Array<string>();
     _win.themes.names( ref names );
 
-    /* Only show the names that are not hidden */
-    for( int i=0; i<names.length; i++ ) {
-      var tname = names.index( i );
-      var theme = _win.themes.get_theme( tname );
-      if( !hide || (dark == theme.prefer_dark) ) {
-        shown.append_val( tname );
-      }
-    }
-
-    /* Update selection of themes */
+    // Update selection of themes
     var index = 0;
     var child = Utils.get_child_at_index( _theme_grid, index );
     while( child != null ) {
-      if( shown.index( index ) == name ) {
+      if( names.index( index ) == name ) {
         child.add_css_class( "theme-selected" );
         var l = (Label)Utils.get_child_at_index( child, 1 );
-        l.set_markup( "<span color=\"white\">%s</span>".printf( theme_label( shown.index( index ) ) ) );
+        l.set_markup( "<span color=\"white\">%s</span>".printf( theme_label( names.index( index ) ) ) );
       } else {
         child.remove_css_class( "theme-selected" );
         var l = (Label)Utils.get_child_at_index( child, 1 );
-        l.set_markup( theme_label( shown.index( index ) ) );
+        l.set_markup( theme_label( names.index( index ) ) );
       }
       child = Utils.get_child_at_index( _theme_grid, ++index );
     }

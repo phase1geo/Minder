@@ -211,11 +211,6 @@
       <summary>Last used export</summary>
       <description>Stores last used export and uses it when it is later invoked</description>
     </key>
-    <key name="hide-themes-not-matching-visual-style" type="b">
-      <default>false</default>
-      <summary>Hide themes that do not match the current system visual style</summary>
-      <description>Hide themes that do not match the current system visual style (aka. light/dark mode)</description>
-    </key>
     <key name="print-settings" type="a{sv}">
       <default>[]</default>
       <summary>Printer settings used in the last print invocation</summary>
