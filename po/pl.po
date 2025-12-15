@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-14 20:00-0600\n"
+"POT-Creation-Date: 2025-12-14 22:25-0600\n"
 "PO-Revision-Date: 2022-08-02 23:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -234,13 +234,13 @@ msgid ""
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1332
+#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1330
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
 #: src/ThemeEditor.vala:153 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2204
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2205
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Zastosuj"
@@ -249,7 +249,7 @@ msgstr "Zastosuj"
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:714 src/MainWindow.vala:2241
+#: src/Document.vala:714 src/MainWindow.vala:2242
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
@@ -292,7 +292,7 @@ msgstr ""
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2270 src/MapModel.vala:1827 src/MapModel.vala:1842
+#: src/DrawArea.vala:2270 src/MapModel.vala:1837 src/MapModel.vala:1852
 msgid "Another Idea"
 msgstr "NOWY TEMAT"
 
@@ -340,7 +340,7 @@ msgstr "Opcje eksportu"
 msgid "Export As %s"
 msgstr "Eksportuj jako %s"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1071 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1069 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Eksport"
 
@@ -1255,11 +1255,11 @@ msgid "Select a group color"
 msgstr "Ustaw kolor..."
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:271
-#: src/MapInspector.vala:524 src/MapModel.vala:2315
+#: src/MapInspector.vala:524 src/MapModel.vala:2325
 msgid "Manual"
 msgstr "Ręcznie"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1623
+#: src/MainWindow.vala:183 src/MainWindow.vala:1624
 msgid "Minder"
 msgstr "Minder"
 
@@ -1267,7 +1267,7 @@ msgstr "Minder"
 msgid "New File"
 msgstr "Nowy plik"
 
-#: src/MainWindow.vala:247 src/MainWindow.vala:1422
+#: src/MainWindow.vala:247 src/MainWindow.vala:1420
 msgid "Open File"
 msgstr "Otwórz plik"
 
@@ -1283,211 +1283,211 @@ msgstr "Cofnij"
 msgid "Redo"
 msgstr "Ponów"
 
-#: src/MainWindow.vala:727
+#: src/MainWindow.vala:725
 msgid "Tag Highlight Mode"
 msgstr ""
 
-#: src/MainWindow.vala:729 src/MainWindow.vala:1141
+#: src/MainWindow.vala:727 src/MainWindow.vala:1139
 msgid "Focus Mode"
 msgstr "Tryb skupienia"
 
-#: src/MainWindow.vala:732
+#: src/MainWindow.vala:730
 msgid "Unnamed Document"
 msgstr "Dokument Bez Nazwy"
 
-#: src/MainWindow.vala:735
+#: src/MainWindow.vala:733
 msgid "Read-Only"
 msgstr ""
 
-#: src/MainWindow.vala:754
+#: src/MainWindow.vala:752
 msgid "Zoom to Fit"
 msgstr "Najlepsze dopasowanie"
 
-#: src/MainWindow.vala:755
+#: src/MainWindow.vala:753
 #, fuzzy
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "Dopasowanie do wybranego elementu"
 
-#: src/MainWindow.vala:756
+#: src/MainWindow.vala:754
 msgid "Zoom to Actual Size"
 msgstr "Dopasowanie do aktualnego rozmiaru"
 
-#: src/MainWindow.vala:764
+#: src/MainWindow.vala:762
 msgid "Zoom to Percent"
 msgstr "Powiększenie w procentach"
 
-#: src/MainWindow.vala:779 src/ZoomWidget.vala:104
+#: src/MainWindow.vala:777 src/ZoomWidget.vala:104
 msgid "Zoom In"
 msgstr "Powiększ"
 
-#: src/MainWindow.vala:786 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:784 src/ZoomWidget.vala:92
 msgid "Zoom Out"
 msgstr "Pomniejsz"
 
-#: src/MainWindow.vala:804 src/MainWindow.vala:1689
+#: src/MainWindow.vala:802 src/MainWindow.vala:1690
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Powiększenie (%d%%)"
 
 # Łączniki??
-#: src/MainWindow.vala:817
+#: src/MainWindow.vala:815
 #, fuzzy
 msgid "Search Nodes, Callouts and Connections"
 msgstr "Przeszukaj gałęzie i łączniki"
 
-#: src/MainWindow.vala:862
+#: src/MainWindow.vala:860
 msgid "Search Criteria"
 msgstr "Kryteria wyszukiwania"
 
-#: src/MainWindow.vala:866
+#: src/MainWindow.vala:864
 msgid "Search all tabs"
 msgstr "Przeszukaj wszystkie karty"
 
-#: src/MainWindow.vala:907 src/StickerSet.vala:114
+#: src/MainWindow.vala:905 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Szukaj"
 
-#: src/MainWindow.vala:915
+#: src/MainWindow.vala:913
 msgid "Nodes"
 msgstr "Gałęzie"
 
-#: src/MainWindow.vala:916
+#: src/MainWindow.vala:914
 msgid "Connections"
 msgstr "Łączniki"
 
-#: src/MainWindow.vala:917
+#: src/MainWindow.vala:915
 msgid "Callouts"
 msgstr ""
 
-#: src/MainWindow.vala:918
+#: src/MainWindow.vala:916
 #, fuzzy
 msgid "Groups"
 msgstr "Dodaj grupę"
 
-#: src/MainWindow.vala:919
+#: src/MainWindow.vala:917
 msgid "Titles"
 msgstr "Tytuły"
 
-#: src/MainWindow.vala:920
+#: src/MainWindow.vala:918
 msgid "Notes"
 msgstr "Notatki"
 
-#: src/MainWindow.vala:921
+#: src/MainWindow.vala:919
 msgid "Folded"
 msgstr "Zwinięte"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:920
 msgid "Unfolded"
 msgstr "Rozwinięte"
 
-#: src/MainWindow.vala:923
+#: src/MainWindow.vala:921
 msgid "Tasks"
 msgstr "Zadania"
 
-#: src/MainWindow.vala:924
+#: src/MainWindow.vala:922
 msgid "Non-tasks"
 msgstr "Nie zadania"
 
-#: src/MainWindow.vala:1046
+#: src/MainWindow.vala:1044
 msgid "Print…"
 msgstr "Drukuj…"
 
-#: src/MainWindow.vala:1085
+#: src/MainWindow.vala:1083
 msgid "Brain Dump"
 msgstr ""
 
-#: src/MainWindow.vala:1161 src/Preferences.vala:50
+#: src/MainWindow.vala:1159 src/Preferences.vala:50
 msgid "Preferences"
 msgstr "Ustawienia"
 
-#: src/MainWindow.vala:1162
+#: src/MainWindow.vala:1160
 msgid "Shortcuts Cheatsheet"
 msgstr "Lista skrótów klawiaturowych"
 
-#: src/MainWindow.vala:1165
+#: src/MainWindow.vala:1163
 msgid "About Minder"
 msgstr "O programie Minder"
 
-#: src/MainWindow.vala:1192 src/MainWindow.vala:1773
+#: src/MainWindow.vala:1190 src/MainWindow.vala:1774
 msgid "Show Property Sidebar"
 msgstr "Pokaż panel właściwości"
 
-#: src/MainWindow.vala:1203 src/MainWindow.vala:1246
+#: src/MainWindow.vala:1201 src/MainWindow.vala:1244
 msgid "Current"
 msgstr "Zaznaczenie"
 
-#: src/MainWindow.vala:1204 src/MainWindow.vala:1247
+#: src/MainWindow.vala:1202 src/MainWindow.vala:1245
 #: src/StyleInspector.vala:363
 msgid "Style"
 msgstr "Wygląd"
 
-#: src/MainWindow.vala:1205 src/MainWindow.vala:1248 src/Preferences.vala:68
+#: src/MainWindow.vala:1203 src/MainWindow.vala:1246 src/Preferences.vala:68
 msgid "Tags"
 msgstr ""
 
-#: src/MainWindow.vala:1206 src/MainWindow.vala:1249
+#: src/MainWindow.vala:1204 src/MainWindow.vala:1247
 msgid "Stickers"
 msgstr "Ikony"
 
-#: src/MainWindow.vala:1207 src/MainWindow.vala:1250
+#: src/MainWindow.vala:1205 src/MainWindow.vala:1248
 msgid "Map"
 msgstr "Mapa"
 
-#: src/MainWindow.vala:1323
+#: src/MainWindow.vala:1321
 msgid "Save current unnamed document?"
 msgstr "Zapisać aktualny niezapisany dokument?"
 
-#: src/MainWindow.vala:1324
+#: src/MainWindow.vala:1322
 msgid "Changes will be permanently lost if not saved."
 msgstr "Zmiany zostaną utracone jeśli nie zostanie zapisany!"
 
-#: src/MainWindow.vala:1329
+#: src/MainWindow.vala:1327
 msgid "Discard Changes"
 msgstr "Odrzuć zmiany"
 
-#: src/MainWindow.vala:1335 src/MainWindow.vala:1619 src/ThemeEditor.vala:158
+#: src/MainWindow.vala:1333 src/MainWindow.vala:1620 src/ThemeEditor.vala:158
 msgid "Save"
 msgstr "Zapisz"
 
-#: src/MainWindow.vala:1367
+#: src/MainWindow.vala:1365
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "Plik %s został zmodyfikowany poza aplikacją."
 
-#: src/MainWindow.vala:1368
+#: src/MainWindow.vala:1366
 msgid "What do you want to do?"
 msgstr "Co chcesz zrobić?"
 
-#: src/MainWindow.vala:1373
+#: src/MainWindow.vala:1371
 msgid "Discard Changes and reload"
 msgstr "Odrzuć zmiany i wczytaj ponownie."
 
-#: src/MainWindow.vala:1376
+#: src/MainWindow.vala:1374
 msgid "Save local version and overwrite"
 msgstr "Zachowaj lokalną wersję i nadpisz"
 
-#: src/MainWindow.vala:1422
+#: src/MainWindow.vala:1420
 #, fuzzy
 msgid "Open Directory"
 msgstr "Otwórz plik"
 
-#: src/MainWindow.vala:1422
+#: src/MainWindow.vala:1420
 msgid "Open"
 msgstr "Otwórz"
 
-#: src/MainWindow.vala:1619
+#: src/MainWindow.vala:1620
 msgid "Save File"
 msgstr "Zapisz plik"
 
-#: src/MainWindow.vala:1719
+#: src/MainWindow.vala:1720
 msgid "Hide Property Sidebar"
 msgstr "Ukryj panel właściwości"
 
-#: src/MainWindow.vala:2195
+#: src/MainWindow.vala:2196
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2196
+#: src/MainWindow.vala:2197
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1495,31 +1495,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2201
+#: src/MainWindow.vala:2202
 #, fuzzy
 msgid "Quit Minder"
 msgstr "O programie Minder"
 
-#: src/MainWindow.vala:2221
+#: src/MainWindow.vala:2222
 #, fuzzy
 msgid "Detail"
 msgstr "Odłącz"
 
-#: src/MainWindow.vala:2229
+#: src/MainWindow.vala:2230
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2230
+#: src/MainWindow.vala:2231
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2231
+#: src/MainWindow.vala:2232
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1527,11 +1527,11 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2238
+#: src/MainWindow.vala:2239
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2263
+#: src/MainWindow.vala:2264
 msgid "Upgrades Needed"
 msgstr ""
 
@@ -1630,11 +1630,11 @@ msgstr "Rozwiń wszystkie gałęzie"
 msgid "Unsaved"
 msgstr "Niezapisany"
 
-#: src/MindMap.vala:430
+#: src/MindMap.vala:431
 msgid "Main Idea"
 msgstr "TEMAT"
 
-#: src/MindMap.vala:1069
+#: src/MindMap.vala:1056
 msgid "Select a link color"
 msgstr ""
 

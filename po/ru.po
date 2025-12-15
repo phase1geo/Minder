@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-14 20:00-0600\n"
+"POT-Creation-Date: 2025-12-14 22:25-0600\n"
 "PO-Revision-Date: 2025-11-14 08:53+0100\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -237,13 +237,13 @@ msgid ""
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1332
+#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1330
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
 #: src/ThemeEditor.vala:153 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2204
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2205
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Применить"
@@ -252,7 +252,7 @@ msgstr "Применить"
 msgid "Don't show this dialog again"
 msgstr "Больше не показывать этот диалог"
 
-#: src/Document.vala:714 src/MainWindow.vala:2241
+#: src/Document.vala:714 src/MainWindow.vala:2242
 msgid "<small>This can be changed in preferences</small>"
 msgstr "<small>Это можно поменять в настройках программы</small>"
 
@@ -295,7 +295,7 @@ msgstr "смену конечной точки соединения"
 msgid "connection drag"
 msgstr "перетаскивание соединения"
 
-#: src/DrawArea.vala:2270 src/MapModel.vala:1827 src/MapModel.vala:1842
+#: src/DrawArea.vala:2270 src/MapModel.vala:1837 src/MapModel.vala:1852
 msgid "Another Idea"
 msgstr "Ещё одна идея"
 
@@ -342,7 +342,7 @@ msgstr "Параметры экспорта"
 msgid "Export As %s"
 msgstr "Экспортировать как %s"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1071 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1069 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Экспортировать"
 
@@ -1253,11 +1253,11 @@ msgid "Select a group color"
 msgstr "Выбрать цвет группы"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:271
-#: src/MapInspector.vala:524 src/MapModel.vala:2315
+#: src/MapInspector.vala:524 src/MapModel.vala:2325
 msgid "Manual"
 msgstr "Вручную"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1623
+#: src/MainWindow.vala:183 src/MainWindow.vala:1624
 msgid "Minder"
 msgstr "Minder"
 
@@ -1265,7 +1265,7 @@ msgstr "Minder"
 msgid "New File"
 msgstr "Создать документ"
 
-#: src/MainWindow.vala:247 src/MainWindow.vala:1422
+#: src/MainWindow.vala:247 src/MainWindow.vala:1420
 msgid "Open File"
 msgstr "Открыть файл"
 
@@ -1281,206 +1281,206 @@ msgstr "Отменить"
 msgid "Redo"
 msgstr "Вернуть"
 
-#: src/MainWindow.vala:727
+#: src/MainWindow.vala:725
 msgid "Tag Highlight Mode"
 msgstr ""
 
-#: src/MainWindow.vala:729 src/MainWindow.vala:1141
+#: src/MainWindow.vala:727 src/MainWindow.vala:1139
 msgid "Focus Mode"
 msgstr "Режим фокусировки"
 
-#: src/MainWindow.vala:732
+#: src/MainWindow.vala:730
 msgid "Unnamed Document"
 msgstr "Безымянный документ"
 
-#: src/MainWindow.vala:735
+#: src/MainWindow.vala:733
 msgid "Read-Only"
 msgstr "Только чтение"
 
-#: src/MainWindow.vala:754
+#: src/MainWindow.vala:752
 msgid "Zoom to Fit"
 msgstr "Уместить всё"
 
-#: src/MainWindow.vala:755
+#: src/MainWindow.vala:753
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "Уместить выбранное дерево узлов"
 
-#: src/MainWindow.vala:756
+#: src/MainWindow.vala:754
 msgid "Zoom to Actual Size"
 msgstr "Настоящий размер"
 
-#: src/MainWindow.vala:764
+#: src/MainWindow.vala:762
 msgid "Zoom to Percent"
 msgstr "Масштаб в процентах"
 
-#: src/MainWindow.vala:779 src/ZoomWidget.vala:104
+#: src/MainWindow.vala:777 src/ZoomWidget.vala:104
 msgid "Zoom In"
 msgstr "Приблизить"
 
-#: src/MainWindow.vala:786 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:784 src/ZoomWidget.vala:92
 msgid "Zoom Out"
 msgstr "Отдалить"
 
-#: src/MainWindow.vala:804 src/MainWindow.vala:1689
+#: src/MainWindow.vala:802 src/MainWindow.vala:1690
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Масштаб (%d%%)"
 
-#: src/MainWindow.vala:817
+#: src/MainWindow.vala:815
 msgid "Search Nodes, Callouts and Connections"
 msgstr "Искать по узлам, выноскам и соединениям"
 
-#: src/MainWindow.vala:862
+#: src/MainWindow.vala:860
 msgid "Search Criteria"
 msgstr "Критерии поиска"
 
-#: src/MainWindow.vala:866
+#: src/MainWindow.vala:864
 msgid "Search all tabs"
 msgstr "Искать во всех вкладках"
 
-#: src/MainWindow.vala:907 src/StickerSet.vala:114
+#: src/MainWindow.vala:905 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Искать"
 
-#: src/MainWindow.vala:915
+#: src/MainWindow.vala:913
 msgid "Nodes"
 msgstr "Узлы"
 
-#: src/MainWindow.vala:916
+#: src/MainWindow.vala:914
 msgid "Connections"
 msgstr "Соединения"
 
-#: src/MainWindow.vala:917
+#: src/MainWindow.vala:915
 msgid "Callouts"
 msgstr "Выноски"
 
-#: src/MainWindow.vala:918
+#: src/MainWindow.vala:916
 msgid "Groups"
 msgstr "Группы"
 
-#: src/MainWindow.vala:919
+#: src/MainWindow.vala:917
 msgid "Titles"
 msgstr "Заголовки"
 
-#: src/MainWindow.vala:920
+#: src/MainWindow.vala:918
 msgid "Notes"
 msgstr "Примечания"
 
-#: src/MainWindow.vala:921
+#: src/MainWindow.vala:919
 msgid "Folded"
 msgstr "Свёрнутые"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:920
 msgid "Unfolded"
 msgstr "Развёрнутые"
 
-#: src/MainWindow.vala:923
+#: src/MainWindow.vala:921
 msgid "Tasks"
 msgstr "Задачи"
 
-#: src/MainWindow.vala:924
+#: src/MainWindow.vala:922
 msgid "Non-tasks"
 msgstr "Не задачи"
 
-#: src/MainWindow.vala:1046
+#: src/MainWindow.vala:1044
 msgid "Print…"
 msgstr "Печать…"
 
-#: src/MainWindow.vala:1085
+#: src/MainWindow.vala:1083
 msgid "Brain Dump"
 msgstr "Разгрузка памяти"
 
-#: src/MainWindow.vala:1161 src/Preferences.vala:50
+#: src/MainWindow.vala:1159 src/Preferences.vala:50
 msgid "Preferences"
 msgstr "Параметры"
 
-#: src/MainWindow.vala:1162
+#: src/MainWindow.vala:1160
 msgid "Shortcuts Cheatsheet"
 msgstr "Справка по горячим клавишам"
 
-#: src/MainWindow.vala:1165
+#: src/MainWindow.vala:1163
 msgid "About Minder"
 msgstr "О программе"
 
-#: src/MainWindow.vala:1192 src/MainWindow.vala:1773
+#: src/MainWindow.vala:1190 src/MainWindow.vala:1774
 msgid "Show Property Sidebar"
 msgstr "Показать панель свойств"
 
-#: src/MainWindow.vala:1203 src/MainWindow.vala:1246
+#: src/MainWindow.vala:1201 src/MainWindow.vala:1244
 msgid "Current"
 msgstr "Выбранное"
 
-#: src/MainWindow.vala:1204 src/MainWindow.vala:1247
+#: src/MainWindow.vala:1202 src/MainWindow.vala:1245
 #: src/StyleInspector.vala:363
 msgid "Style"
 msgstr "Стиль"
 
-#: src/MainWindow.vala:1205 src/MainWindow.vala:1248 src/Preferences.vala:68
+#: src/MainWindow.vala:1203 src/MainWindow.vala:1246 src/Preferences.vala:68
 msgid "Tags"
 msgstr "Метки"
 
-#: src/MainWindow.vala:1206 src/MainWindow.vala:1249
+#: src/MainWindow.vala:1204 src/MainWindow.vala:1247
 msgid "Stickers"
 msgstr "Стикеры"
 
-#: src/MainWindow.vala:1207 src/MainWindow.vala:1250
+#: src/MainWindow.vala:1205 src/MainWindow.vala:1248
 msgid "Map"
 msgstr "Макет"
 
-#: src/MainWindow.vala:1323
+#: src/MainWindow.vala:1321
 msgid "Save current unnamed document?"
 msgstr "Сохранить текущий безымянный документ?"
 
-#: src/MainWindow.vala:1324
+#: src/MainWindow.vala:1322
 msgid "Changes will be permanently lost if not saved."
 msgstr "Без сохранения изменения будут утеряны навсегда."
 
-#: src/MainWindow.vala:1329
+#: src/MainWindow.vala:1327
 msgid "Discard Changes"
 msgstr "Отказаться от изменений"
 
-#: src/MainWindow.vala:1335 src/MainWindow.vala:1619 src/ThemeEditor.vala:158
+#: src/MainWindow.vala:1333 src/MainWindow.vala:1620 src/ThemeEditor.vala:158
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/MainWindow.vala:1367
+#: src/MainWindow.vala:1365
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "Файл %s был изменён другим приложением."
 
-#: src/MainWindow.vala:1368
+#: src/MainWindow.vala:1366
 msgid "What do you want to do?"
 msgstr "Как вы хотите поступить?"
 
-#: src/MainWindow.vala:1373
+#: src/MainWindow.vala:1371
 msgid "Discard Changes and reload"
 msgstr "Отказаться от изменений и перезагрузить"
 
-#: src/MainWindow.vala:1376
+#: src/MainWindow.vala:1374
 msgid "Save local version and overwrite"
 msgstr "Сохранить локальную версию и перезаписать"
 
-#: src/MainWindow.vala:1422
+#: src/MainWindow.vala:1420
 msgid "Open Directory"
 msgstr "Открыть папку"
 
-#: src/MainWindow.vala:1422
+#: src/MainWindow.vala:1420
 msgid "Open"
 msgstr "Открыть"
 
-#: src/MainWindow.vala:1619
+#: src/MainWindow.vala:1620
 msgid "Save File"
 msgstr "Сохранить файл"
 
-#: src/MainWindow.vala:1719
+#: src/MainWindow.vala:1720
 msgid "Hide Property Sidebar"
 msgstr "Скрыть панель свойств"
 
-#: src/MainWindow.vala:2195
+#: src/MainWindow.vala:2196
 msgid "File upgrades needed"
 msgstr "Необходимо обновить файлы"
 
-#: src/MainWindow.vala:2196
+#: src/MainWindow.vala:2197
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1492,16 +1492,16 @@ msgstr ""
 "\n"
 "Выберите способ обновления."
 
-#: src/MainWindow.vala:2201
+#: src/MainWindow.vala:2202
 msgid "Quit Minder"
 msgstr "Выйти из Minder"
 
-#: src/MainWindow.vala:2221
+#: src/MainWindow.vala:2222
 #, fuzzy
 msgid "Detail"
 msgstr "Открепить"
 
-#: src/MainWindow.vala:2229
+#: src/MainWindow.vala:2230
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
@@ -1511,7 +1511,7 @@ msgstr ""
 "необратимо, более старые версии программы не смогут прочитать обновленные "
 "файлы.</small>"
 
-#: src/MainWindow.vala:2230
+#: src/MainWindow.vala:2231
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
@@ -1520,7 +1520,7 @@ msgstr ""
 "<small>Обновит каждый открытый в прошлом сеансе файл Minder, но сохранит "
 "копию старого, оригинального файла в то же каталоге.</small>"
 
-#: src/MainWindow.vala:2231
+#: src/MainWindow.vala:2232
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1532,11 +1532,11 @@ msgstr ""
 "его в новом формате кнопкой «Сохранить как» на панели, чтобы получить "
 "возможность изменять.</small>"
 
-#: src/MainWindow.vala:2238
+#: src/MainWindow.vala:2239
 msgid "Use the selected option when future older Minder files are opened"
 msgstr "Использовать этот выбор при открытии других старых файлов"
 
-#: src/MainWindow.vala:2263
+#: src/MainWindow.vala:2264
 msgid "Upgrades Needed"
 msgstr "Необходимо обновление"
 
@@ -1631,11 +1631,11 @@ msgstr "Развернуть все узлы"
 msgid "Unsaved"
 msgstr "Несохранённые"
 
-#: src/MindMap.vala:430
+#: src/MindMap.vala:431
 msgid "Main Idea"
 msgstr "Главная идея"
 
-#: src/MindMap.vala:1069
+#: src/MindMap.vala:1056
 msgid "Select a link color"
 msgstr "Выбрать цвет связи"
 

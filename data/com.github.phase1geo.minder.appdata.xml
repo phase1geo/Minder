@@ -130,6 +130,35 @@
   </custom>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.0.1" date="2025-12-14">
+      <description>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Removed unnecessary OARS values from appdata.xml.</li>
+          <li>Allowed window height to be much smaller when sidebar is displayed.</li>
+          <li>Improved performance of selections when dragging selection box over nodes.</li>
+          <li>Removed theme value to prefer dark mode, using system setting in window always.</li>
+          <li>Increased default padding for root nodes to make it more visible.</li>
+          <li>Improved default position of root node when a new mindmap is created.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed issue with some style settings not taking immediate effect in the mindmap.</li>
+          <li>Fixed issue with sequence numbers being obfuscated when multiple nodes selected.</li>
+          <li>Fixed issue with autopan when dragging out selection box.</li>
+          <li>Fixed issue with alpha when selection box is dragged over a single node.</li>
+          <li>Fixed potential issue with releasing selection box causing node changes.</li>
+          <li>Fixed display of branch corner radius adjustment in styles sidebar.</li>
+          <li>Fixed issue where panning with middle button continued to pan after button released.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.0" date="2025-12-07">
       <description>
         <p>New</p>
