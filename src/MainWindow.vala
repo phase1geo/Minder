@@ -329,6 +329,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     // Handle any changes to the system default
     var granite_settings  = Granite.Settings.get_default();
+    on_dark_mode_changed( granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK );
     granite_settings.notify["prefers-color-scheme"].connect(() => {
       on_dark_mode_changed( granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK );
     });
@@ -1547,9 +1548,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     if( gtk_settings != null ) {
       gtk_settings.gtk_application_prefer_dark_theme = dark_mode;
     }
-    _brain_btn.icon_name = dark_mode ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
+    _brain_btn.icon_name = Utils.use_dark_mode( _header ) ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
     if( !on_elementary ) {
-      _prop_btn.icon_name = dark_mode ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
+      _prop_btn.icon_name = Utils.use_dark_mode( _header ) ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
     }
     (_stack.get_child_by_name( "current" ) as CurrentInspector).update_icons();
     (_stack.get_child_by_name( "style" )   as StyleInspector).update_icons();

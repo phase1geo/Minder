@@ -436,7 +436,13 @@ public class MindMap {
     // Set the node information
     n.posx  = (wwidth  / 2) - 30;
     n.posy  = (wheight / 2) - 10;
-    n.style = _global_style;
+
+    // Create special style for the root node
+    var root_style = new Style();
+    root_style.copy( _global_style );
+    root_style.node_border  = StyleInspector.styles.get_node_border( "squared" );
+    root_style.node_padding = 20;
+    n.style = root_style;
 
     _model.get_nodes().append_val( n );
 
