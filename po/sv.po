@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-07 19:32-0600\n"
+"POT-Creation-Date: 2025-12-14 20:00-0600\n"
 "PO-Revision-Date: 2025-12-02 09:55+0100\n"
 "Last-Translator: Daniel Nylander <github@danielnylander.se>\n"
 "Language-Team: sv\n"
@@ -113,7 +113,7 @@ msgstr "Töm idélista"
 
 #: src/CalloutMenu.vala:33 src/ConnectionMenu.vala:34
 #: src/ConnectionsMenu.vala:33 src/GroupsMenu.vala:33 src/NodeMenu.vala:40
-#: src/NodesMenu.vala:35 src/TemplateEditor.vala:110 src/ThemeEditor.vala:157
+#: src/NodesMenu.vala:35 src/TemplateEditor.vala:110 src/ThemeEditor.vala:141
 msgid "Delete"
 msgstr "Ta bort"
 
@@ -241,13 +241,13 @@ msgstr ""
 "Observera: Uppgraderade filer kan inte visas/redigeras med äldre versioner "
 "av Minder."
 
-#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1334
+#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1332
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
-#: src/ThemeEditor.vala:169 src/UrlEditor.vala:62
+#: src/ThemeEditor.vala:153 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2211
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2204
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Tillämpa"
@@ -256,7 +256,7 @@ msgstr "Tillämpa"
 msgid "Don't show this dialog again"
 msgstr "Visa inte denna dialogruta igen"
 
-#: src/Document.vala:714 src/MainWindow.vala:2248
+#: src/Document.vala:714 src/MainWindow.vala:2241
 msgid "<small>This can be changed in preferences</small>"
 msgstr "<small>Detta kan ändras i inställningarna</small>"
 
@@ -264,16 +264,16 @@ msgstr "<small>Detta kan ändras i inställningarna</small>"
 msgid "Upgrade Needed"
 msgstr "Uppgradering krävs"
 
-#: src/DrawArea.vala:1520
+#: src/DrawArea.vala:1521
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% färdig"
 
-#: src/DrawArea.vala:1538
+#: src/DrawArea.vala:1539
 msgid "Drag to resize node"
 msgstr "Dra för att ändra storlek på nod"
 
-#: src/DrawArea.vala:1540
+#: src/DrawArea.vala:1541
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -281,25 +281,25 @@ msgstr ""
 "Dra för att ändra storlek på nod och bild. Kontroll-dra för att endast ändra "
 "storlek på nod."
 
-#: src/DrawArea.vala:1682
+#: src/DrawArea.vala:1683
 #, c-format
 msgid "Children: %u\n"
 msgstr "Underordnade: %u\n"
 
-#: src/DrawArea.vala:1683
+#: src/DrawArea.vala:1684
 #, c-format
 msgid "Total: %d"
 msgstr "Totalt: %d"
 
-#: src/DrawArea.vala:1736
+#: src/DrawArea.vala:1738
 msgid "connection endpoint change"
 msgstr "ändring av anslutningsändpunkt"
 
-#: src/DrawArea.vala:1743
+#: src/DrawArea.vala:1745
 msgid "connection drag"
 msgstr "anslutningsdrag"
 
-#: src/DrawArea.vala:2268 src/MapModel.vala:1827 src/MapModel.vala:1842
+#: src/DrawArea.vala:2270 src/MapModel.vala:1827 src/MapModel.vala:1842
 msgid "Another Idea"
 msgstr "En annan idé"
 
@@ -343,7 +343,7 @@ msgstr "Exportalternativ"
 msgid "Export As %s"
 msgstr "Exportera som %s"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1073 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1071 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Exportera"
 
@@ -1189,12 +1189,12 @@ msgstr "Avmarkera all text"
 msgid "Select a group color"
 msgstr "Välj en gruppfärg"
 
-#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:289
-#: src/MapInspector.vala:547 src/MapModel.vala:2315
+#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:271
+#: src/MapInspector.vala:524 src/MapModel.vala:2315
 msgid "Manual"
 msgstr "Manuell"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1630
+#: src/MainWindow.vala:183 src/MainWindow.vala:1623
 msgid "Minder"
 msgstr "Minder"
 
@@ -1202,7 +1202,7 @@ msgstr "Minder"
 msgid "New File"
 msgstr "Ny fil"
 
-#: src/MainWindow.vala:247 src/MainWindow.vala:1424
+#: src/MainWindow.vala:247 src/MainWindow.vala:1422
 msgid "Open File"
 msgstr "Öppna fil"
 
@@ -1218,206 +1218,206 @@ msgstr "Ångra"
 msgid "Redo"
 msgstr "Gör om"
 
-#: src/MainWindow.vala:729
+#: src/MainWindow.vala:727
 msgid "Tag Highlight Mode"
 msgstr "Taggmarkeringsläge"
 
-#: src/MainWindow.vala:731 src/MainWindow.vala:1143
+#: src/MainWindow.vala:729 src/MainWindow.vala:1141
 msgid "Focus Mode"
 msgstr "Fokusläge"
 
-#: src/MainWindow.vala:734
+#: src/MainWindow.vala:732
 msgid "Unnamed Document"
 msgstr "Namnlöst dokument"
 
-#: src/MainWindow.vala:737
+#: src/MainWindow.vala:735
 msgid "Read-Only"
 msgstr "Skrivskyddad"
 
-#: src/MainWindow.vala:756
+#: src/MainWindow.vala:754
 msgid "Zoom to Fit"
 msgstr "Zooma för att passa"
 
-#: src/MainWindow.vala:757
+#: src/MainWindow.vala:755
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "Zooma för att passa vald nodträd"
 
-#: src/MainWindow.vala:758
+#: src/MainWindow.vala:756
 msgid "Zoom to Actual Size"
 msgstr "Zooma till faktisk storlek"
 
-#: src/MainWindow.vala:766
+#: src/MainWindow.vala:764
 msgid "Zoom to Percent"
 msgstr "Zooma till procent"
 
-#: src/MainWindow.vala:781 src/ZoomWidget.vala:104
+#: src/MainWindow.vala:779 src/ZoomWidget.vala:104
 msgid "Zoom In"
 msgstr "Zooma in"
 
-#: src/MainWindow.vala:788 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:786 src/ZoomWidget.vala:92
 msgid "Zoom Out"
 msgstr "Zooma ut"
 
-#: src/MainWindow.vala:806 src/MainWindow.vala:1696
+#: src/MainWindow.vala:804 src/MainWindow.vala:1689
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zooma (%d%%)"
 
-#: src/MainWindow.vala:819
+#: src/MainWindow.vala:817
 msgid "Search Nodes, Callouts and Connections"
 msgstr "Sök noder, utrop och anslutningar"
 
-#: src/MainWindow.vala:864
+#: src/MainWindow.vala:862
 msgid "Search Criteria"
 msgstr "Sökkriterier"
 
-#: src/MainWindow.vala:868
+#: src/MainWindow.vala:866
 msgid "Search all tabs"
 msgstr "Sök i alla flikar"
 
-#: src/MainWindow.vala:909 src/StickerSet.vala:114
+#: src/MainWindow.vala:907 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Sök"
 
-#: src/MainWindow.vala:917
+#: src/MainWindow.vala:915
 msgid "Nodes"
 msgstr "Noder"
 
-#: src/MainWindow.vala:918
+#: src/MainWindow.vala:916
 msgid "Connections"
 msgstr "Vänner"
 
-#: src/MainWindow.vala:919
+#: src/MainWindow.vala:917
 msgid "Callouts"
 msgstr "Callouts"
 
-#: src/MainWindow.vala:920
+#: src/MainWindow.vala:918
 msgid "Groups"
 msgstr "Grupper"
 
-#: src/MainWindow.vala:921
+#: src/MainWindow.vala:919
 msgid "Titles"
 msgstr "Rubriker"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:920
 msgid "Notes"
 msgstr "Anteckningar"
 
-#: src/MainWindow.vala:923
+#: src/MainWindow.vala:921
 msgid "Folded"
 msgstr "Vikt"
 
-#: src/MainWindow.vala:924
+#: src/MainWindow.vala:922
 msgid "Unfolded"
 msgstr "Utfälld"
 
-#: src/MainWindow.vala:925
+#: src/MainWindow.vala:923
 msgid "Tasks"
 msgstr "Uppgifter"
 
-#: src/MainWindow.vala:926
+#: src/MainWindow.vala:924
 msgid "Non-tasks"
 msgstr "Icke-uppgifter"
 
-#: src/MainWindow.vala:1048
+#: src/MainWindow.vala:1046
 msgid "Print…"
 msgstr "Skriv ut…"
 
-#: src/MainWindow.vala:1087
+#: src/MainWindow.vala:1085
 msgid "Brain Dump"
 msgstr "Hjärndump"
 
-#: src/MainWindow.vala:1163 src/Preferences.vala:50
+#: src/MainWindow.vala:1161 src/Preferences.vala:50
 msgid "Preferences"
 msgstr "Inställningar"
 
-#: src/MainWindow.vala:1164
+#: src/MainWindow.vala:1162
 msgid "Shortcuts Cheatsheet"
 msgstr "Genvägslathund"
 
-#: src/MainWindow.vala:1167
+#: src/MainWindow.vala:1165
 msgid "About Minder"
 msgstr "Om Minder"
 
-#: src/MainWindow.vala:1194 src/MainWindow.vala:1780
+#: src/MainWindow.vala:1192 src/MainWindow.vala:1773
 msgid "Show Property Sidebar"
 msgstr "Visa sidofält för egenskaper"
 
-#: src/MainWindow.vala:1205 src/MainWindow.vala:1248
+#: src/MainWindow.vala:1203 src/MainWindow.vala:1246
 msgid "Current"
 msgstr "Nuvarande"
 
-#: src/MainWindow.vala:1206 src/MainWindow.vala:1249
+#: src/MainWindow.vala:1204 src/MainWindow.vala:1247
 #: src/StyleInspector.vala:363
 msgid "Style"
 msgstr "Stil"
 
-#: src/MainWindow.vala:1207 src/MainWindow.vala:1250 src/Preferences.vala:68
+#: src/MainWindow.vala:1205 src/MainWindow.vala:1248 src/Preferences.vala:68
 msgid "Tags"
 msgstr "Taggar"
 
-#: src/MainWindow.vala:1208 src/MainWindow.vala:1251
+#: src/MainWindow.vala:1206 src/MainWindow.vala:1249
 msgid "Stickers"
 msgstr "Klistermärken"
 
-#: src/MainWindow.vala:1209 src/MainWindow.vala:1252
+#: src/MainWindow.vala:1207 src/MainWindow.vala:1250
 msgid "Map"
 msgstr "Karta"
 
-#: src/MainWindow.vala:1325
+#: src/MainWindow.vala:1323
 msgid "Save current unnamed document?"
 msgstr "Spara det aktuella namnlösa dokumentet?"
 
-#: src/MainWindow.vala:1326
+#: src/MainWindow.vala:1324
 msgid "Changes will be permanently lost if not saved."
 msgstr "Ändringar kommer att gå förlorade permanent om de inte sparas."
 
-#: src/MainWindow.vala:1331
+#: src/MainWindow.vala:1329
 msgid "Discard Changes"
 msgstr "Kassera ändringar"
 
-#: src/MainWindow.vala:1337 src/MainWindow.vala:1626 src/ThemeEditor.vala:174
+#: src/MainWindow.vala:1335 src/MainWindow.vala:1619 src/ThemeEditor.vala:158
 msgid "Save"
 msgstr "Spara"
 
-#: src/MainWindow.vala:1369
+#: src/MainWindow.vala:1367
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "Filen %s har modifierats utanför applikationen."
 
-#: src/MainWindow.vala:1370
+#: src/MainWindow.vala:1368
 msgid "What do you want to do?"
 msgstr "Vad vill ni göra?"
 
-#: src/MainWindow.vala:1375
+#: src/MainWindow.vala:1373
 msgid "Discard Changes and reload"
 msgstr "Förkasta ändringar och läs om"
 
-#: src/MainWindow.vala:1378
+#: src/MainWindow.vala:1376
 msgid "Save local version and overwrite"
 msgstr "Spara lokal version och skriv över"
 
-#: src/MainWindow.vala:1424
+#: src/MainWindow.vala:1422
 msgid "Open Directory"
 msgstr "Öppen katalog"
 
-#: src/MainWindow.vala:1424
+#: src/MainWindow.vala:1422
 msgid "Open"
 msgstr "Öppen"
 
-#: src/MainWindow.vala:1626
+#: src/MainWindow.vala:1619
 msgid "Save File"
 msgstr "Spara fil"
 
-#: src/MainWindow.vala:1726
+#: src/MainWindow.vala:1719
 msgid "Hide Property Sidebar"
 msgstr "Dölj sidofält för egenskaper"
 
-#: src/MainWindow.vala:2202
+#: src/MainWindow.vala:2195
 msgid "File upgrades needed"
 msgstr "Filuppgraderingar behövs"
 
-#: src/MainWindow.vala:2203
+#: src/MainWindow.vala:2196
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1429,15 +1429,15 @@ msgstr ""
 "\n"
 "Välj ett uppgraderingsalternativ nedan."
 
-#: src/MainWindow.vala:2208
+#: src/MainWindow.vala:2201
 msgid "Quit Minder"
 msgstr "Avsluta Minder"
 
-#: src/MainWindow.vala:2228
+#: src/MainWindow.vala:2221
 msgid "Detail"
 msgstr "Detalj"
 
-#: src/MainWindow.vala:2236
+#: src/MainWindow.vala:2229
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
@@ -1447,7 +1447,7 @@ msgstr ""
 "senaste Minder-sessionen.  Denna åtgärd är oåterkallelig eftersom äldre "
 "versioner av Minder inte kan läsa det uppgraderade formatet.</small>"
 
-#: src/MainWindow.vala:2237
+#: src/MainWindow.vala:2230
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
@@ -1457,7 +1457,7 @@ msgstr ""
 "senaste Minder-sessionen, men sparar en kopia av den äldre ursprungliga "
 "filen i dess ursprungliga katalog.</small>"
 
-#: src/MainWindow.vala:2238
+#: src/MainWindow.vala:2231
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1469,96 +1469,96 @@ msgstr ""
 "ändra en skrivskyddad tankekarta kan du använda knappen \"Spara som\" i "
 "rubrikfältet för att skriva den till det nyare formatet.</small>"
 
-#: src/MainWindow.vala:2245
+#: src/MainWindow.vala:2238
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 "Använd det valda alternativet när äldre Minder-filer öppnas i framtiden"
 
-#: src/MainWindow.vala:2270
+#: src/MainWindow.vala:2263
 msgid "Upgrades Needed"
 msgstr "Uppgraderingar behövs"
 
-#: src/MapInspector.vala:131
+#: src/MapInspector.vala:113
 msgid "Read-only"
 msgstr "Skrivskyddad"
 
-#: src/MapInspector.vala:166
+#: src/MapInspector.vala:148
 msgid "Hide connections"
 msgstr "Dölj anslutningar"
 
-#: src/MapInspector.vala:202
+#: src/MapInspector.vala:184
 msgid "Hide callouts"
 msgstr "Dölj kommentarer"
 
-#: src/MapInspector.vala:246
+#: src/MapInspector.vala:228
 msgid "Node Layouts"
 msgstr "Nodlayouter"
 
-#: src/MapInspector.vala:300
+#: src/MapInspector.vala:282
 msgid "Node Alignment"
 msgstr "Nodjustering"
 
-#: src/MapInspector.vala:307
+#: src/MapInspector.vala:289
 msgid "Align left edges"
 msgstr "Justera vänsterkanter"
 
-#: src/MapInspector.vala:311
+#: src/MapInspector.vala:293
 msgid "Align horizontal centers"
 msgstr "Justera horisontella centrum"
 
-#: src/MapInspector.vala:315
+#: src/MapInspector.vala:297
 msgid "Align right edges"
 msgstr "Justera högerkanter"
 
-#: src/MapInspector.vala:319
+#: src/MapInspector.vala:301
 msgid "Align top edges"
 msgstr "Justera överkanter"
 
-#: src/MapInspector.vala:323
+#: src/MapInspector.vala:305
 msgid "Align vertical centers"
 msgstr "Justera vertikala centrum"
 
-#: src/MapInspector.vala:327
+#: src/MapInspector.vala:309
 msgid "Align bottom edges"
 msgstr "Justera nedre kanter"
 
-#: src/MapInspector.vala:369
+#: src/MapInspector.vala:351
 msgid "Themes"
 msgstr "Teman"
 
-#: src/MapInspector.vala:396
+#: src/MapInspector.vala:378
 msgid "Add Custom Theme"
 msgstr "Lägg till anpassat tema"
 
-#: src/MapInspector.vala:414
+#: src/MapInspector.vala:396
 msgid "Copy location of temporary directory"
 msgstr "Kopiera platsen för den tillfälliga katalogen"
 
-#: src/MapInspector.vala:439
+#: src/MapInspector.vala:421
 msgid "Balance nodes"
 msgstr "Balansnoder"
 
-#: src/MapInspector.vala:441
+#: src/MapInspector.vala:423
 msgid "Balance Nodes"
 msgstr "Balansnoder"
 
-#: src/MapInspector.vala:445
+#: src/MapInspector.vala:427
 msgid "Fold nodes with completed tasks"
 msgstr "Fäll in noder med slutförda uppgifter"
 
-#: src/MapInspector.vala:447
+#: src/MapInspector.vala:429
 msgid "Fold Completed Tasks"
 msgstr "Vik färdiga uppgifter"
 
-#: src/MapInspector.vala:451
+#: src/MapInspector.vala:433
 msgid "Unfold all nodes"
 msgstr "Fäll ut alla noder"
 
-#: src/MapInspector.vala:453
+#: src/MapInspector.vala:435
 msgid "Unfold All Nodes"
 msgstr "Visa alla noder"
 
-#: src/MapInspector.vala:556
+#: src/MapInspector.vala:533
 msgid "Unsaved"
 msgstr "Inte sparad"
 
@@ -1566,7 +1566,7 @@ msgstr "Inte sparad"
 msgid "Main Idea"
 msgstr "Huvudidé"
 
-#: src/MindMap.vala:1062
+#: src/MindMap.vala:1069
 msgid "Select a link color"
 msgstr "Välj en länkfärg"
 
@@ -1693,7 +1693,7 @@ msgstr "Lägg till grupp"
 msgid "Add Callout"
 msgstr "Lägg till kommentar"
 
-#: src/NodeMenu.vala:59 src/ThemeEditor.vala:153
+#: src/NodeMenu.vala:59 src/ThemeEditor.vala:137
 msgid "Link Color"
 msgstr "Länkfärg"
 
@@ -1841,7 +1841,7 @@ msgstr "Slumpmässiga färger"
 msgid "Use Parent Color"
 msgstr "Använd överordnad färg"
 
-#: src/NodesMenu.vala:44 src/ThemeEditor.vala:145
+#: src/NodesMenu.vala:44 src/ThemeEditor.vala:128
 msgid "Link Colors"
 msgstr "Länkfärger"
 
@@ -1897,15 +1897,15 @@ msgstr "Högerjusterad"
 msgid "Align"
 msgstr "Justera"
 
-#: src/Node.vala:2701
+#: src/Node.vala:2702
 msgid "Node Title"
 msgstr "Nodens titel"
 
-#: src/Node.vala:2709
+#: src/Node.vala:2710
 msgid "Node Note"
 msgstr "Nodnotering"
 
-#: src/Node.vala:2719
+#: src/Node.vala:2720
 msgid "Callout Text"
 msgstr "Callout-text"
 
@@ -2030,14 +2030,10 @@ msgstr ""
 "döljs i samma katalog som originalet med filändelsen .bak."
 
 #: src/Preferences.vala:187
-msgid "Hide themes not matching visual style"
-msgstr "Dölj teman som inte matchar den visuella stilen"
-
-#: src/Preferences.vala:191
 msgid "Default theme"
 msgstr "Standardtema"
 
-#: src/Preferences.vala:193
+#: src/Preferences.vala:189
 msgid ""
 "Sets the default theme to use for newly created mindmaps (use Map sidebar "
 "panel to make immediate changes)."
@@ -2045,21 +2041,21 @@ msgstr ""
 "Ställer in standardtemat som ska användas för nyapplikationer (använd "
 "kartans sidofält för att göra omedelbara ändringar)."
 
-#: src/Preferences.vala:196
+#: src/Preferences.vala:192
 #, fuzzy
 msgid "Enable mindmap animations"
 msgstr "Aktivera animeringar"
 
-#: src/Preferences.vala:200
+#: src/Preferences.vala:196
 #, fuzzy
 msgid "Enable window animations"
 msgstr "Aktivera animeringar"
 
-#: src/Preferences.vala:204
+#: src/Preferences.vala:200
 msgid "Text field font size"
 msgstr "Textfältets teckenstorlek"
 
-#: src/Preferences.vala:207
+#: src/Preferences.vala:203
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
@@ -2067,100 +2063,100 @@ msgstr ""
 "Anger den anpassade teckenstorlek som ska användas i textredigeringsfält "
 "(dvs. snabbinmatnings- eller anteckningsfält)."
 
-#: src/Preferences.vala:210
+#: src/Preferences.vala:206
 msgid "Colorize note fields"
 msgstr "Färglägg anteckningsfält"
 
-#: src/Preferences.vala:214
+#: src/Preferences.vala:210
 msgid "Default global style"
 msgstr "Global standardstil"
 
-#: src/Preferences.vala:216
+#: src/Preferences.vala:212
 msgid "Specifies the global style to use for newly created mindmaps."
 msgstr "Anger den globala stil som ska användas för nyskapade tankekartor."
 
-#: src/Preferences.vala:239
+#: src/Preferences.vala:235
 msgid "Tags in this list will be the starting list of tags for new mindmaps."
 msgstr ""
 "Taggar i denna lista kommer att utgöra startlistan med taggar för nya "
 "tankekartor."
 
-#: src/Preferences.vala:339
+#: src/Preferences.vala:335
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
 msgstr ""
 "Dubbelklicka för att redigera genväg.  Välj + Ta bort för att ta bort genväg."
 
-#: src/Preferences.vala:340
+#: src/Preferences.vala:336
 msgid "Escape to cancel.  Press key combination to set."
 msgstr "Escape för att avbryta.  Tryck tangentkombination att ställa in."
 
-#: src/Preferences.vala:348
+#: src/Preferences.vala:344
 msgid "Set Minder Defaults"
 msgstr "Ställ in Minder-standardvärden"
 
-#: src/Preferences.vala:351
+#: src/Preferences.vala:347
 msgid "Clear All Shortcuts"
 msgstr "Rensa alla genvägar"
 
-#: src/Preferences.vala:360
+#: src/Preferences.vala:356
 msgid "Search commands"
 msgstr "Sökkommandon"
 
-#: src/Preferences.vala:362
+#: src/Preferences.vala:358
 msgid "Search shortcuts"
 msgstr "Sök efter genvägar"
 
-#: src/Preferences.vala:470
+#: src/Preferences.vala:466
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr "Visa dialogruta för uppgradering när filuppgradering behövs"
 
-#: src/Preferences.vala:474
+#: src/Preferences.vala:470
 msgid "Show temporary directory containing current mindmap in map sidebar"
 msgstr ""
 "Visa tillfällig katalog som innehåller aktuell tankekarta i kartans sidofält"
 
-#: src/Preferences.vala:484
+#: src/Preferences.vala:480
 msgid "Default file upgrade action"
 msgstr "Standardåtgärd vid filuppgradering"
 
-#: src/Preferences.vala:558 src/styles/NodeBorderNone.vala:34 src/Tags.vala:47
+#: src/Preferences.vala:554 src/styles/NodeBorderNone.vala:34 src/Tags.vala:47
 msgid "None"
 msgstr "Ingen"
 
-#: src/Preferences.vala:559
+#: src/Preferences.vala:555
 msgid "Enter shortcut"
 msgstr "Ange genväg"
 
-#: src/Preferences.vala:727
+#: src/Preferences.vala:723
 msgid "Unable to set new shortcut due to conflicts"
 msgstr "Det går inte att skapa en ny genväg på grund av konflikter"
 
-#: src/Preferences.vala:728
+#: src/Preferences.vala:724
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr "%s är i konflikt med '%s'"
 
-#: src/Preferences.vala:793
+#: src/Preferences.vala:789
 msgid "Clear all shortcuts?"
 msgstr "Rensa alla genvägar?"
 
-#: src/Preferences.vala:793 src/Preferences.vala:804
+#: src/Preferences.vala:789 src/Preferences.vala:800
 msgid "Current shortcut settings will be lost"
 msgstr "Aktuella genvägsinställningar kommer att gå förlorade"
 
-#: src/Preferences.vala:804
+#: src/Preferences.vala:800
 msgid "Use Minder Default Shortcuts?"
 msgstr "Använd Minders standardgenvägar?"
 
-#: src/Preferences.vala:836 src/Preferences.vala:854
+#: src/Preferences.vala:832 src/Preferences.vala:850
 msgid "Minder Default"
 msgstr "Minder-standard"
 
-#: src/Preferences.vala:839 src/Preferences.vala:855
+#: src/Preferences.vala:835 src/Preferences.vala:851
 msgid "Last Used"
 msgstr "Senast använd"
 
-#: src/Preferences.vala:841 src/Preferences.vala:859
+#: src/Preferences.vala:837 src/Preferences.vala:855
 #, c-format
 msgid "Named Style: %s"
 msgstr "Namngiven stil: %s"
@@ -2454,7 +2450,7 @@ msgstr "Bransch"
 msgid "Mobile"
 msgstr "Mobil"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1225
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1221
 msgid "Arrows"
 msgstr "Pilar"
 
@@ -3438,13 +3434,13 @@ msgstr "Upp"
 msgid "Right up"
 msgstr "Högre upp"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1037
-#: src/StyleInspector.vala:1463 src/StyleInspector.vala:1625
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1033
+#: src/StyleInspector.vala:1459 src/StyleInspector.vala:1621
 msgid "Left"
 msgstr "Vänster"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1039
-#: src/StyleInspector.vala:1465 src/StyleInspector.vala:1627
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1035
+#: src/StyleInspector.vala:1461 src/StyleInspector.vala:1623
 msgid "Right"
 msgstr "Höger"
 
@@ -3742,109 +3738,109 @@ msgstr "Förgreningsalternativ"
 msgid "Corner Radius"
 msgstr "Hörnradie"
 
-#: src/StyleInspector.vala:458 src/StyleInspector.vala:894
+#: src/StyleInspector.vala:454 src/StyleInspector.vala:890
 msgid "Margin"
 msgstr "Marginal"
 
-#: src/StyleInspector.vala:520
+#: src/StyleInspector.vala:516
 msgid "Link Options"
 msgstr "Länkalternativ"
 
-#: src/StyleInspector.vala:543 src/StyleInspector.vala:1184
+#: src/StyleInspector.vala:539 src/StyleInspector.vala:1180
 msgid "Line Dash"
 msgstr "Linje Streck"
 
-#: src/StyleInspector.vala:584 src/StyleInspector.vala:1311
+#: src/StyleInspector.vala:580 src/StyleInspector.vala:1307
 msgid "Line Width"
 msgstr "Linjetjocklek"
 
-#: src/StyleInspector.vala:635
+#: src/StyleInspector.vala:631
 msgid "Link Arrow"
 msgstr "Länkpil"
 
-#: src/StyleInspector.vala:669
+#: src/StyleInspector.vala:665
 msgid "Link Arrow Size"
 msgstr "Länkpilens storlek"
 
-#: src/StyleInspector.vala:743 src/Templates.vala:59 src/Templates.vala:64
+#: src/StyleInspector.vala:739 src/Templates.vala:59 src/Templates.vala:64
 msgid "Node Options"
 msgstr "Nodalternativ"
 
-#: src/StyleInspector.vala:766
+#: src/StyleInspector.vala:762
 msgid "Border Style"
 msgstr "Ramstil"
 
-#: src/StyleInspector.vala:809
+#: src/StyleInspector.vala:805
 msgid "Border Width"
 msgstr "Bredd på ram"
 
-#: src/StyleInspector.vala:859
+#: src/StyleInspector.vala:855
 msgid "Color Fill"
 msgstr "Färgfyllning"
 
-#: src/StyleInspector.vala:868
+#: src/StyleInspector.vala:864
 msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
 msgstr ""
 "Fyller noden med färg när nodens kant är fyrkantig, rundad eller pillerformad"
 
-#: src/StyleInspector.vala:938 src/StyleInspector.vala:1363
-#: src/StyleInspector.vala:1656
+#: src/StyleInspector.vala:934 src/StyleInspector.vala:1359
+#: src/StyleInspector.vala:1652
 msgid "Padding"
 msgstr "Mellanrum"
 
-#: src/StyleInspector.vala:982
+#: src/StyleInspector.vala:978
 msgid "Font"
 msgstr "Typsnitt"
 
-#: src/StyleInspector.vala:1026 src/StyleInspector.vala:1452
-#: src/StyleInspector.vala:1614
+#: src/StyleInspector.vala:1022 src/StyleInspector.vala:1448
+#: src/StyleInspector.vala:1610
 msgid "Text Alignment"
 msgstr "Textjustering"
 
-#: src/StyleInspector.vala:1038 src/StyleInspector.vala:1464
-#: src/StyleInspector.vala:1626
+#: src/StyleInspector.vala:1034 src/StyleInspector.vala:1460
+#: src/StyleInspector.vala:1622
 msgid "Center"
 msgstr "Centrera"
 
-#: src/StyleInspector.vala:1068
+#: src/StyleInspector.vala:1064
 msgid "Width"
 msgstr "Bredd"
 
-#: src/StyleInspector.vala:1100
+#: src/StyleInspector.vala:1096
 msgid "Enable Markup"
 msgstr "Aktivera markering"
 
-#: src/StyleInspector.vala:1161 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1157 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "Anslutningsalternativ"
 
-#: src/StyleInspector.vala:1265
+#: src/StyleInspector.vala:1261
 msgid "Arrow Size"
 msgstr "Pilstorlek"
 
-#: src/StyleInspector.vala:1408
+#: src/StyleInspector.vala:1404
 msgid "Title Font"
 msgstr "Rubrikens typsnitt"
 
-#: src/StyleInspector.vala:1494
+#: src/StyleInspector.vala:1490
 msgid "Title Width"
 msgstr "Titelbredd"
 
-#: src/StyleInspector.vala:1546 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1542 src/Templates.vala:61 src/Templates.vala:66
 msgid "Callout Options"
 msgstr "Alternativ för utrop"
 
-#: src/StyleInspector.vala:1570
+#: src/StyleInspector.vala:1566
 msgid "Text Font"
 msgstr "Typsnitt"
 
-#: src/StyleInspector.vala:1701
+#: src/StyleInspector.vala:1697
 msgid "Pointer Width"
 msgstr "Pekarens bredd"
 
-#: src/StyleInspector.vala:1746
+#: src/StyleInspector.vala:1742
 msgid "Pointer Length"
 msgstr "Pekarlängd"
 
@@ -3965,7 +3961,7 @@ msgstr "Markering av sluttagg"
 msgid "Any"
 msgstr "Alla"
 
-#: src/Tags.vala:82 src/ThemeEditor.vala:117
+#: src/Tags.vala:82 src/ThemeEditor.vala:119
 msgid "Tag"
 msgstr "Tagg"
 
@@ -4035,119 +4031,115 @@ msgstr "Ta bort länk"
 msgid "Parser regex error (re: %s, error: %s)\n"
 msgstr "Parser regex-fel (re: %s, fel: %s)\n"
 
-#: src/ThemeEditor.vala:53
+#: src/ThemeEditor.vala:52
 msgid "Customize Theme"
 msgstr "Anpassa tema"
 
-#: src/ThemeEditor.vala:58
+#: src/ThemeEditor.vala:57
 msgid "Name"
 msgstr "Namn"
 
-#: src/ThemeEditor.vala:96
+#: src/ThemeEditor.vala:97
 msgid "Base Colors"
 msgstr "Basfärger"
 
-#: src/ThemeEditor.vala:102
+#: src/ThemeEditor.vala:104
 msgid "Background"
 msgstr "Bakgrund"
 
-#: src/ThemeEditor.vala:103
+#: src/ThemeEditor.vala:105
 msgid "Foreground"
 msgstr "Förgrund"
 
-#: src/ThemeEditor.vala:104
+#: src/ThemeEditor.vala:106
 msgid "Root Node Background"
 msgstr "Rotnodens bakgrund"
 
-#: src/ThemeEditor.vala:105
+#: src/ThemeEditor.vala:107
 msgid "Root Node Foreground"
 msgstr "Rotnod Förgrund"
 
-#: src/ThemeEditor.vala:106
+#: src/ThemeEditor.vala:108
 msgid "Node Select Background"
 msgstr "Välj bakgrund för nod"
 
-#: src/ThemeEditor.vala:107
+#: src/ThemeEditor.vala:109
 msgid "Node Select Foreground"
 msgstr "Välj nod Förgrund"
 
-#: src/ThemeEditor.vala:108
+#: src/ThemeEditor.vala:110
 msgid "Text Select Background"
 msgstr "Text Välj bakgrund"
 
-#: src/ThemeEditor.vala:109
+#: src/ThemeEditor.vala:111
 msgid "Text Select Foreground"
 msgstr "Text Välj förgrund"
 
-#: src/ThemeEditor.vala:110
+#: src/ThemeEditor.vala:112
 msgid "Text Cursor"
 msgstr "Textmarkör"
 
-#: src/ThemeEditor.vala:111
+#: src/ThemeEditor.vala:113
 msgid "Attachable Highlight"
 msgstr "Bifogbar markering"
 
-#: src/ThemeEditor.vala:112
+#: src/ThemeEditor.vala:114
 msgid "Connection Color"
 msgstr "Anslutningsfärg"
 
-#: src/ThemeEditor.vala:113
+#: src/ThemeEditor.vala:115
 msgid "Connection Title Color"
 msgstr "Anslutningens titel Färg"
 
-#: src/ThemeEditor.vala:114
+#: src/ThemeEditor.vala:116
 msgid "Callout Background"
 msgstr "Bakgrund till uppmaningen"
 
-#: src/ThemeEditor.vala:115
+#: src/ThemeEditor.vala:117
 msgid "URL Link Background"
 msgstr "URL-länk Bakgrund"
 
-#: src/ThemeEditor.vala:116
+#: src/ThemeEditor.vala:118
 msgid "URL Link Foreground"
 msgstr "URL-länk Förgrund"
 
-#: src/ThemeEditor.vala:118
+#: src/ThemeEditor.vala:120
 msgid "Markdown Syntax Chars"
 msgstr "Markdown-syntaxtecken"
 
-#: src/ThemeEditor.vala:119
+#: src/ThemeEditor.vala:121
 msgid "Match Background"
 msgstr "Matchbakgrund"
 
-#: src/ThemeEditor.vala:120
+#: src/ThemeEditor.vala:122
 msgid "Match Foreground"
 msgstr "Matcha förgrund"
 
-#: src/ThemeEditor.vala:121
+#: src/ThemeEditor.vala:123
 msgid "Markdown List Item"
 msgstr "Markdown-listobjekt"
 
-#: src/ThemeEditor.vala:127
-msgid "Prefer Dark Mode"
-msgstr "Föredrar mörkt läge"
-
-#: src/ThemeEditor.vala:223
+#: src/ThemeEditor.vala:209
 msgid "Custom"
 msgstr "Anpassad"
 
-#: src/ThemeEditor.vala:245
+#: src/ThemeEditor.vala:230
 msgid "Delete theme?"
 msgstr "Ta bort tema?"
 
-#: src/ThemeEditor.vala:246
+#: src/ThemeEditor.vala:231
 msgid "This operation cannot be undone."
 msgstr "Denna åtgärd kan inte ångras."
 
-#: src/ThemeEditor.vala:251 src/Utils.vala:456
+#: src/ThemeEditor.vala:236 src/Utils.vala:456
 msgid "No"
 msgstr "Nej"
 
-#: src/ThemeEditor.vala:254 src/Utils.vala:459
+#: src/ThemeEditor.vala:239 src/Utils.vala:459
 msgid "Yes"
 msgstr "Ja"
 
-#: src/ThemeEditor.vala:275
+#: src/ThemeEditor.vala:260
 msgid "Default"
 msgstr "Standard"
 
@@ -4171,12 +4163,12 @@ msgstr "Solariserat ljus"
 msgid "Error parsing regular expression"
 msgstr "Fel vid tolkning av reguljärt uttryck"
 
-#: src/Theme.vala:212
+#: src/Theme.vala:208
 #, c-format
 msgid "Unable to load background color: %s"
 msgstr "Det går inte att läsa in bakgrundsfärgen: %s"
 
-#: src/Theme.vala:321
+#: src/Theme.vala:307
 msgid "Root"
 msgstr "Rot"
 
@@ -4509,6 +4501,12 @@ msgstr "fel: %s\n"
 #: src/ZoomWidget.vala:98
 msgid "Zoom Actual"
 msgstr "Zooma till faktisk"
+
+#~ msgid "Hide themes not matching visual style"
+#~ msgstr "Dölj teman som inte matchar den visuella stilen"
+
+#~ msgid "Prefer Dark Mode"
+#~ msgstr "Föredrar mörkt läge"
 
 #, fuzzy
 #~ msgid "No Commands Listed"
