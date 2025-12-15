@@ -328,13 +328,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     });
 
     // Handle any changes to the system default
-    var gtk_settings  = Gtk.Settings.get_default();
-    if( gtk_settings != null ) {
-      on_dark_mode_changed( gtk_settings.gtk_application_prefer_dark_theme );
-      gtk_settings.notify["gtk-application-prefer-dark-theme"].connect(() => {
-        on_dark_mode_changed( gtk_settings.gtk_application_prefer_dark_theme );
-      });
-    }
+    var granite_settings  = Granite.Settings.get_default();
+    granite_settings.notify["prefers-color-scheme"].connect(() => {
+      on_dark_mode_changed( granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK );
+    });
 
     // If we receive focus, update the titlebar
     var focus = new EventControllerFocus();
@@ -1546,10 +1543,13 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Called whenever the theme is changed
   private void on_dark_mode_changed( bool dark_mode ) {
-    var use_dark_mode = Utils.use_dark_mode( _header );
-    _brain_btn.icon_name = use_dark_mode ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
+    var gtk_settings = Gtk.Settings.get_default();
+    if( gtk_settings != null ) {
+      gtk_settings.gtk_application_prefer_dark_theme = dark_mode;
+    }
+    _brain_btn.icon_name = dark_mode ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
     if( !on_elementary ) {
-      _prop_btn.icon_name  = use_dark_mode ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
+      _prop_btn.icon_name = dark_mode ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
     }
     (_stack.get_child_by_name( "current" ) as CurrentInspector).update_icons();
     (_stack.get_child_by_name( "style" )   as StyleInspector).update_icons();

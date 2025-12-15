@@ -192,7 +192,7 @@ public class Theme : Object {
   public CssProvider get_css_provider( int text_size ) {
     var provider     = new CssProvider();
     var foreground   = Granite.contrasting_foreground_color( get_color( "background" ) );
-    var gtk_settings = Gtk.Settings.get_default();
+    var granite_settings = Granite.Settings.get_default();
     try {
       var tv_size  = (text_size == -1) ? ".textfield { font: 1em \"Sans\"; } " :
                                          ".textfield { font: %dpx \"Sans\"; } ".printf( text_size );
@@ -202,7 +202,7 @@ public class Theme : Object {
                      tv_size +
                      ".theme-selected { background: #087DFF; } " +
                      ".canvas { background: " + get_color( "background" ).to_string() + "; }" +
-                     ".highlighted { background: rgba(255, 255, 129, " + (gtk_settings.gtk_application_prefer_dark_theme ? "0.15" : "1.0") + "); }";
+                     ".highlighted { background: rgba(255, 255, 129, " + ((granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK) ? "0.15" : "1.0") + "); }";
       provider.load_from_string( css_data );
     } catch( GLib.Error e ) {
       stdout.printf( _( "Unable to load background color: %s" ), e.message );
