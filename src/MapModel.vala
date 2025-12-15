@@ -1576,7 +1576,13 @@ public class MapModel {
   public void set_style_after_parent_attach( Node node ) {
     if( !node.is_root() ) {
       var sibling = node.previous_sibling();
-      node.style = (_map.settings.get_boolean( "style-always-from-parent" ) || (sibling == null)) ? node.parent.style : sibling.style;
+      if( node.main_branch() ) {
+        node.style = _map.global_style;
+      } else if( _map.settings.get_boolean( "style-always-from-parent" ) || (sibling == null) ) {
+        node.style = node.parent.style;
+      } else {
+        node.style = sibling.style;
+      }
     }
   }
 
@@ -1714,7 +1720,7 @@ public class MapModel {
   // adding it.
   public void position_root_node( Node node ) {
     if( _nodes.length == 0 ) {
-      node.posx = (_map.canvas.get_allocated_width()  / 2) - 30;
+      node.posx = (_map.canvas.get_allocated_width()  / 4) - 30;
       node.posy = (_map.canvas.get_allocated_height() / 2) - 10;
     } else {
       _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
@@ -1726,7 +1732,11 @@ public class MapModel {
   // appends it to the root node list.
   public Node create_root_node( string name = "" ) {
     var node = new Node.with_name( _map, name, ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
-    node.style = _map.global_style;
+    var style = new Style();
+    style.copy( _map.global_style );
+    // style.node_border  = StyleInspector.styles.get_node_border( "squared" );
+    style.node_padding = 20;
+    node.style = style;
     position_root_node( node );
     _nodes.append_val( node );
     return( node );

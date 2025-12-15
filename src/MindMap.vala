@@ -426,39 +426,20 @@ public class MindMap {
     _model.tags.load_variant( Minder.settings.get_value( "starting-tags" ) );
     reload_tags();
 
-    // Create the main idea node
-    var n = new Node.with_name( this, _("Main Idea"), _model.layouts.get_default() );
-
-    // Get the rough dimensions of the canvas
-    int wwidth, wheight;
-    get_saved_dimensions( out wwidth, out wheight );
-
-    // Set the node information
-    n.posx  = (wwidth  / 2) - 30;
-    n.posy  = (wheight / 2) - 10;
-
-    // Create special style for the root node
-    var root_style = new Style();
-    root_style.copy( _global_style );
-    root_style.node_border  = StyleInspector.styles.get_node_border( "squared" );
-    root_style.node_padding = 20;
-    n.style = root_style;
-
-    _model.get_nodes().append_val( n );
-
-    // Make this initial node the current node
-    set_current_node( n );
+    // Create and add the first root node after idle to allow the window size to be known
     Idle.add(() => {
+      var n = _model.create_root_node( _( "Main Idea" ) );
+      set_current_node( n );
       _model.set_node_mode( n, NodeMode.EDITABLE, false );
+
+      // Make sure that we save the document
+      doc.save_xml();
+      doc.save();
+
+      // Redraw the canvas
+      _canvas.queue_draw();
       return( false );
     });
-
-    // Make sure that we save the document
-    doc.save_xml();
-    doc.save();
-
-    // Redraw the canvas
-    _canvas.queue_draw();
 
   }
 
