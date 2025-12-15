@@ -48,8 +48,8 @@ public class StyleInspector : Box {
   private MainWindow       _win;
   private MindMap?         _map = null;
   private GLib.Settings    _settings;
-  private Revealer         _branch_radius_revealer;
   private Scale            _branch_radius;
+  private Box              _branch_radius_box;
   private Scale            _branch_margin;
   private ModeButtons      _link_types;
   private Scale            _link_width;
@@ -134,7 +134,7 @@ public class StyleInspector : Box {
       vexpand = true,
       child = box
     };
-    sw.child.set_size_request( 200, 600 );
+    // sw.child.set_size_request( 200, 600 );
 
     // Pack the elements into this widget
     append( affect );
@@ -405,7 +405,7 @@ public class StyleInspector : Box {
 
   //-------------------------------------------------------------
   // Creates the UI for changing the branch drawing type.
-  private Revealer create_branch_radius_ui() {
+  private Box create_branch_radius_ui() {
 
     var lbl = new Label( _( "Corner Radius" ) ) {
       hexpand = true,
@@ -418,18 +418,14 @@ public class StyleInspector : Box {
     };
     _branch_radius.change_value.connect( branch_radius_changed );
 
-    var box = new Box( Orientation.HORIZONTAL, 10 ) {
-      homogeneous = true
+    _branch_radius_box = new Box( Orientation.HORIZONTAL, 10 ) {
+      homogeneous = true,
+      visible     = false
     };
-    box.append( lbl );
-    box.append( _branch_radius );
+    _branch_radius_box.append( lbl );
+    _branch_radius_box.append( _branch_radius );
 
-    _branch_radius_revealer = new Revealer() {
-      reveal_child = false,
-      child        = box
-    };
-
-    return( _branch_radius_revealer );
+    return( _branch_radius_box );
 
   }
 
@@ -1845,7 +1841,8 @@ public class StyleInspector : Box {
         _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_GENERAL );
         break;
       case StyleAffects.SELECTED_NODES :
-        _curr_style = selected.nodes().index( 0 ).style;
+        _curr_style = new Style();
+        _curr_style.copy( selected.nodes().index( 0 ).style );
         _branch_group.visible  = true;
         _link_group.visible    = true;
         _node_group.visible    = true;
@@ -1854,7 +1851,8 @@ public class StyleInspector : Box {
         _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_NODE );
         break;
       case StyleAffects.SELECTED_CONNECTIONS :
-        _curr_style = selected.connections().index( 0 ).style;
+        _curr_style = new Style();
+        _curr_style.copy( selected.connections().index( 0 ).style );
         _branch_group.visible  = false;
         _link_group.visible    = false;
         _node_group.visible    = false;
@@ -1864,7 +1862,8 @@ public class StyleInspector : Box {
         _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_CONNECTION );
         break;
       case StyleAffects.SELECTED_CALLOUTS :
-        _curr_style = selected.callouts().index( 0 ).style;
+        _curr_style = new Style();
+        _curr_style.copy( selected.callouts().index( 0 ).style );
         _branch_group.visible  = false;
         _link_group.visible    = false;
         _node_group.visible    = false;
@@ -1923,6 +1922,7 @@ public class StyleInspector : Box {
   // Updates the state of the link types modebutton widget with the
   // link type style information.
   private void update_link_types_with_style( Style style ) {
+    update_link_types_state();
     if( style.link_type != null ) {
       var link_types = styles.get_link_types();
       for( int i=0; i<link_types.length; i++ ) {
@@ -1931,10 +1931,8 @@ public class StyleInspector : Box {
           break;
         }
       }
-      _branch_radius_revealer.visible      = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
-      _branch_radius_revealer.reveal_child = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
+      _branch_radius_box.visible = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
     }
-    update_link_types_state();
   }
 
   //-------------------------------------------------------------

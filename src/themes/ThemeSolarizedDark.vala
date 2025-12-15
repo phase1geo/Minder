@@ -62,8 +62,6 @@ public class ThemeSolarizedDark : Theme {
     set_color( "link_color6", color_from_string( "#D33682" ) );
     set_color( "link_color7", color_from_string( "#2AA198" ) );
 
-    prefer_dark = true;
-
   }
 
 }

@@ -328,15 +328,11 @@ public class MainWindow : Gtk.ApplicationWindow {
     });
 
     // Handle any changes to the system default
-    var gtk_settings  = Gtk.Settings.get_default();
-    if( gtk_settings != null ) {
-      gtk_settings.notify["gtk-application-prefer-dark-theme"].connect(() => {
-        var map = get_current_map();
-        if( gtk_settings.gtk_application_prefer_dark_theme != map.get_theme().prefer_dark ) {
-          gtk_settings.gtk_application_prefer_dark_theme = map.get_theme().prefer_dark;
-        }
-      });
-    }
+    var granite_settings  = Granite.Settings.get_default();
+    on_dark_mode_changed( granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK );
+    granite_settings.notify["prefers-color-scheme"].connect(() => {
+      on_dark_mode_changed( granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK );
+    });
 
     // If we receive focus, update the titlebar
     var focus = new EventControllerFocus();
@@ -553,7 +549,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     map.hide_properties.connect( hide_properties );
     map.undo_buffer.buffer_changed.connect( do_buffer_changed );
     map.undo_text.buffer_changed.connect( do_buffer_changed );
-    map.theme_changed.connect( on_theme_changed );
+    // map.theme_changed.connect( on_theme_changed );
     map.editable_changed.connect( on_editable_changed );
     map.highlighted.changed.connect(() => { on_tag_highlight_changed( map ); });
     map.animator.enable = _settings.get_boolean( "enable-animations" );
@@ -1547,16 +1543,14 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Called whenever the theme is changed
-  private void on_theme_changed( MindMap map ) {
-    var settings  = Gtk.Settings.get_default();
-    var dark_mode = map.get_theme().prefer_dark;
-    if( settings != null ) {
-      settings.gtk_application_prefer_dark_theme = dark_mode;
+  private void on_dark_mode_changed( bool dark_mode ) {
+    var gtk_settings = Gtk.Settings.get_default();
+    if( gtk_settings != null ) {
+      gtk_settings.gtk_application_prefer_dark_theme = dark_mode;
     }
-    var use_dark_mode = Utils.use_dark_mode( _header );
-    _brain_btn.icon_name = use_dark_mode ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
+    _brain_btn.icon_name = Utils.use_dark_mode( _header ) ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
     if( !on_elementary ) {
-      _prop_btn.icon_name  = use_dark_mode ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
+      _prop_btn.icon_name = Utils.use_dark_mode( _header ) ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
     }
     (_stack.get_child_by_name( "current" ) as CurrentInspector).update_icons();
     (_stack.get_child_by_name( "style" )   as StyleInspector).update_icons();

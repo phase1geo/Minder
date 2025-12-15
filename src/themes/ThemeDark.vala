@@ -60,8 +60,6 @@ public class ThemeDark : Theme {
     set_color( "link_color6", color_from_string( "#715344" ) );
     set_color( "link_color7", color_from_string( "#bbbbbb" ) );
 
-    prefer_dark = true;
-
   }
 
 }

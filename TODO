@@ -1,10 +1,5 @@
 General:
 
-  ☐ Update codebase to GTK4
-    ☐ Add support for text completion code
-    ☐ Cleanup up rest of the TODOs
-  ☐ Add support for new file format
-  ☐ Create new MindMap class that takes over most of the functionality in DrawArea
   ☐ Summary node support (?)
 
 Summary Node:
@@ -15,21 +10,26 @@ Summary Node:
 
 Future Features:
 
-  ☐ Add support for named styles @new
-    Saves the state of a style group and gives it a name so that it can be quickly
-    applied to selected items.
-  ☐ Fix issue with drawing connection attachment points when node has a callout @bugfix
-  ☐ Add support for tagging @new
-  ☐ Add support for moving selected nodes when manual layout is enabled for all selected nodes @bugfix
-  ☐ Add support for brainstorming @new
-    We will implement this with with a new list widget that will contain the node titles which can be
-    dragged and dropped within the mind map.
 
 --- ✄ -----------------------
 
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
+ ✔ Update codebase to GTK4 @done (25-12-14 20:04) @project(General)
+ ✔ Fix issue with drawing connection attachment points when node has a callout @bugfix @done (25-12-14 20:04) @project(Future Features)
+ ✔ Create new MindMap class that takes over most of the functionality in DrawArea @done (25-12-14 20:04) @project(General)
+ ✔ Cleanup up rest of the TODOs @done (25-12-14 20:04) @project(General)
+ ✔ Add support for text completion code @done (25-12-14 20:04) @project(General)
+ ✔ Add support for tagging @new @done (25-12-14 20:04) @project(Future Features)
+ ✔ Add support for new file format @done (25-12-14 20:04) @project(General)
+ ✔ Add support for named styles @new @done (25-12-14 20:04) @project(Future Features)
+  Saves the state of a style group and gives it a name so that it can be quickly
+  applied to selected items.
+ ✔ Add support for moving selected nodes when manual layout is enabled for all selected nodes @bugfix @done (25-12-14 20:04) @project(Future Features)
+ ✔ Add support for brainstorming @new @done (25-12-14 20:04) @project(Future Features)
+  We will implement this with with a new list widget that will contain the node titles which can be
+  dragged and dropped within the mind map.
  ✔ Fix issue with remembering sidebar drag handle position @done (24-11-26 00:13) @project(General)
  ✔ Fix issue with drag/drop of stickers @done (24-11-25 23:15) @project(General)
  ✔ Release version 1.16.4 @due(24-04-08 10:00) @done (24-11-25 15:46) @project(General)

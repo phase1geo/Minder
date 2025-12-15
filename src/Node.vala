@@ -1450,12 +1450,12 @@ public class Node : Object {
   //-------------------------------------------------------------
   // Adds all nodes within this tree that intersect with the
   // given box.
-  public void select_within_box( Gdk.Rectangle box, Selection select ) {
+  public void get_nodes_within_box( Gdk.Rectangle box, Array<Node> nodes ) {
     if( intersects_with( box ) ) {
-      select.add_node( this );
+      nodes.append_val( this );
     }
     for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).select_within_box( box, select );
+      _children.index( i ).get_nodes_within_box( box, nodes );
     }
   }
 
@@ -1598,6 +1598,7 @@ public class Node : Object {
   // Loads the style information from the given XML node.
   private void load_style( Xml.Node* n ) {
     _style.load_node( n );
+    _name.set_text_alignment( _style.node_text_align );
     _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
     if( _sequence_num != null ) {
       _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
@@ -3055,13 +3056,6 @@ public class Node : Object {
                    fg_color;
 
       sequence_bbox( out x, out y, out w, out h );
-
-      if( _mode == NodeMode.SELECTED ) {
-        Utils.set_context_color_with_alpha( ctx, color, _alpha );
-        ctx.move_to( x, y );
-        ctx.rectangle( x, y, w, h );
-        ctx.fill();
-      }
 
       // Draw sequence number
       Pango.Rectangle ink_rect, log_rect;
