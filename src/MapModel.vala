@@ -1784,9 +1784,9 @@ public class MapModel {
     node.side  = child.side;
     node.attach( child.parent, child.index(), null );
     node.link_color = color;
+    set_style_after_parent_attach( node );
     child.detach( node.side );
     child.attach( node, -1, null );
-    set_style_after_parent_attach( node );
     return( node );
   }
 
