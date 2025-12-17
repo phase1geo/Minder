@@ -2016,23 +2016,6 @@ public class Node : Object {
     layout.handle_update_by_fold( this );
   }
 
-  /*
-  //-------------------------------------------------------------
-  // Clears all of the folds below the current node.
-  private void clear_tree_folds( Array<Node>? changed ) {
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).clear_tree_folds( changed );
-    }
-    if( folded ) {
-      folded = false;
-      if( changed != null ) {
-        changed.append_val( this );
-      }
-      layout.handle_update_by_fold( this );
-    }
-  }
-  */
-
   //-------------------------------------------------------------
   // Returns true if there is at least one node that is foldable
   // due to its tasks being completed.
