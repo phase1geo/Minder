@@ -1817,6 +1817,7 @@ public class MapModel {
     var summary = new SummaryNode( _map, layouts.get_default() );
     summary.side = nodes.index( 0 ).side;
     summary.attach_nodes( nodes.index( 0 ).parent, nodes, true, _theme );
+    set_style_after_parent_attach( summary );
     return( summary );
   }
 

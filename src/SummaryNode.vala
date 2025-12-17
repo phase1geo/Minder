@@ -234,13 +234,17 @@ public class SummaryNode : Node {
     }
     p.moved.connect( parent_moved );
     if( sort ) {
+      stdout.printf( "SORTING NODES\n" );
       sort_nodes();
     } else {
+      stdout.printf( "PARENT = LAST_NODE\n" );
       parent = last_node();
       update_tree_bboxes();
+      stdout.printf( "Updated tree bboxes\n" );
     }
-    layout.handle_update_by_insert( parent, this, -1 );
-    style  = last_node().style;
+    if( layout != null ) {
+      layout.handle_update_by_insert( parent, this, -1 );
+    }
     /*
     if( layout != null ) {
       layout.handle_update_by_insert( parent, this, -1 );
@@ -302,9 +306,11 @@ public class SummaryNode : Node {
   //-------------------------------------------------------------
   // Update the tree_bbox structures of the summarized nodes
   private void update_tree_bboxes() {
-    foreach( var node in _nodes ) {
-      node.tree_bbox = layout.bbox( node, -1, "update_tree_bboxes" );
-      node.tree_size = side.horizontal() ? node.tree_bbox.height : node.tree_bbox.width;
+    if( layout != null ) {
+      foreach( var node in _nodes ) {
+        node.tree_bbox = layout.bbox( node, -1, "update_tree_bboxes" );
+        node.tree_size = side.horizontal() ? node.tree_bbox.height : node.tree_bbox.width;
+      }
     }
   }
 
