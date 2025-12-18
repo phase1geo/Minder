@@ -1547,15 +1547,15 @@ public class MainWindow : Gtk.ApplicationWindow {
     var gtk_settings = Gtk.Settings.get_default();
     if( gtk_settings != null ) {
       gtk_settings.gtk_application_prefer_dark_theme = dark_mode;
+      _brain_btn.icon_name = Utils.use_dark_mode( _header ) ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
+      if( !on_elementary ) {
+        _prop_btn.icon_name = Utils.use_dark_mode( _header ) ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
+      }
+      (_stack.get_child_by_name( "current" ) as CurrentInspector).update_icons();
+      (_stack.get_child_by_name( "style" )   as StyleInspector).update_icons();
+      (_stack.get_child_by_name( "tag" )     as TagInspector).update_icons();
+      (_stack.get_child_by_name( "map" )     as MapInspector).update_icons();
     }
-    _brain_btn.icon_name = Utils.use_dark_mode( _header ) ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
-    if( !on_elementary ) {
-      _prop_btn.icon_name = Utils.use_dark_mode( _header ) ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
-    }
-    (_stack.get_child_by_name( "current" ) as CurrentInspector).update_icons();
-    (_stack.get_child_by_name( "style" )   as StyleInspector).update_icons();
-    (_stack.get_child_by_name( "tag" )     as TagInspector).update_icons();
-    (_stack.get_child_by_name( "map" )     as MapInspector).update_icons();
   }
 
   //-------------------------------------------------------------
