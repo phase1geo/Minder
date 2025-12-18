@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-14 22:25-0600\n"
+"POT-Creation-Date: 2025-12-17 18:16-0600\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Nathan Bonnemains (@NathanBnm)\n"
 "Language-Team: Français\n"
@@ -120,7 +120,7 @@ msgstr "Supprimer"
 msgid "Select Node"
 msgstr "Sélectionner le nœud"
 
-#: src/Callout.vala:131 src/KeyCommands.vala:677 src/NodeMenu.vala:93
+#: src/Callout.vala:131 src/KeyCommands.vala:677 src/NodeMenu.vala:97
 msgid "Callout"
 msgstr ""
 
@@ -130,7 +130,7 @@ msgid "No text found"
 msgstr "Mot suivant"
 
 #: src/ConnectionInspector.vala:77 src/KeyCommands.vala:680
-#: src/NodeMenu.vala:92
+#: src/NodeMenu.vala:96
 msgid "Connection"
 msgstr "Connexion"
 
@@ -158,12 +158,12 @@ msgstr "Masquer les connexions"
 msgid "Edit Title…"
 msgstr "Modifier le titre"
 
-#: src/ConnectionMenu.vala:38 src/GroupsMenu.vala:36 src/NodeMenu.vala:50
+#: src/ConnectionMenu.vala:38 src/GroupsMenu.vala:36 src/NodeMenu.vala:54
 #, fuzzy
 msgid "Edit Note"
 msgstr "Modifier le titre"
 
-#: src/ConnectionMenu.vala:39 src/NodeMenu.vala:54
+#: src/ConnectionMenu.vala:39 src/NodeMenu.vala:58
 #, fuzzy
 msgid "Remove Sticker"
 msgstr "Supprimer la note"
@@ -185,7 +185,7 @@ msgid "Previous Connection"
 msgstr "Connexion précédente"
 
 #: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:313
-#: src/NodeMenu.vala:100 src/NodesMenu.vala:59
+#: src/NodeMenu.vala:104 src/NodesMenu.vala:59
 msgid "Select"
 msgstr "Sélectionner"
 
@@ -309,12 +309,12 @@ msgstr ""
 "<big>Sélectionnez un nœud ou une connexion\n"
 "pour afficher/modifier des informations</big>"
 
-#: src/EmptyMenu.vala:32 src/NodeMenu.vala:38 src/NodeMenu.vala:249
+#: src/EmptyMenu.vala:32 src/NodeMenu.vala:38 src/NodeMenu.vala:253
 #: src/TextMenu.vala:38
 msgid "Paste"
 msgstr "Coller"
 
-#: src/EmptyMenu.vala:35 src/NodeMenu.vala:67
+#: src/EmptyMenu.vala:35 src/NodeMenu.vala:71
 msgid "Add Root Node"
 msgstr "Ajouter un nœud racine"
 
@@ -556,7 +556,7 @@ msgstr "Modifier l'image"
 msgid "Paste Image from Clipboard"
 msgstr "Couper le nœud sur le presse-papier"
 
-#: src/ImageEditor.vala:418 src/NodeInspector.vala:386 src/NodeMenu.vala:230
+#: src/ImageEditor.vala:418 src/NodeInspector.vala:386 src/NodeMenu.vala:234
 msgid "Remove Image"
 msgstr "Supprimer l'image"
 
@@ -1753,7 +1753,7 @@ msgstr "Copier"
 msgid "Cut"
 msgstr "Couper"
 
-#: src/NodeMenu.vala:39 src/NodeMenu.vala:241 src/NodeMenu.vala:250
+#: src/NodeMenu.vala:39 src/NodeMenu.vala:245 src/NodeMenu.vala:254
 msgid "Paste and Replace Node"
 msgstr ""
 
@@ -1775,184 +1775,197 @@ msgid "Use parent color"
 msgstr ""
 
 #: src/NodeMenu.vala:49
+msgid "One Level"
+msgstr ""
+
+#: src/NodeMenu.vala:50
+msgid "All Levels"
+msgstr ""
+
+#: src/NodeMenu.vala:53
 #, fuzzy
 msgid "Edit Text…"
 msgstr "Modifier…"
 
-#: src/NodeMenu.vala:51 src/NodesMenu.vala:43
+#: src/NodeMenu.vala:55 src/NodesMenu.vala:43
 #, fuzzy
 msgid "Edit Tags"
 msgstr "Modifier l'image"
 
-#: src/NodeMenu.vala:52 src/NodeMenu.vala:226
+#: src/NodeMenu.vala:56 src/NodeMenu.vala:230
 msgid "Add Task"
 msgstr "Transformer en tâche"
 
-#: src/NodeMenu.vala:53 src/NodeMenu.vala:230
+#: src/NodeMenu.vala:57 src/NodeMenu.vala:234
 msgid "Add Image"
 msgstr "Ajouter une image"
 
-#: src/NodeMenu.vala:55 src/NodeMenu.vala:227
+#: src/NodeMenu.vala:59 src/NodeMenu.vala:231
 msgid "Add Node Link"
 msgstr "Ajouter un lien vers le nœud"
 
-#: src/NodeMenu.vala:56
+#: src/NodeMenu.vala:60
 msgid "Add Connection"
 msgstr "Ajouter une connexion"
 
-#: src/NodeMenu.vala:57
+#: src/NodeMenu.vala:61
 msgid "Add Group"
 msgstr ""
 
-#: src/NodeMenu.vala:58 src/NodeMenu.vala:229
+#: src/NodeMenu.vala:62 src/NodeMenu.vala:233
 msgid "Add Callout"
 msgstr ""
 
-#: src/NodeMenu.vala:59 src/ThemeEditor.vala:137
+#: src/NodeMenu.vala:63 src/ThemeEditor.vala:137
 msgid "Link Color"
 msgstr "Couleur du lien"
 
-#: src/NodeMenu.vala:60 src/NodeMenu.vala:228
-msgid "Fold Children"
-msgstr "Plier les enfants"
+#: src/NodeMenu.vala:64
+#, fuzzy
+msgid "Toggle Folding"
+msgstr "Plier/Déplier"
 
-#: src/NodeMenu.vala:61
+#: src/NodeMenu.vala:65
 #, fuzzy
 msgid "Toggle Sequence"
 msgstr "Sélection"
 
-#: src/NodeMenu.vala:64
+#: src/NodeMenu.vala:68
 #, fuzzy
 msgid "Change Node"
 msgstr "Modifier l'image"
 
-#: src/NodeMenu.vala:68
+#: src/NodeMenu.vala:72
 msgid "Add Parent Node"
 msgstr "Ajouter un nœud parent"
 
-#: src/NodeMenu.vala:69
+#: src/NodeMenu.vala:73
 msgid "Add Child Node"
 msgstr "Ajouter un nœud enfant"
 
-#: src/NodeMenu.vala:70
+#: src/NodeMenu.vala:74
 msgid "Add Sibling Node"
 msgstr "Ajouter un nœud frère"
 
-#: src/NodeMenu.vala:73
+#: src/NodeMenu.vala:77
 #, fuzzy
 msgid "Insert Nodes"
 msgstr "insérer un nœud"
 
-#: src/NodeMenu.vala:74
+#: src/NodeMenu.vala:78
 #, fuzzy
 msgid "Replace Nodes"
 msgstr "Équilibrer les nœuds"
 
-#: src/NodeMenu.vala:77
+#: src/NodeMenu.vala:81
 #, fuzzy
 msgid "Add Node"
 msgstr "Ajouter une note"
 
-#: src/NodeMenu.vala:79 src/QuickEntry.vala:40
+#: src/NodeMenu.vala:83 src/QuickEntry.vala:40
 msgid "Quick Entry"
 msgstr "Entrée rapide"
 
-#: src/NodeMenu.vala:82
+#: src/NodeMenu.vala:86
 msgid "Root Node"
 msgstr "Nœud racine"
 
-#: src/NodeMenu.vala:83
+#: src/NodeMenu.vala:87
 msgid "Next Sibling Node"
 msgstr "Nœud frère suivant"
 
-#: src/NodeMenu.vala:84
+#: src/NodeMenu.vala:88
 msgid "Previous Sibling Node"
 msgstr "Nœud frère précédent"
 
-#: src/NodeMenu.vala:85
+#: src/NodeMenu.vala:89
 msgid "Child Node"
 msgstr "Nœud enfant"
 
-#: src/NodeMenu.vala:86 src/NodesMenu.vala:56
+#: src/NodeMenu.vala:90 src/NodesMenu.vala:56
 #, fuzzy
 msgid "Child Nodes"
 msgstr "Nœud enfant"
 
-#: src/NodeMenu.vala:87
+#: src/NodeMenu.vala:91
 msgid "Subtree"
 msgstr ""
 
-#: src/NodeMenu.vala:88
+#: src/NodeMenu.vala:92
 msgid "Parent Node"
 msgstr "Nœud parent"
 
-#: src/NodeMenu.vala:89
+#: src/NodeMenu.vala:93
 msgid "Linked Node"
 msgstr "Nœud lié"
 
-#: src/NodeMenu.vala:101
+#: src/NodeMenu.vala:105
 msgid "Center Current Node"
 msgstr "Centrer sur le nœud"
 
-#: src/NodeMenu.vala:104
+#: src/NodeMenu.vala:108
 msgid "Alphabetically"
 msgstr "Alphabétiquement"
 
-#: src/NodeMenu.vala:105
+#: src/NodeMenu.vala:109
 #, fuzzy
 msgid "Randomly"
 msgstr "Aléatoirement"
 
-#: src/NodeMenu.vala:108
+#: src/NodeMenu.vala:112
 msgid "Sort Children"
 msgstr "Trier les enfants"
 
-#: src/NodeMenu.vala:111
+#: src/NodeMenu.vala:115
 msgid "Detach"
 msgstr "Détacher"
 
-#: src/NodeMenu.vala:224
+#: src/NodeMenu.vala:228
 msgid "Remove Task"
 msgstr "Supprimer la tâche"
 
-#: src/NodeMenu.vala:225
+#: src/NodeMenu.vala:229
 #, fuzzy
 msgid "Mark Task As Done"
 msgstr "Marquer comme fait/à faire"
 
-#: src/NodeMenu.vala:227
+#: src/NodeMenu.vala:231
 msgid "Remove Node Link"
 msgstr "Supprimer le lien vers le nœud"
 
-#: src/NodeMenu.vala:228
+#: src/NodeMenu.vala:232
 msgid "Unfold Children"
 msgstr "Déplier les enfants"
 
-#: src/NodeMenu.vala:229
+#: src/NodeMenu.vala:232
+msgid "Fold Children"
+msgstr "Plier les enfants"
+
+#: src/NodeMenu.vala:233
 #, fuzzy
 msgid "Remove Callout"
 msgstr "Supprimer la tâche"
 
-#: src/NodeMenu.vala:240
+#: src/NodeMenu.vala:244
 #, fuzzy
 msgid "Paste Node As Child"
 msgstr "Coller le nœud comme enfant"
 
-#: src/NodeMenu.vala:243
+#: src/NodeMenu.vala:247
 #, fuzzy
 msgid "Paste Image As Child Node"
 msgstr "Coller le nœud comme enfant"
 
-#: src/NodeMenu.vala:244
+#: src/NodeMenu.vala:248
 msgid "Paste and Replace Node Image"
 msgstr ""
 
-#: src/NodeMenu.vala:246
+#: src/NodeMenu.vala:250
 #, fuzzy
 msgid "Paste Text As Child Node"
 msgstr "Coller le nœud comme enfant"
 
-#: src/NodeMenu.vala:247
+#: src/NodeMenu.vala:251
 msgid "Paste and Replace Node Text"
 msgstr ""
 
@@ -2034,15 +2047,15 @@ msgstr ""
 msgid "Align"
 msgstr "modification du nom du nœud"
 
-#: src/Node.vala:2702
+#: src/Node.vala:2687
 msgid "Node Title"
 msgstr "Titre du nœud"
 
-#: src/Node.vala:2710
+#: src/Node.vala:2695
 msgid "Node Note"
 msgstr "Note du nœud"
 
-#: src/Node.vala:2720
+#: src/Node.vala:2705
 #, fuzzy
 msgid "Callout Text"
 msgstr "Coller le texte"
@@ -4928,9 +4941,6 @@ msgstr "Zoom par défaut (100 %)"
 
 #~ msgid "View Properties"
 #~ msgstr "Afficher les propriétés"
-
-#~ msgid "Toggle Fold"
-#~ msgstr "Plier/Déplier"
 
 #~ msgid "Toggle Node Link"
 #~ msgstr "Activer/Désactiver le lien vers le nœud"

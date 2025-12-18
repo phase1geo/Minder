@@ -45,6 +45,10 @@ public class NodeMenu : BaseMenu {
     append_menu_item( color_menu, KeyCommand.NODE_RANDOMIZE_LINK_COLOR, _( "Randomize color" ) );
     append_menu_item( color_menu, KeyCommand.NODE_REPARENT_LINK_COLOR,  _( "Use parent color" ) );
 
+    var fold_menu = new GLib.Menu();
+    append_menu_item( fold_menu, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, _( "One Level" ) );
+    append_menu_item( fold_menu, KeyCommand.NODE_TOGGLE_FOLDS_DEEP,    _( "All Levels" ) );
+
     _change_submenu = new GLib.Menu();
     append_menu_item( _change_submenu, KeyCommand.EDIT_SELECTED,       _( "Edit Text…" ) );
     append_menu_item( _change_submenu, KeyCommand.EDIT_NOTE,           _( "Edit Note" ), false );
@@ -57,7 +61,7 @@ public class NodeMenu : BaseMenu {
     append_menu_item( _change_submenu, KeyCommand.NODE_ADD_GROUP,      _( "Add Group" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_CALLOUT, _( "Add Callout" ) );
     _change_submenu.append_submenu( _( "Link Color" ), color_menu );
-    append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, _( "Fold Children" ) );
+    _change_submenu.append_submenu( _( "Toggle Folding" ), fold_menu );
     append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_SEQUENCE,      _( "Toggle Sequence" ) );
 
     var change_menu = new GLib.Menu();

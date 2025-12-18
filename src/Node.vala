@@ -1993,9 +1993,9 @@ public class Node : Object {
   // Sets the fold for this node to the given value.  Appends
   // this node to the changed list if the folded value changed.
   public void set_fold( bool value, bool deep, Array<Node>? changed = null ) {
-    if( !value && deep ) {
+    if( deep ) {
       for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).clear_tree_folds( changed );
+        _children.index( i ).set_fold( value, deep, changed );
       }
     }
     if( folded != value ) {
@@ -2013,21 +2013,6 @@ public class Node : Object {
   public void set_fold_only( bool value ) {
     folded = value;
     layout.handle_update_by_fold( this );
-  }
-
-  //-------------------------------------------------------------
-  // Clears all of the folds below the current node.
-  private void clear_tree_folds( Array<Node>? changed ) {
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).clear_tree_folds( changed );
-    }
-    if( folded ) {
-      folded = false;
-      if( changed != null ) {
-        changed.append_val( this );
-      }
-      layout.handle_update_by_fold( this );
-    }
   }
 
   //-------------------------------------------------------------
