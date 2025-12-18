@@ -130,6 +130,26 @@
   </custom>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.0.2" date="2025-12-17">
+      <description>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Changed Shift-F keyboard shortcut to toggle the node folding deeply rather than always unfold deeply.</li>
+          <li>Changed node menu from 'Fold Children' to 'Toggle Folding' submenu where one level or all levels can be selected.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed application crash caused by adding parent node between a root node and a main node.</li>
+          <li>Attempting to fix UI issue where dark mode is changed by the system, causing some icons to visually disappear.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.1" date="2025-12-14">
       <description>
         <p>Changes</p>
