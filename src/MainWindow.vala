@@ -1520,6 +1520,7 @@ public class MainWindow : Gtk.ApplicationWindow {
           return( true );
         }
         close_current_tab();
+        return( false );
       }
     }
     return( false );

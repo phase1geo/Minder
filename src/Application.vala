@@ -147,6 +147,15 @@ public class Minder : Gtk.Application {
     options[8] = {"markdown-include-image-links", 0, 0, OptionArg.NONE, ref image_links, _( "Enables image links in exported Markdown" ), null};
     options[9] = {null};
 
+    // Add some description for importing and exporting
+    var description_prefix = (Utils.get_flatpak_runtime() != "") ? "flatpak run " : "";
+    var description = _( "Import Example:\n" );
+    description += _( "  %scom.github.phase1geo.minder --import=markdown file.markdown\n".printf( description_prefix ) );
+    description += _( "\n" );
+    description += _( "Export Example:\n" );
+    description += _( "  %scom.github.phase1geo.minder --export=png --png-transparent file.minder file.png\n".printf( description_prefix ) );
+    context.set_description( description );
+
     // Parse the arguments
     try {
       context.set_help_enabled( false );
@@ -251,6 +260,7 @@ public class Minder : Gtk.Application {
             stderr.printf( _( "ERROR:  Unable to load Minder input file %s" ).printf( infile ) + "\n" );
           }
         });
+        return( true );
       }
     }
 
