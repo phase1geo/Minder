@@ -134,7 +134,6 @@ public class StyleInspector : Box {
       vexpand = true,
       child = box
     };
-    // sw.child.set_size_request( 200, 600 );
 
     // Pack the elements into this widget
     append( affect );
@@ -404,6 +403,16 @@ public class StyleInspector : Box {
   }
 
   //-------------------------------------------------------------
+  // Ignores scroll events for the given widget.
+  private void ignore_scroll( Widget w ) {
+    var scroller = new EventControllerScroll( Gtk.EventControllerScrollFlags.VERTICAL | Gtk.EventControllerScrollFlags.HORIZONTAL );
+    w.add_controller( scroller );
+    scroller.scroll.connect((dx, dy) => {
+      return true;  // consume the event → scale will not change value
+    });
+  }
+
+  //-------------------------------------------------------------
   // Creates the UI for changing the branch drawing type.
   private Box create_branch_radius_ui() {
 
@@ -416,6 +425,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _branch_radius );
     _branch_radius.change_value.connect( branch_radius_changed );
 
     _branch_radius_box = new Box( Orientation.HORIZONTAL, 10 ) {
@@ -460,6 +470,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _branch_margin );
     _branch_margin.change_value.connect( branch_margin_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 10 ) {
@@ -587,6 +598,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = false
     };
+    ignore_scroll( _link_width );
 
     for( int i=2; i<=8; i++ ) {
       if( (i % 2) == 0 ) {
@@ -671,6 +683,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = false
     };
+    ignore_scroll( _link_arrow_size );
 
     _link_arrow_size.add_mark( 0, PositionType.BOTTOM, "S" );
     _link_arrow_size.add_mark( 1, PositionType.BOTTOM, "M" );
@@ -812,6 +825,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = false
     };
+    ignore_scroll( _node_borderwidth );
 
     for( int i=2; i<=8; i++ ) {
       if( (i % 2) == 0 ) {
@@ -897,6 +911,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _node_margin );
     _node_margin.change_value.connect( node_margin_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -941,6 +956,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _node_padding );
     _node_padding.change_value.connect( node_padding_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1071,6 +1087,7 @@ public class StyleInspector : Box {
       halign = Align.END,
       valign = Align.CENTER,
     };
+    ignore_scroll( _node_width );
     _node_width.value_changed.connect(() => {
       if( !_ignore ) {
         var width = (int)_node_width.get_value();
@@ -1267,6 +1284,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = false
     };
+    ignore_scroll( _conn_arrow_size );
 
     _conn_arrow_size.add_mark( 0, PositionType.BOTTOM, "S" );
     _conn_arrow_size.add_mark( 1, PositionType.BOTTOM, "M" );
@@ -1314,6 +1332,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = false
     };
+    ignore_scroll( _conn_lwidth );
 
     for( int i=2; i<=8; i++ ) {
       if( (i % 2) == 0 ) {
@@ -1366,6 +1385,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _conn_padding );
     _conn_padding.change_value.connect( connection_padding_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1497,6 +1517,7 @@ public class StyleInspector : Box {
       halign = Align.END,
       valign = Align.CENTER,
     };
+    ignore_scroll( _conn_twidth );
     _conn_twidth.value_changed.connect(() => {
       if( !_ignore ) {
         var width = (int)_conn_twidth.get_value();
@@ -1659,6 +1680,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _callout_padding );
     _callout_padding.change_value.connect( callout_padding_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1704,6 +1726,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _callout_ptr_width );
     _callout_ptr_width.change_value.connect( callout_pointer_width_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1749,6 +1772,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _callout_ptr_length );
     _callout_ptr_length.change_value.connect( callout_pointer_length_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
