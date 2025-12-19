@@ -99,7 +99,8 @@ public class DrawArea : Gtk.DrawingArea {
   private EventControllerKey    _key_controller;
   private EventControllerScroll _scroll;
   private string?               _node_link_tooltip = null;
-  private uint                  _autopan_id = 0;
+  private uint                  _autopan_id    = 0;
+  private int                   _resized_count = 0;
 
   public MainWindow win      { private set; get; }
   public Animator   animator { set; get; }
@@ -195,6 +196,8 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void current_changed( MindMap map );
   public signal void scale_changed( double scale );
   public signal void scroll_changed();
+  public signal void size_ready( int width, int height );
+  public signal void size_changed( int width, int height );
 
   /* Default constructor */
   public DrawArea( MindMap map, MainWindow w ) {
@@ -320,6 +323,15 @@ public class DrawArea : Gtk.DrawingArea {
     _im_context.retrieve_surrounding.connect( handle_im_retrieve_surrounding );
     _im_context.delete_surrounding.connect( handle_im_delete_surrounding );
 
+  }
+
+  //-------------------------------------------------------------
+  // Indicates that the size of the widget has changed.
+  public override void size_allocate( int width, int height, int baseline ) {
+    if( _resized_count++ == 0 ) {
+      size_ready( width, height );
+    }
+    size_changed( width, height ); 
   }
 
   //-------------------------------------------------------------

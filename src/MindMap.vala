@@ -427,7 +427,7 @@ public class MindMap {
     reload_tags();
 
     // Create and add the first root node after idle to allow the window size to be known
-    Idle.add(() => {
+    _canvas.size_ready.connect((w, h) => {
       var n = _model.create_root_node( _( "Main Idea" ) );
       set_current_node( n );
       _model.set_node_mode( n, NodeMode.EDITABLE, false );
@@ -438,7 +438,6 @@ public class MindMap {
 
       // Redraw the canvas
       _canvas.queue_draw();
-      return( false );
     });
 
   }

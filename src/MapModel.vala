@@ -1720,8 +1720,8 @@ public class MapModel {
   // adding it.
   public void position_root_node( Node node ) {
     if( _nodes.length == 0 ) {
-      node.posx = (_map.canvas.get_allocated_width()  / 4) - 30;
-      node.posy = (_map.canvas.get_allocated_height() / 2) - 10;
+      node.posx = (_map.canvas.get_allocated_width()  / 4) - 50;
+      node.posy = (_map.canvas.get_allocated_height() / 2) - 30;
     } else {
       _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
     }
