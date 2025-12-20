@@ -1512,11 +1512,13 @@ public class MainWindow : Gtk.ApplicationWindow {
   public bool import_file( string fname, string export_name, ref string new_fname ) {
     close_unchanged_tabs();
     for( int i=0; i<exports.length(); i++ ) {
-      if( exports.index( i ).name == export_name ) {
-        var map = add_tab_conditionally( null, TabAddReason.IMPORT );
-        new_fname = map.doc.filename;
+      if( exports.index( i ).importable && (exports.index( i ).name == export_name) ) {
+        var orig_fname = fname;
+        string[] parts = fname.split( "." );
+        new_fname = string.joinv( ".", parts[0:parts.length-1] ) + ".minder";
+        var map = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
         update_title( map );
-        if( exports.index( i ).import( fname, map ) ) {
+        if( exports.index( i ).import( orig_fname, map ) ) {
           return( true );
         }
         close_current_tab();

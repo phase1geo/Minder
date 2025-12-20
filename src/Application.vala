@@ -151,7 +151,7 @@ public class Minder : Gtk.Application {
     var description_prefix = (Utils.get_flatpak_runtime() != "") ? "flatpak run " : "";
     var description = _( "Import Example:\n" );
     description += _( "  %scom.github.phase1geo.minder --import=markdown file.markdown\n".printf( description_prefix ) );
-    description += _( "\n" );
+    description += "\n";
     description += _( "Export Example:\n" );
     description += _( "  %scom.github.phase1geo.minder --export=png --png-transparent file.minder file.png\n".printf( description_prefix ) );
     context.set_description( description );
@@ -227,6 +227,8 @@ public class Minder : Gtk.Application {
           }
         }
       }
+      appwin.present();
+    } else {
       appwin.present();
     }
 
