@@ -29,7 +29,7 @@ Use the power of mind-mapping to make your ideas come to life.
 - Open multiple mindmaps with the use of tabs.
 - Built-in and customizable theming.
 - Gorgeous animations.
-- Import from OPML, FreeMind, Freeplane, PlainText/Markdown (formatted), Outliner, Portable Minder, filesystem and XMind formats.
+- Import from OPML, FreeMind, Freeplane, PlainText/Markdown (formatted), Mermaid (mindmap), Outliner, Portable Minder, filesystem and XMind formats.
 - Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, WebP, Markdown, Mermaid, Mermaid Mindmap, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, filesystem, XMind and yEd formats.
 - Printer support.
 
