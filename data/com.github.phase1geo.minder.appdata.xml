@@ -130,6 +130,28 @@
   </custom>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.0.3" date="2025-12-21">
+      <description>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated Italian translation (thanks to Albano Battistella).</li>
+          <li xml:lang="ru">Обновлен перевод на итальянский (спаисбо Albano Battistella).</li>
+          <li>Adding import and export examples in command-line help output.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed issue with placing root node on application open.</li>
+          <li>Fixed issue with Style widgets accidentally scrolling.</li>
+          <li>Fixed various issues with command-line import/export.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.2" date="2025-12-17">
       <description>
         <p>Changes</p>

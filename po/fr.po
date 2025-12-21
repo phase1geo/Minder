@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-20 21:25-0600\n"
+"POT-Creation-Date: 2025-12-20 21:55-0600\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Nathan Bonnemains (@NathanBnm)\n"
 "Language-Team: Français\n"
@@ -4121,20 +4121,20 @@ msgstr "Carré"
 msgid "Underlined"
 msgstr "Souligné"
 
-#: src/Styles.vala:57
+#: src/Styles.vala:58
 msgid "Solid"
 msgstr ""
 
-#: src/Styles.vala:58
+#: src/Styles.vala:59
 msgid "Dotted"
 msgstr ""
 
-#: src/Styles.vala:59
+#: src/Styles.vala:60
 #, fuzzy
 msgid "Short Dash"
 msgstr "Feuille de raccourcis"
 
-#: src/Styles.vala:60
+#: src/Styles.vala:61
 #, fuzzy
 msgid "Long Dash"
 msgstr "Style de ligne"
