@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-20 22:13-0600\n"
-"PO-Revision-Date: 2025-12-20 10:37+0100\n"
+"PO-Revision-Date: 2025-12-21 12:37+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -32,7 +32,7 @@ msgstr "Minder in AppCenter"
 #: src/About.vala:60
 #, c-format
 msgid "Flatpak Runtime: %s"
-msgstr ""
+msgstr "Flatpak Runtime: %s"
 
 #: src/Application.vala:133
 #, c-format
@@ -76,9 +76,8 @@ msgid "Enables image links in exported Markdown"
 msgstr "Abilita i collegamenti alle immagini nel Markdown esportato"
 
 #: src/Application.vala:152
-#, fuzzy
 msgid "Import Example:\n"
-msgstr "Importa FIle"
+msgstr "Esempio di importazione:\n"
 
 #: src/Application.vala:153
 #, c-format
@@ -86,9 +85,8 @@ msgid "  %scom.github.phase1geo.minder --import=markdown file.markdown\n"
 msgstr ""
 
 #: src/Application.vala:155
-#, fuzzy
 msgid "Export Example:\n"
-msgstr "Esporta File"
+msgstr "Esempio di esportazione:\n"
 
 #: src/Application.vala:156
 #, c-format
