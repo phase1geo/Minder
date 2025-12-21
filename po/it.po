@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-17 18:16-0600\n"
+"POT-Creation-Date: 2025-12-20 21:25-0600\n"
 "PO-Revision-Date: 2025-12-20 10:37+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -28,6 +28,11 @@ msgstr "Copyright © 2018-2024 Trevor Williams"
 #: src/About.vala:43
 msgid "Minder in AppCenter"
 msgstr "Minder in AppCenter"
+
+#: src/About.vala:60
+#, c-format
+msgid "Flatpak Runtime: %s"
+msgstr ""
 
 #: src/Application.vala:133
 #, c-format
@@ -70,36 +75,58 @@ msgstr "Qualità JPEG (0-100). Il valore predefinito è 90."
 msgid "Enables image links in exported Markdown"
 msgstr "Abilita i collegamenti alle immagini nel Markdown esportato"
 
+#: src/Application.vala:152
+#, fuzzy
+msgid "Import Example:\n"
+msgstr "Importa FIle"
+
+#: src/Application.vala:153
+#, c-format
+msgid "  %scom.github.phase1geo.minder --import=markdown file.markdown\n"
+msgstr ""
+
+#: src/Application.vala:155
+#, fuzzy
+msgid "Export Example:\n"
+msgstr "Esporta File"
+
 #: src/Application.vala:156
+#, c-format
+msgid ""
+"  %scom.github.phase1geo.minder --export=png --png-transparent file.minder "
+"file.png\n"
+msgstr ""
+
+#: src/Application.vala:165
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "ERRORE: %s\n"
 
-#: src/Application.vala:157
+#: src/Application.vala:166
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "Esegui '%s --help' per vedere opzioni valide\n"
 
-#: src/Application.vala:180
+#: src/Application.vala:189
 msgid "ERROR: Unable to import file"
 msgstr "ERRORE: ERRORE: impossibile importare il file"
 
-#: src/Application.vala:184
+#: src/Application.vala:193
 msgid "ERROR: Import is missing filename to import"
 msgstr "ERRORE: nell'importazione manca il nome del file da importare"
 
-#: src/Application.vala:207
+#: src/Application.vala:216
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
 "ERRORE: Nell'esportazione manca il file di input e/o il file di "
 "outputdell'esportazione"
 
-#: src/Application.vala:217
+#: src/Application.vala:226
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "ERRORE: impossibile aprire il file '%s'\n"
 
-#: src/Application.vala:251
+#: src/Application.vala:262
 #, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "ERRORE: impossibile caricare il file di input di Minder %s"
@@ -199,7 +226,9 @@ msgstr "Aggiorna il file Minder alla nuova versione"
 
 #: src/Document.vala:37
 msgid "Upgrade Minder file to new version and keep a copy of the original"
-msgstr "Aggiorna il file Minder alla nuova versione e conserva una copia dell'originale"
+msgstr ""
+"Aggiorna il file Minder alla nuova versione e conserva una copia "
+"dell'originale"
 
 #: src/Document.vala:38
 msgid "Do not upgrade Minder file but view it as read-only"
@@ -214,8 +243,8 @@ msgid ""
 "Upgrade Minder files to new version but keep a copy of the original if "
 "previously saved"
 msgstr ""
-"Aggiorna i file di Minder alla nuova versione, ma conserva una copia dell'originale se "
-"salvato in precedenza"
+"Aggiorna i file di Minder alla nuova versione, ma conserva una copia "
+"dell'originale se salvato in precedenza"
 
 #: src/Document.vala:49
 msgid "Do not upgrade Minder files but view them as read-only"
@@ -235,9 +264,11 @@ msgid ""
 "\n"
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
-"Questo file proviene da una versione precedente di Minder e deve essere aggiornato per poter essere modificato.\n"
+"Questo file proviene da una versione precedente di Minder e deve essere "
+"aggiornato per poter essere modificato.\n"
 "\n"
-"Nota: i file aggiornati non possono essere visualizzati/modificati con le versioni precedenti di Minder."
+"Nota: i file aggiornati non possono essere visualizzati/modificati con le "
+"versioni precedenti di Minder."
 
 #: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1330
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
@@ -245,7 +276,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Cancella"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2205
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2208
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Applica"
@@ -254,7 +285,7 @@ msgstr "Applica"
 msgid "Don't show this dialog again"
 msgstr "Non mostrare più questa finestra di dialogo"
 
-#: src/Document.vala:714 src/MainWindow.vala:2242
+#: src/Document.vala:714 src/MainWindow.vala:2245
 msgid "<small>This can be changed in preferences</small>"
 msgstr "<small>Questo può essere modificato nelle preferenze</small>"
 
@@ -262,16 +293,16 @@ msgstr "<small>Questo può essere modificato nelle preferenze</small>"
 msgid "Upgrade Needed"
 msgstr "Aggiornamento necessario"
 
-#: src/DrawArea.vala:1521
+#: src/DrawArea.vala:1533
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "% 0.3g%% completo"
 
-#: src/DrawArea.vala:1539
+#: src/DrawArea.vala:1551
 msgid "Drag to resize node"
 msgstr "Trascina per ridimensionare il nodo"
 
-#: src/DrawArea.vala:1541
+#: src/DrawArea.vala:1553
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -279,25 +310,25 @@ msgstr ""
 "Trascina per ridimensionare il nodo e l'immagine.\n"
 "Control-trascina per ridimensionare solo il nodo."
 
-#: src/DrawArea.vala:1683
+#: src/DrawArea.vala:1695
 #, c-format
 msgid "Children: %u\n"
 msgstr "Figli: %u\n"
 
-#: src/DrawArea.vala:1684
+#: src/DrawArea.vala:1696
 #, c-format
 msgid "Total: %d"
 msgstr "Totale: %d"
 
-#: src/DrawArea.vala:1738
+#: src/DrawArea.vala:1750
 msgid "connection endpoint change"
 msgstr "modifica dell'endpoint di connessione"
 
-#: src/DrawArea.vala:1745
+#: src/DrawArea.vala:1757
 msgid "connection drag"
 msgstr "trascina della connessione"
 
-#: src/DrawArea.vala:2270 src/MapModel.vala:1837 src/MapModel.vala:1852
+#: src/DrawArea.vala:2282 src/MapModel.vala:1839 src/MapModel.vala:1854
 msgid "Another Idea"
 msgstr "Un'altra idea"
 
@@ -359,28 +390,28 @@ msgstr "Copiato negli Appunti"
 msgid "CSV"
 msgstr "CSV"
 
-#: src/exports/ExportFileSystem.vala:29
+#: src/exports/ExportFileSystem.vala:30
 msgid "File System"
 msgstr "File System"
 
-#: src/exports/ExportFreemind.vala:29
+#: src/exports/ExportFreemind.vala:31
 msgid "Freemind"
 msgstr "Freemind"
 
-#: src/exports/ExportFreemind.vala:45 src/exports/ExportFreeplane.vala:47
-#: src/exports/ExportOPML.vala:38 src/exports/ExportYed.vala:41
+#: src/exports/ExportFreemind.vala:49 src/exports/ExportFreeplane.vala:50
+#: src/exports/ExportOPML.vala:38 src/exports/ExportYed.vala:43
 msgid "Generated by Minder"
 msgstr "Generato da Minder"
 
-#: src/exports/ExportFreeplane.vala:31
+#: src/exports/ExportFreeplane.vala:32
 msgid "Freeplane"
 msgstr "Freeplane"
 
-#: src/exports/ExportImage.vala:85 src/exports/ExportPNG.vala:92
+#: src/exports/ExportImage.vala:90 src/exports/ExportPNG.vala:95
 msgid "Zoom %"
 msgstr "Zoom %"
 
-#: src/exports/ExportImage.vala:92
+#: src/exports/ExportImage.vala:99
 msgid "Quality"
 msgstr "Qualità"
 
@@ -388,35 +419,35 @@ msgstr "Qualità"
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/exports/ExportMarkdown.vala:383
+#: src/exports/ExportMarkdown.vala:382
 msgid "Include image links"
 msgstr "Includi link immagine"
 
-#: src/exports/ExportMarkdown.vala:384
+#: src/exports/ExportMarkdown.vala:383
 msgid "Creates a directory containing the Markdown and embedded images"
 msgstr "Crea una directory contenente il Markdown e le immagini incorporate"
 
-#: src/exports/ExportMermaid.vala:29
+#: src/exports/ExportMermaid.vala:38
 msgid "Mermaid"
 msgstr "Mermaid"
 
-#: src/exports/ExportMermaid.vala:60 src/layouts/LayoutVertical.vala:26
+#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutVertical.vala:26
 msgid "Vertical"
 msgstr "Verticale"
 
-#: src/exports/ExportMermaid.vala:60 src/layouts/LayoutDown.vala:26
+#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutDown.vala:26
 msgid "Downwards"
 msgstr "Verso il basso"
 
-#: src/exports/ExportMermaid.vala:62 src/layouts/LayoutLeft.vala:26
+#: src/exports/ExportMermaid.vala:77 src/layouts/LayoutLeft.vala:26
 msgid "To left"
 msgstr "A sinistra"
 
-#: src/exports/ExportMermaid.vala:64 src/layouts/LayoutUp.vala:26
+#: src/exports/ExportMermaid.vala:79 src/layouts/LayoutUp.vala:26
 msgid "Upwards"
 msgstr "Verso l'alto"
 
-#: src/exports/ExportMermaid.vala:269
+#: src/exports/ExportMermaid.vala:481
 msgid "Use Mermaid Mindmap Format"
 msgstr "Usa il formato Mermaid Mindmap"
 
@@ -436,39 +467,39 @@ msgstr "Modalità rientro"
 msgid "Export using indentation spaces"
 msgstr "Esporta utilizzando gli spazi di rientro"
 
-#: src/exports/ExportOutliner.vala:28
+#: src/exports/ExportOutliner.vala:29
 msgid "Outliner"
 msgstr "Outliner"
 
-#: src/exports/ExportPDF.vala:28
+#: src/exports/ExportPDF.vala:29
 msgid "PDF"
 msgstr "PDF"
 
-#: src/exports/ExportPlantUML.vala:29
+#: src/exports/ExportPlantUML.vala:30
 msgid "PlantUML"
 msgstr "PiantaUML"
 
-#: src/exports/ExportPNG.vala:30
+#: src/exports/ExportPNG.vala:31
 msgid "PNG"
 msgstr "PNG"
 
-#: src/exports/ExportPNG.vala:93
+#: src/exports/ExportPNG.vala:96
 msgid "Enable Transparent Background"
 msgstr "Abilita sfondo trasparente"
 
-#: src/exports/ExportPNG.vala:94
+#: src/exports/ExportPNG.vala:97
 msgid "Compression"
 msgstr "Compressione"
 
-#: src/exports/ExportPortableMinder.vala:28
+#: src/exports/ExportPortableMinder.vala:29
 msgid "Portable Minder"
 msgstr "Minder portatile"
 
-#: src/exports/ExportSVG.vala:28
+#: src/exports/ExportSVG.vala:29
 msgid "SVG"
 msgstr "SVG"
 
-#: src/exports/ExportText.vala:44
+#: src/exports/ExportText.vala:45
 msgid "PlainText"
 msgstr "Testo Semplice"
 
@@ -476,16 +507,16 @@ msgstr "Testo Semplice"
 msgid "WebP"
 msgstr "WebP"
 
-#: src/exports/ExportXMind2021.vala:79
+#: src/exports/ExportXMind2021.vala:80
 msgid "XMind 2021"
 msgstr "XMind 2021"
 
-#: src/exports/ExportXMind2021.vala:671 src/exports/ExportXMind8.vala:695
+#: src/exports/ExportXMind2021.vala:682 src/exports/ExportXMind8.vala:695
 #: src/layouts/LayoutHorizontal.vala:26
 msgid "Horizontal"
 msgstr "Orizzontale"
 
-#: src/exports/ExportXMind2021.vala:673 src/exports/ExportXMind8.vala:697
+#: src/exports/ExportXMind2021.vala:684 src/exports/ExportXMind8.vala:697
 #: src/layouts/LayoutRight.vala:26
 msgid "To right"
 msgstr "A destra"
@@ -494,7 +525,7 @@ msgstr "A destra"
 msgid "XMind 8"
 msgstr "XMind 8"
 
-#: src/exports/ExportYed.vala:26
+#: src/exports/ExportYed.vala:27
 msgid "Yed"
 msgstr "Yed"
 
@@ -662,7 +693,7 @@ msgstr "Mostra stile Scheda nella barra laterale"
 
 #: src/KeyCommands.vala:595
 msgid "Show tag tab in sidebar"
-msgstr "Mostra tag scheda nella barra laterale
+msgstr "Mostra tag scheda nella barra laterale"
 
 #: src/KeyCommands.vala:596
 msgid "Show sticker tab in sidebar"
@@ -674,7 +705,9 @@ msgstr "Mostra scheda della mappa nella barra laterale"
 
 #: src/KeyCommands.vala:598
 msgid "Show currently select node/connection/group information in sidebar"
-msgstr "Mostra le informazioni sul nodo/connessione/gruppo attualmente selezionato nella barra laterale"
+msgstr ""
+"Mostra le informazioni sul nodo/connessione/gruppo attualmente selezionato "
+"nella barra laterale"
 
 #: src/KeyCommands.vala:599
 msgid "Map Commands"
@@ -838,7 +871,9 @@ msgstr "Rendi casuale il colore del link del nodo corrente"
 
 #: src/KeyCommands.vala:639
 msgid "Set current node link color to match parent node"
-msgstr "Imposta il colore del collegamento del nodo corrente in modo che corrisponda al nodo padre"
+msgstr ""
+"Imposta il colore del collegamento del nodo corrente in modo che corrisponda "
+"al nodo padre"
 
 #: src/KeyCommands.vala:640
 msgid "Toggle folding of current node"
@@ -1190,11 +1225,11 @@ msgid "Select a group color"
 msgstr "Seleziona un colore di gruppo"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:271
-#: src/MapInspector.vala:524 src/MapModel.vala:2325
+#: src/MapInspector.vala:524 src/MapModel.vala:2327
 msgid "Manual"
 msgstr "Manuale"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1624
+#: src/MainWindow.vala:183 src/MainWindow.vala:1627
 msgid "Minder"
 msgstr "Minder"
 
@@ -1258,7 +1293,7 @@ msgstr "Zoom avanti"
 msgid "Zoom Out"
 msgstr "Zoom Indietro"
 
-#: src/MainWindow.vala:802 src/MainWindow.vala:1690
+#: src/MainWindow.vala:802 src/MainWindow.vala:1693
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoom (%d%%)"
@@ -1339,7 +1374,7 @@ msgstr "collegamenti note"
 msgid "About Minder"
 msgstr "Informazioni su Minder"
 
-#: src/MainWindow.vala:1190 src/MainWindow.vala:1774
+#: src/MainWindow.vala:1190 src/MainWindow.vala:1777
 msgid "Show Property Sidebar"
 msgstr "Mostra barra laterale della proprietà"
 
@@ -1348,7 +1383,7 @@ msgid "Current"
 msgstr "Corrente"
 
 #: src/MainWindow.vala:1202 src/MainWindow.vala:1245
-#: src/StyleInspector.vala:363
+#: src/StyleInspector.vala:362
 msgid "Style"
 msgstr "Stile"
 
@@ -1376,7 +1411,7 @@ msgstr "Le modifiche andranno perse in modo permanente se non vengono salvate."
 msgid "Discard Changes"
 msgstr "Annullare le Modifiche"
 
-#: src/MainWindow.vala:1333 src/MainWindow.vala:1620 src/ThemeEditor.vala:158
+#: src/MainWindow.vala:1333 src/MainWindow.vala:1623 src/ThemeEditor.vala:158
 msgid "Save"
 msgstr "Salva"
 
@@ -1405,75 +1440,79 @@ msgstr "Apri Directory"
 msgid "Open"
 msgstr "Apri"
 
-#: src/MainWindow.vala:1620
+#: src/MainWindow.vala:1623
 msgid "Save File"
 msgstr "Salva File"
 
-#: src/MainWindow.vala:1720
+#: src/MainWindow.vala:1723
 msgid "Hide Property Sidebar"
 msgstr "Nascondi barra laterale delle proprietà"
 
-#: src/MainWindow.vala:2196
+#: src/MainWindow.vala:2199
 msgid "File upgrades needed"
 msgstr "Aggiornamenti dei file necessari"
 
-#: src/MainWindow.vala:2197
+#: src/MainWindow.vala:2200
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
 "\n"
 "Select an upgrade option below."
 msgstr ""
-"Tutte le schede aperte in precedenza contengono file Minder che devono essere aggiornati per"
-"essere modificati da questa versione di Minder.\n"
+"Tutte le schede aperte in precedenza contengono file Minder che devono "
+"essere aggiornati peressere modificati da questa versione di Minder.\n"
 "\n"
 "Seleziona un'opzione di aggiornamento qui sotto."
 
-#: src/MainWindow.vala:2202
+#: src/MainWindow.vala:2205
 msgid "Quit Minder"
 msgstr "Esci da Minder"
 
-#: src/MainWindow.vala:2222
+#: src/MainWindow.vala:2225
 msgid "Detail"
 msgstr "Dettagli"
 
-#: src/MainWindow.vala:2230
+#: src/MainWindow.vala:2233
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
-"<small>Aggiorna ogni file di Minder per il quale era stata aperta una scheda nell'ultima "
-"sessione di Minder. Questa azione è irreversibile poiché le versioni precedenti di Minder "
-"non sono in grado di leggere il formato aggiornato.</small>"
+"<small>Aggiorna ogni file di Minder per il quale era stata aperta una scheda "
+"nell'ultima sessione di Minder. Questa azione è irreversibile poiché le "
+"versioni precedenti di Minder non sono in grado di leggere il formato "
+"aggiornato.</small>"
 
-#: src/MainWindow.vala:2231
+#: src/MainWindow.vala:2234
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
-"<small>Aggiorna ogni file di Minder per il quale era stata aperta una scheda nell'ultima "
-"sessione di Minder, ma salva una copia del file originale più vecchio nella sua "
-"directory originale.</small>"
+"<small>Aggiorna ogni file di Minder per il quale era stata aperta una scheda "
+"nell'ultima sessione di Minder, ma salva una copia del file originale più "
+"vecchio nella sua directory originale.</small>"
 
-#: src/MainWindow.vala:2232
+#: src/MainWindow.vala:2235
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
 "change a read-only mindmap, you can use the 'Save As' button in the header "
 "bar to write it to the newer format.</small>"
 msgstr ""
-<small>Lascia ogni file Minder nel formato originale, ma apre ogni scheda in "
-"sola lettura. Le mappe mentali in sola lettura possono essere visualizzate ma non modificate. Per "
-"modificare una mappa mentale in sola lettura, puoi utilizzare il pulsante "Salva con nome" nella barra "
-"dell'intestazione per salvarla nel formato più recente.</small>"
+"<small>Lascia ogni file Minder nel formato originale, ma apre ogni scheda in "
+"sola lettura. Le mappe mentali in sola lettura possono essere visualizzate "
+"ma non modificate. Per modificare una mappa mentale in sola lettura, puoi "
+"utilizzare il pulsante 'Salva con nome' nella barra dell'intestazione per "
+"salvarla nel formato più recente.</small>"
 
-#: src/MainWindow.vala:2239
+#: src/MainWindow.vala:2242
 msgid "Use the selected option when future older Minder files are opened"
-msgstr "Utilizza l'opzione selezionata quando verranno aperti i file Minder più vecchi in futuro"
+msgstr ""
+"Utilizza l'opzione selezionata quando verranno aperti i file Minder più "
+"vecchi in futuro"
 
-#: src/MainWindow.vala:2264
+#: src/MainWindow.vala:2267
 msgid "Upgrades Needed"
 msgstr "Aggiornamenti necessari"
 
@@ -1565,7 +1604,7 @@ msgstr "Non salvato"
 msgid "Main Idea"
 msgstr "Idea Principale"
 
-#: src/MindMap.vala:1056
+#: src/MindMap.vala:1055
 msgid "Select a link color"
 msgstr "Seleziona un colore di collegamento"
 
@@ -1936,7 +1975,7 @@ msgstr "Scorciatoie"
 msgid "Advanced"
 msgstr "Avanzato"
 
-#: src/Preferences.vala:93 src/StyleInspector.vala:255
+#: src/Preferences.vala:93 src/StyleInspector.vala:254
 msgid "Close"
 msgstr "Chiudi"
 
@@ -1961,8 +2000,8 @@ msgid ""
 "Specifies if a node is attached to a new parent, whether its style should "
 "come from the new parent or its new siblings"
 msgstr ""
-Specifica se un nodo è collegato a un nuovo nodo padre, e se il suo stile deve "
-"provenire dal nuovo nodo padre o dai suoi nuovi fratelli"
+"Specifica se un nodo è collegato a un nuovo nodo padre, e se il suo stile "
+"deve provenire dal nuovo nodo padre o dai suoi nuovi fratelli"
 
 #: src/Preferences.vala:130
 msgid "Automatically make embedded URLs into links"
@@ -2022,7 +2061,8 @@ msgstr "Ruota i colori dei collegamenti del ramo principale"
 msgid ""
 "If enabled, causes a new color to be used whenever a main branch is created"
 msgstr ""
-"Se abilitato, fa sì che venga utilizzato un nuovo colore ogni volta che viene creato un ramo principale"
+"Se abilitato, fa sì che venga utilizzato un nuovo colore ogni volta che "
+"viene creato un ramo principale"
 
 #: src/Preferences.vala:159
 msgid "Keep backup files after saving"
@@ -2035,9 +2075,10 @@ msgid ""
 "file is removed after save and used on re-opening file if it exists.  Backup "
 "files are hidden in the same directory as the original with a .bak extension."
 msgstr ""
-"I file di backup vengono creati prima del salvataggio. Se abilitato, il file di backup viene "
-"mantenuto ma non viene utilizzato alla riapertura del file. Se disabilitato, il file di backup viene "
-"rimosso dopo il salvataggio e utilizzato alla riapertura del file, se presente. I file di backup vengono "
+"I file di backup vengono creati prima del salvataggio. Se abilitato, il file "
+"di backup viene mantenuto ma non viene utilizzato alla riapertura del file. "
+"Se disabilitato, il file di backup viene rimosso dopo il salvataggio e "
+"utilizzato alla riapertura del file, se presente. I file di backup vengono "
 "nascosti nella stessa directory dell'originale con estensione .bak."
 
 #: src/Preferences.vala:187
@@ -2049,8 +2090,9 @@ msgid ""
 "Sets the default theme to use for newly created mindmaps (use Map sidebar "
 "panel to make immediate changes)."
 msgstr ""
-"Imposta il tema predefinito da utilizzare per le mappe mentali appena create (utilizza il pannello "
-"della barra laterale della mappa per apportare modifiche immediate)."
+"Imposta il tema predefinito da utilizzare per le mappe mentali appena create "
+"(utilizza il pannello della barra laterale della mappa per apportare "
+"modifiche immediate)."
 
 #: src/Preferences.vala:192
 msgid "Enable mindmap animations"
@@ -2082,19 +2124,25 @@ msgstr "Stile globale predefinito"
 
 #: src/Preferences.vala:212
 msgid "Specifies the global style to use for newly created mindmaps."
-msgstr "Specifica lo stile globale da utilizzare per le mappe mentali appena create."
+msgstr ""
+"Specifica lo stile globale da utilizzare per le mappe mentali appena create."
 
 #: src/Preferences.vala:235
 msgid "Tags in this list will be the starting list of tags for new mindmaps."
-msgstr "I tag in questo elenco saranno l'elenco iniziale dei tag per le nuove mappe mentali."
+msgstr ""
+"I tag in questo elenco saranno l'elenco iniziale dei tag per le nuove mappe "
+"mentali."
 
 #: src/Preferences.vala:335
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
-msgstr "Fare doppio clic per modificare la scorciatoia. Selezionare + Elimina per rimuovere la scorciatoia."
+msgstr ""
+"Fare doppio clic per modificare la scorciatoia. Selezionare + Elimina per "
+"rimuovere la scorciatoia."
 
 #: src/Preferences.vala:336
 msgid "Escape to cancel.  Press key combination to set."
-msgstr "Premere Esc per annullare. Premere la combinazione di tasti per impostare."
+msgstr ""
+"Premere Esc per annullare. Premere la combinazione di tasti per impostare."
 
 #: src/Preferences.vala:344
 msgid "Set Minder Defaults"
@@ -2114,11 +2162,15 @@ msgstr "Cerca scorciatoie"
 
 #: src/Preferences.vala:466
 msgid "Show upgrade dialog when file upgrade is needed"
-msgstr "Mostra la finestra di dialogo di aggiornamento quando è necessario l'aggiornamento del file"
+msgstr ""
+"Mostra la finestra di dialogo di aggiornamento quando è necessario "
+"l'aggiornamento del file"
 
 #: src/Preferences.vala:470
 msgid "Show temporary directory containing current mindmap in map sidebar"
-msgstr "Mostra la directory temporanea contenente la mappa mentale corrente nella barra laterale della mappa"
+msgstr ""
+"Mostra la directory temporanea contenente la mappa mentale corrente nella "
+"barra laterale della mappa"
 
 #: src/Preferences.vala:480
 msgid "Default file upgrade action"
@@ -2457,7 +2509,7 @@ msgstr "Industria"
 msgid "Mobile"
 msgstr "Mobile"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1221
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1238
 msgid "Arrows"
 msgstr "Frecce"
 
@@ -3441,13 +3493,13 @@ msgstr "Su"
 msgid "Right up"
 msgstr "Proprio sopra"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1033
-#: src/StyleInspector.vala:1459 src/StyleInspector.vala:1621
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1049
+#: src/StyleInspector.vala:1479 src/StyleInspector.vala:1642
 msgid "Left"
 msgstr "Sinistra"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1035
-#: src/StyleInspector.vala:1461 src/StyleInspector.vala:1623
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1051
+#: src/StyleInspector.vala:1481 src/StyleInspector.vala:1644
 msgid "Right"
 msgstr "Destra"
 
@@ -3661,7 +3713,7 @@ msgstr "Genealogico"
 
 #: src/StickerSet.vala:348
 msgid "Mind map"
-msgstr "Mappa mentale
+msgstr "Mappa mentale"
 
 #: src/StickerSet.vala:349
 msgid "Workflow"
@@ -3707,84 +3759,85 @@ msgstr "Chiamate selezionate"
 msgid "Unknown"
 msgstr "Sconosciuto"
 
-#: src/StyleInspector.vala:244
+#: src/StyleInspector.vala:243
 msgid "Deleted preferences default global style"
 msgstr "Eliminato lo stile globale predefinito delle preferenze"
 
-#: src/StyleInspector.vala:245
+#: src/StyleInspector.vala:244
 #, c-format
 msgid ""
 "The default global style '%s' was deleted.  Setting default global style in "
 "preferences to use the default Minder global style."
 msgstr ""
-"Lo stile globale predefinito '%s' è stato eliminato. Imposta lo stile globale predefinito nelle "
-"preferenze per utilizzare lo stile globale predefinito di Minder."
+"Lo stile globale predefinito '%s' è stato eliminato. Imposta lo stile "
+"globale predefinito nelle preferenze per utilizzare lo stile globale "
+"predefinito di Minder."
 
-#: src/StyleInspector.vala:271
+#: src/StyleInspector.vala:270
 msgid "Changes affect:"
 msgstr "Le modifiche influiscono:"
 
-#: src/StyleInspector.vala:283
+#: src/StyleInspector.vala:282
 msgid "Copy current style"
 msgstr "Copia sitle corrente"
 
-#: src/StyleInspector.vala:295
+#: src/StyleInspector.vala:294
 msgid "Paste copied style"
 msgstr "Incolla lo stile copiato"
 
-#: src/StyleInspector.vala:306
+#: src/StyleInspector.vala:305
 msgid "Style Templates"
 msgstr "Stile dei Modelli"
 
-#: src/StyleInspector.vala:340
+#: src/StyleInspector.vala:339
 msgid "Branch Options"
 msgstr "Opzioni Ramo"
 
-#: src/StyleInspector.vala:410
+#: src/StyleInspector.vala:419
 msgid "Corner Radius"
 msgstr "Raggio dell'angolo"
 
-#: src/StyleInspector.vala:454 src/StyleInspector.vala:890
+#: src/StyleInspector.vala:464 src/StyleInspector.vala:904
 msgid "Margin"
 msgstr "Margine"
 
-#: src/StyleInspector.vala:516
+#: src/StyleInspector.vala:527
 msgid "Link Options"
 msgstr "Opzioni Collegamento"
 
-#: src/StyleInspector.vala:539 src/StyleInspector.vala:1180
+#: src/StyleInspector.vala:550 src/StyleInspector.vala:1197
 msgid "Line Dash"
 msgstr "Linea a Trattino"
 
-#: src/StyleInspector.vala:580 src/StyleInspector.vala:1307
+#: src/StyleInspector.vala:591 src/StyleInspector.vala:1325
 msgid "Line Width"
 msgstr "Larghezza della Linea"
 
-#: src/StyleInspector.vala:631
+#: src/StyleInspector.vala:643
 msgid "Link Arrow"
 msgstr "Freccia di Collegamento"
 
-#: src/StyleInspector.vala:665
+#: src/StyleInspector.vala:677
 msgid "Link Arrow Size"
 msgstr "Dimensione della freccia di collegamento"
 
-#: src/StyleInspector.vala:739 src/Templates.vala:59 src/Templates.vala:64
+#: src/StyleInspector.vala:752 src/Templates.vala:59 src/Templates.vala:64
 msgid "Node Options"
 msgstr "Opzioni Nodo"
 
-#: src/StyleInspector.vala:762
+#: src/StyleInspector.vala:775
 msgid "Border Style"
 msgstr "Stile del Bordo"
 
-#: src/StyleInspector.vala:805
+#: src/StyleInspector.vala:818
 msgid "Border Width"
 msgstr "Larghezza del Bordo"
 
-#: src/StyleInspector.vala:855
+#: src/StyleInspector.vala:869
 msgid "Color Fill"
 msgstr "Riempimento colore"
 
-#: src/StyleInspector.vala:864
+#: src/StyleInspector.vala:878
 msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
@@ -3792,62 +3845,62 @@ msgstr ""
 "Riempe il nodo di colore quando il bordo\n"
 "del bordo è quadrato, arrotondato o a forma di pillola"
 
-#: src/StyleInspector.vala:934 src/StyleInspector.vala:1359
-#: src/StyleInspector.vala:1652
+#: src/StyleInspector.vala:949 src/StyleInspector.vala:1378
+#: src/StyleInspector.vala:1673
 msgid "Padding"
 msgstr "Imbottitura"
 
-#: src/StyleInspector.vala:978
+#: src/StyleInspector.vala:994
 msgid "Font"
 msgstr "Font"
 
-#: src/StyleInspector.vala:1022 src/StyleInspector.vala:1448
-#: src/StyleInspector.vala:1610
+#: src/StyleInspector.vala:1038 src/StyleInspector.vala:1468
+#: src/StyleInspector.vala:1631
 msgid "Text Alignment"
 msgstr "Allineamento del testo"
 
-#: src/StyleInspector.vala:1034 src/StyleInspector.vala:1460
-#: src/StyleInspector.vala:1622
+#: src/StyleInspector.vala:1050 src/StyleInspector.vala:1480
+#: src/StyleInspector.vala:1643
 msgid "Center"
 msgstr "Centra"
 
-#: src/StyleInspector.vala:1064
+#: src/StyleInspector.vala:1080
 msgid "Width"
 msgstr "Larghezza"
 
-#: src/StyleInspector.vala:1096
+#: src/StyleInspector.vala:1113
 msgid "Enable Markup"
 msgstr "Abilita markup"
 
-#: src/StyleInspector.vala:1157 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1174 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "Opzioni di Connessione"
 
-#: src/StyleInspector.vala:1261
+#: src/StyleInspector.vala:1278
 msgid "Arrow Size"
 msgstr "Dimensione freccia"
 
-#: src/StyleInspector.vala:1404
+#: src/StyleInspector.vala:1424
 msgid "Title Font"
 msgstr "Carattere del Titolo"
 
-#: src/StyleInspector.vala:1490
+#: src/StyleInspector.vala:1510
 msgid "Title Width"
 msgstr "Larghezza del Titolo"
 
-#: src/StyleInspector.vala:1542 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1563 src/Templates.vala:61 src/Templates.vala:66
 msgid "Callout Options"
 msgstr "Opzioni di chiamata"
 
-#: src/StyleInspector.vala:1566
+#: src/StyleInspector.vala:1587
 msgid "Text Font"
 msgstr "Carattere del testo"
 
-#: src/StyleInspector.vala:1697
+#: src/StyleInspector.vala:1719
 msgid "Pointer Width"
 msgstr "Larghezza del puntatore"
 
-#: src/StyleInspector.vala:1742
+#: src/StyleInspector.vala:1765
 msgid "Pointer Length"
 msgstr "Lunghezza del puntatore"
 
@@ -3912,14 +3965,16 @@ msgid ""
 "Click to add/remove tag to selected node(s).  Click + Delete to remove node "
 "from tag list.  Double-click to rename tag."
 msgstr ""
-"Fai clic per aggiungere/rimuovere un tag ai nodi selezionati. Fai clic su + Elimina per rimuovere il nodo "
-"dall'elenco dei tag. Fai doppio clic per rinominare il tag."
+"Fai clic per aggiungere/rimuovere un tag ai nodi selezionati. Fai clic su + "
+"Elimina per rimuovere il nodo dall'elenco dei tag. Fai doppio clic per "
+"rinominare il tag."
 
 #: src/TagEditor.vala:77
 msgid ""
 "Click + Delete to remove node from tag list.  Double-click to rename tag."
 msgstr ""
-"Fai clic su + Elimina per rimuovere il nodo dall'elenco dei tag. Fai doppio clic per rinominare il tag."
+"Fai clic su + Elimina per rimuovere il nodo dall'elenco dei tag. Fai doppio "
+"clic per rinominare il tag."
 
 #: src/TagEditor.vala:85
 msgid "Enter tag name"
@@ -3951,8 +4006,8 @@ msgid ""
 "Create, delete, edit mindmap tags.  Add or remove tags in selected node(s).  "
 "Highlight tagged nodes in map."
 msgstr ""
-"Crea, elimina, modifica i tag della mappa mentale. Aggiungi o rimuovi tag nei nodi selezionati. "
-"Evidenzia i nodi taggati nella mappa."
+"Crea, elimina, modifica i tag della mappa mentale. Aggiungi o rimuovi tag "
+"nei nodi selezionati. Evidenzia i nodi taggati nella mappa."
 
 #: src/TagInspector.vala:67
 msgid "Highlight Mode"
@@ -4136,11 +4191,11 @@ msgstr "Eliminare il Tema?"
 msgid "This operation cannot be undone."
 msgstr "Questa operazione non può essere annullata."
 
-#: src/ThemeEditor.vala:236 src/Utils.vala:456
+#: src/ThemeEditor.vala:236 src/Utils.vala:473
 msgid "No"
 msgstr "No"
 
-#: src/ThemeEditor.vala:239 src/Utils.vala:459
+#: src/ThemeEditor.vala:239 src/Utils.vala:476
 msgid "Yes"
 msgstr "Si"
 
@@ -4498,7 +4553,7 @@ msgstr "Rifai "
 msgid "URL"
 msgstr "URL"
 
-#: src/Utils.vala:166
+#: src/Utils.vala:183
 #, c-format
 msgid "error: %s\n"
 msgstr "errore: %s\n"
@@ -4518,9 +4573,6 @@ msgstr "Zoom Effettivo"
 
 #~ msgid "Minder Shortcuts"
 #~ msgstr "Scorciatoie di Minder"
-
-#~ msgid "Import File"
-#~ msgstr "Importa FIle"
 
 #~ msgid "Print File"
 #~ msgstr "Stampa File"
@@ -4973,9 +5025,6 @@ msgstr "Zoom Effettivo"
 #~ msgstr ""
 #~ "Formato per l'esportazione come (utilizzato solo quando si utilizza --"
 #~ "export)"
-
-#~ msgid "Export File"
-#~ msgstr "Esporta File"
 
 #~ msgid "Failed to load sticker XML template: %s"
 #~ msgstr "Impossibile caricare il modello adesivo XML: %s"
