@@ -132,6 +132,12 @@
   <releases>
     <release version="2.0.3" date="2025-12-21">
       <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Adding support for importing Mermaid mindmap files.</li>
+        </ul>
         <p>Changes</p>
         <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
