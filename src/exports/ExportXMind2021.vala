@@ -74,36 +74,39 @@ public class ExportXMind2021 : Export {
     }
   }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportXMind2021() {
     base( "xmind-2021", _( "XMind 2021" ), { ".xmind" }, false, true, false, false );
   }
 
-  /* Exports the given drawing area to the file of the given name */
+  //-------------------------------------------------------------
+  // Exports the given drawing area to the file of the given name
   public override bool export( string fname, MindMap map ) {
 
-    /* Create temporary directory to place contents in */
+    // Create temporary directory to place contents in
     var dir = DirUtils.mkdtemp( "minderXXXXXX" );
 
     var file_list = new FileItems();
 
-    /* Export the meta file */
+    // Export the meta file
     export_meta( map, dir, file_list );
 
-    /* Export the content file */
+    // Export the content file
     export_content( map, dir, file_list );
 
-    /* Export manifest file */
+    // Export manifest file
     export_manifest( dir, file_list );
 
-    /* Archive the contents */
+    // Archive the contents
     archive_contents( dir, fname, file_list );
 
     return( true );
 
   }
 
-  /* Generates the manifest file */
+  //-------------------------------------------------------------
+  // Generates the manifest file
   private bool export_manifest( string dir, FileItems file_list ) {
 
     var root    = new Json.Node( Json.NodeType.OBJECT );
@@ -134,7 +137,8 @@ public class ExportXMind2021 : Export {
 
   }
 
-  /* Generate the main content file from  */
+  //-------------------------------------------------------------
+  // Generate the main content file from given file
   private bool export_content( MindMap map, string dir, FileItems file_list ) {
 
     var root  = new Json.Node( Json.NodeType.ARRAY );
@@ -183,7 +187,7 @@ public class ExportXMind2021 : Export {
       topic.set_string_member( "structureClass", "org.xmind.ui.map.unbalanced" );
     }
 
-    /* Add note, if needed */
+    // Add note, if needed
     if( node.note != "" ) {
       topic.set_object_member( "notes", export_node_note( node ) );
     }
@@ -211,7 +215,7 @@ public class ExportXMind2021 : Export {
 
     }
 
-    /* Add boundaries, if found */
+    // Add boundaries, if found
     if( groups.length > 0 ) {
 
       var boundaries = new Json.Array();
@@ -220,7 +224,7 @@ public class ExportXMind2021 : Export {
 
         var boundary = new Json.Object();
 
-        /* Create boundary */
+        // Create boundary
         boundary.set_string_member( "range", "(%d,%d)".printf( groups.index( i ), groups.index( i ) ) );
         boundary.set_string_member( "title", "" );
         boundary.set_boolean_member( "titleUnedited", true );
@@ -237,7 +241,8 @@ public class ExportXMind2021 : Export {
 
   }
 
-  /* Exports the given node's image */
+  //-------------------------------------------------------------
+  // Exports the given node's image
   private Json.Object? export_node_image( MindMap map, Node node, string dir, FileItems file_list ) {
 
     var image     = new Json.Object();
@@ -246,7 +251,7 @@ public class ExportXMind2021 : Export {
     var src       = Path.build_filename( "resources", Filename.display_basename( img_name ) );
     var parts     = src.split( "." );
 
-    /* Copy the image file to the XMind bundle */
+    // Copy the image file to the XMind bundle
     DirUtils.create( Path.build_filename( dir, "resources" ), 0755 );
     var lfile = File.new_for_path( Path.build_filename( dir, src ) );
     var rfile = File.new_for_path( img_name );
@@ -269,7 +274,8 @@ public class ExportXMind2021 : Export {
 
   }
 
-  /* Exports a node note */
+  //-------------------------------------------------------------
+  // Exports a node note
   private Json.Object export_node_note( Node node ) {
 
     var note = new Json.Object();
@@ -302,7 +308,8 @@ public class ExportXMind2021 : Export {
 
   }
 
-  /* Exports node styling information */
+  //-------------------------------------------------------------
+  // Exports node styling information
   private Json.Object export_node_style( int level ) {
 
     var style = StyleInspector.styles.get_style_for_level( level, null );
@@ -311,7 +318,7 @@ public class ExportXMind2021 : Export {
 
     topic.set_object_member( "properties", props );
 
-    /* Node border shape */
+    // Node border shape
     switch( style.node_border.name() ) {
       case "rounded"    :  props.set_string_member( "shape-class", "org.xmind.topicShape.roundedRect" );  break;
       case "underlined" :  props.set_string_member( "shape-class", "org.xmind.topicShape.underline" );    break;
@@ -448,7 +455,7 @@ public class ExportXMind2021 : Export {
         node.set_string_member( "title", conn.title.text.text );
       }
 
-      /* Create style */
+      // Create style
       /*
       Xml.Node* style = new Xml.Node( null, "style" );
       Xml.Node* props = new Xml.Node( null, "relationship-properties" );
@@ -472,7 +479,8 @@ public class ExportXMind2021 : Export {
 
   }
 
-  /* Exports the contents of the meta file */
+  //-------------------------------------------------------------
+  // Exports the contents of the meta file
   private bool export_meta( MindMap map, string dir, FileItems file_list ) {
 
     var root    = new Json.Node( Json.NodeType.OBJECT );
@@ -502,7 +510,8 @@ public class ExportXMind2021 : Export {
 
   }
 
-  /* Write the contents as a zip file */
+  //-------------------------------------------------------------
+  // Write the contents as a zip file
   private void archive_contents( string dir, string outname, FileItems files ) {
 
     GLib.File pwd = GLib.File.new_for_path( dir );
@@ -555,17 +564,18 @@ public class ExportXMind2021 : Export {
 
   // --------------------------------------------------------------------------------------
 
-  /* Main method used to import an XMind mind-map into Minder */
+  //-------------------------------------------------------------
+  // Main method used to import an XMind mind-map into Minder
   public override bool import( string fname, MindMap map ) {
 
     stdout.printf( "In XMind 2021 import\n" );
 
-    /* Create temporary directory to place contents in */
+    // Create temporary directory to place contents in
     var dir = DirUtils.mkdtemp( "minderXXXXXX" );
 
     stdout.printf( "In XMind2021 import, dir: %s\n", dir );
 
-    /* Unarchive the files */
+    // Unarchive the files
     unarchive_contents( fname, dir );
 
     stdout.printf( "After unarchiving contents, dir: %s\n", dir );
@@ -579,7 +589,7 @@ public class ExportXMind2021 : Export {
 
     import_content( map, content, dir, id_map );
 
-    /* Update the drawing area and save the result */
+    // Update the drawing area and save the result
     map.queue_draw();
     map.auto_save();
 
@@ -591,7 +601,7 @@ public class ExportXMind2021 : Export {
 
     var parser = new Json.Parser();
 
-    /* Read in the contents of the XMind 2021 file */
+    // Read in the contents of the XMind 2021 file
     try {
       parser.load_from_file( fname );
     } catch( GLib.Error e ) {
@@ -639,7 +649,8 @@ public class ExportXMind2021 : Export {
     }
   }
 
-  /* Import a sheet */
+  //-------------------------------------------------------------
+  // Import a sheet
   private void import_sheet( MindMap map, Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
 
     unowned var theme = get_json_object( obj, "theme" );
@@ -678,7 +689,7 @@ public class ExportXMind2021 : Export {
       node = map.model.create_child_node( parent );
     }
 
-    /* Handle the ID */
+    // Handle the ID
     var id = get_json_string( obj, "id" );
     if( id != "" ) {
       id_map.set( id, new IdObject.for_node( node ) );
@@ -886,7 +897,7 @@ public class ExportXMind2021 : Export {
       var lwidth = get_json_string( props, "line-width" );
       var fill   = get_json_string( props, "svg:file" );
 
-      /* Node shape */
+      // Node shape
       if( shape != "" ) {
         var border = "squared";
         switch( shape ) {
@@ -899,7 +910,7 @@ public class ExportXMind2021 : Export {
         }
       }
 
-      /* Border width */
+      // Border width
       if( bwidth != "" ) {
         int width = 1;
         if( bwidth.scanf( "%dpt", &width ) == 1 ) {
@@ -909,7 +920,7 @@ public class ExportXMind2021 : Export {
         }
       }
 
-      /* Link type */
+      // Link type
       if( line != "" ) {
         var type = "straight";
         switch( line ) {
@@ -929,7 +940,7 @@ public class ExportXMind2021 : Export {
         }
       }
 
-      /* Link width */
+      // Link width
       if( lwidth != "" ) {
         int width = 1;
         if( lwidth.scanf( "%dpt", &width ) == 1 ) {
@@ -939,7 +950,7 @@ public class ExportXMind2021 : Export {
         }
       }
 
-      /* Fill color */
+      // Fill color
       if( fill != "" ) {
         foreach( Style style in styles ) {
           style.node_fill = true;
@@ -950,7 +961,8 @@ public class ExportXMind2021 : Export {
 
   }
 
-  /* Unarchives all of the files within the given XMind 8 file */
+  //-------------------------------------------------------------
+  // Unarchives all of the files within the given XMind 2021 file
   private void unarchive_contents( string fname, string dir ) {
 
     Archive.Read archive = new Archive.Read();
@@ -967,7 +979,7 @@ public class ExportXMind2021 : Export {
     extractor.set_options( flags );
     extractor.set_standard_lookup();
 
-    /* Open the file for reading */
+    // Open the file for reading
     if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
       error( "Error: %s (%d)", archive.error_string(), archive.errno() );
     }
@@ -979,7 +991,7 @@ public class ExportXMind2021 : Export {
       var file = File.new_for_path( Path.build_filename( dir, entry.pathname() ) );
       entry.set_pathname( file.get_path() );
 
-      /* Read from the archive and write the files to disk */
+      // Read from the archive and write the files to disk
       if( extractor.write_header( entry ) != Archive.Result.OK ) {
         continue;
       }
@@ -995,7 +1007,7 @@ public class ExportXMind2021 : Export {
 
     }
 
-    /* Close the archive */
+    // Close the archive
     if( archive.close () != Archive.Result.OK) {
       error( "Error: %s (%d)", archive.error_string(), archive.errno() );
     }

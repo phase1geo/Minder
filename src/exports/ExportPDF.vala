@@ -23,43 +23,45 @@ using Cairo;
 
 public class ExportPDF : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportPDF() {
     base( "pdf", _( "PDF" ), { ".pdf" }, true, false, false, false );
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Exports the given mindmap in PDF format.
   public override bool export( string fname, MindMap map ) {
 
-    /* Get the width and height of the page */
+    // Get the width and height of the page
     double page_width  = 8.5 * 72;
     double page_height = 11  * 72;
     double margin      = 0.5 * 72;
 
-    /* Create the drawing surface */
+    // Create the drawing surface
     var surface = new PdfSurface( fname, page_width, page_height );
     var context = new Context( surface );
 
-    /* Get the rectangle holding the entire document */
+    // Get the rectangle holding the entire document
     double x, y, w, h;
     map.model.document_rectangle( out x, out y, out w, out h );
 
-    /* Calculate the required scaling factor to get the document to fit */
+    // Calculate the required scaling factor to get the document to fit
     double width  = (page_width  - (2 * margin)) / w;
     double height = (page_height - (2 * margin)) / h;
     double sf     = (width < height) ? width : height;
 
-    /* Scale and translate the image */
+    // Scale and translate the image
     context.scale( sf, sf );
     context.translate( ((0 - x) + (margin / sf)), ((0 - y) + (margin / sf)) );
 
-    /* Draw background */
+    // Draw background
     map.canvas.get_style_context().render_background( context, x, y, w, h );
 
-    /* Recreate the image */
+    // Recreate the image
     map.model.draw_all( context, true, false );
 
-    /* Draw the page to the PDF file */
+    // Draw the page to the PDF file
     context.show_page();
 
     return( true );

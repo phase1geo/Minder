@@ -23,12 +23,14 @@ using GLib;
 
 public class ExportOutliner : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportOutliner() {
     base( "outliner", _( "Outliner" ), { ".outliner" }, true, true, false, false );
   }
 
-  /* Exports the given drawing area to the file of the given name */
+  //-------------------------------------------------------------
+  // Exports the given drawing area to the file of the given name
   public override bool export( string fname, MindMap map ) {
     Xml.Doc*  doc      = new Xml.Doc( "1.0" );
     Xml.Node* outliner = new Xml.Node( null, "outliner" );
@@ -48,7 +50,8 @@ public class ExportOutliner : Export {
     return( true );
   }
 
-  /* Returns true if tasks should be displayed in Outliner */
+  //-------------------------------------------------------------
+  // Returns true if tasks should be displayed in Outliner
   private bool show_tasks( MindMap map ) {
     var nodes = map.get_nodes();
     for( int i=0; i<nodes.length; i++ ) {
@@ -59,7 +62,8 @@ public class ExportOutliner : Export {
     return( false );
   }
 
-  /* Outputs the theme to use */
+  //-------------------------------------------------------------
+  // Outputs the theme to use
   private Xml.Node* export_theme( MindMap map ) {
     Xml.Node* node = new Xml.Node( null, "theme" );
     var theme = map.get_theme();
@@ -67,7 +71,8 @@ public class ExportOutliner : Export {
     return( node );
   }
 
-  /* Outputs the top-level nodes */
+  //-------------------------------------------------------------
+  // Outputs the top-level nodes
   private Xml.Node* export_top_nodes( MindMap map ) {
     Xml.Node* n = new Xml.Node( null, "nodes" );
     var nodes = map.get_nodes();
@@ -77,7 +82,8 @@ public class ExportOutliner : Export {
     return( n );
   }
 
-  /* Outputs a single node */
+  //-------------------------------------------------------------
+  // Outputs a single node
   private Xml.Node* export_node( Node node ) {
     Xml.Node* n = new Xml.Node( null, "node" );
     n->set_prop( "expanded", (!node.folded).to_string() );
@@ -94,7 +100,8 @@ public class ExportOutliner : Export {
     return( n );
   }
 
-  /* Outputs all of the children nodes of the given node */
+  //-------------------------------------------------------------
+  // Outputs all of the children nodes of the given node
   private Xml.Node* export_nodes( Node node ) {
     Xml.Node* n = new Xml.Node( null, "nodes" );
     for( int i=0; i<node.children().length; i++ ) {
@@ -103,7 +110,8 @@ public class ExportOutliner : Export {
     return( n );
   }
 
-  /* Exports the name of the given node */
+  //-------------------------------------------------------------
+  // Exports the name of the given node
   private Xml.Node* export_name( Node node, CanvasText ct ) {
     Xml.Node* n     = new Xml.Node( null, "name" );
     Xml.Node* t     = new Xml.Node( null, "text" );
@@ -113,7 +121,8 @@ public class ExportOutliner : Export {
     return( n );
   }
 
-  /* Exports the note of the given node */
+  //-------------------------------------------------------------
+  // Exports the note of the given node
   private Xml.Node* export_note( string note ) {
     Xml.Node* n = new Xml.Node( null, "note" );
     Xml.Node* t = new Xml.Node( null, "text" );
@@ -125,32 +134,31 @@ public class ExportOutliner : Export {
 
   //----------------------------------------------------------------------------
 
-  /*
-   Reads the contents of an Outliner file and creates a new document based on
-   the stored information.
-  */
+  //-------------------------------------------------------------
+  // Reads the contents of an Outliner file and creates a new
+  // document based on the stored information.
   public override bool import( string fname, MindMap map ) {
 
-    /* Read in the contents of the OPML file */
+    // Read in the contents of the OPML file
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
     if( doc == null ) {
       return( false );
     }
 
-    /* Get the dimensions of the window */
+    // Get the dimensions of the window
     int width, height;
     map.get_saved_dimensions( out width, out height );
 
-    /* Create the root node */
+    // Create the root node
     var root = new Node.with_name( map, map.doc.label, map.layouts.get_default() );
     root.style = map.global_style;
     root.posx = (width  / 2) - 30;
     root.posy = (height / 2) - 10;
 
-    /* Add the root node */
+    // Add the root node
     map.get_nodes().append_val( root );
 
-    /* Load the contents of the file */
+    // Load the contents of the file
     for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
@@ -160,7 +168,7 @@ public class ExportOutliner : Export {
       }
     }
 
-    /* Delete the OPML document */
+    // Delete the OPML document
     delete doc;
 
     return( true );

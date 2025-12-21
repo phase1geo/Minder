@@ -39,12 +39,14 @@ public class NodeHier {
 
 public class ExportText : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportText() {
     base( "text", _( "PlainText" ), { ".txt" }, true, true, false, true );
   }
 
-  /* Exports the given drawing area to the file of the given name */
+  //-------------------------------------------------------------
+  // Exports the given drawing area to the file of the given name
   public override bool export( string fname, MindMap map ) {
 
     var  file   = File.new_for_path( fname );
@@ -63,7 +65,8 @@ public class ExportText : Export {
 
   }
 
-  /* Draws each of the top-level nodes */
+  //-------------------------------------------------------------
+  // Draws each of the top-level nodes
   public string export_top_nodes( MindMap map ) {
 
     var value = "";
@@ -81,12 +84,13 @@ public class ExportText : Export {
 
   }
 
-  /* Draws the given node and its children to the output stream */
+  //-------------------------------------------------------------
+  // Draws the given node and its children to the output stream
   public string export_node( MindMap map, Node node, string prefix = "\t" ) {
 
     string value = prefix + (node.is_in_sequence() ? "%d. ".printf( node.index() + 1 ) : "- ");
 
-    /* Add the task information, if necessary */
+    // Add the task information, if necessary
     if( node.is_task() ) {
       if( node.is_task_done() ) {
         value += "[x] ";
@@ -95,7 +99,7 @@ public class ExportText : Export {
       }
     }
 
-    /* Add the node title */
+    // Add the node title
     value += node.name.text.text.chomp().replace( "\n", "\n%s  ".printf( prefix ) )  + "\n";
 
     if( node.image != null ) {
@@ -105,12 +109,12 @@ public class ExportText : Export {
       }
     }
 
-    /* Add the node note, if specified */
+    // Add the node note, if specified
     if( node.note != "" ) {
       value += prefix + "  > " + node.note.chomp().replace( "\n", "\n%s  > ".printf( prefix ) ) + "\n";
     }
 
-    /* Add the children */
+    // Add the children
     var children = node.children();
     for( int i=0; i<children.length; i++ ) {
       value += export_node( map, children.index( i ), prefix + "\t" );
@@ -120,9 +124,12 @@ public class ExportText : Export {
 
   }
 
-  /****************************************************************************/
+  //-------------------------------------------------------------
+  // IMPORT
+  //-------------------------------------------------------------
 
-  /* Imports a text file */
+  //-------------------------------------------------------------
+  // Imports a text file into the given mindmap.
   public override bool import( string fname, MindMap map ) {
 
     try {
@@ -132,10 +139,10 @@ public class ExportText : Export {
       size_t          len;
       Array<Node>     nodes;
 
-      /* Read the entire file contents */
+      // Read the entire file contents
       var str = dis.read_upto( "\0", 1, out len ) + "\0";
 
-      /* Import the text */
+      // Import the text
       import_text( str, map.settings.get_int( "quick-entry-spaces-per-tab" ), map, false );
 
       map.queue_draw();
@@ -151,12 +158,14 @@ public class ExportText : Export {
 
   }
 
-  /* Creates a new node from the given information and attaches it to the specified parent node */
+  //-------------------------------------------------------------
+  // Creates a new node from the given information and attaches
+  // it to the specified parent node
   public Node make_node( MindMap map, string task, string name ) {
 
     var node = new Node.with_name( map, name, map.layouts.get_default() );
 
-    /* Add the task information, if necessary */
+    // Add the task information, if necessary
     if( task != "" ) {
       node.enable_task( true );
       if( (task == "x") || (task == "X") ) {
@@ -181,7 +190,8 @@ public class ExportText : Export {
     }
   }
 
-  /* Append the given string to the note */
+  //-------------------------------------------------------------
+  // Append the given string to the note
   public void append_note( Node node, string str ) {
     node.note = "%s\n%s".printf( node.note, str ).strip();
   }
@@ -206,7 +216,7 @@ public class ExportText : Export {
 
         MatchInfo match_info;
 
-        /* If we found some useful text, include it here */
+        // If we found some useful text, include it here
         if( re.match( line, 0, out match_info ) ) {
 
           var spaces = match_info.fetch( 1 ).replace( "\t", tspace ).length;
@@ -214,7 +224,7 @@ public class ExportText : Export {
           var task   = match_info.fetch( 5 );
           var str    = match_info.fetch( 6 );
 
-          /* Add note */
+          // Add note
           if( str.strip() == "" ) continue;
           if( bullet == ">" ) {
             if( node != null ) {
@@ -222,20 +232,20 @@ public class ExportText : Export {
               stack.index( stack.length - 1 ).last_line = lnum;
             }
 
-          /* Add image */
+          // Add image
           } else if( bullet == "!" ) {
             if( node != null ) {
               var img = new NodeImage.from_uri( map.image_manager, str, 200 );
               node.set_image( map.image_manager, img );
             }
 
-          /* If we are starting a new node, create it and add it to the stack */
+          // If we are starting a new node, create it and add it to the stack
           } else if( bullet != "" ) {
             node = make_node( map, task, str );
             var hier = new NodeHier( spaces, node, Regex.match_simple( "\\d+\\.", bullet ), lnum, lnum );
             stack.append_val( hier );
 
-          /* Otherwise, we need to append a new line to the current title */
+          // Otherwise, we need to append a new line to the current title
           } else if( node != null ) {
             append_title( node, str );
             stack.index( stack.length - 1 ).last_line = lnum;
@@ -257,7 +267,8 @@ public class ExportText : Export {
 
   }
 
-  /* Imports the given text string */
+  //-------------------------------------------------------------
+  // Imports the given text string
   public void import_text( string txt, int tab_spaces, MindMap map, bool replace, Array<Node>? nodes = null ) {
 
     var stack = new Array<NodeHier>();
@@ -282,15 +293,15 @@ public class ExportText : Export {
       var node   = stack.index( i ).node;
       var in_seq = stack.index( i ).in_sequence;
 
-      /* Add sibling node */
+      // Add sibling node
       if( spaces == stack.index( i - 1 ).spaces ) {
         parent_node( map, node, in_seq, stack.index( i - 1 ).node.parent );
 
-      /* Add child node */
+      // Add child node
       } else if( spaces > stack.index( i - 1 ).spaces ) {
         parent_node( map, node, in_seq, stack.index( i - 1 ).node );
 
-      /* Add ancestor node */
+      // Add ancestor node
       } else {
         var parent = i - 1;
         while( (parent >= 0) && (spaces < stack.index( parent ).spaces) ) {

@@ -25,33 +25,36 @@ using Gtk;
 
 public class ExportImage : Export {
 
+  //-------------------------------------------------------------
+  // Constructor
   public ExportImage( string type, string label, string[] extensions ) {
     base( type, label, extensions, true, false, false, true );
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Exports the mindmap as an export. 
   public override bool export( string fname, MindMap map ) {
 
     var scale = get_zoom( "zoom" ) / 100.0;
 
-    /* Get the rectangle holding the entire document */
+    // Get the rectangle holding the entire document
     double x, y, w, h;
     map.model.document_rectangle( out x, out y, out w, out h );
 
     w *= scale;
     h *= scale;
 
-    /* Create the drawing surface */
+    // Create the drawing surface
     var surface = new ImageSurface( Format.RGB24, ((int)w + 20), ((int)h + 20) );
     var context = new Context( surface );
 
-    /* Recreate the image */
+    // Recreate the image
     map.canvas.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
     context.translate( (10 - x), (10 - y) );
     context.scale( scale, scale );
     map.model.draw_all( context, true, false );
 
-    /* Write the pixbuf to the file */
+    // Write the pixbuf to the file
     var pixbuf = pixbuf_get_from_surface( surface, 0, 0, ((int)w + 20), ((int)h + 20) );
 
     string[] option_keys   = {};
@@ -81,6 +84,8 @@ public class ExportImage : Export {
 
   }
 
+  //-------------------------------------------------------------
+  // Adds the image settings to the grid.
   public override void add_settings( Grid grid ) {
     add_setting_zoom( "zoom", grid, _( "Zoom %" ), null, 50, 500, 25, 100 );
     switch( name ) {
@@ -88,11 +93,14 @@ public class ExportImage : Export {
     }
   }
 
+  //-------------------------------------------------------------
+  // Adds the settings pertaining to JPEG
   private void add_settings_jpeg( Grid grid ) {
     add_setting_scale( "quality", grid, _( "Quality" ), null, 0, 100, 1, 90 );
   }
 
-  /* Save the settings */
+  //-------------------------------------------------------------
+  // Save the settings
   public override void save_settings( Xml.Node* node ) {
 
     node->set_prop( "zoom", get_zoom( "zoom" ).to_string() );
@@ -103,12 +111,15 @@ public class ExportImage : Export {
 
   }
 
+  //-------------------------------------------------------------
+  // Save the JPEG settings
   private void save_settings_jpeg( Xml.Node* node ) {
     var value = get_scale( "quality" );
     node->set_prop( "quality", value.to_string() );
   }
 
-  /* Load the settings */
+  //-------------------------------------------------------------
+  // Load the settings
   public override void load_settings( Xml.Node* node ) {
 
     var z = node->get_prop( "zoom" );
@@ -122,6 +133,8 @@ public class ExportImage : Export {
 
   }
 
+  //-------------------------------------------------------------
+  // Loads the JPEG settings
   private void load_settings_jpeg( Xml.Node* node ) {
     var q = node->get_prop( "quality" );
     if( q != null ) {

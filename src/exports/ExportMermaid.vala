@@ -311,6 +311,9 @@ public class ExportMermaid : Export {
   // IMPORT
   //-------------------------------------------------------------
 
+  //-------------------------------------------------------------
+  // Main import method.  Takes the name of a Mermaid file, parses
+  // it, and populates the given mindmap.
   public override bool import( string fname, MindMap map ) {
 
     try {
@@ -342,7 +345,8 @@ public class ExportMermaid : Export {
   }
 
   //-------------------------------------------------------------
-  // Imports
+  // Imports the contents of the Mermaid file and populates the
+  // given mindmap.  We only parse Mermaid mindmap data.
   private bool import_text( string txt, MindMap map ) {
 
     var stack = new Array<NodeHier>();

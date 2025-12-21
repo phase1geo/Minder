@@ -21,12 +21,14 @@
 
 public class ExportYed : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportYed() {
     base( "yed", _( "Yed" ), { ".graphml" }, true, false, false, true );
   }
 
-  /* Exports the given drawing area to the file of the given name */
+  //-------------------------------------------------------------
+  // Exports the given drawing area to the file of the given name
   public override bool export( string fname, MindMap map ) {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "graphml" );
@@ -54,7 +56,8 @@ public class ExportYed : Export {
     return( true );
   }
 
-  /* Returns a single key populated with the specified information */
+  //-------------------------------------------------------------
+  // Returns a single key populated with the specified information
   private Xml.Node* export_key_attr( string id, string for_item, string attr_name, string attr_type ) {
     Xml.Node* n = new Xml.Node( null, "key" );
     n->new_prop( "id", id );
@@ -64,7 +67,8 @@ public class ExportYed : Export {
     return( n );
   }
 
-  /* Returns a single key populated with the specified information */
+  //-------------------------------------------------------------
+  // Returns a single key populated with the specified information
   private Xml.Node* export_key_yfiles( string id, string for_item, string yfiles_type ) {
     Xml.Node* n = new Xml.Node( null, "key" );
     n->new_prop( "id", id );
@@ -73,7 +77,8 @@ public class ExportYed : Export {
     return( n );
   }
 
-  /* Adds all of the keys to the root node */
+  //-------------------------------------------------------------
+  // Adds all of the keys to the root node
   private void export_keys( Xml.Node* root ) {
     root->add_child( export_key_attr(   "d5", "node", "description", "string" ) );
     root->add_child( export_key_yfiles( "d6", "node", "nodegraphics" ) );
@@ -82,7 +87,8 @@ public class ExportYed : Export {
     root->add_child( export_key_yfiles( "d10", "edge", "edgegraphics" ) );
   }
 
-  /* Exports each tree as a separate graph */
+  //-------------------------------------------------------------
+  // Exports each tree as a separate graph
   private void export_graphs( Xml.Node* root, Xml.Ns* yns, MindMap map ) {
 
     Xml.Node* graph = new Xml.Node( null, "graph" );
@@ -90,12 +96,12 @@ public class ExportYed : Export {
     graph->new_prop( "id", "G0" );
     root->add_child( graph );
 
-    /* Add nodes */
+    // Add nodes
     for( int i=0; i<map.get_nodes().length; i++ ) {
       export_node_edge( graph, yns, map.get_nodes().index( i ), map.get_theme() );
     }
 
-    /* Add connections */
+    // Add connections
     export_connections( graph, yns, map.connections.connections, map.get_theme() );
 
     Xml.Node* d7 = new Xml.Node( null, "data" );
@@ -227,7 +233,8 @@ public class ExportYed : Export {
 
   }
 
-  /* Adds the node link as an edge */
+  //-------------------------------------------------------------
+  // Adds the node link as an edge
   private Xml.Node* export_link( Node node, Xml.Ns* yns ) {
     if( node.is_root() ) return( null );
     Xml.Node* e = new Xml.Node( null, "edge" );
@@ -248,7 +255,8 @@ public class ExportYed : Export {
 
   }
 
-  /* Adds a node along with its edge */
+  //-------------------------------------------------------------
+  // Adds a node along with its edge
   private void export_node_edge( Xml.Node* graph, Xml.Ns* yns, Node node, Theme theme ) {
     graph->add_child( export_node( node, theme, yns ) );
     if( !node.is_root() ) {
@@ -259,7 +267,8 @@ public class ExportYed : Export {
     }
   }
 
-  /* Create connection */
+  //-------------------------------------------------------------
+  // Create connection
   private void export_connections( Xml.Node* graph, Xml.Ns* yns, Array<Connection> conns, Theme theme ) {
 
     for( int i=0; i<conns.length; i++ ) {
