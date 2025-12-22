@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -23,31 +23,33 @@ using Cairo;
 
 public class ExportSVG : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportSVG() {
     base( "svg", _( "SVG" ), { ".svg" }, true, false, false, false );
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Exports the given mindmap in SVG format. 
   public override bool export( string fname, MindMap map ) {
 
-    /* Get the rectangle holding the entire document */
+    // Get the rectangle holding the entire document
     double x, y, w, h;
     map.model.document_rectangle( out x, out y, out w, out h );
 
-    /* Create the drawing surface */
+    // Create the drawing surface
     var surface = new SvgSurface( fname, ((int)w + 20), ((int)h + 20) );
     var context = new Context( surface );
 
     surface.restrict_to_version( SvgVersion.VERSION_1_1 );
 
-    /* Translate the image */
+    // Translate the image
     context.translate( (10 - x), (10 - y) );
 
-    /* Recreate the image */
+    // Recreate the image
     map.model.draw_all( context, true, false );
 
-    /* Draw the page to the PDF file */
+    // Draw the page to the PDF file
     context.show_page();
 
     return( true );

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2020-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -24,12 +24,14 @@ using Gee;
 
 public class ExportFileSystem : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportFileSystem() {
     base( "fs", _( "File System" ), {"*"}, true, true, true, false );
   }
 
-  /* Performs export to the given filename */
+  //-------------------------------------------------------------
+  // Performs export to the given filename
   public override bool export( string dname, MindMap map ) {
     if( DirUtils.create( dname, 0775 ) == -1 ) {
       return( false );
@@ -42,7 +44,8 @@ public class ExportFileSystem : Export {
     return( true );
   }
 
-  /* Exports the given node contents to the given directory path */
+  //-------------------------------------------------------------
+  // Exports the given node contents to the given directory path
   private bool export_node( string dname, Node node ) {
     var path = Path.build_filename( dname, node.name.text.text );
     if( node.is_leaf() ) {
@@ -64,13 +67,15 @@ public class ExportFileSystem : Export {
     return( true );
   }
 
-  /* Imports given filename into drawing area */
+  //-------------------------------------------------------------
+  // Imports given filename into drawing area
   public override bool import( string dname, MindMap map ) {
     var node = map.model.create_root_node( Path.get_basename( dname ) );
     return( import_node( dname, node, map ) );
   }
 
-  /* Imports the given directory as a node tree of the given parent */
+  //-------------------------------------------------------------
+  // Imports the given directory as a node tree of the given parent
   private bool import_node( string dname, Node parent, MindMap map ) {
     if( FileUtils.test( dname, FileTest.IS_DIR ) ) {
       var dir = Dir.open( dname, 0 );
@@ -86,17 +91,20 @@ public class ExportFileSystem : Export {
     return( true );
   }
 
-  /* Adds settings to the export dialog page */
+  //-------------------------------------------------------------
+  // Adds settings to the export dialog page
   public override void add_settings( Grid grid ) {
     // TBD
   }
 
-  /* Saves the settings */
+  //-------------------------------------------------------------
+  // Saves the settings
   public override void save_settings( Xml.Node* node ) {
     // TBD
   }
 
-  /* Loads the settings */
+  //-------------------------------------------------------------
+  // Loads the settings
   public override void load_settings( Xml.Node* node ) {
     // TBD
   } 

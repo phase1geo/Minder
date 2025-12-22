@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -23,34 +23,34 @@ using Archive;
 
 public class ExportPortableMinder : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportPortableMinder() {
     base( "portable-minder", _( "Portable Minder" ), { ".pminder" }, true, true, false, false );
   }
 
-  /*
-   Exports the current mindmap along with all images to a single file that can
-   be imported in a different computer/location.
-  */
+  //-------------------------------------------------------------
+  // Exports the current mindmap along with all images to a single
+  // file that can be imported in a different computer/location.
   public override bool export( string fname, MindMap map ) {
 
-    /* Create the tar.gz archive named according the the first argument */
+    // Create the tar.gz archive named according the the first argument
     Archive.Write archive = new Archive.Write ();
     archive.add_filter_gzip();
     archive.set_format_pax_restricted();
     archive.open_filename( fname );
 
-    /* Add the Minder file to the archive */
+    // Add the Minder file to the archive
     archive_file( archive, map.doc.filename );
 
-    /* Add the images */
+    // Add the images
     var image_ids = map.image_manager.get_ids();
     for( int i=0; i<image_ids.length; i++ ) {
       var id = image_ids.index( i );
       archive_file( archive, map.image_manager.get_file( id ), id );
     }
 
-    /* Close the archive */
+    // Close the archive
     if( archive.close() != Archive.Result.OK ) {
       error( "Error : %s (%d)", archive.error_string(), archive.errno() );
     }
@@ -59,7 +59,8 @@ public class ExportPortableMinder : Export {
 
   }
 
-  /* Adds the given file to the archive */
+  //-------------------------------------------------------------
+  // Adds the given file to the archive
   public bool archive_file( Archive.Write archive, string fname, int? image_id = null ) {
 
     try {
@@ -69,7 +70,7 @@ public class ExportPortableMinder : Export {
       var input_stream      = file.read();
       var data_input_stream = new DataInputStream( input_stream );
 
-      /* Add an entry to the archive */
+      // Add an entry to the archive
       var entry = new Archive.Entry();
       entry.set_pathname( file.get_basename() );
       entry.set_size( (Archive.int64_t)file_info.get_size() );
@@ -85,7 +86,7 @@ public class ExportPortableMinder : Export {
         return( false );
       }
 
-      /* Add the actual content of the file */
+      // Add the actual content of the file
       size_t bytes_read;
       uint8[] buffer = new uint8[64];
       while( data_input_stream.read_all( buffer, out bytes_read ) ) {
@@ -106,10 +107,10 @@ public class ExportPortableMinder : Export {
 
   //----------------------------------------------------------------------------
 
-  /*
-   Converts the portable Minder file into the Minder document and moves all
-   stored images to the ImageManager on the local computer.
-  */
+  //-------------------------------------------------------------
+  // Converts the portable Minder file into the Minder document
+  // and moves all stored images to the ImageManager on the local
+  // computer.
   public override bool import( string fname, MindMap map ) {
 
     Archive.Read archive = new Archive.Read();
@@ -126,7 +127,7 @@ public class ExportPortableMinder : Export {
     extractor.set_options( flags );
     extractor.set_standard_lookup();
 
-    /* Create the image directory */
+    // Create the image directory
     string img_dir = ".";
     try {
       img_dir = DirUtils.make_tmp( "minder-images-XXXXXX" );
@@ -134,7 +135,7 @@ public class ExportPortableMinder : Export {
       critical( e.message );
     }
 
-    /* Open the portable Minder file for reading */
+    // Open the portable Minder file for reading
     if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
       error( "Error: %s (%d)", archive.error_string(), archive.errno() );
     }
@@ -144,10 +145,8 @@ public class ExportPortableMinder : Export {
 
     while( archive.next_header( out entry ) == Archive.Result.OK ) {
 
-      /*
-       We will need to modify the entry pathname so the file is written to the
-       proper location.
-      */
+      // We will need to modify the entry pathname so the file is written to the
+      // proper location.
       if( entry.pathname().has_suffix( ".minder" ) ) {
         entry.set_pathname( fname.substring( 0, (fname.length - 8) ) + ".minder" );
         minder_path = entry.pathname();
@@ -156,7 +155,7 @@ public class ExportPortableMinder : Export {
         entry.set_pathname( file.get_path() );
       }
 
-      /* Read from the archive and write the files to disk */
+      // Read from the archive and write the files to disk
       if( extractor.write_header( entry ) != Archive.Result.OK ) {
         continue;
       }
@@ -169,7 +168,7 @@ public class ExportPortableMinder : Export {
         }
       }
 
-      /* If the file was an image file, make sure it gets added to the image manager */
+      // If the file was an image file, make sure it gets added to the image manager
       if( !entry.pathname().has_suffix( ".minder" ) ) {
         string name;
         void*  value;
@@ -183,15 +182,15 @@ public class ExportPortableMinder : Export {
 
     }
 
-    /* Close the archive */
+    // Close the archive
     if( archive.close () != Archive.Result.OK) {
       error( "Error: %s (%d)", archive.error_string(), archive.errno() );
     }
 
-    /* Delete the image directory */
+    // Delete the image directory
     DirUtils.remove( img_dir );
 
-    /* Finally, load the minder file and re-save it */
+    // Finally, load the minder file and re-save it
     map.doc.load( true );
     map.auto_save();
 

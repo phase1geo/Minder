@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -82,7 +82,8 @@ public class ExportOrgMode : Export {
     return( get_bool( "indent-mode" ) ? (prefix + "  ") : "" );
   }
 
-  /* Draws each of the top-level nodes */
+  //-------------------------------------------------------------
+  // Draws each of the top-level nodes
   private string export_top_nodes( MindMap map ) {
 
     var retval = "";
@@ -111,7 +112,8 @@ public class ExportOrgMode : Export {
 
   }
 
-  /* Draws the given node and its children to the output stream */
+  //-------------------------------------------------------------
+  // Draws the given node and its children to the output stream
   private string export_node( Node node, string prefix ) {
 
     var retval = "";

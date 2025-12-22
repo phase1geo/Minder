@@ -370,6 +370,29 @@ public class MindMap {
     // Clear the selection
     _selected.clear();
 
+    // If we are a new mindmap, populate our global style
+    switch( _settings.get_int( "default-global-style" ) ) {
+      case 0  :
+        _global_style.copy( StyleInspector.styles.get_global_style() );
+        break;
+      case 1  :
+        if( StyleInspector.last_global_style != null ) {
+          _global_style.copy( StyleInspector.last_global_style );
+        } else {
+          _global_style.copy( StyleInspector.styles.get_global_style() );
+        }
+        break;
+      default :      
+        var template = _win.templates.get_template( TemplateType.STYLE_GENERAL, Minder.settings.get_string( "default-global-style-name" ) );
+        if( template != null ) {
+          var style_template = (StyleTemplate)template;
+          _global_style.copy( style_template.style );
+        } else {
+          _global_style.copy( StyleInspector.styles.get_global_style() );
+        }
+        break;
+    }
+
     // Initialize variables
     // TBD
 
@@ -399,35 +422,12 @@ public class MindMap {
 
     initialize();
 
-    // If we are a new mindmap, populate our global style
-    switch( _settings.get_int( "default-global-style" ) ) {
-      case 0  :
-        _global_style.copy( StyleInspector.styles.get_global_style() );
-        break;
-      case 1  :
-        if( StyleInspector.last_global_style != null ) {
-          _global_style.copy( StyleInspector.last_global_style );
-        } else {
-          _global_style.copy( StyleInspector.styles.get_global_style() );
-        }
-        break;
-      default :      
-        var template = _win.templates.get_template( TemplateType.STYLE_GENERAL, Minder.settings.get_string( "default-global-style-name" ) );
-        if( template != null ) {
-          var style_template = (StyleTemplate)template;
-          _global_style.copy( style_template.style );
-        } else {
-          _global_style.copy( StyleInspector.styles.get_global_style() );
-        }
-        break;
-    }
-
     // Add tags from preferences
     _model.tags.load_variant( Minder.settings.get_value( "starting-tags" ) );
     reload_tags();
 
     // Create and add the first root node after idle to allow the window size to be known
-    Idle.add(() => {
+    _canvas.size_ready.connect((w, h) => {
       var n = _model.create_root_node( _( "Main Idea" ) );
       set_current_node( n );
       _model.set_node_mode( n, NodeMode.EDITABLE, false );
@@ -438,7 +438,6 @@ public class MindMap {
 
       // Redraw the canvas
       _canvas.queue_draw();
-      return( false );
     });
 
   }

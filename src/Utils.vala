@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -42,6 +42,23 @@ public class Utils {
     var settings = Gtk.Settings.get_default();
     var theme    = settings.gtk_theme_name;
     return( (theme != null) && theme.contains( "Adwaita" ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the system information about how this application was
+  // built.
+  public static string get_flatpak_runtime() {
+
+    // Determine the Flatpak runtime being used
+    try {
+      var keyfile = new GLib.KeyFile();
+      keyfile.load_from_file( "/.flatpak-info", GLib.KeyFileFlags.NONE );
+      var runtime = keyfile.get_string( "Application", "runtime" );
+      return( "Flatpak Runtime: %s".printf( runtime ) );
+    } catch( Error e ) {}
+
+    return( "" );
+
   }
 
   //-------------------------------------------------------------

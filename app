@@ -79,7 +79,7 @@ case $1 in
     ./com.github.phase1geo.minder "${@:2}"
     ;;
 "run-flatpak")
-    flatpak run com.github.phase1geo.minder
+    flatpak run com.github.phase1geo.minder "${@:2}"
     ;;
 "debug")
     initialize
