@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-20 22:13-0600\n"
+"POT-Creation-Date: 2025-12-21 19:23-0600\n"
 "PO-Revision-Date: 2023-10-10 17:50+0800\n"
 "Last-Translator: Aerowolf <aerowolf@tom.com>\n"
 "Language-Team: 简体中文\n"
@@ -23,10 +23,9 @@ msgstr ""
 msgid "Mind-mapping application"
 msgstr "思维导图应用程序"
 
-#: src/About.vala:39
-#, fuzzy
-msgid "Copyright © 2018-2024 Trevor Williams"
-msgstr "版权所有 © 2018-2021 Trevor Williams"
+#: src/About.vala:39 src/StickerSet.vala:210
+msgid "Copyright"
+msgstr "版权标志"
 
 #: src/About.vala:43
 msgid "Minder in AppCenter"
@@ -3263,10 +3262,6 @@ msgstr "注册商标"
 msgid "Trademark"
 msgstr "商标"
 
-#: src/StickerSet.vala:210
-msgid "Copyright"
-msgstr "版权标志"
-
 #: src/StickerSet.vala:211
 msgid "Copyleft"
 msgstr "Copyleft标志"
@@ -4389,7 +4384,7 @@ msgstr "平衡节点"
 msgid "node callout changed"
 msgstr "节点标记修改"
 
-#: src/undo_actions/UndoNodeCut.vala:33
+#: src/undo_actions/UndoNodeCut.vala:34
 msgid "cut node"
 msgstr "剪切节点"
 
@@ -4640,6 +4635,10 @@ msgstr "错误： %s\n"
 #: src/ZoomWidget.vala:98
 msgid "Zoom Actual"
 msgstr "缩放到实际大小"
+
+#, fuzzy
+#~ msgid "Copyright © 2018-2024 Trevor Williams"
+#~ msgstr "版权所有 © 2018-2021 Trevor Williams"
 
 #~ msgid "Hide themes not matching visual style"
 #~ msgstr "隐藏与视觉样式不匹配的主题"

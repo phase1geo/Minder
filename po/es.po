@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-20 22:13-0600\n"
+"POT-Creation-Date: 2025-12-21 19:23-0600\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Félix Brezo <felixbrezo@disroot.org>\n"
 "Language-Team: none\n"
@@ -22,9 +22,10 @@ msgstr ""
 msgid "Mind-mapping application"
 msgstr "Salir de la aplicación"
 
-#: src/About.vala:39
-msgid "Copyright © 2018-2024 Trevor Williams"
-msgstr ""
+#: src/About.vala:39 src/StickerSet.vala:210
+#, fuzzy
+msgid "Copyright"
+msgstr "A la derecha"
 
 #: src/About.vala:43
 msgid "Minder in AppCenter"
@@ -3385,11 +3386,6 @@ msgstr ""
 msgid "Trademark"
 msgstr ""
 
-#: src/StickerSet.vala:210
-#, fuzzy
-msgid "Copyright"
-msgstr "A la derecha"
-
 #: src/StickerSet.vala:211
 #, fuzzy
 msgid "Copyleft"
@@ -4576,7 +4572,7 @@ msgstr "balance de nodos"
 msgid "node callout changed"
 msgstr "cambiar nota de nodo"
 
-#: src/undo_actions/UndoNodeCut.vala:33
+#: src/undo_actions/UndoNodeCut.vala:34
 msgid "cut node"
 msgstr "cortar nodo"
 

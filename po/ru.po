@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-20 22:13-0600\n"
+"POT-Creation-Date: 2025-12-21 19:23-0600\n"
 "PO-Revision-Date: 2025-11-14 08:53+0100\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -24,9 +24,9 @@ msgstr ""
 msgid "Mind-mapping application"
 msgstr "Программа для построения ментальных карт"
 
-#: src/About.vala:39
-msgid "Copyright © 2018-2024 Trevor Williams"
-msgstr "Авторские права © 2018-2025 Trevor Williams"
+#: src/About.vala:39 src/StickerSet.vala:210
+msgid "Copyright"
+msgstr "Авторские права"
 
 #: src/About.vala:43
 msgid "Minder in AppCenter"
@@ -3245,10 +3245,6 @@ msgstr "Зарегистрированная торговая марка"
 msgid "Trademark"
 msgstr "Торговая марка"
 
-#: src/StickerSet.vala:210
-msgid "Copyright"
-msgstr "Авторские права"
-
 #: src/StickerSet.vala:211
 msgid "Copyleft"
 msgstr "Копилефт"
@@ -4367,7 +4363,7 @@ msgstr "балансировку узлов"
 msgid "node callout changed"
 msgstr "смена выноски узла"
 
-#: src/undo_actions/UndoNodeCut.vala:33
+#: src/undo_actions/UndoNodeCut.vala:34
 msgid "cut node"
 msgstr "вырезание узла в буфер обмена"
 
@@ -4614,6 +4610,9 @@ msgstr "ошибка: %s\n"
 #: src/ZoomWidget.vala:98
 msgid "Zoom Actual"
 msgstr "Настоящий размер"
+
+#~ msgid "Copyright © 2018-2024 Trevor Williams"
+#~ msgstr "Авторские права © 2018-2025 Trevor Williams"
 
 #~ msgid "Hide themes not matching visual style"
 #~ msgstr "Скрывать темы, не соответствующие визуальному стилю"

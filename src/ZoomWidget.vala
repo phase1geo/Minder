@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2021 (https://github.com/phase1geo/Outliner)
+* Copyright (c) 2021-2025 (https://github.com/phase1geo/Outliner)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public

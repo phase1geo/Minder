@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-20 22:13-0600\n"
+"POT-Creation-Date: 2025-12-21 19:23-0600\n"
 "PO-Revision-Date: 2025-12-21 12:37+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -21,9 +21,9 @@ msgstr ""
 msgid "Mind-mapping application"
 msgstr "Applicazione di mappe mentali"
 
-#: src/About.vala:39
-msgid "Copyright © 2018-2024 Trevor Williams"
-msgstr "Copyright © 2018-2024 Trevor Williams"
+#: src/About.vala:39 src/StickerSet.vala:210
+msgid "Copyright"
+msgstr "Copyright"
 
 #: src/About.vala:43
 msgid "Minder in AppCenter"
@@ -3195,10 +3195,6 @@ msgstr "Marchio registrato"
 msgid "Trademark"
 msgstr "Marchio"
 
-#: src/StickerSet.vala:210
-msgid "Copyright"
-msgstr "Copyright"
-
 #: src/StickerSet.vala:211
 msgid "Copyleft"
 msgstr "Copyleft"
@@ -4319,7 +4315,7 @@ msgstr "bilancia nodi"
 msgid "node callout changed"
 msgstr "Chiamata del nodo modificato"
 
-#: src/undo_actions/UndoNodeCut.vala:33
+#: src/undo_actions/UndoNodeCut.vala:34
 msgid "cut node"
 msgstr "taglia nodo"
 
@@ -4559,6 +4555,9 @@ msgstr "errore: %s\n"
 #: src/ZoomWidget.vala:98
 msgid "Zoom Actual"
 msgstr "Zoom Effettivo"
+
+#~ msgid "Copyright © 2018-2024 Trevor Williams"
+#~ msgstr "Copyright © 2018-2024 Trevor Williams"
 
 #~ msgid "Hide themes not matching visual style"
 #~ msgstr "Nascondi temi che non corrispondono allo stile visivo"

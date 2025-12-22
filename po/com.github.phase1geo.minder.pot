@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-20 22:13-0600\n"
+"POT-Creation-Date: 2025-12-21 19:23-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,8 +21,8 @@ msgstr ""
 msgid "Mind-mapping application"
 msgstr ""
 
-#: src/About.vala:39
-msgid "Copyright © 2018-2024 Trevor Williams"
+#: src/About.vala:39 src/StickerSet.vala:210
+msgid "Copyright"
 msgstr ""
 
 #: src/About.vala:43
@@ -3105,10 +3105,6 @@ msgstr ""
 msgid "Trademark"
 msgstr ""
 
-#: src/StickerSet.vala:210
-msgid "Copyright"
-msgstr ""
-
 #: src/StickerSet.vala:211
 msgid "Copyleft"
 msgstr ""
@@ -4217,7 +4213,7 @@ msgstr ""
 msgid "node callout changed"
 msgstr ""
 
-#: src/undo_actions/UndoNodeCut.vala:33
+#: src/undo_actions/UndoNodeCut.vala:34
 msgid "cut node"
 msgstr ""
 
