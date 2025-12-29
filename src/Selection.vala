@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -193,14 +193,29 @@ public class Selection {
   // Adds an array of nodes to the current selection.  Returns
   // true if at least one node was added.
   public bool add_nodes( Array<Node> nodes, bool signal_change = true ) {
-    var retval = false;
+    var changed = false;
     for( int i=0; i<nodes.length; i++ ) {
-      retval |= add_node( nodes.index( i ), false, false );
+      changed |= add_node( nodes.index( i ), false, false );
     }
-    if( signal_change ) {
+    if( changed && signal_change ) {
       selection_changed();
     }
-    return( retval );
+    return( changed );
+  }
+
+  //-------------------------------------------------------------
+  // Changes the selection to the given set of nodes, only signaling
+  // a change occurred if it has actually occurred.
+  public bool change_nodes( Array<Node> nodes, bool signal_change = true ) {
+    var changed = (nodes.length != _nodes.length);
+    for( int i=0; i<nodes.length; i++ ) {
+      changed |= !is_node_selected( nodes.index( i ) );
+    }
+    if( changed ) {
+      clear_nodes( nodes.length == 0 );
+      add_nodes( nodes, signal_change );
+    }
+    return( changed );
   }
 
   //-------------------------------------------------------------

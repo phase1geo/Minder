@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -58,8 +58,6 @@ public class ThemeDefault : Theme {
     set_color( "link_color5", color_from_string( "#7a36b1" ) );
     set_color( "link_color6", color_from_string( "#715344" ) );
     set_color( "link_color7", color_from_string( "#333333" ) );
-
-    prefer_dark = false;
 
   }
 

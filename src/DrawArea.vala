@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -99,7 +99,8 @@ public class DrawArea : Gtk.DrawingArea {
   private EventControllerKey    _key_controller;
   private EventControllerScroll _scroll;
   private string?               _node_link_tooltip = null;
-  private uint                  _autopan_id = 0;
+  private uint                  _autopan_id    = 0;
+  private int                   _resized_count = 0;
 
   public MainWindow win      { private set; get; }
   public Animator   animator { set; get; }
@@ -195,6 +196,8 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void current_changed( MindMap map );
   public signal void scale_changed( double scale );
   public signal void scroll_changed();
+  public signal void size_ready( int width, int height );
+  public signal void size_changed( int width, int height );
 
   /* Default constructor */
   public DrawArea( MindMap map, MainWindow w ) {
@@ -246,6 +249,7 @@ public class DrawArea : Gtk.DrawingArea {
     };
     this.add_controller( middle_click );
     middle_click.pressed.connect((n_press, x, y) => { on_press( n_press, x, y, Gdk.BUTTON_MIDDLE ); });
+    middle_click.released.connect( on_release );
 
     var right_click = new GestureClick() {
       button = Gdk.BUTTON_SECONDARY
@@ -319,6 +323,15 @@ public class DrawArea : Gtk.DrawingArea {
     _im_context.retrieve_surrounding.connect( handle_im_retrieve_surrounding );
     _im_context.delete_surrounding.connect( handle_im_delete_surrounding );
 
+  }
+
+  //-------------------------------------------------------------
+  // Indicates that the size of the widget has changed.
+  public override void size_allocate( int width, int height, int baseline ) {
+    if( _resized_count++ == 0 ) {
+      size_ready( width, height );
+    }
+    size_changed( width, height ); 
   }
 
   //-------------------------------------------------------------
@@ -1329,7 +1342,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
   
       // Pan the canvas if we are dragging something that is draggable
-      if( _map.selected.is_any_draggable_selected() ) {
+      if( _map.selected.is_any_draggable_selected() && !_select_box.valid ) {
         double diff_x = _scaled_x - last_x;
         double diff_y = _scaled_y - last_y;
         var edge = autopan_inner_edge;
@@ -1446,7 +1459,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
       }
 
-      if( _motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within_node( _scaled_x, _scaled_y ) && _map.editable ) {
+      if( _motion && !_resize && !_select_box.valid && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within_node( _scaled_x, _scaled_y ) && _map.editable ) {
         if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) ) {
           current_node.set_alpha_only( 0.3 );
         } else {
@@ -1701,6 +1714,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( _select_box.valid ) {
       _select_box = {0, 0, 0, 0, false};
       queue_draw();
+      return;
     }
 
     /* Return the cursor to the default cursor */

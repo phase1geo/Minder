@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -87,13 +87,14 @@ public class ExportCSV : Export {
     return( max_levels + 1 );
   }
 
-  /* Convert the given string to one that is valid for CSV files */
+  //-------------------------------------------------------------
+  // Convert the given string to one that is valid for CSV files
   private string stringify( string val ) {
 
-    /* Strip any double-quotes and newlines found */
+    // Strip any double-quotes and newlines found
     string newval = val.replace( "\"", "" ).replace( "\n", " " );
 
-    /* If the value contains any comma characters, quote the entire string */
+    // If the value contains any comma characters, quote the entire string
     if( newval.index_of( "," ) != -1 ) {
       return( "\"" + newval + "\"" );
     }
@@ -102,7 +103,8 @@ public class ExportCSV : Export {
 
   }
 
-  /* Draws each of the top-level nodes */
+  //-------------------------------------------------------------
+  // Draws each of the top-level nodes
   private string export_top_nodes( MindMap map, int levels ) {
 
     var retval = "";
@@ -131,7 +133,8 @@ public class ExportCSV : Export {
 
   }
 
-  /* Draws the given node and its children to the output stream */
+  //-------------------------------------------------------------
+  // Draws the given node and its children to the output stream
   private string export_node( Node node, string prefix, int levels ) {
 
     var retval = "";

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,11 +25,14 @@ using Gee;
 
 public class ExportFreemind : Export {
 
+  //-------------------------------------------------------------
+  // Constructor
   public ExportFreemind() {
     base( "freemind", _( "Freemind" ), { ".mm" }, true, true, false, false );
   }
 
-  /* Exports the given drawing area to the file of the given name */
+  //-------------------------------------------------------------
+  // Exports the given drawing area to the file of the given name
   public override bool export( string fname, MindMap map ) {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     doc->set_root_element( export_map( map ) );
@@ -38,7 +41,8 @@ public class ExportFreemind : Export {
     return( false );
   }
 
-  /* Generates the header for the document */
+  //-------------------------------------------------------------
+  // Generates the header for the document
   private Xml.Node* export_map( MindMap map ) {
     Xml.Node* xmap = new Xml.Node( null, "map" );
     xmap->new_prop( "version", "1.0.1" );
@@ -50,7 +54,8 @@ public class ExportFreemind : Export {
     return( xmap );
   }
 
-  /* Exports the given node information */
+  //-------------------------------------------------------------
+  // Exports the given node information
   private Xml.Node* export_node( Node node, MindMap map ) {
 
     Xml.Node* n = new Xml.Node( null, "node" );
@@ -80,7 +85,7 @@ public class ExportFreemind : Export {
       n->add_child( export_note( node ) );
     }
 
-    /* Add arrowlinks */
+    // Add arrowlinks
     int         index = 0;
     Connection? conn  = null;
     while( (conn = map.connections.get_attached_connection( node, index++ )) != null ) {
@@ -89,7 +94,7 @@ public class ExportFreemind : Export {
       }
     }
 
-    /* Add nodes */
+    // Add nodes
     for( int i=0; i<node.children().length; i++ ) {
       n->add_child( export_node( node.children().index( i ), map ) );
     }
@@ -98,13 +103,15 @@ public class ExportFreemind : Export {
 
   }
 
-  /* Exports the cloud information */
+  //-------------------------------------------------------------
+  // Exports the cloud information
   private Xml.Node* export_cloud( Node node, MindMap map ) {
     Xml.Node* n = new Xml.Node( null, "cloud" );
     return( n );
   }
 
-  /* Exports the given node link as an edge */
+  //-------------------------------------------------------------
+  // Exports the given node link as an edge
   private Xml.Node* export_edge( Node node, MindMap map ) {
     Xml.Node* n = new Xml.Node( null, "edge" );
     n->new_prop( "STYLE", (node.style.link_type.name() == "curved") ? "bezier" : "linear" );
@@ -115,7 +122,8 @@ public class ExportFreemind : Export {
     return( n );
   }
 
-  /* Exports the given node font */
+  //-------------------------------------------------------------
+  // Exports the given node font
   private Xml.Node* export_font( Node node, MindMap map ) {
     Xml.Node* n = new Xml.Node( null, "font" );
     n->new_prop( "NAME",   node.style.node_font.get_family() );
@@ -125,6 +133,8 @@ public class ExportFreemind : Export {
     return( n );
   }
 
+  //-------------------------------------------------------------
+  // Exports the node's note as Freemind XML data.
   private Xml.Node* export_note( Node node ) {
 
     Xml.Node* rc   = new Xml.Node( null, "richcontent" );
@@ -147,7 +157,8 @@ public class ExportFreemind : Export {
 
   }
 
-  /* Exports the given connection as an arrowlink */
+  //-------------------------------------------------------------
+  // Exports the given connection as an arrowlink
   private Xml.Node* export_arrowlink( Connection conn, MindMap map ) {
     Xml.Node* n = new Xml.Node( null, "arrowlink" );
     if( conn.color != null ) {
@@ -161,32 +172,32 @@ public class ExportFreemind : Export {
     return( n );
   }
 
-  /*
-   Reads the contents of an OPML file and creates a new document based on
-   the stored information.
-  */
+  //-------------------------------------------------------------
+  // Reads the contents of an OPML file and creates a new document
+  // based on the stored information.
   public override bool import( string fname, MindMap map ) {
 
-    /* Read in the contents of the Freemind file */
+    // Read in the contents of the Freemind file
     var doc = Xml.Parser.read_file( fname, null, (Xml.ParserOption.HUGE | Xml.ParserOption.RECOVER) );
     if( doc == null ) {
       return( false );
     }
 
-    /* Load the contents of the file */
+    // Load the contents of the file
     import_map( map, doc->get_root_element() );
 
-    /* Update the drawing area */
+    // Update the drawing area
     map.queue_draw();
 
-    /* Delete the OPML document */
+    // Delete the OPML document
     delete doc;
 
     return( true );
 
   }
 
-  /* Parses the OPML head block for information that we will use */
+  //-------------------------------------------------------------
+  // Parses the OPML head block for information that we will use
   private void import_map( MindMap map, Xml.Node* n ) {
 
     var color_map = new HashMap<string,RGBA?>();
@@ -194,10 +205,10 @@ public class ExportFreemind : Export {
     var link_ids  = new Array<NodeLinkInfo?>();
     var to_nodes  = new Array<string>();
 
-    /* Not sure what to do with the version information */
+    // Not sure what to do with the version information
     string? v = n->get_prop( "version" );
     if( v != null ) {
-      /* Not sure what to do with this value */
+      // Not sure what to do with this value
     }
 
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
@@ -210,12 +221,12 @@ public class ExportFreemind : Export {
       }
     }
 
-    /* Connect linked nodes */
+    // Connect linked nodes
     for( int i=0; i<link_ids.length; i++ ) {
       link_ids.index( i ).node.linked_node = new NodeLink.for_local( id_map.get( link_ids.index( i ).id_str ) );
     }
 
-    /* Finish up the connections */
+    // Finish up the connections
     for( int i=0; i<to_nodes.length; i++ ) {
       if( id_map.has_key( to_nodes.index( i ) ) ) {
         var to_node = map.model.get_node( map.get_nodes(), id_map.get( to_nodes.index( i ) ) );
@@ -227,12 +238,13 @@ public class ExportFreemind : Export {
 
   }
 
-  /* Parses the given Freemind node */
+  //-------------------------------------------------------------
+  // Parses the given Freemind node
   public Node import_node( Xml.Node* n, MindMap map, Node? parent, HashMap<string,RGBA?> color_map, HashMap<string,int> id_map, Array<NodeLinkInfo?> link_ids, Array<string> to_nodes ) {
 
     var node = new Node( map, map.layouts.get_default() );
 
-    /* Make sure the style has a default value */
+    // Make sure the style has a default value
     node.style = StyleInspector.styles.get_style_for_level( ((parent == null) ? 0 : 1), null );
 
     string? i = n->get_prop( "ID" );
@@ -275,7 +287,7 @@ public class ExportFreemind : Export {
       parent.sequence = bool.parse( num );
     }
 
-    /* Parse the child nodes */
+    // Parse the child nodes
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
@@ -290,7 +302,7 @@ public class ExportFreemind : Export {
       }
     }
 
-    /* Attach the new node to its parent */
+    // Attach the new node to its parent
     if( parent != null ) {
       node.attach( parent, -1, map.get_theme() );
     }
@@ -311,7 +323,7 @@ public class ExportFreemind : Export {
 
     string? c = n->get_prop( "COLOR" );
     if( c != null ) {
-      /* Not implemented - link color and node color must be the same */
+      // Not implemented - link color and node color must be the same
     }
 
     string? w = n->get_prop( "WIDTH" );
@@ -363,7 +375,7 @@ public class ExportFreemind : Export {
 
     string? c = n->get_prop( "COLOR" );
     if( c != null ) {
-      /* Not implemented */
+      // Not implemented
     }
 
     string? d = n->get_prop( "DESTINATION" );
@@ -381,7 +393,7 @@ public class ExportFreemind : Export {
       end_arrow = ea;
     }
 
-    /* Stylize the arrow */
+    // Stylize the arrow
     switch( start_arrow + end_arrow ) {
       case "NoneNone"       :  conn.style.connection_arrow = "none";    break;
       case "NoneDefault"    :  conn.style.connection_arrow = "fromto";  break;
@@ -389,12 +401,13 @@ public class ExportFreemind : Export {
       case "DefaultDefault" :  conn.style.connection_arrow = "both";    break;
     }
 
-    /* Add the connection to the connections list */
+    // Add the connection to the connections list
     map.connections.add_connection( conn );
 
   }
 
-  /* Parses richcontent for a note.  If found parses the note */
+  //-------------------------------------------------------------
+  // Parses richcontent for a note.  If found parses the note.
   private void import_richcontent( Xml.Node* n, MindMap map, Node node ) {
 
     string? t = n->get_prop( "TYPE" );

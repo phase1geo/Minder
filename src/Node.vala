@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -1451,12 +1451,12 @@ public class Node : Object {
   //-------------------------------------------------------------
   // Adds all nodes within this tree that intersect with the
   // given box.
-  public void select_within_box( Gdk.Rectangle box, Selection select ) {
+  public void get_nodes_within_box( Gdk.Rectangle box, Array<Node> nodes ) {
     if( intersects_with( box ) ) {
-      select.add_node( this );
+      nodes.append_val( this );
     }
     for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).select_within_box( box, select );
+      _children.index( i ).get_nodes_within_box( box, nodes );
     }
   }
 
@@ -1599,6 +1599,7 @@ public class Node : Object {
   // Loads the style information from the given XML node.
   private void load_style( Xml.Node* n ) {
     _style.load_node( n );
+    _name.set_text_alignment( _style.node_text_align );
     _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
     if( _sequence_num != null ) {
       _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
@@ -1993,9 +1994,9 @@ public class Node : Object {
   // Sets the fold for this node to the given value.  Appends
   // this node to the changed list if the folded value changed.
   public void set_fold( bool value, bool deep, Array<Node>? changed = null ) {
-    if( !value && deep ) {
+    if( deep ) {
       for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).clear_tree_folds( changed );
+        _children.index( i ).set_fold( value, deep, changed );
       }
     }
     if( folded != value ) {
@@ -2013,21 +2014,6 @@ public class Node : Object {
   public void set_fold_only( bool value ) {
     folded = value;
     layout.handle_update_by_fold( this );
-  }
-
-  //-------------------------------------------------------------
-  // Clears all of the folds below the current node.
-  private void clear_tree_folds( Array<Node>? changed ) {
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).clear_tree_folds( changed );
-    }
-    if( folded ) {
-      folded = false;
-      if( changed != null ) {
-        changed.append_val( this );
-      }
-      layout.handle_update_by_fold( this );
-    }
   }
 
   //-------------------------------------------------------------
@@ -3056,13 +3042,6 @@ public class Node : Object {
                    fg_color;
 
       sequence_bbox( out x, out y, out w, out h );
-
-      if( _mode == NodeMode.SELECTED ) {
-        Utils.set_context_color_with_alpha( ctx, color, _alpha );
-        ctx.move_to( x, y );
-        ctx.rectangle( x, y, w, h );
-        ctx.fill();
-      }
 
       // Draw sequence number
       Pango.Rectangle ink_rect, log_rect;

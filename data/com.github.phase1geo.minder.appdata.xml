@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2018 Trevor Williams <phase1geo@icloud.com> -->
+<!-- Copyright 2018-2025 Trevor Williams <phase1geo@icloud.com> -->
 <component type="desktop-application">
   <id>com.github.phase1geo.minder</id>
   <metadata_license>CC0-1.0</metadata_license>
@@ -128,36 +128,85 @@
     <value key="x-appcenter-suggested-price">10</value>
     <value key="x-appcenter-stripe">pk_live_Uhb96elhovWNRGkq07m2FRO9008Ia8OtVa</value>
   </custom>
-  <content_rating type="oars-1.1">
-    <content_attribute id="violence-cartoon">none</content_attribute>
-    <content_attribute id="violence-fantasy">none</content_attribute>
-    <content_attribute id="violence-realistic">none</content_attribute>
-    <content_attribute id="violence-bloodshed">none</content_attribute>
-    <content_attribute id="violence-sexual">none</content_attribute>
-    <content_attribute id="violence-desecration">none</content_attribute>
-    <content_attribute id="violence-slavery">none</content_attribute>
-    <content_attribute id="violence-worship">none</content_attribute>
-    <content_attribute id="drugs-alcohol">none</content_attribute>
-    <content_attribute id="drugs-narcotics">none</content_attribute>
-    <content_attribute id="drugs-tobacco">none</content_attribute>
-    <content_attribute id="sex-nudity">none</content_attribute>
-    <content_attribute id="sex-themes">none</content_attribute>
-    <content_attribute id="sex-homosexuality">none</content_attribute>
-    <content_attribute id="sex-prostitution">none</content_attribute>
-    <content_attribute id="sex-adultery">none</content_attribute>
-    <content_attribute id="sex-appearance">none</content_attribute>
-    <content_attribute id="language-profanity">none</content_attribute>
-    <content_attribute id="language-humor">none</content_attribute>
-    <content_attribute id="language-discrimination">none</content_attribute>
-    <content_attribute id="social-chat">none</content_attribute>
-    <content_attribute id="social-info">none</content_attribute>
-    <content_attribute id="social-audio">none</content_attribute>
-    <content_attribute id="social-location">none</content_attribute>
-    <content_attribute id="social-contacts">none</content_attribute>
-    <content_attribute id="money-purchasing">none</content_attribute>
-    <content_attribute id="money-gambling">none</content_attribute>
-  </content_rating>
+  <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.0.3" date="2025-12-21">
+      <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Adding support for importing Mermaid mindmap files.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated Italian translation (thanks to Albano Battistella).</li>
+          <li xml:lang="ru">Обновлен перевод на итальянский (спаисбо Albano Battistella).</li>
+          <li>Adding import and export examples in command-line help output.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed issue with placing root node on application open.</li>
+          <li>Fixed issue with Style widgets accidentally scrolling.</li>
+          <li>Fixed various issues with command-line import/export.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.0.2" date="2025-12-17">
+      <description>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Changed Shift-F keyboard shortcut to toggle the node folding deeply rather than always unfold deeply.</li>
+          <li>Changed node menu from 'Fold Children' to 'Toggle Folding' submenu where one level or all levels can be selected.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed application crash caused by adding parent node between a root node and a main node.</li>
+          <li>Attempting to fix UI issue where dark mode is changed by the system, causing some icons to visually disappear.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.0.1" date="2025-12-14">
+      <description>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Removed unnecessary OARS values from appdata.xml.</li>
+          <li>Allowed window height to be much smaller when sidebar is displayed.</li>
+          <li>Improved performance of selections when dragging selection box over nodes.</li>
+          <li>Removed theme value to prefer dark mode, using system setting in window always.</li>
+          <li>Increased default padding for root nodes to make it more visible.</li>
+          <li>Improved default position of root node when a new mindmap is created.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed issue with some style settings not taking immediate effect in the mindmap.</li>
+          <li>Fixed issue with sequence numbers being obfuscated when multiple nodes selected.</li>
+          <li>Fixed issue with autopan when dragging out selection box.</li>
+          <li>Fixed issue with alpha when selection box is dragged over a single node.</li>
+          <li>Fixed potential issue with releasing selection box causing node changes.</li>
+          <li>Fixed display of branch corner radius adjustment in styles sidebar.</li>
+          <li>Fixed issue where panning with middle button continued to pan after button released.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.0" date="2025-12-07">
       <description>
         <p>New</p>

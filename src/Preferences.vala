@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -183,10 +183,6 @@ public class Preferences : Granite.Dialog {
       row_spacing    = 6
     };
     var row = 0;
-
-    grid.attach( make_label( _( "Hide themes not matching visual style" ) ), 0, row );
-    grid.attach( make_switch( "hide-themes-not-matching-visual-style" ), 1, row );
-    row++;
 
     grid.attach( make_label( _( "Default theme" ) ), 0, row );
     grid.attach( make_themes(), 1, row, 2 );

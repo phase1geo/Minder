@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -66,10 +66,10 @@ public class ExportMarkdown : Export {
       DataInputStream dis = new DataInputStream( file.read() );
       size_t          len;
 
-      /* Read the entire file contents */
+      // Read the entire file contents
       var str = dis.read_upto( "\0", 1, out len ) + "\0";
 
-      /* Import the text */
+      // Import the text
       import_text( str, map, current_dir );
 
       map.queue_draw();
@@ -121,7 +121,7 @@ public class ExportMarkdown : Export {
 
     var node = new Node.with_name( map, name, map.layouts.get_default() );
 
-    /* Add the style component to the node */
+    // Add the style component to the node
     if( parent == null ) {
       node.style = map.global_style;
       if( attach ) {
@@ -136,12 +136,12 @@ public class ExportMarkdown : Export {
       }
     }
 
-    /* Check the bullet type for a sequence */
+    // Check the bullet type for a sequence
     if( Regex.match_simple( "\\d+\\.", bullet ) && (node.parent != null) ) {
       node.parent.sequence = true;
     }
 
-    /* Add the task information, if necessary */
+    // Add the task information, if necessary
     if( task != "" ) {
       node.enable_task( true );
       if( (task == "x") || (task == "X") ) {
@@ -149,7 +149,7 @@ public class ExportMarkdown : Export {
       }
     }
 
-    /* Add the node image, if necessary */
+    // Add the node image, if necessary
     node.set_image( map.image_manager, image );
 
     return( node );
@@ -179,10 +179,8 @@ public class ExportMarkdown : Export {
       var re      = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>|\\d+\\.)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
       var current = map.get_current_node();
 
-      /*
-       Populate the stack with the current node, if one exists.  Set the spaces
-       count to -1 so that everything but a new header is added to this node.
-      */
+      // Populate the stack with the current node, if one exists.  Set the spaces
+      // count to -1 so that everything but a new header is added to this node.
       if( current != null ) {
         stack.append_val( {-1, current} );
       }
@@ -192,7 +190,7 @@ public class ExportMarkdown : Export {
         MatchInfo match_info;
         Node      node;
 
-        /* If we found some useful text, include it here */
+        // If we found some useful text, include it here
         if( re.match( line, 0, out match_info ) ) {
 
           var spaces = match_info.fetch( 1 ).replace( "\t", " " ).length;
@@ -200,34 +198,34 @@ public class ExportMarkdown : Export {
           var task   = match_info.fetch( 5 );
           var str    = match_info.fetch( 6 );
 
-          /* Add note */
+          // Add note
           if( str.strip() == "" ) continue;
           if( bullet == ">" ) {
             if( stack.length > 0 ) {
               append_note( stack.index( stack.length - 1 ).node, str );
             }
 
-          /* If we don't have a bullet, we are a continuation of the previous line */
+          // If we don't have a bullet, we are a continuation of the previous line
           } else if( bullet == "" ) {
             append_name( stack.index( stack.length - 1 ).node, str );
 
-          /* If the stack is empty */
+          // If the stack is empty
           } else if( stack.length == 0 ) {
             node = make_node( map, null, bullet, task, str, current_dir );
             stack.append_val( {spaces, node} );
 
-          /* Add sibling node */
+          // Add sibling node
           } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
             node = make_node( map, stack.index( stack.length - 1 ).node.parent, bullet, task, str, current_dir, true );
             stack.remove_index( stack.length - 1 );
             stack.append_val( {spaces, node} );
 
-          /* Add child node */
+          // Add child node
           } else if( spaces > stack.index( stack.length - 1 ).spaces ) {
             node = make_node( map, stack.index( stack.length - 1 ).node, bullet, task, str, current_dir );
             stack.append_val( {spaces, node} );
 
-          /* Add ancestor node */
+          // Add ancestor node
           } else {
             while( (stack.length > 0) && (spaces < stack.index( stack.length - 1 ).spaces) ) {
               stack.remove_index( stack.length - 1 );
@@ -250,8 +248,9 @@ public class ExportMarkdown : Export {
       }
 
     } catch( GLib.RegexError err ) {
-      /* TBD */
+      // TBD
     }
+
     // TBD
 
   }

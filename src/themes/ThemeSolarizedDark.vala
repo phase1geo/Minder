@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -61,8 +61,6 @@ public class ThemeSolarizedDark : Theme {
     set_color( "link_color5", color_from_string( "#6C71C4" ) );
     set_color( "link_color6", color_from_string( "#D33682" ) );
     set_color( "link_color7", color_from_string( "#2AA198" ) );
-
-    prefer_dark = true;
 
   }
 

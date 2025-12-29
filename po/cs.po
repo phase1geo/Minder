@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-07 19:32-0600\n"
+"POT-Creation-Date: 2025-12-21 19:23-0600\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -22,14 +22,18 @@ msgstr ""
 msgid "Mind-mapping application"
 msgstr "Aplikace pro vytváření myšlenkových map"
 
-#: src/About.vala:39
-#, fuzzy
-msgid "Copyright © 2018-2024 Trevor Williams"
-msgstr "© 2018-2021 Trevor Williams"
+#: src/About.vala:39 src/StickerSet.vala:210
+msgid "Copyright"
+msgstr "Copyright"
 
 #: src/About.vala:43
 msgid "Minder in AppCenter"
 msgstr "Minder je v AppCenter"
+
+#: src/About.vala:60
+#, c-format
+msgid "Flatpak Runtime: %s"
+msgstr ""
 
 #: src/Application.vala:133
 #, c-format
@@ -72,35 +76,57 @@ msgstr ""
 msgid "Enables image links in exported Markdown"
 msgstr ""
 
+#: src/Application.vala:152
+#, fuzzy
+msgid "Import Example:\n"
+msgstr "Importovat soubor"
+
+#: src/Application.vala:153
+#, c-format
+msgid "  %scom.github.phase1geo.minder --import=markdown file.markdown\n"
+msgstr ""
+
+#: src/Application.vala:155
+#, fuzzy
+msgid "Export Example:\n"
+msgstr "Exportovat soubor"
+
 #: src/Application.vala:156
+#, c-format
+msgid ""
+"  %scom.github.phase1geo.minder --export=png --png-transparent file.minder "
+"file.png\n"
+msgstr ""
+
+#: src/Application.vala:165
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "ERROR: %s\n"
 
-#: src/Application.vala:157
+#: src/Application.vala:166
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "Zadejte '%s --help' pro zobrazení všech možností\n"
 
-#: src/Application.vala:180
+#: src/Application.vala:189
 #, fuzzy
 msgid "ERROR: Unable to import file"
 msgstr "ERROR: Nelze otevřít soubor '%s'\n"
 
-#: src/Application.vala:184
+#: src/Application.vala:193
 msgid "ERROR: Import is missing filename to import"
 msgstr ""
 
-#: src/Application.vala:207
+#: src/Application.vala:216
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
 
-#: src/Application.vala:217
+#: src/Application.vala:226
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "ERROR: Nelze otevřít soubor '%s'\n"
 
-#: src/Application.vala:251
+#: src/Application.vala:262
 #, fuzzy, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "ERROR: Nelze otevřít soubor '%s'\n"
@@ -116,7 +142,7 @@ msgstr ""
 
 #: src/CalloutMenu.vala:33 src/ConnectionMenu.vala:34
 #: src/ConnectionsMenu.vala:33 src/GroupsMenu.vala:33 src/NodeMenu.vala:40
-#: src/NodesMenu.vala:35 src/TemplateEditor.vala:110 src/ThemeEditor.vala:157
+#: src/NodesMenu.vala:35 src/TemplateEditor.vala:110 src/ThemeEditor.vala:141
 msgid "Delete"
 msgstr "Smazat"
 
@@ -124,7 +150,7 @@ msgstr "Smazat"
 msgid "Select Node"
 msgstr "Vybrat uzel"
 
-#: src/Callout.vala:131 src/KeyCommands.vala:677 src/NodeMenu.vala:93
+#: src/Callout.vala:131 src/KeyCommands.vala:677 src/NodeMenu.vala:97
 msgid "Callout"
 msgstr ""
 
@@ -133,7 +159,7 @@ msgid "No text found"
 msgstr "Text nenalezen"
 
 #: src/ConnectionInspector.vala:77 src/KeyCommands.vala:680
-#: src/NodeMenu.vala:92
+#: src/NodeMenu.vala:96
 msgid "Connection"
 msgstr "Spojení"
 
@@ -158,11 +184,11 @@ msgstr "Smazat spojení"
 msgid "Edit Title…"
 msgstr "Upravit název…"
 
-#: src/ConnectionMenu.vala:38 src/GroupsMenu.vala:36 src/NodeMenu.vala:50
+#: src/ConnectionMenu.vala:38 src/GroupsMenu.vala:36 src/NodeMenu.vala:54
 msgid "Edit Note"
 msgstr "Upravit poznámku"
 
-#: src/ConnectionMenu.vala:39 src/NodeMenu.vala:54
+#: src/ConnectionMenu.vala:39 src/NodeMenu.vala:58
 msgid "Remove Sticker"
 msgstr "Odstranit nálepku"
 
@@ -183,7 +209,7 @@ msgid "Previous Connection"
 msgstr "Předchozí spojení"
 
 #: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:313
-#: src/NodeMenu.vala:100 src/NodesMenu.vala:59
+#: src/NodeMenu.vala:104 src/NodesMenu.vala:59
 msgid "Select"
 msgstr "Vybrat"
 
@@ -236,13 +262,13 @@ msgid ""
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1334
+#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1330
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
-#: src/ThemeEditor.vala:169 src/UrlEditor.vala:62
+#: src/ThemeEditor.vala:153 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2211
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2208
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Aplikovat"
@@ -251,7 +277,7 @@ msgstr "Aplikovat"
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:714 src/MainWindow.vala:2248
+#: src/Document.vala:714 src/MainWindow.vala:2245
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
@@ -259,40 +285,40 @@ msgstr ""
 msgid "Upgrade Needed"
 msgstr ""
 
-#: src/DrawArea.vala:1520
+#: src/DrawArea.vala:1533
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% hotovo"
 
-#: src/DrawArea.vala:1538
+#: src/DrawArea.vala:1551
 msgid "Drag to resize node"
 msgstr ""
 
-#: src/DrawArea.vala:1540
+#: src/DrawArea.vala:1553
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:1682
+#: src/DrawArea.vala:1695
 #, c-format
 msgid "Children: %u\n"
 msgstr "Podřadných uzlů: %u\n"
 
-#: src/DrawArea.vala:1683
+#: src/DrawArea.vala:1696
 #, c-format
 msgid "Total: %d"
 msgstr "Celkově: %d"
 
-#: src/DrawArea.vala:1736
+#: src/DrawArea.vala:1750
 msgid "connection endpoint change"
 msgstr "změna konce spojení"
 
-#: src/DrawArea.vala:1743
+#: src/DrawArea.vala:1757
 msgid "connection drag"
 msgstr "přetáhnutí spojení"
 
-#: src/DrawArea.vala:2268 src/MapModel.vala:1827 src/MapModel.vala:1842
+#: src/DrawArea.vala:2282 src/MapModel.vala:1839 src/MapModel.vala:1854
 msgid "Another Idea"
 msgstr "Další myšlenka"
 
@@ -305,12 +331,12 @@ msgstr ""
 "Vyberte uzel nebo spojení\n"
 "pro zobrazení/upravení informací"
 
-#: src/EmptyMenu.vala:32 src/NodeMenu.vala:38 src/NodeMenu.vala:249
+#: src/EmptyMenu.vala:32 src/NodeMenu.vala:38 src/NodeMenu.vala:253
 #: src/TextMenu.vala:38
 msgid "Paste"
 msgstr "Vložit"
 
-#: src/EmptyMenu.vala:35 src/NodeMenu.vala:67
+#: src/EmptyMenu.vala:35 src/NodeMenu.vala:71
 msgid "Add Root Node"
 msgstr "Přidat kořenový uzel"
 
@@ -340,7 +366,7 @@ msgstr "Možnosti exportu"
 msgid "Export As %s"
 msgstr "Exportovat jako %s"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1073 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1069 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Export"
 
@@ -357,29 +383,29 @@ msgstr "Zkopírovat obrázek do schránky"
 msgid "CSV"
 msgstr "CSV"
 
-#: src/exports/ExportFileSystem.vala:29
+#: src/exports/ExportFileSystem.vala:30
 msgid "File System"
 msgstr ""
 
-#: src/exports/ExportFreemind.vala:29
+#: src/exports/ExportFreemind.vala:31
 msgid "Freemind"
 msgstr "Freemind"
 
-#: src/exports/ExportFreemind.vala:45 src/exports/ExportFreeplane.vala:47
-#: src/exports/ExportOPML.vala:38 src/exports/ExportYed.vala:41
+#: src/exports/ExportFreemind.vala:49 src/exports/ExportFreeplane.vala:50
+#: src/exports/ExportOPML.vala:38 src/exports/ExportYed.vala:43
 msgid "Generated by Minder"
 msgstr "Vytvořeno Minderem"
 
-#: src/exports/ExportFreeplane.vala:31
+#: src/exports/ExportFreeplane.vala:32
 msgid "Freeplane"
 msgstr "Freeplane"
 
-#: src/exports/ExportImage.vala:85 src/exports/ExportPNG.vala:92
+#: src/exports/ExportImage.vala:90 src/exports/ExportPNG.vala:95
 #, fuzzy
 msgid "Zoom %"
 msgstr "Přiblížení"
 
-#: src/exports/ExportImage.vala:92
+#: src/exports/ExportImage.vala:99
 msgid "Quality"
 msgstr "Kvalita"
 
@@ -387,35 +413,35 @@ msgstr "Kvalita"
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/exports/ExportMarkdown.vala:383
+#: src/exports/ExportMarkdown.vala:382
 msgid "Include image links"
 msgstr "Obsáhnout odkazy na obrázky"
 
-#: src/exports/ExportMarkdown.vala:384
+#: src/exports/ExportMarkdown.vala:383
 msgid "Creates a directory containing the Markdown and embedded images"
 msgstr "Vytvoří adresář obsahující Markdown a přiložené obrázky"
 
-#: src/exports/ExportMermaid.vala:29
+#: src/exports/ExportMermaid.vala:38
 msgid "Mermaid"
 msgstr "Mermaid"
 
-#: src/exports/ExportMermaid.vala:60 src/layouts/LayoutVertical.vala:26
+#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutVertical.vala:26
 msgid "Vertical"
 msgstr "Vertikální"
 
-#: src/exports/ExportMermaid.vala:60 src/layouts/LayoutDown.vala:26
+#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutDown.vala:26
 msgid "Downwards"
 msgstr "Dolů"
 
-#: src/exports/ExportMermaid.vala:62 src/layouts/LayoutLeft.vala:26
+#: src/exports/ExportMermaid.vala:77 src/layouts/LayoutLeft.vala:26
 msgid "To left"
 msgstr "Do leva"
 
-#: src/exports/ExportMermaid.vala:64 src/layouts/LayoutUp.vala:26
+#: src/exports/ExportMermaid.vala:79 src/layouts/LayoutUp.vala:26
 msgid "Upwards"
 msgstr "Vzhůru"
 
-#: src/exports/ExportMermaid.vala:269
+#: src/exports/ExportMermaid.vala:481
 msgid "Use Mermaid Mindmap Format"
 msgstr ""
 
@@ -436,39 +462,39 @@ msgstr "Nadřazený uzel"
 msgid "Export using indentation spaces"
 msgstr ""
 
-#: src/exports/ExportOutliner.vala:28
+#: src/exports/ExportOutliner.vala:29
 msgid "Outliner"
 msgstr "Outliner"
 
-#: src/exports/ExportPDF.vala:28
+#: src/exports/ExportPDF.vala:29
 msgid "PDF"
 msgstr "PDF"
 
-#: src/exports/ExportPlantUML.vala:29
+#: src/exports/ExportPlantUML.vala:30
 msgid "PlantUML"
 msgstr "PlantUML"
 
-#: src/exports/ExportPNG.vala:30
+#: src/exports/ExportPNG.vala:31
 msgid "PNG"
 msgstr "PNG"
 
-#: src/exports/ExportPNG.vala:93
+#: src/exports/ExportPNG.vala:96
 msgid "Enable Transparent Background"
 msgstr "Povolit průhledné pozadí"
 
-#: src/exports/ExportPNG.vala:94
+#: src/exports/ExportPNG.vala:97
 msgid "Compression"
 msgstr "Komprese"
 
-#: src/exports/ExportPortableMinder.vala:28
+#: src/exports/ExportPortableMinder.vala:29
 msgid "Portable Minder"
 msgstr "Přenosný Minder"
 
-#: src/exports/ExportSVG.vala:28
+#: src/exports/ExportSVG.vala:29
 msgid "SVG"
 msgstr "SVG"
 
-#: src/exports/ExportText.vala:44
+#: src/exports/ExportText.vala:45
 msgid "PlainText"
 msgstr "Prostý Text"
 
@@ -476,16 +502,16 @@ msgstr "Prostý Text"
 msgid "WebP"
 msgstr ""
 
-#: src/exports/ExportXMind2021.vala:79
+#: src/exports/ExportXMind2021.vala:80
 msgid "XMind 2021"
 msgstr "XMind 2021"
 
-#: src/exports/ExportXMind2021.vala:671 src/exports/ExportXMind8.vala:695
+#: src/exports/ExportXMind2021.vala:682 src/exports/ExportXMind8.vala:695
 #: src/layouts/LayoutHorizontal.vala:26
 msgid "Horizontal"
 msgstr "Horizontální"
 
-#: src/exports/ExportXMind2021.vala:673 src/exports/ExportXMind8.vala:697
+#: src/exports/ExportXMind2021.vala:684 src/exports/ExportXMind8.vala:697
 #: src/layouts/LayoutRight.vala:26
 msgid "To right"
 msgstr "Do prava"
@@ -494,7 +520,7 @@ msgstr "Do prava"
 msgid "XMind 8"
 msgstr "XMind 8"
 
-#: src/exports/ExportYed.vala:26
+#: src/exports/ExportYed.vala:27
 msgid "Yed"
 msgstr "Yed"
 
@@ -546,7 +572,7 @@ msgstr "Změnit obrázek"
 msgid "Paste Image from Clipboard"
 msgstr "Vložit obrázek ze schránky"
 
-#: src/ImageEditor.vala:418 src/NodeInspector.vala:386 src/NodeMenu.vala:230
+#: src/ImageEditor.vala:418 src/NodeInspector.vala:386 src/NodeMenu.vala:234
 msgid "Remove Image"
 msgstr "Odstranit obrázek"
 
@@ -1279,12 +1305,12 @@ msgstr "Vybrat celý text"
 msgid "Select a group color"
 msgstr "Vyberte barvu odkazu"
 
-#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:289
-#: src/MapInspector.vala:547 src/MapModel.vala:2315
+#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:271
+#: src/MapInspector.vala:524 src/MapModel.vala:2327
 msgid "Manual"
 msgstr "Ruční"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1630
+#: src/MainWindow.vala:183 src/MainWindow.vala:1627
 msgid "Minder"
 msgstr "Minder"
 
@@ -1292,7 +1318,7 @@ msgstr "Minder"
 msgid "New File"
 msgstr "Nový soubor"
 
-#: src/MainWindow.vala:247 src/MainWindow.vala:1424
+#: src/MainWindow.vala:247 src/MainWindow.vala:1420
 msgid "Open File"
 msgstr "Otevřít soubor"
 
@@ -1308,211 +1334,211 @@ msgstr "Zpět"
 msgid "Redo"
 msgstr "Znovu"
 
-#: src/MainWindow.vala:729
+#: src/MainWindow.vala:725
 msgid "Tag Highlight Mode"
 msgstr ""
 
-#: src/MainWindow.vala:731 src/MainWindow.vala:1143
+#: src/MainWindow.vala:727 src/MainWindow.vala:1139
 msgid "Focus Mode"
 msgstr "Režim soustředění"
 
-#: src/MainWindow.vala:734
+#: src/MainWindow.vala:730
 msgid "Unnamed Document"
 msgstr "Nepojmenovaný dokument"
 
-#: src/MainWindow.vala:737
+#: src/MainWindow.vala:733
 #, fuzzy
 msgid "Read-Only"
 msgstr "Čtení"
 
-#: src/MainWindow.vala:756
+#: src/MainWindow.vala:752
 msgid "Zoom to Fit"
 msgstr "Vměstnat do okna"
 
-#: src/MainWindow.vala:757
+#: src/MainWindow.vala:753
 #, fuzzy
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "Vměstnat do okna vybraný uzel"
 
-#: src/MainWindow.vala:758
+#: src/MainWindow.vala:754
 msgid "Zoom to Actual Size"
 msgstr "Přiblížení na skutečnou velikost"
 
-#: src/MainWindow.vala:766
+#: src/MainWindow.vala:762
 msgid "Zoom to Percent"
 msgstr "Procentuální přiblížení"
 
-#: src/MainWindow.vala:781 src/ZoomWidget.vala:104
+#: src/MainWindow.vala:777 src/ZoomWidget.vala:104
 msgid "Zoom In"
 msgstr "Přiblížit"
 
-#: src/MainWindow.vala:788 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:784 src/ZoomWidget.vala:92
 msgid "Zoom Out"
 msgstr "Oddálit"
 
-#: src/MainWindow.vala:806 src/MainWindow.vala:1696
+#: src/MainWindow.vala:802 src/MainWindow.vala:1693
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Přiblížení (%d%%)"
 
-#: src/MainWindow.vala:819
+#: src/MainWindow.vala:815
 #, fuzzy
 msgid "Search Nodes, Callouts and Connections"
 msgstr "Hledat uzly a spojení"
 
-#: src/MainWindow.vala:864
+#: src/MainWindow.vala:860
 msgid "Search Criteria"
 msgstr "Kritéria hledání"
 
-#: src/MainWindow.vala:868
+#: src/MainWindow.vala:864
 msgid "Search all tabs"
 msgstr "Prohledat všechny panely"
 
-#: src/MainWindow.vala:909 src/StickerSet.vala:114
+#: src/MainWindow.vala:905 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Hledat"
 
-#: src/MainWindow.vala:917
+#: src/MainWindow.vala:913
 msgid "Nodes"
 msgstr "Uzly"
 
-#: src/MainWindow.vala:918
+#: src/MainWindow.vala:914
 msgid "Connections"
 msgstr "Spojení"
 
-#: src/MainWindow.vala:919
+#: src/MainWindow.vala:915
 msgid "Callouts"
 msgstr ""
 
-#: src/MainWindow.vala:920
+#: src/MainWindow.vala:916
 #, fuzzy
 msgid "Groups"
 msgstr "Přidat skupinu"
 
-#: src/MainWindow.vala:921
+#: src/MainWindow.vala:917
 msgid "Titles"
 msgstr "Názvy"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:918
 msgid "Notes"
 msgstr "Poznámky"
 
-#: src/MainWindow.vala:923
+#: src/MainWindow.vala:919
 msgid "Folded"
 msgstr "Sbalené"
 
-#: src/MainWindow.vala:924
+#: src/MainWindow.vala:920
 msgid "Unfolded"
 msgstr "Rozbalené"
 
-#: src/MainWindow.vala:925
+#: src/MainWindow.vala:921
 msgid "Tasks"
 msgstr "Úkoly"
 
-#: src/MainWindow.vala:926
+#: src/MainWindow.vala:922
 msgid "Non-tasks"
 msgstr "Nejsou úkoly"
 
-#: src/MainWindow.vala:1048
+#: src/MainWindow.vala:1044
 msgid "Print…"
 msgstr "Vytisknout…"
 
-#: src/MainWindow.vala:1087
+#: src/MainWindow.vala:1083
 msgid "Brain Dump"
 msgstr ""
 
-#: src/MainWindow.vala:1163 src/Preferences.vala:50
+#: src/MainWindow.vala:1159 src/Preferences.vala:50
 msgid "Preferences"
 msgstr "Přizpůsobení"
 
-#: src/MainWindow.vala:1164
+#: src/MainWindow.vala:1160
 msgid "Shortcuts Cheatsheet"
 msgstr "Seznam všech zkratek"
 
-#: src/MainWindow.vala:1167
+#: src/MainWindow.vala:1163
 msgid "About Minder"
 msgstr "O Minderu"
 
-#: src/MainWindow.vala:1194 src/MainWindow.vala:1780
+#: src/MainWindow.vala:1190 src/MainWindow.vala:1777
 msgid "Show Property Sidebar"
 msgstr "Zobrazit panel vlastností"
 
-#: src/MainWindow.vala:1205 src/MainWindow.vala:1248
+#: src/MainWindow.vala:1201 src/MainWindow.vala:1244
 msgid "Current"
 msgstr "Současné"
 
-#: src/MainWindow.vala:1206 src/MainWindow.vala:1249
-#: src/StyleInspector.vala:363
+#: src/MainWindow.vala:1202 src/MainWindow.vala:1245
+#: src/StyleInspector.vala:362
 msgid "Style"
 msgstr "Styl"
 
-#: src/MainWindow.vala:1207 src/MainWindow.vala:1250 src/Preferences.vala:68
+#: src/MainWindow.vala:1203 src/MainWindow.vala:1246 src/Preferences.vala:68
 msgid "Tags"
 msgstr ""
 
-#: src/MainWindow.vala:1208 src/MainWindow.vala:1251
+#: src/MainWindow.vala:1204 src/MainWindow.vala:1247
 msgid "Stickers"
 msgstr "Nálepky"
 
-#: src/MainWindow.vala:1209 src/MainWindow.vala:1252
+#: src/MainWindow.vala:1205 src/MainWindow.vala:1248
 msgid "Map"
 msgstr "Mapa"
 
-#: src/MainWindow.vala:1325
+#: src/MainWindow.vala:1321
 msgid "Save current unnamed document?"
 msgstr "Uložit aktuální nepojmenovaný dokument?"
 
-#: src/MainWindow.vala:1326
+#: src/MainWindow.vala:1322
 msgid "Changes will be permanently lost if not saved."
 msgstr "Pokud soubor neuložíte, provedené změny se navždy ztratí."
 
-#: src/MainWindow.vala:1331
+#: src/MainWindow.vala:1327
 msgid "Discard Changes"
 msgstr "Zahodit změny"
 
-#: src/MainWindow.vala:1337 src/MainWindow.vala:1626 src/ThemeEditor.vala:174
+#: src/MainWindow.vala:1333 src/MainWindow.vala:1623 src/ThemeEditor.vala:158
 msgid "Save"
 msgstr "Uložit"
 
-#: src/MainWindow.vala:1369
+#: src/MainWindow.vala:1365
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "Soubor %s byl upraven mimo tuto aplikaci."
 
-#: src/MainWindow.vala:1370
+#: src/MainWindow.vala:1366
 msgid "What do you want to do?"
 msgstr "Co chcete dělat?"
 
-#: src/MainWindow.vala:1375
+#: src/MainWindow.vala:1371
 msgid "Discard Changes and reload"
 msgstr "Zahodit změny a obnovit"
 
-#: src/MainWindow.vala:1378
+#: src/MainWindow.vala:1374
 msgid "Save local version and overwrite"
 msgstr "Uložit lokální verzi a přepsat"
 
-#: src/MainWindow.vala:1424
+#: src/MainWindow.vala:1420
 #, fuzzy
 msgid "Open Directory"
 msgstr "Otevřít soubor"
 
-#: src/MainWindow.vala:1424
+#: src/MainWindow.vala:1420
 msgid "Open"
 msgstr "Otevřít"
 
-#: src/MainWindow.vala:1626
+#: src/MainWindow.vala:1623
 msgid "Save File"
 msgstr "Uložit soubor"
 
-#: src/MainWindow.vala:1726
+#: src/MainWindow.vala:1723
 msgid "Hide Property Sidebar"
 msgstr "Schovat panel vlastností"
 
-#: src/MainWindow.vala:2202
+#: src/MainWindow.vala:2199
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2203
+#: src/MainWindow.vala:2200
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1520,31 +1546,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2208
+#: src/MainWindow.vala:2205
 #, fuzzy
 msgid "Quit Minder"
 msgstr "O Minderu"
 
-#: src/MainWindow.vala:2228
+#: src/MainWindow.vala:2225
 #, fuzzy
 msgid "Detail"
 msgstr "Odpojit"
 
-#: src/MainWindow.vala:2236
+#: src/MainWindow.vala:2233
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2237
+#: src/MainWindow.vala:2234
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2238
+#: src/MainWindow.vala:2235
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1552,115 +1578,115 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2245
+#: src/MainWindow.vala:2242
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2270
+#: src/MainWindow.vala:2267
 msgid "Upgrades Needed"
 msgstr ""
 
-#: src/MapInspector.vala:131
+#: src/MapInspector.vala:113
 #, fuzzy
 msgid "Read-only"
 msgstr "Čtení"
 
-#: src/MapInspector.vala:166
+#: src/MapInspector.vala:148
 msgid "Hide connections"
 msgstr "Schovat spojení"
 
-#: src/MapInspector.vala:202
+#: src/MapInspector.vala:184
 #, fuzzy
 msgid "Hide callouts"
 msgstr "Videohovor"
 
-#: src/MapInspector.vala:246
+#: src/MapInspector.vala:228
 msgid "Node Layouts"
 msgstr "Rozvržení uzlů"
 
-#: src/MapInspector.vala:300
+#: src/MapInspector.vala:282
 #, fuzzy
 msgid "Node Alignment"
 msgstr "zarovnání uzlu"
 
-#: src/MapInspector.vala:307
+#: src/MapInspector.vala:289
 #, fuzzy
 msgid "Align left edges"
 msgstr "Zarovnat levou stranu"
 
-#: src/MapInspector.vala:311
+#: src/MapInspector.vala:293
 #, fuzzy
 msgid "Align horizontal centers"
 msgstr "Zarovnat prostředek vodorovně"
 
-#: src/MapInspector.vala:315
+#: src/MapInspector.vala:297
 #, fuzzy
 msgid "Align right edges"
 msgstr "Zarovnat pravou stranu"
 
-#: src/MapInspector.vala:319
+#: src/MapInspector.vala:301
 #, fuzzy
 msgid "Align top edges"
 msgstr "Zarovnat uzly"
 
-#: src/MapInspector.vala:323
+#: src/MapInspector.vala:305
 #, fuzzy
 msgid "Align vertical centers"
 msgstr "Zarovnat prostředek svisle"
 
-#: src/MapInspector.vala:327
+#: src/MapInspector.vala:309
 #, fuzzy
 msgid "Align bottom edges"
 msgstr "Zarovnat spodní stranu"
 
-#: src/MapInspector.vala:369
+#: src/MapInspector.vala:351
 msgid "Themes"
 msgstr "Témata"
 
-#: src/MapInspector.vala:396
+#: src/MapInspector.vala:378
 msgid "Add Custom Theme"
 msgstr "Přidat vlastní motiv"
 
-#: src/MapInspector.vala:414
+#: src/MapInspector.vala:396
 msgid "Copy location of temporary directory"
 msgstr ""
 
-#: src/MapInspector.vala:439
+#: src/MapInspector.vala:421
 #, fuzzy
 msgid "Balance nodes"
 msgstr "vyvážit uzly"
 
-#: src/MapInspector.vala:441
+#: src/MapInspector.vala:423
 msgid "Balance Nodes"
 msgstr "Vyvážit uzly"
 
-#: src/MapInspector.vala:445
+#: src/MapInspector.vala:427
 #, fuzzy
 msgid "Fold nodes with completed tasks"
 msgstr "Sbalit dokončené úkoly"
 
-#: src/MapInspector.vala:447
+#: src/MapInspector.vala:429
 msgid "Fold Completed Tasks"
 msgstr "Sbalit dokončené úkoly"
 
-#: src/MapInspector.vala:451
+#: src/MapInspector.vala:433
 #, fuzzy
 msgid "Unfold all nodes"
 msgstr "Rozbalit všechny uzly"
 
-#: src/MapInspector.vala:453
+#: src/MapInspector.vala:435
 msgid "Unfold All Nodes"
 msgstr "Rozbalit všechny uzly"
 
-#: src/MapInspector.vala:556
+#: src/MapInspector.vala:533
 msgid "Unsaved"
 msgstr "Neuložené"
 
-#: src/MindMap.vala:430
+#: src/MindMap.vala:431
 msgid "Main Idea"
 msgstr "Hlavní myšlenka"
 
-#: src/MindMap.vala:1062
+#: src/MindMap.vala:1055
 msgid "Select a link color"
 msgstr "Vyberte barvu odkazu"
 
@@ -1734,7 +1760,7 @@ msgstr "Kopírovat"
 msgid "Cut"
 msgstr "Vyjmout"
 
-#: src/NodeMenu.vala:39 src/NodeMenu.vala:241 src/NodeMenu.vala:250
+#: src/NodeMenu.vala:39 src/NodeMenu.vala:245 src/NodeMenu.vala:254
 msgid "Paste and Replace Node"
 msgstr "Režim vložení a nahrazení"
 
@@ -1755,175 +1781,188 @@ msgid "Use parent color"
 msgstr "Použít nadřazenou barvu"
 
 #: src/NodeMenu.vala:49
+msgid "One Level"
+msgstr ""
+
+#: src/NodeMenu.vala:50
+msgid "All Levels"
+msgstr ""
+
+#: src/NodeMenu.vala:53
 msgid "Edit Text…"
 msgstr "Upravit text…"
 
-#: src/NodeMenu.vala:51 src/NodesMenu.vala:43
+#: src/NodeMenu.vala:55 src/NodesMenu.vala:43
 #, fuzzy
 msgid "Edit Tags"
 msgstr "Upravit obrázek"
 
-#: src/NodeMenu.vala:52 src/NodeMenu.vala:226
+#: src/NodeMenu.vala:56 src/NodeMenu.vala:230
 msgid "Add Task"
 msgstr "Přidat úkol"
 
-#: src/NodeMenu.vala:53 src/NodeMenu.vala:230
+#: src/NodeMenu.vala:57 src/NodeMenu.vala:234
 msgid "Add Image"
 msgstr "Přidat obrázek"
 
-#: src/NodeMenu.vala:55 src/NodeMenu.vala:227
+#: src/NodeMenu.vala:59 src/NodeMenu.vala:231
 msgid "Add Node Link"
 msgstr "Přidat poznámku k odkazu"
 
-#: src/NodeMenu.vala:56
+#: src/NodeMenu.vala:60
 msgid "Add Connection"
 msgstr "Přidat spojení"
 
-#: src/NodeMenu.vala:57
+#: src/NodeMenu.vala:61
 msgid "Add Group"
 msgstr "Přidat skupinu"
 
-#: src/NodeMenu.vala:58 src/NodeMenu.vala:229
+#: src/NodeMenu.vala:62 src/NodeMenu.vala:233
 #, fuzzy
 msgid "Add Callout"
 msgstr "Přidat skupinu"
 
-#: src/NodeMenu.vala:59 src/ThemeEditor.vala:153
+#: src/NodeMenu.vala:63 src/ThemeEditor.vala:137
 msgid "Link Color"
 msgstr "Barva odkazu"
 
-#: src/NodeMenu.vala:60 src/NodeMenu.vala:228
-msgid "Fold Children"
-msgstr "Sbalit podřadné uzly"
+#: src/NodeMenu.vala:64
+#, fuzzy
+msgid "Toggle Folding"
+msgstr "Přepnout sbalení"
 
-#: src/NodeMenu.vala:61
+#: src/NodeMenu.vala:65
 #, fuzzy
 msgid "Toggle Sequence"
 msgstr "Přepnout výběr položky"
 
-#: src/NodeMenu.vala:64
+#: src/NodeMenu.vala:68
 msgid "Change Node"
 msgstr "Změnit uzly"
 
-#: src/NodeMenu.vala:68
+#: src/NodeMenu.vala:72
 msgid "Add Parent Node"
 msgstr "Hledat nadřazený uzel"
 
-#: src/NodeMenu.vala:69
+#: src/NodeMenu.vala:73
 msgid "Add Child Node"
 msgstr "Přidat podřadný uzel"
 
-#: src/NodeMenu.vala:70
+#: src/NodeMenu.vala:74
 msgid "Add Sibling Node"
 msgstr "Přidat souřadný uzel"
 
-#: src/NodeMenu.vala:73
+#: src/NodeMenu.vala:77
 msgid "Insert Nodes"
 msgstr "Vložit uzly"
 
-#: src/NodeMenu.vala:74
+#: src/NodeMenu.vala:78
 msgid "Replace Nodes"
 msgstr "Nahradit uzly"
 
-#: src/NodeMenu.vala:77
+#: src/NodeMenu.vala:81
 msgid "Add Node"
 msgstr "Přidat uzel"
 
-#: src/NodeMenu.vala:79 src/QuickEntry.vala:40
+#: src/NodeMenu.vala:83 src/QuickEntry.vala:40
 msgid "Quick Entry"
 msgstr "Rychlé zadávání"
 
-#: src/NodeMenu.vala:82
+#: src/NodeMenu.vala:86
 msgid "Root Node"
 msgstr "Kořenový uzel"
 
-#: src/NodeMenu.vala:83
+#: src/NodeMenu.vala:87
 msgid "Next Sibling Node"
 msgstr "Další souřadný uzel"
 
-#: src/NodeMenu.vala:84
+#: src/NodeMenu.vala:88
 msgid "Previous Sibling Node"
 msgstr "Předchozí souřadný uzel"
 
-#: src/NodeMenu.vala:85
+#: src/NodeMenu.vala:89
 msgid "Child Node"
 msgstr "Podřadný uzel"
 
-#: src/NodeMenu.vala:86 src/NodesMenu.vala:56
+#: src/NodeMenu.vala:90 src/NodesMenu.vala:56
 msgid "Child Nodes"
 msgstr "Podřadné uzly"
 
-#: src/NodeMenu.vala:87
+#: src/NodeMenu.vala:91
 msgid "Subtree"
 msgstr "Podřadný strom"
 
-#: src/NodeMenu.vala:88
+#: src/NodeMenu.vala:92
 msgid "Parent Node"
 msgstr "Nadřazený uzel"
 
-#: src/NodeMenu.vala:89
+#: src/NodeMenu.vala:93
 msgid "Linked Node"
 msgstr "Spojený uzel"
 
-#: src/NodeMenu.vala:101
+#: src/NodeMenu.vala:105
 msgid "Center Current Node"
 msgstr "Zarovnat tento uzel na střed"
 
-#: src/NodeMenu.vala:104
+#: src/NodeMenu.vala:108
 msgid "Alphabetically"
 msgstr "Abecedně"
 
-#: src/NodeMenu.vala:105
+#: src/NodeMenu.vala:109
 #, fuzzy
 msgid "Randomly"
 msgstr "Randomizovat"
 
-#: src/NodeMenu.vala:108
+#: src/NodeMenu.vala:112
 msgid "Sort Children"
 msgstr "Třídit podřadné uzly"
 
-#: src/NodeMenu.vala:111
+#: src/NodeMenu.vala:115
 msgid "Detach"
 msgstr "Odpojit"
 
-#: src/NodeMenu.vala:224
+#: src/NodeMenu.vala:228
 msgid "Remove Task"
 msgstr "Odstranit úkol"
 
-#: src/NodeMenu.vala:225
+#: src/NodeMenu.vala:229
 msgid "Mark Task As Done"
 msgstr "Označit úkol za splněný"
 
-#: src/NodeMenu.vala:227
+#: src/NodeMenu.vala:231
 msgid "Remove Node Link"
 msgstr "Odstranit odkaz uzlu"
 
-#: src/NodeMenu.vala:228
+#: src/NodeMenu.vala:232
 msgid "Unfold Children"
 msgstr "Rozbalit podřadné uzly"
 
-#: src/NodeMenu.vala:229
+#: src/NodeMenu.vala:232
+msgid "Fold Children"
+msgstr "Sbalit podřadné uzly"
+
+#: src/NodeMenu.vala:233
 #, fuzzy
 msgid "Remove Callout"
 msgstr "Odstranit úkol"
 
-#: src/NodeMenu.vala:240
+#: src/NodeMenu.vala:244
 msgid "Paste Node As Child"
 msgstr "Vložit uzel jako podřadný"
 
-#: src/NodeMenu.vala:243
+#: src/NodeMenu.vala:247
 msgid "Paste Image As Child Node"
 msgstr "Vložit obrázek jako podřadný uzel"
 
-#: src/NodeMenu.vala:244
+#: src/NodeMenu.vala:248
 msgid "Paste and Replace Node Image"
 msgstr "Vložit a nahradit obrázek uzlu"
 
-#: src/NodeMenu.vala:246
+#: src/NodeMenu.vala:250
 msgid "Paste Text As Child Node"
 msgstr "Vložit uzel jako podřadný"
 
-#: src/NodeMenu.vala:247
+#: src/NodeMenu.vala:251
 msgid "Paste and Replace Node Text"
 msgstr "Vložit a nahradit text uzlu"
 
@@ -1942,7 +1981,7 @@ msgstr "Randomizovat barvy"
 msgid "Use Parent Color"
 msgstr "Použít nadřazenou barvu"
 
-#: src/NodesMenu.vala:44 src/ThemeEditor.vala:145
+#: src/NodesMenu.vala:44 src/ThemeEditor.vala:128
 msgid "Link Colors"
 msgstr "Barvy odkazu"
 
@@ -2001,15 +2040,15 @@ msgstr "Zarovnat vpravo"
 msgid "Align"
 msgstr "Zarovnat nahoru"
 
-#: src/Node.vala:2701
+#: src/Node.vala:2687
 msgid "Node Title"
 msgstr "Název poznámky"
 
-#: src/Node.vala:2709
+#: src/Node.vala:2695
 msgid "Node Note"
 msgstr "Poznámka uzlu"
 
-#: src/Node.vala:2719
+#: src/Node.vala:2705
 #, fuzzy
 msgid "Callout Text"
 msgstr "Vložit text"
@@ -2032,7 +2071,7 @@ msgstr "Zkratky Minderu"
 msgid "Advanced"
 msgstr "Výhoda"
 
-#: src/Preferences.vala:93 src/StyleInspector.vala:255
+#: src/Preferences.vala:93 src/StyleInspector.vala:254
 msgid "Close"
 msgstr "Zavřít"
 
@@ -2125,34 +2164,30 @@ msgid ""
 msgstr ""
 
 #: src/Preferences.vala:187
-msgid "Hide themes not matching visual style"
-msgstr "Schovat motivy neodpovídající stylu rozhraní"
-
-#: src/Preferences.vala:191
 msgid "Default theme"
 msgstr "Základní motiv"
 
-#: src/Preferences.vala:193
+#: src/Preferences.vala:189
 msgid ""
 "Sets the default theme to use for newly created mindmaps (use Map sidebar "
 "panel to make immediate changes)."
 msgstr ""
 
-#: src/Preferences.vala:196
+#: src/Preferences.vala:192
 #, fuzzy
 msgid "Enable mindmap animations"
 msgstr "Povolit animace"
 
-#: src/Preferences.vala:200
+#: src/Preferences.vala:196
 #, fuzzy
 msgid "Enable window animations"
 msgstr "Povolit animace"
 
-#: src/Preferences.vala:204
+#: src/Preferences.vala:200
 msgid "Text field font size"
 msgstr "Velikost stylu písma v textových polích"
 
-#: src/Preferences.vala:207
+#: src/Preferences.vala:203
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
@@ -2160,105 +2195,105 @@ msgstr ""
 "Upřesňuje velikost vlastního stylu písma používaného v úpravných polích "
 "(tedy Rychlé zadávání nebo pole poznámek)."
 
-#: src/Preferences.vala:210
+#: src/Preferences.vala:206
 msgid "Colorize note fields"
 msgstr ""
 
-#: src/Preferences.vala:214
+#: src/Preferences.vala:210
 #, fuzzy
 msgid "Default global style"
 msgstr "Základní motiv"
 
-#: src/Preferences.vala:216
+#: src/Preferences.vala:212
 msgid "Specifies the global style to use for newly created mindmaps."
 msgstr ""
 
-#: src/Preferences.vala:239
+#: src/Preferences.vala:235
 msgid "Tags in this list will be the starting list of tags for new mindmaps."
 msgstr ""
 
-#: src/Preferences.vala:339
+#: src/Preferences.vala:335
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
 msgstr ""
 
-#: src/Preferences.vala:340
+#: src/Preferences.vala:336
 msgid "Escape to cancel.  Press key combination to set."
 msgstr ""
 
-#: src/Preferences.vala:348
+#: src/Preferences.vala:344
 msgid "Set Minder Defaults"
 msgstr ""
 
-#: src/Preferences.vala:351
+#: src/Preferences.vala:347
 #, fuzzy
 msgid "Clear All Shortcuts"
 msgstr "Zkratky Minderu"
 
-#: src/Preferences.vala:360
+#: src/Preferences.vala:356
 #, fuzzy
 msgid "Search commands"
 msgstr "Uzlové příkazy"
 
-#: src/Preferences.vala:362
+#: src/Preferences.vala:358
 #, fuzzy
 msgid "Search shortcuts"
 msgstr "Zkratky Minderu"
 
-#: src/Preferences.vala:470
+#: src/Preferences.vala:466
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr ""
 
-#: src/Preferences.vala:474
+#: src/Preferences.vala:470
 msgid "Show temporary directory containing current mindmap in map sidebar"
 msgstr ""
 
-#: src/Preferences.vala:484
+#: src/Preferences.vala:480
 msgid "Default file upgrade action"
 msgstr ""
 
-#: src/Preferences.vala:558 src/styles/NodeBorderNone.vala:34 src/Tags.vala:47
+#: src/Preferences.vala:554 src/styles/NodeBorderNone.vala:34 src/Tags.vala:47
 msgid "None"
 msgstr "Žádný"
 
-#: src/Preferences.vala:559
+#: src/Preferences.vala:555
 #, fuzzy
 msgid "Enter shortcut"
 msgstr "Zkratky Minderu"
 
-#: src/Preferences.vala:727
+#: src/Preferences.vala:723
 msgid "Unable to set new shortcut due to conflicts"
 msgstr ""
 
-#: src/Preferences.vala:728
+#: src/Preferences.vala:724
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr ""
 
-#: src/Preferences.vala:793
+#: src/Preferences.vala:789
 #, fuzzy
 msgid "Clear all shortcuts?"
 msgstr "Zkratky Minderu"
 
-#: src/Preferences.vala:793 src/Preferences.vala:804
+#: src/Preferences.vala:789 src/Preferences.vala:800
 msgid "Current shortcut settings will be lost"
 msgstr ""
 
-#: src/Preferences.vala:804
+#: src/Preferences.vala:800
 #, fuzzy
 msgid "Use Minder Default Shortcuts?"
 msgstr "Zkratky Minderu"
 
-#: src/Preferences.vala:836 src/Preferences.vala:854
+#: src/Preferences.vala:832 src/Preferences.vala:850
 #, fuzzy
 msgid "Minder Default"
 msgstr "Základní"
 
-#: src/Preferences.vala:839 src/Preferences.vala:855
+#: src/Preferences.vala:835 src/Preferences.vala:851
 #, fuzzy
 msgid "Last Used"
 msgstr "Znovu přidat co bylo odebráno"
 
-#: src/Preferences.vala:841 src/Preferences.vala:859
+#: src/Preferences.vala:837 src/Preferences.vala:855
 #, c-format
 msgid "Named Style: %s"
 msgstr ""
@@ -2564,7 +2599,7 @@ msgstr "Průmysl"
 msgid "Mobile"
 msgstr "Souvisí s mobilem"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1225
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1238
 msgid "Arrows"
 msgstr "Šipky"
 
@@ -3252,10 +3287,6 @@ msgstr "Registrovaná ochranná známka"
 msgid "Trademark"
 msgstr "Ochranná známka"
 
-#: src/StickerSet.vala:210
-msgid "Copyright"
-msgstr "Copyright"
-
 #: src/StickerSet.vala:211
 msgid "Copyleft"
 msgstr "Zkopírovat vlevo"
@@ -3548,13 +3579,13 @@ msgstr "Nahoru"
 msgid "Right up"
 msgstr "Doprava nahoru"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1037
-#: src/StyleInspector.vala:1463 src/StyleInspector.vala:1625
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1049
+#: src/StyleInspector.vala:1479 src/StyleInspector.vala:1642
 msgid "Left"
 msgstr "Do leva"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1039
-#: src/StyleInspector.vala:1465 src/StyleInspector.vala:1627
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1051
+#: src/StyleInspector.vala:1481 src/StyleInspector.vala:1644
 msgid "Right"
 msgstr "Do prava"
 
@@ -3815,84 +3846,84 @@ msgstr "Vybrané uzly"
 msgid "Unknown"
 msgstr "Neznámý"
 
-#: src/StyleInspector.vala:244
+#: src/StyleInspector.vala:243
 msgid "Deleted preferences default global style"
 msgstr ""
 
-#: src/StyleInspector.vala:245
+#: src/StyleInspector.vala:244
 #, c-format
 msgid ""
 "The default global style '%s' was deleted.  Setting default global style in "
 "preferences to use the default Minder global style."
 msgstr ""
 
-#: src/StyleInspector.vala:271
+#: src/StyleInspector.vala:270
 msgid "Changes affect:"
 msgstr "Změny ovlivňují:"
 
-#: src/StyleInspector.vala:283
+#: src/StyleInspector.vala:282
 msgid "Copy current style"
 msgstr ""
 
-#: src/StyleInspector.vala:295
+#: src/StyleInspector.vala:294
 msgid "Paste copied style"
 msgstr ""
 
-#: src/StyleInspector.vala:306
+#: src/StyleInspector.vala:305
 #, fuzzy
 msgid "Style Templates"
 msgstr "Šablona"
 
-#: src/StyleInspector.vala:340
+#: src/StyleInspector.vala:339
 msgid "Branch Options"
 msgstr "Možnosti větve"
 
-#: src/StyleInspector.vala:410
+#: src/StyleInspector.vala:419
 msgid "Corner Radius"
 msgstr "Rozsah rohu"
 
-#: src/StyleInspector.vala:458 src/StyleInspector.vala:894
+#: src/StyleInspector.vala:464 src/StyleInspector.vala:904
 msgid "Margin"
 msgstr "Okraj"
 
-#: src/StyleInspector.vala:520
+#: src/StyleInspector.vala:527
 msgid "Link Options"
 msgstr "Možnosti odkazu"
 
-#: src/StyleInspector.vala:543 src/StyleInspector.vala:1184
+#: src/StyleInspector.vala:550 src/StyleInspector.vala:1197
 msgid "Line Dash"
 msgstr "Vzhled čáry"
 
-#: src/StyleInspector.vala:584 src/StyleInspector.vala:1311
+#: src/StyleInspector.vala:591 src/StyleInspector.vala:1325
 msgid "Line Width"
 msgstr "Tloušťka čáry"
 
-#: src/StyleInspector.vala:635
+#: src/StyleInspector.vala:643
 msgid "Link Arrow"
 msgstr "Šipka odkazu"
 
-#: src/StyleInspector.vala:669
+#: src/StyleInspector.vala:677
 #, fuzzy
 msgid "Link Arrow Size"
 msgstr "Šipka odkazu"
 
-#: src/StyleInspector.vala:743 src/Templates.vala:59 src/Templates.vala:64
+#: src/StyleInspector.vala:752 src/Templates.vala:59 src/Templates.vala:64
 msgid "Node Options"
 msgstr "Možnosti uzlu"
 
-#: src/StyleInspector.vala:766
+#: src/StyleInspector.vala:775
 msgid "Border Style"
 msgstr "Styl okraje"
 
-#: src/StyleInspector.vala:809
+#: src/StyleInspector.vala:818
 msgid "Border Width"
 msgstr "Šířka okraje"
 
-#: src/StyleInspector.vala:859
+#: src/StyleInspector.vala:869
 msgid "Color Fill"
 msgstr "Barevná výplň"
 
-#: src/StyleInspector.vala:868
+#: src/StyleInspector.vala:878
 msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
@@ -3900,68 +3931,68 @@ msgstr ""
 "Vyplní uzel barvou, když je okraj uzlu\n"
 "hranatý, kulatý nebo Pill-shaped"
 
-#: src/StyleInspector.vala:938 src/StyleInspector.vala:1363
-#: src/StyleInspector.vala:1656
+#: src/StyleInspector.vala:949 src/StyleInspector.vala:1378
+#: src/StyleInspector.vala:1673
 msgid "Padding"
 msgstr "Odstup"
 
-#: src/StyleInspector.vala:982
+#: src/StyleInspector.vala:994
 msgid "Font"
 msgstr "Styl písma"
 
-#: src/StyleInspector.vala:1026 src/StyleInspector.vala:1452
-#: src/StyleInspector.vala:1614
+#: src/StyleInspector.vala:1038 src/StyleInspector.vala:1468
+#: src/StyleInspector.vala:1631
 #, fuzzy
 msgid "Text Alignment"
 msgstr "zarovnání uzlu"
 
-#: src/StyleInspector.vala:1038 src/StyleInspector.vala:1464
-#: src/StyleInspector.vala:1626
+#: src/StyleInspector.vala:1050 src/StyleInspector.vala:1480
+#: src/StyleInspector.vala:1643
 #, fuzzy
 msgid "Center"
 msgstr "Zarovnat do pohledu"
 
-#: src/StyleInspector.vala:1068
+#: src/StyleInspector.vala:1080
 msgid "Width"
 msgstr "Šířka"
 
-#: src/StyleInspector.vala:1100
+#: src/StyleInspector.vala:1113
 msgid "Enable Markup"
 msgstr "Povolit Markup"
 
-#: src/StyleInspector.vala:1161 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1174 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "Možnosti spojení"
 
-#: src/StyleInspector.vala:1265
+#: src/StyleInspector.vala:1278
 #, fuzzy
 msgid "Arrow Size"
 msgstr "Šipky"
 
-#: src/StyleInspector.vala:1408
+#: src/StyleInspector.vala:1424
 msgid "Title Font"
 msgstr "Styl názvu"
 
-#: src/StyleInspector.vala:1494
+#: src/StyleInspector.vala:1510
 msgid "Title Width"
 msgstr "Šířka názvu"
 
-#: src/StyleInspector.vala:1546 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1563 src/Templates.vala:61 src/Templates.vala:66
 #, fuzzy
 msgid "Callout Options"
 msgstr "Možnosti exportu"
 
-#: src/StyleInspector.vala:1570
+#: src/StyleInspector.vala:1587
 #, fuzzy
 msgid "Text Font"
 msgstr "Styl názvu"
 
-#: src/StyleInspector.vala:1701
+#: src/StyleInspector.vala:1719
 #, fuzzy
 msgid "Pointer Width"
 msgstr "Tloušťka čáry"
 
-#: src/StyleInspector.vala:1746
+#: src/StyleInspector.vala:1765
 msgid "Pointer Length"
 msgstr ""
 
@@ -4001,19 +4032,19 @@ msgstr "Udělaný hranatým"
 msgid "Underlined"
 msgstr "Podtrhnutý"
 
-#: src/Styles.vala:57
+#: src/Styles.vala:58
 msgid "Solid"
 msgstr "Vyplněná"
 
-#: src/Styles.vala:58
+#: src/Styles.vala:59
 msgid "Dotted"
 msgstr "Tečkovaná"
 
-#: src/Styles.vala:59
+#: src/Styles.vala:60
 msgid "Short Dash"
 msgstr "Krátce čárkovaná"
 
-#: src/Styles.vala:60
+#: src/Styles.vala:61
 msgid "Long Dash"
 msgstr "Dlouze čárkovaná"
 
@@ -4077,7 +4108,7 @@ msgstr ""
 msgid "Any"
 msgstr ""
 
-#: src/Tags.vala:82 src/ThemeEditor.vala:117
+#: src/Tags.vala:82 src/ThemeEditor.vala:119
 msgid "Tag"
 msgstr "Štítek"
 
@@ -4153,120 +4184,116 @@ msgstr "Odstranit odkaz"
 msgid "Parser regex error (re: %s, error: %s)\n"
 msgstr "Parser regex error (re: %s, error: %s)\n"
 
-#: src/ThemeEditor.vala:53
+#: src/ThemeEditor.vala:52
 msgid "Customize Theme"
 msgstr "Upravit motiv"
 
-#: src/ThemeEditor.vala:58
+#: src/ThemeEditor.vala:57
 msgid "Name"
 msgstr "Jméno"
 
-#: src/ThemeEditor.vala:96
+#: src/ThemeEditor.vala:97
 msgid "Base Colors"
 msgstr "Základní barva"
 
-#: src/ThemeEditor.vala:102
+#: src/ThemeEditor.vala:104
 msgid "Background"
 msgstr "Pozadí"
 
-#: src/ThemeEditor.vala:103
+#: src/ThemeEditor.vala:105
 msgid "Foreground"
 msgstr "Popředí"
 
-#: src/ThemeEditor.vala:104
+#: src/ThemeEditor.vala:106
 msgid "Root Node Background"
 msgstr "Pozadí kořenového uzlu"
 
-#: src/ThemeEditor.vala:105
+#: src/ThemeEditor.vala:107
 msgid "Root Node Foreground"
 msgstr "Popředí kořenového uzlu"
 
-#: src/ThemeEditor.vala:106
+#: src/ThemeEditor.vala:108
 msgid "Node Select Background"
 msgstr "Pozadí výběru uzlu"
 
-#: src/ThemeEditor.vala:107
+#: src/ThemeEditor.vala:109
 msgid "Node Select Foreground"
 msgstr "Popředí výběru uzlu"
 
-#: src/ThemeEditor.vala:108
+#: src/ThemeEditor.vala:110
 msgid "Text Select Background"
 msgstr "Pozadí výběru textu"
 
-#: src/ThemeEditor.vala:109
+#: src/ThemeEditor.vala:111
 msgid "Text Select Foreground"
 msgstr "Popředí výběru textu"
 
-#: src/ThemeEditor.vala:110
+#: src/ThemeEditor.vala:112
 msgid "Text Cursor"
 msgstr "Ukazatel textu"
 
-#: src/ThemeEditor.vala:111
+#: src/ThemeEditor.vala:113
 msgid "Attachable Highlight"
 msgstr "Připojitelné zvýraznění"
 
-#: src/ThemeEditor.vala:112
+#: src/ThemeEditor.vala:114
 msgid "Connection Color"
 msgstr "Barva spojení"
 
-#: src/ThemeEditor.vala:113
+#: src/ThemeEditor.vala:115
 msgid "Connection Title Color"
 msgstr "Barva názvu spojení"
 
-#: src/ThemeEditor.vala:114
+#: src/ThemeEditor.vala:116
 #, fuzzy
 msgid "Callout Background"
 msgstr "Udělat pozadí schodným"
 
-#: src/ThemeEditor.vala:115
+#: src/ThemeEditor.vala:117
 msgid "URL Link Background"
 msgstr "Pozadí URL odkazu"
 
-#: src/ThemeEditor.vala:116
+#: src/ThemeEditor.vala:118
 msgid "URL Link Foreground"
 msgstr "Popředí URL odkazu"
 
-#: src/ThemeEditor.vala:118
+#: src/ThemeEditor.vala:120
 msgid "Markdown Syntax Chars"
 msgstr "Znaky syntaxe Markdownu"
 
-#: src/ThemeEditor.vala:119
+#: src/ThemeEditor.vala:121
 msgid "Match Background"
 msgstr "Udělat pozadí schodným"
 
-#: src/ThemeEditor.vala:120
+#: src/ThemeEditor.vala:122
 msgid "Match Foreground"
 msgstr "Udělat popředí schodným"
 
-#: src/ThemeEditor.vala:121
+#: src/ThemeEditor.vala:123
 msgid "Markdown List Item"
 msgstr "Předmět Markdown seznamu"
 
-#: src/ThemeEditor.vala:127
-msgid "Prefer Dark Mode"
-msgstr "Preferovat tmavý režim"
-
-#: src/ThemeEditor.vala:223
+#: src/ThemeEditor.vala:209
 msgid "Custom"
 msgstr "Vlastní"
 
-#: src/ThemeEditor.vala:245
+#: src/ThemeEditor.vala:230
 msgid "Delete theme?"
 msgstr "Smazat motiv?"
 
-#: src/ThemeEditor.vala:246
+#: src/ThemeEditor.vala:231
 msgid "This operation cannot be undone."
 msgstr "Tato operace nemůže být vrácena."
 
-#: src/ThemeEditor.vala:251 src/Utils.vala:456
+#: src/ThemeEditor.vala:236 src/Utils.vala:473
 msgid "No"
 msgstr "Ne"
 
-#: src/ThemeEditor.vala:254 src/Utils.vala:459
+#: src/ThemeEditor.vala:239 src/Utils.vala:476
 msgid "Yes"
 msgstr "Ano"
 
-#: src/ThemeEditor.vala:275
+#: src/ThemeEditor.vala:260
 msgid "Default"
 msgstr "Základní"
 
@@ -4291,12 +4318,12 @@ msgstr "Solarized Light"
 msgid "Error parsing regular expression"
 msgstr "Vyskytla se chyba v parsování regulárního výrazu\n"
 
-#: src/Theme.vala:212
+#: src/Theme.vala:208
 #, c-format
 msgid "Unable to load background color: %s"
 msgstr "Nebylo možné načíst barvu pozadí: %s"
 
-#: src/Theme.vala:321
+#: src/Theme.vala:307
 msgid "Root"
 msgstr "Kořen"
 
@@ -4393,7 +4420,7 @@ msgstr "vyvážit uzly"
 msgid "node callout changed"
 msgstr "změna poznámky uzlu"
 
-#: src/undo_actions/UndoNodeCut.vala:33
+#: src/undo_actions/UndoNodeCut.vala:34
 msgid "cut node"
 msgstr "vyjmout uzel"
 
@@ -4636,7 +4663,7 @@ msgstr "Znovu "
 msgid "URL"
 msgstr "URL"
 
-#: src/Utils.vala:166
+#: src/Utils.vala:183
 #, c-format
 msgid "error: %s\n"
 msgstr "error: %s\n"
@@ -4646,14 +4673,21 @@ msgid "Zoom Actual"
 msgstr "Aktuální zoom"
 
 #, fuzzy
+#~ msgid "Copyright © 2018-2024 Trevor Williams"
+#~ msgstr "© 2018-2021 Trevor Williams"
+
+#~ msgid "Hide themes not matching visual style"
+#~ msgstr "Schovat motivy neodpovídající stylu rozhraní"
+
+#~ msgid "Prefer Dark Mode"
+#~ msgstr "Preferovat tmavý režim"
+
+#, fuzzy
 #~ msgid "No Commands Listed"
 #~ msgstr "Uzlové příkazy"
 
 #~ msgid "Minder Shortcuts"
 #~ msgstr "Zkratky Minderu"
-
-#~ msgid "Import File"
-#~ msgstr "Importovat soubor"
 
 #~ msgid "Print File"
 #~ msgstr "Vytisknout soubor"
@@ -4786,9 +4820,6 @@ msgstr "Aktuální zoom"
 
 #~ msgid "View Properties"
 #~ msgstr "Zobrazit vlastnosti"
-
-#~ msgid "Toggle Fold"
-#~ msgstr "Přepnout sbalení"
 
 #~ msgid "Toggle Node Link"
 #~ msgstr "Přepnout odkaz uzlu"
@@ -5092,9 +5123,6 @@ msgstr "Aktuální zoom"
 #, fuzzy
 #~ msgid "Add Summary Node"
 #~ msgstr "Hledat nadřazený uzel"
-
-#~ msgid "Export File"
-#~ msgstr "Exportovat soubor"
 
 #~ msgid "node change fold"
 #~ msgstr "změna sbalení uzlu"

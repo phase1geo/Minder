@@ -370,6 +370,29 @@ public class MindMap {
     // Clear the selection
     _selected.clear();
 
+    // If we are a new mindmap, populate our global style
+    switch( _settings.get_int( "default-global-style" ) ) {
+      case 0  :
+        _global_style.copy( StyleInspector.styles.get_global_style() );
+        break;
+      case 1  :
+        if( StyleInspector.last_global_style != null ) {
+          _global_style.copy( StyleInspector.last_global_style );
+        } else {
+          _global_style.copy( StyleInspector.styles.get_global_style() );
+        }
+        break;
+      default :      
+        var template = _win.templates.get_template( TemplateType.STYLE_GENERAL, Minder.settings.get_string( "default-global-style-name" ) );
+        if( template != null ) {
+          var style_template = (StyleTemplate)template;
+          _global_style.copy( style_template.style );
+        } else {
+          _global_style.copy( StyleInspector.styles.get_global_style() );
+        }
+        break;
+    }
+
     // Initialize variables
     // TBD
 
@@ -399,60 +422,23 @@ public class MindMap {
 
     initialize();
 
-    // If we are a new mindmap, populate our global style
-    switch( _settings.get_int( "default-global-style" ) ) {
-      case 0  :
-        _global_style.copy( StyleInspector.styles.get_global_style() );
-        break;
-      case 1  :
-        if( StyleInspector.last_global_style != null ) {
-          _global_style.copy( StyleInspector.last_global_style );
-        } else {
-          _global_style.copy( StyleInspector.styles.get_global_style() );
-        }
-        break;
-      default :      
-        var template = _win.templates.get_template( TemplateType.STYLE_GENERAL, Minder.settings.get_string( "default-global-style-name" ) );
-        if( template != null ) {
-          var style_template = (StyleTemplate)template;
-          _global_style.copy( style_template.style );
-        } else {
-          _global_style.copy( StyleInspector.styles.get_global_style() );
-        }
-        break;
-    }
-
     // Add tags from preferences
     _model.tags.load_variant( Minder.settings.get_value( "starting-tags" ) );
     reload_tags();
 
-    // Create the main idea node
-    var n = new Node.with_name( this, _("Main Idea"), _model.layouts.get_default() );
-
-    // Get the rough dimensions of the canvas
-    int wwidth, wheight;
-    get_saved_dimensions( out wwidth, out wheight );
-
-    // Set the node information
-    n.posx  = (wwidth  / 2) - 30;
-    n.posy  = (wheight / 2) - 10;
-    n.style = _global_style;
-
-    _model.get_nodes().append_val( n );
-
-    // Make this initial node the current node
-    set_current_node( n );
-    Idle.add(() => {
+    // Create and add the first root node after idle to allow the window size to be known
+    _canvas.size_ready.connect((w, h) => {
+      var n = _model.create_root_node( _( "Main Idea" ) );
+      set_current_node( n );
       _model.set_node_mode( n, NodeMode.EDITABLE, false );
-      return( false );
+
+      // Make sure that we save the document
+      doc.save_xml();
+      doc.save();
+
+      // Redraw the canvas
+      _canvas.queue_draw();
     });
-
-    // Make sure that we save the document
-    doc.save_xml();
-    doc.save();
-
-    // Redraw the canvas
-    _canvas.queue_draw();
 
   }
 
@@ -727,16 +713,23 @@ public class MindMap {
   //-------------------------------------------------------------
   // Selects all nodes within the selected box.
   public void select_nodes_within_box( SelectBox select_box, bool shift ) {
+
     Gdk.Rectangle box = {
       (int)((select_box.w < 0) ? (select_box.x + select_box.w) : select_box.x),
       (int)((select_box.h < 0) ? (select_box.y + select_box.h) : select_box.y),
       (int)((select_box.w < 0) ? (0 - select_box.w) : select_box.w),
       (int)((select_box.h < 0) ? (0 - select_box.h) : select_box.h)
     };
+
+    var nodes = new Array<Node>();
+    _model.get_nodes_within_rectangle( box, nodes );
+
     if( !shift ) {
-      _selected.clear_nodes();
+      _selected.change_nodes( nodes );
+    } else {
+      _selected.add_nodes( nodes );
     }
-    _model.select_nodes_within_rectangle( box );
+
   }
 
   //-------------------------------------------------------------

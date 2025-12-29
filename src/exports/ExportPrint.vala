@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -43,7 +43,7 @@ public class ExportPrint : Object {
     op.unit               = Unit.MM;
     op.embed_page_setup   = true;
 
-    /* Connect to the draw_page signal */
+    // Connect to the draw_page signal
     op.draw_page.connect( draw_page );
 
     try {
@@ -54,14 +54,14 @@ public class ExportPrint : Object {
           Minder.settings.set_value( "page-setup",     op.default_page_setup.to_gvariant() );
           break;
         case PrintOperationResult.ERROR :
-          /* TBD - Display the print error */
+          // TBD - Display the print error
           break;
         case PrintOperationResult.IN_PROGRESS :
-          /* TBD */
+          // TBD
           break;
       }
     } catch( GLib.Error e ) {
-      /* TBD */
+      // TBD
     }
 
   }
@@ -74,20 +74,20 @@ public class ExportPrint : Object {
     var page_width  = context.get_width();
     var page_height = context.get_height();
 
-    /* Get the rectangle holding the entire document */
+    // Get the rectangle holding the entire document
     double x, y, w, h;
     _map.model.document_rectangle( out x, out y, out w, out h );
 
-    /* Calculate the required scaling factor to get the document to fit */
+    // Calculate the required scaling factor to get the document to fit
     double width  = page_width  / w;
     double height = page_height / h;
     double sf     = (width < height) ? width : height;
 
-    /* Scale and translate the image */
+    // Scale and translate the image
     ctx.scale( sf, sf );
     ctx.translate( (0 - x), (0 - y) );
 
-    /* Draw the map */
+    // Draw the map
     _map.model.draw_all( ctx, true, false );
 
   }

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -34,39 +34,40 @@ public class Styles {
   private static Array<NodeBorder> _node_borders;
   private        Array<StyleLevel> _styles;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public Styles() {
 
     var rtl        = (Gtk.get_locale_direction() == Gtk.TextDirection.RTL);
     var text_align = rtl ? Pango.Alignment.RIGHT : Pango.Alignment.LEFT;
 
-    /* Create the link types */
+    // Create the link types
     var lt_straight = new LinkTypeStraight();
     var lt_squared  = new LinkTypeSquared();
     var lt_rounded  = new LinkTypeRounded();
     var lt_curved   = new LinkTypeCurved();
 
-    /* Add the link types to the list */
+    // Add the link types to the list
     _link_types = new Array<LinkType>();
     _link_types.append_val( lt_straight );
     _link_types.append_val( lt_squared );
     _link_types.append_val( lt_rounded );
     _link_types.append_val( lt_curved );
 
-    /* Create the link dashes */
+    // Create the link dashes
     var ld_solid  = new LinkDash( "solid",     _( "Solid" ),      {} );
     var ld_dotted = new LinkDash( "dotted",    _( "Dotted" ),     {2, 6} );
     var ld_sdash  = new LinkDash( "shortdash", _( "Short Dash" ), {6, 6} );
     var ld_ldash  = new LinkDash( "longdash",  _( "Long Dash" ),  {20, 6} );
 
-    /* Add the link dashes to the list */
+    // Add the link dashes to the list
     _link_dashes = new Array<LinkDash>();
     _link_dashes.append_val( ld_solid );
     _link_dashes.append_val( ld_dotted );
     _link_dashes.append_val( ld_sdash );
     _link_dashes.append_val( ld_ldash );
 
-    /* Create the node borders */
+    // Create the node borders
     var nb_none       = new NodeBorderNone();
     var nb_underlined = new NodeBorderUnderlined();
     var nb_bracketed  = new NodeBorderBracket();
@@ -74,7 +75,7 @@ public class Styles {
     var nb_rounded    = new NodeBorderRounded();
     var nb_pilled     = new NodeBorderPill();
 
-    /* Add the node borders to the list */
+    // Add the node borders to the list
     _node_borders = new Array<NodeBorder>();
     _node_borders.append_val( nb_none );
     _node_borders.append_val( nb_underlined );
@@ -83,7 +84,7 @@ public class Styles {
     _node_borders.append_val( nb_rounded );
     _node_borders.append_val( nb_pilled );
 
-    /* Allocate styles for each level */
+    // Allocate styles for each level
     _styles = new Array<StyleLevel>();
     for( int i=0; i<=10; i++ ) {
       var level = new StyleLevel();
@@ -124,7 +125,8 @@ public class Styles {
 
   }
 
-  /* Loads the contents of the style templates */
+  //-------------------------------------------------------------
+  // Loads the contents of the style templates
   public void load( Xml.Node* n ) {
 
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
@@ -145,7 +147,8 @@ public class Styles {
 
   }
 
-  /* Saves the style template information */
+  //-------------------------------------------------------------
+  // Saves the style template information
   public void save( Xml.Node* parent ) {
 
     Xml.Node* node = new Xml.Node( null, "styles" );
@@ -163,7 +166,8 @@ public class Styles {
 
   }
 
-  /* Sets all nodes in the mind-map to the given link style */
+  //-------------------------------------------------------------
+  // Sets all nodes in the mind-map to the given link style
   public void set_all_to_style( Style style ) {
     for( int i=0; i<=10; i++ ) {
       _styles.index( i ).style.copy( style );
@@ -171,7 +175,8 @@ public class Styles {
     }
   }
 
-  /* Sets all nodes at the specified levels to the given link style */
+  //-------------------------------------------------------------
+  // Sets all nodes at the specified levels to the given link style
   public void set_levels_to_style( int levels, Style style ) {
     for( int i=0; i<10; i++ ) {
       if( (levels & (1 << i)) != 0 ) {
@@ -181,7 +186,8 @@ public class Styles {
     }
   }
 
-  /* Returns the link type with the given name */
+  //-------------------------------------------------------------
+  // Returns the link type with the given name
   public LinkType? get_link_type( string name ) {
     for( int i=0; i<_link_types.length; i++ ) {
       var link_type = _link_types.index( i );
@@ -192,12 +198,14 @@ public class Styles {
     return( null );
   }
 
-  /* Returns the list of available link types */
+  //-------------------------------------------------------------
+  // Returns the list of available link types
   public Array<LinkType> get_link_types() {
     return( _link_types );
   }
 
-  /* Returns the link dash with the given name */
+  //-------------------------------------------------------------
+  // Returns the link dash with the given name
   public LinkDash? get_link_dash( string name ) {
     for( int i=0; i<_link_dashes.length; i++ ) {
       var link_dash = _link_dashes.index( i );
@@ -208,12 +216,14 @@ public class Styles {
     return( null );
   }
 
-  /* Returns the list of available link dashes */
+  //-------------------------------------------------------------
+  // Returns the list of available link dashes
   public Array<LinkDash> get_link_dashes() {
     return( _link_dashes );
   }
 
-  /* Returns the node border with the given name */
+  //-------------------------------------------------------------
+  // Returns the node border with the given name
   public NodeBorder? get_node_border( string name ) {
     for( int i=0; i<_node_borders.length; i++ ) {
       var node_border = _node_borders.index( i );
@@ -224,18 +234,21 @@ public class Styles {
     return( null );
   }
 
-  /* Return the list of available node borders */
+  //-------------------------------------------------------------
+  // Return the list of available node borders
   public Array<NodeBorder> get_node_borders() {
     return( _node_borders );
   }
 
-  /* Returns the style for the given level */
+  //-------------------------------------------------------------
+  // Returns the style for the given level
   public Style get_style_for_level( uint level, Style? alternative ) {
     var slevel = _styles.index( (level > 9) ? 9 : level );
     return( (slevel.isset || (alternative == null)) ? slevel.style : alternative  );
   }
 
-  /* Returns the global style */
+  //-------------------------------------------------------------
+  // Returns the global style
   public Style get_global_style() {
     return( _styles.index( 10 ).style );
   }

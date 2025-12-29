@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019-2021 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2019-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -36,7 +36,7 @@ public class About {
       authors            = { "Trevor Williams" },
       program_name       = "Minder",
       comments           = _( "Mind-mapping application" ),
-      copyright          = _( "Copyright © 2018-2024 Trevor Williams" ),
+      copyright          = _( "Copyright" ) + " © 2018-2025 Trevor Williams",
       version            = Minder.version,
       license_type       = License.GPL_3_0,
       website            = "https://appcenter.elementary.io/com.github.phase1geo.minder/",
@@ -55,22 +55,11 @@ public class About {
   // Returns the system information about how this application was
   // built.
   private string get_system_info() {
-
-    // Determine the Flatpak runtime being used
-    try {
-      var keyfile = new GLib.KeyFile();
-      keyfile.load_from_file( "/.flatpak-info", GLib.KeyFileFlags.NONE );
-
-      var runtime = keyfile.get_string( "Application", "runtime" );
-
-      return( "Flatpak Runtime: %s".printf( runtime ) );
-
-    } catch( Error e ) {
-      stdout.printf( "Error: %s\n", e.message );
+    var runtime = Utils.get_flatpak_runtime();
+    if( runtime != "" ) {
+      return( _( "Flatpak Runtime: %s".printf( runtime ) ) );
     }
-
     return( "" );
-
   }
 
   //-------------------------------------------------------------

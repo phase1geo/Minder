@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -24,12 +24,14 @@ using Gdk;
 
 public class ExportPlantUML : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportPlantUML() {
     base( "plant-uml", _( "PlantUML" ), { ".puml" }, true, true, false, true );
   }
 
-  /* Exports the given drawing area to the file of the given name */
+  //-------------------------------------------------------------
+  // Exports the given drawing area to the file of the given name
   public override bool export( string fname, MindMap map ) {
     var retval = true;
     if( send_to_clipboard() ) {
@@ -54,7 +56,8 @@ public class ExportPlantUML : Export {
     return( "@endmindmap\n\n" );
   }
 
-  /* Draws each of the top-level nodes */
+  //-------------------------------------------------------------
+  // Draws each of the top-level nodes
   private string export_top_nodes( MindMap map ) {
 
     var retval = "";
@@ -76,7 +79,8 @@ public class ExportPlantUML : Export {
 
   }
 
-  /* Draws the given node and its children to the output stream */
+  //-------------------------------------------------------------
+  // Draws the given node and its children to the output stream
   private string export_node( Node node, int depth ) {
 
     var retval = "";
@@ -126,7 +130,8 @@ public class ExportPlantUML : Export {
   // IMPORT
   //-------------------------------------------------------------
 
-  /* Imports a PlantUML document */
+  //-------------------------------------------------------------
+  // Imports a PlantUML document
   public override bool import( string fname, MindMap map ) {
 
     try {
@@ -136,10 +141,10 @@ public class ExportPlantUML : Export {
       size_t          len;
       Array<Node>     nodes;
 
-      /* Read the entire file contents */
+      // Read the entire file contents
       var str = dis.read_upto( "\0", 1, out len ) + "\0";
 
-      /* Import the text */
+      // Import the text
       import_doc( str, map );
 
       map.queue_draw();
@@ -190,7 +195,9 @@ public class ExportPlantUML : Export {
 
   }
 
-  /* Imports the given node information and adds the new node to the mind map */
+  //-------------------------------------------------------------
+  // Imports the given node information and adds the new node to
+  // the mind map
   private void import_node( MindMap map, MatchInfo matches, NodeSide side, ref Node? last_node ) {
 
     var li    = matches.fetch( 1 );
@@ -198,7 +205,7 @@ public class ExportPlantUML : Export {
     var text  = matches.fetch( 3 ).replace( "\\n", "\n" );
     var depth = 1;
 
-    /* Figure out the node depth */
+    // Figure out the node depth
     switch( li.get_char( 0 ) ) {
       case '*' :  depth = li.char_count();  break;
       case '+' :  depth = li.char_count();  side = NodeSide.RIGHT;  break;
@@ -212,7 +219,7 @@ public class ExportPlantUML : Export {
         break;
     }
 
-    /* Create node with the leftover text */
+    // Create node with the leftover text
     switch( depth ) {
       case 1 :
         last_node = map.model.create_root_node( text );
@@ -239,7 +246,7 @@ public class ExportPlantUML : Export {
         break;
     }
 
-    /* Figure out the color and/or node shape */
+    // Figure out the color and/or node shape
     if( color == "_" ) {
       last_node.style.node_border = StyleInspector.styles.get_node_border( "none" );
     } else {

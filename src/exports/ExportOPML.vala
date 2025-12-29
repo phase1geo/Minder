@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -113,13 +113,13 @@ public class ExportOPML : Export {
   // based on the stored information.
   public override bool import( string fname, MindMap map ) {
 
-    /* Read in the contents of the OPML file */
+    // Read in the contents of the OPML file
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
     if( doc == null ) {
       return( false );
     }
 
-    /* Load the contents of the file */
+    // Load the contents of the file
     for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         Array<int>? expand_state = null;
@@ -134,7 +134,7 @@ public class ExportOPML : Export {
       }
     }
 
-    /* Delete the OPML document */
+    // Delete the OPML document
     delete doc;
 
     return( true );
@@ -166,10 +166,10 @@ public class ExportOPML : Export {
 
     int node_id = 1;
 
-    /* Clear the existing nodes */
+    // Clear the existing nodes
     map.get_nodes().remove_range( 0, map.get_nodes().length );
 
-    /* Load the contents of the file */
+    // Load the contents of the file
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "outline") {
@@ -190,13 +190,13 @@ public class ExportOPML : Export {
 
   private void import_node( MindMap map, Node node, Xml.Node* parent, int node_id, ref Array<int> expand_state, Theme theme ) {
 
-    /* Get the node name */
+    // Get the node name
     string? n = parent->get_prop( "text" );
     if( n != null ) {
       node.name.text.insert_text( 0, n );
     }
 
-    /* Get the task information */
+    // Get the task information
     string? t = parent->get_prop( "checked" );
     if( t != null ) {
       node.enable_task( true );
@@ -205,16 +205,16 @@ public class ExportOPML : Export {
       }
     }
 
-    /* Get the note information */
+    // Get the note information
     string? o = parent->get_prop( "note" );
     if( o != null ) {
       node.note = o;
     }
 
-    /* Load the style */
+    // Load the style
     node.style = map.global_style;
 
-    /* Figure out if this node is folded */
+    // Figure out if this node is folded
     if( expand_state != null ) {
       node.folded = true;
       for( int i=0; i<expand_state.length; i++ ) {
@@ -228,7 +228,7 @@ public class ExportOPML : Export {
 
     node_id++;
 
-    /* Parse the child nodes */
+    // Parse the child nodes
     for( Xml.Node* it2 = parent->children; it2 != null; it2 = it2->next ) {
       if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "outline") ) {
         var child = new Node( map, node.layout );
@@ -237,7 +237,7 @@ public class ExportOPML : Export {
       }
     }
 
-    /* Calculate the tree size */
+    // Calculate the tree size
     node.tree_bbox = node.layout.bbox( node, -1, "import_opml" );
     node.tree_size = node.side.horizontal() ? node.tree_bbox.height : node.tree_bbox.width;
 

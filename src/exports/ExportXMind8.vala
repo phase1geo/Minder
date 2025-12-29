@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -85,26 +85,26 @@ public class ExportXMind8 : Export {
   // Exports the given drawing area to the file of the given name.
   public override bool export( string fname, MindMap map ) {
 
-    /* Create temporary directory to place contents in */
+    // Create temporary directory to place contents in
     var dir = DirUtils.mkdtemp( "minderXXXXXX" );
 
     var styles    = new Array<Xml.Node*>();
     var file_list = new FileItems();
 
-    /* Export the meta file */
+    // Export the meta file
     export_meta( map, dir, file_list );
 
-    /* Export the content file */
+    // Export the content file
     export_content( map, dir, file_list, styles );
 
     if( styles.length > 0 ) {
       export_styles( dir, file_list, styles );
     }
 
-    /* Export manifest file */
+    // Export manifest file
     export_manifest( dir, file_list );
 
-    /* Archive the contents */
+    // Archive the contents
     archive_contents( dir, fname, file_list );
 
     return( true );
@@ -238,12 +238,12 @@ public class ExportXMind8 : Export {
     title->add_content( node.name.text.text );
     topic->add_child( title );
 
-    /* Add note, if needed */
+    // Add note, if needed
     if( node.note != "" ) {
       topic->add_child( export_node_note( node, styles ) );
     }
 
-    /* Add styling information */
+    // Add styling information
     Xml.Node* nstyle = new Xml.Node( null, "style" );
     Xml.Node* nprops = new Xml.Node( null, "topic-properties" );
     nstyle->set_prop( "id", sid.to_string() );
@@ -252,7 +252,7 @@ public class ExportXMind8 : Export {
     nstyle->add_child( nprops );
     styles.append_val( nstyle );
 
-    /* Add image, if needed */
+    // Add image, if needed
     if( node.image != null ) {
       export_image( map, node, dir, file_list, topic );
     }
@@ -276,7 +276,7 @@ public class ExportXMind8 : Export {
       children->add_child( topics );
       topic->add_child( children );
 
-      /* Add boundaries, if found */
+      // Add boundaries, if found
       if( groups.length > 0 ) {
         Xml.Node* boundaries = new Xml.Node( null, "boundaries" );
         for( int i=0; i<groups.length; i++ ) {
@@ -287,14 +287,14 @@ public class ExportXMind8 : Export {
           int       id       = ids++;
           int       stid     = ids++;
 
-          /* Create boundary */
+          // Create boundary
           boundary->set_prop( "id", id.to_string() );
           boundary->set_prop( "style-id", stid.to_string() );
           boundary->set_prop( "range", "(%d,%d)".printf( groups.index( i ), groups.index( i ) ) );
           boundary->set_prop( "timestamp", timestamp );
           boundaries->add_child( boundary );
 
-          /* Create styling node */
+          // Create styling node
           style->set_prop( "id", stid.to_string() );
           style->set_prop( "type", "boundary" );
           props->set_prop( "svg:fill", Utils.color_from_rgba( node.children().index( groups.index( i ) ).link_color ) );
@@ -321,10 +321,10 @@ public class ExportXMind8 : Export {
     var parts     = src.split( "." );
     Xml.Node* img = new Xml.Node( null, "xhtml:img" );
 
-    /* XMind doesn't support SVG images so cut short if we have this type of image */
+    // XMind doesn't support SVG images so cut short if we have this type of image
     if( mime_type == "image/svg" ) return;
 
-    /* Copy the image file to the XMind bundle */
+    // Copy the image file to the XMind bundle
     DirUtils.create( Path.build_filename( dir, "attachments" ), 0755 );
     var lfile = File.new_for_path( Path.build_filename( dir, src ) );
     var rfile = File.new_for_path( img_name );
@@ -334,7 +334,7 @@ public class ExportXMind8 : Export {
       return;
     }
 
-    img->set_prop( "style-id", (ids++).to_string() );  /* TBD - We need to store this for later use */
+    img->set_prop( "style-id", (ids++).to_string() );
     img->set_prop( "svg:height", node.image.height.to_string() );
     img->set_prop( "svg:width",  node.image.width.to_string() );
     img->set_prop( "xhtml:src",  "xap:%s".printf( src ) );
@@ -349,7 +349,7 @@ public class ExportXMind8 : Export {
   // Exports node styling information.
   private void export_node_style( Node node, Xml.Node* n ) {
 
-    /* Node border shape */
+    // Node border shape
     switch( node.style.node_border.name() ) {
       case "rounded"    :  n->set_prop( "shape-class", "org.xmind.topicShape.roundedRect" );  break;
       case "underlined" :  n->set_prop( "shape-class", "org.xmind.topicShape.underline" );    break;
@@ -418,7 +418,7 @@ public class ExportXMind8 : Export {
     styles.append_val( bold_style );
     styles.append_val( em_style );
 
-    /* Perform simple one-for-one replacements */
+    // Perform simple one-for-one replacements
     return( str.replace( "<p>",       "<xhtml:p>" )
                .replace( "</p>",      "</xhtml:p>" )
                .replace( "<a href",   "<xhtml:a xlink:href" )
@@ -468,7 +468,7 @@ public class ExportXMind8 : Export {
 
         relations->add_child( relation );
 
-        /* Create style */
+        // Create style
         Xml.Node* style = new Xml.Node( null, "style" );
         Xml.Node* props = new Xml.Node( null, "relationship-properties" );
         var from_arrow = (conn.style.connection_arrow == "tofrom") || (conn.style.connection_arrow == "both");
@@ -612,15 +612,15 @@ public class ExportXMind8 : Export {
   // Main method used to import an XMind mind-map into Minder.
   public override bool import( string fname, MindMap map ) {
 
-    /* Create temporary directory to place contents in */
+    // Create temporary directory to place contents in
     var dir = DirUtils.mkdtemp( "minderXXXXXX" );
 
-    /* Unarchive the files */
+    // Unarchive the files
     unarchive_contents( fname, dir );
 
     var id_map = new HashMap<string,IdObject>();
 
-    /* If this .xmind file should be handled by XMind 2021, return false */
+    // If this .xmind file should be handled by XMind 2021, return false
     if( FileUtils.test( Path.build_filename( dir, "content.json" ), FileTest.EXISTS ) ) {
       return( false );
     }
@@ -630,7 +630,7 @@ public class ExportXMind8 : Export {
     import_content( map, content, dir, id_map );
     import_styles( map, styles, id_map );
 
-    /* Update the drawing area and save the result */
+    // Update the drawing area and save the result
     map.queue_draw();
     map.auto_save();
 
@@ -642,16 +642,16 @@ public class ExportXMind8 : Export {
   // Import the content file.
   private bool import_content( MindMap map, string fname, string dir, HashMap<string,IdObject> id_map ) {
 
-    /* Read in the contents of the XMind 8 file */
+    // Read in the contents of the XMind 8 file
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
     if( doc == null ) {
       return( false );
     }
 
-    /* Load the contents of the file */
+    // Load the contents of the file
     import_map( map, doc->get_root_element(), dir, id_map );
 
-    /* Delete the OPML document */
+    // Delete the OPML document
     delete doc;
 
     return( true );
@@ -702,7 +702,7 @@ public class ExportXMind8 : Export {
       node = map.model.create_child_node( parent );
     }
 
-    /* Handle the ID */
+    // Handle the ID
     string? id = n->get_prop( "id" );
     if( id != null ) {
       id_map.set( id, new IdObject.for_node( node ) );
@@ -894,19 +894,19 @@ public class ExportXMind8 : Export {
   // Imports and applies styling information.
   private bool import_styles( MindMap map, string fname, HashMap<string,IdObject> id_map ) {
 
-    /* Read in the contents of the Freemind file */
+    // Read in the contents of the Freemind file
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
     if( doc == null ) {
       return( false );
     }
 
-    /* Load the contents of the file */
+    // Load the contents of the file
     import_styles_content( map, doc->get_root_element(), id_map );
 
-    /* Update the drawing area */
+    // Update the drawing area
     map.queue_draw();
 
-    /* Delete the OPML document */
+    // Delete the OPML document
     delete doc;
 
     return( true );
@@ -1099,7 +1099,7 @@ public class ExportXMind8 : Export {
     extractor.set_options( flags );
     extractor.set_standard_lookup();
 
-    /* Open the file for reading */
+    // Open the file for reading
     if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
       error( "Error: %s (%d)", archive.error_string(), archive.errno() );
     }
@@ -1111,7 +1111,7 @@ public class ExportXMind8 : Export {
       var file = File.new_for_path( Path.build_filename( dir, entry.pathname() ) );
       entry.set_pathname( file.get_path() );
 
-      /* Read from the archive and write the files to disk */
+      // Read from the archive and write the files to disk
       if( extractor.write_header( entry ) != Archive.Result.OK ) {
         continue;
       }
@@ -1127,7 +1127,7 @@ public class ExportXMind8 : Export {
 
     }
 
-    /* Close the archive */
+    // Close the archive
     if( archive.close () != Archive.Result.OK) {
       error( "Error: %s (%d)", archive.error_string(), archive.errno() );
     }
