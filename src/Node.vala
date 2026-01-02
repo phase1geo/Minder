@@ -813,6 +813,9 @@ public class Node : Object {
     var nb = tree_bbox;
     nb.x += diffx;
     nb.y += diffy;
+    if( (first_summarized() || last_summarized()) && (_layout != null) ) {
+      _layout.update_tree_size( this );
+    }
     tree_bbox = nb;
   }
 
@@ -1610,7 +1613,6 @@ public class Node : Object {
             break;
           case "summary-node" :
             var node = new SummaryNode.from_xml( _map, _layout, it );
-            stdout.printf( "  CREATING summary node, first: %d, last: %d\n", first_summary_index, node_index );
             node.attach_nodes( this, first_summary_index, node_index );
             first_summary_index = -1;
             break;
@@ -1766,7 +1768,6 @@ public class Node : Object {
     }
 
     // Get the tree bbox
-    stdout.printf( "Get tree_bbox\n" );
     tree_bbox = layout.bbox( this, -1, "node.load" );
 
     if( ts == null ) {
@@ -2131,7 +2132,6 @@ public class Node : Object {
   // Moves this node into the proper position within the parent
   // node.  Returns true if the node is moved to a new position.
   public bool move_to_position( Node child, NodeSide side, double x, double y ) {
-    stdout.printf( "In move_to_position, child: %s\n", child.name.text.text );
     int   idx           = child.index();
     Node? last_selected = last_selected_child;
     for( int i=0; i<_children.length; i++ ) {
@@ -2311,7 +2311,6 @@ public class Node : Object {
       }
       _sequence_num = null;
       if( layout != null ) {
-        stdout.printf( "Deleting: %s\n", name.text.text );
         layout.handle_update_by_delete( parent, idx, side, tree_size );
       }
       parent   = null;
@@ -2829,10 +2828,6 @@ public class Node : Object {
     double y = posy + style.node_margin;
     double w = _width  - (style.node_margin * 2);
     double h = _height - (style.node_margin * 2);
-
-    if( is_summary() ) {
-      _alpha = 0.2;
-    }
 
     // If we are a root node and our alpha value is not 1.0, draw our shape in the background color to hide
     // any links that are drawn under us.
@@ -3386,6 +3381,7 @@ public class Node : Object {
     var nodesel_foreground = theme.get_color( "nodesel_foreground" );
 
     // Draw tree_bbox
+    /*
     if( is_summarized() || is_summary() ) {
       if( first_summarized() ) {
         Utils.set_context_color_with_alpha( ctx, theme.get_color( "link_color0" ), 0.5 );
@@ -3399,6 +3395,7 @@ public class Node : Object {
       ctx.rectangle( tree_bbox.x, tree_bbox.y, tree_bbox.width, tree_bbox.height );
       ctx.fill();
     }
+    */
 
     /*
     // Draw bbox

@@ -436,11 +436,9 @@ public class MapModel {
     }
 
     // Perform the layout process again to make sure that everything is accounted for
-    /*
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).layout.initialize( _nodes.index( i ) );
     }
-    */
 
     queue_draw();
 

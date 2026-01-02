@@ -54,35 +54,45 @@ public class Layout : Object {
   //-------------------------------------------------------------
   // Initializes the given node based on this layout.
   public virtual void initialize( Node parent ) {
+    stdout.printf( "Layout initialize, parent: %s\n", parent.name.text.text );
     var list = new SList<Node>();
     parent.side = side_mapping( parent.side );
     if( parent.traversable() ) {
       for( int i=0; i<parent.children().length; i++ ) {
         var n = parent.children().index( i );
         initialize( n );
-        if( !n.is_summary() ) {
-          list.append( n );
+        list.append( n );
+      }
+      list.@foreach((item) => {
+        stdout.printf( "  detaching %s\n", item.name.text.text );
+        if( item.is_summary() ) {
+          var n = (SummaryNode)item;
+          n.detach_from_layout( item.side );
+        } else {
+          item.detach( item.side );
         }
-      }
-      list.@foreach((item) => {
-        item.detach( item.side );
       });
       list.@foreach((item) => {
+        stdout.printf( "  attaching %s\n", item.name.text.text );
         item.attach_init( parent, -1 );
+        if( item.last_summarized() ) {
+          var child = item.children().index( 0 );
+          double xy1, xy2;
+          (child as SummaryNode).get_extents( out xy1, out xy2 );
+          if( child.side.horizontal() ) {
+            child.posy = xy1 + (((xy2 - xy1) / 2) - (child.total_height / 2));
+          } else {
+            child.posx = xy1 + (((xy2 - xy1) / 2) - (child.total_width / 2));
+          }
+          (child as SummaryNode).update_tree_bboxes();
+        }
       });
-      /*
-      if( parent.last_summarized() ) {
-        parent.summary_node().nodes_changed( 1, 1, "layout.initialize" );
-      }
-      */
     }
   }
 
   //-------------------------------------------------------------
   // Get the bbox for the given parent to the given depth
   public virtual NodeBounds bbox( Node parent, int side_mask, string msg ) {
-
-    stdout.printf( "In bbox, parent: %s\n", parent.name.text.text );
 
     uint num_children = parent.children().length;
 
@@ -110,44 +120,36 @@ public class Layout : Object {
     // If the node is a summarized node, we need to adjust the treebox to include the summary node and its tree.
     if( parent.is_summarized() ) {
 
-      stdout.printf( "Setting summarized treebox: %s\n", parent.name.text.text );
-
       var summary = parent.summary_node();
       var sb      = summary.tree_bbox;
 
       if( parent.first_summarized() ) {
-        stdout.printf( "  first\n" );
         nb.x = (parent.side.vertical()   && (nb.x > sb.x)) ? sb.x : nb.x;
         nb.y = (parent.side.horizontal() && (nb.y > sb.y)) ? sb.y : nb.y;
         x2   = ((parent.side == NodeSide.RIGHT)  && (x2 < (sb.x + sb.width)))  ? (sb.x + sb.width)  : x2;
         y2   = ((parent.side == NodeSide.BOTTOM) && (y2 < (sb.y + sb.height))) ? (sb.y + sb.height) : y2;
       } else if( parent.last_summarized() ) {
-        stdout.printf( "  last\n" );
+        // stdout.printf( "Updating treebox for last: %s, summary nb: %s\n", parent.name.text.text, sb.to_string() );
         nb.x = ((parent.side == NodeSide.LEFT) && (nb.x > sb.x)) ? sb.x : nb.x;
         nb.y = ((parent.side == NodeSide.TOP)  && (nb.y > sb.y)) ? sb.y : nb.y;
-        stdout.printf( "      vertical: %s, x2: %g, sb.x: %g, sb.width: %g\n", parent.side.vertical().to_string(), x2, sb.x, sb.width );
         //x2   = (parent.side.horizontal() && (x2 < (sb.x + sb.width)))  ? (sb.x + sb.width)  : x2;
         //y2   = (parent.side.vertical()   && (y2 < (sb.y + sb.height))) ? (sb.y + sb.height) : y2;
         x2   = (x2 < (sb.x + sb.width))  ? (sb.x + sb.width)  : x2;
         y2   = (y2 < (sb.y + sb.height)) ? (sb.y + sb.height) : y2;
+        // stdout.printf( "  x: %g, y: %g, w: %g, h: %g\n", nb.x, nb.y, (x2 - nb.x), (y2 - nb.y) );
       } else if( parent.side.horizontal() ) {
-        stdout.printf( "  other\n" );
         nb.x = (nb.x < sb.x) ? nb.x : sb.x;
         x2   = (x2 < (sb.x + sb.width)) ? (sb.x + sb.width) : x2;
       } else {
-        stdout.printf( "  other\n" );
         nb.y = (nb.y < sb.y) ? nb.y : sb.y;
         y2   = (y2 < (sb.y + sb.height)) ? (sb.y + sb.height) : y2;
       }
 
     } else if( parent.is_summary() ) {
-      stdout.printf( "Setting summary treebox\n" );
     }
 
     nb.width  = (x2 - nb.x);
     nb.height = (y2 - nb.y);
-
-    stdout.printf( "    x: %g, y: %g, w: %g, h: %g, name: %s\n", nb.x, nb.y, nb.width, nb.height, parent.name.text.text );
 
     return( nb );
 
@@ -155,7 +157,7 @@ public class Layout : Object {
 
   //-------------------------------------------------------------
   // Updates the tree size
-  protected void update_tree_size( Node n ) {
+  public void update_tree_size( Node n ) {
 
     /* Get the node's tree dimensions */
     var nb = bbox( n, -1, "update_tree_size" );  // n.is_summarized() ? n.summary_node().tree_bbox : bbox( n, -1 );
@@ -181,12 +183,9 @@ public class Layout : Object {
       double xy1, xy2;
       (parent as SummaryNode).get_extents( out xy1, out xy2 );
 
-      stdout.printf( "In GET_ADJUST, summary extents, xy1: %g, xy2: %g, size: %g, name: %s\n", xy1, xy2, (xy2 - xy1), parent.name.text.text );
-
       var extent_size    = xy2 - xy1;
       var orig_tree_size = (extent_size < parent.tree_size) ? parent.tree_size : extent_size;
       update_tree_size( parent );
-      stdout.printf( "  retval: %g\n", ((extent_size < parent.tree_size) ? (parent.tree_size - orig_tree_size) : 0) );
       return( (extent_size < parent.tree_size) ? (parent.tree_size - orig_tree_size) : 0 );
 
     } else {
@@ -351,7 +350,6 @@ public class Layout : Object {
   //-------------------------------------------------------------
   // Updates the layout when necessary when a node is edited.
   public virtual void handle_update_by_edit( Node n, double diffw, double diffh ) {
-    stdout.printf( "In handle_update_by_edit, n: %s, diffw: %g, diffh: %g\n", n.name.text.text, diffw, diffh );
     double adjust = 0 - (get_adjust( n ) / 2);
     if( n.side.horizontal() ) {
       if( diffh != 0 ) {
@@ -419,8 +417,6 @@ public class Layout : Object {
   // Called when we are inserting a node within a parent.
   public virtual void handle_update_by_insert( Node parent, Node child, int pos ) {
 
-    stdout.printf( "In handle_update_by_insert, child: %s\n", child.name.text.text );
-
     double ox, oy, ow, oh;
     double adjust;
 
@@ -475,10 +471,6 @@ public class Layout : Object {
 
     adjust_tree_all( child, child.tree_bbox, (0 - adjust), "by_insert" );
 
-    if( Minder.debug_advance && (child.name.text.text == "Third") ) {
-      assert( false );
-    }
-
   }
 
   //-------------------------------------------------------------
@@ -487,8 +479,6 @@ public class Layout : Object {
   public virtual void handle_update_by_delete( Node parent, int index, NodeSide side, double size ) {
 
     double adjust = size / 2;
-    stdout.printf( "In handle_update_by_delete, parent: %s, adjust: %g\n", parent.name.text.text, adjust );
-    // assert( false );
 
     // Adjust the parent's descendants
     for( int i=0; i<parent.children().length; i++ ) {

@@ -199,8 +199,6 @@ public class SummaryNode : Node {
       if( y2 < (node.posy + node.height) ) { y2 = (node.posy + node.height); }
     }
 
-    stdout.printf( "In nodes_changed, side: %s, fx: %g, fy: %g, x1: %g, y1: %g, x2: %g, y2: %g, msg: %s\n", side.to_string(), fx, fy, x1, y1, x2, y2, msg );
-
     switch( side ) {
       case NodeSide.LEFT   :  
         posx = (fx == 0) ? posx : (x1 - width) - margin;
@@ -228,19 +226,25 @@ public class SummaryNode : Node {
     assert( (first_index >= 0) && (first_index < last_index) );
     for( int i=first_index; i<last_index; i++ ) {
       var node = p.children().index( i );
-      stdout.printf( "  Adding summarized node: %s\n", node.name.text.text );
       _nodes.append( node );
       node.children().append_val( this );
       connect_node( node );
     }
-    p.moved.connect( parent_moved );
-    parent = last_node();
-    update_tree_bboxes();
-    if( layout != null ) {
-      layout.handle_update_by_insert( parent, this, -1 );
-    }
+    attach_init( p, -1 );
     if( theme != null ) {
       link_color_child = main_branch() ? theme.next_color() : parent.link_color;
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Used by attach_nodes and the layout initialization method to
+  // connect to the given parent node
+  public override void attach_init( Node parent, int index ) {
+    parent.moved.connect( parent_moved );
+    this.parent = last_node();
+    update_tree_bboxes();
+    if( layout != null ) {
+      layout.handle_update_by_insert( this.parent, this, -1 );
     }
   }
 
@@ -285,16 +289,20 @@ public class SummaryNode : Node {
   // Overrides the standard detachment
   public override void detach( NodeSide side ) {
     detach_all();
-    /*
+    detach_from_layout( side );
+  }
+
+  //-------------------------------------------------------------
+  // Detaches from layout.
+  public void detach_from_layout( NodeSide side ) {
     if( layout != null ) {
-      layout.handle_update_by_delete( parent, idx, side, tree_size );
+      layout.handle_update_by_delete( parent, 0, side, tree_size );
     }
-    */
   }
 
   //-------------------------------------------------------------
   // Update the tree_bbox structures of the summarized nodes
-  private void update_tree_bboxes() {
+  public void update_tree_bboxes() {
     if( layout != null ) {
       foreach( var node in _nodes ) {
         node.tree_bbox = layout.bbox( node, -1, "update_tree_bboxes" );
@@ -341,8 +349,6 @@ public class SummaryNode : Node {
   //-------------------------------------------------------------
   // Removes the given node from the list of summarized nodes
   public void remove_node( Node node ) {
-
-    stdout.printf( "Removing node\n" );
 
     var update_color = (node == parent);
 
