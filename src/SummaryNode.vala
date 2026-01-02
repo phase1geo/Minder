@@ -55,10 +55,11 @@ public class SummaryNode : Node {
 
   //-------------------------------------------------------------
   // Constructor from XML data
-  public SummaryNode.from_xml( MindMap map, Layout? layout, Xml.Node* node, ref Array<Node> siblings ) {
+  public SummaryNode.from_xml( MindMap map, Layout? layout, Xml.Node* node ) {
     base( map, layout );
     _nodes = new List<Node>();
-    load( map, node, false, null, ref siblings );
+    var dummy = false;
+    load( map, node, false, ref dummy );
   }
 
   //-------------------------------------------------------------
@@ -223,33 +224,21 @@ public class SummaryNode : Node {
 
   //-------------------------------------------------------------
   // Attach ourself to the list of nodes
-  public void attach_nodes( Node p, Array<Node> nodes, bool sort, Theme? theme ) {
-    assert( nodes.length > 0 );
-    for( int i=0; i<nodes.length; i++ ) {
-      var node = nodes.index( i );
+  public void attach_nodes( Node p, int first_index, int last_index, Theme? theme = null ) {
+    assert( (first_index >= 0) && (first_index < last_index) );
+    for( int i=first_index; i<last_index; i++ ) {
+      var node = p.children().index( i );
       stdout.printf( "  Adding summarized node: %s\n", node.name.text.text );
       _nodes.append( node );
       node.children().append_val( this );
       connect_node( node );
     }
     p.moved.connect( parent_moved );
-    if( sort ) {
-      stdout.printf( "SORTING NODES\n" );
-      sort_nodes();
-    } else {
-      stdout.printf( "PARENT = LAST_NODE\n" );
-      parent = last_node();
-      update_tree_bboxes();
-      stdout.printf( "Updated tree bboxes\n" );
-    }
+    parent = last_node();
+    update_tree_bboxes();
     if( layout != null ) {
       layout.handle_update_by_insert( parent, this, -1 );
     }
-    /*
-    if( layout != null ) {
-      layout.handle_update_by_insert( parent, this, -1 );
-    }
-    */
     if( theme != null ) {
       link_color_child = main_branch() ? theme.next_color() : parent.link_color;
     }
@@ -261,12 +250,12 @@ public class SummaryNode : Node {
   // already summarized.
   public void attach_siblings( Node node, Theme? theme ) {
     var sibling = node;
-    var nodes   = new Array<Node>();
+    var first_summary_index = 0;
     while( (sibling != null) && sibling.is_leaf() && !sibling.is_summarized() && (sibling.side == side) ) {
-      nodes.prepend_val( sibling );
+      first_summary_index = sibling.index();
       sibling = sibling.previous_sibling();
     }
-    attach_nodes( node.parent, nodes, false, theme );
+    attach_nodes( node.parent, first_summary_index, (node.index() + 1), theme );
   }
 
   //-------------------------------------------------------------

@@ -600,7 +600,7 @@ public class Node : Object {
 
   //-------------------------------------------------------------
   // Constructor from an XML node.
-  public Node.from_xml( MindMap map, Layout? layout, Xml.Node* n, bool isroot, Node? sibling_parent, ref Array<Node> siblings ) {
+  public Node.from_xml( MindMap map, Layout? layout, Xml.Node* n, bool isroot, ref bool first_summary ) {
     _map       = map;
     _children  = new Array<Node>();
     _tree_bbox = new NodeBounds( map );
@@ -609,7 +609,7 @@ public class Node : Object {
     _name.resized.connect( position_text_and_update_size );
     _tags      = new Tags();
     set_parsers();
-    load( map, n, isroot, sibling_parent, ref siblings );
+    load( map, n, isroot, ref first_summary );
   }
 
   //-------------------------------------------------------------
@@ -805,29 +805,6 @@ public class Node : Object {
       _sequence_num = null;
     }
     position_text_and_update_size();
-  }
-
-  //-------------------------------------------------------------
-  // Clears the summary extents found as grandchildren of this
-  // node.
-  public virtual void clear_summary_extents() {
-    for( int i=0; i<_children.length; i++ ) {
-      var node = _children.index( i );
-      if( node.last_summarized() ) {
-        node.summary_node().clear_extents();
-      }
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Sets the summary extents found as grandchildren of this node.
-  public virtual void set_summary_extents() {
-    for( int i=0; i<_children.length; i++ ) {
-      var node = _children.index( i );
-      if( node.last_summarized() ) {
-        node.summary_node().set_extents();
-      }
-    }
   }
 
   //-------------------------------------------------------------
@@ -1616,19 +1593,26 @@ public class Node : Object {
 
   //-------------------------------------------------------------
   // Loads the child nodes.
-  private void load_nodes( Xml.Node* n, Node? sibling_parent, ref Array<Node> siblings ) {
-    var nodes = new Array<Node>();
+  private void load_nodes( Xml.Node* n ) {
+    var first_summary_index = -1;
+    var node_index          = 0;
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           case "node" :
-            var node = new Node.from_xml( _map, _layout, it, false, this, ref nodes );
+            bool first_summary = false;
+            var node = new Node.from_xml( _map, _layout, it, false, ref first_summary );
             node.attach( this, -1, null );
+            if( first_summary ) {
+              first_summary_index = node_index;
+            }
+            node_index++;
             break;
           case "summary-node" :
-            var node = new SummaryNode.from_xml( _map, _layout, it, ref nodes );
-            node.attach_nodes( sibling_parent, siblings, false, null );
-            siblings.remove_range( 0, siblings.length );
+            var node = new SummaryNode.from_xml( _map, _layout, it );
+            stdout.printf( "  CREATING summary node, first: %d, last: %d\n", first_summary_index, node_index );
+            node.attach_nodes( this, first_summary_index, node_index );
+            first_summary_index = -1;
             break;
         }
       }
@@ -1637,7 +1621,7 @@ public class Node : Object {
 
   //-------------------------------------------------------------
   // Loads the file contents into this instance.
-  public virtual void load( MindMap map, Xml.Node* n, bool isroot, Node? sibling_parent, ref Array<Node> siblings ) {
+  public virtual void load( MindMap map, Xml.Node* n, bool isroot, ref bool first_summary ) {
 
     _loaded = false;
 
@@ -1714,9 +1698,9 @@ public class Node : Object {
       group = bool.parse( g );
     }
 
-    string? su = n->get_prop( "summarized" );
-    if( (su != null) && bool.parse( su ) ) {
-      siblings.append_val( this );
+    string? ss = n->get_prop( "summary-start" );
+    if( ss != null ) {
+      first_summary = true;
     }
 
     // If the posx and posy values are not set, set the layout now
@@ -1741,10 +1725,16 @@ public class Node : Object {
           case "taglist"    :  tags.load_indices( it, _map.model.tags );  break;
           case "style"      :  load_style( it );  break;
           case "callout"    :  load_callout( it );  break;
-          case "nodes"      :  load_nodes( it, sibling_parent, ref siblings );  break;
+          case "nodes"      :  load_nodes( it );  break;
         }
       }
     }
+
+    /*
+    if( is_summary() ) {
+      return;
+    }
+    */
 
     string? srl = n->get_prop( "sequence" );
     if( srl != null ) {
@@ -1776,6 +1766,7 @@ public class Node : Object {
     }
 
     // Get the tree bbox
+    stdout.printf( "Get tree_bbox\n" );
     tree_bbox = layout.bbox( this, -1, "node.load" );
 
     if( ts == null ) {
@@ -1822,7 +1813,9 @@ public class Node : Object {
       node->new_prop( "color", Utils.color_from_rgba( _link_color ) );
       node->new_prop( "colorroot", link_color_root.to_string() );
     }
-    node->new_prop( "summarized", is_summarized().to_string() );
+    if( first_summarized() ) {
+      node->new_prop( "summary-start", "true" );
+    }
     node->new_prop( "layout", _layout.name );
     if( _sticker != null ) {
       node->new_prop( "sticker", _sticker );
@@ -1847,10 +1840,14 @@ public class Node : Object {
       node->add_child( _callout.save() );
     }
 
-    if( (_children.length > 0) && traversable() ) {
+    if( (_children.length > 0) && !is_summarized() ) {
       Xml.Node* nodes = new Xml.Node( null, "nodes" );
       for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).save( nodes );
+        var child = _children.index( i );
+        child.save( nodes );
+        if( child.last_summarized() ) {
+          child.children().index( 0 ).save( nodes );
+        }
       }
       node->add_child( nodes );
     }
@@ -2134,6 +2131,7 @@ public class Node : Object {
   // Moves this node into the proper position within the parent
   // node.  Returns true if the node is moved to a new position.
   public bool move_to_position( Node child, NodeSide side, double x, double y ) {
+    stdout.printf( "In move_to_position, child: %s\n", child.name.text.text );
     int   idx           = child.index();
     Node? last_selected = last_selected_child;
     for( int i=0; i<_children.length; i++ ) {
@@ -2284,7 +2282,9 @@ public class Node : Object {
     update_tree_bbox( diffx, diffy );
     position_text();
 
-    if( !is_summarized() || last_summarized() ) {
+    // If we are a summarized node and we are being moved by our parent, don't propagate
+    // the moved signal since our parent will move the summary node on our behalf.
+    if( !is_summarized() ) {
       moved( diffx, diffy );
     }
 
@@ -2311,6 +2311,7 @@ public class Node : Object {
       }
       _sequence_num = null;
       if( layout != null ) {
+        stdout.printf( "Deleting: %s\n", name.text.text );
         layout.handle_update_by_delete( parent, idx, side, tree_size );
       }
       parent   = null;
@@ -2828,6 +2829,10 @@ public class Node : Object {
     double y = posy + style.node_margin;
     double w = _width  - (style.node_margin * 2);
     double h = _height - (style.node_margin * 2);
+
+    if( is_summary() ) {
+      _alpha = 0.2;
+    }
 
     // If we are a root node and our alpha value is not 1.0, draw our shape in the background color to hide
     // any links that are drawn under us.
@@ -3383,13 +3388,13 @@ public class Node : Object {
     // Draw tree_bbox
     if( is_summarized() || is_summary() ) {
       if( first_summarized() ) {
-        Utils.set_context_color_with_alpha( ctx, theme.get_color( "link_color0" ), 0.1 );
+        Utils.set_context_color_with_alpha( ctx, theme.get_color( "link_color0" ), 0.5 );
       } else if( last_summarized() ) {
-        Utils.set_context_color_with_alpha( ctx, theme.get_color( "link_color3" ), 0.1 );
+        Utils.set_context_color_with_alpha( ctx, theme.get_color( "link_color3" ), 0.5 );
       } else if( is_summarized() ) {
-        Utils.set_context_color_with_alpha( ctx, theme.get_color( "link_color6" ), 0.1 );
+        Utils.set_context_color_with_alpha( ctx, theme.get_color( "link_color6" ), 0.5 );
       } else {
-        Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.1 );
+        Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.5 );
       }
       ctx.rectangle( tree_bbox.x, tree_bbox.y, tree_bbox.width, tree_bbox.height );
       ctx.fill();

@@ -412,8 +412,8 @@ public class MapModel {
           case "nodes"        :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var siblings = new Array<Node>();
-                var node = new Node.from_xml( _map, null, it2, true, null, ref siblings );
+                var first_summary = false;
+                var node = new Node.from_xml( _map, null, it2, true, ref first_summary );
                 if( use_layout != null ) {
                   node.layout = use_layout;
                 }
@@ -436,9 +436,11 @@ public class MapModel {
     }
 
     // Perform the layout process again to make sure that everything is accounted for
+    /*
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).layout.initialize( _nodes.index( i ) );
     }
+    */
 
     queue_draw();
 
@@ -1815,10 +1817,10 @@ public class MapModel {
   //-------------------------------------------------------------
   // Creates a summary node for the nodes in the range of first
   // to last, inclusive.
-  public Node create_summary_node( Array<Node> nodes ) {
+  public Node create_summary_node( Node parent, NodeSide side, int first_index, int last_index ) {
     var summary = new SummaryNode( _map, layouts.get_default() );
-    summary.side = nodes.index( 0 ).side;
-    summary.attach_nodes( nodes.index( 0 ).parent, nodes, true, _theme );
+    summary.side = side;
+    summary.attach_nodes( parent, first_index, last_index, _theme );
     set_style_after_parent_attach( summary );
     return( summary );
   }
@@ -1947,8 +1949,8 @@ public class MapModel {
   // selected range
   public void add_summary_node_from_selected() {
     if( !nodes_summarizable() ) return;
-    var nodes = _map.selected.nodes();
-    var node  = create_summary_node( nodes );
+    var nodes = _map.selected.ordered_nodes();
+    var node  = create_summary_node( nodes.index( 0 ).parent, nodes.index( 0 ).side, nodes.index( 0 ).index(), (nodes.index( nodes.length - 1 ).index() + 1) );
     _map.add_undo( new UndoNodeSummary( (SummaryNode)node ) );
     _map.set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );
@@ -2384,8 +2386,8 @@ public class MapModel {
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var siblings = new Array<Node>();
-                var node = new Node.from_xml( _map, null, it2, true, null, ref siblings );
+                var first_summary = false;
+                var node = new Node.from_xml( _map, null, it2, true, ref first_summary );
                 nodes.append_val( node );
               }
             }

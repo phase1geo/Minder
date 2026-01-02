@@ -82,6 +82,8 @@ public class Layout : Object {
   // Get the bbox for the given parent to the given depth
   public virtual NodeBounds bbox( Node parent, int side_mask, string msg ) {
 
+    stdout.printf( "In bbox, parent: %s\n", parent.name.text.text );
+
     uint num_children = parent.children().length;
 
     double px, py, pw, ph;
@@ -205,7 +207,8 @@ public class Layout : Object {
 
       var n = parent.children().index( i );
 
-      if( ((i != child_index) || n.last_summarized()) && ((n.side & side_mask) != 0) ) {
+      // if( ((i != child_index) || n.last_summarized()) && ((n.side & side_mask) != 0) ) {
+      if( (i != child_index) && ((n.side & side_mask) != 0) ) {
         if( n.side.horizontal() ) {
           n.posy += amount;
         } else {
@@ -323,7 +326,7 @@ public class Layout : Object {
   public void apply_margin( Node n ) {
     if( n.parent == null ) return;
     double px, py, pw, ph;
-    var margin = n.parent.style.branch_margin;
+    var margin = n.parent.style.branch_margin + (n.is_summary() ? 20 : 0);
     n.parent.bbox( out px, out py, out pw, out ph );
     switch( n.side ) {
       case NodeSide.LEFT :
@@ -348,6 +351,7 @@ public class Layout : Object {
   //-------------------------------------------------------------
   // Updates the layout when necessary when a node is edited.
   public virtual void handle_update_by_edit( Node n, double diffw, double diffh ) {
+    stdout.printf( "In handle_update_by_edit, n: %s, diffw: %g, diffh: %g\n", n.name.text.text, diffw, diffh );
     double adjust = 0 - (get_adjust( n ) / 2);
     if( n.side.horizontal() ) {
       if( diffh != 0 ) {
@@ -471,6 +475,10 @@ public class Layout : Object {
 
     adjust_tree_all( child, child.tree_bbox, (0 - adjust), "by_insert" );
 
+    if( Minder.debug_advance && (child.name.text.text == "Third") ) {
+      assert( false );
+    }
+
   }
 
   //-------------------------------------------------------------
@@ -479,6 +487,8 @@ public class Layout : Object {
   public virtual void handle_update_by_delete( Node parent, int index, NodeSide side, double size ) {
 
     double adjust = size / 2;
+    stdout.printf( "In handle_update_by_delete, parent: %s, adjust: %g\n", parent.name.text.text, adjust );
+    // assert( false );
 
     // Adjust the parent's descendants
     for( int i=0; i<parent.children().length; i++ ) {

@@ -336,7 +336,7 @@ public class Document : Object {
     var bak_file = get_bak_file();
     var fname    = (FileUtils.test( bak_file, FileTest.EXISTS ) && !_map.settings.get_boolean( "keep-backup-after-save" )) ? bak_file : filename;
 
-    // stdout.printf( "Loading fname: %s, temp: %s\n", fname, _temp_dir );
+    stdout.printf( "Loading fname: %s, temp: %s\n", fname, _temp_dir );
 
     Archive.Read archive = new Archive.Read();
     archive.support_filter_gzip();

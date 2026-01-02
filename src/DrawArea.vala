@@ -607,11 +607,8 @@ public class DrawArea : Gtk.DrawingArea {
 
       // If the node is currently selected, we may be moving multiple nodes, so
       // hold off
-      } else if (node.mode != NodeMode.SELECTED) {
+      } else if( node.mode != NodeMode.SELECTED ) {
         _map.selected.set_current_node( node );
-        if( node.parent != null ) {
-          node.parent.set_summary_extents();
-        }
       }
 
       if( node.parent != null ) {
@@ -1786,9 +1783,6 @@ public class DrawArea : Gtk.DrawingArea {
           var orig_summary = current_node.summary_node();
           var moved        = false;
           animator.add_nodes( _map.get_nodes(), false, "move to position" );
-          if( current_node.parent != null ) {
-            current_node.parent.clear_summary_extents();
-          }
           if( current_node.is_summary() ) {
             (current_node as SummaryNode).nodes_changed( 1, 1 );
           } else {
@@ -1800,7 +1794,7 @@ public class DrawArea : Gtk.DrawingArea {
           if( !current_node.is_summarized() && (_map.model.attach_summary != null) ) {
             _map.model.attach_summary.add_node( current_node );
           } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_map.model.attach_summary == null) ) {
-            current_node.summary_node().remove_node( current_node );
+            // TBD - current_node.summary_node().remove_node( current_node );
           } else if( current_node.is_summarized() ) {
             current_node.summary_node().node_moved( current_node );
           }

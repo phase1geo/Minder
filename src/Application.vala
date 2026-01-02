@@ -34,7 +34,7 @@ public class Minder : Gtk.Application {
 
   public  static GLib.Settings settings;
   public  static string        version       = "2.0.3";
-  public  static bool          debug         = false;
+  public  static bool          debug         = true;
   public  static bool          debug_advance = false;
   public  static int           debug_count   = 0;
 
