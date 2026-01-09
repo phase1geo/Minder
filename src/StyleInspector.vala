@@ -1015,10 +1015,12 @@ public class StyleInspector : Box {
     });
     font_dialog.set_filter( font_filter );
     _node_font.notify["font-desc"].connect(() => {
-      var family = _node_font.font_desc.get_family();
-      var size   = _node_font.font_desc.get_size();
-      _curr_style.node_font = _node_font.font_desc.copy();
-      _map.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _map ) );
+      if( !_ignore ) {
+        var family = _node_font.font_desc.get_family();
+        var size   = _node_font.font_desc.get_size();
+        _curr_style.node_font = _node_font.font_desc.copy();
+        _map.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _map ) );
+      }
     });
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1445,10 +1447,12 @@ public class StyleInspector : Box {
     });
     font_dialog.set_filter( font_filter );
     _conn_font.notify["font-desc"].connect(() => {
-      var family = _conn_font.font_desc.get_family();
-      var size   = _conn_font.font_desc.get_size();
-      _curr_style.connection_font = _conn_font.font_desc.copy();
-      _map.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _map ) );
+      if( !_ignore ) {
+        var family = _conn_font.font_desc.get_family();
+        var size   = _conn_font.font_desc.get_size();
+        _curr_style.connection_font = _conn_font.font_desc.copy();
+        _map.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _map ) );
+      }
     });
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1608,10 +1612,12 @@ public class StyleInspector : Box {
     });
     font_dialog.set_filter( font_filter );
     _callout_font.notify["font-desc"].connect(() => {
-      var family = _callout_font.font_desc.get_family();
-      var size   = _callout_font.font_desc.get_size();
-      _curr_style.callout_font = _callout_font.font_desc.copy();
-      _map.add_undo( new UndoStyleCalloutFont( _affects, family, size, _map ) );
+      if( !_ignore ) {
+        var family = _callout_font.font_desc.get_family();
+        var size   = _callout_font.font_desc.get_size();
+        _curr_style.callout_font = _callout_font.font_desc.copy();
+        _map.add_undo( new UndoStyleCalloutFont( _affects, family, size, _map ) );
+      }
     });
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -2123,7 +2129,7 @@ public class StyleInspector : Box {
         _node_padding.set_value( (double)node_padding );
       }
       if( style.node_font != null ) {
-        _node_font.set_font_features( style.node_font.to_string() );
+        _node_font.set_font_desc( style.node_font );
       }
       if( node_width != null ) {
         _node_width.set_value( (float)node_width );
@@ -2147,7 +2153,7 @@ public class StyleInspector : Box {
         _conn_lwidth.set_value( (double)conn_line_width );
       }
       if( style.connection_font != null ) {
-        _conn_font.set_font_features( style.connection_font.to_string() );
+        _conn_font.set_font_desc( style.connection_font );
       }
       if( style.connection_title_width != null ) {
         _conn_twidth.set_value( style.connection_title_width );
@@ -2161,7 +2167,7 @@ public class StyleInspector : Box {
     if( (_affects == StyleAffects.ALL) || (_affects == StyleAffects.SELECTED_CALLOUTS) ) {
       update_callout_text_align_with_style( style );
       if( style.callout_font != null ) {
-        _callout_font.set_font_features( style.callout_font.to_string() );
+        _callout_font.set_font_desc( style.callout_font );
       }
       if( callout_padding != null ) {
         _callout_padding.set_value( (double)callout_padding );
