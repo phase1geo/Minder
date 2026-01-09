@@ -113,6 +113,8 @@ public class ExportPortableMinder : Export {
   // computer.
   public override bool import( string fname, MindMap map ) {
 
+    stdout.printf( "Importing portable Minder fname: %s\n", fname );
+
     Archive.Read archive = new Archive.Read();
     archive.support_filter_gzip();
     archive.support_format_all();
@@ -135,6 +137,8 @@ public class ExportPortableMinder : Export {
       critical( e.message );
     }
 
+    stdout.printf( "  img_dir: %s\n", img_dir );
+
     // Open the portable Minder file for reading
     if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
       error( "Error: %s (%d)", archive.error_string(), archive.errno() );
@@ -144,6 +148,8 @@ public class ExportPortableMinder : Export {
     unowned Archive.Entry entry;
 
     while( archive.next_header( out entry ) == Archive.Result.OK ) {
+
+      stdout.printf( "  found file: %s\n", entry.pathname() );
 
       // We will need to modify the entry pathname so the file is written to the
       // proper location.
@@ -176,6 +182,7 @@ public class ExportPortableMinder : Export {
         entry.xattr_reset();
         if( (entry.xattr_next( out name, out value, out size ) == Archive.Result.OK) && (name == "image_id") ) {
           int* id = (int*)value;
+          stdout.printf( "    image_manager: %s, id: %d\n", (map.image_manager.get_image_dir() ?? "NA"), *id );
           map.image_manager.add_image( "file://" + entry.pathname(), *id );
         }
       }

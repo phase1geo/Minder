@@ -150,6 +150,7 @@ public class NodeImage {
 
     // Allocate the image
     if( id != -1 ) {
+      stdout.printf( "id: %d, resize: %s, width: %d\n", id, resize.to_string(), width );
       if( load( im, id, false ) ) {
         set_width( width );
       }
@@ -171,6 +172,7 @@ public class NodeImage {
 
       // Get the name of the file to read from the ImageManager
       var fname = im.get_file( id );
+      stdout.printf( "fname: %s\n", (fname ?? "NA") );
       if( fname == null ) {
         this.valid = false;
         return( false );
@@ -183,6 +185,7 @@ public class NodeImage {
       if( init ) {
         crop_x = 0;
         crop_y = 0;
+        stdout.printf( "orig.width: %d\n", _orig.width );
         crop_w = _orig.width;
         crop_h = _orig.height;
       }
@@ -215,6 +218,8 @@ public class NodeImage {
       stderr.printf( "Warning: Calculated height (%d) invalid, using minimum height of 1\n", int_crop_h );
       int_crop_h = 1;
     }
+
+    stdout.printf( "width: %d, orig.width: %d, crop_x: %d, crop_y: %d, crop_w: %d, crop_h: %d\n", width, _orig.get_width(), crop_x, crop_y, crop_w, crop_h );
 
     var tmp = new Pixbuf.subpixbuf( _orig, crop_x, crop_y, crop_w, crop_h );
     if( (tmp == null) || (int_crop_h <= 0) ) {

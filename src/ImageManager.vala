@@ -207,6 +207,7 @@ public class ImageManager {
    could not be added, returns a value of -1.
   */
   public int add_image( string uri, int? orig_id = null ) {
+    stdout.printf( "In add_image, uri: %s\n", uri );
     var item = find_uri_match( uri );
     if( item == null ) {
       item = new ImageItem( this, uri );
@@ -216,6 +217,7 @@ public class ImageManager {
       if( !item.copy_file() ) return( -1 );
     }
     if( orig_id != null ) {
+      stdout.printf( "   orig_id: %d, item.id: %d\n", orig_id, item.id );
       _id_map.set( orig_id, item.id );
     }
     return( item.id );
