@@ -27,7 +27,6 @@ public class StickerInspector : Box {
   private string favorites = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "favorites.xml" );
 
   private MainWindow    _win;
-  private DrawArea?     _da = null;
   private GLib.Settings _settings;
   private SearchEntry   _search;
   private Stack         _stack;
@@ -85,6 +84,21 @@ public class StickerInspector : Box {
       placeholder_text = _( "Search Stickers" )
     };
     _search.search_changed.connect( do_search );
+
+    var search_key = new EventControllerKey();
+    _search.add_controller( search_key );
+
+    search_key.key_pressed.connect((keyval, keycode, state) => {
+      if( keyval == Gdk.Key.Escape ) {
+        if( _search.text == "" ) {
+          _win.get_current_map().hide_properties();
+        } else {
+          _search.text = "";
+        }
+        return( true );
+      }
+      return( false );
+    });
 
     // Create main scrollable pane
     var box = new Box( Orientation.VERTICAL, 20 );

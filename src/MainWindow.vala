@@ -2044,30 +2044,6 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
-  // Displays the current sidebar tab
-  private void action_show_current() {
-    show_properties( "current", PropertyGrab.FIRST );
-  }
-
-  //-------------------------------------------------------------
-  // Displays the style sidebar tab
-  private void action_show_style() {
-    show_properties( "style", PropertyGrab.FIRST );
-  }
-
-  //-------------------------------------------------------------
-  // Displays the stickers sidebar tab
-  private void action_show_stickers() {
-    show_properties( "sticker", PropertyGrab.FIRST );
-  }
-
-  //-------------------------------------------------------------
-  // Displays the map sidebar tab
-  private void action_show_map() {
-    show_properties( "map", PropertyGrab.FIRST );
-  }
-
-  //-------------------------------------------------------------
   // Shows the next tab in the tabbar
   private void action_next_tab() {
     _nb.next_page();

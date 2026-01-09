@@ -51,6 +51,9 @@ public class TagInspector : Box {
     _editor.tag_removed.connect( tag_removed );
     _editor.select_changed.connect( tag_select_changed );
     _editor.visible_changed.connect( tag_visible_changed );
+    _editor.escaped.connect(() => {
+      _map.hide_properties();
+    });
 
     win.canvas_changed.connect( tab_changed );
 

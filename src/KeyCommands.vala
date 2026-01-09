@@ -943,7 +943,10 @@ public enum KeyCommand {
   //-------------------------------------------------------------
   // Returns true if this command is valid for a selected sticker.
   public bool for_sticker() {
-    return( ((STICKER_START < this) && (this < STICKER_END)) );
+    return(
+      ((STICKER_START < this) && (this < STICKER_END)) ||
+      (this == ESCAPE)
+    );
   }
 
   //-------------------------------------------------------------
@@ -952,7 +955,8 @@ public enum KeyCommand {
     return(
       ((GROUP_START < this) && (this < GROUP_END)) ||
       (this == EDIT_NOTE) ||
-      (this == SHOW_CURRENT_INFO)
+      (this == SHOW_CURRENT_INFO) ||
+      (this == ESCAPE)
     );
   }
 
@@ -965,6 +969,7 @@ public enum KeyCommand {
       case NODE_ADD_SIBLING_AFTER  :
       case NODE_ADD_SIBLING_BEFORE :
       case EDIT_PASTE              :
+      case ESCAPE                  :
         return( true );
       default :
         return( false );
