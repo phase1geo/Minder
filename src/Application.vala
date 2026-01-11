@@ -255,7 +255,7 @@ public class Minder : Gtk.Application {
         });
         var map = appwin.create_map();
         map.doc.load_filename( infile, false );
-        map.doc.load( true, (loaded) => {
+        map.doc.load( UpgradeAction.READ_ONLY, (loaded) => {
           if( loaded ) {
             export.export( outfile, map );
           } else {

@@ -1479,7 +1479,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     if( fname.has_suffix( ".minder" ) ) {
       var map = add_tab_conditionally( fname, TabAddReason.OPEN );
       update_title( map );
-      map.doc.load( false, (valid, msg) => {
+      map.doc.load( UpgradeAction.NUM, (valid, msg) => {
         if( valid ) {
           save_tab_state( _nb.page );
         } else {
@@ -2327,7 +2327,7 @@ public class MainWindow : Gtk.ApplicationWindow {
             map.editable = !bool.parse( read_only );
           }
           map.doc.load_filename( fname, bool.parse( saved ) );
-          map.doc.load( true, null );
+          map.doc.load( UpgradeAction.READ_ONLY, null );
           tabs++;
         } else {
           tab_skipped = true;
