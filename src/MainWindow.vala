@@ -1492,8 +1492,7 @@ public class MainWindow : Gtk.ApplicationWindow {
         if( exports.index( i ).importable && (exports.index( i ).dir == dir) ) {
           string new_fname;
           if( exports.index( i ).filename_matches( fname, out new_fname ) ) {
-            new_fname += ".minder";
-            var map = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
+            var map = add_tab_conditionally( null, TabAddReason.IMPORT );
             update_title( map );
             if( exports.index( i ).import( fname, map ) ) {
               save_tab_state( _nb.page );
@@ -1513,12 +1512,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     close_unchanged_tabs();
     for( int i=0; i<exports.length(); i++ ) {
       if( exports.index( i ).importable && (exports.index( i ).name == export_name) ) {
-        var orig_fname = fname;
-        string[] parts = fname.split( "." );
-        new_fname = string.joinv( ".", parts[0:parts.length-1] ) + ".minder";
-        var map = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
+        var map = add_tab_conditionally( null, TabAddReason.IMPORT );
         update_title( map );
-        if( exports.index( i ).import( orig_fname, map ) ) {
+        if( exports.index( i ).import( fname, map ) ) {
           return( true );
         }
         close_current_tab();
