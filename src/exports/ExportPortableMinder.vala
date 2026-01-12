@@ -140,7 +140,6 @@ public class ExportPortableMinder : Export {
       error( "Error: %s (%d)", archive.error_string(), archive.errno() );
     }
 
-    string?               minder_path = null;
     unowned Archive.Entry entry;
 
     while( archive.next_header( out entry ) == Archive.Result.OK ) {
@@ -148,8 +147,7 @@ public class ExportPortableMinder : Export {
       // We will need to modify the entry pathname so the file is written to the
       // proper location.
       if( entry.pathname().has_suffix( ".minder" ) ) {
-        entry.set_pathname( fname.substring( 0, (fname.length - 8) ) + ".minder" );
-        minder_path = entry.pathname();
+        entry.set_pathname( map.doc.filename );
       } else {
         var file = File.new_for_path( Path.build_filename( img_dir, entry.pathname() ) );
         entry.set_pathname( file.get_path() );
@@ -191,8 +189,7 @@ public class ExportPortableMinder : Export {
     DirUtils.remove( img_dir );
 
     // Finally, load the minder file and re-save it
-    map.doc.load( true );
-    map.auto_save();
+    map.doc.load( UpgradeAction.OVERRIDE );
 
     return( true );
 

@@ -27,7 +27,8 @@ public delegate void ImageIdFunc( int id );
 
 public class ImageManager {
 
-  /* Private class used by the image manager to store image information */
+  //-------------------------------------------------------------
+  // Private class used by the image manager to store image information
   private class ImageItem {
 
     private ImageManager _manager;
@@ -37,7 +38,8 @@ public class ImageManager {
     public string ext   { set; get; default = ""; }
     public bool   valid { set; get; default = false; }
 
-    /* Default constructor */
+    //-------------------------------------------------------------
+    // Default constructor
     public ImageItem( ImageManager manager, string uri ) {
       _manager   = manager;
       this.id    = Minder.settings.get_int( "image-id" );
@@ -47,7 +49,8 @@ public class ImageManager {
       Minder.settings.set_int( "image-id", (this.id + 1) );
     }
 
-    /* Loads the item information from given XML node */
+    //-------------------------------------------------------------
+    // Loads the item information from given XML node
     public ImageItem.from_xml( ImageManager manager, Xml.Node* n ) {
       _manager = manager;
       string? i = n->get_prop( "id" );
@@ -65,7 +68,8 @@ public class ImageManager {
       valid = true;
     }
 
-    /* Saves the given image item to the specified XML node */
+    //-------------------------------------------------------------
+    // Saves the given image item to the specified XML node
     public void save( Xml.Node* parent ) {
       Xml.Node* n = new Xml.Node( null, "image" );
       n->new_prop( "id",  id.to_string() );
@@ -74,12 +78,14 @@ public class ImageManager {
       parent->add_child( n );
     }
 
-    /* Returns true if the file exists */
+    //-------------------------------------------------------------
+    // Returns true if the file exists
     public bool exists() {
       return( FileUtils.test( get_path(), FileTest.EXISTS ) );
     }
 
-    /* Returns the extension associated with the filename */
+    //-------------------------------------------------------------
+    // Returns the extension associated with the filename
     public string get_extension() {
       if( uri != "" ) {
         var parts = uri.split( "." );
@@ -93,13 +99,16 @@ public class ImageManager {
       return( "" );
     }
 
-    /* Returns the full pathname to the given fname */
+    //-------------------------------------------------------------
+    // Returns the full pathname to the given fname
     public string get_path() {
       var basename = "img%06x%s".printf( id, ext );
       return( GLib.Path.build_filename( _manager.get_image_dir(), basename ) );
     }
 
-    /* Copies the given URI to the given filename in the storage directory */
+    //-------------------------------------------------------------
+    // Copies the given URI to the given filename in the storage
+    // directory
     public bool copy_file() {
       var rfile = File.new_for_uri( uri );
       var lfile = File.new_for_path( get_path() );
@@ -112,7 +121,9 @@ public class ImageManager {
       return( true );
     }
 
-    /* If the current item is no longer valid, remove it from the file system */
+    //-------------------------------------------------------------
+    // If the current item is no longer valid, remove it from the
+    // file system
     public void cleanup() {
       if( !valid && exists() ) {
         FileUtils.unlink( get_path() );
@@ -125,34 +136,39 @@ public class ImageManager {
   private HashMap<int,int> _id_map;
   private string?          _image_dir = null;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public ImageManager() {
 
-    /* Create the images directory if it does not exist */
+    // Create the images directory if it does not exist
     set_image_dir( get_image_dir() );
 
-    /* Allocate the images array */
+    // Allocate the images array
     _images = new Array<ImageItem>();
     _id_map = new HashMap<int,int>();
 
   }
 
-  /* Returns the web pathname used to store downloaded images */
+  //-------------------------------------------------------------
+  // Returns the web pathname used to store downloaded images
   public string? get_image_dir() {
     return( _image_dir );
   }
 
-  /* Sets the image dir to the specified path (pass null to use the default system path) */
+  //-------------------------------------------------------------
+  // Sets the image dir to the specified path (pass null to use
+  // the default system path)
   public void set_image_dir( string? image_dir ) {
 
     _image_dir = image_dir ?? GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "images" );
 
-    /* Create the images directory if it does not exist */
+    // Create the images directory if it does not exist
     DirUtils.create_with_parents( _image_dir, 0775 );
 
   }
 
-  /* Loads the image manager information from the specified XML node */
+  //-------------------------------------------------------------
+  // Loads the image manager information from the specified XML node
   public void load( Xml.Node* n ) {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
@@ -166,7 +182,8 @@ public class ImageManager {
     }
   }
 
-  /* Saves the image manager information to the file */
+  //-------------------------------------------------------------
+  // Saves the image manager information to the file
   public void save( Xml.Node* n ) {
     for( int i=0; i<_images.length; i++ ) {
       if( _images.index( i ).valid ) {
@@ -175,10 +192,10 @@ public class ImageManager {
     }
   }
 
-  /*
-   Searches the list of stored image items, returning the array index
-   of the item that matches.  If no match is found, a value of -1 is returned.
-  */
+  //-------------------------------------------------------------
+  // Searches the list of stored image items, returning the array
+  // index of the item that matches.  If no match is found, a
+  // value of -1 is returned.
   private ImageItem? find_match( int id ) {
     for( int i=0; i<_images.length; i++ ) {
       if( _images.index( i ).id == id ) {
@@ -188,10 +205,9 @@ public class ImageManager {
     return( null );
   }
 
-  /*
-   Finds an image item that matches the given URI and returns the index of the
-   matching item.
-  */
+  //-------------------------------------------------------------
+  // Finds an image item that matches the given URI and returns
+  // the index of the matching item.
   private ImageItem? find_uri_match( string uri ) {
     for( int i=0; i<_images.length; i++ ) {
       if( _images.index( i ).uri == uri ) {
@@ -201,11 +217,11 @@ public class ImageManager {
     return( null );
   }
 
-  /*
-   Adds the given image information to the stored list.  Returns the image ID that
-   the NodeImage class will store to reference the image details.  If the image
-   could not be added, returns a value of -1.
-  */
+  //-------------------------------------------------------------
+  // Adds the given image information to the stored list.  Returns
+  // the image ID that the NodeImage class will store to reference
+  // the image details.  If the image could not be added, returns
+  // a value of -1.
   public int add_image( string uri, int? orig_id = null ) {
     var item = find_uri_match( uri );
     if( item == null ) {
@@ -221,12 +237,12 @@ public class ImageManager {
     return( item.id );
   }
 
-  /*
-   Creates a file with the contents of the given pixbuf and adds the file information
-   to the manager list.  Returns the image ID that the NodeImage class will store
-   to reference the image details.  If the image could not be added, returns a
-   value of -1.
-  */
+  //-------------------------------------------------------------
+  // Creates a file with the contents of the given pixbuf and
+  // adds the file information to the manager list.  Returns the
+  // image ID that the NodeImage class will store to reference
+  // the image details.  If the image could not be added, returns
+  // a value of -1.
   public int add_pixbuf( Gdk.Pixbuf buf, int? orig_id = null ) {
     var item = new ImageItem( this, "" );
     try {
@@ -238,7 +254,9 @@ public class ImageManager {
     return( item.id );
   }
 
-  /* Returns the full pathname of the stored file for the given image ID */
+  //-------------------------------------------------------------
+  // Returns the full pathname of the stored file for the given
+  // image ID
   public string? get_file( int id ) {
     var item = find_match( id );
     if( item != null ) {
@@ -247,7 +265,8 @@ public class ImageManager {
     return( null );
   }
 
-  /* Returns the MIME type associated with the given image file */
+  //-------------------------------------------------------------
+  // Returns the MIME type associated with the given image file
   public string? get_mime_type( int id ) {
     var item = find_match( id );
     if( item != null ) {
@@ -256,7 +275,8 @@ public class ImageManager {
     return( null );
   }
 
-  /* Returns the list of stored files */
+  //-------------------------------------------------------------
+  // Returns the list of stored files
   public Array<int> get_ids() {
     var ids = new Array<int>();
     for( int i=0; i<_images.length; i++ ) {
@@ -265,7 +285,8 @@ public class ImageManager {
     return( ids );
   }
 
-  /* Returns the stored URI for the given imaged ID */
+  //-------------------------------------------------------------
+  // Returns the stored URI for the given imaged ID
   public string get_uri( int id ) {
     var item = find_match( id );
     if( item != null ) {
@@ -274,11 +295,11 @@ public class ImageManager {
     return( "" );
   }
 
-  /*
-   Sets the validity of the given URI to the the specified value.  When an image
-   is no longer needed, this method should be called with a value of false.  When
-   an image is needed again, this method should be called with a value of true.
-  */
+  //-------------------------------------------------------------
+  // Sets the validity of the given URI to the the specified value.
+  // When an image is no longer needed, this method should be
+  // called with a value of false.  When an image is needed again,
+  // this method should be called with a value of true.
   public void set_valid( int id, bool value ) {
     var item = find_match( id );
     if( item != null ) {
@@ -286,14 +307,16 @@ public class ImageManager {
     }
   }
 
-  /* Cleans up the contents of the stored images */
+  //-------------------------------------------------------------
+  // Cleans up the contents of the stored images
   public void cleanup() {
     for( int i=0; i<_images.length; i++ ) {
       _images.index( i ).cleanup();
     }
   }
 
-  /* Returns the ID to use for the given ID */
+  //-------------------------------------------------------------
+  // Returns the ID to use for the given ID
   public int get_id( int id ) {
     if( _id_map.has_key( id ) ) {
       return( _id_map.get( id ) );
@@ -301,11 +324,11 @@ public class ImageManager {
     return( id );
   }
 
-  /*
-   Allows the user to choose an image file.  If the user selects an existing file,
-   adds the image to the manager and returns the image ID to the calling function.
-   If no image was selected, a value of -1 will be returned.
-  */
+  //-------------------------------------------------------------
+  // Allows the user to choose an image file.  If the user selects
+  // an existing file, adds the image to the manager and returns
+  // the image ID to the calling function.  If no image was
+  // selected, a value of -1 will be returned.
   public void choose_image( Gtk.Window parent, ImageIdFunc func ) {
 
     int id = -1;
@@ -313,7 +336,7 @@ public class ImageManager {
     var dialog = Utils.make_file_chooser( _( "Select Image" ), _( "Select" ) );
     // Utils.set_chooser_folder( dialog );
 
-    /* Allow pixbuf image types */
+    // Allow pixbuf image types
     var filter  = new FileFilter();
     filter.set_filter_name( _( "Images" ) );
     filter.add_pattern( "*.bmp" );

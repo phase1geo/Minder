@@ -331,7 +331,7 @@ public class Document : Object {
   //-------------------------------------------------------------
   // Converts the Minder file into the Minder document and moves
   // all stored images to the ImageManager on the local computer
-  public void load( bool force_v1_readonly, AfterLoadFunc? func = null ) {
+  public void load( UpgradeAction force_upgrade_action = UpgradeAction.NUM, AfterLoadFunc? func = null ) {
 
     var bak_file = get_bak_file();
     var fname    = (FileUtils.test( bak_file, FileTest.EXISTS ) && !_map.settings.get_boolean( "keep-backup-after-save" )) ? bak_file : filename;
@@ -354,8 +354,8 @@ public class Document : Object {
 
     /* Open the portable Minder file for reading */
     if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
-      if( force_v1_readonly ) {
-        upgrade( UpgradeAction.READ_ONLY, func );
+      if( force_upgrade_action != UpgradeAction.NUM ) {
+        upgrade( force_upgrade_action, func );
       } else if( _map.settings.get_boolean( "ask-for-upgrade-action" ) ) {
         request_upgrade_action( func );
       } else {
@@ -429,7 +429,7 @@ public class Document : Object {
             var fname = filename.replace( ".mind", "-backup-%s-%s.mind".printf( now.to_string(), _etag ) );
             save_xml_internal( fname, false );
             _map.initialize_for_open();
-            load( false );
+            load();
           }
           delete doc;
         });
