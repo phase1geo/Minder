@@ -86,6 +86,14 @@ case $1 in
     # G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.minder "${@:2}"
     G_DEBUG=fatal-warnings gdb --args ./com.github.phase1geo.minder "${@:2}"
     ;;
+"heaptrack")
+    initialize
+    heaptrack ./com.github.phase1geo.minder "${@:2}"
+    ;;
+"valgrind")
+    initialize
+    valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --num-callers=30 ./com.github.phase1geo.minder "${0:2}" | tee ../valgrind.out
+    ;;
 "flatpak-debug")
     echo "Run command at prompt: G_DEBUG=fatal-criticals gdb /app/bin/com.github.phase1geo.minder"
     flatpak run --devel --command=sh com.github.phase1geo.minder

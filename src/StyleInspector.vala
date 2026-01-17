@@ -2122,10 +2122,10 @@ public class StyleInspector : Box {
       if( node_fill != null ) {
         _node_fill.set_active( (bool)node_fill );
       }
-      if( node_margin != null ) {
+      if( node_margin != 0 ) {
         _node_margin.set_value( (double)node_margin );
       }
-      if( node_padding != null ) {
+      if( node_padding != 0 ) {
         _node_padding.set_value( (double)node_padding );
       }
       if( style.node_font != null ) {

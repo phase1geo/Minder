@@ -35,8 +35,8 @@ public class Style {
   public NodeBorder?      node_border            { get; set; default = null; }
   public int?             node_borderwidth       { get; set; default = null; }
   public bool?            node_fill              { get; set; default = null; }
-  public int?             node_margin            { get; set; default = null; }
-  public int?             node_padding           { get; set; default = null; }
+  public int              node_margin            { get; set; default = 0; }
+  public int              node_padding           { get; set; default = 0; }
   public FontDescription? node_font              { get; set; default = null; }
   public Pango.Alignment? node_text_align        { get; set; default = null; }
   public int?             node_width             { get; set; default = null; }
@@ -103,8 +103,8 @@ public class Style {
       node_border            = null;
       node_borderwidth       = null;
       node_fill              = null;
-      node_margin            = null;
-      node_padding           = null;
+      node_margin            = 0;
+      node_padding           = 0;
       node_font              = null;
       node_text_align        = null;
       node_width             = null;
@@ -154,8 +154,8 @@ public class Style {
     if( ((s.node_border      != null) || !s._template) && (node_border      != s.node_border) )      { changed = true;  node_border      = s.node_border; }
     if( ((s.node_borderwidth != null) || !s._template) && (node_borderwidth != s.node_borderwidth) ) { changed = true;  node_borderwidth = s.node_borderwidth; }
     if( ((s.node_fill        != null) || !s._template) && (node_fill        != s.node_fill) )        { changed = true;  node_fill        = s.node_fill; }
-    if( ((s.node_margin      != null) || !s._template) && (node_margin      != s.node_margin) )      { changed = true;  node_margin      = s.node_margin; }
-    if( ((s.node_padding     != null) || !s._template) && (node_padding     != s.node_padding) )     { changed = true;  node_padding     = s.node_padding; }
+    if( ((s.node_margin      != 0)    || !s._template) && (node_margin      != s.node_margin) )      { changed = true;  node_margin      = s.node_margin; }
+    if( ((s.node_padding     != 0)    || !s._template) && (node_padding     != s.node_padding) )     { changed = true;  node_padding     = s.node_padding; }
     if( ((s.node_font        != null) || !s._template) )                                             { changed = true;  node_font        = s.node_font.copy(); }
     if( ((s.node_text_align  != null) || !s._template) && (node_text_align  != s.node_text_align) )  { changed = true;  node_text_align  = s.node_text_align; }
     if( ((s.node_width       != null) || !s._template) && (node_width       != s.node_width) )       { changed = true;  node_width       = s.node_width; }
@@ -219,8 +219,8 @@ public class Style {
     if( node_border            != null ) arr += "nborder[%s]".printf( node_border.name() );
     if( node_borderwidth       != null ) arr += "nbwidth[%d]".printf( node_borderwidth );
     if( node_fill              != null ) arr += "nfill[%s]".printf( node_fill.to_string() );
-    if( node_margin            != null ) arr += "nmargin[%d]".printf( node_margin );
-    if( node_padding           != null ) arr += "npad[%d]".printf( node_padding );
+    if( node_margin            != 0 )    arr += "nmargin[%d]".printf( node_margin );
+    if( node_padding           != 0 )    arr += "npad[%d]".printf( node_padding );
     if( node_font              != null ) arr += "nfont";
     if( node_text_align        != null ) {
       switch( node_text_align ) {
@@ -472,10 +472,10 @@ public class Style {
     if( node_fill != null ) {
       n->set_prop( "nodefill", node_fill.to_string() );
     }
-    if( node_margin != null ) {
+    if( node_margin != 0 ) {
       n->set_prop( "nodemargin", node_margin.to_string() );
     }
-    if( node_padding != null ) {
+    if( node_padding != 0 ) {
       n->set_prop( "nodepadding", node_padding.to_string() );
     }
     if( node_font != null ) {

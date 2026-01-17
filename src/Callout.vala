@@ -160,7 +160,7 @@ public class Callout : Object {
   // Called whenever the text changes the size of the callout.
   public void position_text( bool call_resized ) {
 
-    var margin  = _node.style.node_margin ?? 0;
+    var margin  = _node.style.node_margin;
     var padding = style.callout_padding ?? 0;
     var plength = style.callout_ptr_length ?? 0;
 
