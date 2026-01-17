@@ -1575,10 +1575,11 @@ public class MapModel {
   // parent.
   public void set_style_after_parent_attach( Node node ) {
     if( !node.is_root() ) {
-      var sibling = node.previous_sibling();
-      if( node.main_branch() ) {
+      var sibling     = node.previous_sibling();
+      var from_parent = _map.settings.get_boolean( "style-always-from-parent" ) || (sibling == null);
+      if( node.main_branch() && from_parent ) {
         node.style = _map.global_style;
-      } else if( _map.settings.get_boolean( "style-always-from-parent" ) || (sibling == null) ) {
+      } else if( from_parent ) {
         node.style = node.parent.style;
       } else {
         node.style = sibling.style;
