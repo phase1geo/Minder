@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -33,7 +33,7 @@ public class Minder : Gtk.Application {
   private        GLib.Settings       touch_settings;
 
   public  static GLib.Settings settings;
-  public  static string        version       = "2.0.3";
+  public  static string        version       = "2.0.4";
   public  static bool          debug         = false;
   public  static bool          debug_advance = false;
   public  static int           debug_count   = 0;

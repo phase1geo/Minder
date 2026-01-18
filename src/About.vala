@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2019-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -36,7 +36,7 @@ public class About {
       authors            = { "Trevor Williams" },
       program_name       = "Minder",
       comments           = _( "Mind-mapping application" ),
-      copyright          = _( "Copyright" ) + " © 2018-2025 Trevor Williams",
+      copyright          = _( "Copyright" ) + " © 2018-2026 Trevor Williams",
       version            = Minder.version,
       license_type       = License.GPL_3_0,
       website            = "https://appcenter.elementary.io/com.github.phase1geo.minder/",
