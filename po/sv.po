@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-21 19:23-0600\n"
+"POT-Creation-Date: 2026-01-18 13:27-0600\n"
 "PO-Revision-Date: 2025-12-02 09:55+0100\n"
 "Last-Translator: Daniel Nylander <github@danielnylander.se>\n"
 "Language-Team: sv\n"
@@ -205,7 +205,7 @@ msgstr "Nästa anslutning"
 msgid "Previous Connection"
 msgstr "Tidigare anslutning"
 
-#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:313
+#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:336
 #: src/NodeMenu.vala:104 src/NodesMenu.vala:59
 msgid "Select"
 msgstr "Välj"
@@ -273,7 +273,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2208
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2180
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Tillämpa"
@@ -282,7 +282,7 @@ msgstr "Tillämpa"
 msgid "Don't show this dialog again"
 msgstr "Visa inte denna dialogruta igen"
 
-#: src/Document.vala:714 src/MainWindow.vala:2245
+#: src/Document.vala:714 src/MainWindow.vala:2217
 msgid "<small>This can be changed in preferences</small>"
 msgstr "<small>Detta kan ändras i inställningarna</small>"
 
@@ -325,7 +325,7 @@ msgstr "ändring av anslutningsändpunkt"
 msgid "connection drag"
 msgstr "anslutningsdrag"
 
-#: src/DrawArea.vala:2282 src/MapModel.vala:1839 src/MapModel.vala:1854
+#: src/DrawArea.vala:2282 src/MapModel.vala:1840 src/MapModel.vala:1855
 msgid "Another Idea"
 msgstr "En annan idé"
 
@@ -582,11 +582,11 @@ msgstr "Kopiera bild till urklipp"
 msgid "Cut Image to Clipboard"
 msgstr "Klipp ut bild till urklipp"
 
-#: src/ImageManager.vala:313
+#: src/ImageManager.vala:336
 msgid "Select Image"
 msgstr "Välj bild"
 
-#: src/ImageManager.vala:318
+#: src/ImageManager.vala:341
 msgid "Images"
 msgstr "Bilder"
 
@@ -1211,16 +1211,16 @@ msgstr "Markera all text"
 msgid "Deselect all text"
 msgstr "Avmarkera all text"
 
-#: src/KeyCommands.vala:1876
+#: src/KeyCommands.vala:1881
 msgid "Select a group color"
 msgstr "Välj en gruppfärg"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:271
-#: src/MapInspector.vala:524 src/MapModel.vala:2327
+#: src/MapInspector.vala:524 src/MapModel.vala:2328
 msgid "Manual"
 msgstr "Manuell"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1627
+#: src/MainWindow.vala:183 src/MainWindow.vala:1623
 msgid "Minder"
 msgstr "Minder"
 
@@ -1284,7 +1284,7 @@ msgstr "Zooma in"
 msgid "Zoom Out"
 msgstr "Zooma ut"
 
-#: src/MainWindow.vala:802 src/MainWindow.vala:1693
+#: src/MainWindow.vala:802 src/MainWindow.vala:1689
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zooma (%d%%)"
@@ -1365,7 +1365,7 @@ msgstr "Genvägslathund"
 msgid "About Minder"
 msgstr "Om Minder"
 
-#: src/MainWindow.vala:1190 src/MainWindow.vala:1777
+#: src/MainWindow.vala:1190 src/MainWindow.vala:1773
 msgid "Show Property Sidebar"
 msgstr "Visa sidofält för egenskaper"
 
@@ -1402,7 +1402,7 @@ msgstr "Ändringar kommer att gå förlorade permanent om de inte sparas."
 msgid "Discard Changes"
 msgstr "Kassera ändringar"
 
-#: src/MainWindow.vala:1333 src/MainWindow.vala:1623 src/ThemeEditor.vala:158
+#: src/MainWindow.vala:1333 src/MainWindow.vala:1619 src/ThemeEditor.vala:158
 msgid "Save"
 msgstr "Spara"
 
@@ -1431,19 +1431,19 @@ msgstr "Öppen katalog"
 msgid "Open"
 msgstr "Öppen"
 
-#: src/MainWindow.vala:1623
+#: src/MainWindow.vala:1619
 msgid "Save File"
 msgstr "Spara fil"
 
-#: src/MainWindow.vala:1723
+#: src/MainWindow.vala:1719
 msgid "Hide Property Sidebar"
 msgstr "Dölj sidofält för egenskaper"
 
-#: src/MainWindow.vala:2199
+#: src/MainWindow.vala:2171
 msgid "File upgrades needed"
 msgstr "Filuppgraderingar behövs"
 
-#: src/MainWindow.vala:2200
+#: src/MainWindow.vala:2172
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1455,15 +1455,15 @@ msgstr ""
 "\n"
 "Välj ett uppgraderingsalternativ nedan."
 
-#: src/MainWindow.vala:2205
+#: src/MainWindow.vala:2177
 msgid "Quit Minder"
 msgstr "Avsluta Minder"
 
-#: src/MainWindow.vala:2225
+#: src/MainWindow.vala:2197
 msgid "Detail"
 msgstr "Detalj"
 
-#: src/MainWindow.vala:2233
+#: src/MainWindow.vala:2205
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
@@ -1473,7 +1473,7 @@ msgstr ""
 "senaste Minder-sessionen.  Denna åtgärd är oåterkallelig eftersom äldre "
 "versioner av Minder inte kan läsa det uppgraderade formatet.</small>"
 
-#: src/MainWindow.vala:2234
+#: src/MainWindow.vala:2206
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
@@ -1483,7 +1483,7 @@ msgstr ""
 "senaste Minder-sessionen, men sparar en kopia av den äldre ursprungliga "
 "filen i dess ursprungliga katalog.</small>"
 
-#: src/MainWindow.vala:2235
+#: src/MainWindow.vala:2207
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1495,12 +1495,12 @@ msgstr ""
 "ändra en skrivskyddad tankekarta kan du använda knappen \"Spara som\" i "
 "rubrikfältet för att skriva den till det nyare formatet.</small>"
 
-#: src/MainWindow.vala:2242
+#: src/MainWindow.vala:2214
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 "Använd det valda alternativet när äldre Minder-filer öppnas i framtiden"
 
-#: src/MainWindow.vala:2267
+#: src/MainWindow.vala:2239
 msgid "Upgrades Needed"
 msgstr "Uppgraderingar behövs"
 
@@ -2425,19 +2425,19 @@ msgstr "[Dubbelklicka med vänster musknapp på ordet]"
 msgid "[Triple left-click text]"
 msgstr "[Trippel vänsterklick på text]"
 
-#: src/StickerInspector.vala:61
+#: src/StickerInspector.vala:60
 msgid "Remove From Favorites"
 msgstr "Ta bort från favoriter"
 
-#: src/StickerInspector.vala:64 src/StickerInspector.vala:67
+#: src/StickerInspector.vala:63 src/StickerInspector.vala:66
 msgid "Add To Favorites"
 msgstr "Lägg till i favoriter"
 
-#: src/StickerInspector.vala:70
+#: src/StickerInspector.vala:69
 msgid "Remove Custom Sticker"
 msgstr "Ta bort anpassad klistermärke"
 
-#: src/StickerInspector.vala:78
+#: src/StickerInspector.vala:77
 msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
@@ -2445,27 +2445,27 @@ msgstr ""
 "Dra och släpp klistermärket på en nod eller någon annanstans på kartan för "
 "att lägga till ett klistermärke."
 
-#: src/StickerInspector.vala:85
+#: src/StickerInspector.vala:84
 msgid "Search Stickers"
 msgstr "Sök efter klistermärken"
 
-#: src/StickerInspector.vala:119
+#: src/StickerInspector.vala:133
 msgid "Favorites"
 msgstr "Favoriter"
 
-#: src/StickerInspector.vala:125
+#: src/StickerInspector.vala:139
 msgid "Show Custom Sticker Directory"
 msgstr "Visa katalog med anpassade klistermärken"
 
-#: src/StickerInspector.vala:205
+#: src/StickerInspector.vala:219
 msgid "Add custom stickers"
 msgstr "Lägg till anpassade klistermärken"
 
-#: src/StickerInspector.vala:459
+#: src/StickerInspector.vala:473
 msgid "Import Sticker(s)"
 msgstr "Importera klistermärken"
 
-#: src/StickerInspector.vala:459 src/StickerSet.vala:353
+#: src/StickerInspector.vala:473 src/StickerSet.vala:353
 msgid "Import"
 msgstr "Importera"
 
@@ -2489,7 +2489,7 @@ msgstr "Bransch"
 msgid "Mobile"
 msgstr "Mobil"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1238
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1240
 msgid "Arrows"
 msgstr "Pilar"
 
@@ -3469,13 +3469,13 @@ msgstr "Upp"
 msgid "Right up"
 msgstr "Högre upp"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1049
-#: src/StyleInspector.vala:1479 src/StyleInspector.vala:1642
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1051
+#: src/StyleInspector.vala:1483 src/StyleInspector.vala:1648
 msgid "Left"
 msgstr "Vänster"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1051
-#: src/StyleInspector.vala:1481 src/StyleInspector.vala:1644
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1053
+#: src/StyleInspector.vala:1485 src/StyleInspector.vala:1650
 msgid "Right"
 msgstr "Höger"
 
@@ -3781,11 +3781,11 @@ msgstr "Marginal"
 msgid "Link Options"
 msgstr "Länkalternativ"
 
-#: src/StyleInspector.vala:550 src/StyleInspector.vala:1197
+#: src/StyleInspector.vala:550 src/StyleInspector.vala:1199
 msgid "Line Dash"
 msgstr "Linje Streck"
 
-#: src/StyleInspector.vala:591 src/StyleInspector.vala:1325
+#: src/StyleInspector.vala:591 src/StyleInspector.vala:1327
 msgid "Line Width"
 msgstr "Linjetjocklek"
 
@@ -3820,8 +3820,8 @@ msgid ""
 msgstr ""
 "Fyller noden med färg när nodens kant är fyrkantig, rundad eller pillerformad"
 
-#: src/StyleInspector.vala:949 src/StyleInspector.vala:1378
-#: src/StyleInspector.vala:1673
+#: src/StyleInspector.vala:949 src/StyleInspector.vala:1380
+#: src/StyleInspector.vala:1679
 msgid "Padding"
 msgstr "Mellanrum"
 
@@ -3829,53 +3829,53 @@ msgstr "Mellanrum"
 msgid "Font"
 msgstr "Typsnitt"
 
-#: src/StyleInspector.vala:1038 src/StyleInspector.vala:1468
-#: src/StyleInspector.vala:1631
+#: src/StyleInspector.vala:1040 src/StyleInspector.vala:1472
+#: src/StyleInspector.vala:1637
 msgid "Text Alignment"
 msgstr "Textjustering"
 
-#: src/StyleInspector.vala:1050 src/StyleInspector.vala:1480
-#: src/StyleInspector.vala:1643
+#: src/StyleInspector.vala:1052 src/StyleInspector.vala:1484
+#: src/StyleInspector.vala:1649
 msgid "Center"
 msgstr "Centrera"
 
-#: src/StyleInspector.vala:1080
+#: src/StyleInspector.vala:1082
 msgid "Width"
 msgstr "Bredd"
 
-#: src/StyleInspector.vala:1113
+#: src/StyleInspector.vala:1115
 msgid "Enable Markup"
 msgstr "Aktivera markering"
 
-#: src/StyleInspector.vala:1174 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1176 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "Anslutningsalternativ"
 
-#: src/StyleInspector.vala:1278
+#: src/StyleInspector.vala:1280
 msgid "Arrow Size"
 msgstr "Pilstorlek"
 
-#: src/StyleInspector.vala:1424
+#: src/StyleInspector.vala:1426
 msgid "Title Font"
 msgstr "Rubrikens typsnitt"
 
-#: src/StyleInspector.vala:1510
+#: src/StyleInspector.vala:1514
 msgid "Title Width"
 msgstr "Titelbredd"
 
-#: src/StyleInspector.vala:1563 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1567 src/Templates.vala:61 src/Templates.vala:66
 msgid "Callout Options"
 msgstr "Alternativ för utrop"
 
-#: src/StyleInspector.vala:1587
+#: src/StyleInspector.vala:1591
 msgid "Text Font"
 msgstr "Typsnitt"
 
-#: src/StyleInspector.vala:1719
+#: src/StyleInspector.vala:1725
 msgid "Pointer Width"
 msgstr "Pekarens bredd"
 
-#: src/StyleInspector.vala:1765
+#: src/StyleInspector.vala:1771
 msgid "Pointer Length"
 msgstr "Pekarlängd"
 
@@ -3963,11 +3963,11 @@ msgstr "Klicka för att lägga till tagg till markeringslista"
 msgid "Click to remove tag from highlight"
 msgstr "Klicka för att ta bort tagg från markering"
 
-#: src/TagEditor.vala:311
+#: src/TagEditor.vala:312
 msgid "Enter name of tag to find or create"
 msgstr "Ange namn på tagg att hitta eller skapa"
 
-#: src/TagEditor.vala:413
+#: src/TagEditor.vala:429
 #, c-format
 msgid "Create '%s' tag"
 msgstr "Skapa '%s'-tagg"
@@ -3984,11 +3984,11 @@ msgstr ""
 "Skapa, ta bort och redigera taggar i tankekartor.  Lägg till eller ta bort "
 "taggar i valda nod(er).  Markera taggade noder i kartan."
 
-#: src/TagInspector.vala:67
+#: src/TagInspector.vala:70
 msgid "Highlight Mode"
 msgstr "Markeringsläge"
 
-#: src/TagInspector.vala:77
+#: src/TagInspector.vala:80
 msgid "End Tag Highlighting"
 msgstr "Markering av sluttagg"
 

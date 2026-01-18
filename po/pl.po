@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-21 19:23-0600\n"
+"POT-Creation-Date: 2026-01-18 13:27-0600\n"
 "PO-Revision-Date: 2022-08-02 23:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -206,7 +206,7 @@ msgstr "Następny łącznik"
 msgid "Previous Connection"
 msgstr "Poprzedni łącznik"
 
-#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:313
+#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:336
 #: src/NodeMenu.vala:104 src/NodesMenu.vala:59
 msgid "Select"
 msgstr "Zaznacz"
@@ -266,7 +266,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2208
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2180
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Zastosuj"
@@ -275,7 +275,7 @@ msgstr "Zastosuj"
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:714 src/MainWindow.vala:2245
+#: src/Document.vala:714 src/MainWindow.vala:2217
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
@@ -318,7 +318,7 @@ msgstr ""
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2282 src/MapModel.vala:1839 src/MapModel.vala:1854
+#: src/DrawArea.vala:2282 src/MapModel.vala:1840 src/MapModel.vala:1855
 msgid "Another Idea"
 msgstr "NOWY TEMAT"
 
@@ -584,11 +584,11 @@ msgstr "Kopiuj obraz do schowka"
 msgid "Cut Image to Clipboard"
 msgstr "Wytnij obraz do schowka"
 
-#: src/ImageManager.vala:313
+#: src/ImageManager.vala:336
 msgid "Select Image"
 msgstr "Wybierz oraz"
 
-#: src/ImageManager.vala:318
+#: src/ImageManager.vala:341
 msgid "Images"
 msgstr "Obrazy"
 
@@ -1275,17 +1275,17 @@ msgstr ""
 msgid "Deselect all text"
 msgstr "Zaznacz cały tekst"
 
-#: src/KeyCommands.vala:1876
+#: src/KeyCommands.vala:1881
 #, fuzzy
 msgid "Select a group color"
 msgstr "Ustaw kolor..."
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:271
-#: src/MapInspector.vala:524 src/MapModel.vala:2327
+#: src/MapInspector.vala:524 src/MapModel.vala:2328
 msgid "Manual"
 msgstr "Ręcznie"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1627
+#: src/MainWindow.vala:183 src/MainWindow.vala:1623
 msgid "Minder"
 msgstr "Minder"
 
@@ -1350,7 +1350,7 @@ msgstr "Powiększ"
 msgid "Zoom Out"
 msgstr "Pomniejsz"
 
-#: src/MainWindow.vala:802 src/MainWindow.vala:1693
+#: src/MainWindow.vala:802 src/MainWindow.vala:1689
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Powiększenie (%d%%)"
@@ -1434,7 +1434,7 @@ msgstr "Lista skrótów klawiaturowych"
 msgid "About Minder"
 msgstr "O programie Minder"
 
-#: src/MainWindow.vala:1190 src/MainWindow.vala:1777
+#: src/MainWindow.vala:1190 src/MainWindow.vala:1773
 msgid "Show Property Sidebar"
 msgstr "Pokaż panel właściwości"
 
@@ -1471,7 +1471,7 @@ msgstr "Zmiany zostaną utracone jeśli nie zostanie zapisany!"
 msgid "Discard Changes"
 msgstr "Odrzuć zmiany"
 
-#: src/MainWindow.vala:1333 src/MainWindow.vala:1623 src/ThemeEditor.vala:158
+#: src/MainWindow.vala:1333 src/MainWindow.vala:1619 src/ThemeEditor.vala:158
 msgid "Save"
 msgstr "Zapisz"
 
@@ -1501,19 +1501,19 @@ msgstr "Otwórz plik"
 msgid "Open"
 msgstr "Otwórz"
 
-#: src/MainWindow.vala:1623
+#: src/MainWindow.vala:1619
 msgid "Save File"
 msgstr "Zapisz plik"
 
-#: src/MainWindow.vala:1723
+#: src/MainWindow.vala:1719
 msgid "Hide Property Sidebar"
 msgstr "Ukryj panel właściwości"
 
-#: src/MainWindow.vala:2199
+#: src/MainWindow.vala:2171
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2200
+#: src/MainWindow.vala:2172
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1521,31 +1521,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2205
+#: src/MainWindow.vala:2177
 #, fuzzy
 msgid "Quit Minder"
 msgstr "O programie Minder"
 
-#: src/MainWindow.vala:2225
+#: src/MainWindow.vala:2197
 #, fuzzy
 msgid "Detail"
 msgstr "Odłącz"
 
-#: src/MainWindow.vala:2233
+#: src/MainWindow.vala:2205
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2234
+#: src/MainWindow.vala:2206
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2235
+#: src/MainWindow.vala:2207
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1553,11 +1553,11 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2242
+#: src/MainWindow.vala:2214
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2267
+#: src/MainWindow.vala:2239
 msgid "Upgrades Needed"
 msgstr ""
 
@@ -2486,20 +2486,20 @@ msgstr ""
 msgid "[Triple left-click text]"
 msgstr ""
 
-#: src/StickerInspector.vala:61
+#: src/StickerInspector.vala:60
 msgid "Remove From Favorites"
 msgstr "Usuń z ulubionych"
 
-#: src/StickerInspector.vala:64 src/StickerInspector.vala:67
+#: src/StickerInspector.vala:63 src/StickerInspector.vala:66
 msgid "Add To Favorites"
 msgstr "Dodaj do ulubionych"
 
-#: src/StickerInspector.vala:70
+#: src/StickerInspector.vala:69
 #, fuzzy
 msgid "Remove Custom Sticker"
 msgstr "Usuń ikonę"
 
-#: src/StickerInspector.vala:78
+#: src/StickerInspector.vala:77
 msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
@@ -2507,29 +2507,29 @@ msgstr ""
 "Przeciągnij ikonę na element lub na dowolne miejsce na mapie aby ją tam "
 "umieścić."
 
-#: src/StickerInspector.vala:85
+#: src/StickerInspector.vala:84
 msgid "Search Stickers"
 msgstr "Szukaj ikon"
 
-#: src/StickerInspector.vala:119
+#: src/StickerInspector.vala:133
 msgid "Favorites"
 msgstr "Ulubione"
 
-#: src/StickerInspector.vala:125
+#: src/StickerInspector.vala:139
 msgid "Show Custom Sticker Directory"
 msgstr ""
 
-#: src/StickerInspector.vala:205
+#: src/StickerInspector.vala:219
 #, fuzzy
 msgid "Add custom stickers"
 msgstr "dodanie ikony do gałęzi"
 
-#: src/StickerInspector.vala:459
+#: src/StickerInspector.vala:473
 #, fuzzy
 msgid "Import Sticker(s)"
 msgstr "Usuń ikonę"
 
-#: src/StickerInspector.vala:459 src/StickerSet.vala:353
+#: src/StickerInspector.vala:473 src/StickerSet.vala:353
 msgid "Import"
 msgstr ""
 
@@ -2553,7 +2553,7 @@ msgstr "Przemysł"
 msgid "Mobile"
 msgstr "Mobile"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1238
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1240
 msgid "Arrows"
 msgstr "Strzałki"
 
@@ -3533,13 +3533,13 @@ msgstr ""
 msgid "Right up"
 msgstr ""
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1049
-#: src/StyleInspector.vala:1479 src/StyleInspector.vala:1642
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1051
+#: src/StyleInspector.vala:1483 src/StyleInspector.vala:1648
 msgid "Left"
 msgstr ""
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1051
-#: src/StyleInspector.vala:1481 src/StyleInspector.vala:1644
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1053
+#: src/StyleInspector.vala:1485 src/StyleInspector.vala:1650
 msgid "Right"
 msgstr ""
 
@@ -3844,11 +3844,11 @@ msgstr "Odstępy"
 msgid "Link Options"
 msgstr "Styl linii łączących"
 
-#: src/StyleInspector.vala:550 src/StyleInspector.vala:1197
+#: src/StyleInspector.vala:550 src/StyleInspector.vala:1199
 msgid "Line Dash"
 msgstr "Styl linii"
 
-#: src/StyleInspector.vala:591 src/StyleInspector.vala:1325
+#: src/StyleInspector.vala:591 src/StyleInspector.vala:1327
 msgid "Line Width"
 msgstr "Grubość linii"
 
@@ -3885,8 +3885,8 @@ msgstr ""
 "Wypełnia tło gałęzi kolorem,\n"
 "jest posiada zamknięte obramowanie"
 
-#: src/StyleInspector.vala:949 src/StyleInspector.vala:1378
-#: src/StyleInspector.vala:1673
+#: src/StyleInspector.vala:949 src/StyleInspector.vala:1380
+#: src/StyleInspector.vala:1679
 msgid "Padding"
 msgstr "Wypełnienie"
 
@@ -3894,58 +3894,58 @@ msgstr "Wypełnienie"
 msgid "Font"
 msgstr "Czcionka"
 
-#: src/StyleInspector.vala:1038 src/StyleInspector.vala:1468
-#: src/StyleInspector.vala:1631
+#: src/StyleInspector.vala:1040 src/StyleInspector.vala:1472
+#: src/StyleInspector.vala:1637
 #, fuzzy
 msgid "Text Alignment"
 msgstr "wyrównanie gałęzi"
 
-#: src/StyleInspector.vala:1050 src/StyleInspector.vala:1480
-#: src/StyleInspector.vala:1643
+#: src/StyleInspector.vala:1052 src/StyleInspector.vala:1484
+#: src/StyleInspector.vala:1649
 msgid "Center"
 msgstr ""
 
-#: src/StyleInspector.vala:1080
+#: src/StyleInspector.vala:1082
 msgid "Width"
 msgstr "Szerokość"
 
-#: src/StyleInspector.vala:1113
+#: src/StyleInspector.vala:1115
 msgid "Enable Markup"
 msgstr "Pozwól używać znaczników Markdown"
 
-#: src/StyleInspector.vala:1174 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1176 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "Opcje łącznika"
 
-#: src/StyleInspector.vala:1278
+#: src/StyleInspector.vala:1280
 #, fuzzy
 msgid "Arrow Size"
 msgstr "Strzałki"
 
-#: src/StyleInspector.vala:1424
+#: src/StyleInspector.vala:1426
 msgid "Title Font"
 msgstr "Czcionka etykiety łącznika"
 
-#: src/StyleInspector.vala:1510
+#: src/StyleInspector.vala:1514
 msgid "Title Width"
 msgstr "Szerokość etykiety łącznika"
 
-#: src/StyleInspector.vala:1563 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1567 src/Templates.vala:61 src/Templates.vala:66
 #, fuzzy
 msgid "Callout Options"
 msgstr "Opcje eksportu"
 
-#: src/StyleInspector.vala:1587
+#: src/StyleInspector.vala:1591
 #, fuzzy
 msgid "Text Font"
 msgstr "Czcionka etykiety łącznika"
 
-#: src/StyleInspector.vala:1719
+#: src/StyleInspector.vala:1725
 #, fuzzy
 msgid "Pointer Width"
 msgstr "Grubość linii"
 
-#: src/StyleInspector.vala:1765
+#: src/StyleInspector.vala:1771
 msgid "Pointer Length"
 msgstr ""
 
@@ -4029,11 +4029,11 @@ msgstr ""
 msgid "Click to remove tag from highlight"
 msgstr ""
 
-#: src/TagEditor.vala:311
+#: src/TagEditor.vala:312
 msgid "Enter name of tag to find or create"
 msgstr ""
 
-#: src/TagEditor.vala:413
+#: src/TagEditor.vala:429
 #, c-format
 msgid "Create '%s' tag"
 msgstr ""
@@ -4048,11 +4048,11 @@ msgid ""
 "Highlight tagged nodes in map."
 msgstr ""
 
-#: src/TagInspector.vala:67
+#: src/TagInspector.vala:70
 msgid "Highlight Mode"
 msgstr ""
 
-#: src/TagInspector.vala:77
+#: src/TagInspector.vala:80
 msgid "End Tag Highlighting"
 msgstr ""
 

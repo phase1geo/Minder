@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2018-2025 Trevor Williams <phase1geo@icloud.com> -->
+<!-- Copyright 2018-2026 Trevor Williams <phase1geo@icloud.com> -->
 <component type="desktop-application">
   <id>com.github.phase1geo.minder</id>
   <metadata_license>CC0-1.0</metadata_license>
@@ -130,7 +130,35 @@
   </custom>
   <content_rating type="oars-1.1"/>
   <releases>
-    <release version="2.0.3" date="2025-12-21">
+    <release version="2.0.4" date="2026-01-18">
+      <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Use Minder file icon for .minder files.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Changed importing to use an unnamed filename after import.</li>
+          <li>Minor memory optimizations for nodes.</li>
+          <li>Changed node styling for main nodes that have siblings to use sibling styling instead of default styling.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed issue with updating font UI in style sidebar.</li>
+          <li>Fixed several issues with closing sidebar with Escape key.</li>
+          <li>Fixed issues with importing legacy portable Minder files.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.0.3" date="2026-12-21">
       <description>
         <p>New</p>
         <p xml:lang="pt">Novo</p>

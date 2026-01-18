@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-21 19:23-0600\n"
+"POT-Creation-Date: 2026-01-18 13:27-0600\n"
 "PO-Revision-Date: 2025-12-21 12:37+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -205,7 +205,7 @@ msgstr "Prossima connessione"
 msgid "Previous Connection"
 msgstr "Connessione precedente"
 
-#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:313
+#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:336
 #: src/NodeMenu.vala:104 src/NodesMenu.vala:59
 msgid "Select"
 msgstr "Seleziona"
@@ -274,7 +274,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Cancella"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2208
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2180
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Applica"
@@ -283,7 +283,7 @@ msgstr "Applica"
 msgid "Don't show this dialog again"
 msgstr "Non mostrare più questa finestra di dialogo"
 
-#: src/Document.vala:714 src/MainWindow.vala:2245
+#: src/Document.vala:714 src/MainWindow.vala:2217
 msgid "<small>This can be changed in preferences</small>"
 msgstr "<small>Questo può essere modificato nelle preferenze</small>"
 
@@ -326,7 +326,7 @@ msgstr "modifica dell'endpoint di connessione"
 msgid "connection drag"
 msgstr "trascina della connessione"
 
-#: src/DrawArea.vala:2282 src/MapModel.vala:1839 src/MapModel.vala:1854
+#: src/DrawArea.vala:2282 src/MapModel.vala:1840 src/MapModel.vala:1855
 msgid "Another Idea"
 msgstr "Un'altra idea"
 
@@ -585,11 +585,11 @@ msgstr "Copia Immagine negli Appunti"
 msgid "Cut Image to Clipboard"
 msgstr "Taglia immagine negli Appunti"
 
-#: src/ImageManager.vala:313
+#: src/ImageManager.vala:336
 msgid "Select Image"
 msgstr "Seleziona Immagine"
 
-#: src/ImageManager.vala:318
+#: src/ImageManager.vala:341
 msgid "Images"
 msgstr "Immagini"
 
@@ -1218,16 +1218,16 @@ msgstr "Seleziona tutto il testo"
 msgid "Deselect all text"
 msgstr "Deseleziona tutto il testo"
 
-#: src/KeyCommands.vala:1876
+#: src/KeyCommands.vala:1881
 msgid "Select a group color"
 msgstr "Seleziona un colore di gruppo"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:271
-#: src/MapInspector.vala:524 src/MapModel.vala:2327
+#: src/MapInspector.vala:524 src/MapModel.vala:2328
 msgid "Manual"
 msgstr "Manuale"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1627
+#: src/MainWindow.vala:183 src/MainWindow.vala:1623
 msgid "Minder"
 msgstr "Minder"
 
@@ -1291,7 +1291,7 @@ msgstr "Zoom avanti"
 msgid "Zoom Out"
 msgstr "Zoom Indietro"
 
-#: src/MainWindow.vala:802 src/MainWindow.vala:1693
+#: src/MainWindow.vala:802 src/MainWindow.vala:1689
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoom (%d%%)"
@@ -1372,7 +1372,7 @@ msgstr "collegamenti note"
 msgid "About Minder"
 msgstr "Informazioni su Minder"
 
-#: src/MainWindow.vala:1190 src/MainWindow.vala:1777
+#: src/MainWindow.vala:1190 src/MainWindow.vala:1773
 msgid "Show Property Sidebar"
 msgstr "Mostra barra laterale della proprietà"
 
@@ -1409,7 +1409,7 @@ msgstr "Le modifiche andranno perse in modo permanente se non vengono salvate."
 msgid "Discard Changes"
 msgstr "Annullare le Modifiche"
 
-#: src/MainWindow.vala:1333 src/MainWindow.vala:1623 src/ThemeEditor.vala:158
+#: src/MainWindow.vala:1333 src/MainWindow.vala:1619 src/ThemeEditor.vala:158
 msgid "Save"
 msgstr "Salva"
 
@@ -1438,19 +1438,19 @@ msgstr "Apri Directory"
 msgid "Open"
 msgstr "Apri"
 
-#: src/MainWindow.vala:1623
+#: src/MainWindow.vala:1619
 msgid "Save File"
 msgstr "Salva File"
 
-#: src/MainWindow.vala:1723
+#: src/MainWindow.vala:1719
 msgid "Hide Property Sidebar"
 msgstr "Nascondi barra laterale delle proprietà"
 
-#: src/MainWindow.vala:2199
+#: src/MainWindow.vala:2171
 msgid "File upgrades needed"
 msgstr "Aggiornamenti dei file necessari"
 
-#: src/MainWindow.vala:2200
+#: src/MainWindow.vala:2172
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1462,15 +1462,15 @@ msgstr ""
 "\n"
 "Seleziona un'opzione di aggiornamento qui sotto."
 
-#: src/MainWindow.vala:2205
+#: src/MainWindow.vala:2177
 msgid "Quit Minder"
 msgstr "Esci da Minder"
 
-#: src/MainWindow.vala:2225
+#: src/MainWindow.vala:2197
 msgid "Detail"
 msgstr "Dettagli"
 
-#: src/MainWindow.vala:2233
+#: src/MainWindow.vala:2205
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
@@ -1481,7 +1481,7 @@ msgstr ""
 "versioni precedenti di Minder non sono in grado di leggere il formato "
 "aggiornato.</small>"
 
-#: src/MainWindow.vala:2234
+#: src/MainWindow.vala:2206
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
@@ -1491,7 +1491,7 @@ msgstr ""
 "nell'ultima sessione di Minder, ma salva una copia del file originale più "
 "vecchio nella sua directory originale.</small>"
 
-#: src/MainWindow.vala:2235
+#: src/MainWindow.vala:2207
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1504,13 +1504,13 @@ msgstr ""
 "utilizzare il pulsante 'Salva con nome' nella barra dell'intestazione per "
 "salvarla nel formato più recente.</small>"
 
-#: src/MainWindow.vala:2242
+#: src/MainWindow.vala:2214
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 "Utilizza l'opzione selezionata quando verranno aperti i file Minder più "
 "vecchi in futuro"
 
-#: src/MainWindow.vala:2267
+#: src/MainWindow.vala:2239
 msgid "Upgrades Needed"
 msgstr "Aggiornamenti necessari"
 
@@ -2443,19 +2443,19 @@ msgstr "[Doppio clic sinistro sulla parola]"
 msgid "[Triple left-click text]"
 msgstr "[Fare triplo clic sinistro sul testo]"
 
-#: src/StickerInspector.vala:61
+#: src/StickerInspector.vala:60
 msgid "Remove From Favorites"
 msgstr "Rimuovi dai Preferiti"
 
-#: src/StickerInspector.vala:64 src/StickerInspector.vala:67
+#: src/StickerInspector.vala:63 src/StickerInspector.vala:66
 msgid "Add To Favorites"
 msgstr "Aggiungi ai Preferiti"
 
-#: src/StickerInspector.vala:70
+#: src/StickerInspector.vala:69
 msgid "Remove Custom Sticker"
 msgstr "Rimuovi adesivo personalizzato"
 
-#: src/StickerInspector.vala:78
+#: src/StickerInspector.vala:77
 msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
@@ -2463,27 +2463,27 @@ msgstr ""
 "Trascina e rilascia sticker su un nodo o in qualsiasi altro punto della "
 "mappa per aggiungere uno sticker."
 
-#: src/StickerInspector.vala:85
+#: src/StickerInspector.vala:84
 msgid "Search Stickers"
 msgstr "Cerca Sticker"
 
-#: src/StickerInspector.vala:119
+#: src/StickerInspector.vala:133
 msgid "Favorites"
 msgstr "Preferiti"
 
-#: src/StickerInspector.vala:125
+#: src/StickerInspector.vala:139
 msgid "Show Custom Sticker Directory"
 msgstr "Mostra la directory degli adesivi personalizzati"
 
-#: src/StickerInspector.vala:205
+#: src/StickerInspector.vala:219
 msgid "Add custom stickers"
 msgstr "aggiungi adesivo personalizzato"
 
-#: src/StickerInspector.vala:459
+#: src/StickerInspector.vala:473
 msgid "Import Sticker(s)"
 msgstr "Importa adesivo(i)"
 
-#: src/StickerInspector.vala:459 src/StickerSet.vala:353
+#: src/StickerInspector.vala:473 src/StickerSet.vala:353
 msgid "Import"
 msgstr "Importa"
 
@@ -2507,7 +2507,7 @@ msgstr "Industria"
 msgid "Mobile"
 msgstr "Mobile"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1238
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1240
 msgid "Arrows"
 msgstr "Frecce"
 
@@ -3487,13 +3487,13 @@ msgstr "Su"
 msgid "Right up"
 msgstr "Proprio sopra"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1049
-#: src/StyleInspector.vala:1479 src/StyleInspector.vala:1642
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1051
+#: src/StyleInspector.vala:1483 src/StyleInspector.vala:1648
 msgid "Left"
 msgstr "Sinistra"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1051
-#: src/StyleInspector.vala:1481 src/StyleInspector.vala:1644
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1053
+#: src/StyleInspector.vala:1485 src/StyleInspector.vala:1650
 msgid "Right"
 msgstr "Destra"
 
@@ -3799,11 +3799,11 @@ msgstr "Margine"
 msgid "Link Options"
 msgstr "Opzioni Collegamento"
 
-#: src/StyleInspector.vala:550 src/StyleInspector.vala:1197
+#: src/StyleInspector.vala:550 src/StyleInspector.vala:1199
 msgid "Line Dash"
 msgstr "Linea a Trattino"
 
-#: src/StyleInspector.vala:591 src/StyleInspector.vala:1325
+#: src/StyleInspector.vala:591 src/StyleInspector.vala:1327
 msgid "Line Width"
 msgstr "Larghezza della Linea"
 
@@ -3839,8 +3839,8 @@ msgstr ""
 "Riempe il nodo di colore quando il bordo\n"
 "del bordo è quadrato, arrotondato o a forma di pillola"
 
-#: src/StyleInspector.vala:949 src/StyleInspector.vala:1378
-#: src/StyleInspector.vala:1673
+#: src/StyleInspector.vala:949 src/StyleInspector.vala:1380
+#: src/StyleInspector.vala:1679
 msgid "Padding"
 msgstr "Imbottitura"
 
@@ -3848,53 +3848,53 @@ msgstr "Imbottitura"
 msgid "Font"
 msgstr "Font"
 
-#: src/StyleInspector.vala:1038 src/StyleInspector.vala:1468
-#: src/StyleInspector.vala:1631
+#: src/StyleInspector.vala:1040 src/StyleInspector.vala:1472
+#: src/StyleInspector.vala:1637
 msgid "Text Alignment"
 msgstr "Allineamento del testo"
 
-#: src/StyleInspector.vala:1050 src/StyleInspector.vala:1480
-#: src/StyleInspector.vala:1643
+#: src/StyleInspector.vala:1052 src/StyleInspector.vala:1484
+#: src/StyleInspector.vala:1649
 msgid "Center"
 msgstr "Centra"
 
-#: src/StyleInspector.vala:1080
+#: src/StyleInspector.vala:1082
 msgid "Width"
 msgstr "Larghezza"
 
-#: src/StyleInspector.vala:1113
+#: src/StyleInspector.vala:1115
 msgid "Enable Markup"
 msgstr "Abilita markup"
 
-#: src/StyleInspector.vala:1174 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1176 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "Opzioni di Connessione"
 
-#: src/StyleInspector.vala:1278
+#: src/StyleInspector.vala:1280
 msgid "Arrow Size"
 msgstr "Dimensione freccia"
 
-#: src/StyleInspector.vala:1424
+#: src/StyleInspector.vala:1426
 msgid "Title Font"
 msgstr "Carattere del Titolo"
 
-#: src/StyleInspector.vala:1510
+#: src/StyleInspector.vala:1514
 msgid "Title Width"
 msgstr "Larghezza del Titolo"
 
-#: src/StyleInspector.vala:1563 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1567 src/Templates.vala:61 src/Templates.vala:66
 msgid "Callout Options"
 msgstr "Opzioni di chiamata"
 
-#: src/StyleInspector.vala:1587
+#: src/StyleInspector.vala:1591
 msgid "Text Font"
 msgstr "Carattere del testo"
 
-#: src/StyleInspector.vala:1719
+#: src/StyleInspector.vala:1725
 msgid "Pointer Width"
 msgstr "Larghezza del puntatore"
 
-#: src/StyleInspector.vala:1765
+#: src/StyleInspector.vala:1771
 msgid "Pointer Length"
 msgstr "Lunghezza del puntatore"
 
@@ -3982,11 +3982,11 @@ msgstr "Fai clic per aggiungere il tag all'elenco evidenziato"
 msgid "Click to remove tag from highlight"
 msgstr "Fai clic per rimuovere il tag dall'evidenziazione"
 
-#: src/TagEditor.vala:311
+#: src/TagEditor.vala:312
 msgid "Enter name of tag to find or create"
 msgstr "Inserisci il nome del tag da trovare o creare"
 
-#: src/TagEditor.vala:413
+#: src/TagEditor.vala:429
 #, c-format
 msgid "Create '%s' tag"
 msgstr "Crea il tag '%s'"
@@ -4003,11 +4003,11 @@ msgstr ""
 "Crea, elimina, modifica i tag della mappa mentale. Aggiungi o rimuovi tag "
 "nei nodi selezionati. Evidenzia i nodi taggati nella mappa."
 
-#: src/TagInspector.vala:67
+#: src/TagInspector.vala:70
 msgid "Highlight Mode"
 msgstr "Modalità evidenziazione"
 
-#: src/TagInspector.vala:77
+#: src/TagInspector.vala:80
 msgid "End Tag Highlighting"
 msgstr "Evidenziazione del tag finale"
 

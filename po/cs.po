@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-21 19:23-0600\n"
+"POT-Creation-Date: 2026-01-18 13:27-0600\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -208,7 +208,7 @@ msgstr "Příští spojení"
 msgid "Previous Connection"
 msgstr "Předchozí spojení"
 
-#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:313
+#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:336
 #: src/NodeMenu.vala:104 src/NodesMenu.vala:59
 msgid "Select"
 msgstr "Vybrat"
@@ -268,7 +268,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2208
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2180
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Aplikovat"
@@ -277,7 +277,7 @@ msgstr "Aplikovat"
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:714 src/MainWindow.vala:2245
+#: src/Document.vala:714 src/MainWindow.vala:2217
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
@@ -318,7 +318,7 @@ msgstr "změna konce spojení"
 msgid "connection drag"
 msgstr "přetáhnutí spojení"
 
-#: src/DrawArea.vala:2282 src/MapModel.vala:1839 src/MapModel.vala:1854
+#: src/DrawArea.vala:2282 src/MapModel.vala:1840 src/MapModel.vala:1855
 msgid "Another Idea"
 msgstr "Další myšlenka"
 
@@ -584,11 +584,11 @@ msgstr "Zkopírovat obrázek do schránky"
 msgid "Cut Image to Clipboard"
 msgstr "Vyjmout obrázek do schránky"
 
-#: src/ImageManager.vala:313
+#: src/ImageManager.vala:336
 msgid "Select Image"
 msgstr "Vybrat obrázek"
 
-#: src/ImageManager.vala:318
+#: src/ImageManager.vala:341
 msgid "Images"
 msgstr "Obrázky"
 
@@ -1300,17 +1300,17 @@ msgstr "Vybrat celý text"
 msgid "Deselect all text"
 msgstr "Vybrat celý text"
 
-#: src/KeyCommands.vala:1876
+#: src/KeyCommands.vala:1881
 #, fuzzy
 msgid "Select a group color"
 msgstr "Vyberte barvu odkazu"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:271
-#: src/MapInspector.vala:524 src/MapModel.vala:2327
+#: src/MapInspector.vala:524 src/MapModel.vala:2328
 msgid "Manual"
 msgstr "Ruční"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1627
+#: src/MainWindow.vala:183 src/MainWindow.vala:1623
 msgid "Minder"
 msgstr "Minder"
 
@@ -1376,7 +1376,7 @@ msgstr "Přiblížit"
 msgid "Zoom Out"
 msgstr "Oddálit"
 
-#: src/MainWindow.vala:802 src/MainWindow.vala:1693
+#: src/MainWindow.vala:802 src/MainWindow.vala:1689
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Přiblížení (%d%%)"
@@ -1459,7 +1459,7 @@ msgstr "Seznam všech zkratek"
 msgid "About Minder"
 msgstr "O Minderu"
 
-#: src/MainWindow.vala:1190 src/MainWindow.vala:1777
+#: src/MainWindow.vala:1190 src/MainWindow.vala:1773
 msgid "Show Property Sidebar"
 msgstr "Zobrazit panel vlastností"
 
@@ -1496,7 +1496,7 @@ msgstr "Pokud soubor neuložíte, provedené změny se navždy ztratí."
 msgid "Discard Changes"
 msgstr "Zahodit změny"
 
-#: src/MainWindow.vala:1333 src/MainWindow.vala:1623 src/ThemeEditor.vala:158
+#: src/MainWindow.vala:1333 src/MainWindow.vala:1619 src/ThemeEditor.vala:158
 msgid "Save"
 msgstr "Uložit"
 
@@ -1526,19 +1526,19 @@ msgstr "Otevřít soubor"
 msgid "Open"
 msgstr "Otevřít"
 
-#: src/MainWindow.vala:1623
+#: src/MainWindow.vala:1619
 msgid "Save File"
 msgstr "Uložit soubor"
 
-#: src/MainWindow.vala:1723
+#: src/MainWindow.vala:1719
 msgid "Hide Property Sidebar"
 msgstr "Schovat panel vlastností"
 
-#: src/MainWindow.vala:2199
+#: src/MainWindow.vala:2171
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2200
+#: src/MainWindow.vala:2172
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1546,31 +1546,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2205
+#: src/MainWindow.vala:2177
 #, fuzzy
 msgid "Quit Minder"
 msgstr "O Minderu"
 
-#: src/MainWindow.vala:2225
+#: src/MainWindow.vala:2197
 #, fuzzy
 msgid "Detail"
 msgstr "Odpojit"
 
-#: src/MainWindow.vala:2233
+#: src/MainWindow.vala:2205
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2234
+#: src/MainWindow.vala:2206
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2235
+#: src/MainWindow.vala:2207
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1578,11 +1578,11 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2242
+#: src/MainWindow.vala:2214
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2267
+#: src/MainWindow.vala:2239
 msgid "Upgrades Needed"
 msgstr ""
 
@@ -2532,20 +2532,20 @@ msgstr "[dvojité kliknutí na slovo]"
 msgid "[Triple left-click text]"
 msgstr "[trojité levé kliknutí kdekoliv v textu]"
 
-#: src/StickerInspector.vala:61
+#: src/StickerInspector.vala:60
 msgid "Remove From Favorites"
 msgstr "Odstranit z oblíbených"
 
-#: src/StickerInspector.vala:64 src/StickerInspector.vala:67
+#: src/StickerInspector.vala:63 src/StickerInspector.vala:66
 msgid "Add To Favorites"
 msgstr "Přidat do oblíbených"
 
-#: src/StickerInspector.vala:70
+#: src/StickerInspector.vala:69
 #, fuzzy
 msgid "Remove Custom Sticker"
 msgstr "Odstranit nálepku"
 
-#: src/StickerInspector.vala:78
+#: src/StickerInspector.vala:77
 msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
@@ -2553,29 +2553,29 @@ msgstr ""
 "Pokud chcete přidat nálepku, přetáhněte nálepku na uzel nebo kamkoliv jinam "
 "v mapě."
 
-#: src/StickerInspector.vala:85
+#: src/StickerInspector.vala:84
 msgid "Search Stickers"
 msgstr "Hledat nálepky"
 
-#: src/StickerInspector.vala:119
+#: src/StickerInspector.vala:133
 msgid "Favorites"
 msgstr "Oblíbené"
 
-#: src/StickerInspector.vala:125
+#: src/StickerInspector.vala:139
 msgid "Show Custom Sticker Directory"
 msgstr ""
 
-#: src/StickerInspector.vala:205
+#: src/StickerInspector.vala:219
 #, fuzzy
 msgid "Add custom stickers"
 msgstr "přidat poznámku uzlu"
 
-#: src/StickerInspector.vala:459
+#: src/StickerInspector.vala:473
 #, fuzzy
 msgid "Import Sticker(s)"
 msgstr "Odstranit nálepku"
 
-#: src/StickerInspector.vala:459 src/StickerSet.vala:353
+#: src/StickerInspector.vala:473 src/StickerSet.vala:353
 msgid "Import"
 msgstr "Import"
 
@@ -2599,7 +2599,7 @@ msgstr "Průmysl"
 msgid "Mobile"
 msgstr "Souvisí s mobilem"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1238
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1240
 msgid "Arrows"
 msgstr "Šipky"
 
@@ -3579,13 +3579,13 @@ msgstr "Nahoru"
 msgid "Right up"
 msgstr "Doprava nahoru"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1049
-#: src/StyleInspector.vala:1479 src/StyleInspector.vala:1642
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1051
+#: src/StyleInspector.vala:1483 src/StyleInspector.vala:1648
 msgid "Left"
 msgstr "Do leva"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1051
-#: src/StyleInspector.vala:1481 src/StyleInspector.vala:1644
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1053
+#: src/StyleInspector.vala:1485 src/StyleInspector.vala:1650
 msgid "Right"
 msgstr "Do prava"
 
@@ -3890,11 +3890,11 @@ msgstr "Okraj"
 msgid "Link Options"
 msgstr "Možnosti odkazu"
 
-#: src/StyleInspector.vala:550 src/StyleInspector.vala:1197
+#: src/StyleInspector.vala:550 src/StyleInspector.vala:1199
 msgid "Line Dash"
 msgstr "Vzhled čáry"
 
-#: src/StyleInspector.vala:591 src/StyleInspector.vala:1325
+#: src/StyleInspector.vala:591 src/StyleInspector.vala:1327
 msgid "Line Width"
 msgstr "Tloušťka čáry"
 
@@ -3931,8 +3931,8 @@ msgstr ""
 "Vyplní uzel barvou, když je okraj uzlu\n"
 "hranatý, kulatý nebo Pill-shaped"
 
-#: src/StyleInspector.vala:949 src/StyleInspector.vala:1378
-#: src/StyleInspector.vala:1673
+#: src/StyleInspector.vala:949 src/StyleInspector.vala:1380
+#: src/StyleInspector.vala:1679
 msgid "Padding"
 msgstr "Odstup"
 
@@ -3940,59 +3940,59 @@ msgstr "Odstup"
 msgid "Font"
 msgstr "Styl písma"
 
-#: src/StyleInspector.vala:1038 src/StyleInspector.vala:1468
-#: src/StyleInspector.vala:1631
+#: src/StyleInspector.vala:1040 src/StyleInspector.vala:1472
+#: src/StyleInspector.vala:1637
 #, fuzzy
 msgid "Text Alignment"
 msgstr "zarovnání uzlu"
 
-#: src/StyleInspector.vala:1050 src/StyleInspector.vala:1480
-#: src/StyleInspector.vala:1643
+#: src/StyleInspector.vala:1052 src/StyleInspector.vala:1484
+#: src/StyleInspector.vala:1649
 #, fuzzy
 msgid "Center"
 msgstr "Zarovnat do pohledu"
 
-#: src/StyleInspector.vala:1080
+#: src/StyleInspector.vala:1082
 msgid "Width"
 msgstr "Šířka"
 
-#: src/StyleInspector.vala:1113
+#: src/StyleInspector.vala:1115
 msgid "Enable Markup"
 msgstr "Povolit Markup"
 
-#: src/StyleInspector.vala:1174 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1176 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "Možnosti spojení"
 
-#: src/StyleInspector.vala:1278
+#: src/StyleInspector.vala:1280
 #, fuzzy
 msgid "Arrow Size"
 msgstr "Šipky"
 
-#: src/StyleInspector.vala:1424
+#: src/StyleInspector.vala:1426
 msgid "Title Font"
 msgstr "Styl názvu"
 
-#: src/StyleInspector.vala:1510
+#: src/StyleInspector.vala:1514
 msgid "Title Width"
 msgstr "Šířka názvu"
 
-#: src/StyleInspector.vala:1563 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1567 src/Templates.vala:61 src/Templates.vala:66
 #, fuzzy
 msgid "Callout Options"
 msgstr "Možnosti exportu"
 
-#: src/StyleInspector.vala:1587
+#: src/StyleInspector.vala:1591
 #, fuzzy
 msgid "Text Font"
 msgstr "Styl názvu"
 
-#: src/StyleInspector.vala:1719
+#: src/StyleInspector.vala:1725
 #, fuzzy
 msgid "Pointer Width"
 msgstr "Tloušťka čáry"
 
-#: src/StyleInspector.vala:1765
+#: src/StyleInspector.vala:1771
 msgid "Pointer Length"
 msgstr ""
 
@@ -4076,11 +4076,11 @@ msgstr ""
 msgid "Click to remove tag from highlight"
 msgstr ""
 
-#: src/TagEditor.vala:311
+#: src/TagEditor.vala:312
 msgid "Enter name of tag to find or create"
 msgstr ""
 
-#: src/TagEditor.vala:413
+#: src/TagEditor.vala:429
 #, c-format
 msgid "Create '%s' tag"
 msgstr ""
@@ -4095,12 +4095,12 @@ msgid ""
 "Highlight tagged nodes in map."
 msgstr ""
 
-#: src/TagInspector.vala:67
+#: src/TagInspector.vala:70
 #, fuzzy
 msgid "Highlight Mode"
 msgstr "Zarovnat pravou stranu"
 
-#: src/TagInspector.vala:77
+#: src/TagInspector.vala:80
 msgid "End Tag Highlighting"
 msgstr ""
 
