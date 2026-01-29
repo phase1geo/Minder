@@ -54,7 +54,7 @@ public class Utils {
       var keyfile = new GLib.KeyFile();
       keyfile.load_from_file( "/.flatpak-info", GLib.KeyFileFlags.NONE );
       var runtime = keyfile.get_string( "Application", "runtime" );
-      return( "Flatpak Runtime: %s".printf( runtime ) );
+      return( runtime );
     } catch( Error e ) {}
 
     return( "" );
