@@ -79,6 +79,19 @@
   </custom>
   <content_rating type="oars-1.1" />
   <releases>
+    <release version="2.0.5" date="2026-01-31">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Improved .minder file icon image.</li>
+          <li>Improved connection drawing to avoid lines overlapping with other connection lines.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed runtime string in About window.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.4" date="2026-01-18">
       <description>
         <p>New</p>

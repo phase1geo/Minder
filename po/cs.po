@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-18 13:27-0600\n"
+"POT-Creation-Date: 2026-01-31 21:15-0600\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -213,11 +213,11 @@ msgstr "Předchozí spojení"
 msgid "Select"
 msgstr "Vybrat"
 
-#: src/Connection.vala:804
+#: src/Connection.vala:810
 msgid "Connection Title"
 msgstr "Název spojení"
 
-#: src/Connection.vala:812
+#: src/Connection.vala:818
 msgid "Connection Note"
 msgstr "Poznámka ke spojení"
 

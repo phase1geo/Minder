@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-18 13:27-0600\n"
+"POT-Creation-Date: 2026-01-31 21:15-0600\n"
 "PO-Revision-Date: 2020-04-20 14:26+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: \n"
@@ -218,12 +218,12 @@ msgstr "Vorige verbinding"
 msgid "Select"
 msgstr "Kiezen"
 
-#: src/Connection.vala:804
+#: src/Connection.vala:810
 #, fuzzy
 msgid "Connection Title"
 msgstr "Verbinding"
 
-#: src/Connection.vala:812
+#: src/Connection.vala:818
 #, fuzzy
 msgid "Connection Note"
 msgstr "Verbinding"

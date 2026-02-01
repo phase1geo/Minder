@@ -130,6 +130,25 @@
   </custom>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.0.5" date="2026-01-31">
+      <description>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Improved .minder file icon image.</li>
+          <li>Improved connection drawing to avoid lines overlapping with other connection lines.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed runtime string in About window.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.4" date="2026-01-18">
       <description>
         <p>New</p>
@@ -158,7 +177,7 @@
         </ul>
       </description>
     </release>
-    <release version="2.0.3" date="2026-12-21">
+    <release version="2.0.3" date="2025-12-21">
       <description>
         <p>New</p>
         <p xml:lang="pt">Novo</p>
