@@ -355,7 +355,10 @@ public class Connections {
   public void draw_all( Cairo.Context ctx, Theme theme, bool exporting ) {
     if( hide ) return;
     for( int i=0; i<_connections.length; i++ ) {
-      _connections.index( i ).draw( ctx, theme, exporting );
+      _connections.index( i ).draw_line( ctx, theme, exporting );
+    }
+    for( int i=0; i<_connections.length; i++ ) {
+      _connections.index( i ).draw_title( ctx, theme, exporting );
     }
   }
 

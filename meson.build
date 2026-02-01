@@ -1,5 +1,5 @@
 project('com.github.phase1geo.minder', ['vala', 'c'],
-    version : '2.0.4',
+    version : '2.0.5',
     license: 'GPL-3.0'
 )
 
@@ -87,5 +87,6 @@ e = executable('com.github.phase1geo.minder',
 gnome.post_install(
   glib_compile_schemas: true,
   gtk_update_icon_cache: true,
-  update_desktop_database: true
+  update_mime_database: true,
+  update_desktop_database: true,
 )

@@ -77,6 +77,18 @@
   <defs
      id="defs15">
     <linearGradient
+       id="linearGradient1"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop1" />
+      <stop
+         style="stop-color:#bfbfbf;stop-opacity:1;"
+         offset="1"
+         id="stop2" />
+    </linearGradient>
+    <linearGradient
        id="linearGradient1735">
       <stop
          id="stop1727"
@@ -2570,17 +2582,27 @@
        id="linearGradient1430"
        xlink:href="#linearGradient1649"
        inkscape:collect="always" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1"
+       id="linearGradient2"
+       x1="335.22083"
+       y1="81.73851"
+       x2="335.22083"
+       y2="558.26154"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-15.220848)" />
   </defs>
   <rect
-     style="display:inline;fill:none;stroke-width:4.67707;stroke:#313131;stroke-opacity:1"
+     style="display:inline;fill:url(#linearGradient2);stroke:#313131;stroke-width:4.67707;stroke-opacity:1"
      id="rect1"
      width="471.84601"
      height="631.30243"
-     x="99.297844"
+     x="84.076996"
      y="4.3488111" />
   <g
      id="g1"
-     transform="matrix(0.88621952,0,0,0.91966889,39.825568,74.774487)">
+     transform="matrix(0.7488261,0,0,0.77178304,69.820461,29.813444)">
     <g
        inkscape:groupmode="layer"
        id="layer6"
