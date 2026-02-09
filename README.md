@@ -68,7 +68,7 @@ Minder is available as a Flatpak (recommended) via Flathub and elementary OS App
 
 You can install the Flathub flatpak from:
 
-https://flathub.org/apps/com.github.phase1geo.minder
+https://flathub.org/apps/io.github.phase1geo.minder
 
 ### elementary OS AppCenter
 
@@ -107,5 +107,5 @@ Debian/Ubuntu package is also available:
 Minder documentation can be found [here](https://github.com/phase1geo/Minder/wiki/Table-of-Contents).
 
 <p align="center">
-  <a href="https://appcenter.elementary.io/com.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
+  <a href="https://appcenter.elementary.io/io.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
 </p>

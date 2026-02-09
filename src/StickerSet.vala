@@ -381,7 +381,7 @@ public class StickerSet {
     Utils.create_dir( sticker_dir() );
 
     /* Add the README */
-    var src = File.new_for_uri( "resource:///com/github/phase1geo/minder/README.md" );
+    var src = File.new_for_uri( "resource:///io/github/phase1geo/minder/README.md" );
     var dst = File.new_for_path( Path.build_filename( sticker_dir(), "README.md" ) );
     try {
       src.copy( dst, FileCopyFlags.OVERWRITE );
@@ -500,7 +500,7 @@ public class StickerSet {
       if( resource.get_char( 0 ) == '/' ) {
         return( new Pixbuf.from_file_at_scale( resource, ((width == -1) ? 64 : width), -1, true ) );
       } else {
-        return( new Pixbuf.from_resource_at_scale( ("/com/github/phase1geo/minder/" + resource), ((width == -1) ? 64 : width), -1, true ) );
+        return( new Pixbuf.from_resource_at_scale( ("/io/github/phase1geo/minder/" + resource), ((width == -1) ? 64 : width), -1, true ) );
       }
     } catch( Error e ) {
       return( null );

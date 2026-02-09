@@ -91,7 +91,7 @@ namespace MinderTest {
 
     private GLib.TestSuite root_suite;
     private GLib.File      tmp_dir;
-    private const string   SCHEMA_FILE_NAME = "com.github.phase1geo.minder.gschema.xml";
+    private const string   SCHEMA_FILE_NAME = "io.github.phase1geo.minder.gschema.xml";
 
     public TestRunner( GLib.TestSuite? root_suite = null ) {
       if( root_suite == null ) {

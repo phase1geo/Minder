@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/com/github/phase1geo/minder">
+  <gresource prefix="/io/github/phase1geo/minder">
     <file alias="Application.css" compressed="true">Application.css</file>
-    <file alias="minder-logo.svg">icons/scalable/com.github.phase1geo.minder.svg</file>
+    <file alias="minder-logo.svg">icons/scalable/io.github.phase1geo.minder.svg</file>
     <file alias="README.md">custom_sticker_readme.md</file>
 
     <file alias="minder-balance-light-symbolic.svg">icons/16/minder-balance-light-symbolic.svg</file>

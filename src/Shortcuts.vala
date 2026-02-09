@@ -750,7 +750,7 @@ public class Shortcuts {
 
     doc->set_root_element( root );
 
-    root->set_prop( "domain", "com.github.phase1geo.minder" );
+    root->set_prop( "domain", "io.github.phase1geo.minder" );
 
     var window = make_object( "GtkShortcutsWindow", "shortcuts" );
     root->add_child( window );

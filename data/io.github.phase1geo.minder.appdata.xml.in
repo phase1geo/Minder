@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2018-2026 Trevor Williams <phase1geo@icloud.com> -->
 <component type="desktop-application">
-  <id>com.github.phase1geo.minder</id>
+  <id>io.github.phase1geo.minder</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Minder</name>
@@ -40,9 +40,9 @@
       <li>Printer support.</li>
     </ul>
   </description>
-  <launchable type="desktop-id">com.github.phase1geo.minder.desktop</launchable>
+  <launchable type="desktop-id">io.github.phase1geo.minder.desktop</launchable>
   <provides>
-    <binary>com.github.phase1geo.minder</binary>
+    <binary>io.github.phase1geo.minder</binary>
   </provides>
   <screenshots>
     <screenshot type="default">
@@ -66,7 +66,7 @@
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-map-properties.png</image>
     </screenshot>
   </screenshots>
-  <developer id="com.github.phase1geo">
+  <developer id="io.github.phase1geo">
     <name>Trevor Williams</name>
   </developer>
   <url type="homepage">https://github.com/phase1geo/minder/</url>
