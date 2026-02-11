@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2018-2026 Trevor Williams <phase1geo@icloud.com> -->
 <component type="desktop-application">
-  <id>com.github.phase1geo.minder</id>
+  <id>io.github.phase1geo.minder</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Minder</name>
@@ -83,9 +83,9 @@
       <li xml:lang="fr">Prise en charge de l'impression.</li>
     </ul>
   </description>
-  <launchable type="desktop-id">com.github.phase1geo.minder.desktop</launchable>
+  <launchable type="desktop-id">io.github.phase1geo.minder.desktop</launchable>
   <provides>
-    <binary>com.github.phase1geo.minder</binary>
+    <binary>io.github.phase1geo.minder</binary>
   </provides>
   <screenshots>
     <screenshot type="default">
@@ -114,7 +114,7 @@
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-map-properties.png</image>
     </screenshot>
   </screenshots>
-  <developer id="com.github.phase1geo">
+  <developer id="io.github.phase1geo">
     <name>Trevor Williams</name>
     <name xml:lang="ru">Trevor Williams</name>
     <name xml:lang="pt">Trevor Williams</name>
@@ -130,6 +130,13 @@
   </custom>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.0.6" date="2025-02-11">
+      <p>Changes</p>
+      <ul>
+        <li>Changing application ID from com.github.phase1geo.minder to io.github.phase1geo.minder</li>
+        <li>Removing home directory permissions from Flatpak manifest.</li>
+      </ul>
+    </release>
     <release version="2.0.5" date="2026-01-31">
       <description>
         <p>Changes</p>
