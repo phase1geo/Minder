@@ -45,24 +45,23 @@ public class UrlEditor {
     });
     _entry.changed.connect( check_entry );
 
-    var ebox = new Box( Orientation.HORIZONTAL, 5 );
-    ebox.append( lbl );
-    ebox.append( _entry );
-
-    _apply = new Button.with_label( _( "Apply" ) ) {
-      halign = Align.END,
-      sensitive = false
+    _apply = new Button.from_icon_name( "object-select-symbolic" ) {
+      halign = Align.START,
+      sensitive = false,
+      tooltip_text = _( "Apply" )
     };
+    _apply.add_css_class( Granite.STYLE_CLASS_CIRCULAR );
     _apply.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
     _apply.clicked.connect(() => {
       set_url();
       _popover.popdown();
     });
 
-    var cancel = new Button.with_label( _( "Cancel" ) ) {
-      halign = Align.END,
-      hexpand = true
+    var cancel = new Button.from_icon_name( ( "window-close-symbolic" ) ) {
+      halign = Align.START,
+      tooltip_text = _( "Cancel" )
     };
+    cancel.add_css_class( Granite.STYLE_CLASS_CIRCULAR );
     cancel.clicked.connect(() => {
       var ct = _map.get_current_text();
       if( ct != null ) {
@@ -71,18 +70,16 @@ public class UrlEditor {
       _popover.popdown();
     });
 
-    var bbox = new Box( Orientation.HORIZONTAL, 5 );
-    bbox.append( cancel );
-    bbox.append( _apply );
-
-    var box = new Box( Orientation.VERTICAL, 5 ) {
+    var box = new Box( Orientation.HORIZONTAL, 5 ) {
       margin_start  = 5,
       margin_end    = 5,
       margin_top    = 5,
       margin_bottom = 5
     };
-    box.append( ebox );
-    box.append( bbox );
+    box.append( lbl );
+    box.append( _entry );
+    box.append( _apply );
+    box.append( cancel );
 
     // Popover
     _popover = new Popover() {
@@ -211,7 +208,7 @@ public class UrlEditor {
       try {
         clipboard.read_text_async.begin( null, (obj, res) => {
           var text = clipboard.read_text_async.end( res );
-          if( text != null ) {
+          if( (text != null) && Utils.is_url( text ) ) {
             _entry.text = text;
             check_entry();
           }

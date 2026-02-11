@@ -33,7 +33,7 @@ public class Minder : Gtk.Application {
   private        GLib.Settings       touch_settings;
 
   public  static GLib.Settings settings;
-  public  static string        version       = "2.0.5";
+  public  static string        version       = "2.0.6";
   public  static bool          debug         = false;
   public  static bool          debug_advance = false;
   public  static int           debug_count   = 0;
@@ -42,7 +42,7 @@ public class Minder : Gtk.Application {
   // Default constructor
   public Minder () {
 
-    Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.HANDLES_COMMAND_LINE );
+    Object( application_id: "io.github.phase1geo.minder", flags: ApplicationFlags.HANDLES_COMMAND_LINE );
 
     Intl.setlocale( LocaleCategory.ALL, "" );
     Intl.bindtextdomain( GETTEXT_PACKAGE, LOCALEDIR );
@@ -59,11 +59,11 @@ public class Minder : Gtk.Application {
   private void start_application() {
 
     // Initialize the settings
-    settings = new GLib.Settings( "com.github.phase1geo.minder" );
+    settings = new GLib.Settings( "io.github.phase1geo.minder" );
 
     // Add the application-specific icons
     weak IconTheme default_theme = IconTheme.get_for_display( Gdk.Display.get_default() );
-    default_theme.add_resource_path( "/com/github/phase1geo/minder" );
+    default_theme.add_resource_path( "/io/github/phase1geo/minder" );
 
     // Create the main window
     appwin = new MainWindow( this, settings );
@@ -150,10 +150,10 @@ public class Minder : Gtk.Application {
     // Add some description for importing and exporting
     var description_prefix = (Utils.get_flatpak_runtime() != "") ? "flatpak run " : "";
     var description = _( "Import Example:\n" );
-    description += _( "  %scom.github.phase1geo.minder --import=markdown file.markdown\n".printf( description_prefix ) );
+    description += _( "  %sio.github.phase1geo.minder --import=markdown file.markdown\n".printf( description_prefix ) );
     description += "\n";
     description += _( "Export Example:\n" );
-    description += _( "  %scom.github.phase1geo.minder --export=png --png-transparent file.minder file.png\n".printf( description_prefix ) );
+    description += _( "  %sio.github.phase1geo.minder --export=png --png-transparent file.minder file.png\n".printf( description_prefix ) );
     context.set_description( description );
 
     // Parse the arguments

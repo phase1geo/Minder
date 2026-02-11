@@ -48,8 +48,8 @@ case $1 in
 "generate-i18n")
     grep -rc _\( * | grep ^src | grep -v :0 | cut -d : -f 1 | sort -o po/POTFILES
     initialize
-    ninja com.github.phase1geo.minder-pot
-    ninja com.github.phase1geo.minder-update-po
+    ninja io.github.phase1geo.minder-pot
+    ninja io.github.phase1geo.minder-update-po
     ninja extra-pot
     ninja extra-update-po
     cp data/* ../data
@@ -76,27 +76,27 @@ case $1 in
     ;;
 "run")
     initialize
-    ./com.github.phase1geo.minder "${@:2}"
+    ./io.github.phase1geo.minder "${@:2}"
     ;;
 "run-flatpak")
-    flatpak run com.github.phase1geo.minder "${@:2}"
+    flatpak run io.github.phase1geo.minder "${@:2}"
     ;;
 "debug")
     initialize
-    # G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.minder "${@:2}"
-    G_DEBUG=fatal-warnings gdb --args ./com.github.phase1geo.minder "${@:2}"
+    # G_DEBUG=fatal-criticals gdb --args ./io.github.phase1geo.minder "${@:2}"
+    G_DEBUG=fatal-warnings gdb --args ./io.github.phase1geo.minder "${@:2}"
     ;;
 "heaptrack")
     initialize
-    heaptrack ./com.github.phase1geo.minder "${@:2}"
+    heaptrack ./io.github.phase1geo.minder "${@:2}"
     ;;
 "valgrind")
     initialize
-    valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --num-callers=30 ./com.github.phase1geo.minder "${0:2}" | tee ../valgrind.out
+    valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --num-callers=30 ./io.github.phase1geo.minder "${0:2}" | tee ../valgrind.out
     ;;
 "flatpak-debug")
-    echo "Run command at prompt: G_DEBUG=fatal-criticals gdb /app/bin/com.github.phase1geo.minder"
-    flatpak run --devel --command=sh com.github.phase1geo.minder
+    echo "Run command at prompt: G_DEBUG=fatal-criticals gdb /app/bin/io.github.phase1geo.minder"
+    flatpak run --devel --command=sh io.github.phase1geo.minder
     ;;
 "test")
     test
@@ -106,12 +106,12 @@ case $1 in
     sudo ninja uninstall
     ;;
 "elementary")
-    flatpak-builder --user --install --force-clean ../build-minder-elementary elementary/com.github.phase1geo.minder.yml
-    flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" com.github.phase1geo.minder.Debug
+    flatpak-builder --user --install --force-clean ../build-minder-elementary elementary/io.github.phase1geo.minder.yml
+    flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" io.github.phase1geo.minder.Debug
     ;;
 "flathub")
-    flatpak-builder --user --install --force-clean ../build-minder-flathub flathub/com.github.phase1geo.minder.yml
-    flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" com.github.phase1geo.minder.Debug
+    flatpak-builder --user --install --force-clean ../build-minder-flathub flathub/io.github.phase1geo.minder.yml
+    flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" io.github.phase1geo.minder.Debug
     ;;
 *)
     echo "Usage:"

@@ -2013,7 +2013,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     var ui_str  = shortcuts.get_ui_string();
     var builder = new Builder.from_string( ui_str, ui_str.length );
-    // var builder = new Builder.from_resource( "/com/github/phase1geo/minder/shortcuts.ui" );
+    // var builder = new Builder.from_resource( "/io/github/phase1geo/minder/shortcuts.ui" );
     var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
     var map     = get_current_map();
 
@@ -2343,7 +2343,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       var notification = new Notification( title );
       notification.set_body( msg );
       notification.set_priority( priority );
-      app.send_notification( "com.github.phase1geo.minder", notification );
+      app.send_notification( "io.github.phase1geo.minder", notification );
     }
   }
 
