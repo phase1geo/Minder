@@ -80,13 +80,11 @@
   <content_rating type="oars-1.1" />
   <releases>
     <release version="2.0.6" date="2025-02-11">
-      <description>
-        <p>Changes</p>
-        <ul>
-          <li>Changing application ID from com.github.phase1geo.minder to io.github.phase1geo.minder</li>
-          <li>Removing home directory permissions from Flatpak manifest.</li>
-        </ul>
-      </description>
+      <p>Changes</p>
+      <ul>
+        <li>Changing application ID from com.github.phase1geo.minder to io.github.phase1geo.minder</li>
+        <li>Removing home directory permissions from Flatpak manifest.</li>
+      </ul>
     </release>
     <release version="2.0.5" date="2026-01-31">
       <description>
