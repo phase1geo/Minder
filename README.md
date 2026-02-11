@@ -64,6 +64,9 @@ Alternatively, you can install the elementary OS Flatpak using `./app elementary
 
 Minder is available as a Flatpak (recommended) via Flathub and elementary OS AppCenter.
 
+**Note:  Some features may require home directory access permissions with Flatpaks to work properly.  If you notice any
+issues with exported images, try enabling home directory access with Flatseal before reporting issues.**
+
 ### Flathub
 
 You can install the Flathub flatpak from:
