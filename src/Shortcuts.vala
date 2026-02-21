@@ -292,13 +292,14 @@ public class Shortcuts {
   // Removes the shortcut associated with the given command.  Returns
   // true if the shortcut is found and removed.
   private bool remove_shortcut( KeyCommand command ) {
+    var removed = false;
     for( int i=0; i<_shortcuts.length; i++ ) {
       if( _shortcuts.index( i ).matches_command( command ) ) {
         _shortcuts.remove_index( i );
-        return( true );
+        removed = true;
       }
     }
-    return( false );
+    return( removed );
   }
 
   //-------------------------------------------------------------
@@ -480,7 +481,6 @@ public class Shortcuts {
   public void add_default_shortcuts() {
     for( int i=0; i<_defaults.length; i++ ) {
       _shortcuts.append_val( _defaults.index( i ) );
-      // FOOBAR
     }
   }
 
@@ -493,6 +493,7 @@ public class Shortcuts {
     for( int i=0; i<_shortcuts.length; i++ ) {
       shortcut_changed( _shortcuts.index( i ).command, _shortcuts.index( i ) );
     }
+    save();
   }
 
   //-------------------------------------------------------------
