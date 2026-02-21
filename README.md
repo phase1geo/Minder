@@ -60,25 +60,15 @@ the command-line with `./app run`.  If you want to debug with gdb using this bui
 
 Alternatively, you can install the elementary OS Flatpak using `./app elementary` or the Flathub Flatpak using `./app flathub`.  Once the Flatpak has been built, it can be run using `./app run-flatpak`.  To make this work, make sure that `flatpak` and `flatpak-builder` are installed on your system along with the required Sdk and Platform flatpaks.
 
-## Important Note For Minder Version 2.0.6+ Users
-
-Due to Flatpak naming requirements, the Minder application ID was changed from 'com.github.phase1geo.minder' to
-'io.github.phase1geo.minder' as of version 2.0.6.  If you are upgrading from an older version of minder, you will want
-to remove the 'com.github.phase1geo.minder' binary file or the Flatpaks of the same name to avoid accidentally using an
-older version.
-
 ## Flatpak
 
 Minder is available as a Flatpak (recommended) via Flathub and elementary OS AppCenter.
-
-**Note:  Some features may require home directory access permissions with Flatpaks to work properly.  If you notice any
-issues with exported images, try enabling home directory access with Flatseal before reporting issues.**
 
 ### Flathub
 
 You can install the Flathub flatpak from:
 
-https://flathub.org/apps/io.github.phase1geo.minder
+https://flathub.org/apps/com.github.phase1geo.minder
 
 ### elementary OS AppCenter
 
@@ -117,5 +107,5 @@ Debian/Ubuntu package is also available:
 Minder documentation can be found [here](https://github.com/phase1geo/Minder/wiki/Table-of-Contents).
 
 <p align="center">
-  <a href="https://appcenter.elementary.io/io.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
+  <a href="https://appcenter.elementary.io/com.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
 </p>

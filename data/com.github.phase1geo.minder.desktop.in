@@ -3,11 +3,11 @@ Name=Minder
 GenericName=Mind-mapper
 Comment=Create, develop and visualize your ideas
 Categories=Utility;Office;Development;
-Exec=io.github.phase1geo.minder %f
-Icon=io.github.phase1geo.minder
+Exec=com.github.phase1geo.minder %f
+Icon=com.github.phase1geo.minder
 Terminal=false
 Type=Application
-MimeType=application/io.github.phase1geo.minder;
+MimeType=application/com.github.phase1geo.minder;
 X-GNOME-Gettext-Domain=Minder
 X-GNOME-UsesNotifications=true
 Keywords=Mind;Mapping;
@@ -15,4 +15,4 @@ Actions=NewDocument;
 
 [Desktop Action NewDocument]
 Name=New Document
-Exec=io.github.phase1geo.minder -n
+Exec=com.github.phase1geo.minder -n

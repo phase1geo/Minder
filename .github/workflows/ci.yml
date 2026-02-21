@@ -24,9 +24,9 @@ jobs:
     - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:
         # This is the name of the Bundle file we're building and can be anything you like
-        bundle: io.github.phase1geo.minder.flatpak
+        bundle: com.github.phase1geo.minder.flatpak
         # This uses your app's RDNN ID
-        manifest-path: elementary/io.github.phase1geo.minder.yml
+        manifest-path: elementary/com.github.phase1geo.minder.yml
 
         # These lines specify the location of the elementary Runtime and Sdk
         repository-name: appcenter

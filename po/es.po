@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-10 22:41-0600\n"
+"POT-Creation-Date: 2026-01-31 21:15-0600\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Félix Brezo <felixbrezo@disroot.org>\n"
 "Language-Team: none\n"
@@ -82,7 +82,7 @@ msgstr "Importar archivo"
 
 #: src/Application.vala:153
 #, c-format
-msgid "  %sio.github.phase1geo.minder --import=markdown file.markdown\n"
+msgid "  %scom.github.phase1geo.minder --import=markdown file.markdown\n"
 msgstr ""
 
 #: src/Application.vala:155
@@ -93,7 +93,7 @@ msgstr "Exportar archivo"
 #: src/Application.vala:156
 #, c-format
 msgid ""
-"  %sio.github.phase1geo.minder --export=png --png-transparent file.minder "
+"  %scom.github.phase1geo.minder --export=png --png-transparent file.minder "
 "file.png\n"
 msgstr ""
 
@@ -282,7 +282,7 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2180
-#: src/UrlEditor.vala:51
+#: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Aplicar"
 

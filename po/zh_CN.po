@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-10 22:41-0600\n"
+"POT-Creation-Date: 2026-01-31 21:15-0600\n"
 "PO-Revision-Date: 2023-10-10 17:50+0800\n"
 "Last-Translator: Aerowolf <aerowolf@tom.com>\n"
 "Language-Team: 简体中文\n"
@@ -86,7 +86,7 @@ msgstr "导入文件"
 
 #: src/Application.vala:153
 #, c-format
-msgid "  %sio.github.phase1geo.minder --import=markdown file.markdown\n"
+msgid "  %scom.github.phase1geo.minder --import=markdown file.markdown\n"
 msgstr ""
 
 #: src/Application.vala:155
@@ -97,7 +97,7 @@ msgstr "导出文件"
 #: src/Application.vala:156
 #, c-format
 msgid ""
-"  %sio.github.phase1geo.minder --export=png --png-transparent file.minder "
+"  %scom.github.phase1geo.minder --export=png --png-transparent file.minder "
 "file.png\n"
 msgstr ""
 
@@ -273,7 +273,7 @@ msgid "Cancel"
 msgstr "取消"
 
 #: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2180
-#: src/UrlEditor.vala:51
+#: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "应用"
 

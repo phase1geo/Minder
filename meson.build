@@ -1,5 +1,5 @@
-project('io.github.phase1geo.minder', ['vala', 'c'],
-    version : '2.0.6',
+project('com.github.phase1geo.minder', ['vala', 'c'],
+    version : '2.0.5',
     license: 'GPL-3.0'
 )
 
@@ -72,7 +72,7 @@ dependencies = [
 
 subdir('tests')
 
-e = executable('io.github.phase1geo.minder',
+e = executable('com.github.phase1geo.minder',
     sources,
     config_file,
     gresource,

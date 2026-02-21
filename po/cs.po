@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-10 22:41-0600\n"
+"POT-Creation-Date: 2026-01-31 21:15-0600\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -83,7 +83,7 @@ msgstr "Importovat soubor"
 
 #: src/Application.vala:153
 #, c-format
-msgid "  %sio.github.phase1geo.minder --import=markdown file.markdown\n"
+msgid "  %scom.github.phase1geo.minder --import=markdown file.markdown\n"
 msgstr ""
 
 #: src/Application.vala:155
@@ -94,7 +94,7 @@ msgstr "Exportovat soubor"
 #: src/Application.vala:156
 #, c-format
 msgid ""
-"  %sio.github.phase1geo.minder --export=png --png-transparent file.minder "
+"  %scom.github.phase1geo.minder --export=png --png-transparent file.minder "
 "file.png\n"
 msgstr ""
 
@@ -269,7 +269,7 @@ msgid "Cancel"
 msgstr "Zrušit"
 
 #: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2180
-#: src/UrlEditor.vala:51
+#: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "Aplikovat"
 
