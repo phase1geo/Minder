@@ -122,7 +122,7 @@ public class Callout : Object {
       }
     }
   }
-  public double alpha { set; get; default = 1.0; }
+  public bool hide { set; get; default = false; }
 
   //-------------------------------------------------------------
   // Default constructor.

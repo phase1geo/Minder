@@ -226,7 +226,7 @@ public class Node : Object {
   protected double       _ipadx        = 6;
   protected double       _ipady        = 3;
   protected double       _task_radius  = 7;
-  protected double       _alpha        = 1.0;
+  protected bool         _hide         = false;
   protected Array<Node>  _children;
   private   NodeMode     _mode         = NodeMode.NONE;
   private   NodeBounds   _tree_bbox;
@@ -472,19 +472,19 @@ public class Node : Object {
       }
     }
   }
-  public double alpha {
+  public bool hide {
     get {
-      return( _alpha );
+      return( _hide );
     }
     set {
-      _alpha = value;
+      _hide = value;
       if( traversable() ) {
         for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).alpha = value;
+          _children.index( i ).hide = value;
         }
       }
       if( _callout != null ) {
-        _callout.alpha = _alpha;
+        _callout.alpha = get_alpha();
       }
     }
   }
@@ -680,7 +680,7 @@ public class Node : Object {
     _total_width    = n._total_width;
     _total_height   = n._total_height;
     _task_radius    = n._task_radius;
-    _alpha          = n._alpha;
+    _hide           = n._hide;
     _task_count     = n._task_count;
     _task_done      = n._task_done;
     _layout         = n._layout;
@@ -738,24 +738,11 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
-  // Sets the alpha value without propagating this to the children.
-  public void set_alpha_only( double value ) {
-    _alpha = value;
+  // Sets the hide indicator without propagating this to the children.
+  public void set_hide_only( double value ) {
+    _hide = value;
     if( _callout != null ) {
-      _callout.alpha = value;
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Updates the alpha value if it is not set to 1.0.
-  public void update_alpha( double value ) {
-    if( _alpha < 1.0 ) {
-      _alpha = value;
-    }
-    if( traversable() ) {
-      for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).update_alpha( value );
-      }
+      _callout.alpha = get_alpha();
     }
   }
 
@@ -2648,7 +2635,7 @@ public class Node : Object {
   // this procedure recursively.
   public void highlight_tags( Tags tags, TagComboType combo_type ) {
     if( combo_type.highlightable( _tags, tags ) ) {
-      set_alpha_only( 1.0 );
+      set_hide_only( false );
     }
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).highlight_tags( tags, combo_type );
@@ -2673,7 +2660,7 @@ public class Node : Object {
   // that match the given string pattern.
   public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     if( search_opts[SearchOptions.NODES] &&
-        (_alpha == 1.0) &&
+        !_hide &&
         (((((_task_count == 0) || !is_leaf()) && search_opts[SearchOptions.NONTASKS]) ||
           ((_task_count != 0) && is_leaf()   && search_opts[SearchOptions.TASKS])) &&
          (((parent != null) && parent.folded && search_opts[SearchOptions.FOLDED]) ||
@@ -2770,6 +2757,12 @@ public class Node : Object {
   //-------------------------------------------------------------
 
   //-------------------------------------------------------------
+  // Returns the alpha value used to draw this widget.
+  private double get_alpha() {
+    return( _hide && (_map.focus_mode.use_alpha()) ? _map.focus_alpha : 1.0 );
+  }
+
+  //-------------------------------------------------------------
   // Returns the link point for this node.
   protected virtual void link_point( out double x, out double y, bool seq = false ) {
     if( is_root() ) {
@@ -2829,30 +2822,31 @@ public class Node : Object {
     double y = posy + style.node_margin;
     double w = _width  - (style.node_margin * 2);
     double h = _height - (style.node_margin * 2);
+    double alpha = get_alpha();
 
     // If we are a root node and our alpha value is not 1.0, draw our shape in the background color to hide
     // any links that are drawn under us.
-    if( is_root() && (_alpha < 1.0) ) {
+    if( is_root() && (alpha < 1.0) ) {
       Utils.set_context_color( ctx, theme.get_color( "background" ) );
       style.draw_node_fill( ctx, x, y, w, h, side );
     }
 
     // Set the fill color
     if( mode.is_selected() && !exporting ) {
-      Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), alpha );
       style.draw_node_fill( ctx, x, y, w, h, side );
     } else if( is_root() || style.is_fillable() ) {
-      Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, border_color, alpha );
       style.draw_node_fill( ctx, x, y, w, h, side );
     } else if( !is_grouped() ) {
-      Utils.set_context_color_with_alpha( ctx, theme.get_color( "background" ), _alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "background" ), alpha );
       style.draw_node_fill( ctx, x, y, w, h, side );
     }
 
     if( !is_root() || style.is_fillable() ) {
 
       // Draw the border
-      Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, border_color, alpha );
       ctx.set_line_width( style.node_borderwidth );
 
       // If we are in a vertical orientation and the border type is underlined, draw nothing
@@ -2891,7 +2885,7 @@ public class Node : Object {
     if( _image != null ) {
       double x, y, w, h;
       image_bbox( out x, out y, out w, out h );
-      _image.draw( ctx, x, y, _alpha );
+      _image.draw( ctx, x, y, get_alpha() );
     }
 
   }
@@ -2902,12 +2896,13 @@ public class Node : Object {
 
     int hmargin = 3;
     int vmargin = 3;
+    var alpha   = get_alpha();
 
     // Draw the selection box around the text if the node is in the 'selected' state
     if( mode.is_selected() && !exporting ) {
       var padding = style.node_padding ?? 0;
       var margin  = style.node_margin  ?? 0;
-      Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), alpha );
       ctx.rectangle( ((posx + padding + margin) - hmargin),
                      ((posy + padding + margin) - vmargin),
                      ((_width  - (padding * 2) - (margin * 2)) + (hmargin * 2)),
@@ -2926,7 +2921,7 @@ public class Node : Object {
       color = Granite.contrasting_foreground_color( link_color );
     }
 
-    name.draw( ctx, theme, color, _alpha, exporting );
+    name.draw( ctx, theme, color, alpha, exporting );
 
   }
 
@@ -2943,17 +2938,19 @@ public class Node : Object {
       ctx.set_line_width( 2 );
       ctx.arc( (x + _task_radius), (y + _task_radius), _task_radius, 0, (2 * Math.PI) );
 
+      var alpha = get_alpha();
+
       if( (_task_done == 0) && (background != null) ) {
-        Utils.set_context_color_with_alpha( ctx, background, _alpha );
+        Utils.set_context_color_with_alpha( ctx, background, alpha );
       } else {
-        Utils.set_context_color_with_alpha( ctx, color, _alpha );
+        Utils.set_context_color_with_alpha( ctx, color, alpha );
       }
       ctx.fill_preserve();
 
       if( style.is_fillable() && (background != null) ) {
-        Utils.set_context_color_with_alpha( ctx, background, _alpha );
+        Utils.set_context_color_with_alpha( ctx, background, alpha );
       } else {
-        Utils.set_context_color_with_alpha( ctx, color, _alpha );
+        Utils.set_context_color_with_alpha( ctx, color, alpha );
       }
       ctx.stroke();
 
@@ -2976,21 +2973,23 @@ public class Node : Object {
       x += _task_radius;
       y += _task_radius;
 
+      var alpha = get_alpha();
+
       // Draw circle outline
       ctx.new_path();
       ctx.set_line_width( 2 );
       ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
       if( style.is_fillable() && (background != null) ) {
-        Utils.set_context_color_with_alpha( ctx, background, _alpha );
+        Utils.set_context_color_with_alpha( ctx, background, alpha );
         ctx.fill();
       } else {
-        Utils.set_context_color_with_alpha( ctx, color, _alpha );
+        Utils.set_context_color_with_alpha( ctx, color, alpha );
         ctx.stroke();
       }
 
       // Draw completeness pie
       if( _task_done > 0 ) {
-        Utils.set_context_color_with_alpha( ctx, color, _alpha );
+        Utils.set_context_color_with_alpha( ctx, color, alpha );
         ctx.new_path();
         ctx.set_line_width( 2 );
         ctx.arc( x, y, (_task_radius - 1), (1.5 * Math.PI), angle );
@@ -3015,8 +3014,10 @@ public class Node : Object {
 
       sticker_bbox( out x, out y, out w, out h );
 
+      var alpha = get_alpha();
+
       if( _mode == NodeMode.SELECTED ) {
-        Utils.set_context_color_with_alpha( ctx, color, _alpha );
+        Utils.set_context_color_with_alpha( ctx, color, alpha );
         ctx.move_to( x, y );
         ctx.rectangle( x, y, w, h );
         ctx.fill();
@@ -3024,7 +3025,7 @@ public class Node : Object {
 
       // Draw sticker
       cairo_set_source_pixbuf( ctx, _sticker_buf, x, y );
-      ctx.paint_with_alpha( _alpha );
+      ctx.paint_with_alpha( alpha );
 
     }
 
@@ -3049,7 +3050,7 @@ public class Node : Object {
 
       // Output the text
       ctx.move_to( (x - (log_rect.x / Pango.SCALE)), y );
-      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, color, get_alpha() );
       Pango.cairo_show_layout( ctx, _sequence_num.layout );
       ctx.new_path();
 
@@ -3071,7 +3072,7 @@ public class Node : Object {
 
       note_bbox( out x, out y, out w, out h );
 
-      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, color, get_alpha() );
       ctx.new_path();
       ctx.set_line_width( 1 );
       ctx.move_to( (x + 2), y );
@@ -3104,7 +3105,7 @@ public class Node : Object {
 
       linked_node_bbox( out x, out y, out w, out h );
 
-      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, color, get_alpha() );
       ctx.new_path();
       ctx.set_line_width( 1 );
       ctx.move_to( x, (y + 3) );
@@ -3137,17 +3138,19 @@ public class Node : Object {
     double fx, fy, fw, fh;
     fold_bbox( out fx, out fy, out fw, out fh );
 
+    var alpha = get_alpha();
+
     if( folded ) {
 
       // Draw the fold rectangle
-      Utils.set_context_color_with_alpha( ctx, bg_color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, bg_color, alpha );
       ctx.new_path();
       ctx.set_line_width( 1 );
       ctx.rectangle( fx, fy, fw, fh );
       ctx.fill();
 
       // Draw circles
-      Utils.set_context_color_with_alpha( ctx, fg_color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, fg_color, alpha );
       ctx.new_path();
       ctx.arc( (fx + (fw / 3)), (fy + (fh / 2)), 2, 0, (2 * Math.PI) );
       ctx.fill();
@@ -3158,12 +3161,12 @@ public class Node : Object {
     } else if( show_fold ) {
 
       // Draw the fold rectangle
-      Utils.set_context_color_with_alpha( ctx, fg_color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, fg_color, alpha );
       ctx.new_path();
       ctx.set_line_width( 2 );
       ctx.rectangle( fx, fy, fw, fh );
       ctx.fill_preserve();
-      Utils.set_context_color_with_alpha( ctx, bg_color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, bg_color, alpha );
       ctx.stroke();
 
     }
@@ -3181,7 +3184,7 @@ public class Node : Object {
       node_bbox( out x, out y, out w, out h );
 
       // Draw highlight border
-      Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), _alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), get_alpha() );
       ctx.set_line_width( 4 );
       ctx.rectangle( x, y, w, h );
       ctx.stroke();
@@ -3216,7 +3219,7 @@ public class Node : Object {
       parent.link_point( out parent_x, out parent_y );
     }
 
-    Utils.set_context_color_with_alpha( ctx, _link_color, ((_parent.alpha != 1.0) ? _parent.alpha : _alpha) );
+    Utils.set_context_color_with_alpha( ctx, _link_color, ((_parent.alpha != 1.0) ? _parent.get_alpha() : get_alpha()) );
     ctx.set_line_cap( LineCap.ROUND );
 
     if( link_sibling ) {
@@ -3306,8 +3309,10 @@ public class Node : Object {
     var x2   = tipx - arrowLength * Math.cos( theta + phi2 );
     var y2   = tipy - arrowLength * Math.sin( theta + phi2 );
 
+    var alpha = get_alpha();
+
     // Draw the arrow
-    Utils.set_context_color_with_alpha( ctx, _link_color, _alpha );
+    Utils.set_context_color_with_alpha( ctx, _link_color, alpha );
     ctx.set_line_width( 1 );
     ctx.move_to( tipx, tipy );
     ctx.line_to( x1, y1 );
@@ -3315,7 +3320,7 @@ public class Node : Object {
     ctx.close_path();
     ctx.fill_preserve();
 
-    Utils.set_context_color_with_alpha( ctx, theme.get_color( "background" ), _alpha );
+    Utils.set_context_color_with_alpha( ctx, theme.get_color( "background" ), alpha );
     ctx.set_line_width( 2 );
     ctx.stroke();
 
@@ -3338,7 +3343,7 @@ public class Node : Object {
     ctx.rectangle( x, y, w, h );
     ctx.fill_preserve();
 
-    Utils.set_context_color_with_alpha( ctx, theme.get_color( "foreground" ), _alpha );
+    Utils.set_context_color_with_alpha( ctx, theme.get_color( "foreground" ), get_alpha() );
     ctx.stroke();
 
   }
@@ -3353,13 +3358,15 @@ public class Node : Object {
       double x, y, w, h;
       tag_bbox( i, out x, out y, out w, out h );
 
-      Utils.set_context_color_with_alpha( ctx, tag.color, _alpha );
+      var alpha = get_alpha();
+
+      Utils.set_context_color_with_alpha( ctx, tag.color, alpha );
       ctx.rectangle( x, y, w, h );
       ctx.fill_preserve();
 
       var color = (mode.is_selected() && !exporting) ? Granite.contrasting_foreground_color( theme.get_color( "nodesel_background" ) ) :
                                                        theme.get_color( "background" );
-      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, color, alpha );
       ctx.set_line_width( 1 );
       ctx.stroke();
 

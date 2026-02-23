@@ -22,6 +22,38 @@
 using Gtk;
 using Gdk;
 
+public enum FocusMode {
+  NONE,
+  PATH,
+  TAGS,
+  LEVELS;
+
+  public string to_string() {
+    switch( this ) {
+      case NONE   :  return( "none" );
+      case PATH   :  return( "path" );
+      case TAGS   :  return( "tags" );
+      case LEVELS :  return( "levels" );
+      default     :  assert_not_reached();
+    }
+  }
+
+  public static FocusMode parse( string str ) {
+    switch( str ) {
+      case "none"   :  return( NONE );
+      case "path"   :  return( PATH );
+      case "tags"   :  return( TAGS );
+      case "levels" :  return( LEVELS );
+      default       :  return( NONE );
+    }
+  }
+
+  public bool use_alpha() {
+    return( (this == PATH) || (this == TAGS) );
+  }
+
+}
+
 public class MindMap {
 
   private MainWindow     _win;
@@ -32,12 +64,13 @@ public class MindMap {
   private UndoBuffer     _undo_buffer;
   private UndoTextBuffer _undo_text;
   private Selection      _selected;
-  private bool           _focus_mode     = false;
+  // private bool           _focus_mode     = false;
   private double         _focus_alpha    = 0.05;
   private Tags           _highlighted;
   private TagComboType   _highlight_mode = TagComboType.AND;
   private bool           _editable       = true;
   private Style          _global_style;
+  private FocusMode      _focus_mode     = FocusMode.NONE;
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -85,7 +118,7 @@ public class MindMap {
       return( _undo_text );
     }
   }
-  public bool focus_mode {
+  public FocusMode focus_mode {
     get {
       return( _focus_mode );
     }
@@ -1139,15 +1172,15 @@ public class MindMap {
   public void update_focus_mode() {
     var selnodes = selected.nodes();
     var selconns = selected.connections();
-    var alpha    = (_highlighted.size() > 0) ||
-                   (_focus_mode && ((selnodes.length > 0) || (selconns.length > 0))) ? _focus_alpha : 1.0;
+    var mode     = (_highlighted.size() > 0) ? FocusMode.TAGS :
+                   ((_focus_mode && ((selnodes.length > 0) || (selconns.length > 0))) ? _focus_alpha : 1.0;
     var nodes    = _model.get_nodes();
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).alpha = alpha;
     }
     if( _highlighted.size() > 0 ) {
       _model.highlight_tags( _highlighted, _highlight_mode );
-    } else if( _focus_mode ) {
+    } else if( _focus_mode == FocusMode.PATH ) {
       for( int i=0; i<selnodes.length; i++ ) {
         var current = selnodes.index( i );
         current.alpha = 1.0;
