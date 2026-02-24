@@ -78,6 +78,10 @@ case $1 in
     initialize
     ./com.github.phase1geo.minder "${@:2}"
     ;;
+"run-rtl")
+    initialize
+    LANG=he_IL.utf8 ./com.github.phase1geo.minder "${@:2}"
+    ;;
 "run-flatpak")
     flatpak run com.github.phase1geo.minder "${@:2}"
     ;;

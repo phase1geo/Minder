@@ -984,23 +984,36 @@ public class CanvasText : Object {
   //-------------------------------------------------------------
   // Returns the current cursor position
   public void get_cursor_pos( out int x, out int ytop, out int ybot ) {
+
     var index = text.text.index_of_nth_char( _cursor );
     var rect  = _pango_layout.index_to_pos( index );
-    x    = (int)(posx + (rect.x / Pango.SCALE));
+
+    Pango.Rectangle ink_rect, log_rect;
+    _pango_layout.get_extents( out ink_rect, out log_rect );
+
+    x    = (int)((posx + (rect.x / Pango.SCALE)) - (log_rect.x / Pango.SCALE));
     ytop = (int)(posy + (rect.y / Pango.SCALE));
     ybot = ytop + (int)(rect.height / Pango.SCALE);
+
   }
 
   //-------------------------------------------------------------
   // Returns the x and y position of the given character position
   public void get_char_pos( int pos, out double left, out double top, out double bottom, out int line ) {
+
     var index = text.text.index_of_nth_char( pos );
     var rect  = _pango_layout.index_to_pos( index );
-    left   = posx + (rect.x / Pango.SCALE);
+
+    Pango.Rectangle ink_rect, log_rect;
+    _pango_layout.get_extents( out ink_rect, out log_rect );
+
+    left   = (posx + (rect.x / Pango.SCALE)) - (log_rect.x / Pango.SCALE);
     top    = posy + (rect.y / Pango.SCALE);
     bottom = top + (rect.height / Pango.SCALE);
+
     int x_pos;
     _pango_layout.index_to_line_x( index, false, out line, out x_pos );
+
   }
 
   //-------------------------------------------------------------
