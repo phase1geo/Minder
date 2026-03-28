@@ -700,7 +700,7 @@ public class Node : Object {
     tree_bbox.copy_from( n.tree_bbox );
     sticker          = n.sticker;
     sequence         = n.sequence;
-    _tags            = n.tags.copy();
+    _tags.copy_tags( n.tags );
   }
 
   //-------------------------------------------------------------

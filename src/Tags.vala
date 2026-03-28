@@ -221,6 +221,14 @@ public class Tags {
   }
 
   //-------------------------------------------------------------
+  // Copies the tag list from the other tags list to ours.
+  public void copy_tags( Tags other ) {
+    for( int i=0; i<other.size(); i++ ) {
+      add_tag( other.get_tag( i ) );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Removes the given tag from the list.
   public bool remove_tag( int index ) {
     if( (index < 0) || (index > _tags.length) ) return( false );
