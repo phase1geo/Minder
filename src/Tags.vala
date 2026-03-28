@@ -161,6 +161,18 @@ public class Tags {
   }
 
   //-------------------------------------------------------------
+  // Returns the tag associated with the given name.
+  public Tag? get_tag_from_name( string name ) {
+    for( int i=0; i<_tags.length; i++ ) {
+      var tag = _tags.index( i );
+      if( tag.name == name ) {
+        return( tag );
+      }
+    }
+    return( null );
+  }
+
+  //-------------------------------------------------------------
   // Returns the index of the given tag.  Returns -1 if the tag
   // cannot be found.
   public int get_tag_index( Tag tag ) {

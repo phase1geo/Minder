@@ -2229,11 +2229,12 @@ public class DrawArea : Gtk.DrawingArea {
 
     if( !_map.editable ) return( false );
 
-    var node = _map.model.attach_node;
-    var tag  = (Tag)val;
+    var node  = _map.model.attach_node;
+    var tag   = (Tag)val;
+    var found = _map.model.tags.get_tag_from_name( tag.name );
 
-    if( (node != null) && (node.mode == NodeMode.DROPPABLE) ) {
-      node.add_tag( tag );
+    if( (node != null) && (node.mode == NodeMode.DROPPABLE) && (found != null) ) {
+      node.add_tag( found );
       if( _map.select_node( node ) ) {
         queue_draw();
         _map.auto_save();
