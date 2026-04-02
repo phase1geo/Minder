@@ -32,6 +32,7 @@ public class CanvasText : Object {
   private double        _posx         = 0.0;
   private double        _posy         = 0.0;
   private FormattedText _text;
+  private FormattedText _nomarkup_text;
   private bool          _edit         = false;
   private int           _cursor       = 0;   // Location of the cursor when editing
   private int           _column       = 0;   // Character column to use when moving vertically
@@ -104,6 +105,7 @@ public class CanvasText : Object {
       if( _edit != value ) {
         _edit = value;
         if( !_edit ) {
+          _nomarkup_text = new FormattedText.copy_clean( _map, _text );
           clear_selection( "edit" );
         }
         update_size( true );
@@ -130,11 +132,12 @@ public class CanvasText : Object {
   // Default constructor
   public CanvasText( MindMap map ) {
     int int_max_width = (int)_max_width;
-    _map          = map;
-    _text         = new FormattedText( map );
+    _map           = map;
+    _text          = new FormattedText( map );
     _text.changed.connect( text_changed );
-    _line_layout  = map.canvas.create_pango_layout( "M" );
-    _pango_layout = map.canvas.create_pango_layout( null );
+    _nomarkup_text = new FormattedText( map );
+    _line_layout   = map.canvas.create_pango_layout( "M" );
+    _pango_layout  = map.canvas.create_pango_layout( null );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
@@ -145,11 +148,12 @@ public class CanvasText : Object {
   // Constructor initializing string
   public CanvasText.with_text( MindMap map, string txt ) {
     int int_max_width = (int)_max_width;
-    _map          = map;
-    _text         = new FormattedText.with_text( map, txt );
+    _map           = map;
+    _text          = new FormattedText.with_text( map, txt );
     _text.changed.connect( text_changed );
-    _line_layout  = map.canvas.create_pango_layout( "M" );
-    _pango_layout = map.canvas.create_pango_layout( txt );
+    _nomarkup_text = new FormattedText.copy_clean( map, _text );
+    _line_layout   = map.canvas.create_pango_layout( "M" );
+    _pango_layout  = map.canvas.create_pango_layout( txt );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
@@ -174,6 +178,7 @@ public class CanvasText : Object {
     _max_width = ct._max_width;
     _font_size = ct._font_size;
     _text.copy( ct.text );
+    _nomarkup_text.copy( ct._nomarkup_text );
     _line_layout.set_font_description( ct._pango_layout.get_font_description() );
     _pango_layout.set_font_description( ct._pango_layout.get_font_description() );
     _pango_layout.set_alignment( ct._pango_layout.get_alignment() );
@@ -306,6 +311,7 @@ public class CanvasText : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "text" ) )  {
         _text.load( it );
+        _nomarkup_text = new FormattedText.copy_clean( _map, _text );
         update_size( false );
       }
     }
@@ -346,8 +352,8 @@ public class CanvasText : Object {
   public void update_size( bool call_resized = true ) {
     if( _pango_layout != null ) {
       int text_width, text_height;
-      _pango_layout.set_text( _text.text, -1 );
-      _pango_layout.set_attributes( _text.get_attributes() );
+      _pango_layout.set_text( (edit ? _text.text : _nomarkup_text.text), -1 );
+      _pango_layout.set_attributes( edit ? _text.get_attributes() : _nomarkup_text.get_attributes() );
       _pango_layout.get_size( out text_width, out text_height );
       _width  = (text_width  / Pango.SCALE);
       _height = (text_height / Pango.SCALE);
@@ -1103,7 +1109,7 @@ public class CanvasText : Object {
 
     if( copy_layout ) {
       layout = _pango_layout.copy();
-      layout.set_attributes( _text.get_attributes_from_theme( theme ) );
+      layout.set_attributes( _nomarkup_text.get_attributes_from_theme( theme ) );
     }
 
     if( alpha < 1.0 ) {

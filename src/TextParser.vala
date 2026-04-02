@@ -84,7 +84,6 @@ public class TextParser {
   protected void remove_tags( FormattedText text, MatchInfo matches, int paren ) {
     int start, end;
     matches.fetch_pos( paren, out start, out end );
-    stdout.printf( "Removing all tags from %d to %d\n", start, end );
     text.remove_all_tags( start, end );
   }
 
