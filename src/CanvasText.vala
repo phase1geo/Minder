@@ -29,23 +29,24 @@ public class CanvasText : Object {
 
   // Member variables
   private MindMap       _map;
-  private double        _posx         = 0.0;
-  private double        _posy         = 0.0;
+  private double        _posx          = 0.0;
+  private double        _posy          = 0.0;
   private FormattedText _text;
   private FormattedText _nomarkup_text;
-  private bool          _edit         = false;
-  private int           _cursor       = 0;   // Location of the cursor when editing
-  private int           _column       = 0;   // Character column to use when moving vertically
-  private Pango.Layout  _pango_layout = null;
-  private Pango.Layout  _line_layout  = null;
-  private int           _selstart     = 0;
-  private int           _selend       = 0;
-  private int           _selanchor    = 0;
-  private double        _max_width    = 200;
-  private double        _width        = 0;
-  private double        _height       = 0;
-  private bool          _debug        = false;
-  private int           _font_size    = 12;
+  private bool          _edit          = false;
+  private bool          _node_selected = false;
+  private int           _cursor        = 0;   // Location of the cursor when editing
+  private int           _column        = 0;   // Character column to use when moving vertically
+  private Pango.Layout  _pango_layout  = null;
+  private Pango.Layout  _line_layout   = null;
+  private int           _selstart      = 0;
+  private int           _selend        = 0;
+  private int           _selanchor     = 0;
+  private double        _max_width     = 200;
+  private double        _width         = 0;
+  private double        _height        = 0;
+  private bool          _debug         = false;
+  private int           _font_size     = 12;
 
   // Signals
   public signal void resized();
@@ -110,6 +111,14 @@ public class CanvasText : Object {
         }
         update_size( true );
       }
+    }
+  }
+  public bool node_selected {
+    get {
+      return( _node_selected );
+    }
+    set {
+      _node_selected = value;
     }
   }
   public int cursor {
@@ -1107,10 +1116,10 @@ public class CanvasText : Object {
 
     var layout = _pango_layout;
 
-    if( copy_layout ) {
+    if( copy_layout || node_selected ) {
       layout = _pango_layout.copy();
-      layout.set_attributes( edit ? _text.get_attributes_from_theme( theme ) :
-                                    _nomarkup_text.get_attributes_from_theme( theme ) );
+      layout.set_attributes( edit ? _text.get_attributes_from_theme( theme, node_selected ) :
+                                    _nomarkup_text.get_attributes_from_theme( theme, node_selected ) );
     }
 
     if( alpha < 1.0 ) {

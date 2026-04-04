@@ -321,9 +321,11 @@ public class Node : Object {
         _mode = value;
         if( _mode == NodeMode.EDITABLE ) {
           name.edit = true;
+          name.node_selected = false;
           name.set_cursor_all( false );
         } else {
           name.edit = false;
+          name.node_selected = _mode.is_selected();
           name.clear_selection();
         }
       }

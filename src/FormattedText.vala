@@ -1078,13 +1078,18 @@ public class FormattedText {
   // colors to the returns tags immediately without updating the
   // main components.  This is useful for changing the theme for
   // a temporary context.
-  public AttrList get_attributes_from_theme( Theme theme ) {
+  public AttrList get_attributes_from_theme( Theme theme, bool use_sel_fg ) {
     var attrs = new AttrList();
     for( int i=0; i<(FormatTag.LENGTH-5); i++ ) {
       _formats[i].get_attributes( _attr_tags[i], ref attrs );
     }
-    _formats[FormatTag.URL].get_attributes( new UrlInfo( theme.get_color( "url_foreground" ) ), ref attrs );
-    _formats[FormatTag.SYNTAX].get_attributes( new SyntaxInfo( theme.get_color( "syntax" ), true ), ref attrs );
+    if( use_sel_fg ) {
+      _formats[FormatTag.URL].get_attributes( new UrlInfo( theme.get_color( "nodesel_foreground" ) ), ref attrs );
+      _formats[FormatTag.SYNTAX].get_attributes( new SyntaxInfo( theme.get_color( "nodesel_foreground" ), true ), ref attrs );
+    } else {
+      _formats[FormatTag.URL].get_attributes( new UrlInfo( theme.get_color( "url_foreground" ) ), ref attrs );
+      _formats[FormatTag.SYNTAX].get_attributes( new SyntaxInfo( theme.get_color( "syntax" ), true ), ref attrs );
+    }
     return( attrs );
   }
 
