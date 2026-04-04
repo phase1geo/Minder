@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-31 21:15-0600\n"
+"POT-Creation-Date: 2026-04-04 12:38-0500\n"
 "PO-Revision-Date: 2020-04-20 14:26+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: \n"
@@ -153,7 +153,7 @@ msgstr "Knoop kiezen"
 msgid "Callout"
 msgstr ""
 
-#: src/CanvasText.vala:291 src/FormattedText.vala:1179
+#: src/CanvasText.vala:305 src/FormattedText.vala:1184
 #, fuzzy
 msgid "No text found"
 msgstr "Volgende woord"
@@ -609,7 +609,7 @@ msgstr "Tak kiezen"
 msgid "Images"
 msgstr "Afbeelding"
 
-#: src/KeyCommands.vala:571 src/Shortcuts.vala:796
+#: src/KeyCommands.vala:571 src/Shortcuts.vala:797
 msgid "General"
 msgstr "Algemeen"
 
@@ -1303,7 +1303,7 @@ msgstr ""
 msgid "Add end of current line to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:733 src/Shortcuts.vala:821
+#: src/KeyCommands.vala:733 src/Shortcuts.vala:822
 #, fuzzy
 msgid "Select all text"
 msgstr "Tak kiezen"
@@ -1313,7 +1313,7 @@ msgstr "Tak kiezen"
 msgid "Deselect all text"
 msgstr "Tak kiezen"
 
-#: src/KeyCommands.vala:1881
+#: src/KeyCommands.vala:1882
 #, fuzzy
 msgid "Select a group color"
 msgstr "Verbindingskleur kiezen"
@@ -1704,7 +1704,7 @@ msgstr "Niet-opgeslagen"
 msgid "Main Idea"
 msgstr "Hoofdidee"
 
-#: src/MindMap.vala:1055
+#: src/MindMap.vala:1072
 msgid "Select a link color"
 msgstr "Verbindingskleur kiezen"
 
@@ -1742,7 +1742,7 @@ msgstr "Afbeelding"
 msgid "Add Image…"
 msgstr "Afbeelding toevoegen…"
 
-#: src/NodeInspector.vala:378 src/Shortcuts.vala:798
+#: src/NodeInspector.vala:378 src/Shortcuts.vala:799
 msgid "Edit Image"
 msgstr "Afbeelding bewerken"
 
@@ -2073,15 +2073,15 @@ msgstr ""
 msgid "Align"
 msgstr "naam wijzigen"
 
-#: src/Node.vala:2687
+#: src/Node.vala:2689
 msgid "Node Title"
 msgstr "Titel van knoop"
 
-#: src/Node.vala:2695
+#: src/Node.vala:2697
 msgid "Node Note"
 msgstr "Aantekening"
 
-#: src/Node.vala:2705
+#: src/Node.vala:2707
 #, fuzzy
 msgid "Callout Text"
 msgstr "Tekst plakken"
@@ -2393,171 +2393,171 @@ msgstr "Knopen uitlijnen"
 msgid "Insert"
 msgstr "knoop invoegen"
 
-#: src/Shortcuts.vala:773 src/Shortcuts.vala:779
+#: src/Shortcuts.vala:774 src/Shortcuts.vala:780
 #, fuzzy
 msgid "No Shortcuts Set"
 msgstr "Minder-sneltoetsen"
 
-#: src/Shortcuts.vala:794
+#: src/Shortcuts.vala:795
 msgid "Mouse Events"
 msgstr ""
 
-#: src/Shortcuts.vala:797
+#: src/Shortcuts.vala:798
 msgid "Show Contextual Menu"
 msgstr ""
 
-#: src/Shortcuts.vala:797
+#: src/Shortcuts.vala:798
 msgid "[Right-click when item is selected]"
 msgstr ""
 
-#: src/Shortcuts.vala:798
+#: src/Shortcuts.vala:799
 msgid "[Double left-click image]"
 msgstr ""
 
-#: src/Shortcuts.vala:800
+#: src/Shortcuts.vala:801
 #, fuzzy
 msgid "Canvas Movement"
 msgstr "Cursorverplaatsing"
 
-#: src/Shortcuts.vala:801
+#: src/Shortcuts.vala:802
 #, fuzzy
 msgid "Pan Canvas"
 msgstr "Afbeelding bewerken"
 
-#: src/Shortcuts.vala:801
+#: src/Shortcuts.vala:802
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr ""
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:803
 #, fuzzy
 msgid "Scroll Vertically"
 msgstr "Verticaal"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:803
 msgid "[Scrollwheel up/down]"
 msgstr ""
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:804
 #, fuzzy
 msgid "Scroll Horizontally"
 msgstr "Horizontaal"
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:804
 msgid "[Scrollwhile left/right]"
 msgstr ""
 
-#: src/Shortcuts.vala:805
+#: src/Shortcuts.vala:806
 #, fuzzy
 msgid "Item Selection"
 msgstr "Selectie"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:807
 #, fuzzy
 msgid "Select Single Item"
 msgstr "Knoop verwijderen"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:807
 msgid "[Left-click on item]"
 msgstr ""
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:808
 #, fuzzy
 msgid "Select Child Nodes"
 msgstr "Subknoop kiezen"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:808
 msgid "[Control + Left-click on parent node]"
 msgstr ""
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:809
 #, fuzzy
 msgid "Select Node Tree/Subtree"
 msgstr "Beginknoop kiezen"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:809
 msgid "[Control + Double left-click on parent node"
 msgstr ""
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:810
 msgid "Select All Nodes at Same Depth Level"
 msgstr ""
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:810
 msgid "[Control + Triple left-click on node]"
 msgstr ""
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:811
 #, fuzzy
 msgid "Block Selection"
 msgstr "Selectie"
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:811
 msgid "[Left-click + Drag]"
 msgstr ""
 
-#: src/Shortcuts.vala:812
+#: src/Shortcuts.vala:813
 #, fuzzy
 msgid "Item Selection Toggle"
 msgstr "Selectie"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:814
 #, fuzzy
 msgid "Toggle Selection of Item"
 msgstr "Selectie"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:814
 msgid "[Shift + Left-click on item]"
 msgstr ""
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:815
 #, fuzzy
 msgid "Toggle Selection of Child Nodes"
 msgstr "Subknoop kiezen"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:815
 msgid "[Shift + Control + Left-click on item]"
 msgstr ""
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:816
 #, fuzzy
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "Beginknoop kiezen"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:816
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr ""
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:817
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr ""
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:817
 msgid "Shift + Control + Triple-click on node]"
 msgstr ""
 
-#: src/Shortcuts.vala:818
+#: src/Shortcuts.vala:819
 #, fuzzy
 msgid "Text Selection"
 msgstr "Selectie"
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:820
 msgid "Set Cursor Insert Point"
 msgstr ""
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:820
 msgid "[Left-click in text]"
 msgstr ""
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:821
 #, fuzzy
 msgid "Select Current Word"
 msgstr "Tak kiezen"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:821
 msgid "[Double left-click on word]"
 msgstr ""
 
-#: src/Shortcuts.vala:821
+#: src/Shortcuts.vala:822
 msgid "[Triple left-click text]"
 msgstr ""
 

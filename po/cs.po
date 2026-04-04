@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-31 21:15-0600\n"
+"POT-Creation-Date: 2026-04-04 12:38-0500\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -154,7 +154,7 @@ msgstr "Vybrat uzel"
 msgid "Callout"
 msgstr ""
 
-#: src/CanvasText.vala:291 src/FormattedText.vala:1179
+#: src/CanvasText.vala:305 src/FormattedText.vala:1184
 msgid "No text found"
 msgstr "Text nenalezen"
 
@@ -592,7 +592,7 @@ msgstr "Vybrat obrázek"
 msgid "Images"
 msgstr "Obrázky"
 
-#: src/KeyCommands.vala:571 src/Shortcuts.vala:796
+#: src/KeyCommands.vala:571 src/Shortcuts.vala:797
 msgid "General"
 msgstr "Obecné"
 
@@ -1291,7 +1291,7 @@ msgstr ""
 msgid "Add end of current line to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:733 src/Shortcuts.vala:821
+#: src/KeyCommands.vala:733 src/Shortcuts.vala:822
 msgid "Select all text"
 msgstr "Vybrat celý text"
 
@@ -1300,7 +1300,7 @@ msgstr "Vybrat celý text"
 msgid "Deselect all text"
 msgstr "Vybrat celý text"
 
-#: src/KeyCommands.vala:1881
+#: src/KeyCommands.vala:1882
 #, fuzzy
 msgid "Select a group color"
 msgstr "Vyberte barvu odkazu"
@@ -1686,7 +1686,7 @@ msgstr "Neuložené"
 msgid "Main Idea"
 msgstr "Hlavní myšlenka"
 
-#: src/MindMap.vala:1055
+#: src/MindMap.vala:1072
 msgid "Select a link color"
 msgstr "Vyberte barvu odkazu"
 
@@ -1724,7 +1724,7 @@ msgstr "Obrázek"
 msgid "Add Image…"
 msgstr "Přidat obrázek…"
 
-#: src/NodeInspector.vala:378 src/Shortcuts.vala:798
+#: src/NodeInspector.vala:378 src/Shortcuts.vala:799
 msgid "Edit Image"
 msgstr "Upravit obrázek"
 
@@ -2040,15 +2040,15 @@ msgstr "Zarovnat vpravo"
 msgid "Align"
 msgstr "Zarovnat nahoru"
 
-#: src/Node.vala:2687
+#: src/Node.vala:2689
 msgid "Node Title"
 msgstr "Název poznámky"
 
-#: src/Node.vala:2695
+#: src/Node.vala:2697
 msgid "Node Note"
 msgstr "Poznámka uzlu"
 
-#: src/Node.vala:2705
+#: src/Node.vala:2707
 #, fuzzy
 msgid "Callout Text"
 msgstr "Vložit text"
@@ -2372,162 +2372,162 @@ msgstr "Nahradit"
 msgid "Insert"
 msgstr "Vložit"
 
-#: src/Shortcuts.vala:773 src/Shortcuts.vala:779
+#: src/Shortcuts.vala:774 src/Shortcuts.vala:780
 #, fuzzy
 msgid "No Shortcuts Set"
 msgstr "Zkratky Minderu"
 
-#: src/Shortcuts.vala:794
+#: src/Shortcuts.vala:795
 msgid "Mouse Events"
 msgstr "Události myši"
 
-#: src/Shortcuts.vala:797
+#: src/Shortcuts.vala:798
 msgid "Show Contextual Menu"
 msgstr "Zobrazit kontextové menu"
 
-#: src/Shortcuts.vala:797
+#: src/Shortcuts.vala:798
 msgid "[Right-click when item is selected]"
 msgstr "[Pravé tlačítko, když je položka vybrána]"
 
-#: src/Shortcuts.vala:798
+#: src/Shortcuts.vala:799
 #, fuzzy
 msgid "[Double left-click image]"
 msgstr "[Dvojitý poklep levého tlačítka na obrázek]"
 
-#: src/Shortcuts.vala:800
+#: src/Shortcuts.vala:801
 msgid "Canvas Movement"
 msgstr "Pohyb plátna"
 
-#: src/Shortcuts.vala:801
+#: src/Shortcuts.vala:802
 msgid "Pan Canvas"
 msgstr "Natočit plátno"
 
-#: src/Shortcuts.vala:801
+#: src/Shortcuts.vala:802
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr "[Prostřední tlačítko + táhnutí/ alt + táhnutí"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:803
 msgid "Scroll Vertically"
 msgstr "Scrolovat vertikálně"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:803
 msgid "[Scrollwheel up/down]"
 msgstr "[Scroll tlačítko nahoru/dolú]"
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:804
 msgid "Scroll Horizontally"
 msgstr "Scrolovat vodorovně"
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:804
 msgid "[Scrollwhile left/right]"
 msgstr ""
 
-#: src/Shortcuts.vala:805
+#: src/Shortcuts.vala:806
 msgid "Item Selection"
 msgstr "Výběr položek"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:807
 msgid "Select Single Item"
 msgstr "Vybrat jedinou položku"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:807
 msgid "[Left-click on item]"
 msgstr "[Levé kliknutí na položku]"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:808
 msgid "Select Child Nodes"
 msgstr "Vybrat podřadné uzly"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:808
 msgid "[Control + Left-click on parent node]"
 msgstr "[Control + levé tlačítko na nadřazený uzel]"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:809
 msgid "Select Node Tree/Subtree"
 msgstr "Vybrat strom/podřadný strom uzlů"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:809
 #, fuzzy
 msgid "[Control + Double left-click on parent node"
 msgstr "[Control + dvojité pravé kliknutí na nadřazený uzel"
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:810
 msgid "Select All Nodes at Same Depth Level"
 msgstr "Vybrat všechny uzly na stejné úrovni"
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:810
 msgid "[Control + Triple left-click on node]"
 msgstr "[Control + trojité levé klinutí na uzel]"
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:811
 msgid "Block Selection"
 msgstr "Výběr oblasti"
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:811
 msgid "[Left-click + Drag]"
 msgstr "[Levé tlačítko + táhnutí]"
 
-#: src/Shortcuts.vala:812
+#: src/Shortcuts.vala:813
 #, fuzzy
 msgid "Item Selection Toggle"
 msgstr "Výběr položek"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:814
 msgid "Toggle Selection of Item"
 msgstr "Přepnout výběr položky"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:814
 msgid "[Shift + Left-click on item]"
 msgstr "[Shift + levé tlačítko na položku]"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:815
 msgid "Toggle Selection of Child Nodes"
 msgstr "Přepnout výběr souřadných uzlů"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:815
 msgid "[Shift + Control + Left-click on item]"
 msgstr "[Shift + control + levé tlačítko na položku]"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:816
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "Přepnout výběr uzlu/podřadného stromu"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:816
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr "[Shift + control + dvojité pravé kliknutí na nadřazený uzel]"
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:817
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr "Přepnout výběr všech uzlů na stejné úrovni"
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:817
 #, fuzzy
 msgid "Shift + Control + Triple-click on node]"
 msgstr "[Shift + control + trojité kliknutí na uzel]"
 
-#: src/Shortcuts.vala:818
+#: src/Shortcuts.vala:819
 msgid "Text Selection"
 msgstr "Výběr textu"
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:820
 msgid "Set Cursor Insert Point"
 msgstr "Nastavit místo vložení ukazatele myši"
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:820
 #, fuzzy
 msgid "[Left-click in text]"
 msgstr "[Levé kliknutí na položku]"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:821
 #, fuzzy
 msgid "Select Current Word"
 msgstr "Vybrat současné slovo"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:821
 msgid "[Double left-click on word]"
 msgstr "[dvojité kliknutí na slovo]"
 
-#: src/Shortcuts.vala:821
+#: src/Shortcuts.vala:822
 #, fuzzy
 msgid "[Triple left-click text]"
 msgstr "[trojité levé kliknutí kdekoliv v textu]"

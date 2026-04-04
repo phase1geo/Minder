@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-31 21:15-0600\n"
+"POT-Creation-Date: 2026-04-04 12:38-0500\n"
 "PO-Revision-Date: 2025-12-21 12:37+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -151,7 +151,7 @@ msgstr "Seleziona Nodo"
 msgid "Callout"
 msgstr "Chiamata"
 
-#: src/CanvasText.vala:291 src/FormattedText.vala:1179
+#: src/CanvasText.vala:305 src/FormattedText.vala:1184
 msgid "No text found"
 msgstr "Nessun testo trovato"
 
@@ -593,7 +593,7 @@ msgstr "Seleziona Immagine"
 msgid "Images"
 msgstr "Immagini"
 
-#: src/KeyCommands.vala:571 src/Shortcuts.vala:796
+#: src/KeyCommands.vala:571 src/Shortcuts.vala:797
 msgid "General"
 msgstr "Generale"
 
@@ -1210,7 +1210,7 @@ msgstr "Aggiungi l'inizio della riga corrente alla selezione corrente"
 msgid "Add end of current line to current selection"
 msgstr "Aggiungi la fine della riga corrente alla selezione corrente"
 
-#: src/KeyCommands.vala:733 src/Shortcuts.vala:821
+#: src/KeyCommands.vala:733 src/Shortcuts.vala:822
 msgid "Select all text"
 msgstr "Seleziona tutto il testo"
 
@@ -1218,7 +1218,7 @@ msgstr "Seleziona tutto il testo"
 msgid "Deselect all text"
 msgstr "Deseleziona tutto il testo"
 
-#: src/KeyCommands.vala:1881
+#: src/KeyCommands.vala:1882
 msgid "Select a group color"
 msgstr "Seleziona un colore di gruppo"
 
@@ -1602,7 +1602,7 @@ msgstr "Non salvato"
 msgid "Main Idea"
 msgstr "Idea Principale"
 
-#: src/MindMap.vala:1055
+#: src/MindMap.vala:1072
 msgid "Select a link color"
 msgstr "Seleziona un colore di collegamento"
 
@@ -1641,7 +1641,7 @@ msgstr "Immagine"
 msgid "Add Image…"
 msgstr "Aggiungi Immagine…"
 
-#: src/NodeInspector.vala:378 src/Shortcuts.vala:798
+#: src/NodeInspector.vala:378 src/Shortcuts.vala:799
 msgid "Edit Image"
 msgstr "Modifica Immagine"
 
@@ -1945,15 +1945,15 @@ msgstr "Allinea a destra"
 msgid "Align"
 msgstr "Allinea"
 
-#: src/Node.vala:2687
+#: src/Node.vala:2689
 msgid "Node Title"
 msgstr "Titolo Nodo"
 
-#: src/Node.vala:2695
+#: src/Node.vala:2697
 msgid "Node Note"
 msgstr "Nota Nodo"
 
-#: src/Node.vala:2705
+#: src/Node.vala:2707
 msgid "Callout Text"
 msgstr "Chiamata testo"
 
@@ -2288,158 +2288,158 @@ msgstr "Sostituire"
 msgid "Insert"
 msgstr "Inserire"
 
-#: src/Shortcuts.vala:773 src/Shortcuts.vala:779
+#: src/Shortcuts.vala:774 src/Shortcuts.vala:780
 msgid "No Shortcuts Set"
 msgstr "Nessuna scorciatoia impostata"
 
-#: src/Shortcuts.vala:794
+#: src/Shortcuts.vala:795
 msgid "Mouse Events"
 msgstr "Eventi del Mouse"
 
-#: src/Shortcuts.vala:797
+#: src/Shortcuts.vala:798
 msgid "Show Contextual Menu"
 msgstr "Mostra menu contestuale"
 
-#: src/Shortcuts.vala:797
+#: src/Shortcuts.vala:798
 msgid "[Right-click when item is selected]"
 msgstr ""
 "[Fare clic con il pulsante destro del mouse quando l'elemento è selezionato]"
 
-#: src/Shortcuts.vala:798
+#: src/Shortcuts.vala:799
 msgid "[Double left-click image]"
 msgstr "[Fare doppio clic sull'immagine con il tasto sinistro del mouse]"
 
-#: src/Shortcuts.vala:800
+#: src/Shortcuts.vala:801
 msgid "Canvas Movement"
 msgstr "Movimento della Tela"
 
-#: src/Shortcuts.vala:801
+#: src/Shortcuts.vala:802
 msgid "Pan Canvas"
 msgstr "Panoramica Tela"
 
-#: src/Shortcuts.vala:801
+#: src/Shortcuts.vala:802
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr "[Clic centrale + Trascina / Alt + Movimento]"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:803
 msgid "Scroll Vertically"
 msgstr "Scorri verticalmente"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:803
 msgid "[Scrollwheel up/down]"
 msgstr "[Rotellina di scorrimento su/giù]"
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:804
 msgid "Scroll Horizontally"
 msgstr "Scorri Orizzontalmente"
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:804
 msgid "[Scrollwhile left/right]"
 msgstr "[Scorrimento a sinistra/destra]"
 
-#: src/Shortcuts.vala:805
+#: src/Shortcuts.vala:806
 msgid "Item Selection"
 msgstr "Seleziona elemento"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:807
 msgid "Select Single Item"
 msgstr "Seleziona elemento singolo"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:807
 msgid "[Left-click on item]"
 msgstr "[Fare clic con il tasto sinistro sull'elemento]"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:808
 msgid "Select Child Nodes"
 msgstr "Seleziona Nodi figlio"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:808
 msgid "[Control + Left-click on parent node]"
 msgstr "[Ctrl + clic sinistro sul nodo principale]"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:809
 msgid "Select Node Tree/Subtree"
 msgstr "Selezionare la sottostruttura dell'albero dei nodi"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:809
 msgid "[Control + Double left-click on parent node"
 msgstr "[Ctrl + doppio clic sinistro sul nodo padre]"
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:810
 msgid "Select All Nodes at Same Depth Level"
 msgstr "Seleziona tutti i nodi allo stesso livello di profondità"
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:810
 msgid "[Control + Triple left-click on node]"
 msgstr "[Ctrl + triplo clic sinistro sul nodo]"
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:811
 msgid "Block Selection"
 msgstr "Selezione blocco"
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:811
 msgid "[Left-click + Drag]"
 msgstr "[Clic sinistro + trascina]"
 
-#: src/Shortcuts.vala:812
+#: src/Shortcuts.vala:813
 msgid "Item Selection Toggle"
 msgstr "Attiva selezione elemento"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:814
 msgid "Toggle Selection of Item"
 msgstr "Attiva o disattiva la selezione dell'elemento"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:814
 msgid "[Shift + Left-click on item]"
 msgstr "[Maiusc + clic sinistro sull'elemento]"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:815
 msgid "Toggle Selection of Child Nodes"
 msgstr "Attiva/disattiva la selezione dei nodi figlio"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:815
 msgid "[Shift + Control + Left-click on item]"
 msgstr "[Maiusc + Ctrl + clic sinistro sull'elemento]"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:816
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "Alterna la selezione dell'albero dei nodi/sottostruttura"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:816
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr "[MAIUSC + CTRL + Doppio clic sinistro sul nodo genitore]"
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:817
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr ""
 "Attiva/disattiva la selezione di tutti i nodi allo stesso livello di "
 "profondità"
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:817
 msgid "Shift + Control + Triple-click on node]"
 msgstr "[Maiusc + Ctrl + Triplo clic sul nodo]"
 
-#: src/Shortcuts.vala:818
+#: src/Shortcuts.vala:819
 msgid "Text Selection"
 msgstr "Seleziona Testo"
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:820
 msgid "Set Cursor Insert Point"
 msgstr "Imposta il punto di inserimento del cursore"
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:820
 msgid "[Left-click in text]"
 msgstr "[Fare clic con il tasto sinistro]"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:821
 msgid "Select Current Word"
 msgstr "Seleziona parola corrente"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:821
 msgid "[Double left-click on word]"
 msgstr "[Doppio clic sinistro sulla parola]"
 
-#: src/Shortcuts.vala:821
+#: src/Shortcuts.vala:822
 msgid "[Triple left-click text]"
 msgstr "[Fare triplo clic sinistro sul testo]"
 

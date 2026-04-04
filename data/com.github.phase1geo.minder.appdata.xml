@@ -130,6 +130,30 @@
   </custom>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.0.7" date="2026-04-05">
+      <description>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Added Georgian translation (special thanks to Ekaterine Papava).</li>
+          <li>Removed markup characters from nodes when nodes are not being edited to improve display.</li>
+          <li>Improved coloring of URLs when node is selected.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed issue resetting application shortcuts to the Minder defaults.</li>
+          <li>Fixed issues with RTL language display.</li>
+          <li>Fixed issue with selecting the first root node via keyboard shortcut when no other nodes are selected.</li>
+          <li>Fixed issue with drag and drop of tags on nodes.</li>
+          <li>Fixed issue with copying nodes with tags.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.5" date="2026-01-31">
       <description>
         <p>Changes</p>

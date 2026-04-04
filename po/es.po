@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-31 21:15-0600\n"
+"POT-Creation-Date: 2026-04-04 12:38-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Félix Brezo <felixbrezo@disroot.org>\n"
 "Language-Team: none\n"
@@ -152,7 +152,7 @@ msgstr "Seleccionar nodo"
 msgid "Callout"
 msgstr ""
 
-#: src/CanvasText.vala:291 src/FormattedText.vala:1179
+#: src/CanvasText.vala:305 src/FormattedText.vala:1184
 #, fuzzy
 msgid "No text found"
 msgstr "Palabra siguiente"
@@ -615,7 +615,7 @@ msgstr "Seleccionar imagen"
 msgid "Images"
 msgstr "Imágenes"
 
-#: src/KeyCommands.vala:571 src/Shortcuts.vala:796
+#: src/KeyCommands.vala:571 src/Shortcuts.vala:797
 msgid "General"
 msgstr "General"
 
@@ -1310,7 +1310,7 @@ msgstr ""
 msgid "Add end of current line to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:733 src/Shortcuts.vala:821
+#: src/KeyCommands.vala:733 src/Shortcuts.vala:822
 #, fuzzy
 msgid "Select all text"
 msgstr "Seleccionar un ancestro"
@@ -1320,7 +1320,7 @@ msgstr "Seleccionar un ancestro"
 msgid "Deselect all text"
 msgstr "Seleccionar un ancestro"
 
-#: src/KeyCommands.vala:1881
+#: src/KeyCommands.vala:1882
 #, fuzzy
 msgid "Select a group color"
 msgstr "Seleccionar color de enlace"
@@ -1718,7 +1718,7 @@ msgstr "No guardado"
 msgid "Main Idea"
 msgstr "Idea principal"
 
-#: src/MindMap.vala:1055
+#: src/MindMap.vala:1072
 #, fuzzy
 msgid "Select a link color"
 msgstr "Seleccionar color de enlace"
@@ -1760,7 +1760,7 @@ msgstr "Imagen"
 msgid "Add Image…"
 msgstr "Añadir imagen…"
 
-#: src/NodeInspector.vala:378 src/Shortcuts.vala:798
+#: src/NodeInspector.vala:378 src/Shortcuts.vala:799
 msgid "Edit Image"
 msgstr "Editar imagen"
 
@@ -2102,17 +2102,17 @@ msgstr "Alinear a la derecha"
 msgid "Align"
 msgstr "Alinear arriba"
 
-#: src/Node.vala:2687
+#: src/Node.vala:2689
 #, fuzzy
 msgid "Node Title"
 msgstr "Título de nodo"
 
-#: src/Node.vala:2695
+#: src/Node.vala:2697
 #, fuzzy
 msgid "Node Note"
 msgstr "Nota de nodo"
 
-#: src/Node.vala:2705
+#: src/Node.vala:2707
 #, fuzzy
 msgid "Callout Text"
 msgstr "Pegar texto"
@@ -2435,171 +2435,171 @@ msgstr "Reemplazar"
 msgid "Insert"
 msgstr "Insertar"
 
-#: src/Shortcuts.vala:773 src/Shortcuts.vala:779
+#: src/Shortcuts.vala:774 src/Shortcuts.vala:780
 #, fuzzy
 msgid "No Shortcuts Set"
 msgstr "Atajos de Minder"
 
-#: src/Shortcuts.vala:794
+#: src/Shortcuts.vala:795
 msgid "Mouse Events"
 msgstr ""
 
-#: src/Shortcuts.vala:797
+#: src/Shortcuts.vala:798
 msgid "Show Contextual Menu"
 msgstr ""
 
-#: src/Shortcuts.vala:797
+#: src/Shortcuts.vala:798
 msgid "[Right-click when item is selected]"
 msgstr ""
 
-#: src/Shortcuts.vala:798
+#: src/Shortcuts.vala:799
 msgid "[Double left-click image]"
 msgstr ""
 
-#: src/Shortcuts.vala:800
+#: src/Shortcuts.vala:801
 #, fuzzy
 msgid "Canvas Movement"
 msgstr "Movimiento del cursos"
 
-#: src/Shortcuts.vala:801
+#: src/Shortcuts.vala:802
 #, fuzzy
 msgid "Pan Canvas"
 msgstr "Editar imagen"
 
-#: src/Shortcuts.vala:801
+#: src/Shortcuts.vala:802
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr ""
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:803
 #, fuzzy
 msgid "Scroll Vertically"
 msgstr "Vertical"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:803
 msgid "[Scrollwheel up/down]"
 msgstr ""
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:804
 #, fuzzy
 msgid "Scroll Horizontally"
 msgstr "Horizontal"
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:804
 msgid "[Scrollwhile left/right]"
 msgstr ""
 
-#: src/Shortcuts.vala:805
+#: src/Shortcuts.vala:806
 #, fuzzy
 msgid "Item Selection"
 msgstr "Selección"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:807
 #, fuzzy
 msgid "Select Single Item"
 msgstr "Eliminar nodo individual"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:807
 msgid "[Left-click on item]"
 msgstr ""
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:808
 #, fuzzy
 msgid "Select Child Nodes"
 msgstr "Seleccionar un hijo"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:808
 msgid "[Control + Left-click on parent node]"
 msgstr ""
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:809
 #, fuzzy
 msgid "Select Node Tree/Subtree"
 msgstr "Seleccionar nodo inicial"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:809
 msgid "[Control + Double left-click on parent node"
 msgstr ""
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:810
 msgid "Select All Nodes at Same Depth Level"
 msgstr ""
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:810
 msgid "[Control + Triple left-click on node]"
 msgstr ""
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:811
 #, fuzzy
 msgid "Block Selection"
 msgstr "Selección"
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:811
 msgid "[Left-click + Drag]"
 msgstr ""
 
-#: src/Shortcuts.vala:812
+#: src/Shortcuts.vala:813
 #, fuzzy
 msgid "Item Selection Toggle"
 msgstr "Selección"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:814
 #, fuzzy
 msgid "Toggle Selection of Item"
 msgstr "Selección"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:814
 msgid "[Shift + Left-click on item]"
 msgstr ""
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:815
 #, fuzzy
 msgid "Toggle Selection of Child Nodes"
 msgstr "Seleccionar un hijo"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:815
 msgid "[Shift + Control + Left-click on item]"
 msgstr ""
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:816
 #, fuzzy
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "Seleccionar nodo inicial"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:816
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr ""
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:817
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr ""
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:817
 msgid "Shift + Control + Triple-click on node]"
 msgstr ""
 
-#: src/Shortcuts.vala:818
+#: src/Shortcuts.vala:819
 #, fuzzy
 msgid "Text Selection"
 msgstr "Selección"
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:820
 msgid "Set Cursor Insert Point"
 msgstr ""
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:820
 msgid "[Left-click in text]"
 msgstr ""
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:821
 #, fuzzy
 msgid "Select Current Word"
 msgstr "Seleccionar un ancestro"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:821
 msgid "[Double left-click on word]"
 msgstr ""
 
-#: src/Shortcuts.vala:821
+#: src/Shortcuts.vala:822
 msgid "[Triple left-click text]"
 msgstr ""
 

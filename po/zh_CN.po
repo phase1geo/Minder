@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-31 21:15-0600\n"
+"POT-Creation-Date: 2026-04-04 12:38-0500\n"
 "PO-Revision-Date: 2023-10-10 17:50+0800\n"
 "Last-Translator: Aerowolf <aerowolf@tom.com>\n"
 "Language-Team: 简体中文\n"
@@ -158,7 +158,7 @@ msgstr "选择节点"
 msgid "Callout"
 msgstr "标记"
 
-#: src/CanvasText.vala:291 src/FormattedText.vala:1179
+#: src/CanvasText.vala:305 src/FormattedText.vala:1184
 msgid "No text found"
 msgstr "未找到文本"
 
@@ -593,7 +593,7 @@ msgstr "选择图像"
 msgid "Images"
 msgstr "图像"
 
-#: src/KeyCommands.vala:571 src/Shortcuts.vala:796
+#: src/KeyCommands.vala:571 src/Shortcuts.vala:797
 msgid "General"
 msgstr "常规"
 
@@ -1294,7 +1294,7 @@ msgstr ""
 msgid "Add end of current line to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:733 src/Shortcuts.vala:821
+#: src/KeyCommands.vala:733 src/Shortcuts.vala:822
 msgid "Select all text"
 msgstr "选择所有文本"
 
@@ -1303,7 +1303,7 @@ msgstr "选择所有文本"
 msgid "Deselect all text"
 msgstr "选择所有文本"
 
-#: src/KeyCommands.vala:1881
+#: src/KeyCommands.vala:1882
 #, fuzzy
 msgid "Select a group color"
 msgstr "选择链接颜色"
@@ -1684,7 +1684,7 @@ msgstr "未保存"
 msgid "Main Idea"
 msgstr "主要想法"
 
-#: src/MindMap.vala:1055
+#: src/MindMap.vala:1072
 msgid "Select a link color"
 msgstr "选择链接颜色"
 
@@ -1722,7 +1722,7 @@ msgstr "图像"
 msgid "Add Image…"
 msgstr "添加图像……"
 
-#: src/NodeInspector.vala:378 src/Shortcuts.vala:798
+#: src/NodeInspector.vala:378 src/Shortcuts.vala:799
 msgid "Edit Image"
 msgstr "编辑图像"
 
@@ -2036,15 +2036,15 @@ msgstr "右对齐"
 msgid "Align"
 msgstr "上部对齐"
 
-#: src/Node.vala:2687
+#: src/Node.vala:2689
 msgid "Node Title"
 msgstr "节点标题"
 
-#: src/Node.vala:2695
+#: src/Node.vala:2697
 msgid "Node Note"
 msgstr "节点备注"
 
-#: src/Node.vala:2705
+#: src/Node.vala:2707
 msgid "Callout Text"
 msgstr "标记文本"
 
@@ -2351,162 +2351,162 @@ msgstr "替换"
 msgid "Insert"
 msgstr "插入"
 
-#: src/Shortcuts.vala:773 src/Shortcuts.vala:779
+#: src/Shortcuts.vala:774 src/Shortcuts.vala:780
 #, fuzzy
 msgid "No Shortcuts Set"
 msgstr "Minder快捷键"
 
-#: src/Shortcuts.vala:794
+#: src/Shortcuts.vala:795
 msgid "Mouse Events"
 msgstr "鼠标事件"
 
-#: src/Shortcuts.vala:797
+#: src/Shortcuts.vala:798
 msgid "Show Contextual Menu"
 msgstr "显示上下文菜单"
 
-#: src/Shortcuts.vala:797
+#: src/Shortcuts.vala:798
 msgid "[Right-click when item is selected]"
 msgstr "[选择项目时单击鼠标右键]"
 
-#: src/Shortcuts.vala:798
+#: src/Shortcuts.vala:799
 #, fuzzy
 msgid "[Double left-click image]"
 msgstr "[双击图像]"
 
-#: src/Shortcuts.vala:800
+#: src/Shortcuts.vala:801
 msgid "Canvas Movement"
 msgstr "画布移动"
 
-#: src/Shortcuts.vala:801
+#: src/Shortcuts.vala:802
 msgid "Pan Canvas"
 msgstr "平移画布"
 
-#: src/Shortcuts.vala:801
+#: src/Shortcuts.vala:802
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr "[中键点击 + 拖动 / Alt键 + 拖动]"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:803
 msgid "Scroll Vertically"
 msgstr "垂直滚动"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:803
 msgid "[Scrollwheel up/down]"
 msgstr "[滚轮上/下]"
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:804
 msgid "Scroll Horizontally"
 msgstr "水平滚动"
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:804
 msgid "[Scrollwhile left/right]"
 msgstr ""
 
-#: src/Shortcuts.vala:805
+#: src/Shortcuts.vala:806
 msgid "Item Selection"
 msgstr "项目选择"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:807
 msgid "Select Single Item"
 msgstr "选择单个项目"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:807
 msgid "[Left-click on item]"
 msgstr "[左键点击项目]"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:808
 msgid "Select Child Nodes"
 msgstr "选择子节点"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:808
 msgid "[Control + Left-click on parent node]"
 msgstr "[Ctrl键 + 左键点击父节点]"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:809
 msgid "Select Node Tree/Subtree"
 msgstr "选择节点树/子树"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:809
 #, fuzzy
 msgid "[Control + Double left-click on parent node"
 msgstr "[Ctrl键 + 双击父节点]"
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:810
 msgid "Select All Nodes at Same Depth Level"
 msgstr "选择相同层级的所有节点"
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:810
 msgid "[Control + Triple left-click on node]"
 msgstr "[Ctrl键 + 三次左键点击节点]"
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:811
 msgid "Block Selection"
 msgstr "块选择"
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:811
 msgid "[Left-click + Drag]"
 msgstr "[左键点击 + 拖动]"
 
-#: src/Shortcuts.vala:812
+#: src/Shortcuts.vala:813
 #, fuzzy
 msgid "Item Selection Toggle"
 msgstr "项目选择"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:814
 msgid "Toggle Selection of Item"
 msgstr "切换项目选择"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:814
 msgid "[Shift + Left-click on item]"
 msgstr "[Shift键 + 左键点击项目]"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:815
 msgid "Toggle Selection of Child Nodes"
 msgstr "切换子节点的选择"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:815
 msgid "[Shift + Control + Left-click on item]"
 msgstr "[Shift键 + Ctrl键 + 左键点击项目]"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:816
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "切换节点树/子树的选择"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:816
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr "[Shift键 + Ctrl键 + 双击父节点]"
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:817
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr "切换相同层级的所有节点的选择"
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:817
 #, fuzzy
 msgid "Shift + Control + Triple-click on node]"
 msgstr "[Shift键 + Ctrl键 + 三次左键点击节点]"
 
-#: src/Shortcuts.vala:818
+#: src/Shortcuts.vala:819
 msgid "Text Selection"
 msgstr "文本选择"
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:820
 msgid "Set Cursor Insert Point"
 msgstr "设置光标插入点"
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:820
 #, fuzzy
 msgid "[Left-click in text]"
 msgstr "[左键点击项目]"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:821
 #, fuzzy
 msgid "Select Current Word"
 msgstr "选择当前单词"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:821
 msgid "[Double left-click on word]"
 msgstr "[双击单词]"
 
-#: src/Shortcuts.vala:821
+#: src/Shortcuts.vala:822
 #, fuzzy
 msgid "[Triple left-click text]"
 msgstr "[在文本中的任意位置单击三次左键]"
