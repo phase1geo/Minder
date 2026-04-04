@@ -1109,7 +1109,8 @@ public class CanvasText : Object {
 
     if( copy_layout ) {
       layout = _pango_layout.copy();
-      layout.set_attributes( _nomarkup_text.get_attributes_from_theme( theme ) );
+      layout.set_attributes( edit ? _text.get_attributes_from_theme( theme ) :
+                                    _nomarkup_text.get_attributes_from_theme( theme ) );
     }
 
     if( alpha < 1.0 ) {

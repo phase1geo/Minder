@@ -443,7 +443,7 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
-  // NODE SELECTION METHODS
+  // TEXT SELECTION METHODS
   //-------------------------------------------------------------
 
   //-------------------------------------------------------------
@@ -460,6 +460,23 @@ public class MindMap {
       return( null );
     }
   }
+
+  //-------------------------------------------------------------
+  // If any text is being edited, end the editing mode and return
+  // it to its selected state.
+  public void unedit_text() {
+    if( is_node_editable() ) {
+      _model.set_node_mode( get_current_node(), NodeMode.CURRENT );
+    } else if( is_connection_editable() ) {
+      _model.set_connection_mode( get_current_connection(), ConnMode.SELECTED );
+    } else if( is_callout_editable() ) {
+      _model.set_callout_mode( get_current_callout(), CalloutMode.SELECTED );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // NODE SELECTION METHODS
+  //-------------------------------------------------------------
 
   //-------------------------------------------------------------
   // Returns the current node.
