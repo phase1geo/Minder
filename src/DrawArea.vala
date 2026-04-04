@@ -1771,50 +1771,49 @@ public class DrawArea : Gtk.DrawingArea {
 
       if( current_node.mode == NodeMode.CURRENT ) {
 
-        /* If we are hovering over an attach node, perform the attachment */
+        // If we are hovering over an attach node, perform the attachment
         if( _map.model.attach_node != null ) {
           _map.model.attach_current_node();
 
-        /* If we are not in motion, set the cursor */
-        } else if( !_motion ) {
-          current_node.name.set_cursor_all( false );
-          current_node.name.move_cursor_to_end();
+        } else if( _motion ) {
 
-        /* If we are not a root node or a summary node, move the node into the appropriate position */
-        } else if( (current_node.parent != null) && _map.editable ) {
-          var orig_index   = current_node.index();
-          var orig_summary = current_node.summary_node();
-          var moved        = false;
-          animator.add_nodes( _map.get_nodes(), false, "move to position" );
-          if( current_node.parent != null ) {
-            current_node.parent.clear_summary_extents();
-          }
-          if( current_node.is_summary() ) {
-            (current_node as SummaryNode).nodes_changed( 1, 1 );
-          } else {
-            moved = current_node.parent.move_to_position( current_node, _orig_side, scale_value( x ), scale_value( y ) );
-            if( !moved ) {
-              animator.clear_last_save();
+          // If we are not a root node or a summary node, move the node into the appropriate position
+          if( (current_node.parent != null) && _map.editable ) {
+            var orig_index   = current_node.index();
+            var orig_summary = current_node.summary_node();
+            var moved        = false;
+            animator.add_nodes( _map.get_nodes(), false, "move to position" );
+            if( current_node.parent != null ) {
+              current_node.parent.clear_summary_extents();
             }
-          }
-          if( !current_node.is_summarized() && (_map.model.attach_summary != null) ) {
-            _map.model.attach_summary.add_node( current_node );
-          } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_map.model.attach_summary == null) ) {
-            current_node.summary_node().remove_node( current_node );
-          } else if( current_node.is_summarized() ) {
-            current_node.summary_node().node_moved( current_node );
-          }
-          if( moved ) {
-            _map.add_undo( new UndoNodeMove( current_node, _orig_side, orig_index, orig_summary ) );
-          }
-          animator.animate();
+            if( current_node.is_summary() ) {
+              (current_node as SummaryNode).nodes_changed( 1, 1 );
+            } else {
+              moved = current_node.parent.move_to_position( current_node, _orig_side, scale_value( x ), scale_value( y ) );
+              if( !moved ) {
+                animator.clear_last_save();
+              }
+            }
+            if( !current_node.is_summarized() && (_map.model.attach_summary != null) ) {
+              _map.model.attach_summary.add_node( current_node );
+            } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_map.model.attach_summary == null) ) {
+              current_node.summary_node().remove_node( current_node );
+            } else if( current_node.is_summarized() ) {
+              current_node.summary_node().node_moved( current_node );
+            }
+            if( moved ) {
+              _map.add_undo( new UndoNodeMove( current_node, _orig_side, orig_index, orig_summary ) );
+            }
+            animator.animate();
 
-          /* Clear the attachable summary indicator */
-          _map.model.set_attach_summary( null );
+            // Clear the attachable summary indicator
+            _map.model.set_attach_summary( null );
 
-        /* Otherwise, redraw everything after the move */
-        } else {
-          queue_draw();
+          // Otherwise, redraw everything after the move
+          } else {
+            queue_draw();
+          }
+
         }
 
       }

@@ -173,6 +173,9 @@ public class Exporter : Box {
 
     var name   = _stack.visible_child_name;
     var export = win.exports.get_by_name( name );
+    var map    = win.get_current_map();
+
+    map.unedit_text();
 
     if( export.send_to_clipboard() ) {
       do_export_to_clipboard( win, export );
