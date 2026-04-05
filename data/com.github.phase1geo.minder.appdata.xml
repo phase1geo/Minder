@@ -122,6 +122,7 @@
   </developer>
   <url type="homepage">https://github.com/phase1geo/minder/</url>
   <url type="bugtracker">https://github.com/phase1geo/minder/issues/</url>
+  <url type="vcs-browser">https://github.com/phase1geo/minder/</url>
   <custom>
     <value key="x-appcenter-color-primary">#603461</value>
     <value key="x-appcenter-color-primary-text">rgb(255, 255, 255)</value>
@@ -138,6 +139,7 @@
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed issue with rendering node text when themes are changed.</li>
+          <li>Fixed Flathub linter warnings.</li>
         </ul>
       </description>
     </release>

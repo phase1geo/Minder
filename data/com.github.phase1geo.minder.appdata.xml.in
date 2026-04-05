@@ -85,6 +85,7 @@
         <p>Bug Fixes</p>
         <ul>
           <li>Fixed issue with rendering node text when themes are changed.</li>
+          <li>Fixed Flathub linter warnings.</li>
         </ul>
       </description>
     </release>
