@@ -130,6 +130,17 @@
   </custom>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.0.8" date="2026-04-05">
+      <description>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed issue with rendering node text when themes are changed.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.7" date="2026-04-05">
       <description>
         <p>Changes</p>
