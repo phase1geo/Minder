@@ -376,7 +376,7 @@ public class CanvasText : Object {
   // Updates the canvas item with the given theme
   public void update_attributes() {
     if( _pango_layout != null ) {
-      _pango_layout.set_attributes( _text.get_attributes() );
+      _pango_layout.set_attributes( edit ? _text.get_attributes() : _nomarkup_text.get_attributes() );
     }
   }
 
