@@ -2,14 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
 # ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2020.
-# ALBANO BATTISTELLA <albanobattistella@gmail.com>, 2021,2022,2023,2024,2025.
+# ALBANO BATTISTELLA <albanobattistella@gmail.com>, 2021,2022,2023,2024,2025,2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-04 19:55-0500\n"
-"PO-Revision-Date: 2025-12-21 12:37+0100\n"
+"PO-Revision-Date: 2025-04-06 09:37+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -1358,7 +1358,7 @@ msgstr "Stampa…"
 
 #: src/MainWindow.vala:1083
 msgid "Brain Dump"
-msgstr ""
+msgstr "Dump mentale"
 
 #: src/MainWindow.vala:1159 src/Preferences.vala:50
 msgid "Preferences"
