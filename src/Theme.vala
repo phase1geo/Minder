@@ -51,6 +51,7 @@ public class Theme : Object {
     _colors.set( "connection_foreground", null );
     _colors.set( "url_background",        null );
     _colors.set( "url_foreground",        null );
+    _colors.set( "highlighter",           null );
     _colors.set( "tag",                   null );
     _colors.set( "syntax",                null );
     _colors.set( "match_background",      null );

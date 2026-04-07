@@ -116,6 +116,7 @@ public class ThemeEditor : Gtk.Box {
     add_color( _( "Callout Background" ),     "callout_background",    grid, ref row );
     add_color( _( "URL Link Background" ),    "url_background",        grid, ref row );
     add_color( _( "URL Link Foreground" ),    "url_foreground",        grid, ref row );
+    add_color( _( "Highlighter" ),            "highlighter",           grid, ref row );
     add_color( _( "Tag" ),                    "tag",                   grid, ref row );
     add_color( _( "Markdown Syntax Chars" ),  "syntax",                grid, ref row );
     add_color( _( "Match Background" ),       "match_background",      grid, ref row );
