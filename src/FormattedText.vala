@@ -627,20 +627,23 @@ public class FormattedText {
   private class HighlightInfo : TagAttr {
     public HighlightInfo() {}
     public override void add_attrs( ref AttrList list, int start, int end, string? extra ) {
-      var color = get_color( extra );
-      var bg    = attr_background_new( (uint16)(color.red * 65535), (uint16)(color.green * 65535), (uint16)(color.blue * 65535) );
-      var alpha = attr_background_alpha_new( (uint16)(65536 * 0.5) );
+      var bg_color = get_color( "#cccc00" );
+      var fg_color = get_color( "#000000" );
+      var bg    = attr_background_new( (uint16)(bg_color.red * 65535), (uint16)(bg_color.green * 65535), (uint16)(bg_color.blue * 65535) );
+      var fg    = attr_foreground_new( (uint16)(fg_color.red * 65535), (uint16)(fg_color.green * 65535), (uint16)(fg_color.blue * 65535) );
       bg.start_index = start;
       bg.end_index   = end;
       list.change( (owned)bg );
-      alpha.start_index = start;
-      alpha.end_index   = end;
-      list.change( (owned)alpha );
+      fg.start_index = start;
+      fg.end_index   = end;
+      list.change( (owned)fg );
     }
     public override TextTag text_tag( string? extra ) {
       var ttag = new TextTag( "hilite" + extra );
-      ttag.background_rgba = get_color( extra );
+      ttag.background_rgba = get_color( "#cccc00" );
       ttag.background_set  = true;
+      ttag.foreground_rgba = get_color( "#000000" );
+      ttag.foreground_set  = true;
       return( ttag );
     }
   }

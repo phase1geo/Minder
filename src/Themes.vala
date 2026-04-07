@@ -31,44 +31,48 @@ public class Themes : Object {
     save_custom();
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public Themes() {
 
-    /* Allocate memory for the themes array */
+    // Allocate memory for the themes array
     _themes = new Array<Theme>();
 
-    /* Create the themes */
+    // Create the themes
     var default_theme         = new ThemeDefault();
     var dark_theme            = new ThemeDark();
     var solarized_light_theme = new ThemeSolarizedLight();
     var solarized_dark_theme  = new ThemeSolarizedDark();
 
-    /* Add the themes to the list */
+    // Add the themes to the list
     _themes.append_val( default_theme );
     _themes.append_val( dark_theme );
     _themes.append_val( solarized_light_theme );
     _themes.append_val( solarized_dark_theme );
 
-    /* Load the customized themes */
+    // Load the customized themes
     load_custom();
 
   }
 
-  /* Returns a list of theme names */
+  //-------------------------------------------------------------
+  // Returns a list of theme names
   public void names( ref Array<string> names ) {
     for( int i=0; i<_themes.length; i++ ) {
       names.append_val( _themes.index( i ).name );
     }
   }
 
-  /* Returns a HashMap containing the list of stored names */
+  //-------------------------------------------------------------
+  // Returns a HashMap containing the list of stored names
   public void names_hash( ref HashMap<string,int> names ) {
     for( int i=0; i<_themes.length; i++ ) {
       names.set( _themes.index( i ).name, 1 );
     }
   }
 
-  /* Returns a list of icons associated with each of the loaded themes */
+  //-------------------------------------------------------------
+  // Returns a list of icons associated with each of the loaded themes
   public void icons( ref Array<Picture> icons ) {
     for( int i=0; i<_themes.length; i++ ) {
       var picture = new Picture.for_paintable( _themes.index( i ).make_icon() ) {
@@ -79,7 +83,8 @@ public class Themes : Object {
     }
   }
 
-  /* Returns true if the given theme currently exists */
+  //-------------------------------------------------------------
+  // Returns true if the given theme currently exists
   public bool exists( Theme theme ) {
     for( int i=0; i<_themes.length; i++ ) {
       if( _themes.index( i ).matches( theme ) ) {
@@ -89,7 +94,8 @@ public class Themes : Object {
     return( false );
   }
 
-  /* Returns the theme associated with the given name */
+  //-------------------------------------------------------------
+  // Returns the theme associated with the given name
   public Theme get_theme( string name ) {
     for( int i=0; i<_themes.length; i++ ) {
       if( name == _themes.index( i ).name ) {
@@ -99,13 +105,15 @@ public class Themes : Object {
     return( _themes.index( 0 ) );
   }
 
-  /* Adds the given theme */
+  //-------------------------------------------------------------
+  // Adds the given theme
   public void add_theme( Theme theme ) {
     _themes.append_val( theme );
     themes_changed();
   }
 
-  /* Deletes the given theme */
+  //-------------------------------------------------------------
+  // Deletes the given theme
   public void delete_theme( string name ) {
     for( int i=0; i<_themes.length; i++ ) {
       if( _themes.index( i ).name == name ) {
@@ -117,7 +125,8 @@ public class Themes : Object {
   }
 
 #if SKIP
-  /* Output the current list of themes to standard output */
+  //-------------------------------------------------------------
+  // Output the current list of themes to standard output
   private void display_themes( string msg ) {
     stdout.printf( "%s\n", msg );
     for( int i=0; i<_themes.length; i++ ) {
@@ -126,7 +135,8 @@ public class Themes : Object {
   }
 #endif
 
-  /* Loads the custom themes from XML */
+  //-------------------------------------------------------------
+  // Loads the custom themes from XML
   private void load_custom() {
     var themes = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "custom_themes.xml" );
     if( FileUtils.test( themes, FileTest.EXISTS ) ) {
@@ -134,7 +144,7 @@ public class Themes : Object {
       if( doc == null ) return;
       for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
         if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "theme") ) {
-          var theme = new Theme.from_theme( _themes.index( 0 ) );
+          var theme = new Theme.customized( _themes.index( 0 ) );
           theme.load( it );
           _themes.append_val( theme );
         }
@@ -143,7 +153,8 @@ public class Themes : Object {
     }
   }
 
-  /* Saves the custom themes to XML */
+  //-------------------------------------------------------------
+  // Saves the custom themes to XML
   public void save_custom() {
 
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
@@ -159,19 +170,21 @@ public class Themes : Object {
     doc->set_root_element( root );
 
     for( uint i=0; i<_themes.length; i++ ) {
-      if( _themes.index( i ).custom && !_themes.index( i ).temporary ) {
-        root->add_child( _themes.index( i ).save() );
+      var theme = _themes.index( i );
+      if( theme.custom && !theme.temporary ) {
+        root->add_child( theme.save() );
       }
     }
 
-    /* Save the file */
+    // Save the file
     doc->save_format_file( fname, 1 );
 
     delete doc;
 
   }
 
-  /* Returns a uniquified version of the given name */
+  //-------------------------------------------------------------
+  // Returns a uniquified version of the given name
   public string uniquify_name( string name ) {
 
     var names = new HashMap<string,int>();

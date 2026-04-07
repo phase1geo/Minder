@@ -24,9 +24,8 @@ public class ThemeDark : Theme {
   /* Create the theme colors */
   public ThemeDark() {
 
-    name   = "dark";
-    label  = _( "Dark" );
-    custom = false;
+    name  = "dark";
+    label = _( "Dark" );
 
     /* Generate the non-link colors */
     set_color( "background",            color_from_string( "#333333" ) );

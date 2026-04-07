@@ -30,7 +30,7 @@ public class Theme : Object {
   public string name        { set; get; }
   public string label       { set; get; }
   public int    index       { set; get; default = -1; }
-  public bool   custom      { protected set; get; default = true; }
+  public bool   custom      { private set; get; default = false; }
   public bool   temporary   { set; get; default = false; }
 
   //-------------------------------------------------------------
@@ -69,8 +69,9 @@ public class Theme : Object {
 
   //-------------------------------------------------------------
   // Copy constructor
-  public Theme.from_theme( Theme theme ) {
+  public Theme.customized( Theme theme ) {
     copy( theme );
+    custom = true;
   }
 
   //-------------------------------------------------------------

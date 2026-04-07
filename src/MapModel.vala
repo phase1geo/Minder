@@ -314,7 +314,8 @@ public class MapModel {
   private void load_theme( Xml.Node* n ) {
 
     // Load the theme
-    var theme = new Theme.from_theme( _map.win.themes.get_theme( "default" ) );
+    var theme = new Theme();
+    theme.copy( _map.win.themes.get_theme( "default" ) );
     theme.temporary = true;
 
     var valid = theme.load( n );

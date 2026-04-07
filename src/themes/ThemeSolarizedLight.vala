@@ -27,9 +27,8 @@ public class ThemeSolarizedLight : Theme {
   /* Create the theme colors */
   public ThemeSolarizedLight() {
 
-    name   = "solarized_light";
-    label  = _( "Solarized Light" );
-    custom = false;
+    name  = "solarized_light";
+    label = _( "Solarized Light" );
 
     /* Generate the non-link colors */
     set_color( "background",            color_from_string( "#FDF6E3" ) );
