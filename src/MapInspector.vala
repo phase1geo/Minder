@@ -488,7 +488,7 @@ public class MapInspector : Box {
           select_theme( name );
           _map.model.set_theme( theme, true );
           if( theme.custom && (n_press == 2) ) {
-            edit_current_theme();
+            edit_theme( theme);
           }
         }
       });
@@ -529,9 +529,6 @@ public class MapInspector : Box {
   // Returns the label to use for the given theme by name.
   private string theme_label( string name ) {
     var theme = _win.themes.get_theme( name );
-    if( theme.temporary ) {
-      return( theme.label + " (" + _( "Unsaved" ) + ")" );
-    }
     return( theme.label );
   }
 
@@ -575,13 +572,13 @@ public class MapInspector : Box {
   //-------------------------------------------------------------
   // Displays the current theme editor.
   private void create_custom_theme() {
-    _win.show_theme_editor( false );
+    _win.show_theme_editor( null );
   }
 
   //-------------------------------------------------------------
   // Displays the current theme editor.
-  private void edit_current_theme() {
-    _win.show_theme_editor( true );
+  private void edit_theme( Theme theme ) {
+    _win.show_theme_editor( theme );
   }
 
   //-------------------------------------------------------------

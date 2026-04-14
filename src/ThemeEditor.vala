@@ -48,12 +48,12 @@ public class ThemeEditor : Gtk.Box {
     _win  = win;
     _btns = new HashMap<string,ColorButton>();
 
-    /* Add title */
+    // Add title
     var title = new Label( _( "Customize Theme" ) + "\n" );
     title.add_css_class( "titled" );
     append( title );
 
-    /* Add name label */
+    // Add name label
     var nlbl = new Label( _( "Name" ) + ":" ) {
       xalign = (float)0,
     };
@@ -74,7 +74,7 @@ public class ThemeEditor : Gtk.Box {
     nbox.append( _name );
     append( nbox );
 
-    /* Add theme options to grid */
+    // Add theme options to grid
     var grid = new Grid() {
       row_spacing    = 5,
       column_spacing = 30,
@@ -84,7 +84,7 @@ public class ThemeEditor : Gtk.Box {
       margin_bottom  = 5
     };
 
-    /* Create scrollable options grid */
+    // Create scrollable options grid
     var sw = new ScrolledWindow() {
       vexpand = true,
       child = grid
@@ -116,6 +116,7 @@ public class ThemeEditor : Gtk.Box {
     add_color( _( "Callout Background" ),     "callout_background",    grid, ref row );
     add_color( _( "URL Link Background" ),    "url_background",        grid, ref row );
     add_color( _( "URL Link Foreground" ),    "url_foreground",        grid, ref row );
+    add_color( _( "Highlighter" ),            "highlighter",           grid, ref row );
     add_color( _( "Tag" ),                    "tag",                   grid, ref row );
     add_color( _( "Markdown Syntax Chars" ),  "syntax",                grid, ref row );
     add_color( _( "Match Background" ),       "match_background",      grid, ref row );
@@ -132,12 +133,12 @@ public class ThemeEditor : Gtk.Box {
     grid.attach( link_lbl, 0, row, 2 );
     row++;
 
-    /* Add link colors */
+    // Add link colors
     for( int i=0; i<Theme.num_link_colors(); i++ ) {
       add_color( _( "Link Color" ) + " #%d".printf( i + 1 ), "link_color%d".printf( i ), grid, ref row );
     }
 
-    /* Create the button bar */
+    // Create the button bar
     _del = new Button.with_label( _( "Delete" ) ) {
       halign  = Align.START,
       hexpand = true,
@@ -173,7 +174,8 @@ public class ThemeEditor : Gtk.Box {
 
   }
 
-  /* Adds a coloring row */
+  //-------------------------------------------------------------
+  // Adds a coloring row
   private void add_color( string lbl_str, string name, Grid grid, ref int row ) {
 
     var lbl = new Label( "  " + lbl_str ) {
@@ -196,34 +198,36 @@ public class ThemeEditor : Gtk.Box {
 
   }
 
-  /* This should be called prior to editing a theme */
+  //-------------------------------------------------------------
+  // This should be called prior to editing a theme
   public void initialize( Theme theme, bool edit ) {
 
-    /* Initialize class variables */
+    // Initialize class variables
     _orig_theme = theme;
     _edit       = edit;
-    _theme      = new Theme.from_theme( theme );
+    _theme      = new Theme.customized( theme );
 
-    /* Figure out a unique name for the new theme */
+    // Figure out a unique name for the new theme
     if( !edit ) {
       _theme.name = _theme.label = _win.themes.uniquify_name( _( "Custom" ) + " #1" );
     }
 
     _ignore = true;
 
-    /* Initialize the UI */
+    // Initialize the UI
     var colors = _theme.colors();
     for( int i=0; i<colors.length; i++ ) {
       _btns.get( colors.index( i ) ).rgba = _theme.get_color( colors.index( i ) );
     }
-    _name.text = _theme.name;
-    _del.visible = edit && !theme.temporary;
+    _name.text   = _theme.name;
+    _del.visible = edit;
 
     _ignore = false;
 
   }
 
-  /* Displays the dialog window to confirm theme deletion */
+  //-------------------------------------------------------------
+  // Displays the dialog window to confirm theme deletion
   private void confirm_deletion() {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
@@ -255,25 +259,27 @@ public class ThemeEditor : Gtk.Box {
 
   }
 
-  /* Deletes the current theme */
+  //-------------------------------------------------------------
+  // Deletes the current theme
   private void delete_theme() {
     _win.get_current_map().model.set_theme( _win.themes.get_theme( _( "Default" ) ), true );
     _win.themes.delete_theme( _orig_theme.name );
     _win.hide_theme_editor();
   }
 
-  /* Hides the theme editor panel without saving */
+  //-------------------------------------------------------------
+  // Hides the theme editor panel without saving
   private void close_window() {
     _win.get_current_map().model.set_theme( _orig_theme, true );
     _win.hide_theme_editor();
   }
 
-  /* Saves the theme and hides the theme editor panel */
+  //-------------------------------------------------------------
+  // Saves the theme and hides the theme editor panel
   private void save_theme() {
     _theme.name = _theme.label = _name.text;
     if( _edit ) {
       _orig_theme.copy( _theme );
-      _orig_theme.temporary = false;
       _win.themes.themes_changed();
     } else {
       _win.themes.add_theme( _theme );

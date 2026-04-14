@@ -27,9 +27,8 @@ public class ThemeSolarizedLight : Theme {
   /* Create the theme colors */
   public ThemeSolarizedLight() {
 
-    name   = "solarized_light";
-    label  = _( "Solarized Light" );
-    custom = false;
+    name  = "solarized_light";
+    label = _( "Solarized Light" );
 
     /* Generate the non-link colors */
     set_color( "background",            color_from_string( "#FDF6E3" ) );
@@ -46,6 +45,7 @@ public class ThemeSolarizedLight : Theme {
     set_color( "connection_foreground", color_from_string( "#FDF6E3" ) );
     set_color( "url_background",        color_from_string( "Grey" ) );
     set_color( "url_foreground",        color_from_string( "#62a0ea" ) );
+    set_color( "highlighter",           color_from_string( "#cccc00" ) );
     set_color( "tag",                   color_from_string( "#c00000" ) );
     set_color( "syntax",                color_from_string( "Grey" ) );
     set_color( "match_background",      color_from_string( "Gold" ) );
