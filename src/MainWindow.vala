@@ -1754,8 +1754,12 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Displays the theme editor pane
-  public void show_theme_editor( bool edit ) {
-    _themer.initialize( get_current_map().get_theme(), edit );
+  public void show_theme_editor( Theme? theme ) {
+    if( theme == null ) {
+      _themer.initialize( get_current_map().get_theme(), false );
+    } else {
+      _themer.initialize( theme, true );
+    }
     _inspector_nb.page = 1;
   }
 

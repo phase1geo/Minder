@@ -472,30 +472,28 @@ public class MapInspector : Box {
     for( int i=0; i<names.length; i++ ) {
       var name  = names.index( i );
       var theme = _win.themes.get_theme( name );
-      if( !theme.temporary ) {
-        var label = new Label( theme_label( name ) );
-        var item  = new Box( Orientation.VERTICAL, 0 ) {
-          margin_start  = 5,
-          margin_end    = 5,
-          margin_top    = 5,
-          margin_bottom = 5
-        };
-        item.append( icons.index( i ) );
-        item.append( label );
-        var click = new GestureClick();
-        item.add_controller( click );
-        click.pressed.connect((n_press, x, y) => {
-          if( _map.editable ) {
-            select_theme( name );
-            _map.model.set_theme( theme, true );
-            if( theme.custom && (n_press == 2) ) {
-              edit_current_theme();
-            }
+      var label = new Label( theme_label( name ) );
+      var item  = new Box( Orientation.VERTICAL, 0 ) {
+        margin_start  = 5,
+        margin_end    = 5,
+        margin_top    = 5,
+        margin_bottom = 5
+      };
+      item.append( icons.index( i ) );
+      item.append( label );
+      var click = new GestureClick();
+      item.add_controller( click );
+      click.pressed.connect((n_press, x, y) => {
+        if( _map.editable ) {
+          select_theme( name );
+          _map.model.set_theme( theme, true );
+          if( theme.custom && (n_press == 2) ) {
+            edit_theme( theme);
           }
-        });
-        _theme_grid.attach( item, (index % 2), (index / 2) );
-        index++;
-      }
+        }
+      });
+      _theme_grid.attach( item, (index % 2), (index / 2) );
+      index++;
     }
 
     // Make sure that the current theme is selected
@@ -531,9 +529,6 @@ public class MapInspector : Box {
   // Returns the label to use for the given theme by name.
   private string theme_label( string name ) {
     var theme = _win.themes.get_theme( name );
-    if( theme.temporary ) {
-      return( theme.label + " (" + _( "Unsaved" ) + ")" );
-    }
     return( theme.label );
   }
 
@@ -577,13 +572,13 @@ public class MapInspector : Box {
   //-------------------------------------------------------------
   // Displays the current theme editor.
   private void create_custom_theme() {
-    _win.show_theme_editor( false );
+    _win.show_theme_editor( null );
   }
 
   //-------------------------------------------------------------
   // Displays the current theme editor.
-  private void edit_current_theme() {
-    _win.show_theme_editor( true );
+  private void edit_theme( Theme theme ) {
+    _win.show_theme_editor( theme );
   }
 
   //-------------------------------------------------------------

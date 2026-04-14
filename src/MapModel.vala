@@ -225,12 +225,10 @@ public class MapModel {
   //-------------------------------------------------------------
   // Sets the theme to the given value.
   public void set_theme( Theme theme, bool save ) {
-    if( _theme.name == theme.name ) return;
-    if( _theme.index != -1 ) {
-      update_theme_colors( theme );
-    }
-    _theme.copy( theme );
-    FormattedText.set_theme( _theme );
+    if( _theme == theme ) return;
+    FormattedText.set_theme( theme );
+    update_theme_colors( theme );
+    _theme = theme;
     update_css();
     theme_changed();
     queue_draw();
@@ -315,14 +313,11 @@ public class MapModel {
 
     // Load the theme
     var theme = new Theme();
-    theme.copy( _map.win.themes.get_theme( "default" ) );
-    theme.temporary = true;
-
-    var valid = theme.load( n );
+    theme.load( n );
 
     // If this theme does not currently exist, add the theme temporarily
     if( !_map.win.themes.exists( theme ) ) {
-      if( valid ) {
+      if( theme.custom ) {
         theme.name = _map.win.themes.uniquify_name( theme.name );
         _map.win.themes.add_theme( theme );
       } else {
@@ -331,8 +326,7 @@ public class MapModel {
     }
 
     // Get the theme
-    _theme.copy( _map.win.themes.get_theme( theme.name ) );
-    _theme.index = theme.index;
+    _theme = _map.win.themes.get_theme( theme.name );
 
     // If we are the current drawarea, update the CSS and indicate the theme change
     if( _map.win.get_current_map() == _map ) {

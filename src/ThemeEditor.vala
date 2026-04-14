@@ -219,8 +219,8 @@ public class ThemeEditor : Gtk.Box {
     for( int i=0; i<colors.length; i++ ) {
       _btns.get( colors.index( i ) ).rgba = _theme.get_color( colors.index( i ) );
     }
-    _name.text = _theme.name;
-    _del.visible = edit && !theme.temporary;
+    _name.text   = _theme.name;
+    _del.visible = edit;
 
     _ignore = false;
 
@@ -280,7 +280,6 @@ public class ThemeEditor : Gtk.Box {
     _theme.name = _theme.label = _name.text;
     if( _edit ) {
       _orig_theme.copy( _theme );
-      _orig_theme.temporary = false;
       _win.themes.themes_changed();
     } else {
       _win.themes.add_theme( _theme );

@@ -171,7 +171,7 @@ public class Themes : Object {
 
     for( uint i=0; i<_themes.length; i++ ) {
       var theme = _themes.index( i );
-      if( theme.custom && !theme.temporary ) {
+      if( theme.custom ) {
         root->add_child( theme.save() );
       }
     }

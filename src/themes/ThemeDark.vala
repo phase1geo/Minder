@@ -43,7 +43,7 @@ public class ThemeDark : Theme {
     set_color( "connection_foreground", color_from_string( "White" ) );
     set_color( "url_background",        color_from_string( "Grey" ) );
     set_color( "url_foreground",        color_from_string( "#62a0ea" ) );
-    set_color( "highlighter",           color_from_string( "#cccc00" ) );
+    set_color( "highlighter",           color_from_string( "#aaaa00" ) );
     set_color( "tag",                   color_from_string( "#c00000" ) );
     set_color( "syntax",                color_from_string( "Grey" ) );
     set_color( "match_background",      color_from_string( "Gold" ) );
