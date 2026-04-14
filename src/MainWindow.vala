@@ -1158,6 +1158,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     var misc_menu = new GLib.Menu();
     append_menu_item( misc_menu, KeyCommand.SHOW_PREFERENCES, _( "Preferences" ) );
     append_menu_item( misc_menu, KeyCommand.SHOW_SHORTCUTS,   _( "Shortcuts Cheatsheet" ) );
+    misc_menu.append_submenu( _( "Markdown Syntax" ), make_markdown_menu() );
 
     var about_menu = new GLib.Menu();
     append_menu_item( about_menu, KeyCommand.SHOW_ABOUT, _( "About Minder" ) );
@@ -1172,6 +1173,31 @@ public class MainWindow : Gtk.ApplicationWindow {
       menu_model = menu
     };
     _header.pack_end( misc_btn );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates a Markdown menu which shows shortcuts and allows the
+  // user to insert them in map text or notes, depending on where
+  // the input is directed to.
+  public GLib.Menu make_markdown_menu() {
+
+    var md_menu = new GLib.Menu();
+
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER1,     _( "# Header1" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER2,     _( "## Header2" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER3,     _( "### Header3" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER4,     _( "#### Header4" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER5,     _( "##### Header5" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER6,     _( "###### Header6" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_BOLD,        _( "**Bold**" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_ITALICS,     _( "_Italicize_" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_STRIKE,      _( "~~Strikeout~~" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_SUPERSCRIPT, _( "<sup>Superscript</sup>") );
+    append_menu_item( md_menu, KeyCommand.EDIT_SUBSCRIPT,   _( "<sub>Subscript</sub>") );
+    append_menu_item( md_menu, KeyCommand.EDIT_LINK,        _( "[Link text](URL)" ) );
+
+    return( md_menu );
 
   }
 
