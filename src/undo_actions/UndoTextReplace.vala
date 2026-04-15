@@ -21,13 +21,14 @@
 
 public class UndoTextReplace : UndoTextItem {
 
-  public string             orig_text { private set; get; }
-  public string             new_text  { private set; get; }
-  public int                start     { private set; get; }
-  public Array<UndoTagInfo> tags      { private set; get; }
+  public string              orig_text { private set; get; }
+  public string              new_text  { private set; get; }
+  public int                 start     { private set; get; }
+  public Array<UndoTagInfo>? tags      { private set; get; }
 
-  /* Default constructor */
-  public UndoTextReplace( string orig_text, string new_text, int start, Array<UndoTagInfo> tags, int start_cursor, int end_cursor ) {
+  //-------------------------------------------------------------
+  // Default constructor
+  public UndoTextReplace( string orig_text, string new_text, int start, Array<UndoTagInfo>? tags, int start_cursor, int end_cursor ) {
     base( _( "text replacement" ), UndoTextOp.REPLACE, start_cursor, end_cursor );
     this.orig_text = orig_text;
     this.new_text  = new_text;
@@ -35,22 +36,27 @@ public class UndoTextReplace : UndoTextItem {
     this.tags      = tags;
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo_text( MindMap map, CanvasText ct ) {
     ct.text.replace_text( start, new_text.length, orig_text );
-    ct.text.apply_tags( tags, start );
+    if( tags != null ) {
+      ct.text.apply_tags( tags, start );
+    }
     ct.set_cursor_only( start_cursor );
     map.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo_text( MindMap map, CanvasText ct ) {
     ct.text.replace_text( start, orig_text.length, new_text );
     ct.set_cursor_only( end_cursor );
     map.queue_draw();
   }
 
-  /* Merges the given item with this item, if possible */
+  //-------------------------------------------------------------
+  // Merges the given item with this item, if possible
   public override bool merge( CanvasText ct, UndoTextItem item ) {
     if( (end_cursor == item.start_cursor) && (item.op == UndoTextOp.INSERT) ) {
       var insert = item as UndoTextInsert;

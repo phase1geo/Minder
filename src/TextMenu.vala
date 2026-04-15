@@ -48,10 +48,14 @@ public class TextMenu : BaseMenu {
     append_menu_item( other_menu, KeyCommand.EDIT_EDIT_URL,   _( "Edit Link" ) );
     append_menu_item( other_menu, KeyCommand.EDIT_REMOVE_URL, _( "Remove Link" ) );
 
+    var md_menu = new GLib.Menu();
+    md_menu.append_submenu( _( "Markdown" ), da.map.win.make_markdown_menu() );
+
     menu.append_section( null, edit_menu );
     menu.append_section( null, emoji_menu );
     menu.append_section( null, open_menu );
     menu.append_section( null, other_menu );
+    menu.append_section( null, md_menu );
 
   }
 

@@ -1193,6 +1193,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     append_menu_item( md_menu, KeyCommand.EDIT_BOLD,        _( "**Bold**" ) );
     append_menu_item( md_menu, KeyCommand.EDIT_ITALICS,     _( "_Italicize_" ) );
     append_menu_item( md_menu, KeyCommand.EDIT_STRIKE,      _( "~~Strikeout~~" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HIGHLIGHT,   _( "==Highlight==" ) );
     append_menu_item( md_menu, KeyCommand.EDIT_SUPERSCRIPT, _( "<sup>Superscript</sup>") );
     append_menu_item( md_menu, KeyCommand.EDIT_SUBSCRIPT,   _( "<sub>Subscript</sub>") );
     append_menu_item( md_menu, KeyCommand.EDIT_LINK,        _( "[Link text](URL)" ) );

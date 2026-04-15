@@ -1313,15 +1313,17 @@ public enum KeyCommand {
 
   public static void undo_action( MindMap map ) {
     if( !map.editable ) return;
-    if( map.undo_buffer.undoable() ) {
-      map.undo_buffer.undo();
+    var buffer = map.current_undo_buffer();
+    if( buffer.undoable() ) {
+      buffer.undo();
     }
   }
 
   public static void redo_action( MindMap map ) {
     if( !map.editable ) return;
-    if( map.undo_buffer.redoable() ) {
-      map.undo_buffer.redo();
+    var buffer = map.current_undo_buffer();
+    if( buffer.redoable() ) {
+      buffer.redo();
     }
   }
 
@@ -2129,56 +2131,65 @@ public enum KeyCommand {
     }
   }
 
-  public static void edit_header1( MindMap map ) {
+  private static void edit_insert_markdown( MindMap map, string pretext, string posttext = "", string midtext = "" ) {
+    var text = map.get_current_text();
+    if( text != null ) {
+      text.insert_markdown( pretext, midtext, posttext, map.undo_text );
+      map.canvas.grab_focus();
+      text_changed( map );
+    }
+  }
 
+  public static void edit_header1( MindMap map ) {
+    edit_insert_markdown( map, "# " );
   }
 
   public static void edit_header2( MindMap map ) {
-
+    edit_insert_markdown( map, "## " );
   }
 
   public static void edit_header3( MindMap map ) {
-
+    edit_insert_markdown( map, "### " );
   }
 
   public static void edit_header4( MindMap map ) {
-
+    edit_insert_markdown( map, "#### " );
   }
 
   public static void edit_header5( MindMap map ) {
-
+    edit_insert_markdown( map, "##### " );
   }
 
   public static void edit_header6( MindMap map ) {
-
+    edit_insert_markdown( map, "###### " );
   }
 
   public static void edit_bold( MindMap map ) {
-
+    edit_insert_markdown( map, "**", "**" );
   }
 
   public static void edit_italics( MindMap map ) {
-
+    edit_insert_markdown( map, "_", "_" );
   }
 
   public static void edit_strike( MindMap map ) {
-
+    edit_insert_markdown( map, "~~", "~~" );
   }
 
   public static void edit_highlight( MindMap map ) {
-
+    edit_insert_markdown( map, "==", "==" );
   }
 
   public static void edit_superscript( MindMap map ) {
-
+    edit_insert_markdown( map, "<sup>", "</sup>" );
   }
 
   public static void edit_subscript( MindMap map ) {
-
+    edit_insert_markdown( map, "<sub>", "</sub>" );
   }
 
   public static void edit_link( MindMap map ) {
-
+    edit_insert_markdown( map, "[", ")", "](" );
   }
 
   public static void edit_cursor_char_next( MindMap map ) {
