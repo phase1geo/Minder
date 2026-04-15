@@ -33,6 +33,12 @@ public class GroupInspector : Box {
 
   public signal void editable_changed();
 
+  public NoteView note {
+    get {
+      return( _note );
+    }
+  }
+
   //-------------------------------------------------------------
   // Constructor
   public GroupInspector( MainWindow win ) {

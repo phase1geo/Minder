@@ -2132,11 +2132,17 @@ public enum KeyCommand {
   }
 
   private static void edit_insert_markdown( MindMap map, string pretext, string posttext = "", string midtext = "" ) {
+    stdout.printf( "HERE!!!!!\n" );
+    if( !map.editable ) return;
     var text = map.get_current_text();
+    var note = map.win.get_current_note();
     if( text != null ) {
       text.insert_markdown( pretext, midtext, posttext, map.undo_text );
       map.canvas.grab_focus();
       text_changed( map );
+    } else if( (note != null) && note.has_focus ) {
+      stdout.printf( "HERE!\n" );
+      note.paste_markdown( pretext, midtext, posttext );
     }
   }
 

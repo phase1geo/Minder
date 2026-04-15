@@ -1261,6 +1261,20 @@ public class MainWindow : Gtk.ApplicationWindow {
     set_action_for_command( KeyCommand.SHOW_STICKER_SIDEBAR );
     set_action_for_command( KeyCommand.SHOW_MAP_SIDEBAR );
 
+    set_action_for_command( KeyCommand.EDIT_HEADER1 );
+    set_action_for_command( KeyCommand.EDIT_HEADER2 );
+    set_action_for_command( KeyCommand.EDIT_HEADER3 );
+    set_action_for_command( KeyCommand.EDIT_HEADER4 );
+    set_action_for_command( KeyCommand.EDIT_HEADER5 );
+    set_action_for_command( KeyCommand.EDIT_HEADER6 );
+    set_action_for_command( KeyCommand.EDIT_BOLD );
+    set_action_for_command( KeyCommand.EDIT_ITALICS );
+    set_action_for_command( KeyCommand.EDIT_STRIKE );
+    set_action_for_command( KeyCommand.EDIT_HIGHLIGHT );
+    set_action_for_command( KeyCommand.EDIT_SUPERSCRIPT );
+    set_action_for_command( KeyCommand.EDIT_SUBSCRIPT );
+    set_action_for_command( KeyCommand.EDIT_LINK );
+
     // Handle the enable-ui-animations value
     setting_changed_ui_animations();
 
@@ -1777,6 +1791,17 @@ public class MainWindow : Gtk.ApplicationWindow {
         break;
     }
 
+  }
+
+  //-------------------------------------------------------------
+  // Returns the currently selected note widget, if one exists;
+  // otherwise, returns null.
+  public NoteView? get_current_note() {
+    var current = (_stack.get_child_by_name( "current" ) as CurrentInspector);
+    if( current != null ) {
+      return( current.get_note() );
+    }
+    return( null );
   }
 
   //-------------------------------------------------------------

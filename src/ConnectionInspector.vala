@@ -35,6 +35,12 @@ public class ConnectionInspector : Box {
 
   public signal void editable_changed();
 
+  public NoteView note {
+    get {
+      return( _note );
+    }
+  }
+
   //-------------------------------------------------------------
   // Default constructor
   public ConnectionInspector( MainWindow win ) {

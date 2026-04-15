@@ -50,6 +50,12 @@ public class NodeInspector : Box {
   public signal void update_icons();
   public signal void editable_changed();
 
+  public NoteView note {
+    get {
+      return( _note );
+    }
+  }
+
   //-------------------------------------------------------------
   // Constructor.
   public NodeInspector( MainWindow win ) {
