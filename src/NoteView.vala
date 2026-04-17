@@ -226,20 +226,22 @@ public class NoteView : GtkSource.View {
     }
   }
 
-  private static bool      _path_init = false;
-  private int              _last_lnum = -1;
-  private string?          _last_url  = null;
-  private int?             _last_link = null;
-  private Array<UrlPos>    _last_urls;
-  private Array<LinkPos>   _last_links;
-  private int              _last_x;
-  private int              _last_y;
-  private Regex?           _url_re;
-  private Regex?           _link_re;
-  private Tooltip          _tooltip;
-  private bool             _control   = false;
-  public  GtkSource.Style  _srcstyle  = null;
-  public  GtkSource.Buffer _buffer;
+  private MainWindow        _win;
+  private static bool       _path_init = false;
+  private int               _last_lnum = -1;
+  private string?           _last_url  = null;
+  private int?              _last_link = null;
+  private Array<UrlPos>     _last_urls;
+  private Array<LinkPos>    _last_links;
+  private int               _last_x;
+  private int               _last_y;
+  private Regex?            _url_re;
+  private Regex?            _link_re;
+  private Tooltip           _tooltip;
+  private bool              _control   = false;
+  private SimpleActionGroup _group;
+  public  GtkSource.Style   _srcstyle  = null;
+  public  GtkSource.Buffer  _buffer;
 
   public string text {
     set {
@@ -266,7 +268,9 @@ public class NoteView : GtkSource.View {
 
   //-------------------------------------------------------------
   // Default constructor
-  public NoteView() {
+  public NoteView( MainWindow win ) {
+
+    _win = win;
 
     completion.select_on_show = true;
 
@@ -315,6 +319,17 @@ public class NoteView : GtkSource.View {
     _buffer.changed.connect (() => {
       modified = true;
     });
+
+    // Create and add the action group to the mindmap canvas
+    _group = new SimpleActionGroup();
+    insert_action_group( "noteview", _group );
+
+    var md_menu = win.make_markdown_menu();
+
+    var extra = new GLib.Menu();
+    extra.append_submenu( _( "Markdown" ), md_menu );
+
+    extra_menu = extra;
 
     var focus = new EventControllerFocus();
     add_controller( focus );

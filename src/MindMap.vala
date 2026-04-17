@@ -472,6 +472,7 @@ public class MindMap {
     } else if( is_callout_editable() ) {
       _model.set_callout_mode( get_current_callout(), CalloutMode.SELECTED );
     }
+    queue_draw();
   }
 
   //-------------------------------------------------------------

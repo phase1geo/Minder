@@ -94,7 +94,7 @@ public class GroupInspector : Box {
     };
     lbl.add_css_class( "titled" );
 
-    _note = new NoteView() {
+    _note = new NoteView( win ) {
       vexpand   = true,
       wrap_mode = Gtk.WrapMode.WORD
     };
@@ -131,6 +131,7 @@ public class GroupInspector : Box {
   private void note_focus_in() {
     _group     = _map.get_current_group();
     _orig_note = _note.buffer.text;
+    _map.unedit_text();
   }
 
   //-------------------------------------------------------------
