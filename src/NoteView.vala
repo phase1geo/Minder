@@ -581,21 +581,35 @@ public class NoteView : GtkSource.View {
     TextIter selstart, selend, cursor;
     if( buffer.get_selection_bounds( out selstart, out selend ) ) {
       var str  = buffer.get_text( selstart, selend, true );
-      var istr = pretext + str + midtext + posttext;
       buffer.delete( ref selstart, ref selend );
-      buffer.insert( ref selstart, istr, istr.length );
+      if( midtext != "" ) {
+        var istr       = pretext + str + midtext + posttext;
+        var back_chars = posttext.char_count();
+        if( Utils.is_url( str ) ) {
+          istr = pretext + midtext + str + posttext;
+          back_chars = midtext.char_count() + str.char_count() + posttext.char_count();
+        }
+        buffer.insert( ref selstart, istr, istr.length );
+        buffer.get_iter_at_mark( out cursor, buffer.get_insert() );
+        cursor.backward_chars( back_chars );
+        buffer.place_cursor( cursor );
+      } else {
+        var istr = pretext + str + posttext;
+        buffer.insert( ref selstart, istr, istr.length );
+      }
     } else if( posttext == "" ) {
       buffer.get_iter_at_mark( out cursor, buffer.get_insert() );
       cursor.set_line_offset( 0 );
-      buffer.move_mark( buffer.get_insert(), cursor );
+      buffer.place_cursor( cursor );
       buffer.insert_at_cursor( pretext, pretext.length );
     } else {
       var str = pretext + midtext + posttext;
       buffer.insert_at_cursor( str, str.length );
       buffer.get_iter_at_mark( out cursor, buffer.get_insert() );
       cursor.backward_chars( midtext.char_count() + posttext.char_count() );
-      buffer.move_mark( buffer.get_insert(), cursor );
+      buffer.place_cursor( cursor );
     }
+    grab_focus();
   }
 
   //-------------------------------------------------------------

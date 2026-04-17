@@ -972,6 +972,10 @@ public class CanvasText : Object {
       var str  = text.text.slice( spos, epos );
       var mstr = pretext + str + midtext;
       var istr = mstr + posttext;
+      if( (midtext != "") && Utils.is_url( str ) ) {  // If the selected string is a URL and we are wrapping it in a link
+        mstr = pretext;
+        istr = mstr + midtext + str + posttext;
+      }
       text.replace_text( spos, (epos - spos), istr );
       set_cursor_only( _selstart + mstr.char_count() );
       change_selection( _cursor, _cursor, "insert_formatting" );

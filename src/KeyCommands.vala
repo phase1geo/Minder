@@ -202,6 +202,7 @@ public enum KeyCommand {
       EDIT_BOLD,
       EDIT_ITALICS,
       EDIT_STRIKE,
+      EDIT_CODE,
       EDIT_HIGHLIGHT,
       EDIT_SUPERSCRIPT,
       EDIT_SUBSCRIPT,
@@ -390,6 +391,7 @@ public enum KeyCommand {
       case EDIT_BOLD                 :  return( "edit-bold" );
       case EDIT_ITALICS              :  return( "edit-italics" );
       case EDIT_STRIKE               :  return( "edit-strike" );
+      case EDIT_CODE                 :  return( "edit-code" );
       case EDIT_HIGHLIGHT            :  return( "edit-highlight" );
       case EDIT_SUPERSCRIPT          :  return( "edit-superscript" );
       case EDIT_SUBSCRIPT            :  return( "edit-subscript" );
@@ -561,6 +563,7 @@ public enum KeyCommand {
       case "edit-bold"                 :  return( EDIT_BOLD );
       case "edit-italics"              :  return( EDIT_ITALICS );
       case "edit-strike"               :  return( EDIT_STRIKE );
+      case "edit-code"                 :  return( EDIT_CODE );
       case "edit-highlight"            :  return( EDIT_HIGHLIGHT );
       case "edit-superscript"          :  return( EDIT_SUPERSCRIPT );
       case "edit-subscript"            :  return( EDIT_SUBSCRIPT );
@@ -748,6 +751,7 @@ public enum KeyCommand {
       case EDIT_BOLD                 :  return( _( "Insert Markdown bold syntax" ) );
       case EDIT_ITALICS              :  return( _( "Insert Markdown italics syntax" ) );
       case EDIT_STRIKE               :  return( _( "Insert Markdown strikethrough syntax" ) );
+      case EDIT_CODE                 :  return( _( "Insert Markdown code syntax" ) );
       case EDIT_HIGHLIGHT            :  return( _( "Insert Markdown highlighting syntax" ) );
       case EDIT_SUPERSCRIPT          :  return( _( "Insert Markdown superscript syntax" ) );
       case EDIT_SUBSCRIPT            :  return( _( "Insert Markdown subscript syntax" ) );
@@ -919,6 +923,7 @@ public enum KeyCommand {
       case EDIT_BOLD                 :  return( edit_bold );
       case EDIT_ITALICS              :  return( edit_italics );
       case EDIT_STRIKE               :  return( edit_strike );
+      case EDIT_CODE                 :  return( edit_code );
       case EDIT_HIGHLIGHT            :  return( edit_highlight );
       case EDIT_SUPERSCRIPT          :  return( edit_superscript );
       case EDIT_SUBSCRIPT            :  return( edit_subscript );
@@ -2178,6 +2183,10 @@ public enum KeyCommand {
 
   public static void edit_strike( MindMap map ) {
     edit_insert_markdown( map, true, "~~", "~~" );
+  }
+
+  public static void edit_code( MindMap map ) {
+    edit_insert_markdown( map, true, "`", "`" );
   }
 
   public static void edit_highlight( MindMap map ) {
