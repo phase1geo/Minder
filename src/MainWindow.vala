@@ -540,7 +540,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Adds a new tab to the notebook
   public MindMap add_tab( string? fname, TabAddReason reason ) {
 
-    /* Create and pack the canvas */
+    // Create and pack the canvas
     var map = new MindMap( this, _settings );
     map.current_changed.connect( on_current_changed );
     map.scale_changed.connect( change_scale );
@@ -558,7 +558,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       map.doc.load_filename( fname, (reason == TabAddReason.OPEN) );
     }
 
-    /* Create the overlay that will hold the canvas so that we can put an entry box for emoji support */
+    // Create the overlay that will hold the canvas so that we can put an entry box for emoji support
     var overlay = new Overlay() {
       child = map.canvas
     };
@@ -624,17 +624,17 @@ public class MainWindow : Gtk.ApplicationWindow {
       close_tab( tab_index );
     });
 
-    /* Update the titlebar */
+    // Update the titlebar
     update_title( map );
 
-    /* Make the drawing area new */
+    // Make the drawing area new
     if( reason == TabAddReason.NEW ) {
       map.initialize_for_new();
     } else {
       map.initialize_for_open();
     }
 
-    /* Indicate that the tab has changed */
+    // Indicate that the tab has changed
     if( reason != TabAddReason.LOAD ) {
       if( reason == TabAddReason.OPEN ) {
         map.editable = true;
@@ -796,7 +796,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     var popover = new PopoverMenu.from_model( menu );
     popover.add_child( zbox, "scale" );
 
-    /* Create the menu button */
+    // Create the menu button
     _zoom_btn = new MenuButton() {
       icon_name    = get_icon_name( "zoom-fit-best" ),
       tooltip_text = _( "Zoom (%d%%)" ).printf( 100 ),
@@ -810,7 +810,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Adds the search functionality.
   private void add_search_button() {
 
-    /* Create the search entry field */
+    // Create the search entry field
     _search_entry = new SearchEntry() {
       placeholder_text = _( "Search Nodes, Callouts and Connections" ),
       width_chars      = 60
@@ -892,12 +892,12 @@ public class MainWindow : Gtk.ApplicationWindow {
     box.append( new Separator( Orientation.HORIZONTAL ) );
     box.append( search_all_box );
 
-    /* Create the popover and associate it with the menu button */
+    // Create the popover and associate it with the menu button
     _search = new Popover() {
       child = box
     };
 
-    /* Create the menu button */
+    // Create the menu button
     _search_btn = new MenuButton() {
       icon_name = (on_elementary ? "minder-search" : "edit-find-symbolic"),
       popover   = _search
@@ -907,7 +907,8 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Creates the UI for the search criteria box */
+  //-------------------------------------------------------------
+  // Creates the UI for the search criteria box
   private Grid create_search_options_box() {
 
     _search_nodes       = new CheckButton.with_label( _( "Nodes" ) );
@@ -921,7 +922,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _search_tasks       = new CheckButton.with_label( _( "Tasks" ) );
     _search_nontasks    = new CheckButton.with_label( _( "Non-tasks" ) );
 
-    /* Set the active values from the settings */
+    // Set the active values from the settings
     _search_nodes.active       = _settings.get_boolean( "search-opt-nodes" );
     _search_connections.active = _settings.get_boolean( "search-opt-connections" );
     _search_callouts.active    = _settings.get_boolean( "search-opt-callouts" );
@@ -933,7 +934,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _search_tasks.active       = _settings.get_boolean( "search-opt-tasks" );
     _search_nontasks.active    = _settings.get_boolean( "search-opt-nontasks" );
 
-    /* Set the checkbutton sensitivity */
+    // Set the checkbutton sensitivity
     _search_nodes.set_sensitive( _search_callouts.active || _search_connections.active || _search_groups.active );
     _search_connections.set_sensitive( _search_nodes.active || _search_callouts.active || _search_groups.active );
     _search_callouts.set_sensitive( _search_nodes.active || _search_connections.active || _search_groups.active );
@@ -1047,12 +1048,12 @@ public class MainWindow : Gtk.ApplicationWindow {
     menu.append_section( null, export_menu );
     menu.append_section( null, print_menu );
     
-    /* Create the popover and associate it with clicking on the menu button */
+    // Create the popover and associate it with clicking on the menu button
     var popover = new PopoverMenu.from_model( menu ) {
       cascade_popdown = false
     };
 
-    /* Create export menu */
+    // Create export menu
     _exporter = new Exporter( this ) {
       margin_start = 5,
       margin_end   = 5
@@ -1063,7 +1064,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     popover.add_child( _exporter, "export" );
 
-    /* Create the menu button */
+    // Create the menu button
     var menu_btn = new MenuButton() {
       icon_name    = (on_elementary ? "document-export" : "document-send-symbolic"),
       tooltip_text = _( "Export" ),
@@ -1166,12 +1167,39 @@ public class MainWindow : Gtk.ApplicationWindow {
     menu.append_section( null, misc_menu );
     menu.append_section( null, about_menu );
 
-    /* Create the menu button */
+    // Create the menu button
     var misc_btn = new MenuButton() {
       icon_name  = get_icon_name( "open-menu" ),
       menu_model = menu
     };
     _header.pack_end( misc_btn );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates a Markdown menu which shows shortcuts and allows the
+  // user to insert them in map text or notes, depending on where
+  // the input is directed to.
+  public GLib.Menu make_markdown_menu() {
+
+    var md_menu = new GLib.Menu();
+
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER1,     _( "# Header1" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER2,     _( "## Header2" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER3,     _( "### Header3" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER4,     _( "#### Header4" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER5,     _( "##### Header5" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER6,     _( "###### Header6" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_BOLD,        _( "**Bold**" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_ITALICS,     _( "__Italicize_" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_STRIKE,      _( "~~Strikeout~~" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_CODE,        _( "`Code`" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HIGHLIGHT,   _( "==Highlight==" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_SUPERSCRIPT, _( "<sup>Superscript</sup>") );
+    append_menu_item( md_menu, KeyCommand.EDIT_SUBSCRIPT,   _( "<sub>Subscript</sub>") );
+    append_menu_item( md_menu, KeyCommand.EDIT_LINK,        _( "[Link text](URL)" ) );
+
+    return( md_menu );
 
   }
 
@@ -1183,7 +1211,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _prop_show = (on_elementary ? "minder-sidebar-open"  : "minder-sidebar-light-symbolic");
     _prop_hide = (on_elementary ? "minder-sidebar-close" : "minder-sidebar-light-symbolic");
 
-    /* Add the menubutton */
+    // Add the menubutton
     _prop_btn  = new ToggleButton() {
       icon_name    = _prop_show,
       active       = false,
@@ -1208,7 +1236,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _stack.add_controller( key );
     key.key_pressed.connect( stack_keypress );
 
-    /* If the stack switcher is clicked, save off which tab is in view */
+    // If the stack switcher is clicked, save off which tab is in view
     _stack.notify.connect((ps) => {
       if( ps.name == "visible-child" ) {
         _settings.set_boolean( "current-properties-shown", (_stack.visible_child_name == "current") );
@@ -1233,6 +1261,20 @@ public class MainWindow : Gtk.ApplicationWindow {
     set_action_for_command( KeyCommand.SHOW_TAG_SIDEBAR );
     set_action_for_command( KeyCommand.SHOW_STICKER_SIDEBAR );
     set_action_for_command( KeyCommand.SHOW_MAP_SIDEBAR );
+
+    set_action_for_command( KeyCommand.EDIT_HEADER1 );
+    set_action_for_command( KeyCommand.EDIT_HEADER2 );
+    set_action_for_command( KeyCommand.EDIT_HEADER3 );
+    set_action_for_command( KeyCommand.EDIT_HEADER4 );
+    set_action_for_command( KeyCommand.EDIT_HEADER5 );
+    set_action_for_command( KeyCommand.EDIT_HEADER6 );
+    set_action_for_command( KeyCommand.EDIT_BOLD );
+    set_action_for_command( KeyCommand.EDIT_ITALICS );
+    set_action_for_command( KeyCommand.EDIT_STRIKE );
+    set_action_for_command( KeyCommand.EDIT_HIGHLIGHT );
+    set_action_for_command( KeyCommand.EDIT_SUPERSCRIPT );
+    set_action_for_command( KeyCommand.EDIT_SUBSCRIPT );
+    set_action_for_command( KeyCommand.EDIT_LINK );
 
     // Handle the enable-ui-animations value
     setting_changed_ui_animations();
@@ -1390,12 +1432,12 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Creates a new file
   public void do_new_file() {
 
-    /* Close any unchanged tabs */
+    // Close any unchanged tabs
     if( find_unchanged_tab() ) return;
 
     var map = add_tab( null, TabAddReason.NEW );
 
-    /* Set the title to indicate that we have an unnamed document */
+    // Set the title to indicate that we have an unnamed document
     update_title( map );
 
   }
@@ -1421,7 +1463,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     var filters = new GLib.ListStore( typeof( FileFilter ) );
 
-    /* Create file filters */
+    // Create file filters
     if( !dir ) {
       var filter = new FileFilter();
       filter.set_filter_name( "Minder" );
@@ -1596,11 +1638,11 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Converts the given node name to an appropriate filename
   private string convert_name_to_filename( string name ) {
 
-    /* If the name contains newline characters, just use the first line */
+    // If the name contains newline characters, just use the first line
     var first_line = name.split( "\n" )[0];
     var base_name  = first_line.delimit( "~!@#$%^&*+`={}[]|\\/,.<>?;:\"' \t", '-' );
 
-    /* Remove consecutive - characters with a single dash */
+    // Remove consecutive - characters with a single dash
     try {
       var re1 = new Regex( "-+" );
       var re2 = new Regex( "^-|-$" );
@@ -1750,6 +1792,17 @@ public class MainWindow : Gtk.ApplicationWindow {
         break;
     }
 
+  }
+
+  //-------------------------------------------------------------
+  // Returns the currently selected note widget, if one exists;
+  // otherwise, returns null.
+  public NoteView? get_current_note() {
+    var current = (_stack.get_child_by_name( "current" ) as CurrentInspector);
+    if( current != null ) {
+      return( current.get_note() );
+    }
+    return( null );
   }
 
   //-------------------------------------------------------------
@@ -2024,7 +2077,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     win.transient_for = this;
     win.view_name     = null;
 
-    /* Display the most relevant information based on the current state */
+    // Display the most relevant information based on the current state
     if( map.is_node_editable() || map.is_connection_editable() ) {
       win.section_name = "editing";
     } else if( map.is_node_selected() ) {
@@ -2118,7 +2171,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     root->new_prop( "selected", current_page.to_string() );
     root->new_prop( "version",  "2" );
 
-    /* Save the file */
+    // Save the file
     doc->save_format_file( fname, 1 );
 
     delete doc;

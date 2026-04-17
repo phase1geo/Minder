@@ -50,13 +50,19 @@ public class NodeInspector : Box {
   public signal void update_icons();
   public signal void editable_changed();
 
+  public NoteView note {
+    get {
+      return( _note );
+    }
+  }
+
   //-------------------------------------------------------------
   // Constructor.
   public NodeInspector( MainWindow win ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 10 );
 
-    /* Create the node widgets */
+    // Create the node widgets
     create_title();
     create_task();
     create_fold();
@@ -286,7 +292,7 @@ public class NodeInspector : Box {
     };
     lbl.add_css_class( "titled" );
 
-    _note = new NoteView() {
+    _note = new NoteView( win ) {
       valign    = Align.FILL,
       vexpand   = true,
       wrap_mode = Gtk.WrapMode.WORD
@@ -426,7 +432,7 @@ public class NodeInspector : Box {
       btn_del.sensitive  = _map.editable;
     });
 
-    /* Set ourselves up to be a drag target */
+    // Set ourselves up to be a drag target
     var drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
     _image.add_controller( drop );
 
@@ -452,7 +458,7 @@ public class NodeInspector : Box {
 
     File file = File.new_for_uri( uri );
 
-    /* If the URI is a file on the local filesystem, view it with the Files app */
+    // If the URI is a file on the local filesystem, view it with the Files app
     if( file.get_uri_scheme() == "file" ) {
       var files = AppInfo.get_default_for_type( "inode/directory", true );
       var list  = new List<File>();
@@ -488,7 +494,7 @@ public class NodeInspector : Box {
     };
     cut_btn.clicked.connect( node_cut );
 
-    /* Create the detach button */
+    // Create the detach button
     _detach_btn = new Button.from_icon_name( "minder-detach-light-symbolic" ) {
       tooltip_text = _( "Detach Node" )
     };
@@ -498,19 +504,19 @@ public class NodeInspector : Box {
       _detach_btn.icon_name = Utils.use_dark_mode( _detach_btn ) ? "minder-detach-dark-symbolic" : "minder-detach-light-symbolic";
     });
 
-    /* Create the node deletion button */
+    // Create the node deletion button
     var del_btn = new Button.from_icon_name( "edit-delete-symbolic" ) {
       tooltip_text = _( "Delete Node" )
     };
     del_btn.clicked.connect( node_delete );
 
-    /* Add the buttons to the button grid */
+    // Add the buttons to the button grid
     grid.attach( copy_btn,    0, 0 );
     grid.attach( cut_btn,     1, 0 );
     grid.attach( _detach_btn, 2, 0 );
     grid.attach( del_btn,     3, 0 );
 
-    /* Add the button grid to the popover */
+    // Add the button grid to the popover
     // pack_start( grid, false, true );
 
   }
@@ -581,6 +587,7 @@ public class NodeInspector : Box {
   private void note_focus_in() {
     _node      = _map.get_current_node();
     _orig_note = _note.buffer.text;
+    _map.unedit_text();
   }
 
   //-------------------------------------------------------------
@@ -662,15 +669,15 @@ public class NodeInspector : Box {
     int    num_colors = Theme.num_link_colors();
     RGBA[] colors     = new RGBA[num_colors];
 
-    /* Gather the theme colors into an RGBA array */
+    // Gather the theme colors into an RGBA array
     for( int i=0; i<num_colors; i++ ) {
       colors[i] = _map.get_theme().link_color( i );
     }
 
-    /* Clear the palette */
+    // Clear the palette
     _link_color.add_palette( Orientation.HORIZONTAL, 10, null );
 
-    /* Set the palette with the new theme colors */
+    // Set the palette with the new theme colors
     _link_color.add_palette( Orientation.HORIZONTAL, 10, colors );
 
   }

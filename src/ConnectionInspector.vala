@@ -35,6 +35,12 @@ public class ConnectionInspector : Box {
 
   public signal void editable_changed();
 
+  public NoteView note {
+    get {
+      return( _note );
+    }
+  }
+
   //-------------------------------------------------------------
   // Default constructor
   public ConnectionInspector( MainWindow win ) {
@@ -133,7 +139,7 @@ public class ConnectionInspector : Box {
     };
     lbl.add_css_class( "titled" );
 
-    _note = new NoteView() {
+    _note = new NoteView( win ) {
       valign    = Align.FILL,
       vexpand   = true,
       wrap_mode = Gtk.WrapMode.WORD
@@ -207,6 +213,7 @@ public class ConnectionInspector : Box {
   private void note_focus_in() {
     _connection = _map.get_current_connection();
     _orig_note  = _note.buffer.text;
+    _map.unedit_text();
   }
 
   //-------------------------------------------------------------

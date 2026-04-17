@@ -609,6 +609,11 @@ public class Shortcuts {
     add_default( Key.r,            true, true,  false, KeyCommand.NODE_QUICK_ENTRY_REPLACE );
     add_default( Key.y,            true, false, false, KeyCommand.NODE_PASTE_NODE_LINK );
 
+    add_default( Key.b,            true, false, false, KeyCommand.EDIT_BOLD );
+    add_default( Key.i,            true, false, false, KeyCommand.EDIT_ITALICS );
+    add_default( Key.x,            true, true,  false, KeyCommand.EDIT_STRIKE );
+    add_default( Key.grave,        true, false, false, KeyCommand.EDIT_CODE );
+
     add_default( Key.F10,          false, true,  false, KeyCommand.SHOW_CONTEXTUAL_MENU );
     add_default( Key.Menu,         false, false, false, KeyCommand.SHOW_CONTEXTUAL_MENU );
 

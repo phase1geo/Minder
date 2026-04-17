@@ -963,6 +963,38 @@ public class CanvasText : Object {
   }
 
   //-------------------------------------------------------------
+  // Inserts the Markdown formatting
+  public void insert_markdown( string pretext, string midtext = "", string posttext = "", UndoTextBuffer undo_buffer ) {
+    var cur = _cursor;
+    if( _selstart != _selend ) {
+      var spos = text.text.index_of_nth_char( _selstart );
+      var epos = text.text.index_of_nth_char( _selend );
+      var str  = text.text.slice( spos, epos );
+      var mstr = pretext + str + midtext;
+      var istr = mstr + posttext;
+      if( (midtext != "") && Utils.is_url( str ) ) {  // If the selected string is a URL and we are wrapping it in a link
+        mstr = pretext;
+        istr = mstr + midtext + str + posttext;
+      }
+      text.replace_text( spos, (epos - spos), istr );
+      set_cursor_only( _selstart + mstr.char_count() );
+      change_selection( _cursor, _cursor, "insert_formatting" );
+      undo_buffer.add_replace( spos, str, istr, null, cur );
+    } else if( posttext == "" ) {
+      var spos = find_line_extent( true );
+      text.insert_text( spos, pretext );
+      set_cursor_only( _cursor + pretext.char_count() );
+      undo_buffer.add_insert( spos, pretext, cur );
+    } else {
+      var spos = text.text.index_of_nth_char( _cursor );
+      var istr = pretext + midtext + posttext;
+      text.insert_text( spos, istr );
+      set_cursor_only( _cursor + pretext.char_count() );
+      undo_buffer.add_insert( spos, istr, cur );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Replaces the given range with the specified string
   public void replace( int start, int end, string s, UndoTextBuffer undo_buffer ) {
     var slen = s.char_count();
