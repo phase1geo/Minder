@@ -109,7 +109,7 @@ public class BaseMenu {
     var action = new SimpleAction( command.to_string(), null );
     action.activate.connect((v) => {
       var func = command.get_func();
-      func( map );
+      func( map, false );
       if( grab_canvas ) {
         map.canvas.grab_focus();
       }

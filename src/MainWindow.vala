@@ -210,9 +210,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     _nb.page_removed.connect( tab_removed );
 
     // Set shortcuts until we have a tab menu
-    set_action_for_command( KeyCommand.TAB_GOTO_NEXT );
-    set_action_for_command( KeyCommand.TAB_GOTO_PREV );
-    set_action_for_command( KeyCommand.TAB_CLOSE_CURRENT );
+    set_action_for_command( KeyCommand.TAB_GOTO_NEXT, true );
+    set_action_for_command( KeyCommand.TAB_GOTO_PREV, true );
+    set_action_for_command( KeyCommand.TAB_CLOSE_CURRENT, true );
 
     // Create the braindump pane
     _brain = new Braindump( this ) {
@@ -355,8 +355,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     });
 
     // Set shortcuts that don't have a UI element
-    set_action_for_command( KeyCommand.FILE_SAVE );
-    set_action_for_command( KeyCommand.QUIT );
+    set_action_for_command( KeyCommand.FILE_SAVE, true );
+    set_action_for_command( KeyCommand.QUIT, true );
 
     // Set the window size based on gsettings
     set_window_size();
@@ -1256,25 +1256,26 @@ public class MainWindow : Gtk.ApplicationWindow {
     });
 
     // Set shortcuts
-    set_action_for_command( KeyCommand.SHOW_CURRENT_SIDEBAR );
-    set_action_for_command( KeyCommand.SHOW_STYLE_SIDEBAR );
-    set_action_for_command( KeyCommand.SHOW_TAG_SIDEBAR );
-    set_action_for_command( KeyCommand.SHOW_STICKER_SIDEBAR );
-    set_action_for_command( KeyCommand.SHOW_MAP_SIDEBAR );
+    set_action_for_command( KeyCommand.SHOW_CURRENT_SIDEBAR, true );
+    set_action_for_command( KeyCommand.SHOW_STYLE_SIDEBAR, true );
+    set_action_for_command( KeyCommand.SHOW_TAG_SIDEBAR, true );
+    set_action_for_command( KeyCommand.SHOW_STICKER_SIDEBAR, true );
+    set_action_for_command( KeyCommand.SHOW_MAP_SIDEBAR, true );
 
-    set_action_for_command( KeyCommand.EDIT_HEADER1 );
-    set_action_for_command( KeyCommand.EDIT_HEADER2 );
-    set_action_for_command( KeyCommand.EDIT_HEADER3 );
-    set_action_for_command( KeyCommand.EDIT_HEADER4 );
-    set_action_for_command( KeyCommand.EDIT_HEADER5 );
-    set_action_for_command( KeyCommand.EDIT_HEADER6 );
-    set_action_for_command( KeyCommand.EDIT_BOLD );
-    set_action_for_command( KeyCommand.EDIT_ITALICS );
-    set_action_for_command( KeyCommand.EDIT_STRIKE );
-    set_action_for_command( KeyCommand.EDIT_HIGHLIGHT );
-    set_action_for_command( KeyCommand.EDIT_SUPERSCRIPT );
-    set_action_for_command( KeyCommand.EDIT_SUBSCRIPT );
-    set_action_for_command( KeyCommand.EDIT_LINK );
+    set_action_for_command( KeyCommand.EDIT_HEADER1, true );
+    set_action_for_command( KeyCommand.EDIT_HEADER2, true );
+    set_action_for_command( KeyCommand.EDIT_HEADER3, true );
+    set_action_for_command( KeyCommand.EDIT_HEADER4, true );
+    set_action_for_command( KeyCommand.EDIT_HEADER5, true );
+    set_action_for_command( KeyCommand.EDIT_HEADER6, true );
+    set_action_for_command( KeyCommand.EDIT_BOLD, true );
+    set_action_for_command( KeyCommand.EDIT_ITALICS, true );
+    set_action_for_command( KeyCommand.EDIT_STRIKE, true );
+    set_action_for_command( KeyCommand.EDIT_HIGHLIGHT, true );
+    set_action_for_command( KeyCommand.EDIT_CODE, true );
+    set_action_for_command( KeyCommand.EDIT_SUPERSCRIPT, true );
+    set_action_for_command( KeyCommand.EDIT_SUBSCRIPT, true );
+    set_action_for_command( KeyCommand.EDIT_LINK, true );
 
     // Handle the enable-ui-animations value
     setting_changed_ui_animations();
@@ -2410,19 +2411,28 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Adds and action for the given command.
-  private void set_action_for_command( KeyCommand command ) {
+  private void set_action_for_command( KeyCommand command, bool key_only ) {
 
     // Create action to execute
-    var action = new SimpleAction( command.to_string(), null );
+    if( !key_only ) {
+      var action = new SimpleAction( command.to_string(), null );
+      action.activate.connect((v) => {
+        var func = command.get_func();
+        func( get_current_map(), false );
+      });
+      _actions.add_action( action );
+    }
+
+    var action = new SimpleAction( (command.to_string() + "_key"), null );
     action.activate.connect((v) => {
       var func = command.get_func();
-      func( get_current_map() );
+      func( get_current_map(), true );
     });
     _actions.add_action( action );
 
     var shortcut = shortcuts.get_shortcut( command );
     if( shortcut != null ) {
-      application.set_accels_for_action( "win.%s".printf( command.to_string() ), { shortcut.get_accelerator() } );
+      application.set_accels_for_action( "win.%s_key".printf( command.to_string() ), { shortcut.get_accelerator() } );
     }
 
   }
@@ -2431,7 +2441,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Appends a command with the given command to the specified menu.
   private void append_menu_item( GLib.Menu menu, KeyCommand command, string label ) {
     menu.append( label, "win.%s".printf( command.to_string() ) );
-    set_action_for_command( command );
+    set_action_for_command( command, false );
   }
 
   //-------------------------------------------------------------
@@ -2450,7 +2460,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Updates registers for shortcuts
   public void register_widget_for_shortcut( Gtk.Widget w, KeyCommand command, string label ) {
     register_widget_for_tooltip( w, command, label );
-    set_action_for_command( command );
+    set_action_for_command( command, false );
   }
 
   //-------------------------------------------------------------
@@ -2486,7 +2496,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Execute command.
   public void execute_command( KeyCommand command ) {
     var func = command.get_func();
-    func( get_current_map() );
+    func( get_current_map(), false );
   }
 
 }

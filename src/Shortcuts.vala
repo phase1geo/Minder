@@ -170,7 +170,7 @@ public class Shortcut {
   //-------------------------------------------------------------
   // Executes the stored function with the given map.
   public void execute( MindMap map ) {
-    _func( map );
+    _func( map, true );
   }
 
   //-------------------------------------------------------------

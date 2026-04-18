@@ -21,7 +21,7 @@
 
 using Gee;
 
-public delegate void KeyCommandFunc( MindMap map );
+public delegate void KeyCommandFunc( MindMap map, bool key_activated );
 
 public enum KeyCommand {
   DO_NOTHING,
@@ -2144,65 +2144,65 @@ public enum KeyCommand {
       text.insert_markdown( pretext, midtext, posttext, map.undo_text );
       map.canvas.grab_focus();
       text_changed( map );
-    } else if( note != null ) {
+    } else if( (note != null) && (!key_used || note.has_focus) ) {
       note.paste_markdown( pretext, midtext, posttext );
     }
   }
 
-  public static void edit_header1( MindMap map ) {
-    edit_insert_markdown( map, true, "# " );
+  public static void edit_header1( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "# " );
   }
 
-  public static void edit_header2( MindMap map ) {
-    edit_insert_markdown( map, true, "## " );
+  public static void edit_header2( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "## " );
   }
 
-  public static void edit_header3( MindMap map ) {
-    edit_insert_markdown( map, true, "### " );
+  public static void edit_header3( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "### " );
   }
 
-  public static void edit_header4( MindMap map ) {
-    edit_insert_markdown( map, true, "#### " );
+  public static void edit_header4( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "#### " );
   }
 
-  public static void edit_header5( MindMap map ) {
-    edit_insert_markdown( map, true, "##### " );
+  public static void edit_header5( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "##### " );
   }
 
-  public static void edit_header6( MindMap map ) {
-    edit_insert_markdown( map, true, "###### " );
+  public static void edit_header6( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "###### " );
   }
 
-  public static void edit_bold( MindMap map ) {
-    edit_insert_markdown( map, true, "**", "**" );
+  public static void edit_bold( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "**", "**" );
   }
 
-  public static void edit_italics( MindMap map ) {
-    edit_insert_markdown( map, true, "_", "_" );
+  public static void edit_italics( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "_", "_" );
   }
 
-  public static void edit_strike( MindMap map ) {
-    edit_insert_markdown( map, true, "~~", "~~" );
+  public static void edit_strike( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "~~", "~~" );
   }
 
-  public static void edit_code( MindMap map ) {
-    edit_insert_markdown( map, true, "`", "`" );
+  public static void edit_code( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "`", "`" );
   }
 
-  public static void edit_highlight( MindMap map ) {
-    edit_insert_markdown( map, true, "==", "==" );
+  public static void edit_highlight( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "==", "==" );
   }
 
-  public static void edit_superscript( MindMap map ) {
-    edit_insert_markdown( map, true, "<sup>", "</sup>" );
+  public static void edit_superscript( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "<sup>", "</sup>" );
   }
 
-  public static void edit_subscript( MindMap map ) {
-    edit_insert_markdown( map, true, "<sub>", "</sub>" );
+  public static void edit_subscript( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "<sub>", "</sub>" );
   }
 
-  public static void edit_link( MindMap map ) {
-    edit_insert_markdown( map, true, "[", ")", "](" );
+  public static void edit_link( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "[", ")", "](" );
   }
 
   public static void edit_cursor_char_next( MindMap map ) {
