@@ -131,6 +131,33 @@
   </custom>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.0.9" date="2026-04-19">
+      <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Added syntax highlighting support for Markdown strikethrough and highlighting in notes.</li>
+          <li>Added Markdown highlighting theming support.</li>
+          <li>Added Markdown syntax insertion menus for canvas text and notes.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated Italian translation (thanks to Albano Battistella).</li>
+          <li xml:lang="ru">Обновлен перевод на итальянский (спаисбо Albano Battistella).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixing issues with saving custom themes.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.8" date="2026-04-05">
       <description>
         <p>Bug Fixes</p>
