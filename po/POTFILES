@@ -51,6 +51,7 @@ src/layouts/LayoutVertical.vala
 src/MainWindow.vala
 src/MapInspector.vala
 src/MapModel.vala
+src/MarkdownMenu.vala
 src/MindMap.vala
 src/NodeGroup.vala
 src/NodeInspector.vala
@@ -58,6 +59,7 @@ src/NodeLink.vala
 src/NodeMenu.vala
 src/NodesMenu.vala
 src/Node.vala
+src/NoteView.vala
 src/Preferences.vala
 src/QuickEntry.vala
 src/Shortcuts.vala

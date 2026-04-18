@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-04 19:55-0500\n"
+"POT-Creation-Date: 2026-04-18 12:51-0500\n"
 "PO-Revision-Date: 2026-03-31 12:29+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -139,7 +139,7 @@ msgstr "იდეების სიის გასუფთავება"
 
 #: src/CalloutMenu.vala:33 src/ConnectionMenu.vala:34
 #: src/ConnectionsMenu.vala:33 src/GroupsMenu.vala:33 src/NodeMenu.vala:40
-#: src/NodesMenu.vala:35 src/TemplateEditor.vala:110 src/ThemeEditor.vala:141
+#: src/NodesMenu.vala:35 src/TemplateEditor.vala:110 src/ThemeEditor.vala:142
 msgid "Delete"
 msgstr "წაშლა"
 
@@ -147,33 +147,33 @@ msgstr "წაშლა"
 msgid "Select Node"
 msgstr "კვანძის მონიშვნა"
 
-#: src/Callout.vala:131 src/KeyCommands.vala:677 src/NodeMenu.vala:97
+#: src/Callout.vala:131 src/KeyCommands.vala:721 src/NodeMenu.vala:97
 msgid "Callout"
 msgstr "სქოლიო"
 
-#: src/CanvasText.vala:305 src/FormattedText.vala:1184
+#: src/CanvasText.vala:305 src/FormattedText.vala:1190
 msgid "No text found"
 msgstr "ტექსტი აღმოჩენილი არაა"
 
-#: src/ConnectionInspector.vala:77 src/KeyCommands.vala:680
+#: src/ConnectionInspector.vala:83 src/KeyCommands.vala:724
 #: src/NodeMenu.vala:96
 msgid "Connection"
 msgstr "კავშირი"
 
-#: src/ConnectionInspector.vala:90 src/NodeInspector.vala:199
+#: src/ConnectionInspector.vala:96 src/NodeInspector.vala:205
 msgid "Color"
 msgstr "ფერი"
 
-#: src/ConnectionInspector.vala:104
+#: src/ConnectionInspector.vala:110
 msgid "Use Theme Default Color"
 msgstr "თემის ნაგულისხმევი ფერის გამოყენება"
 
-#: src/ConnectionInspector.vala:130 src/GroupInspector.vala:86
-#: src/NodeInspector.vala:284
+#: src/ConnectionInspector.vala:136 src/GroupInspector.vala:92
+#: src/NodeInspector.vala:290
 msgid "Note"
 msgstr "შენიშვნა"
 
-#: src/ConnectionInspector.vala:186
+#: src/ConnectionInspector.vala:192
 msgid "Delete Connection"
 msgstr "შეერთების წაშლა"
 
@@ -265,13 +265,13 @@ msgstr ""
 "\n"
 "შენიშვნა: განახლებულ ფაილებს Minder-ის ძველ ვერ გახსნით/ჩაასწორებთ."
 
-#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1330
+#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1373
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
-#: src/ThemeEditor.vala:153 src/UrlEditor.vala:62
+#: src/ThemeEditor.vala:154 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "გაუქმება"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2180
+#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2238
 #: src/UrlEditor.vala:52
 msgid "Apply"
 msgstr "გადატარება"
@@ -280,7 +280,7 @@ msgstr "გადატარება"
 msgid "Don't show this dialog again"
 msgstr "ეს დიალოგი აღარ მაჩვენო"
 
-#: src/Document.vala:714 src/MainWindow.vala:2217
+#: src/Document.vala:714 src/MainWindow.vala:2275
 msgid "<small>This can be changed in preferences</small>"
 msgstr "<small>ამის შეცვლა მორგების დიალოგში შეგიძლიათ</small>"
 
@@ -288,16 +288,16 @@ msgstr "<small>ამის შეცვლა მორგების დი�
 msgid "Upgrade Needed"
 msgstr "საჭიროა განახლება"
 
-#: src/DrawArea.vala:1533
+#: src/DrawArea.vala:1528
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% მზადაა"
 
-#: src/DrawArea.vala:1551
+#: src/DrawArea.vala:1546
 msgid "Drag to resize node"
 msgstr "გადაათრიეთ კვანძის ზომის შესაცვლელად"
 
-#: src/DrawArea.vala:1553
+#: src/DrawArea.vala:1548
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -305,25 +305,25 @@ msgstr ""
 "გადაათრიეთ კვანძისა და გამოსახულების ზომის შესაცვლელად.\n"
 "Ctrl+გადათრევა, მხოლოდ, კვანძის ზომის შესაცვლელად."
 
-#: src/DrawArea.vala:1695
+#: src/DrawArea.vala:1690
 #, c-format
 msgid "Children: %u\n"
 msgstr "ბავშვები: %u\n"
 
-#: src/DrawArea.vala:1696
+#: src/DrawArea.vala:1691
 #, c-format
 msgid "Total: %d"
 msgstr "სულ: %d"
 
-#: src/DrawArea.vala:1750
+#: src/DrawArea.vala:1745
 msgid "connection endpoint change"
 msgstr "კავშირის ბოლოწერტილის შეცვლა"
 
-#: src/DrawArea.vala:1757
+#: src/DrawArea.vala:1752
 msgid "connection drag"
 msgstr "კავშირის გადათრევა"
 
-#: src/DrawArea.vala:2282 src/MapModel.vala:1840 src/MapModel.vala:1855
+#: src/DrawArea.vala:2277 src/MapModel.vala:1835 src/MapModel.vala:1850
 msgid "Another Idea"
 msgstr "კიდევ ერთი იდეა"
 
@@ -369,7 +369,7 @@ msgstr "გატანის მორგება"
 msgid "Export As %s"
 msgstr "გატანა როგორც %s"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1069 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1070 src/StickerSet.vala:352
 msgid "Export"
 msgstr "გატანა"
 
@@ -410,7 +410,8 @@ msgstr "გადიდების %"
 msgid "Quality"
 msgstr "ხარისხი"
 
-#: src/exports/ExportMarkdown.vala:34
+#: src/exports/ExportMarkdown.vala:34 src/NoteView.vala:330
+#: src/TextMenu.vala:52
 msgid "Markdown"
 msgstr "Markdown"
 
@@ -533,7 +534,7 @@ msgstr "JPEG"
 msgid "Export to clipboard"
 msgstr "გატანა ბუფერში"
 
-#: src/GroupInspector.vala:73 src/KeyCommands.vala:686
+#: src/GroupInspector.vala:79 src/KeyCommands.vala:730
 msgid "Group"
 msgstr "ჯგუფები"
 
@@ -571,7 +572,7 @@ msgstr "გამოსახულების შეცვლა"
 msgid "Paste Image from Clipboard"
 msgstr "გამოსახულების ჩასმა ბუფერიდან"
 
-#: src/ImageEditor.vala:418 src/NodeInspector.vala:386 src/NodeMenu.vala:234
+#: src/ImageEditor.vala:418 src/NodeInspector.vala:392 src/NodeMenu.vala:234
 msgid "Remove Image"
 msgstr "სურათის წაშლა"
 
@@ -591,638 +592,699 @@ msgstr "აირჩიეთ გამოსახულება"
 msgid "Images"
 msgstr "გამოსახულებები"
 
-#: src/KeyCommands.vala:571 src/Shortcuts.vala:797
+#: src/KeyCommands.vala:615 src/Shortcuts.vala:802
 msgid "General"
 msgstr "ზოგადი"
 
-#: src/KeyCommands.vala:572
+#: src/KeyCommands.vala:616
 msgid "File Commands"
 msgstr "ფაილის ბრძანებები"
 
-#: src/KeyCommands.vala:573
+#: src/KeyCommands.vala:617
 msgid "Create new mindmap"
 msgstr "ახალი გონების რუკის შექმნა"
 
-#: src/KeyCommands.vala:574
+#: src/KeyCommands.vala:618
 msgid "Open saved mindmap"
 msgstr "შენახული გონების რუკის გახსნა"
 
-#: src/KeyCommands.vala:575
+#: src/KeyCommands.vala:619
 msgid "Create mindmap from directory structure"
 msgstr "მენტალური რუკის შექმნა საქაღალდის სტრუქტურიდან"
 
-#: src/KeyCommands.vala:576
+#: src/KeyCommands.vala:620
 msgid "Save mindmap to current file"
 msgstr "მენტალური რუკის შენახვა მიმდინარე ფაილში"
 
-#: src/KeyCommands.vala:577
+#: src/KeyCommands.vala:621
 msgid "Save mindmap to new file"
 msgstr "მენტალური რუკის შენახვა ახალ ფაილში"
 
-#: src/KeyCommands.vala:578
+#: src/KeyCommands.vala:622
 msgid "Show print dialog for current mindmap"
 msgstr "ბეჭდვის დიალოგის ჩვენება მიმდინარე მენტალური რუკისთვის"
 
-#: src/KeyCommands.vala:579
+#: src/KeyCommands.vala:623
 msgid "Tab Commands"
 msgstr "ჩანართის ბრძანებები"
 
-#: src/KeyCommands.vala:580
+#: src/KeyCommands.vala:624
 msgid "Select next tab"
 msgstr "შემდეგი ჩანართის არჩევა"
 
-#: src/KeyCommands.vala:581
+#: src/KeyCommands.vala:625
 msgid "Select previous tab"
 msgstr "წინა ჩანართის არჩევა"
 
-#: src/KeyCommands.vala:582
+#: src/KeyCommands.vala:626
 msgid "Close the current mindmap"
 msgstr "მიმდინარე მენტალური რუკის დახურვა"
 
-#: src/KeyCommands.vala:583
+#: src/KeyCommands.vala:627
 msgid "Undo/Redo Commands"
 msgstr "ბრძანებების გაუქმება/გამეორება"
 
-#: src/KeyCommands.vala:584
+#: src/KeyCommands.vala:628
 msgid "Undo last action"
 msgstr "ბოლო ბრძანების გაუქმება"
 
-#: src/KeyCommands.vala:585
+#: src/KeyCommands.vala:629
 msgid "Redo last undone action"
 msgstr "ბოლო დაბრუნებული ქმედების გამეორება"
 
-#: src/KeyCommands.vala:586
+#: src/KeyCommands.vala:630
 msgid "Zoom Commands"
 msgstr "გადიდების ბრძანებები"
 
-#: src/KeyCommands.vala:587
+#: src/KeyCommands.vala:631
 msgid "Zoom in"
 msgstr "გადიდება"
 
-#: src/KeyCommands.vala:588
+#: src/KeyCommands.vala:632
 msgid "Zoom out"
 msgstr "დაპატარავება"
 
-#: src/KeyCommands.vala:589
+#: src/KeyCommands.vala:633
 msgid "Zoom to fit entire mindmap in viewer"
 msgstr "გადიდება მთელი მენტალური რუკის ფანჯარაში ჩასატევად"
 
-#: src/KeyCommands.vala:590
+#: src/KeyCommands.vala:634
 msgid "Zoom selected node subtree in viewer"
 msgstr "მონიშნული კვანძის ქვეხის გადიდება დათვალიერების ფანჯარაში"
 
-#: src/KeyCommands.vala:591
+#: src/KeyCommands.vala:635
 msgid "Zoom to 100%"
 msgstr "100%-მდე გადიდება"
 
-#: src/KeyCommands.vala:592
+#: src/KeyCommands.vala:636
 msgid "Sidebar Commands"
 msgstr "გვერდითი პანელის ბრძანებები"
 
-#: src/KeyCommands.vala:593
+#: src/KeyCommands.vala:637
 msgid "Show current tab in sidebar"
 msgstr "მიმდინარე ჩანართის ჩვენება გვერდით პანელში"
 
-#: src/KeyCommands.vala:594
+#: src/KeyCommands.vala:638
 msgid "Show style tab in sidebar"
 msgstr "სტილის ჩანართის ჩვენება გვერდით პანელში"
 
-#: src/KeyCommands.vala:595
+#: src/KeyCommands.vala:639
 msgid "Show tag tab in sidebar"
 msgstr "ჭდის ჩანართის ჩვენება გვერდით პანელში"
 
-#: src/KeyCommands.vala:596
+#: src/KeyCommands.vala:640
 msgid "Show sticker tab in sidebar"
 msgstr "სტიკერის ჩანართის ჩვენება გვერდით პანელში"
 
-#: src/KeyCommands.vala:597
+#: src/KeyCommands.vala:641
 msgid "Show map tab in sidebar"
 msgstr "რუკის ჩანართის ჩვენება გვერდით პანელში"
 
-#: src/KeyCommands.vala:598
+#: src/KeyCommands.vala:642
 msgid "Show currently select node/connection/group information in sidebar"
 msgstr ""
 "ამჟამად მონიშნული კვანძის/კავშირის/ჯგუფის ინფორმაციის ჩვენება გვერდით პანელზე"
 
-#: src/KeyCommands.vala:599
+#: src/KeyCommands.vala:643
 msgid "Map Commands"
 msgstr "რუკის ბრძანებები"
 
-#: src/KeyCommands.vala:600
+#: src/KeyCommands.vala:644
 msgid "Show/Hide Connections"
 msgstr "კავშირების ჩვენება/დამალვა"
 
-#: src/KeyCommands.vala:601
+#: src/KeyCommands.vala:645
 msgid "Show/Hide Callouts"
 msgstr "სქოლიოების ჩვენება/დამალვა"
 
-#: src/KeyCommands.vala:602
+#: src/KeyCommands.vala:646
 msgid "Balance nodes in vertical/horizontal layouts"
 msgstr "კვანძების დაბალანსება ვერტიკალურ/ჰორიზონტალურ განლაგებებში"
 
-#: src/KeyCommands.vala:603
+#: src/KeyCommands.vala:647
 msgid "Fold all completed tasks"
 msgstr "ყველა დასრულებული ამოცანის დაკეცვა"
 
-#: src/KeyCommands.vala:604
+#: src/KeyCommands.vala:648
 msgid "Unfold all folded nodes"
 msgstr "ყველა დაკეცილი კვანძის გაშლა"
 
-#: src/KeyCommands.vala:605
+#: src/KeyCommands.vala:649
 msgid "Miscellaneous Commands"
 msgstr "სხვადასხვა ბრძანებები"
 
-#: src/KeyCommands.vala:606
+#: src/KeyCommands.vala:650
 msgid "Show preferences window"
 msgstr "პარამეტრების ფანჯრის ჩვენება"
 
-#: src/KeyCommands.vala:607
+#: src/KeyCommands.vala:651
 msgid "Show shortcuts cheatsheet"
 msgstr "კლავიატურის მალსახმობების სარჩევის ჩვენება"
 
-#: src/KeyCommands.vala:608
+#: src/KeyCommands.vala:652
 msgid "Show contextual menu"
 msgstr "კონტექსტური მენიუს ჩვენება"
 
-#: src/KeyCommands.vala:609
+#: src/KeyCommands.vala:653
 msgid "Show find popup"
 msgstr "ძებნის მხტუნარას ჩენება"
 
-#: src/KeyCommands.vala:610
+#: src/KeyCommands.vala:654
 msgid "Show About window"
 msgstr "'შესახებ' ფანჯრის ჩვენება"
 
-#: src/KeyCommands.vala:611
+#: src/KeyCommands.vala:655
 msgid "Toggle braindump input mode"
 msgstr "იდეების შეყვანის რეჟიმის გადართვა"
 
-#: src/KeyCommands.vala:612
+#: src/KeyCommands.vala:656
 msgid "Toggle focus mode"
 msgstr "ფოკუსის რეჟიმის გადართვა"
 
-#: src/KeyCommands.vala:613
+#: src/KeyCommands.vala:657
 msgid "Edit note of current item"
 msgstr "მიმდინარე ელემენტის შენიშვნის ჩასწორება"
 
-#: src/KeyCommands.vala:614
+#: src/KeyCommands.vala:658
 msgid "Edit currently selected item"
 msgstr "ამჟამად მონიშნული ელემენტის ჩასწორება"
 
-#: src/KeyCommands.vala:615
+#: src/KeyCommands.vala:659
 msgid "Show currently selected item"
 msgstr "ამჟამად მონიშნული ელემენტის ჩვენება"
 
-#: src/KeyCommands.vala:616
+#: src/KeyCommands.vala:660
 msgid "Remove sticker from current node or connection"
 msgstr "სტიკერის წაშლა მიმდინარე კვანძიდან, ან კავშირიდან"
 
-#: src/KeyCommands.vala:617
+#: src/KeyCommands.vala:661
 msgid "Quit the application"
 msgstr "აპლიკაციიდან გასვლა"
 
-#: src/KeyCommands.vala:618 src/NodeInspector.vala:100
+#: src/KeyCommands.vala:662 src/NodeInspector.vala:106
 msgid "Node"
 msgstr "კვანძი"
 
-#: src/KeyCommands.vala:619
+#: src/KeyCommands.vala:663
 msgid "Creation/Deletion Commands"
 msgstr "შექმნის/წაშლის ბრძანებები"
 
-#: src/KeyCommands.vala:620
+#: src/KeyCommands.vala:664
 msgid "Add root node"
 msgstr "ძირითადი კვანძის დამატება"
 
-#: src/KeyCommands.vala:621
+#: src/KeyCommands.vala:665
 msgid "Add sibling node after current node"
 msgstr "ნათესავი კვანძის დამატება მიმდინარე კვანძის შემდეგ"
 
-#: src/KeyCommands.vala:622
+#: src/KeyCommands.vala:666
 msgid "Add sibling node before current node"
 msgstr "ნათესავი კვანძის დამატება მიმდინარე კვანძამდე"
 
-#: src/KeyCommands.vala:623
+#: src/KeyCommands.vala:667
 msgid "Add child node to current node"
 msgstr "შვილი კვანძის დამატება მიმდინარე კვანძისთვის"
 
-#: src/KeyCommands.vala:624
+#: src/KeyCommands.vala:668
 msgid "Add parent node to current node"
 msgstr "მშობელი კვანძის დამატება მიმდინარე კვანზისთვის"
 
-#: src/KeyCommands.vala:625
+#: src/KeyCommands.vala:669
 msgid "Use quick entry to insert nodes"
 msgstr "სწრაფი შეყვანის გამოყენება კვანძების ჩასასმელად"
 
-#: src/KeyCommands.vala:626
+#: src/KeyCommands.vala:670
 msgid "Use quick entry to replace current node"
 msgstr "სწრაფი შეყვანის გამოყენება მიმდინარე კვანძის ჩასანაცვლებლად"
 
-#: src/KeyCommands.vala:627
+#: src/KeyCommands.vala:671
 msgid "Remove selected node only (leave subtree)"
 msgstr "მხოლოდ, მონიშნული კვანძის წაშლა (ქვეხის დატოვება)"
 
-#: src/KeyCommands.vala:628 src/KeyCommands.vala:700
+#: src/KeyCommands.vala:672 src/KeyCommands.vala:759
 msgid "Clipboard Commands"
 msgstr "ბუფერის ბრძანებები"
 
-#: src/KeyCommands.vala:629
+#: src/KeyCommands.vala:673
 msgid "Paste node link from clipboard into current node"
 msgstr "კვანძის კავშირის ჩასმა ბუფერიდან მიმდინარე კვანძში"
 
-#: src/KeyCommands.vala:630
+#: src/KeyCommands.vala:674
 msgid "Replace current node with clipboard content"
 msgstr "მიმდინარე კვანძის ჩანაცვლება ბუფერის შემცველობით"
 
-#: src/KeyCommands.vala:631
+#: src/KeyCommands.vala:675
 msgid "View Commands"
 msgstr "ბრძანებების ნახვა"
 
-#: src/KeyCommands.vala:632
+#: src/KeyCommands.vala:676
 msgid "Center current node in map canvas"
 msgstr "მიმდინარე კვანძის დაცენტრება რუკის ტილოზე"
 
-#: src/KeyCommands.vala:633 src/KeyCommands.vala:687
+#: src/KeyCommands.vala:677 src/KeyCommands.vala:731
 msgid "Change Commands"
 msgstr "ბრძანებების შეცვლა"
 
-#: src/KeyCommands.vala:634
+#: src/KeyCommands.vala:678
 msgid "Change task status of current node"
 msgstr "მიმდინარე კვანძის ამოცანის სტატუსის გადართვა"
 
-#: src/KeyCommands.vala:635
+#: src/KeyCommands.vala:679
 msgid "Add/Edit image of current node"
 msgstr "მიმდინარე კვანძის გამოსახულების დამატება/ჩასწორება"
 
-#: src/KeyCommands.vala:636
+#: src/KeyCommands.vala:680
 msgid "Remove image from current node"
 msgstr "გამოსახულების წაშლა მიმდინარე კვანძიდან"
 
-#: src/KeyCommands.vala:637
+#: src/KeyCommands.vala:681
 msgid "Change link color of current node"
 msgstr "მიმდინარე კვანძის კავშირის ფერის შეცვლა"
 
-#: src/KeyCommands.vala:638
+#: src/KeyCommands.vala:682
 msgid "Randomize the current node link color"
 msgstr "მიმდინარე კვანძის კავშირის ფერის შემთხვევითობა"
 
-#: src/KeyCommands.vala:639
+#: src/KeyCommands.vala:683
 msgid "Set current node link color to match parent node"
 msgstr "მიმდინარე კვანძის კავშირის ფერის მშობელი კვანძის ფერზე დაყენება"
 
-#: src/KeyCommands.vala:640
+#: src/KeyCommands.vala:684
 msgid "Toggle folding of current node"
 msgstr "მიმდინარე კვანძის დაკეცვის გადართვა"
 
-#: src/KeyCommands.vala:641
+#: src/KeyCommands.vala:685
 msgid "Toggle folding of current node subtree"
 msgstr "მიმდინარე კვანძის ქვეხის დაკეცვის გადართვა"
 
-#: src/KeyCommands.vala:642
+#: src/KeyCommands.vala:686
 msgid "Toggle the node link state"
 msgstr "კვანძის ბმულის მდგომარეობის გადართვა"
 
-#: src/KeyCommands.vala:643
+#: src/KeyCommands.vala:687
 msgid "Add group for current node and its subtree"
 msgstr "ჯგუფის დამატება მიმდინარე კვანძისთვის და მისი ქვეხისთვის"
 
-#: src/KeyCommands.vala:644
+#: src/KeyCommands.vala:688
 msgid "Start creation of connection from current node"
 msgstr "მიმდინარე კვანძიდან კავშირის შექმნის დაწყება"
 
-#: src/KeyCommands.vala:645
+#: src/KeyCommands.vala:689
 msgid "Add/Remove callout for current node"
 msgstr "სქოლიოს დამატება/წაშლა მიმდინარე კვანძისთვის"
 
-#: src/KeyCommands.vala:646
+#: src/KeyCommands.vala:690
 msgid "Toggle sequence state of children of current node"
 msgstr "მიმდინარე კვანძის შვილების მიმდევრობის მდგომარეობის გადართვა"
 
-#: src/KeyCommands.vala:647 src/KeyCommands.vala:678 src/KeyCommands.vala:681
-#: src/KeyCommands.vala:690 src/KeyCommands.vala:720
+#: src/KeyCommands.vala:691 src/KeyCommands.vala:722 src/KeyCommands.vala:725
+#: src/KeyCommands.vala:734 src/KeyCommands.vala:779
 msgid "Selection Commands"
 msgstr "მონიშვნის ბრძანებები"
 
-#: src/KeyCommands.vala:648
+#: src/KeyCommands.vala:692
 msgid "Select root node of current node"
 msgstr "მიმდინარე კვანძის ძირითადი კვანძის მონიშვნა"
 
-#: src/KeyCommands.vala:649
+#: src/KeyCommands.vala:693
 msgid "Select parent node of current node"
 msgstr "მიმდინარე კვანძის მშობელი კვანძის მონიშვნა"
 
-#: src/KeyCommands.vala:650
+#: src/KeyCommands.vala:694
 msgid "Select all child nodes of current node"
 msgstr "მიმდინარე კვანძის ყველა შვილი კვანძის მონიშვნა"
 
-#: src/KeyCommands.vala:651
+#: src/KeyCommands.vala:695
 msgid "Select single child node of current node"
 msgstr "მიმდინარე კვანძის ერთი შვილი კვანძის მონიშვნა"
 
-#: src/KeyCommands.vala:652
+#: src/KeyCommands.vala:696
 msgid "Select all nodes in subtree of current node"
 msgstr "მიმდინარე კვანძის ქვეხეში ყველა შვილი კვანძის მონიშვნა"
 
-#: src/KeyCommands.vala:653
+#: src/KeyCommands.vala:697
 msgid "Select next sibling node of current node"
 msgstr "მიმდინარე კვანძის შემდეგი ნათესავი კვანძის მონიშვნა"
 
-#: src/KeyCommands.vala:654
+#: src/KeyCommands.vala:698
 msgid "Select previous sibling node of current node"
 msgstr "მიმდინარე კვანძის წინა ნათესავი კვანძის მონიშვნა"
 
-#: src/KeyCommands.vala:655
+#: src/KeyCommands.vala:699
 msgid "Select node to the left of current node"
 msgstr "მიმდინარე კვანძის მარცხენა მხარეს არსებული კვანძის მონიშვნა"
 
-#: src/KeyCommands.vala:656
+#: src/KeyCommands.vala:700
 msgid "Select node to the right of current node"
 msgstr "მიმდინარე კვანძის მარჯვენა მხარეს არსებული კვანძის მონიშვნა"
 
-#: src/KeyCommands.vala:657
+#: src/KeyCommands.vala:701
 msgid "Select node above current node"
 msgstr "მიმდინარე კვანძის ზემოთ არსებული კვანძის მონიშვნა"
 
-#: src/KeyCommands.vala:658
+#: src/KeyCommands.vala:702
 msgid "Select node below current node"
 msgstr "მიმდინარე კვანძის ქვემოთ არსებული კვანძის მონიშვნა"
 
-#: src/KeyCommands.vala:659
+#: src/KeyCommands.vala:703
 msgid "Select linked node of current node"
 msgstr "მიმდინარე კვანძთან დაკავშირებული კვანძის მონიშვნა"
 
-#: src/KeyCommands.vala:660
+#: src/KeyCommands.vala:704
 msgid "Select connection of current node"
 msgstr "მიმდინარე კვანძის კავშირის მონიშვნა"
 
-#: src/KeyCommands.vala:661
+#: src/KeyCommands.vala:705
 msgid "Select callout of current node"
 msgstr "აირჩიეთ მიმდინარე კვანძის სქოლიო"
 
-#: src/KeyCommands.vala:662
+#: src/KeyCommands.vala:706
 msgid "Move Commands"
 msgstr "გადატანის ბრძანებები"
 
-#: src/KeyCommands.vala:663
+#: src/KeyCommands.vala:707
 msgid "Swap current node with right node"
 msgstr "მიმდინარე კვანძის მიმოცვლა მარჯვენა კვანძთან"
 
-#: src/KeyCommands.vala:664
+#: src/KeyCommands.vala:708
 msgid "Swap current node with left node"
 msgstr "მიმდინარე კვანძის მიმოცვლა მარცხენა კვანძთან"
 
-#: src/KeyCommands.vala:665
+#: src/KeyCommands.vala:709
 msgid "Swap current node with above node"
 msgstr "მიმდინარე კვანძის მიმოცვლა ზედა კვანძთან"
 
-#: src/KeyCommands.vala:666
+#: src/KeyCommands.vala:710
 msgid "Swap current node with below node"
 msgstr "მიმდინარე კვანძის მიმოცვლა ქვედა კვანძთან"
 
-#: src/KeyCommands.vala:667
+#: src/KeyCommands.vala:711
 msgid "Sort child nodes of current node alphabetically"
 msgstr "მიმდინარე კვანძის შვილი კვანძების დალაგება ანბანის მიხედვით"
 
-#: src/KeyCommands.vala:668
+#: src/KeyCommands.vala:712
 msgid "Sort child nodes of current node randomly"
 msgstr "მიმდინარე კვანძის შვილი კვანძების დალაგება შემთხვევით"
 
-#: src/KeyCommands.vala:669
+#: src/KeyCommands.vala:713
 msgid "Detaches current node and its subtree"
 msgstr "მოხსნის მიმდინარე კვანძსა და მის ქვეხეს"
 
-#: src/KeyCommands.vala:670
+#: src/KeyCommands.vala:714
 msgid "Alignment Commands"
 msgstr "სწორების ბრძანებები"
 
-#: src/KeyCommands.vala:671
+#: src/KeyCommands.vala:715
 msgid "Align selected node top edges"
 msgstr "მონიშნული კვანძის სწორება ზედა წიბოებთან"
 
-#: src/KeyCommands.vala:672
+#: src/KeyCommands.vala:716
 msgid "Align selected node vertical centers"
 msgstr "მონიშნული კვანძის სწორება ვერტიკალურ ცენტრებთან"
 
-#: src/KeyCommands.vala:673
+#: src/KeyCommands.vala:717
 msgid "Align selected node bottom edges"
 msgstr "მონიშნული კვანძის სწორება ქვედა წიბოებთან"
 
-#: src/KeyCommands.vala:674
+#: src/KeyCommands.vala:718
 msgid "Align selected node left edges"
 msgstr "მონიშნული კვანძის სწორება მარცხენა წიბოებთან"
 
-#: src/KeyCommands.vala:675
+#: src/KeyCommands.vala:719
 msgid "Align selected node horizontal centers"
 msgstr "მონიშნული კვანძის სწორება ჰორიზონტალურ ცენტრებთან"
 
-#: src/KeyCommands.vala:676
+#: src/KeyCommands.vala:720
 msgid "Align selected node right edges"
 msgstr "მონიშნული კვანძის სწორება მარჯვენა წიბოებთან"
 
-#: src/KeyCommands.vala:679
+#: src/KeyCommands.vala:723
 msgid "Select callout node"
 msgstr "აირჩიეთ სქოლიოს კვანძი"
 
-#: src/KeyCommands.vala:682
+#: src/KeyCommands.vala:726
 msgid "Select connection source node"
 msgstr "აირჩიეთ კავშირის წყარო კვანძი"
 
-#: src/KeyCommands.vala:683
+#: src/KeyCommands.vala:727
 msgid "Select connection target node"
 msgstr "აირჩიეთ კავშირის სამიზნე კვანძი"
 
-#: src/KeyCommands.vala:684
+#: src/KeyCommands.vala:728
 msgid "Select next connection in map"
 msgstr "აირჩიეთ შემდეგი კავშირი რუკაზე"
 
-#: src/KeyCommands.vala:685
+#: src/KeyCommands.vala:729
 msgid "Select previous connection in map"
 msgstr "აირჩიეთ წინა კავშირი რუკაზე"
 
-#: src/KeyCommands.vala:688
+#: src/KeyCommands.vala:732
 msgid "Change the color of the current group"
 msgstr "მიმდინარე ჯგუფის ფერის შეცვლა"
 
-#: src/KeyCommands.vala:689
+#: src/KeyCommands.vala:733
 msgid "Merge current groups into single group"
 msgstr "მიმდინარე ჯგუფების გაერთიანება ერთ ჯგუფში"
 
-#: src/KeyCommands.vala:691
+#: src/KeyCommands.vala:735
 msgid "Select main node(s) of current group(s)"
 msgstr "მიმდინარე ჯგუფ(ებ)-ის მთავარი კვანძ(ებ)-ის მონიშვნა"
 
-#: src/KeyCommands.vala:692
+#: src/KeyCommands.vala:736
 msgid "Selects all nodes within current group(s)"
 msgstr "მონიშნავს ყველა კვანძს მიმდინარე ჯგუფ(ებ)-ში"
 
-#: src/KeyCommands.vala:693
+#: src/KeyCommands.vala:737
 msgid "Text Editing"
 msgstr "ტექსტის ჩასწორება"
 
-#: src/KeyCommands.vala:694
+#: src/KeyCommands.vala:738
 msgid "Insertion/Deletion Commands"
 msgstr "ჩასმის/წაშლის ბრძანებები"
 
-#: src/KeyCommands.vala:695
+#: src/KeyCommands.vala:739
 msgid "Insert newline character"
 msgstr "ახალი ხაზის სიმბოლოს ჩასმა"
 
-#: src/KeyCommands.vala:696
+#: src/KeyCommands.vala:740
 msgid "Insert TAB character"
 msgstr "ტაბულაციის სიმბოლოს ჩასმა"
 
-#: src/KeyCommands.vala:697
+#: src/KeyCommands.vala:741
 msgid "Insert emoji"
 msgstr "ემოჯის ჩასმა"
 
-#: src/KeyCommands.vala:698
+#: src/KeyCommands.vala:742
 msgid "Remove next word"
 msgstr "შემდეგი სიტყვის წაშლა"
 
-#: src/KeyCommands.vala:699
+#: src/KeyCommands.vala:743
 msgid "Remove previous word"
 msgstr "წინა სიტყვის წაშლა"
 
-#: src/KeyCommands.vala:701
+#: src/KeyCommands.vala:744
+#, fuzzy
+msgid "Markdown Syntax"
+msgstr "Markdown-ის სინტაქსის სიმბოლოები"
+
+#: src/KeyCommands.vala:745
+msgid "Insert Markdown header-1 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:746
+msgid "Insert Markdown header-2 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:747
+msgid "Insert Markdown header-3 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:748
+msgid "Insert Markdown header-4 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:749
+msgid "Insert Markdown header-5 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:750
+msgid "Insert Markdown header-6 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:751
+msgid "Insert Markdown bold syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:752
+msgid "Insert Markdown italics syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:753
+msgid "Insert Markdown strikethrough syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:754
+msgid "Insert Markdown code syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:755
+msgid "Insert Markdown highlighting syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:756
+msgid "Insert Markdown superscript syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:757
+msgid "Insert Markdown subscript syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:758
+msgid "Insert Markdown URL link syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:760
 msgid "Copy selected nodes or text"
 msgstr "მონიშნული კვანძების, ან ტექსტის კოპირება"
 
-#: src/KeyCommands.vala:702
+#: src/KeyCommands.vala:761
 msgid "Cut selected nodes or text"
 msgstr "მონიშნული კვანძების, ან ტექსტის ამოჭრა"
 
-#: src/KeyCommands.vala:703
+#: src/KeyCommands.vala:762
 msgid "Paste nodes or text from clipboard"
 msgstr "კვანძების, ან ტექსტის ჩასმა ბუფერიდან"
 
-#: src/KeyCommands.vala:704
+#: src/KeyCommands.vala:763
 msgid "URL Commands"
 msgstr "URL-ის ბრძანებები"
 
-#: src/KeyCommands.vala:705
+#: src/KeyCommands.vala:764
 msgid "Open URL link at current cursor position"
 msgstr "კურსორის მიმდინარე პოზიციაზე არსებული URL-ის გახსნა"
 
-#: src/KeyCommands.vala:706
+#: src/KeyCommands.vala:765
 msgid "Add URL link at current cursor position"
 msgstr "URL ბმულის დამატება კურსორის მიმდინარე პოზიციაზე"
 
-#: src/KeyCommands.vala:707
+#: src/KeyCommands.vala:766
 msgid "Change URL link at current cursor position"
 msgstr "კურსორის მიმდინარე პოზიციაზე არსებული URL-ის ბმულის შეცვლა"
 
-#: src/KeyCommands.vala:708
+#: src/KeyCommands.vala:767
 msgid "Remove URL link at current cursor position"
 msgstr "კურსორის მიმდინარე პოზიციაზე არსებული URL-ის ბმულის წაშლა"
 
-#: src/KeyCommands.vala:709
+#: src/KeyCommands.vala:768
 msgid "Cursor Commands"
 msgstr "კურსორის ბრძანებები"
 
-#: src/KeyCommands.vala:710
+#: src/KeyCommands.vala:769
 msgid "Move cursor to next character"
 msgstr "კურსორის გადატანა შემდეგ სიმბოლოზე"
 
-#: src/KeyCommands.vala:711
+#: src/KeyCommands.vala:770
 msgid "Move cursor to previous character"
 msgstr "კურსორის გადატანა წინო სიმბოლოზე"
 
-#: src/KeyCommands.vala:712
+#: src/KeyCommands.vala:771
 msgid "Move cursor up one line"
 msgstr "კურსორის ერთი ხაზით ატანა"
 
-#: src/KeyCommands.vala:713
+#: src/KeyCommands.vala:772
 msgid "Move cursor down one line"
 msgstr "კურსორის ერთი ხაზით ჩამოტანა"
 
-#: src/KeyCommands.vala:714
+#: src/KeyCommands.vala:773
 msgid "Move cursor to beginning of next word"
 msgstr "კურსორის გადატანა შემდეგი სიტყვის დასაწყისში"
 
-#: src/KeyCommands.vala:715
+#: src/KeyCommands.vala:774
 msgid "Move cursor to beginning of previous word"
 msgstr "კურსორის გადატანა წინა სიტყვის დასაწყისში"
 
-#: src/KeyCommands.vala:716
+#: src/KeyCommands.vala:775
 msgid "Move cursor to start of text"
 msgstr "კურსორის გადატანა ტექსტის დასაწყისში"
 
-#: src/KeyCommands.vala:717
+#: src/KeyCommands.vala:776
 msgid "Move cursor to end of text"
 msgstr "კურსორის გადატანა ტექსტის ბოლოში"
 
-#: src/KeyCommands.vala:718
+#: src/KeyCommands.vala:777
 msgid "Move cursor to start of current line"
 msgstr "კურსორის გადატანა მიმდინარე ხაზის დასაწყისში"
 
-#: src/KeyCommands.vala:719
+#: src/KeyCommands.vala:778
 msgid "Move cursor to end of current line"
 msgstr "კურსორის გადატანა მიმდინარე ხაზის ბოლოში"
 
-#: src/KeyCommands.vala:721
+#: src/KeyCommands.vala:780
 msgid "Add next character to current selection"
 msgstr "შემდეგი სიმბოლოს დამატება მიმდინარე მონიშნულისთვის"
 
-#: src/KeyCommands.vala:722
+#: src/KeyCommands.vala:781
 msgid "Add previous character to current selection"
 msgstr "წინა სიმბოლოს დამატება მიმდინარე მონიშნულისთვის"
 
-#: src/KeyCommands.vala:723
+#: src/KeyCommands.vala:782
 msgid "Add line up to current selection"
 msgstr "ხაზის დამატება მიმდინარე მონიშნულის ზემოდან"
 
-#: src/KeyCommands.vala:724
+#: src/KeyCommands.vala:783
 msgid "Add line down to current selection"
 msgstr "ხაზის დამატება მიმდინარე მონიშნულის ქვემოდან"
 
-#: src/KeyCommands.vala:725
+#: src/KeyCommands.vala:784
 msgid "Add next word to current selection"
 msgstr "შემდეგი სიტყვის დამატება მიმდინარე მონიშნულისთვის"
 
-#: src/KeyCommands.vala:726
+#: src/KeyCommands.vala:785
 msgid "Add previous word to current selection"
 msgstr "წინა სიტყვის დამატება მიმდინარე მონიშნულისთვის"
 
-#: src/KeyCommands.vala:727
+#: src/KeyCommands.vala:786
 msgid "Add start of text to current selection (Control-Up)"
 msgstr "ტექსტის დასაწყისის დამატება მიმდინარე მონიშნულისთვის (Ctrl+მაღლა)"
 
-#: src/KeyCommands.vala:728
+#: src/KeyCommands.vala:787
 msgid "Add start of text to current selection (Control-Home)"
 msgstr "ტექსტის დასაწყისის დამატება მიმდინარე მონიშნულისთვის (Ctrl+Home)"
 
-#: src/KeyCommands.vala:729
+#: src/KeyCommands.vala:788
 msgid "Add end of text to current selection (Control-Down)"
 msgstr "ტექსტის დასაწყისის დამატება მიმდინარე მონიშნულისთვის (Ctrl+ქვემოთ)"
 
-#: src/KeyCommands.vala:730
+#: src/KeyCommands.vala:789
 msgid "Add end of text to current selection (Control-End)"
 msgstr "ტექსტის დასაწყისის დამატება მიმდინარე მონიშნულისთვის (Ctrl+End)"
 
-#: src/KeyCommands.vala:731
+#: src/KeyCommands.vala:790
 msgid "Add start of current line to current selection"
 msgstr "მიმდინარე ხაზის დასაწყისის დამატება მიმდინარე მონიშნულისთვის"
 
-#: src/KeyCommands.vala:732
+#: src/KeyCommands.vala:791
 msgid "Add end of current line to current selection"
 msgstr "მიმდინარე ხაზის ოლოს დამატება მიმდინარე მონიშნულისთვის"
 
-#: src/KeyCommands.vala:733 src/Shortcuts.vala:822
+#: src/KeyCommands.vala:792 src/Shortcuts.vala:827
 msgid "Select all text"
 msgstr "მთელი ტექსტის არჩევა"
 
-#: src/KeyCommands.vala:734
+#: src/KeyCommands.vala:793
 msgid "Deselect all text"
 msgstr "ტექსტის მონიშვნის მოხსნა"
 
-#: src/KeyCommands.vala:1882
+#: src/KeyCommands.vala:1959
 msgid "Select a group color"
 msgstr "ჯგუფის ფერის არჩევა"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:271
-#: src/MapInspector.vala:524 src/MapModel.vala:2328
+#: src/MapInspector.vala:524 src/MapModel.vala:2323
 msgid "Manual"
 msgstr "ხელით"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1623
+#: src/MainWindow.vala:183 src/MainWindow.vala:1666
 msgid "Minder"
 msgstr "Minder"
 
@@ -1230,7 +1292,7 @@ msgstr "Minder"
 msgid "New File"
 msgstr "ახალი ფაილი"
 
-#: src/MainWindow.vala:247 src/MainWindow.vala:1420
+#: src/MainWindow.vala:247 src/MainWindow.vala:1463
 msgid "Open File"
 msgstr "ფაილის გახსნა"
 
@@ -1250,7 +1312,7 @@ msgstr "აღდგენა"
 msgid "Tag Highlight Mode"
 msgstr "ჭდის გამოკვეთის რეჟიმი"
 
-#: src/MainWindow.vala:727 src/MainWindow.vala:1139
+#: src/MainWindow.vala:727 src/MainWindow.vala:1140
 msgid "Focus Mode"
 msgstr "ფოკუსის რეჟიმი"
 
@@ -1286,7 +1348,7 @@ msgstr "გადიდება"
 msgid "Zoom Out"
 msgstr "დაპატარავება"
 
-#: src/MainWindow.vala:802 src/MainWindow.vala:1689
+#: src/MainWindow.vala:802 src/MainWindow.vala:1732
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "გადიდება (%d%%)"
@@ -1307,145 +1369,203 @@ msgstr "ძებნა ყველა ჩანართში"
 msgid "Search"
 msgstr "ძებნა"
 
-#: src/MainWindow.vala:913
+#: src/MainWindow.vala:914
 msgid "Nodes"
 msgstr "კვანძები"
 
-#: src/MainWindow.vala:914
+#: src/MainWindow.vala:915
 msgid "Connections"
 msgstr "კავშირები"
 
-#: src/MainWindow.vala:915
+#: src/MainWindow.vala:916
 msgid "Callouts"
 msgstr "სქოლიოები"
 
-#: src/MainWindow.vala:916
+#: src/MainWindow.vala:917
 msgid "Groups"
 msgstr "ჯგუფები"
 
-#: src/MainWindow.vala:917
+#: src/MainWindow.vala:918
 msgid "Titles"
 msgstr "სათაურები"
 
-#: src/MainWindow.vala:918
+#: src/MainWindow.vala:919
 msgid "Notes"
 msgstr "შენიშვნები"
 
-#: src/MainWindow.vala:919
+#: src/MainWindow.vala:920
 msgid "Folded"
 msgstr "გაკეცილი"
 
-#: src/MainWindow.vala:920
+#: src/MainWindow.vala:921
 msgid "Unfolded"
 msgstr "გაშლილი"
 
-#: src/MainWindow.vala:921
+#: src/MainWindow.vala:922
 msgid "Tasks"
 msgstr "ამოცანები"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:923
 msgid "Non-tasks"
 msgstr "არაამოცანები"
 
-#: src/MainWindow.vala:1044
+#: src/MainWindow.vala:1045
 msgid "Print…"
 msgstr "ბეჭდვა…"
 
-#: src/MainWindow.vala:1083
+#: src/MainWindow.vala:1084
 msgid "Brain Dump"
 msgstr "ტვინის დამპი"
 
-#: src/MainWindow.vala:1159 src/Preferences.vala:50
+#: src/MainWindow.vala:1160 src/Preferences.vala:50
 msgid "Preferences"
 msgstr "მორგება"
 
-#: src/MainWindow.vala:1160
+#: src/MainWindow.vala:1161
 msgid "Shortcuts Cheatsheet"
 msgstr "კლავიატურის მალსახმობების სარჩევი"
 
-#: src/MainWindow.vala:1163
+#: src/MainWindow.vala:1164
 msgid "About Minder"
 msgstr "Minder-ის შესახებ"
 
-#: src/MainWindow.vala:1190 src/MainWindow.vala:1773
+#: src/MainWindow.vala:1187 src/MarkdownMenu.vala:32
+#, fuzzy
+msgid "# Header1"
+msgstr "ყურსასმენი"
+
+#: src/MainWindow.vala:1188 src/MarkdownMenu.vala:33
+msgid "## Header2"
+msgstr ""
+
+#: src/MainWindow.vala:1189 src/MarkdownMenu.vala:34
+msgid "### Header3"
+msgstr ""
+
+#: src/MainWindow.vala:1190 src/MarkdownMenu.vala:35
+msgid "#### Header4"
+msgstr ""
+
+#: src/MainWindow.vala:1191 src/MarkdownMenu.vala:36
+msgid "##### Header5"
+msgstr ""
+
+#: src/MainWindow.vala:1192 src/MarkdownMenu.vala:37
+msgid "###### Header6"
+msgstr ""
+
+#: src/MainWindow.vala:1193 src/MarkdownMenu.vala:38
+msgid "**Bold**"
+msgstr ""
+
+#: src/MainWindow.vala:1194
+msgid "__Italicize_"
+msgstr ""
+
+#: src/MainWindow.vala:1195 src/MarkdownMenu.vala:40
+msgid "~~Strikeout~~"
+msgstr ""
+
+#: src/MainWindow.vala:1196
+msgid "`Code`"
+msgstr ""
+
+#: src/MainWindow.vala:1197 src/MarkdownMenu.vala:41
+#, fuzzy
+msgid "==Highlight=="
+msgstr "გამოკვე_თის რეჟიმი"
+
+#: src/MainWindow.vala:1198 src/MarkdownMenu.vala:42
+msgid "<sup>Superscript</sup>"
+msgstr ""
+
+#: src/MainWindow.vala:1199 src/MarkdownMenu.vala:43
+msgid "<sub>Subscript</sub>"
+msgstr ""
+
+#: src/MainWindow.vala:1200 src/MarkdownMenu.vala:44
+msgid "[Link text](URL)"
+msgstr ""
+
+#: src/MainWindow.vala:1218 src/MainWindow.vala:1831
 msgid "Show Property Sidebar"
 msgstr "თვისებების პანელის ჩვენება"
 
-#: src/MainWindow.vala:1201 src/MainWindow.vala:1244
+#: src/MainWindow.vala:1229 src/MainWindow.vala:1287
 msgid "Current"
 msgstr "მიმდინარე"
 
-#: src/MainWindow.vala:1202 src/MainWindow.vala:1245
+#: src/MainWindow.vala:1230 src/MainWindow.vala:1288
 #: src/StyleInspector.vala:362
 msgid "Style"
 msgstr "სტილი"
 
-#: src/MainWindow.vala:1203 src/MainWindow.vala:1246 src/Preferences.vala:68
+#: src/MainWindow.vala:1231 src/MainWindow.vala:1289 src/Preferences.vala:68
 msgid "Tags"
 msgstr "ჭდეები"
 
-#: src/MainWindow.vala:1204 src/MainWindow.vala:1247
+#: src/MainWindow.vala:1232 src/MainWindow.vala:1290
 msgid "Stickers"
 msgstr "სტიკერები"
 
-#: src/MainWindow.vala:1205 src/MainWindow.vala:1248
+#: src/MainWindow.vala:1233 src/MainWindow.vala:1291
 msgid "Map"
 msgstr "რუკა"
 
-#: src/MainWindow.vala:1321
+#: src/MainWindow.vala:1364
 msgid "Save current unnamed document?"
 msgstr "გნებავთ ამჟამად უსახელო დოკუმენტის შენახვა?"
 
-#: src/MainWindow.vala:1322
+#: src/MainWindow.vala:1365
 msgid "Changes will be permanently lost if not saved."
 msgstr "თუ არ შეინახავთ, ცვლილებები სამუდამოდ დაიკარგება."
 
-#: src/MainWindow.vala:1327
+#: src/MainWindow.vala:1370
 msgid "Discard Changes"
 msgstr "ცვლილებების გაუქმება"
 
-#: src/MainWindow.vala:1333 src/MainWindow.vala:1619 src/ThemeEditor.vala:158
+#: src/MainWindow.vala:1376 src/MainWindow.vala:1662 src/ThemeEditor.vala:159
 msgid "Save"
 msgstr "შენახვა"
 
-#: src/MainWindow.vala:1365
+#: src/MainWindow.vala:1408
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "ფაილი %s აპლიკაციის გარეთ შეიცვალა."
 
-#: src/MainWindow.vala:1366
+#: src/MainWindow.vala:1409
 msgid "What do you want to do?"
 msgstr "რა გნებავთ, გააკეთოთ?"
 
-#: src/MainWindow.vala:1371
+#: src/MainWindow.vala:1414
 msgid "Discard Changes and reload"
 msgstr "ცვლილებების გაუქმება და თავიდან ჩატვირთვა"
 
-#: src/MainWindow.vala:1374
+#: src/MainWindow.vala:1417
 msgid "Save local version and overwrite"
 msgstr "ლოკალური ვერსიის შენახვა და თავზე გადაწერა"
 
-#: src/MainWindow.vala:1420
+#: src/MainWindow.vala:1463
 msgid "Open Directory"
 msgstr "საქაღალდის გახსნა"
 
-#: src/MainWindow.vala:1420
+#: src/MainWindow.vala:1463
 msgid "Open"
 msgstr "გახსნა"
 
-#: src/MainWindow.vala:1619
+#: src/MainWindow.vala:1662
 msgid "Save File"
 msgstr "ფაილის შენახვა"
 
-#: src/MainWindow.vala:1719
+#: src/MainWindow.vala:1762
 msgid "Hide Property Sidebar"
 msgstr "თვისებების პანელის დამალვა"
 
-#: src/MainWindow.vala:2171
+#: src/MainWindow.vala:2229
 msgid "File upgrades needed"
 msgstr "საჭიროა ფაილის განახლებები"
 
-#: src/MainWindow.vala:2172
+#: src/MainWindow.vala:2230
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1457,15 +1577,15 @@ msgstr ""
 "\n"
 "აირჩიეთ აღდგენის ვარიანტი დაბლა."
 
-#: src/MainWindow.vala:2177
+#: src/MainWindow.vala:2235
 msgid "Quit Minder"
 msgstr "გასვლა Minder-იდან"
 
-#: src/MainWindow.vala:2197
+#: src/MainWindow.vala:2255
 msgid "Detail"
 msgstr "დეტალები"
 
-#: src/MainWindow.vala:2205
+#: src/MainWindow.vala:2263
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
@@ -1475,7 +1595,7 @@ msgstr ""
 "ფაილი ჰქონდა გახსნილი.  ეს ქმედება შეუქცევადია, რადგან Minder-ის ძველ "
 "ვერსიებს განახლებული ფორმატის წაკითხვა არ შეუძლიათ.</small>"
 
-#: src/MainWindow.vala:2206
+#: src/MainWindow.vala:2264
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
@@ -1485,7 +1605,7 @@ msgstr ""
 "ჩანართი ჰქონდა ღია, მაგრამ ძველი, ორიგინალი ფაილის ასლის შენახვით მისივე "
 "საქაღალდეში.</small>"
 
-#: src/MainWindow.vala:2207
+#: src/MainWindow.vala:2265
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1498,13 +1618,13 @@ msgstr ""
 "წაკითხვადი მენტალური რუკა, შეგიძლიათ თავსართის პანელიდან აირჩიოთ 'შენახვა "
 "მხოლოდ', რომელიც ფაილს ახალ ფორმატში შეინახავს.</small>"
 
-#: src/MainWindow.vala:2214
+#: src/MainWindow.vala:2272
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 "მონიშნული ვარიანტის გამოყენება მომავალშიც, როცა Minder-ის ძველი ფაილების "
 "გახსნა მოხდება"
 
-#: src/MainWindow.vala:2239
+#: src/MainWindow.vala:2297
 msgid "Upgrades Needed"
 msgstr "საჭიროა განახლებები"
 
@@ -1588,15 +1708,15 @@ msgstr "ყველა კვანძის გაშლა"
 msgid "Unfold All Nodes"
 msgstr "ყველა კვანძის გაშლა"
 
-#: src/MapInspector.vala:533
-msgid "Unsaved"
-msgstr "შეუნახავი"
+#: src/MarkdownMenu.vala:39
+msgid "_Italicize_"
+msgstr ""
 
 #: src/MindMap.vala:431
 msgid "Main Idea"
 msgstr "მთავარი იდეა"
 
-#: src/MindMap.vala:1072
+#: src/MindMap.vala:1073
 msgid "Select a link color"
 msgstr "აირჩიეთ ბმულის ფერი"
 
@@ -1604,58 +1724,58 @@ msgstr "აირჩიეთ ბმულის ფერი"
 msgid "Group Note"
 msgstr "ჯგუფის შენიშვნა"
 
-#: src/NodeInspector.vala:114
+#: src/NodeInspector.vala:120
 msgid "Task"
 msgstr "ამოცანა"
 
-#: src/NodeInspector.vala:140
+#: src/NodeInspector.vala:146
 msgid "Fold"
 msgstr "დაკეცვა"
 
-#: src/NodeInspector.vala:166
+#: src/NodeInspector.vala:172
 msgid "Sequence"
 msgstr "მიმდევრობა"
 
-#: src/NodeInspector.vala:175
+#: src/NodeInspector.vala:181
 msgid ""
 "When set, automatically numbers child nodes and displays them as a sequence."
 msgstr ""
 "როცა დაყენებულია, შვილი კვანძები ავტომატურად დაინომრება და მიმდევრობით "
 "იქნება ნაჩვენები."
 
-#: src/NodeInspector.vala:230
+#: src/NodeInspector.vala:236
 msgid "Override Color"
 msgstr "ფერის გადაფარვა"
 
-#: src/NodeInspector.vala:345 src/NodeInspector.vala:369
+#: src/NodeInspector.vala:351 src/NodeInspector.vala:375
 msgid "Image"
 msgstr "გამოსახულება"
 
-#: src/NodeInspector.vala:351
+#: src/NodeInspector.vala:357
 msgid "Add Image…"
 msgstr "გამოსახულების დამატება…"
 
-#: src/NodeInspector.vala:378 src/Shortcuts.vala:799
+#: src/NodeInspector.vala:384 src/Shortcuts.vala:804
 msgid "Edit Image"
 msgstr "გამოსახულების ჩასწორება"
 
-#: src/NodeInspector.vala:395
+#: src/NodeInspector.vala:401
 msgid "Resizable"
 msgstr "შეცვლადი ზომით"
 
-#: src/NodeInspector.vala:482
+#: src/NodeInspector.vala:488
 msgid "Copy Node To Clipboard"
 msgstr "კვანძის კოპირება ბუფერში"
 
-#: src/NodeInspector.vala:487
+#: src/NodeInspector.vala:493
 msgid "Cut Node To Clipboard"
 msgstr "კვანძის ამოჭრა ბუფერში"
 
-#: src/NodeInspector.vala:493
+#: src/NodeInspector.vala:499
 msgid "Detach Node"
 msgstr "კვანძის მოხსნა"
 
-#: src/NodeInspector.vala:503
+#: src/NodeInspector.vala:509
 msgid "Delete Node"
 msgstr "კვანძის წაშლა"
 
@@ -1731,7 +1851,7 @@ msgstr "ჯგუფის დამატება"
 msgid "Add Callout"
 msgstr "სქოლიოს დამატება"
 
-#: src/NodeMenu.vala:63 src/ThemeEditor.vala:137
+#: src/NodeMenu.vala:63 src/ThemeEditor.vala:138
 msgid "Link Color"
 msgstr "ბმულის ფერი"
 
@@ -1883,7 +2003,7 @@ msgstr "შემთხვევითი ფერები"
 msgid "Use Parent Color"
 msgstr "მშობელი ფერის გამოყენება"
 
-#: src/NodesMenu.vala:44 src/ThemeEditor.vala:128
+#: src/NodesMenu.vala:44 src/ThemeEditor.vala:129
 msgid "Link Colors"
 msgstr "ბმულის ფერები"
 
@@ -2273,155 +2393,155 @@ msgstr "ჩანაცვლება"
 msgid "Insert"
 msgstr "ჩასმა"
 
-#: src/Shortcuts.vala:774 src/Shortcuts.vala:780
+#: src/Shortcuts.vala:779 src/Shortcuts.vala:785
 msgid "No Shortcuts Set"
 msgstr "მალსახმობები დაყენებული არაა"
 
-#: src/Shortcuts.vala:795
+#: src/Shortcuts.vala:800
 msgid "Mouse Events"
 msgstr "თაგუნას მოვლენები"
 
-#: src/Shortcuts.vala:798
+#: src/Shortcuts.vala:803
 msgid "Show Contextual Menu"
 msgstr "კონტექსტური მენიუს ჩვენება"
 
-#: src/Shortcuts.vala:798
+#: src/Shortcuts.vala:803
 msgid "[Right-click when item is selected]"
 msgstr "[მარჯვენა წკაპი, როცა ელემენტი მონიშნულია]"
 
-#: src/Shortcuts.vala:799
+#: src/Shortcuts.vala:804
 msgid "[Double left-click image]"
 msgstr "[ორმაგი მარცხენა წკაპი გამოსახულებაზე]"
 
-#: src/Shortcuts.vala:801
+#: src/Shortcuts.vala:806
 msgid "Canvas Movement"
 msgstr "ტილოს გადაადგილება"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:807
 msgid "Pan Canvas"
 msgstr "ტილოს პანორამირება"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:807
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr "[შუა წკაპი + გადათრევა / Alt + მოძრაობა]"
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:808
 msgid "Scroll Vertically"
 msgstr "ვერტიკალური გადახვევა"
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:808
 msgid "[Scrollwheel up/down]"
 msgstr "[გადახვევის ბორბალი ზემოთ/ქვემოთ]"
 
-#: src/Shortcuts.vala:804
+#: src/Shortcuts.vala:809
 msgid "Scroll Horizontally"
 msgstr "ჰორიზონტალური გადახვევა"
 
-#: src/Shortcuts.vala:804
+#: src/Shortcuts.vala:809
 msgid "[Scrollwhile left/right]"
 msgstr "[გადახვევა მარცხნივ/მარჯვნივ]"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:811
 msgid "Item Selection"
 msgstr "ელემენტების მონიშვნა"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:812
 msgid "Select Single Item"
 msgstr "ერთი ელემენტის მონიშვნა"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:812
 msgid "[Left-click on item]"
 msgstr "[მარცხენა წკაპი ელემენტზე]"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:813
 msgid "Select Child Nodes"
 msgstr "შვილი ელემენტების მონიშვნა"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:813
 msgid "[Control + Left-click on parent node]"
 msgstr "[Control + მარცხენა წკაპი მშობელ კვანძზე]"
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:814
 msgid "Select Node Tree/Subtree"
 msgstr "კვანძების ხის/ქვეხის მონიშვნა"
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:814
 msgid "[Control + Double left-click on parent node"
 msgstr "[Control + ორმაგი მარცხენა წკაპი მშობელ კვანძზე"
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:815
 msgid "Select All Nodes at Same Depth Level"
 msgstr "იგივე სიღრმეზე არსებული ყველა კვანძის მონიშვნა"
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:815
 msgid "[Control + Triple left-click on node]"
 msgstr "[Control + სამმაგი მარცხენა წკაპი კვანძზე]"
 
-#: src/Shortcuts.vala:811
+#: src/Shortcuts.vala:816
 msgid "Block Selection"
 msgstr "მონიშნულის დაბლოკვა"
 
-#: src/Shortcuts.vala:811
+#: src/Shortcuts.vala:816
 msgid "[Left-click + Drag]"
 msgstr "[მარცხენა წკაპი + გადათრევა]"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:818
 msgid "Item Selection Toggle"
 msgstr "ელემენტის მონიშვნის გადართვა"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:819
 msgid "Toggle Selection of Item"
 msgstr "ელემენტის მონიშვნის გადართვა"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:819
 msgid "[Shift + Left-click on item]"
 msgstr "[Shift + მარცხენა წკაპი ელემენტზე]"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:820
 msgid "Toggle Selection of Child Nodes"
 msgstr "შვილი კვანძების მონიშვნის გადართვა"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:820
 msgid "[Shift + Control + Left-click on item]"
 msgstr "[Shift + Control + მარცხენა წკაპი ელემენტზე]"
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:821
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "კვანძის ხის/ქვეხის მონიშვნის გადართვა"
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:821
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr "[Shift + Control + ორმაგი მარცხენა წკაპი მშობელ კვანძზე]"
 
-#: src/Shortcuts.vala:817
+#: src/Shortcuts.vala:822
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr "იგივე სიღრმეზე არსებული ყველა კვანძის მონიშვნის გადართვა"
 
-#: src/Shortcuts.vala:817
+#: src/Shortcuts.vala:822
 msgid "Shift + Control + Triple-click on node]"
 msgstr "Shift + Control + სამმაგი წკაპი კვანძზე]"
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:824
 msgid "Text Selection"
 msgstr "მონიშნული ტექსტი"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:825
 msgid "Set Cursor Insert Point"
 msgstr "კურსორის ჩასმის წერტილის დაყენება"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:825
 msgid "[Left-click in text]"
 msgstr "[Left-დააწკაპუნეთ ტექსტზე]"
 
-#: src/Shortcuts.vala:821
+#: src/Shortcuts.vala:826
 msgid "Select Current Word"
 msgstr "მიმდინარე სიტყვის მონიშვნა"
 
-#: src/Shortcuts.vala:821
+#: src/Shortcuts.vala:826
 msgid "[Double left-click on word]"
 msgstr "[ორმაგი მარცხენა წკაპი სიტყვაზე]"
 
-#: src/Shortcuts.vala:822
+#: src/Shortcuts.vala:827
 msgid "[Triple left-click text]"
 msgstr "[სამმაგი მარცხენა წკაპი ტექსტზე]"
 
@@ -3997,7 +4117,7 @@ msgstr "დასრულების ჭდის გამოკვეთა"
 msgid "Any"
 msgstr "ნებისმიერი"
 
-#: src/Tags.vala:82 src/ThemeEditor.vala:119
+#: src/Tags.vala:82 src/ThemeEditor.vala:120
 msgid "Tag"
 msgstr "ჭდე"
 
@@ -4139,47 +4259,52 @@ msgstr "URL ბმულის ფონი"
 msgid "URL Link Foreground"
 msgstr "URL ბმულის წინა პლანი"
 
-#: src/ThemeEditor.vala:120
+#: src/ThemeEditor.vala:119
+#, fuzzy
+msgid "Highlighter"
+msgstr "გამოკვე_თის რეჟიმი"
+
+#: src/ThemeEditor.vala:121
 msgid "Markdown Syntax Chars"
 msgstr "Markdown-ის სინტაქსის სიმბოლოები"
 
-#: src/ThemeEditor.vala:121
+#: src/ThemeEditor.vala:122
 msgid "Match Background"
 msgstr "ფონის დამთხვევა"
 
-#: src/ThemeEditor.vala:122
+#: src/ThemeEditor.vala:123
 msgid "Match Foreground"
 msgstr "წინა პლანის დამთხვევა"
 
-#: src/ThemeEditor.vala:123
+#: src/ThemeEditor.vala:124
 msgid "Markdown List Item"
 msgstr "Markdown-ის სიის ელემენტი"
 
-#: src/ThemeEditor.vala:209
+#: src/ThemeEditor.vala:212
 msgid "Custom"
 msgstr "ხელით"
 
-#: src/ThemeEditor.vala:230
+#: src/ThemeEditor.vala:234
 msgid "Delete theme?"
 msgstr "წაიშალოს თემა?"
 
-#: src/ThemeEditor.vala:231
+#: src/ThemeEditor.vala:235
 msgid "This operation cannot be undone."
 msgstr "ეს ოპერაცია შეუქცევადია."
 
-#: src/ThemeEditor.vala:236 src/Utils.vala:473
+#: src/ThemeEditor.vala:240 src/Utils.vala:473
 msgid "No"
 msgstr "არა"
 
-#: src/ThemeEditor.vala:239 src/Utils.vala:476
+#: src/ThemeEditor.vala:243 src/Utils.vala:476
 msgid "Yes"
 msgstr "დიახ"
 
-#: src/ThemeEditor.vala:260
+#: src/ThemeEditor.vala:265
 msgid "Default"
 msgstr "ნაგულისხმევი"
 
-#: src/themes/ThemeDark.vala:28
+#: src/themes/ThemeDark.vala:29
 msgid "Dark"
 msgstr "მუქი"
 
@@ -4195,16 +4320,16 @@ msgstr "Solarized მუქი"
 msgid "Solarized Light"
 msgstr "Solarized ღია"
 
-#: src/Themes.vala:196
+#: src/Themes.vala:209
 msgid "Error parsing regular expression"
 msgstr "რეგულარული გამოსახულების დამუშავების შეცდომა"
 
-#: src/Theme.vala:208
+#: src/Theme.vala:212
 #, c-format
 msgid "Unable to load background color: %s"
 msgstr "ფონის სფერის ჩატვირთვა შეუძლებელია: %s"
 
-#: src/Theme.vala:307
+#: src/Theme.vala:308
 msgid "Root"
 msgstr "Root"
 
@@ -4505,7 +4630,7 @@ msgstr "ტექსტის წაშლა"
 msgid "text insertion"
 msgstr "ტექსტის ჩასმა"
 
-#: src/undo_actions/UndoTextReplace.vala:31
+#: src/undo_actions/UndoTextReplace.vala:32
 msgid "text replacement"
 msgstr "ტექსტის ჩანაცვლება"
 
@@ -4537,3 +4662,6 @@ msgstr "შეცდომა: %s\n"
 #: src/ZoomWidget.vala:98
 msgid "Zoom Actual"
 msgstr "რეალური ზომამდე გადიდება"
+
+#~ msgid "Unsaved"
+#~ msgstr "შეუნახავი"
