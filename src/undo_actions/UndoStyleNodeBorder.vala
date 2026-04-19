@@ -25,7 +25,8 @@ public class UndoStyleNodeBorder : UndoStyleChange {
 
   GenericArray<NodeBorder> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleNodeBorder( StyleAffects affects, NodeBorder node_border, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<NodeBorder>();

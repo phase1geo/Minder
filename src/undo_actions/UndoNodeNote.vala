@@ -27,7 +27,8 @@ public class UndoNodeNote : UndoItem {
   string _old_note;
   string _new_note;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoNodeNote( Node n, string old_note ) {
     base( _( "node note change" ) );
     _node     = n;
@@ -35,7 +36,8 @@ public class UndoNodeNote : UndoItem {
     _new_note = n.note;
   }
 
-  /* Undoes a node name change */
+  //-------------------------------------------------------------
+  // Undoes a node name change
   public override void undo( MindMap map ) {
     _node.note = _old_note;
     map.queue_draw();
@@ -43,7 +45,8 @@ public class UndoNodeNote : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a node name change */
+  //-------------------------------------------------------------
+  // Redoes a node name change
   public override void redo( MindMap map ) {
     _node.note = _new_note;
     map.queue_draw();

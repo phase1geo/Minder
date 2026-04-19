@@ -224,7 +224,7 @@ public class MapInspector : Box {
     layouts.get_icons( ref light_icons, ref dark_icons );
     layouts.get_names( ref names );
 
-    /* Create the modebutton to select the current layout */
+    // Create the modebutton to select the current layout
     var lbl = new Label( _( "Node Layouts" ) ) {
       halign  = Align.START,
       hexpand = true,
@@ -278,13 +278,13 @@ public class MapInspector : Box {
   // manual layout mode.
   private void add_alignment_ui() {
 
-    /* Create the modebutton to select the current layout */
+    // Create the modebutton to select the current layout
     var lbl = new Label( _( "Node Alignment" ) ) {
       xalign = (float)0,
     };
     lbl.add_css_class( "titled" );
 
-    /* Create the alignment buttons */
+    // Create the alignment buttons
     _hleft = new Button.from_icon_name( "align-horizontal-left-symbolic" );
     _win.register_widget_for_tooltip( _hleft, KeyCommand.NODE_ALIGN_LEFT, _( "Align left edges" ) );
     _hleft.clicked.connect(() => { _win.execute_command( KeyCommand.NODE_ALIGN_LEFT ); });
@@ -347,7 +347,7 @@ public class MapInspector : Box {
   // Adds the themes UI.
   private void add_theme_ui() {
 
-    /* Create the UI */
+    // Create the UI
     var lbl = new Label( _( "Themes" ) ) {
       halign = Align.FILL,
       xalign = (float)0,
@@ -369,7 +369,7 @@ public class MapInspector : Box {
     };
     // sw.set_size_request( 200, 600 );
 
-    /* Add the themes to the theme box */
+    // Add the themes to the theme box
     update_themes();
 
     _add_theme = new Button.from_icon_name( "list-add-symbolic" ) {
@@ -380,7 +380,7 @@ public class MapInspector : Box {
     _add_theme.clicked.connect( create_custom_theme );
     tb.append( _add_theme );
 
-    /* Pack the panel */
+    // Pack the panel
     append( lbl );
     append( sw );
 
@@ -561,10 +561,10 @@ public class MapInspector : Box {
   // Updates the current theme.
   private void update_theme_layout() {
 
-    /* Make sure the current theme is selected */
+    // Make sure the current theme is selected
     select_theme( _map.get_theme().name );
 
-    /* Initialize the button states */
+    // Initialize the button states
     current_changed();
 
   }
@@ -590,7 +590,7 @@ public class MapInspector : Box {
     var   unfoldable      = _map.model.unfoldable();
     bool  layout_selected = false;
 
-    /* Select the layout that corresponds with the current tree */
+    // Select the layout that corresponds with the current tree
     if( current != null ) {
       if( layout_selected = (current.layout != null) ) {
         select_layout( current.layout.name );
@@ -605,11 +605,11 @@ public class MapInspector : Box {
       select_layout( _map.layouts.get_default().name );
     }
 
-    /* Update the sensitivity of the buttons */
+    // Update the sensitivity of the buttons
     _fold_completed.set_sensitive( foldable && _map.editable );
     _unfold_all.set_sensitive( unfoldable && _map.editable );
 
-    /* Update the node alignment buttons */
+    // Update the node alignment buttons
     update_node_alignment();
 
   }

@@ -26,7 +26,8 @@ public class UndoNodeStickerChange : UndoItem {
   private Node   _node;
   private string _name;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoNodeStickerChange( Node node, string orig_name ) {
     base( _( "change node sticker" ) );
     _node = node;
@@ -41,12 +42,14 @@ public class UndoNodeStickerChange : UndoItem {
     map.auto_save();
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data
   public override void undo( MindMap map ) {
     toggle( map );
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation
   public override void redo( MindMap map ) {
     toggle( map );
   }

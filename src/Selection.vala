@@ -692,7 +692,7 @@ public class Selection {
   // containing only selected nodes but maintaining their hierarchy.
   public void get_subtrees( ref Array<Node> subtrees, ImageManager im ) {
 
-    /* Get the list of all parent nodes */
+    // Get the list of all parent nodes
     var parents = new Array<Node>();
     get_parents( ref parents );
 

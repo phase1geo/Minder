@@ -26,22 +26,26 @@ public class Stickers {
 
   private Array<Sticker> _stickers;
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public Stickers() {
     _stickers = new Array<Sticker>();
   }
 
-  /* Clears all of the stored stickers */
+  //-------------------------------------------------------------
+  // Clears all of the stored stickers
   public void clear() {
     _stickers.remove_range( 0, _stickers.length );
   }
 
-  /* Adds the given sticker to our list */
+  //-------------------------------------------------------------
+  // Adds the given sticker to our list
   public void add_sticker( Sticker sticker ) {
     _stickers.append_val( sticker );
   }
 
-  /* Deletes the given sticker from this list */
+  //-------------------------------------------------------------
+  // Deletes the given sticker from this list
   public void remove_sticker( Sticker sticker ) {
     for( int i=0; i<_stickers.length; i++ ) {
       if( _stickers.index( i ) == sticker ) {
@@ -51,13 +55,15 @@ public class Stickers {
     }
   }
 
-  /* This should be called whenever we select a sticker */
+  //-------------------------------------------------------------
+  // This should be called whenever we select a sticker
   public void select_sticker( Sticker sticker ) {
     remove_sticker( sticker );
     add_sticker( sticker );
   }
 
-  /* Returns the sticker located at the given cursor position */
+  //-------------------------------------------------------------
+  // Returns the sticker located at the given cursor position
   public Sticker? is_within( double x, double y ) {
     for( int i=(int)(_stickers.length - 1); i>=0; i-- ) {
       var s = _stickers.index( i );
@@ -68,7 +74,8 @@ public class Stickers {
     return( null );
   }
 
-  /* Adds the sticker extents to the current extents */
+  //-------------------------------------------------------------
+  // Adds the sticker extents to the current extents
   public void add_extents( ref double x1, ref double y1, ref double x2, ref double y2 ) {
     for( int i=0; i<_stickers.length; i++ ) {
       var s = _stickers.index( i );
@@ -79,7 +86,8 @@ public class Stickers {
     }
   }
 
-  /* Saves the sticker to the XML tree */
+  //-------------------------------------------------------------
+  // Saves the sticker to the XML tree
   public Xml.Node* save() {
     Xml.Node* n = new Xml.Node( null, "stickers" );
     for( int i=0; i<_stickers.length; i++ ) {
@@ -88,7 +96,8 @@ public class Stickers {
     return( n );
   }
 
-  /* Loads the sticker from the XML tree */
+  //-------------------------------------------------------------
+  // Loads the sticker from the XML tree
   public void load( MindMap map, Xml.Node* n ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "sticker") ) {
@@ -98,7 +107,8 @@ public class Stickers {
     }
   }
 
-  /* Draw the sticker on the mind map */
+  //-------------------------------------------------------------
+  // Draw the sticker on the mind map
   public void draw_all( Cairo.Context ctx, Theme theme, double opacity, bool exporting ) {
     for( int i=0; i<_stickers.length; i++ ) {
       _stickers.index( i ).draw( ctx, theme, opacity, exporting );

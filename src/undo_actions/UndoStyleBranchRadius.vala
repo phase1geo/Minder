@@ -25,7 +25,8 @@ public class UndoStyleBranchRadius : UndoStyleChange {
 
   GenericArray<int> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleBranchRadius( StyleAffects affects, int branch_radius, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<int>();

@@ -41,13 +41,15 @@ public class UndoTextClearTags : UndoTextItem {
     map.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo_text( MindMap map, CanvasText ct ) {
     ct.text.remove_all_tags( start, end );
     map.queue_draw();
   }
 
-  /* Merges the given item with the current one */
+  //-------------------------------------------------------------
+  // Merges the given item with the current one
   public override bool merge( CanvasText ct, UndoTextItem item ) {
     return( false );
   }

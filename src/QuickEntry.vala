@@ -32,7 +32,7 @@ public class QuickEntry : Gtk.Window {
 
   public QuickEntry( MindMap map, bool replace, GLib.Settings settings ) {
 
-    /* Configure the window */
+    // Configure the window
     default_width   = 500;
     default_height  = 500;
     modal           = true;
@@ -40,14 +40,14 @@ public class QuickEntry : Gtk.Window {
     title           = _( "Quick Entry" );
     transient_for   = map.win;
 
-    /* Initialize member variables */
+    // Initialize member variables
     _map    = map;
     _export = (ExportText)map.win.exports.get_by_name( "text" );
 
-    /* Add window elements */
+    // Add window elements
     var box = new Box( Orientation.VERTICAL, 0 );
 
-    /* Create the text entry area */
+    // Create the text entry area
     _entry = new TextView() {
       bottom_margin = 0,
       wrap_mode     = Gtk.WrapMode.WORD
@@ -66,7 +66,7 @@ public class QuickEntry : Gtk.Window {
     _entry.buffer.insert_text.connect( handle_text_insertion );
     _entry.buffer.create_tag( "node", "background_rgba", Utils.color_from_string( "grey90" ), null );
 
-    /* Create the scrolled window for the text entry area */
+    // Create the scrolled window for the text entry area
     var sw = new ScrolledWindow() {
       margin_start = 10,
       margin_end   = 10,
@@ -214,7 +214,9 @@ public class QuickEntry : Gtk.Window {
     return( lbl );
   }
 
-  /* Called whenever text is inserted by the user (either by entry or by paste) */
+  //-------------------------------------------------------------
+  // Called whenever text is inserted by the user (either by entry
+  // or by paste)
   private void handle_text_insertion( ref TextIter pos, string new_text, int new_text_length ) {
     var cleaned = (pos.get_offset() == 0) ? new_text.chug() : new_text;
     if( cleaned != new_text ) {
@@ -231,14 +233,15 @@ public class QuickEntry : Gtk.Window {
 
     TextIter first, last;
 
-    /* Clear the node tag */
+    // Clear the node tag
     _entry.buffer.get_start_iter( out first );
     _entry.buffer.get_end_iter( out last );
     _entry.buffer.remove_tag_by_name( "node", first, last );
 
   }
 
-  /* Called whenever we drag something over the canvas */
+  //-------------------------------------------------------------
+  // Called whenever we drag something over the canvas
   private DragAction handle_drag_motion( double x, double y ) {
 
     if( _node_stack == null ) {
@@ -248,7 +251,7 @@ public class QuickEntry : Gtk.Window {
       }
     }
 
-    /* Clear the node tag */
+    // Clear the node tag
     clear_node_tag();
 
     if( _node_stack != null ) {
@@ -273,7 +276,8 @@ public class QuickEntry : Gtk.Window {
 
   }
 
-  /* Called when something is dropped on the DrawArea */
+  //-------------------------------------------------------------
+  // Called when something is dropped on the DrawArea
   private bool handle_drop( Value val, double x, double y ) {
 
     TextIter iter;
@@ -297,13 +301,13 @@ public class QuickEntry : Gtk.Window {
       }
       node_str += _export.export_node( _map, node_info.node, string.nfill( node_info.spaces, ' ' ) );
 
-      /* Perform the text substitution */
+      // Perform the text substitution
       _entry.buffer.get_iter_at_line( out first, node_info.first_line );
       _entry.buffer.get_iter_at_line( out last,  (node_info.last_line + 1) );
       _entry.buffer.delete( ref first, ref last );
       _entry.buffer.insert( ref first, node_str, node_str.length );
 
-      /* Make sure that we clear the node stack */
+      // Make sure that we clear the node stack
       _node_stack = null;
 
       return( true );
@@ -316,7 +320,9 @@ public class QuickEntry : Gtk.Window {
 
   }
 
-  /* Returns the text from the start of the current line to the current insertion cursor */
+  //-------------------------------------------------------------
+  // Returns the text from the start of the current line to the
+  // current insertion cursor
   private string get_line_text( int adjust ) {
 
     TextIter current;
@@ -326,7 +332,7 @@ public class QuickEntry : Gtk.Window {
 
     buf.get_iter_at_mark( out current, buf.get_insert() );
 
-    /* Adjust the line */
+    // Adjust the line
     if( adjust < 0 ) {
       current.backward_lines( 0 - adjust );
     } else if( adjust > 0 ) {
@@ -340,14 +346,16 @@ public class QuickEntry : Gtk.Window {
 
   }
 
-  /* Returns the text from the start of the current line to the current insertion cursor */
+  //-------------------------------------------------------------
+  // Returns the text from the start of the current line to the
+  // current insertion cursor
   private string get_start_to_current_text() {
 
     TextIter startline;
     TextIter endline;
     var      buf = _entry.buffer;
 
-    /* Get the text on the current line */
+    // Get the text on the current line
     buf.get_iter_at_mark( out endline,   buf.get_insert() );
     buf.get_iter_at_line( out startline, endline.get_line() );
 
@@ -355,7 +363,8 @@ public class QuickEntry : Gtk.Window {
 
   }
 
-  /* Returns the whitespace at the beginning of the current line */
+  //-------------------------------------------------------------
+  // Returns the whitespace at the beginning of the current line
   private bool get_whitespace( string line, out string wspace ) {
 
     wspace = "";
@@ -378,29 +387,35 @@ public class QuickEntry : Gtk.Window {
 
   }
 
-  /* Returns true if the current line describes the start of a new node */
+  //-------------------------------------------------------------
+  // Returns true if the current line describes the start of a new
+  // node
   private bool is_node_line( string line ) {
     return( Regex.match_simple( "^[ \\t]*[+*#-]", line ) );
   }
 
-  /* Returns true if the current line is a blank line */
+  //-------------------------------------------------------------
+  // Returns true if the current line is a blank line
   private bool is_blank_line( string line ) {
     return( line.strip() == "" );
   }
 
-  /* Converts the given whitespace to all spaces */
+  //-------------------------------------------------------------
+  // Converts the given whitespace to all spaces
   private string tabs_to_spaces( string wspace ) {
     var tspace = string.nfill( 8, ' ' );
     return( wspace.replace( "\t", tspace ) );
   }
 
-  /* Aligns the given prefix whitespace to be tabbed properly */
+  //-------------------------------------------------------------
+  // Aligns the given prefix whitespace to be tabbed properly
   private string align_to_tab( string wspace ) {
     var ws = tabs_to_spaces( wspace );
     return( string.nfill( (ws.char_count() / 8), '\t' ) );
   }
 
-  /* Deletes the whitespace on the current line */
+  //-------------------------------------------------------------
+  // Deletes the whitespace on the current line
   private void delete_whitespace( string? ins_text = null ) {
 
     string ws;
@@ -426,7 +441,8 @@ public class QuickEntry : Gtk.Window {
 
   }
 
-  /* Handles any keypresses in the quick entry text field */
+  //-------------------------------------------------------------
+  // Handles any keypresses in the quick entry text field
   private bool on_keypress( uint keyval, uint keycode, ModifierType state ) {
 
     var control = (bool)(state & ModifierType.CONTROL_MASK);
@@ -449,14 +465,18 @@ public class QuickEntry : Gtk.Window {
 
   }
 
-  /* If the user attempts to hit the space bar when adding front-end whitespace, don't insert it */
+  //-------------------------------------------------------------
+  // If the user attempts to hit the space bar when adding front-end
+  // whitespace, don't insert it
   private bool handle_space() {
 
     return( get_start_to_current_text().strip() == "" );
 
   }
 
-  /* If the return key is pressed, we will automatically indent the next line */
+  //-------------------------------------------------------------
+  // If the return key is pressed, we will automatically indent
+  // the next line
   private bool handle_return( bool control ) {
 
     if( control ) {
@@ -477,7 +497,9 @@ public class QuickEntry : Gtk.Window {
 
   }
 
-  /* If the Tab key is pressed, only allow it if it is valid to do so */
+  //-------------------------------------------------------------
+  // If the Tab key is pressed, only allow it if it is valid to
+  // do so
   private bool handle_tab( bool shift ) {
 
     TextIter current;
@@ -543,17 +565,20 @@ public class QuickEntry : Gtk.Window {
 
   }
 
-  /* Inserts the specified nodes into the given drawing area */
+  //-------------------------------------------------------------
+  // Inserts the specified nodes into the given drawing area
   private bool handle_insert() {
     return( _map.model.insert_text_as_node( _map.get_current_node(), _entry.buffer.text ) );
   }
 
-  /* Replaces the specified nodes into the given drawing area */
+  //-------------------------------------------------------------
+  // Replaces the specified nodes into the given drawing area
   private bool handle_replace() {
     return( _map.model.replace_text_as_node( _map.get_current_node(), _entry.buffer.text ) );
   }
 
-  /* Preloads the text buffer with the given text */
+  //-------------------------------------------------------------
+  // Preloads the text buffer with the given text
   public void preload( string value ) {
     _entry.buffer.insert_at_cursor( value, value.length );
   }

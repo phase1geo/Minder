@@ -25,7 +25,8 @@ public class UndoStyleConnectionArrow : UndoStyleChange {
 
   GenericArray<string> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleConnectionArrow( StyleAffects affects, string connection_arrow, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<string>();

@@ -25,7 +25,8 @@ public class UndoStyleConnectionLineWidth : UndoStyleChange {
 
   GenericArray<int> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleConnectionLineWidth( StyleAffects affects, int line_width, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<int>();

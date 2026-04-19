@@ -601,7 +601,7 @@ public class Style {
       from_node.style.link_type.draw( ctx, from_node, to_node, from_x, from_y, to_x1, to_y1, out tailx, out taily, out tipx, out tipy );
     }
 
-    /* Draw the extension line, if necessary */
+    // Draw the extension line, if necessary
     if( (to_x1 != to_x2) || (to_y1 != to_y2) ) {
       ctx.move_to( to_x1, to_y1 );
       ctx.line_to( to_x2, to_y2 );

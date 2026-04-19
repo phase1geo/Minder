@@ -25,7 +25,8 @@ public class UndoNodeSequences : UndoItem {
 
   Array<Node> _nodes;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoNodeSequences( Array<Node> nodes ) {
     base( _( "node sequence changes" ) );
     _nodes = nodes;
@@ -41,12 +42,14 @@ public class UndoNodeSequences : UndoItem {
     map.auto_save();
   }
 
-  /* Undoes a node name change */
+  //-------------------------------------------------------------
+  // Undoes a node name change
   public override void undo( MindMap map ) {
     update( map );
   }
 
-  /* Redoes a node name change */
+  //-------------------------------------------------------------
+  // Redoes a node name change
   public override void redo( MindMap map ) {
     update( map );
   }

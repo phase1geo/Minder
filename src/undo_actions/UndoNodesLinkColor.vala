@@ -28,7 +28,8 @@ public class UndoNodesLinkColor : UndoItem {
   Array<RGBA?> _old_colors;
   RGBA         _new_color;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoNodesLinkColor( Array<Node> nodes, RGBA new_color ) {
     base( _( "node link color changes" ) );
     _nodes      = new Array<Node>();
@@ -40,7 +41,8 @@ public class UndoNodesLinkColor : UndoItem {
     _new_color = new_color;
   }
 
-  /* Undoes a node link color change */
+  //-------------------------------------------------------------
+  // Undoes a node link color change
   public override void undo( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).link_color = _old_colors.index( i );
@@ -49,7 +51,8 @@ public class UndoNodesLinkColor : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a node link color change */
+  //-------------------------------------------------------------
+  // Redoes a node link color change
   public override void redo( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).link_color = _new_color;

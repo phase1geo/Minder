@@ -339,13 +339,6 @@ public class ExportFreeplane : Export {
       node.name.text.insert_text( 0, t );
     }
 
-    /*
-    string? f = n->get_prop( "FOLDED" );
-    if( f != null ) {
-      node.folded = bool.parse( f );
-    }
-    */
-
     string? l = n->get_prop( "LINK" );
     if( (l != null) && (l.substring( 0, 1 ) == "#") ) {
       link_ids.append_val( NodeLinkInfo( l.substring( 1 ), node ) );

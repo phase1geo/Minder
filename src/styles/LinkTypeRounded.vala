@@ -21,25 +21,30 @@
 
 public class LinkTypeRounded : Object, LinkType {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public LinkTypeRounded() {}
 
-  /* Returns the search name */
+  //-------------------------------------------------------------
+  // Returns the search name
   public string name() {
     return( "rounded" );
   }
 
-  /* Returns the name of the link type */
+  //-------------------------------------------------------------
+  // Returns the name of the link type
   public string display_name() {
     return( _( "Rounded" ) );
   }
 
-  /* Returns the name of the light-mode icon */
+  //-------------------------------------------------------------
+  // Returns the name of the light-mode icon
   public string light_icon_name() {
     return( "minder-link-rounded-light-symbolic" );
   }
 
-  /* Returns the name of the dark-mode icon */
+  //-------------------------------------------------------------
+  // Returns the name of the dark-mode icon
   public string dark_icon_name() {
     return( "minder-link-rounded-dark-symbolic" );
   }
@@ -51,7 +56,8 @@ public class LinkTypeRounded : Object, LinkType {
                               (((to_b + radius) > from_b) ? from_b : (to_b + radius));
   }
 
-  /* Draw method for the link */
+  //-------------------------------------------------------------
+  // Draw method for the link
   public void draw( Cairo.Context ctx, Node from_node, Node to_node,
                     double from_x, double from_y, double to_x, double to_y,
                     out double tailx, out double taily, out double tipx, out double tipy ) {

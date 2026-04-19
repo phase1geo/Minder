@@ -25,7 +25,8 @@ public class UndoNodeLayout : UndoItem {
   private string _new_layout;
   private Node?  _root;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoNodeLayout( Layout old_layout, Layout new_layout, Node? root_node ) {
     base( _( "change layout" ) );
     _old_layout = old_layout.name;
@@ -33,13 +34,15 @@ public class UndoNodeLayout : UndoItem {
     _root       = root_node;
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data
   public override void undo( MindMap map ) {
     map.model.set_layout( _old_layout, _root, false );
     map.loaded();
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation
   public override void redo( MindMap map ) {
     map.model.set_layout( _new_layout, _root, false );
     map.loaded();

@@ -31,31 +31,36 @@ public class UndoBuffer : Object {
 
   public signal void buffer_changed( UndoBuffer buf );
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoBuffer( MindMap map ) {
     _map         = map;
     _undo_buffer = new Array<UndoItem>();
     _redo_buffer = new Array<UndoItem>();
   }
 
-  /* Clear the undo/redo buffers */
+  //-------------------------------------------------------------
+  // Clear the undo/redo buffers
   public void clear() {
     _undo_buffer.remove_range( 0, _undo_buffer.length );
     _redo_buffer.remove_range( 0, _redo_buffer.length );
     buffer_changed( this );
   }
 
-  /* Returns true if we can perform an undo action */
+  //-------------------------------------------------------------
+  // Returns true if we can perform an undo action
   public bool undoable() {
     return( _undo_buffer.length > 0 );
   }
 
-  /* Returns true if we can perform a redo action */
+  //-------------------------------------------------------------
+  // Returns true if we can perform a redo action
   public bool redoable() {
     return( _redo_buffer.length > 0 );
   }
 
-  /* Performs the next undo action in the buffer */
+  //-------------------------------------------------------------
+  // Performs the next undo action in the buffer
   public virtual void undo() {
     if( undoable() ) {
       UndoItem item = _undo_buffer.index( _undo_buffer.length - 1 );
@@ -67,7 +72,8 @@ public class UndoBuffer : Object {
     output( "AFTER UNDO" );
   }
 
-  /* Performs the next redo action in the buffer */
+  //-------------------------------------------------------------
+  // Performs the next redo action in the buffer
   public virtual void redo() {
     if( redoable() ) {
       UndoItem item = _redo_buffer.index( _redo_buffer.length - 1 );
@@ -79,19 +85,23 @@ public class UndoBuffer : Object {
     output( "AFTER REDO" );
   }
 
-  /* Returns the undo tooltip */
+  //-------------------------------------------------------------
+  // Returns the undo tooltip
   public string undo_tooltip() {
     if( _undo_buffer.length == 0 ) return( _( "Undo" ) );
     return( _( "Undo " ) + _undo_buffer.index( _undo_buffer.length - 1 ).name );
   }
 
-  /* Returns the undo tooltip */
+  //-------------------------------------------------------------
+  // Returns the undo tooltip
   public string redo_tooltip() {
     if( _redo_buffer.length == 0 ) return( _( "Redo" ) );
     return( _( "Redo " ) + _redo_buffer.index( _redo_buffer.length - 1 ).name );
   }
 
-  /* Adds a new undo item to the undo buffer.  Clears the redo buffer. */
+  //-------------------------------------------------------------
+  // Adds a new undo item to the undo buffer.  Clears the redo
+  // buffer.
   public void add_item( UndoItem item ) {
     item.id = _current_id++;
     _undo_buffer.append_val( item );
@@ -100,10 +110,10 @@ public class UndoBuffer : Object {
     output( "ITEM ADDED" );
   }
 
-  /*
-   Attempts to replace the last item in the undo buffer with the given item if both items are the same type;
-   otherwise, the new item will just be added like any other item.
-  */
+  //-------------------------------------------------------------
+  // Attempts to replace the last item in the undo buffer with the
+  // given item if both items are the same type; otherwise, the
+  // new item will just be added like any other item.
   public void replace_item( UndoItem item ) {
     item.id = _current_id++;
     if( _undo_buffer.length > 0 ) {
@@ -118,7 +128,8 @@ public class UndoBuffer : Object {
     add_item( item );
   }
 
-  /* Outputs the state of the undo and redo buffers to standard output */
+  //-------------------------------------------------------------
+  // Outputs the state of the undo and redo buffers to standard output
   public void output( string msg = "BUFFER STATE" ) {
     if( _debug ) {
       stdout.printf( "%s\n  Undo Buffer\n-----------\n", msg );

@@ -24,13 +24,14 @@ using Gtk;
 
 public class ThemeSolarizedDark : Theme {
 
-  /* Create the theme colors */
+  //-------------------------------------------------------------
+  // Create the theme colors
   public ThemeSolarizedDark() {
 
     name  = "solarized_dark";
     label = _( "Solarized Dark" );
 
-    /* Generate the non-link colors */
+    // Generate the non-link colors
     set_color( "background",            color_from_string( "#002B36" ) );
     set_color( "foreground",            color_from_string( "#93A1A1" ) );
     set_color( "root_background",       color_from_string( "#d4d4d4" ) );

@@ -27,14 +27,16 @@ public class UndoNodeAddParent : UndoItem {
   private Node _parent;
   private Node _child;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoNodeAddParent( Node parent, Node child ) {
     base( _( "add parent node" ) );
     _parent = parent;
     _child  = child;
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data
   public override void undo( MindMap map ) {
     var parent = _parent.parent;
     var index  = _parent.index();
@@ -47,7 +49,8 @@ public class UndoNodeAddParent : UndoItem {
     map.auto_save();
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation
   public override void redo( MindMap map ) {
     var parent = _child.parent;
     var index  = _child.index();

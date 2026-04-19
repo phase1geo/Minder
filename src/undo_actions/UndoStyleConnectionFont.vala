@@ -26,7 +26,8 @@ public class UndoStyleConnectionFont : UndoStyleChange {
 
   GenericArray<FontDescription> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleConnectionFont( StyleAffects affects, string family, int size, MindMap map ) {
     base( affects, map );
     var conn_font = new FontDescription();

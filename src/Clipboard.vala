@@ -59,10 +59,10 @@ public class MinderClipboard {
     Connections conns;
     NodeGroups  groups;
 
-    /* Store the data to copy */
+    // Store the data to copy
     map.model.get_nodes_for_clipboard( out nodes, out conns, out groups );
 
-    /* Inform the clipboard */
+    // Inform the clipboard
     var clipboard = Display.get_default().get_clipboard();
     var text      = map.model.serialize_for_copy( nodes, conns, groups );
 

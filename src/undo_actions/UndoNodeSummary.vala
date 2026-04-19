@@ -27,7 +27,8 @@ public class UndoNodeSummary : UndoItem {
   private Node        _first;
   private Node        _last;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoNodeSummary( SummaryNode n ) {
     base( _( "insert summary node" ) );
     _n     = n;
@@ -35,7 +36,8 @@ public class UndoNodeSummary : UndoItem {
     _last  = n.last_node();
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data
   public override void undo( MindMap map ) {
     // _n.detach( _n.side );
     if( map.get_current_node() == _n ) {
@@ -45,7 +47,8 @@ public class UndoNodeSummary : UndoItem {
     map.auto_save();
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation
   public override void redo( MindMap map ) {
     // _n.attach( _first, -1, null );
     map.set_current_node( _n );

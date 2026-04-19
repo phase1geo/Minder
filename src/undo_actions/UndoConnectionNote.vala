@@ -27,7 +27,8 @@ public class UndoConnectionNote : UndoItem {
   string     _old_note;
   string     _new_note;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoConnectionNote( Connection c, string old_note ) {
     base( _( "connection note change" ) );
     _conn     = c;
@@ -35,7 +36,8 @@ public class UndoConnectionNote : UndoItem {
     _new_note = c.note;
   }
 
-  /* Undoes a node name change */
+  //-------------------------------------------------------------
+  // Undoes a node name change
   public override void undo( MindMap map ) {
     _conn.note = _old_note;
     map.queue_draw();
@@ -43,7 +45,8 @@ public class UndoConnectionNote : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a node name change */
+  //-------------------------------------------------------------
+  // Redoes a node name change
   public override void redo( MindMap map ) {
     _conn.note = _new_note;
     map.queue_draw();

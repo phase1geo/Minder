@@ -25,7 +25,8 @@ public class UndoStyleAffectChange : UndoStyleChange {
 
   private GenericArray<Style> _styles;
 
-  /* Constructor for a style affect change */
+  //-------------------------------------------------------------
+  // Constructor for a style affect change
   public UndoStyleAffectChange( StyleAffects affects, Style style, MindMap map ) {
     base( affects, map );
     _styles = new GenericArray<Style>();

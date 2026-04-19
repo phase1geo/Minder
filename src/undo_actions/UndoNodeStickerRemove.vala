@@ -26,21 +26,24 @@ public class UndoNodeStickerRemove : UndoItem {
   private Node   _node;
   private string _name;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoNodeStickerRemove( Node node ) {
     base( _( "remove node sticker" ) );
     _node = node;
     _name = node.sticker;
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data
   public override void undo( MindMap map ) {
     _node.sticker = _name;
     map.queue_draw();
     map.auto_save();
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation
   public override void redo( MindMap map ) {
     _node.sticker = null;
     map.queue_draw();

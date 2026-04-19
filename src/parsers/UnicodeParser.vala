@@ -42,10 +42,10 @@ public class UnicodeParser : TextParser {
 
     var tag = get_text( match, 0 );
 
-    /* Highlight the tag */
+    // Highlight the tag
     add_tag( text, match, 0, FormatTag.TAG, tag );
 
-    /* If the FormattedText item matches the currently edited */
+    // If the FormattedText item matches the currently edited
     if( _map.is_node_selected() ) {
       handle_code_for_ct( _map.get_current_node().name, text, match, tag );
     } else if( _map.is_callout_selected() ) {
@@ -65,7 +65,8 @@ public class UnicodeParser : TextParser {
     }
   }
 
-  /* Handles hiding the auto-completion window */
+  //-------------------------------------------------------------
+  // Handles hiding the auto-completion window
   private void handle_nocode( FormattedText text, MatchInfo match ) {
     if( _map.is_node_selected() ) {
       handle_nocode_for_ct( _map.get_current_node().name, text, match );

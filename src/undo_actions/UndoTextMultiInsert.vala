@@ -28,13 +28,15 @@ public class UndoTextMultiInsert : UndoTextItem {
 
   private Array<InsertText?> _inserts;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoTextMultiInsert( Array<InsertText?> inserts, int start_cursor, int end_cursor ) {
     base( _( "text insertion" ), UndoTextOp.INSERT, start_cursor, end_cursor );
     _inserts = inserts;
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo_text( MindMap map, CanvasText ct ) {
     for( int i=0; i<_inserts.length; i++ ) {
       var insert = _inserts.index( i );
@@ -44,7 +46,8 @@ public class UndoTextMultiInsert : UndoTextItem {
     map.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo_text( MindMap map, CanvasText ct ) {
     for( int i=(int)(_inserts.length - 1); i>=0; i-- ) {
       var insert = _inserts.index( i );

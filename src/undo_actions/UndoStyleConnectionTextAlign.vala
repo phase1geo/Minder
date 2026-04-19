@@ -25,7 +25,8 @@ public class UndoStyleConnectionTextAlign : UndoStyleChange {
 
   GenericArray<Pango.Alignment> _values;
 
-  /* Constructor for a node text alignment change */
+  //-------------------------------------------------------------
+  // Constructor for a node text alignment change
   public UndoStyleConnectionTextAlign( StyleAffects affects, Pango.Alignment text_align, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<Pango.Alignment>();

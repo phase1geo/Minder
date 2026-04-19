@@ -26,14 +26,16 @@ public class UndoStickerChange : UndoItem {
   private Sticker _old_sticker;
   private Sticker _new_sticker;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoStickerChange( Sticker old_sticker, Sticker new_sticker ) {
     base( _( "change sticker" ) );
     _old_sticker = old_sticker;
     _new_sticker = new_sticker;
   }
 
-  /* Changes out the stickers */
+  //-------------------------------------------------------------
+  // Changes out the stickers
   private void change( MindMap map, Sticker prev, Sticker next ) {
     map.stickers.remove_sticker( prev );
     map.stickers.add_sticker( next );
@@ -41,12 +43,14 @@ public class UndoStickerChange : UndoItem {
     map.auto_save();
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data
   public override void undo( MindMap map ) {
     change( map, _new_sticker, _old_sticker );
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation
   public override void redo( MindMap map ) {
     change( map, _old_sticker, _new_sticker );
   }

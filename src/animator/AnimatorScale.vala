@@ -26,23 +26,27 @@ public class AnimatorScale : AnimatorAction {
   private double? _sscale = null;  // Starting scaling factor
   private double? _escale = null;  // Ending scaling factor
 
-  /* Constructor for a scale change */
+  //-------------------------------------------------------------
+  // Constructor for a scale change
   public AnimatorScale( DrawArea da, string name ) {
     base( name, false );
     _sscale = da.sfactor;
   }
 
-  /* Returns the NODES types */
+  //-------------------------------------------------------------
+  // Returns the NODES types
   public override AnimationType type() {
     return( AnimationType.SCALE );
   }
 
-  /* User method which performs the animation */
+  //-------------------------------------------------------------
+  // User method which performs the animation
   public override void capture( DrawArea da ) {
     _escale = da.sfactor;
   }
 
-  /* Adjusts scaling factor for the given frame */
+  //-------------------------------------------------------------
+  // Adjusts scaling factor for the given frame
   public override void adjust( DrawArea da ) {
     double divisor = index / frames;
     index++;

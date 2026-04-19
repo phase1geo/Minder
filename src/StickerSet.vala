@@ -360,27 +360,29 @@ public class StickerSet {
       _title_re = new Regex( "(^|\\W)([a-z])" );
     } catch( RegexError e ) {}
 
-    /* Create or load the custom sticker directory */
+    // Create or load the custom sticker directory
     if( !create_custom_dir() ) {
       load_from_filesystem( sticker_dir(), false );
     }
 
   }
 
-  /* Returns the path of the internal sticker directory */
+  //-------------------------------------------------------------
+  // Returns the path of the internal sticker directory
   public string sticker_dir() {
     return( Path.build_filename( Environment.get_user_data_dir(), "minder", "stickers" ) );
   }
 
-  /* Creates the initial structure of the custom sticker directory */
+  //-------------------------------------------------------------
+  // Creates the initial structure of the custom sticker directory
   private bool create_custom_dir() {
 
     if( FileUtils.test( sticker_dir(), FileTest.EXISTS ) ) return( false );
 
-    /* Create the main sticker directory */
+    // Create the main sticker directory
     Utils.create_dir( sticker_dir() );
 
-    /* Add the README */
+    // Add the README
     var src = File.new_for_uri( "resource:///com/github/phase1geo/minder/README.md" );
     var dst = File.new_for_path( Path.build_filename( sticker_dir(), "README.md" ) );
     try {
@@ -478,7 +480,9 @@ public class StickerSet {
     return( false );
   }
 
-  /* Copies the given sticker to the appropriate, internal sticker category directory */
+  //-------------------------------------------------------------
+  // Copies the given sticker to the appropriate, internal sticker
+  // category directory
   private bool import_sticker( string category, string file ) {
     var cat_dir = Path.build_filename( sticker_dir(), category );
     Utils.create_dir( cat_dir );
@@ -490,7 +494,8 @@ public class StickerSet {
     return( false );
   }
 
-  /* Removes the associated sticker */
+  //-------------------------------------------------------------
+  // Removes the associated sticker
   public bool remove_sticker( string name ) {
     return( FileUtils.unlink( name ) == 0 );
   }

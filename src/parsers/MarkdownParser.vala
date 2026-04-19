@@ -151,7 +151,9 @@ public class MarkdownParser : TextParser {
     }
   }
 
-  /* Returns true if the associated tag should enable the associated FormatBar button */
+  //-------------------------------------------------------------
+  // Returns true if the associated tag should enable the associated
+  // FormatBar button
   public override bool tag_handled( FormatTag tag ) {
     switch( tag ) {
       case FormatTag.HEADER  :
@@ -163,7 +165,8 @@ public class MarkdownParser : TextParser {
     }
   }
 
-  /* This is called when the associated FormatBar button is clicked */
+  //-------------------------------------------------------------
+  // This is called when the associated FormatBar button is clicked
   public override void insert_tag( CanvasText ct, FormatTag tag, int start_pos, int end_pos, UndoTextBuffer undo_buffer, string? extra ) {
     switch( tag ) {
       case FormatTag.HEADER  :  insert_header( ct, start_pos, extra, undo_buffer );  break;

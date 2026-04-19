@@ -26,7 +26,8 @@ public class UndoStyleCalloutFont : UndoStyleChange {
 
   GenericArray<FontDescription> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleCalloutFont( StyleAffects affects, string family, int size, MindMap map ) {
     base( affects, map );
     var callout_font = new FontDescription();

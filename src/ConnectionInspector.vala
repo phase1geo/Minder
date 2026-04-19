@@ -59,7 +59,8 @@ public class ConnectionInspector : Box {
 
   }
 
-  /* Called whenever the tab in the main window changes */
+  //-------------------------------------------------------------
+  // Called whenever the tab in the main window changes
   private void tab_changed( MindMap? map ) {
     if( _map != null ) {
       _map.current_changed.disconnect( connection_changed );
@@ -187,16 +188,16 @@ public class ConnectionInspector : Box {
       column_spacing     = 5
     };
 
-    /* Create the node deletion button */
+    // Create the node deletion button
     var del_btn = new Button.from_icon_name( "edit-delete-symbolic" ) {
       tooltip_text = _( "Delete Connection" )
     };
     del_btn.clicked.connect( connection_delete );
 
-    /* Add the buttons to the button grid */
+    // Add the buttons to the button grid
     grid.attach( del_btn, 0, 0 );
 
-    /* Add the button grid to the popover */
+    // Add the button grid to the popover
     // pack_start( grid, false, true );
 
   }

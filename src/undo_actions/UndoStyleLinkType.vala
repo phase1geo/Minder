@@ -25,7 +25,8 @@ public class UndoStyleLinkType : UndoStyleChange {
 
   GenericArray<LinkType> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleLinkType( StyleAffects affects, LinkType link_type, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<LinkType>();

@@ -30,7 +30,8 @@ public class UrlEditor {
   private Entry   _entry;
   private Button  _apply;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UrlEditor( DrawArea da ) {
 
     _map = da.map;
@@ -93,18 +94,17 @@ public class UrlEditor {
 
   }
 
-  /*
-   Checks the contents of the entry string.  If it is a URL, make the action button active;
-   otherwise, inactivate the action button.
-  */
+  //-------------------------------------------------------------
+  // Checks the contents of the entry string.  If it is a URL,
+  // make the action button active; otherwise, inactivate the
+  // action button.
   private void check_entry() {
     _apply.set_sensitive( Utils.is_url( _entry.text ) );
   }
 
-  /*
-   Sets the URL of the current canvas text's selected text to the value stored in the
-   popover entry.
-  */
+  //-------------------------------------------------------------
+  // Sets the URL of the current canvas text's selected text to
+  // the value stored in the popover entry.
   private void set_url() {
     var node       = _map.get_current_node();
     var connection = _map.get_current_connection();
@@ -145,7 +145,9 @@ public class UrlEditor {
     }
   }
 
-  /* Called when we want to add a URL to the currently selected text of the given node. */
+  //-------------------------------------------------------------
+  // Called when we want to add a URL to the currently selected
+  // text of the given node.
   public void add_url() {
 
     var ct = _map.get_current_text();
@@ -153,7 +155,7 @@ public class UrlEditor {
     int selstart, selend, cursor;
     ct.get_cursor_info( out cursor, out selstart, out selend );
 
-    /* Position the popover */
+    // Position the popover
     double left, top, bottom;
     int line;
     ct.get_char_pos( selstart, out left, out top, out bottom, out line );
@@ -169,7 +171,8 @@ public class UrlEditor {
 
   }
 
-  /* Removes the current URLs from the given node */
+  //-------------------------------------------------------------
+  // Removes the current URLs from the given node
   public void remove_url() {
     var ct       = _map.get_current_text();
     var node     = _map.get_current_node();
@@ -201,10 +204,9 @@ public class UrlEditor {
     }
   }
 
-  /*
-   Returns the URL that is in the clipboard (if one exists); otherwise,
-   returns the empty string.
-  */
+  //-------------------------------------------------------------
+  // Returns the URL that is in the clipboard (if one exists); otherwise,
+  // returns the empty string.
   private void set_url_from_clipboard() {
     var clipboard   = Display.get_default().get_clipboard();
     if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
@@ -220,7 +222,8 @@ public class UrlEditor {
     }
   }
 
-  /* Called when we want to edit the URL of the current node */
+  //-------------------------------------------------------------
+  // Called when we want to edit the URL of the current node
   public void edit_url() {
 
     var ct = _map.get_current_text();
@@ -228,7 +231,7 @@ public class UrlEditor {
     int selstart, selend, cursor;
     ct.get_cursor_info( out cursor, out selstart, out selend );
 
-    /* Position the popover */
+    // Position the popover
     double left, top, bottom;
     int    line;
     var links = ct.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );

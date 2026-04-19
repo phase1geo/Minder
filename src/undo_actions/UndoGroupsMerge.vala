@@ -26,7 +26,8 @@ public class UndoGroupsMerge : UndoItem {
   private Array<NodeGroup> _groups;
   private NodeGroup        _merged;
 
-  /* Constructor for removing a group */
+  //-------------------------------------------------------------
+  // Constructor for removing a group
   public UndoGroupsMerge( Array<NodeGroup> groups, NodeGroup merged ) {
     base( _( "group merge" ) );
     _groups = new Array<NodeGroup>();
@@ -36,7 +37,8 @@ public class UndoGroupsMerge : UndoItem {
     }
   }
 
-  /* Undoes a connection change */
+  //-------------------------------------------------------------
+  // Undoes a connection change
   public override void undo( MindMap map ) {
     map.selected.clear();
     map.groups.remove_group( _merged );
@@ -48,7 +50,8 @@ public class UndoGroupsMerge : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a connection change */
+  //-------------------------------------------------------------
+  // Redoes a connection change
   public override void redo( MindMap map ) {
     map.selected.clear();
     for( int i=0; i<_groups.length; i++ ) {

@@ -25,7 +25,8 @@ public class UndoStyleNodeMargin : UndoStyleChange {
 
   GenericArray<int> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleNodeMargin( StyleAffects affects, int node_margin, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<int>();

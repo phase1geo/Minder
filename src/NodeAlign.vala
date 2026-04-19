@@ -48,32 +48,40 @@ public class NodeAlign {
     map.auto_save();
   }
 
-  /* Aligns all of the given nodes to the top of the first node */
+  //-------------------------------------------------------------
+  // Aligns all of the given nodes to the top of the first node
   public static void align_top( MindMap map, Array<Node> nodes ) {
     align_to( map, nodes, (first, node) => { node.posy = first.posy; } );
   }
 
-  /* Aligns all of the given nodes to the bottom of the first node */
+  //-------------------------------------------------------------
+  // Aligns all of the given nodes to the bottom of the first node
   public static void align_bottom( MindMap map, Array<Node> nodes ) {
     align_to( map, nodes, (first, node) => { node.posy = ((first.posy + first.height) - node.height); } );
   }
 
-  /* Aligns all of the given nodes to the left side of the first node */
+  //-------------------------------------------------------------
+  // Aligns all of the given nodes to the left side of the first node
   public static void align_left( MindMap map, Array<Node> nodes ) {
     align_to( map, nodes, (first, node) => { node.posx = first.posx; } );
   }
 
-  /* Aligns all of the given nodes to the right side of the first node */
+  //-------------------------------------------------------------
+  // Aligns all of the given nodes to the right side of the first node
   public static void align_right( MindMap map, Array<Node> nodes ) {
     align_to( map, nodes, (first, node) => { node.posx = ((first.posx + first.width) - node.width); } );
   }
 
-  /* Aligns all of the given nodes to the center of the first node horizontally */
+  //-------------------------------------------------------------
+  // Aligns all of the given nodes to the center of the first node
+  // horizontally
   public static void align_hcenter( MindMap map, Array<Node> nodes ) {
     align_to( map, nodes, (first, node) => { node.posx = ((first.posx + (first.width / 2)) - (node.width / 2)); } );
   }
 
-  /* Aligns all of the given nodes to the center of the first node vertically */
+  //-------------------------------------------------------------
+  // Aligns all of the given nodes to the center of the first node
+  // vertically
   public static void align_vcenter( MindMap map, Array<Node> nodes ) {
     align_to( map, nodes, (first, node) => { node.posy = ((first.posy + (first.height / 2)) - (node.height / 2)); } );
   }

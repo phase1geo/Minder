@@ -39,7 +39,7 @@ public class MindMap {
   private bool           _editable       = true;
   private Style          _global_style;
 
-  /* Allocate static parsers */
+  // Allocate static parsers
   public MarkdownParser markdown_parser { get; private set; }
   public TaggerParser   tagger_parser   { get; private set; }
   public UrlParser      url_parser      { get; private set; }

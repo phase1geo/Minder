@@ -29,7 +29,8 @@ public class UndoNodeResize : UndoItem {
   bool _old_resizable;
   bool _new_resizable;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoNodeResize( Node n, int old_width, bool old_resizable ) {
     base( _( "node resize" ) );
     _node          = n;
@@ -39,7 +40,8 @@ public class UndoNodeResize : UndoItem {
     _new_resizable = n.image_resizable;
   }
 
-  /* Undoes a node name change */
+  //-------------------------------------------------------------
+  // Undoes a node name change
   public override void undo( MindMap map ) {
     _node.image_resizable = _old_resizable;
     _node.resize( _old_width - _new_width );
@@ -47,7 +49,8 @@ public class UndoNodeResize : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a node name change */
+  //-------------------------------------------------------------
+  // Redoes a node name change
   public override void redo( MindMap map ) {
     _node.image_resizable = _new_resizable;
     _node.resize( _new_width - _old_width );

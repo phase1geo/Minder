@@ -28,7 +28,8 @@ public class UndoGroupsColor : UndoItem {
   private Array<RGBA?>     _old_colors;
   private RGBA             _new_color;
 
-  /* Constructor for removing a group */
+  //-------------------------------------------------------------
+  // Constructor for removing a group
   public UndoGroupsColor( Array<NodeGroup> groups, RGBA new_color ) {
     base( _( "group color change" ) );
     _groups     = new Array<NodeGroup>();
@@ -40,7 +41,8 @@ public class UndoGroupsColor : UndoItem {
     }
   }
 
-  /* Undoes a connection change */
+  //-------------------------------------------------------------
+  // Undoes a connection change
   public override void undo( MindMap map ) {
     for( int i=0; i<_groups.length; i++ ) {
       _groups.index( i ).color = _old_colors.index( i );
@@ -49,7 +51,8 @@ public class UndoGroupsColor : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a connection change */
+  //-------------------------------------------------------------
+  // Redoes a connection change
   public override void redo( MindMap map ) {
     for( int i=0; i<_groups.length; i++ ) {
       _groups.index( i ).color = _new_color;

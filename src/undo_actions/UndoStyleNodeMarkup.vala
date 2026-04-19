@@ -25,7 +25,8 @@ public class UndoStyleNodeMarkup : UndoStyleChange {
 
   GenericArray<bool> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleNodeMarkup( StyleAffects affects, bool node_markup, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<bool>();

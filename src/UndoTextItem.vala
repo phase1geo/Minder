@@ -28,16 +28,16 @@ public enum UndoTextOp {
   TAGCLEAR
 }
 
-/*
- Represents a single text undo item in the text undo buffer.
-*/
+//-------------------------------------------------------------
+// Represents a single text undo item in the text undo buffer.
 public class UndoTextItem : UndoItem {
 
   protected UndoTextOp op           { set; get; }
   protected int        start_cursor { set; get; }
   protected int        end_cursor   { set; get; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoTextItem( string name, UndoTextOp op, int start_cursor, int end_cursor ) {
     base( name );
     this.op           = op;
@@ -45,18 +45,19 @@ public class UndoTextItem : UndoItem {
     this.end_cursor   = end_cursor;
   }
 
-  /*
-   Merges the given item into this item, if possible and returns true to indicate
-   that the merge occurred.
-  */
+  //-------------------------------------------------------------
+  // Merges the given item into this item, if possible and returns
+  // true to indicate that the merge occurred.
   public virtual bool merge( CanvasText ct, UndoTextItem item ) {
     return( false );
   }
 
-  /* Performs an undo of the text item */
+  //-------------------------------------------------------------
+  // Performs an undo of the text item
   public virtual void undo_text( MindMap map, CanvasText ct ) {}
 
-  /* Performs a redo of the text item */
+  //-------------------------------------------------------------
+  // Performs a redo of the text item
   public virtual void redo_text( MindMap map, CanvasText ct ) {}
 
 }

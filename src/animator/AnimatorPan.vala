@@ -28,23 +28,27 @@ public class AnimatorPan : AnimatorAction {
   private double? _eox = null;  // Ending x-origin
   private double? _eoy = null;  // Ending y-origin
 
-  /* Constructor for a pan change */
+  //-------------------------------------------------------------
+  // Constructor for a pan change
   public AnimatorPan( DrawArea da, string name ) {
     base( name, false );
     da.get_origin( out _sox, out _soy );
   }
 
-  /* Returns the NODES types */
+  //-------------------------------------------------------------
+  // Returns the NODES types
   public override AnimationType type() {
     return( AnimationType.PAN );
   }
 
-  /* User method which performs the animation */
+  //-------------------------------------------------------------
+  // User method which performs the animation
   public override void capture( DrawArea da ) {
     da.get_origin( out _eox, out _eoy );
   }
 
-  /* Adjusts the origin for the given frame */
+  //-------------------------------------------------------------
+  // Adjusts the origin for the given frame
   public override void adjust( DrawArea da ) {
     double divisor = index / frames;
     index++;

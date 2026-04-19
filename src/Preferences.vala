@@ -750,7 +750,7 @@ public class Preferences : Granite.Dialog {
   // Creates the theme menu button
   private MenuButton make_themes() {
 
-    /* Get the available theme names */
+    // Get the available theme names
     var names = new Array<string>();
     _win.themes.names( ref names );
 

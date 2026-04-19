@@ -25,6 +25,8 @@ using Granite.Widgets;
 
 public class EmptyInspector : Box {
 
+  //-------------------------------------------------------------
+  // Default constructor
   public EmptyInspector( MainWindow win ) {
 
     var empty_lbl = new Label( "<big>" + _( "Select a node, connection or group\nto view/edit information" ) + "</big>" ) {
@@ -39,7 +41,8 @@ public class EmptyInspector : Box {
 
   }
 
-  /* Returns the width of this window */
+  //-------------------------------------------------------------
+  // Returns the width of this window
   public int get_width() {
     return( 300 );
   }

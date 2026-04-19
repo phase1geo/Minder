@@ -43,12 +43,14 @@ public class UndoStickerResize : UndoItem {
     map.auto_save();
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data
   public override void undo( MindMap map ) {
     toggle( map );
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation
   public override void redo( MindMap map ) {
     toggle( map );
   }

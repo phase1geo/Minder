@@ -27,7 +27,8 @@ public class UndoTextTagRemove : UndoTextItem {
   public string?   extra  { private set; get; }
   public bool      parsed { private set; get; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoTextTagRemove( int start, int end, FormatTag tag, string? extra, bool parsed, int cursor ) {
     base( _( "format tag remove" ), UndoTextOp.TAGDEL, cursor, cursor );
     this.start  = start;
@@ -37,21 +38,24 @@ public class UndoTextTagRemove : UndoTextItem {
     this.parsed = parsed;
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo_text( MindMap map, CanvasText ct ) {
     ct.text.add_tag( tag, start, end, parsed, extra );
     ct.set_cursor_only( start_cursor );
     map.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo_text( MindMap map, CanvasText ct ) {
     ct.text.remove_tag( tag, start, end );
     ct.set_cursor_only( end_cursor );
     map.queue_draw();
   }
 
-  /* Merges the given item with the current one */
+  //-------------------------------------------------------------
+  // Merges the given item with the current one
   public override bool merge( CanvasText ct, UndoTextItem item ) {
     return( false );
   }

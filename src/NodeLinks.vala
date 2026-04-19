@@ -1,3 +1,24 @@
+/*
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Trevor Williams <phase1geo@gmail.com>
+*/
+
 using Gee;
 
 public class NodeLinks {
@@ -6,7 +27,8 @@ public class NodeLinks {
   private int                   _id = 0;
   private Regex?                _link_re;
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public NodeLinks() {
     _links = new HashMap<int,NodeLink>();
     try {
@@ -16,7 +38,8 @@ public class NodeLinks {
     }
   }
 
-  /* Adds the given node link to our node list */
+  //-------------------------------------------------------------
+  // Adds the given node link to our node list
   public int add_link( NodeLink link ) {
 
     var id = -1;
@@ -38,7 +61,8 @@ public class NodeLinks {
 
   }
 
-  /* Returns the node link for the given ID */
+  //-------------------------------------------------------------
+  // Returns the node link for the given ID
   public NodeLink? get_node_link( int id ) {
     if( _links.has_key( id ) ) {
       return( _links.get( id ) );
@@ -46,15 +70,16 @@ public class NodeLinks {
     return( null );
   }
 
-  /* Returns the number of links stored */
+  //-------------------------------------------------------------
+  // Returns the number of links stored
   public int num_links() {
     return( _links.size );
   }
 
-  /*
-   Populates the internal node links from the given node's note.  The doc_links
-   parameter should come from the NodeLinks structure stored in the DrawArea.
-  */
+  //-------------------------------------------------------------
+  // Populates the internal node links from the given node's note.
+  // The doc_links parameter should come from the NodeLinks
+  // structure stored in the DrawArea.
   private void get_links_from_note( string note, NodeLinks doc_links ) {
     if( _link_re == null ) return;
     MatchInfo match_info;
@@ -73,20 +98,22 @@ public class NodeLinks {
     } catch( RegexError e ) {}
   }
 
-  /* Gets the links from the given node's note */
+  //-------------------------------------------------------------
+  // Gets the links from the given node's note
   public void get_links_from_node( Node node, NodeLinks doc_links ) {
     get_links_from_note( node.note, doc_links );
   }
 
-  /* Gets the links from the given connections's note */
+  //-------------------------------------------------------------
+  // Gets the links from the given connections's note
   public void get_links_from_connection( Connection conn, NodeLinks doc_links ) {
     get_links_from_note( conn.note, doc_links );
   }
 
-  /*
-   Finds the node links in the given node and stores the node links in the document links,
-   gets the new index and updates the IDs with the new IDs.
-  */
+  //-------------------------------------------------------------
+  // Finds the node links in the given node and stores the node
+  // links in the document links, gets the new index and updates
+  // the IDs with the new IDs.
   public string? set_links_in_note( string orig_note, NodeLinks doc_links ) {
     var note = orig_note;
     if( _link_re == null ) return( null );
@@ -110,7 +137,9 @@ public class NodeLinks {
     }
   }
 
-  /* Extracts and updates the note text for a node with its node link information */
+  //-------------------------------------------------------------
+  // Extracts and updates the note text for a node with its node
+  // link information
   public void set_links_in_node( Node node, NodeLinks doc_links ) {
     var note = set_links_in_note( node.note, doc_links );
     if( note != null ) {
@@ -118,7 +147,9 @@ public class NodeLinks {
     }
   }
 
-  /* Extracts and updates the note text for a connection with its node link information */
+  //-------------------------------------------------------------
+  // Extracts and updates the note text for a connection with its
+  // node link information
   public void set_links_in_connection( Connection conn, NodeLinks doc_links ) {
     var note = set_links_in_note( conn.note, doc_links );
     if( note != null ) {
@@ -126,7 +157,8 @@ public class NodeLinks {
     }
   }
 
-  /* Saves the node link information to the document */
+  //-------------------------------------------------------------
+  // Saves the node link information to the document
   public Xml.Node* save() {
 
     Xml.Node* node = new Xml.Node( null, "nodelinks" );
@@ -144,7 +176,8 @@ public class NodeLinks {
 
   }
 
-  /* Loads the node link information from the document */
+  //-------------------------------------------------------------
+  // Loads the node link information from the document
   public void load( Xml.Node* node ) {
 
     var i = node->get_prop( "id" );

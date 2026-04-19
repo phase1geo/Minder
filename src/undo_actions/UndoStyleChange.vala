@@ -34,7 +34,8 @@ public class UndoStyleChange : UndoItem {
     REDO
   }
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleChange( StyleAffects affects, MindMap map ) {
     base( _( "style change" ) );
     _affects  = affects;
@@ -43,7 +44,8 @@ public class UndoStyleChange : UndoItem {
     _callouts = map.get_selected_callouts();
   }
 
-  /* Returns true if the given undo item matches our item */
+  //-------------------------------------------------------------
+  // Returns true if the given undo item matches our item
   protected override bool matches( UndoItem item ) {
     UndoStyleChange other = (UndoStyleChange)item;
     if( (_affects == other._affects) && (_nodes.length == other._nodes.length) && (_conns.length == other._conns.length) && (_callouts.length == other._callouts.length) ) {
@@ -171,19 +173,21 @@ public class UndoStyleChange : UndoItem {
   }
 
   protected virtual void load_style_value( Style style ) {
-    /* This method will be overridden */
+    // This method will be overridden
   }
 
   protected virtual void store_style_value( Style style, int index ) {
-    /* This method will be overridden */
+    // This method will be overridden
   }
 
-  /* Undoes a node name change */
+  //-------------------------------------------------------------
+  // Undoes a node name change
   public override void undo( MindMap map ) {
     traverse_styles( map, StyleChangeType.UNDO );
   }
 
-  /* Redoes a node name change */
+  //-------------------------------------------------------------
+  // Redoes a node name change
   public override void redo( MindMap map ) {
     traverse_styles( map, StyleChangeType.REDO );
   }

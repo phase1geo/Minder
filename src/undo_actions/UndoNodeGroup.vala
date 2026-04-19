@@ -25,7 +25,8 @@ public class UndoNodeGroup : UndoItem {
 
   Node _node;
 
-  /* Constructor for a node group change */
+  //-------------------------------------------------------------
+  // Constructor for a node group change
   public UndoNodeGroup( Node n ) {
     base( _( "node group change" ) );
     _node = n;
@@ -37,12 +38,14 @@ public class UndoNodeGroup : UndoItem {
     map.changed();
   }
   
-  /* Undoes a node name change */
+  //-------------------------------------------------------------
+  // Undoes a node name change
   public override void undo( MindMap map ) {
     toggle( map );
   }
 
-  /* Redoes a node name change */
+  //-------------------------------------------------------------
+  // Redoes a node name change
   public override void redo( MindMap map ) {
     toggle( map );
   }

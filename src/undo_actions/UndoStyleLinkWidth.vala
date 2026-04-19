@@ -25,7 +25,8 @@ public class UndoStyleLinkWidth : UndoStyleChange {
 
   private GenericArray<int> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleLinkWidth( StyleAffects affects, int link_width, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<int>();

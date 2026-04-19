@@ -26,7 +26,8 @@ public class UndoNodeCallout : UndoItem {
   private Node     _node;
   private Callout? _prev_callout = null;
 
-  /* Constructor for a node callout change */
+  //-------------------------------------------------------------
+  // Constructor for a node callout change
   public UndoNodeCallout( Node node ) {
     base( _( "node callout changed" ) );
     _node         = node;
@@ -41,12 +42,14 @@ public class UndoNodeCallout : UndoItem {
     map.auto_save();
   }
 
-  /* Undoes a node callout add/remove */
+  //-------------------------------------------------------------
+  // Undoes a node callout add/remove
   public override void undo( MindMap map ) {
     change( map );
   }
 
-  /* Redoes a node callout add/remove */
+  //-------------------------------------------------------------
+  // Redoes a node callout add/remove
   public override void redo( MindMap map ) {
     change( map );
   }

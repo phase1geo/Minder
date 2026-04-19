@@ -27,7 +27,8 @@ public class UndoCalloutText : UndoItem {
   private CanvasText _text;
   private CanvasText _orig_text;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoCalloutText( MindMap map, Callout callout, CanvasText orig_text ) {
     base( _( "callout text change" ) );
     _callout   = callout;
@@ -37,7 +38,8 @@ public class UndoCalloutText : UndoItem {
     _orig_text.copy( orig_text );
   }
 
-  /* Undoes a node name change */
+  //-------------------------------------------------------------
+  // Undoes a node name change
   public override void undo( MindMap map ) {
     _callout.text.copy( _orig_text );
     map.queue_draw();
@@ -45,7 +47,8 @@ public class UndoCalloutText : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a node name change */
+  //-------------------------------------------------------------
+  // Redoes a node name change
   public override void redo( MindMap map ) {
     _callout.text.copy( _text );
     map.queue_draw();

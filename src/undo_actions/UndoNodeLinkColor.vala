@@ -28,7 +28,8 @@ public class UndoNodeLinkColor : UndoItem {
   RGBA? _old_color;
   RGBA? _new_color;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoNodeLinkColor( Node n, RGBA? old_color ) {
     base( _( "link color change" ) );
     _node      = n;
@@ -36,7 +37,8 @@ public class UndoNodeLinkColor : UndoItem {
     _new_color = n.link_color;
   }
 
-  /* Undoes a node name change */
+  //-------------------------------------------------------------
+  // Undoes a node name change
   public override void undo( MindMap map ) {
     _node.link_color = _old_color;
     map.queue_draw();
@@ -44,7 +46,8 @@ public class UndoNodeLinkColor : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a node name change */
+  //-------------------------------------------------------------
+  // Redoes a node name change
   public override void redo( MindMap map ) {
     _node.link_color = _new_color;
     map.queue_draw();

@@ -25,7 +25,8 @@ public class UndoStyleBranchMargin : UndoStyleChange {
 
   GenericArray<int> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleBranchMargin( StyleAffects affects, int branch_margin, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<int>();

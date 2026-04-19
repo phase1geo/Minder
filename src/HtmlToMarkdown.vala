@@ -24,7 +24,8 @@ public class HtmlToMarkdown {
   public static int  list_depth = -1;
   public static bool extensions = true;
 
-  /* Resets to the namespace for parsing */
+  //-------------------------------------------------------------
+  // Resets to the namespace for parsing
   public static void reset( bool ext = true ) {
     list_depth = -1;
     extensions = ext;
@@ -40,7 +41,9 @@ public class HtmlToMarkdown {
     return( text );
   }
 
-  /* Expects the entire HTML XML tree and returns the supported Markdown version */
+  //-------------------------------------------------------------
+  // Expects the entire HTML XML tree and returns the supported
+  // Markdown version
   public static string parse_xml( Xml.Node* n ) {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name.down() == "body") ) {
@@ -50,7 +53,8 @@ public class HtmlToMarkdown {
     return( "" );
   }
 
-  /* Parses the item */
+  //-------------------------------------------------------------
+  // Parses the item
   public static string parse_item( Xml.Node* n ) {
     string text = "";
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
@@ -105,7 +109,8 @@ public class HtmlToMarkdown {
     return( text.strip() );
   }
 
-  /* Returns the text for the given list */
+  //-------------------------------------------------------------
+  // Returns the text for the given list
   public static string parse_list( Xml.Node* n, bool unordered, int depth = 0 ) {
     var text  = "";
     var index = 1;
@@ -124,7 +129,8 @@ public class HtmlToMarkdown {
     return( text );
   }
 
-  /* Returns the link text */
+  //-------------------------------------------------------------
+  // Returns the link text
   public static string parse_link( Xml.Node* n ) {
     var item = parse_item( n );
     string? h = n->get_prop( "href" );
@@ -134,7 +140,8 @@ public class HtmlToMarkdown {
     return( item );
   }
 
-  /* Returns the image text */
+  //-------------------------------------------------------------
+  // Returns the image text
   public static string parse_image( Xml.Node* n ) {
     var text  = "";
     string? s = n->get_prop( "src" );
@@ -186,7 +193,8 @@ public class HtmlToMarkdown {
     return( text );
   }
 
-  /* Parses a non-Markdown node and output it as HTML */
+  //-------------------------------------------------------------
+  // Parses a non-Markdown node and output it as HTML
   public static string parse_node( Xml.Node* n ) {
     return( "<" + n->name + ">" + parse_item( n ) + "</" + n->name + ">" );
   }

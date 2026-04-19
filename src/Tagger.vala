@@ -172,7 +172,7 @@ public class Tagger {
 
     popover.popup();
 
-    /* Preload the tags */
+    // Preload the tags
     populate_listbox( listbox, get_matches( "" ) );
 
   }

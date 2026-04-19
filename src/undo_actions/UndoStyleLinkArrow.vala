@@ -25,7 +25,8 @@ public class UndoStyleLinkArrow : UndoStyleChange {
 
   GenericArray<bool> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleLinkArrow( StyleAffects affects, bool link_arrow, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<bool>();

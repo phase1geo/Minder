@@ -25,7 +25,8 @@ public class UndoStyleLinkDash : UndoStyleChange {
 
   GenericArray<LinkDash> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleLinkDash( StyleAffects affects, LinkDash link_dash, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<LinkDash>();

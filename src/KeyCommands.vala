@@ -1409,7 +1409,7 @@ public enum KeyCommand {
     win.transient_for = map.win;
     win.view_name     = null;
 
-    /* Display the most relevant information based on the current state */
+    // Display the most relevant information based on the current state
     if( map.is_node_editable() || map.is_connection_editable() ) {
       win.section_name = "editing";
     } else if( map.is_node_selected() ) {

@@ -427,7 +427,7 @@ public class Shortcuts {
       }
     }
 
-    /* Save the file */
+    // Save the file
     doc->save_format_file( shortcuts_path(), 1 );
 
     delete doc;

@@ -21,13 +21,14 @@
 
 public class ThemeDefault : Theme {
 
-  /* Create the theme colors */
+  //-------------------------------------------------------------
+  // Create the theme colors
   public ThemeDefault() {
 
     name  = "default";
     label = _( "Light" );
 
-    /* Generate the non-link colors */
+    // Generate the non-link colors
     set_color( "background",            color_from_string( "#ffffff" ) );
     set_color( "foreground",            color_from_string( "Black" ) );
     set_color( "root_background",       color_from_string( "#d4d4d4" ) );

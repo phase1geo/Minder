@@ -25,7 +25,8 @@ public class UndoStyleNodePadding : UndoStyleChange {
 
   GenericArray<int> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleNodePadding( StyleAffects affects, int node_padding, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<int>();
