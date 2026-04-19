@@ -94,7 +94,8 @@
         </ul>
         <p>Bug Fixes</p>
         <ul>
-          <li>Fixing issues with saving custom themes.</li>
+          <li>Fixed issues with saving custom themes.</li>
+          <li>Fixed issue where nodes with rendered Markdown text were not updated when markdown enablement was changed in settings.</li>
         </ul>
       </description>
     </release>
