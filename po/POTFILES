@@ -51,7 +51,6 @@ src/layouts/LayoutVertical.vala
 src/MainWindow.vala
 src/MapInspector.vala
 src/MapModel.vala
-src/MarkdownMenu.vala
 src/MindMap.vala
 src/NodeGroup.vala
 src/NodeInspector.vala

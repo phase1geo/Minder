@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-18 12:51-0500\n"
+"POT-Creation-Date: 2026-04-19 08:03-0500\n"
 "PO-Revision-Date: 2025-11-14 08:53+0100\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -160,25 +160,25 @@ msgstr "Выноска"
 msgid "No text found"
 msgstr "Текст не найден"
 
-#: src/ConnectionInspector.vala:83 src/KeyCommands.vala:724
+#: src/ConnectionInspector.vala:84 src/KeyCommands.vala:724
 #: src/NodeMenu.vala:96
 msgid "Connection"
 msgstr "Соединения"
 
-#: src/ConnectionInspector.vala:96 src/NodeInspector.vala:205
+#: src/ConnectionInspector.vala:97 src/NodeInspector.vala:205
 msgid "Color"
 msgstr "Цвет"
 
-#: src/ConnectionInspector.vala:110
+#: src/ConnectionInspector.vala:111
 msgid "Use Theme Default Color"
 msgstr "Использовать цвет темы по умолчанию"
 
-#: src/ConnectionInspector.vala:136 src/GroupInspector.vala:92
+#: src/ConnectionInspector.vala:137 src/GroupInspector.vala:92
 #: src/NodeInspector.vala:290
 msgid "Note"
 msgstr "Примечание"
 
-#: src/ConnectionInspector.vala:192
+#: src/ConnectionInspector.vala:193
 msgid "Delete Connection"
 msgstr "Удалить соединение"
 
@@ -264,14 +264,14 @@ msgid ""
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1373
+#: src/Document.vala:697 src/ImageEditor.vala:428 src/MainWindow.vala:1373
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
-#: src/ThemeEditor.vala:154 src/UrlEditor.vala:62
+#: src/ThemeEditor.vala:154 src/UrlEditor.vala:63
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2238
-#: src/UrlEditor.vala:52
+#: src/Document.vala:700 src/ImageEditor.vala:431 src/MainWindow.vala:2238
+#: src/UrlEditor.vala:53
 msgid "Apply"
 msgstr "Применить"
 
@@ -326,7 +326,7 @@ msgstr "перетаскивание соединения"
 msgid "Another Idea"
 msgstr "Ещё одна идея"
 
-#: src/EmptyInspector.vala:30
+#: src/EmptyInspector.vala:32
 msgid ""
 "Select a node, connection or group\n"
 "to view/edit information"
@@ -334,20 +334,20 @@ msgstr ""
 "Выберите узел, связь или группу,\n"
 "чтобы просмотреть/изменить данные"
 
-#: src/EmptyMenu.vala:32 src/NodeMenu.vala:38 src/NodeMenu.vala:253
+#: src/EmptyMenu.vala:33 src/NodeMenu.vala:38 src/NodeMenu.vala:253
 #: src/TextMenu.vala:38
 msgid "Paste"
 msgstr "Вставить"
 
-#: src/EmptyMenu.vala:35 src/NodeMenu.vala:71
+#: src/EmptyMenu.vala:36 src/NodeMenu.vala:71
 msgid "Add Root Node"
 msgstr "Вставить корневой узел"
 
-#: src/EmptyMenu.vala:36
+#: src/EmptyMenu.vala:37
 msgid "Add Nodes With Quick Entry"
 msgstr "Добавить узлы быстрым вводом"
 
-#: src/EmptyMenu.vala:39
+#: src/EmptyMenu.vala:40
 #, fuzzy
 msgid "Select First Root Node"
 msgstr "Выбрать начальный узел"
@@ -411,7 +411,7 @@ msgid "Quality"
 msgstr "Качество"
 
 #: src/exports/ExportMarkdown.vala:34 src/NoteView.vala:330
-#: src/TextMenu.vala:52
+#: src/TextMenu.vala:68
 msgid "Markdown"
 msgstr "Markdown"
 
@@ -525,7 +525,7 @@ msgstr "XMind 8"
 msgid "Yed"
 msgstr "Yed"
 
-#: src/Exports.vala:36
+#: src/Exports.vala:37
 msgid "JPEG"
 msgstr "JPEG"
 
@@ -558,28 +558,28 @@ msgstr "Все сгруппированные узлы"
 msgid "Crop Area: %d,%d %3dx%3d"
 msgstr "Область обрезки: %d,%d %3dx%3d"
 
-#: src/ImageEditor.vala:401
+#: src/ImageEditor.vala:399
 #, c-format
 msgid "Cursor: %3d,%3d"
 msgstr "Указатель мыши: %3d,%3d"
 
-#: src/ImageEditor.vala:410
+#: src/ImageEditor.vala:408
 msgid "Change Image"
 msgstr "Сменить изображение"
 
-#: src/ImageEditor.vala:414
+#: src/ImageEditor.vala:412
 msgid "Paste Image from Clipboard"
 msgstr "Вставить избражение из бефера обмена"
 
-#: src/ImageEditor.vala:418 src/NodeInspector.vala:392 src/NodeMenu.vala:234
+#: src/ImageEditor.vala:416 src/NodeInspector.vala:392 src/NodeMenu.vala:234
 msgid "Remove Image"
 msgstr "Удалить изображение"
 
-#: src/ImageEditor.vala:422
+#: src/ImageEditor.vala:420
 msgid "Copy Image to Clipboard"
 msgstr "Скопировать изображение в буфер обмена"
 
-#: src/ImageEditor.vala:427
+#: src/ImageEditor.vala:425
 msgid "Cut Image to Clipboard"
 msgstr "Скопировать изображение в буфер обмена"
 
@@ -1362,11 +1362,11 @@ msgstr "Открыть файл"
 msgid "Save File As"
 msgstr "Сохранить файл как"
 
-#: src/MainWindow.vala:259 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:259 src/StickerSet.vala:307 src/UndoBuffer.vala:91
 msgid "Undo"
 msgstr "Отменить"
 
-#: src/MainWindow.vala:266 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:266 src/StickerSet.vala:308 src/UndoBuffer.vala:98
 msgid "Redo"
 msgstr "Вернуть"
 
@@ -1402,11 +1402,11 @@ msgstr "Настоящий размер"
 msgid "Zoom to Percent"
 msgstr "Масштаб в процентах"
 
-#: src/MainWindow.vala:777 src/ZoomWidget.vala:104
+#: src/MainWindow.vala:777 src/ZoomWidget.vala:105
 msgid "Zoom In"
 msgstr "Приблизить"
 
-#: src/MainWindow.vala:784 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:784 src/ZoomWidget.vala:93
 msgid "Zoom Out"
 msgstr "Отдалить"
 
@@ -1491,61 +1491,61 @@ msgstr "Справка по горячим клавишам"
 msgid "About Minder"
 msgstr "О программе"
 
-#: src/MainWindow.vala:1187 src/MarkdownMenu.vala:32
+#: src/MainWindow.vala:1187 src/TextMenu.vala:52
 #, fuzzy
 msgid "# Header1"
 msgstr "Гарнитура"
 
-#: src/MainWindow.vala:1188 src/MarkdownMenu.vala:33
+#: src/MainWindow.vala:1188 src/TextMenu.vala:53
 msgid "## Header2"
 msgstr ""
 
-#: src/MainWindow.vala:1189 src/MarkdownMenu.vala:34
+#: src/MainWindow.vala:1189 src/TextMenu.vala:54
 msgid "### Header3"
 msgstr ""
 
-#: src/MainWindow.vala:1190 src/MarkdownMenu.vala:35
+#: src/MainWindow.vala:1190 src/TextMenu.vala:55
 msgid "#### Header4"
 msgstr ""
 
-#: src/MainWindow.vala:1191 src/MarkdownMenu.vala:36
+#: src/MainWindow.vala:1191 src/TextMenu.vala:56
 msgid "##### Header5"
 msgstr ""
 
-#: src/MainWindow.vala:1192 src/MarkdownMenu.vala:37
+#: src/MainWindow.vala:1192 src/TextMenu.vala:57
 msgid "###### Header6"
 msgstr ""
 
-#: src/MainWindow.vala:1193 src/MarkdownMenu.vala:38
+#: src/MainWindow.vala:1193 src/TextMenu.vala:58
 msgid "**Bold**"
 msgstr ""
 
-#: src/MainWindow.vala:1194
+#: src/MainWindow.vala:1194 src/TextMenu.vala:59
 msgid "__Italicize_"
 msgstr ""
 
-#: src/MainWindow.vala:1195 src/MarkdownMenu.vala:40
+#: src/MainWindow.vala:1195 src/TextMenu.vala:60
 msgid "~~Strikeout~~"
 msgstr ""
 
-#: src/MainWindow.vala:1196
+#: src/MainWindow.vala:1196 src/TextMenu.vala:61
 msgid "`Code`"
 msgstr ""
 
-#: src/MainWindow.vala:1197 src/MarkdownMenu.vala:41
+#: src/MainWindow.vala:1197 src/TextMenu.vala:62
 #, fuzzy
 msgid "==Highlight=="
 msgstr "Выровнять по правой стороне"
 
-#: src/MainWindow.vala:1198 src/MarkdownMenu.vala:42
+#: src/MainWindow.vala:1198 src/TextMenu.vala:63
 msgid "<sup>Superscript</sup>"
 msgstr ""
 
-#: src/MainWindow.vala:1199 src/MarkdownMenu.vala:43
+#: src/MainWindow.vala:1199 src/TextMenu.vala:64
 msgid "<sub>Subscript</sub>"
 msgstr ""
 
-#: src/MainWindow.vala:1200 src/MarkdownMenu.vala:44
+#: src/MainWindow.vala:1200 src/TextMenu.vala:65
 msgid "[Link text](URL)"
 msgstr ""
 
@@ -1774,19 +1774,15 @@ msgstr "Развернуть все узлы"
 msgid "Unfold All Nodes"
 msgstr "Развернуть все узлы"
 
-#: src/MarkdownMenu.vala:39
-msgid "_Italicize_"
-msgstr ""
-
-#: src/MindMap.vala:431
+#: src/MindMap.vala:428
 msgid "Main Idea"
 msgstr "Главная идея"
 
-#: src/MindMap.vala:1073
+#: src/MindMap.vala:1079
 msgid "Select a link color"
 msgstr "Выбрать цвет связи"
 
-#: src/NodeGroup.vala:159
+#: src/NodeGroup.vala:167
 #, fuzzy
 msgid "Group Note"
 msgstr "Примечание группы"
@@ -2333,7 +2329,7 @@ msgstr ""
 msgid "Default file upgrade action"
 msgstr ""
 
-#: src/Preferences.vala:554 src/styles/NodeBorderNone.vala:34 src/Tags.vala:47
+#: src/Preferences.vala:554 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
 msgid "None"
 msgstr "Нет"
 
@@ -2649,11 +2645,11 @@ msgstr "Показать каталог с собственными стикер
 msgid "Add custom stickers"
 msgstr "Добавить свои стикеры"
 
-#: src/StickerInspector.vala:473
+#: src/StickerInspector.vala:484
 msgid "Import Sticker(s)"
 msgstr "Импортировать стикеры"
 
-#: src/StickerInspector.vala:473 src/StickerSet.vala:353
+#: src/StickerInspector.vala:484 src/StickerSet.vala:353
 msgid "Import"
 msgstr "Импортировать"
 
@@ -4067,39 +4063,39 @@ msgstr "Ширина указателя"
 msgid "Pointer Length"
 msgstr "Длина указателя"
 
-#: src/styles/LinkTypeCurved.vala:34
+#: src/styles/LinkTypeCurved.vala:37
 msgid "Curved"
 msgstr "Кривые"
 
-#: src/styles/LinkTypeRounded.vala:34
+#: src/styles/LinkTypeRounded.vala:37
 msgid "Rounded"
 msgstr "Скругленный"
 
-#: src/styles/LinkTypeSquared.vala:34
+#: src/styles/LinkTypeSquared.vala:37
 msgid "Squared"
 msgstr "Квадратный"
 
-#: src/styles/LinkTypeStraight.vala:34
+#: src/styles/LinkTypeStraight.vala:37
 msgid "Straight"
 msgstr "Прямой"
 
-#: src/styles/NodeBorderBracket.vala:34
+#: src/styles/NodeBorderBracket.vala:38
 msgid "Square Bracket"
 msgstr "Квадратная скобка"
 
-#: src/styles/NodeBorderPill.vala:34
+#: src/styles/NodeBorderPill.vala:38
 msgid "Pill-shaped"
 msgstr "Таблетка"
 
-#: src/styles/NodeBorderRounded.vala:34
+#: src/styles/NodeBorderRounded.vala:38
 msgid "Rounded Rectangle"
 msgstr "Скруглённый прямоугольник"
 
-#: src/styles/NodeBorderSquared.vala:34
+#: src/styles/NodeBorderSquared.vala:38
 msgid "Squared Off"
 msgstr "Прямоугольник"
 
-#: src/styles/NodeBorderUnderlined.vala:34
+#: src/styles/NodeBorderUnderlined.vala:37
 msgid "Underlined"
 msgstr "Подчёркивание"
 
@@ -4374,15 +4370,15 @@ msgstr "По умолчанию"
 msgid "Dark"
 msgstr "Тёмная"
 
-#: src/themes/ThemeDefault.vala:28
+#: src/themes/ThemeDefault.vala:29
 msgid "Light"
 msgstr "Светлая"
 
-#: src/themes/ThemeSolarizedDark.vala:31
+#: src/themes/ThemeSolarizedDark.vala:32
 msgid "Solarized Dark"
 msgstr "Тёмная Solarized"
 
-#: src/themes/ThemeSolarizedLight.vala:31
+#: src/themes/ThemeSolarizedLight.vala:32
 msgid "Solarized Light"
 msgstr "Светлая Solarized"
 
@@ -4403,7 +4399,7 @@ msgstr "Корень"
 msgid "callout resize"
 msgstr "смена размера выноски"
 
-#: src/undo_actions/UndoCalloutText.vala:32
+#: src/undo_actions/UndoCalloutText.vala:33
 msgid "callout text change"
 msgstr "смена текст выноски"
 
@@ -4415,15 +4411,15 @@ msgstr "присоединение узла"
 msgid "add connection"
 msgstr "создание соединения"
 
-#: src/undo_actions/UndoConnectionColor.vala:33
+#: src/undo_actions/UndoConnectionColor.vala:34
 msgid "connection color change"
 msgstr "смену цвета соединения"
 
-#: src/undo_actions/UndoConnectionDelete.vala:30
+#: src/undo_actions/UndoConnectionDelete.vala:31
 msgid "delete connection"
 msgstr "удаление соединения"
 
-#: src/undo_actions/UndoConnectionNote.vala:32
+#: src/undo_actions/UndoConnectionNote.vala:33
 msgid "connection note change"
 msgstr "смену примечания к соединению"
 
@@ -4431,19 +4427,19 @@ msgstr "смену примечания к соединению"
 msgid "delete connections"
 msgstr "удаление соединений"
 
-#: src/undo_actions/UndoConnectionStickerAdd.vala:31
+#: src/undo_actions/UndoConnectionStickerAdd.vala:32
 msgid "add connection sticker"
 msgstr "добавление стикера соединения"
 
-#: src/undo_actions/UndoConnectionStickerChange.vala:31
+#: src/undo_actions/UndoConnectionStickerChange.vala:32
 msgid "change connection sticker"
 msgstr "смену стикера соединения"
 
-#: src/undo_actions/UndoConnectionStickerRemove.vala:31
+#: src/undo_actions/UndoConnectionStickerRemove.vala:32
 msgid "remove connection sticker"
 msgstr "удаление стикера соединения"
 
-#: src/undo_actions/UndoConnectionTitle.vala:32
+#: src/undo_actions/UndoConnectionTitle.vala:33
 msgid "connection title change"
 msgstr "смену подписи соединения"
 
@@ -4451,27 +4447,27 @@ msgstr "смену подписи соединения"
 msgid "add group"
 msgstr "создание группы"
 
-#: src/undo_actions/UndoGroupNote.vala:32
+#: src/undo_actions/UndoGroupNote.vala:33
 msgid "node group note change"
 msgstr "изменения в примечании к группе узлов"
 
-#: src/undo_actions/UndoGroupRemove.vala:30
+#: src/undo_actions/UndoGroupRemove.vala:31
 msgid "remove group"
 msgstr "удаление группы"
 
-#: src/undo_actions/UndoGroupsColor.vala:33
+#: src/undo_actions/UndoGroupsColor.vala:34
 msgid "group color change"
 msgstr "смену цвета группы"
 
-#: src/undo_actions/UndoGroupsMerge.vala:31
+#: src/undo_actions/UndoGroupsMerge.vala:32
 msgid "group merge"
 msgstr "объединение группы"
 
-#: src/undo_actions/UndoGroupsRemove.vala:30
+#: src/undo_actions/UndoGroupsRemove.vala:31
 msgid "remove groups"
 msgstr "удаление групп"
 
-#: src/undo_actions/UndoNodeAddParent.vala:32
+#: src/undo_actions/UndoNodeAddParent.vala:33
 msgid "add parent node"
 msgstr "добавку узла-родителя"
 
@@ -4484,11 +4480,11 @@ msgstr "прикрепление узла"
 msgid "balance nodes"
 msgstr "балансировку узлов"
 
-#: src/undo_actions/UndoNodeCallout.vala:31
+#: src/undo_actions/UndoNodeCallout.vala:32
 msgid "node callout changed"
 msgstr "смена выноски узла"
 
-#: src/undo_actions/UndoNodeCut.vala:34
+#: src/undo_actions/UndoNodeCut.vala:35
 msgid "cut node"
 msgstr "вырезание узла в буфер обмена"
 
@@ -4500,32 +4496,32 @@ msgstr "удаление узла"
 msgid "detach node"
 msgstr "открепление узла"
 
-#: src/undo_actions/UndoNodeFolds.vala:30
-#: src/undo_actions/UndoNodeFolds.vala:35
+#: src/undo_actions/UndoNodeFolds.vala:31
+#: src/undo_actions/UndoNodeFolds.vala:36
 msgid "node fold changes"
 msgstr "смену сворачивания узла"
 
-#: src/undo_actions/UndoNodeGroup.vala:30
+#: src/undo_actions/UndoNodeGroup.vala:31
 msgid "node group change"
 msgstr "смену группы узлов"
 
-#: src/undo_actions/UndoNodeImage.vala:32
+#: src/undo_actions/UndoNodeImage.vala:33
 msgid "node image change"
 msgstr "смену изображения узла"
 
-#: src/undo_actions/UndoNodeInsert.vala:33
+#: src/undo_actions/UndoNodeInsert.vala:34
 msgid "insert node"
 msgstr "вставку узла"
 
-#: src/undo_actions/UndoNodeLayout.vala:30
+#: src/undo_actions/UndoNodeLayout.vala:31
 msgid "change layout"
 msgstr "смену схемы узлов"
 
-#: src/undo_actions/UndoNodeLinkColor.vala:33
+#: src/undo_actions/UndoNodeLinkColor.vala:34
 msgid "link color change"
 msgstr "смену цвета ссылки"
 
-#: src/undo_actions/UndoNodeLink.vala:32
+#: src/undo_actions/UndoNodeLink.vala:33
 msgid "node link change"
 msgstr "смену ссылки узла"
 
@@ -4537,7 +4533,7 @@ msgstr "перемещение узла"
 msgid "node name change"
 msgstr "смену названия узла"
 
-#: src/undo_actions/UndoNodeNote.vala:32
+#: src/undo_actions/UndoNodeNote.vala:33
 msgid "node note change"
 msgstr "изменение комментария к узлу"
 
@@ -4545,8 +4541,8 @@ msgstr "изменение комментария к узлу"
 msgid "paste node"
 msgstr "вставку узла"
 
-#: src/undo_actions/UndoNodeReparentLinkColor.vala:32
-#: src/undo_actions/UndoNodesReparentLinkColor.vala:33
+#: src/undo_actions/UndoNodeReparentLinkColor.vala:33
+#: src/undo_actions/UndoNodesReparentLinkColor.vala:34
 msgid "node link color reparent"
 msgstr "смена цвета узла на родительский"
 
@@ -4554,11 +4550,11 @@ msgstr "смена цвета узла на родительский"
 msgid "reparent children"
 msgstr "выбор нового родительского узла для узлов-потомков"
 
-#: src/undo_actions/UndoNodeReplace.vala:31
+#: src/undo_actions/UndoNodeReplace.vala:32
 msgid "replace node"
 msgstr "замену узла"
 
-#: src/undo_actions/UndoNodeResize.vala:34
+#: src/undo_actions/UndoNodeResize.vala:35
 msgid "node resize"
 msgstr "смену размера узла"
 
@@ -4579,35 +4575,35 @@ msgstr "вырезание узлов в буфер обмена"
 msgid "delete nodes"
 msgstr "удаление узлов"
 
-#: src/undo_actions/UndoNodeSequences.vala:30
+#: src/undo_actions/UndoNodeSequences.vala:31
 msgid "node sequence changes"
 msgstr ""
 
-#: src/undo_actions/UndoNodesGroup.vala:30
+#: src/undo_actions/UndoNodesGroup.vala:31
 msgid "change node groups"
 msgstr "смену групп узлов"
 
-#: src/undo_actions/UndoNodesInsert.vala:37
+#: src/undo_actions/UndoNodesInsert.vala:38
 msgid "insert nodes"
 msgstr "вставку узлов"
 
-#: src/undo_actions/UndoNodesLinkColor.vala:33
+#: src/undo_actions/UndoNodesLinkColor.vala:34
 msgid "node link color changes"
 msgstr "смену цвета ссылки узла"
 
-#: src/undo_actions/UndoNodesLink.vala:31
+#: src/undo_actions/UndoNodesLink.vala:32
 msgid "node link changes"
 msgstr "изменение ссылки узла"
 
-#: src/undo_actions/UndoNodeSort.vala:57
+#: src/undo_actions/UndoNodeSort.vala:59
 msgid "sort nodes"
 msgstr "сортировку узлов"
 
-#: src/undo_actions/UndoNodesRandLinkColor.vala:33
+#: src/undo_actions/UndoNodesRandLinkColor.vala:34
 msgid "random node link color changes"
 msgstr "назначение цвета связей случайным образом"
 
-#: src/undo_actions/UndoNodesReplace.vala:31
+#: src/undo_actions/UndoNodesReplace.vala:32
 msgid "replace nodes"
 msgstr "замену узлов"
 
@@ -4621,31 +4617,31 @@ msgstr "добавление форматирующего тега"
 msgid "tag remove"
 msgstr "удаление форматирующего тега"
 
-#: src/undo_actions/UndoNodeStickerAdd.vala:31
+#: src/undo_actions/UndoNodeStickerAdd.vala:32
 msgid "add node sticker"
 msgstr "добавление стикера к узлу"
 
-#: src/undo_actions/UndoNodeStickerChange.vala:31
+#: src/undo_actions/UndoNodeStickerChange.vala:32
 msgid "change node sticker"
 msgstr "смену стикера узла"
 
-#: src/undo_actions/UndoNodeStickerRemove.vala:31
+#: src/undo_actions/UndoNodeStickerRemove.vala:32
 msgid "remove node sticker"
 msgstr "удаление стикера из узла"
 
-#: src/undo_actions/UndoNodeSummaryDelete.vala:32
+#: src/undo_actions/UndoNodeSummaryDelete.vala:33
 msgid "delete summary node"
 msgstr "удаление узла сводки"
 
-#: src/undo_actions/UndoNodeSummaryFromNode.vala:31
+#: src/undo_actions/UndoNodeSummaryFromNode.vala:32
 msgid "convert to summary node"
 msgstr "превращение в узел сводки"
 
-#: src/undo_actions/UndoNodeSummary.vala:32
+#: src/undo_actions/UndoNodeSummary.vala:33
 msgid "insert summary node"
 msgstr "вставка узла сводки"
 
-#: src/undo_actions/UndoNodeTasks.vala:30
+#: src/undo_actions/UndoNodeTasks.vala:31
 msgid "node task changes"
 msgstr "смену статуса задачи"
 
@@ -4654,12 +4650,12 @@ msgstr "смену статуса задачи"
 msgid "reparent node"
 msgstr "изменение родителя узла"
 
-#: src/undo_actions/UndoStickerAdd.vala:30
+#: src/undo_actions/UndoStickerAdd.vala:31
 #: src/undo_actions/UndoStickerMove.vala:33
 msgid "add sticker"
 msgstr "добавление стикера"
 
-#: src/undo_actions/UndoStickerChange.vala:31
+#: src/undo_actions/UndoStickerChange.vala:32
 msgid "change sticker"
 msgstr "смену стикера"
 
@@ -4671,7 +4667,7 @@ msgstr "удаление стикера"
 msgid "resize sticker"
 msgstr "смену размера стикера"
 
-#: src/undo_actions/UndoStyleChange.vala:39
+#: src/undo_actions/UndoStyleChange.vala:40
 msgid "style change"
 msgstr "смену стиля"
 
@@ -4694,12 +4690,12 @@ msgstr "удаление форматирующего тега"
 msgid "clear formatting"
 msgstr "очистку форматирования"
 
-#: src/undo_actions/UndoTextDelete.vala:30
+#: src/undo_actions/UndoTextDelete.vala:31
 msgid "text deletion"
 msgstr "удаление текста"
 
-#: src/undo_actions/UndoTextInsert.vala:29
-#: src/undo_actions/UndoTextMultiInsert.vala:33
+#: src/undo_actions/UndoTextInsert.vala:30
+#: src/undo_actions/UndoTextMultiInsert.vala:34
 msgid "text insertion"
 msgstr "вставку текста"
 
@@ -4707,23 +4703,23 @@ msgstr "вставку текста"
 msgid "text replacement"
 msgstr "замену текста"
 
-#: src/undo_actions/UndoTextTagAdd.vala:32
+#: src/undo_actions/UndoTextTagAdd.vala:33
 msgid "format tag add"
 msgstr "добавление форматирующего тега"
 
-#: src/undo_actions/UndoTextTagRemove.vala:32
+#: src/undo_actions/UndoTextTagRemove.vala:33
 msgid "format tag remove"
 msgstr "удаление форматирующего тега"
 
-#: src/UndoBuffer.vala:85
+#: src/UndoBuffer.vala:92
 msgid "Undo "
 msgstr "Отменить "
 
-#: src/UndoBuffer.vala:91
+#: src/UndoBuffer.vala:99
 msgid "Redo "
 msgstr "Вернуть "
 
-#: src/UrlEditor.vala:38
+#: src/UrlEditor.vala:39
 msgid "URL"
 msgstr "URL"
 
@@ -4732,7 +4728,7 @@ msgstr "URL"
 msgid "error: %s\n"
 msgstr "ошибка: %s\n"
 
-#: src/ZoomWidget.vala:98
+#: src/ZoomWidget.vala:99
 msgid "Zoom Actual"
 msgstr "Настоящий размер"
 

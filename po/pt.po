@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-18 12:51-0500\n"
+"POT-Creation-Date: 2026-04-19 08:03-0500\n"
 "PO-Revision-Date: 2020-08-30 14:45+0100\n"
 "Last-Translator: André Barata <andretiagob@protonmail.com>\n"
 "Language-Team: none\n"
@@ -158,25 +158,25 @@ msgstr ""
 msgid "No text found"
 msgstr "Palavra Seguinte"
 
-#: src/ConnectionInspector.vala:83 src/KeyCommands.vala:724
+#: src/ConnectionInspector.vala:84 src/KeyCommands.vala:724
 #: src/NodeMenu.vala:96
 msgid "Connection"
 msgstr "Conexão"
 
-#: src/ConnectionInspector.vala:96 src/NodeInspector.vala:205
+#: src/ConnectionInspector.vala:97 src/NodeInspector.vala:205
 msgid "Color"
 msgstr "Cor"
 
-#: src/ConnectionInspector.vala:110
+#: src/ConnectionInspector.vala:111
 msgid "Use Theme Default Color"
 msgstr "Usar a Cor Padrão do Tema"
 
-#: src/ConnectionInspector.vala:136 src/GroupInspector.vala:92
+#: src/ConnectionInspector.vala:137 src/GroupInspector.vala:92
 #: src/NodeInspector.vala:290
 msgid "Note"
 msgstr "Nota"
 
-#: src/ConnectionInspector.vala:192
+#: src/ConnectionInspector.vala:193
 msgid "Delete Connection"
 msgstr "Apagar Conexão"
 
@@ -264,14 +264,14 @@ msgid ""
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1373
+#: src/Document.vala:697 src/ImageEditor.vala:428 src/MainWindow.vala:1373
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
-#: src/ThemeEditor.vala:154 src/UrlEditor.vala:62
+#: src/ThemeEditor.vala:154 src/UrlEditor.vala:63
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2238
-#: src/UrlEditor.vala:52
+#: src/Document.vala:700 src/ImageEditor.vala:431 src/MainWindow.vala:2238
+#: src/UrlEditor.vala:53
 msgid "Apply"
 msgstr "Aplicar"
 
@@ -324,7 +324,7 @@ msgstr "arrastar conexão"
 msgid "Another Idea"
 msgstr "Outra ideia"
 
-#: src/EmptyInspector.vala:30
+#: src/EmptyInspector.vala:32
 #, fuzzy
 msgid ""
 "Select a node, connection or group\n"
@@ -333,20 +333,20 @@ msgstr ""
 "<big>Selecione um nó ou conexão\n"
 "para ver/editar informação</big>"
 
-#: src/EmptyMenu.vala:32 src/NodeMenu.vala:38 src/NodeMenu.vala:253
+#: src/EmptyMenu.vala:33 src/NodeMenu.vala:38 src/NodeMenu.vala:253
 #: src/TextMenu.vala:38
 msgid "Paste"
 msgstr "Colar"
 
-#: src/EmptyMenu.vala:35 src/NodeMenu.vala:71
+#: src/EmptyMenu.vala:36 src/NodeMenu.vala:71
 msgid "Add Root Node"
 msgstr "Adicionar Nó de Raiz"
 
-#: src/EmptyMenu.vala:36
+#: src/EmptyMenu.vala:37
 msgid "Add Nodes With Quick Entry"
 msgstr "Adicionar Nós Com a Entrada Rápida"
 
-#: src/EmptyMenu.vala:39
+#: src/EmptyMenu.vala:40
 #, fuzzy
 msgid "Select First Root Node"
 msgstr "Selecionar Nó de Inicio"
@@ -413,7 +413,7 @@ msgid "Quality"
 msgstr ""
 
 #: src/exports/ExportMarkdown.vala:34 src/NoteView.vala:330
-#: src/TextMenu.vala:52
+#: src/TextMenu.vala:68
 msgid "Markdown"
 msgstr "Markdown"
 
@@ -531,7 +531,7 @@ msgstr "XMind 8"
 msgid "Yed"
 msgstr "Sim"
 
-#: src/Exports.vala:36
+#: src/Exports.vala:37
 msgid "JPEG"
 msgstr "JPEG"
 
@@ -568,28 +568,28 @@ msgstr ""
 msgid "Crop Area: %d,%d %3dx%3d"
 msgstr "Cortar Área: %d,%d %3dx%3d"
 
-#: src/ImageEditor.vala:401
+#: src/ImageEditor.vala:399
 #, c-format
 msgid "Cursor: %3d,%3d"
 msgstr "Cursor: %3d,%3d"
 
-#: src/ImageEditor.vala:410
+#: src/ImageEditor.vala:408
 msgid "Change Image"
 msgstr "Alterar Imagem"
 
-#: src/ImageEditor.vala:414
+#: src/ImageEditor.vala:412
 msgid "Paste Image from Clipboard"
 msgstr "Colar Imagem da Área de Transferência"
 
-#: src/ImageEditor.vala:418 src/NodeInspector.vala:392 src/NodeMenu.vala:234
+#: src/ImageEditor.vala:416 src/NodeInspector.vala:392 src/NodeMenu.vala:234
 msgid "Remove Image"
 msgstr "Remover Imagem"
 
-#: src/ImageEditor.vala:422
+#: src/ImageEditor.vala:420
 msgid "Copy Image to Clipboard"
 msgstr "Copiar Imagem para a Área de Transferência"
 
-#: src/ImageEditor.vala:427
+#: src/ImageEditor.vala:425
 msgid "Cut Image to Clipboard"
 msgstr "Cortar Imagem para a Área de Transferência"
 
@@ -1395,11 +1395,11 @@ msgstr "Abrir Ficheiro"
 msgid "Save File As"
 msgstr "Gravar Ficheiro Como"
 
-#: src/MainWindow.vala:259 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:259 src/StickerSet.vala:307 src/UndoBuffer.vala:91
 msgid "Undo"
 msgstr "Desfazer"
 
-#: src/MainWindow.vala:266 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:266 src/StickerSet.vala:308 src/UndoBuffer.vala:98
 msgid "Redo"
 msgstr "Refazer"
 
@@ -1437,11 +1437,11 @@ msgstr "Ampliar até ao Tamanho Atual"
 msgid "Zoom to Percent"
 msgstr "Ampliar para Percentagem"
 
-#: src/MainWindow.vala:777 src/ZoomWidget.vala:104
+#: src/MainWindow.vala:777 src/ZoomWidget.vala:105
 msgid "Zoom In"
 msgstr "Ampliar Mais"
 
-#: src/MainWindow.vala:784 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:784 src/ZoomWidget.vala:93
 msgid "Zoom Out"
 msgstr "Ampliar Menos"
 
@@ -1531,60 +1531,60 @@ msgstr "Cábula de Atalhos"
 msgid "About Minder"
 msgstr "Minder Portátil"
 
-#: src/MainWindow.vala:1187 src/MarkdownMenu.vala:32
+#: src/MainWindow.vala:1187 src/TextMenu.vala:52
 msgid "# Header1"
 msgstr ""
 
-#: src/MainWindow.vala:1188 src/MarkdownMenu.vala:33
+#: src/MainWindow.vala:1188 src/TextMenu.vala:53
 msgid "## Header2"
 msgstr ""
 
-#: src/MainWindow.vala:1189 src/MarkdownMenu.vala:34
+#: src/MainWindow.vala:1189 src/TextMenu.vala:54
 msgid "### Header3"
 msgstr ""
 
-#: src/MainWindow.vala:1190 src/MarkdownMenu.vala:35
+#: src/MainWindow.vala:1190 src/TextMenu.vala:55
 msgid "#### Header4"
 msgstr ""
 
-#: src/MainWindow.vala:1191 src/MarkdownMenu.vala:36
+#: src/MainWindow.vala:1191 src/TextMenu.vala:56
 msgid "##### Header5"
 msgstr ""
 
-#: src/MainWindow.vala:1192 src/MarkdownMenu.vala:37
+#: src/MainWindow.vala:1192 src/TextMenu.vala:57
 msgid "###### Header6"
 msgstr ""
 
-#: src/MainWindow.vala:1193 src/MarkdownMenu.vala:38
+#: src/MainWindow.vala:1193 src/TextMenu.vala:58
 msgid "**Bold**"
 msgstr ""
 
-#: src/MainWindow.vala:1194
+#: src/MainWindow.vala:1194 src/TextMenu.vala:59
 msgid "__Italicize_"
 msgstr ""
 
-#: src/MainWindow.vala:1195 src/MarkdownMenu.vala:40
+#: src/MainWindow.vala:1195 src/TextMenu.vala:60
 msgid "~~Strikeout~~"
 msgstr ""
 
-#: src/MainWindow.vala:1196
+#: src/MainWindow.vala:1196 src/TextMenu.vala:61
 msgid "`Code`"
 msgstr ""
 
-#: src/MainWindow.vala:1197 src/MarkdownMenu.vala:41
+#: src/MainWindow.vala:1197 src/TextMenu.vala:62
 #, fuzzy
 msgid "==Highlight=="
 msgstr "Alinhar à Direita"
 
-#: src/MainWindow.vala:1198 src/MarkdownMenu.vala:42
+#: src/MainWindow.vala:1198 src/TextMenu.vala:63
 msgid "<sup>Superscript</sup>"
 msgstr ""
 
-#: src/MainWindow.vala:1199 src/MarkdownMenu.vala:43
+#: src/MainWindow.vala:1199 src/TextMenu.vala:64
 msgid "<sub>Subscript</sub>"
 msgstr ""
 
-#: src/MainWindow.vala:1200 src/MarkdownMenu.vala:44
+#: src/MainWindow.vala:1200 src/TextMenu.vala:65
 msgid "[Link text](URL)"
 msgstr ""
 
@@ -1810,19 +1810,15 @@ msgstr "Desdobrar Todos os Nós"
 msgid "Unfold All Nodes"
 msgstr "Desdobrar Todos os Nós"
 
-#: src/MarkdownMenu.vala:39
-msgid "_Italicize_"
-msgstr ""
-
-#: src/MindMap.vala:431
+#: src/MindMap.vala:428
 msgid "Main Idea"
 msgstr "Ideia Principal"
 
-#: src/MindMap.vala:1073
+#: src/MindMap.vala:1079
 msgid "Select a link color"
 msgstr "Selecionar uma cor da ligação"
 
-#: src/NodeGroup.vala:159
+#: src/NodeGroup.vala:167
 #, fuzzy
 msgid "Group Note"
 msgstr "Adicionar Grupo"
@@ -2386,7 +2382,7 @@ msgstr ""
 msgid "Default file upgrade action"
 msgstr ""
 
-#: src/Preferences.vala:554 src/styles/NodeBorderNone.vala:34 src/Tags.vala:47
+#: src/Preferences.vala:554 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
 msgid "None"
 msgstr "Nenhum"
 
@@ -2705,12 +2701,12 @@ msgstr ""
 msgid "Add custom stickers"
 msgstr "Adicionar Ligação ao Nó"
 
-#: src/StickerInspector.vala:473
+#: src/StickerInspector.vala:484
 #, fuzzy
 msgid "Import Sticker(s)"
 msgstr "Remover Autocolante"
 
-#: src/StickerInspector.vala:473 src/StickerSet.vala:353
+#: src/StickerInspector.vala:484 src/StickerSet.vala:353
 #, fuzzy
 msgid "Import"
 msgstr "Importar Ficheiro"
@@ -4182,39 +4178,39 @@ msgstr "Largura da Linha"
 msgid "Pointer Length"
 msgstr ""
 
-#: src/styles/LinkTypeCurved.vala:34
+#: src/styles/LinkTypeCurved.vala:37
 msgid "Curved"
 msgstr "Curvado"
 
-#: src/styles/LinkTypeRounded.vala:34
+#: src/styles/LinkTypeRounded.vala:37
 msgid "Rounded"
 msgstr ""
 
-#: src/styles/LinkTypeSquared.vala:34
+#: src/styles/LinkTypeSquared.vala:37
 msgid "Squared"
 msgstr "Quadrado"
 
-#: src/styles/LinkTypeStraight.vala:34
+#: src/styles/LinkTypeStraight.vala:37
 msgid "Straight"
 msgstr "Reto"
 
-#: src/styles/NodeBorderBracket.vala:34
+#: src/styles/NodeBorderBracket.vala:38
 msgid "Square Bracket"
 msgstr "Parêntese Quadrado"
 
-#: src/styles/NodeBorderPill.vala:34
+#: src/styles/NodeBorderPill.vala:38
 msgid "Pill-shaped"
 msgstr "Forma de cápsula"
 
-#: src/styles/NodeBorderRounded.vala:34
+#: src/styles/NodeBorderRounded.vala:38
 msgid "Rounded Rectangle"
 msgstr "Retângulo Redondo"
 
-#: src/styles/NodeBorderSquared.vala:34
+#: src/styles/NodeBorderSquared.vala:38
 msgid "Squared Off"
 msgstr "Quadrado Cortado"
 
-#: src/styles/NodeBorderUnderlined.vala:34
+#: src/styles/NodeBorderUnderlined.vala:37
 msgid "Underlined"
 msgstr "Sublinhado"
 
@@ -4497,16 +4493,16 @@ msgstr "Padrão"
 msgid "Dark"
 msgstr "Escuro"
 
-#: src/themes/ThemeDefault.vala:28
+#: src/themes/ThemeDefault.vala:29
 #, fuzzy
 msgid "Light"
 msgstr "Para a direita"
 
-#: src/themes/ThemeSolarizedDark.vala:31
+#: src/themes/ThemeSolarizedDark.vala:32
 msgid "Solarized Dark"
 msgstr "Luz de Sol Escura"
 
-#: src/themes/ThemeSolarizedLight.vala:31
+#: src/themes/ThemeSolarizedLight.vala:32
 msgid "Solarized Light"
 msgstr "Luz de Sol"
 
@@ -4528,7 +4524,7 @@ msgstr "Raiz"
 msgid "callout resize"
 msgstr "redimensionar nó"
 
-#: src/undo_actions/UndoCalloutText.vala:32
+#: src/undo_actions/UndoCalloutText.vala:33
 #, fuzzy
 msgid "callout text change"
 msgstr "alterar nota da conexão"
@@ -4541,15 +4537,15 @@ msgstr "nó conectado"
 msgid "add connection"
 msgstr "adicionar conexão"
 
-#: src/undo_actions/UndoConnectionColor.vala:33
+#: src/undo_actions/UndoConnectionColor.vala:34
 msgid "connection color change"
 msgstr "alterar cor da conexão"
 
-#: src/undo_actions/UndoConnectionDelete.vala:30
+#: src/undo_actions/UndoConnectionDelete.vala:31
 msgid "delete connection"
 msgstr "apagar conexão"
 
-#: src/undo_actions/UndoConnectionNote.vala:32
+#: src/undo_actions/UndoConnectionNote.vala:33
 msgid "connection note change"
 msgstr "alterar nota da conexão"
 
@@ -4557,22 +4553,22 @@ msgstr "alterar nota da conexão"
 msgid "delete connections"
 msgstr "apagar conexões"
 
-#: src/undo_actions/UndoConnectionStickerAdd.vala:31
+#: src/undo_actions/UndoConnectionStickerAdd.vala:32
 #, fuzzy
 msgid "add connection sticker"
 msgstr "adicionar conexão"
 
-#: src/undo_actions/UndoConnectionStickerChange.vala:31
+#: src/undo_actions/UndoConnectionStickerChange.vala:32
 #, fuzzy
 msgid "change connection sticker"
 msgstr "Esconder conexões"
 
-#: src/undo_actions/UndoConnectionStickerRemove.vala:31
+#: src/undo_actions/UndoConnectionStickerRemove.vala:32
 #, fuzzy
 msgid "remove connection sticker"
 msgstr "apagar conexões"
 
-#: src/undo_actions/UndoConnectionTitle.vala:32
+#: src/undo_actions/UndoConnectionTitle.vala:33
 msgid "connection title change"
 msgstr "alterar título da conexão"
 
@@ -4581,31 +4577,31 @@ msgstr "alterar título da conexão"
 msgid "add group"
 msgstr "Adicionar Grupo"
 
-#: src/undo_actions/UndoGroupNote.vala:32
+#: src/undo_actions/UndoGroupNote.vala:33
 #, fuzzy
 msgid "node group note change"
 msgstr "alterar nota do nó"
 
-#: src/undo_actions/UndoGroupRemove.vala:30
+#: src/undo_actions/UndoGroupRemove.vala:31
 #, fuzzy
 msgid "remove group"
 msgstr "Criar Grupo"
 
-#: src/undo_actions/UndoGroupsColor.vala:33
+#: src/undo_actions/UndoGroupsColor.vala:34
 #, fuzzy
 msgid "group color change"
 msgstr "alterar cor da ligação"
 
-#: src/undo_actions/UndoGroupsMerge.vala:31
+#: src/undo_actions/UndoGroupsMerge.vala:32
 msgid "group merge"
 msgstr ""
 
-#: src/undo_actions/UndoGroupsRemove.vala:30
+#: src/undo_actions/UndoGroupsRemove.vala:31
 #, fuzzy
 msgid "remove groups"
 msgstr "Criar Grupo"
 
-#: src/undo_actions/UndoNodeAddParent.vala:32
+#: src/undo_actions/UndoNodeAddParent.vala:33
 msgid "add parent node"
 msgstr "adicionar nota pai"
 
@@ -4618,12 +4614,12 @@ msgstr "anexar nó"
 msgid "balance nodes"
 msgstr "equilibrar nós"
 
-#: src/undo_actions/UndoNodeCallout.vala:31
+#: src/undo_actions/UndoNodeCallout.vala:32
 #, fuzzy
 msgid "node callout changed"
 msgstr "alterar nota do nó"
 
-#: src/undo_actions/UndoNodeCut.vala:34
+#: src/undo_actions/UndoNodeCut.vala:35
 msgid "cut node"
 msgstr "cortar nó"
 
@@ -4635,34 +4631,34 @@ msgstr "apagar nó"
 msgid "detach node"
 msgstr "separar nó"
 
-#: src/undo_actions/UndoNodeFolds.vala:30
-#: src/undo_actions/UndoNodeFolds.vala:35
+#: src/undo_actions/UndoNodeFolds.vala:31
+#: src/undo_actions/UndoNodeFolds.vala:36
 #, fuzzy
 msgid "node fold changes"
 msgstr "alterar ligação do nó"
 
-#: src/undo_actions/UndoNodeGroup.vala:30
+#: src/undo_actions/UndoNodeGroup.vala:31
 #, fuzzy
 msgid "node group change"
 msgstr "alterar nota do nó"
 
-#: src/undo_actions/UndoNodeImage.vala:32
+#: src/undo_actions/UndoNodeImage.vala:33
 msgid "node image change"
 msgstr "alterar imagem do nó"
 
-#: src/undo_actions/UndoNodeInsert.vala:33
+#: src/undo_actions/UndoNodeInsert.vala:34
 msgid "insert node"
 msgstr "inserir nó"
 
-#: src/undo_actions/UndoNodeLayout.vala:30
+#: src/undo_actions/UndoNodeLayout.vala:31
 msgid "change layout"
 msgstr "alterar layout"
 
-#: src/undo_actions/UndoNodeLinkColor.vala:33
+#: src/undo_actions/UndoNodeLinkColor.vala:34
 msgid "link color change"
 msgstr "alterar cor da ligação"
 
-#: src/undo_actions/UndoNodeLink.vala:32
+#: src/undo_actions/UndoNodeLink.vala:33
 msgid "node link change"
 msgstr "alterar ligação do nó"
 
@@ -4674,7 +4670,7 @@ msgstr "mover nó"
 msgid "node name change"
 msgstr "alterar nome do nó"
 
-#: src/undo_actions/UndoNodeNote.vala:32
+#: src/undo_actions/UndoNodeNote.vala:33
 msgid "node note change"
 msgstr "alterar nota do nó"
 
@@ -4682,8 +4678,8 @@ msgstr "alterar nota do nó"
 msgid "paste node"
 msgstr "colar nó"
 
-#: src/undo_actions/UndoNodeReparentLinkColor.vala:32
-#: src/undo_actions/UndoNodesReparentLinkColor.vala:33
+#: src/undo_actions/UndoNodeReparentLinkColor.vala:33
+#: src/undo_actions/UndoNodesReparentLinkColor.vala:34
 msgid "node link color reparent"
 msgstr "alterar cor da ligação do nó"
 
@@ -4692,11 +4688,11 @@ msgstr "alterar cor da ligação do nó"
 msgid "reparent children"
 msgstr "Selecionar Filhos"
 
-#: src/undo_actions/UndoNodeReplace.vala:31
+#: src/undo_actions/UndoNodeReplace.vala:32
 msgid "replace node"
 msgstr "substituir nó"
 
-#: src/undo_actions/UndoNodeResize.vala:34
+#: src/undo_actions/UndoNodeResize.vala:35
 msgid "node resize"
 msgstr "redimensionar nó"
 
@@ -4717,36 +4713,36 @@ msgstr "cortar nós"
 msgid "delete nodes"
 msgstr "apagar nós"
 
-#: src/undo_actions/UndoNodeSequences.vala:30
+#: src/undo_actions/UndoNodeSequences.vala:31
 #, fuzzy
 msgid "node sequence changes"
 msgstr "alterar nome do nó"
 
-#: src/undo_actions/UndoNodesGroup.vala:30
+#: src/undo_actions/UndoNodesGroup.vala:31
 msgid "change node groups"
 msgstr ""
 
-#: src/undo_actions/UndoNodesInsert.vala:37
+#: src/undo_actions/UndoNodesInsert.vala:38
 msgid "insert nodes"
 msgstr "inserir nós"
 
-#: src/undo_actions/UndoNodesLinkColor.vala:33
+#: src/undo_actions/UndoNodesLinkColor.vala:34
 msgid "node link color changes"
 msgstr "alterar cor da ligação do nó"
 
-#: src/undo_actions/UndoNodesLink.vala:31
+#: src/undo_actions/UndoNodesLink.vala:32
 msgid "node link changes"
 msgstr "alterar ligação do nó"
 
-#: src/undo_actions/UndoNodeSort.vala:57
+#: src/undo_actions/UndoNodeSort.vala:59
 msgid "sort nodes"
 msgstr "organizar nós"
 
-#: src/undo_actions/UndoNodesRandLinkColor.vala:33
+#: src/undo_actions/UndoNodesRandLinkColor.vala:34
 msgid "random node link color changes"
 msgstr "alterar cor da ligação do nó aleatoriamente"
 
-#: src/undo_actions/UndoNodesReplace.vala:31
+#: src/undo_actions/UndoNodesReplace.vala:32
 msgid "replace nodes"
 msgstr "substituir nós"
 
@@ -4758,37 +4754,37 @@ msgstr ""
 msgid "tag remove"
 msgstr ""
 
-#: src/undo_actions/UndoNodeStickerAdd.vala:31
+#: src/undo_actions/UndoNodeStickerAdd.vala:32
 #, fuzzy
 msgid "add node sticker"
 msgstr "Adicionar Ligação ao Nó"
 
-#: src/undo_actions/UndoNodeStickerChange.vala:31
+#: src/undo_actions/UndoNodeStickerChange.vala:32
 #, fuzzy
 msgid "change node sticker"
 msgstr "Remover Autocolante"
 
-#: src/undo_actions/UndoNodeStickerRemove.vala:31
+#: src/undo_actions/UndoNodeStickerRemove.vala:32
 #, fuzzy
 msgid "remove node sticker"
 msgstr "Remover Autocolante"
 
-#: src/undo_actions/UndoNodeSummaryDelete.vala:32
+#: src/undo_actions/UndoNodeSummaryDelete.vala:33
 #, fuzzy
 msgid "delete summary node"
 msgstr "inserir nó"
 
-#: src/undo_actions/UndoNodeSummaryFromNode.vala:31
+#: src/undo_actions/UndoNodeSummaryFromNode.vala:32
 #, fuzzy
 msgid "convert to summary node"
 msgstr "inserir nó"
 
-#: src/undo_actions/UndoNodeSummary.vala:32
+#: src/undo_actions/UndoNodeSummary.vala:33
 #, fuzzy
 msgid "insert summary node"
 msgstr "inserir nó"
 
-#: src/undo_actions/UndoNodeTasks.vala:30
+#: src/undo_actions/UndoNodeTasks.vala:31
 #, fuzzy
 msgid "node task changes"
 msgstr "alterar tarefa do nó"
@@ -4798,13 +4794,13 @@ msgstr "alterar tarefa do nó"
 msgid "reparent node"
 msgstr "substituir nó"
 
-#: src/undo_actions/UndoStickerAdd.vala:30
+#: src/undo_actions/UndoStickerAdd.vala:31
 #: src/undo_actions/UndoStickerMove.vala:33
 #, fuzzy
 msgid "add sticker"
 msgstr "Autocolantes"
 
-#: src/undo_actions/UndoStickerChange.vala:31
+#: src/undo_actions/UndoStickerChange.vala:32
 msgid "change sticker"
 msgstr ""
 
@@ -4818,7 +4814,7 @@ msgstr "Remover Autocolante"
 msgid "resize sticker"
 msgstr "Remover Autocolante"
 
-#: src/undo_actions/UndoStyleChange.vala:39
+#: src/undo_actions/UndoStyleChange.vala:40
 msgid "style change"
 msgstr "alterar estilo"
 
@@ -4839,13 +4835,13 @@ msgstr ""
 msgid "clear formatting"
 msgstr ""
 
-#: src/undo_actions/UndoTextDelete.vala:30
+#: src/undo_actions/UndoTextDelete.vala:31
 #, fuzzy
 msgid "text deletion"
 msgstr "Seleção de Texto"
 
-#: src/undo_actions/UndoTextInsert.vala:29
-#: src/undo_actions/UndoTextMultiInsert.vala:33
+#: src/undo_actions/UndoTextInsert.vala:30
+#: src/undo_actions/UndoTextMultiInsert.vala:34
 #, fuzzy
 msgid "text insertion"
 msgstr "Conexão Seguinte"
@@ -4855,23 +4851,23 @@ msgstr "Conexão Seguinte"
 msgid "text replacement"
 msgstr "Substituição de Entrada Rápida"
 
-#: src/undo_actions/UndoTextTagAdd.vala:32
+#: src/undo_actions/UndoTextTagAdd.vala:33
 msgid "format tag add"
 msgstr ""
 
-#: src/undo_actions/UndoTextTagRemove.vala:32
+#: src/undo_actions/UndoTextTagRemove.vala:33
 msgid "format tag remove"
 msgstr ""
 
-#: src/UndoBuffer.vala:85
+#: src/UndoBuffer.vala:92
 msgid "Undo "
 msgstr "Desfazer "
 
-#: src/UndoBuffer.vala:91
+#: src/UndoBuffer.vala:99
 msgid "Redo "
 msgstr "Refazer "
 
-#: src/UrlEditor.vala:38
+#: src/UrlEditor.vala:39
 msgid "URL"
 msgstr "URL"
 
@@ -4880,7 +4876,7 @@ msgstr "URL"
 msgid "error: %s\n"
 msgstr ""
 
-#: src/ZoomWidget.vala:98
+#: src/ZoomWidget.vala:99
 #, fuzzy
 msgid "Zoom Actual"
 msgstr "Ampliar até ao Tamanho Atual"
