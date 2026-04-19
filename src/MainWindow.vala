@@ -446,7 +446,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     var value = settings.get_boolean( "enable-markdown" );
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var map = get_map( i );
-      map.markdown_parser.enable = value;
+      map.update_enable_markdown( value );
     }
   }
 

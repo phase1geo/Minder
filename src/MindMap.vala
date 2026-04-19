@@ -393,9 +393,6 @@ public class MindMap {
         break;
     }
 
-    // Initialize variables
-    // TBD
-
   }
 
   //-------------------------------------------------------------
@@ -440,6 +437,15 @@ public class MindMap {
       _canvas.queue_draw();
     });
 
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever the enable-markdown setting value is changed.
+  public void update_enable_markdown( bool enable ) {
+    if( markdown_parser.enable != enable ) {
+      markdown_parser.enable = enable;
+      queue_draw();
+    }
   }
 
   //-------------------------------------------------------------

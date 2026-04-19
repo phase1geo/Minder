@@ -353,6 +353,9 @@ public class CanvasText : Object {
   //-------------------------------------------------------------
   // Called whenever the text changes
   private void text_changed() {
+    if( !edit ) {
+      _nomarkup_text = new FormattedText.copy_clean( _map, _text );
+    }
     update_size( true );
   }
 
