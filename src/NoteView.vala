@@ -226,20 +226,22 @@ public class NoteView : GtkSource.View {
     }
   }
 
-  private static bool      _path_init = false;
-  private int              _last_lnum = -1;
-  private string?          _last_url  = null;
-  private int?             _last_link = null;
-  private Array<UrlPos>    _last_urls;
-  private Array<LinkPos>   _last_links;
-  private int              _last_x;
-  private int              _last_y;
-  private Regex?           _url_re;
-  private Regex?           _link_re;
-  private Tooltip          _tooltip;
-  private bool             _control   = false;
-  public  GtkSource.Style  _srcstyle  = null;
-  public  GtkSource.Buffer _buffer;
+  private MainWindow        _win;
+  private static bool       _path_init = false;
+  private int               _last_lnum = -1;
+  private string?           _last_url  = null;
+  private int?              _last_link = null;
+  private Array<UrlPos>     _last_urls;
+  private Array<LinkPos>    _last_links;
+  private int               _last_x;
+  private int               _last_y;
+  private Regex?            _url_re;
+  private Regex?            _link_re;
+  private Tooltip           _tooltip;
+  private bool              _control   = false;
+  private SimpleActionGroup _group;
+  public  GtkSource.Style   _srcstyle  = null;
+  public  GtkSource.Buffer  _buffer;
 
   public string text {
     set {
@@ -264,8 +266,11 @@ public class NoteView : GtkSource.View {
   public signal void node_link_clicked( int id );
   public signal void node_link_hover( int id );
 
-  /* Default constructor */
-  public NoteView() {
+  //-------------------------------------------------------------
+  // Default constructor
+  public NoteView( MainWindow win ) {
+
+    _win = win;
 
     completion.select_on_show = true;
 
@@ -315,6 +320,17 @@ public class NoteView : GtkSource.View {
       modified = true;
     });
 
+    // Create and add the action group to the mindmap canvas
+    _group = new SimpleActionGroup();
+    insert_action_group( "noteview", _group );
+
+    var md_menu = win.make_markdown_menu();
+
+    var extra = new GLib.Menu();
+    extra.append_submenu( _( "Markdown" ), md_menu );
+
+    extra_menu = extra;
+
     var focus = new EventControllerFocus();
     add_controller( focus );
     focus.enter.connect( on_focus );
@@ -356,24 +372,29 @@ public class NoteView : GtkSource.View {
 
   }
 
-  /* Returns the Markdown language parser used to highlight the text */
+  //-------------------------------------------------------------
+  // Returns the Markdown language parser used to highlight the text
   private string get_default_language() {
     return( "markdown-minder" );
   }
 
-  /* Returns the coloring scheme to use to highlight the text */
+  //-------------------------------------------------------------
+  // Returns the coloring scheme to use to highlight the text
   private string get_default_scheme () {
     return( Minder.settings.get_boolean( "colorize-notes" ) ? "minder.color" : "minder.none" );
   }
 
-  /* Clears the URL handler code to force it reparse the current line for URLs */
+  //-------------------------------------------------------------
+  // Clears the URL handler code to force it reparse the current
+  // line for URLs
   private void clear() {
     _last_lnum = -1;
     _last_url  = null;
     _last_link = null;
   }
 
-  /* Returns the string of text for the current line */
+  //-------------------------------------------------------------
+  // Returns the string of text for the current line
   private string current_line( TextIter cursor ) {
     var start = cursor;
     var end   = cursor;
@@ -382,10 +403,9 @@ public class NoteView : GtkSource.View {
     return( start.get_text( end ).chomp() );
   }
 
-  /*
-   Parses all of the URLs in the given line and stores their positions within
-   the _last_match_pos private member array.
-  */
+  //-------------------------------------------------------------
+  // Parses all of the URLs in the given line and stores their
+  // positions within the _last_match_pos private member array.
   private void parse_line_for_urls( string line ) {
     if( _url_re == null ) return;
     MatchInfo match_info;
@@ -401,10 +421,9 @@ public class NoteView : GtkSource.View {
     } catch( RegexError e ) {}
   }
 
-  /*
-   Parses all of the URLs in the given line and stores their positions within
-   the _last_match_pos private member array.
-  */
+  //-------------------------------------------------------------
+  // Parses all of the URLs in the given line and stores their
+  // positions within the _last_match_pos private member array.
   private void parse_line_for_node_links( string line ) {
     if( _link_re == null ) return;
     MatchInfo match_info;
@@ -421,7 +440,8 @@ public class NoteView : GtkSource.View {
     } catch( RegexError e ) {}
   }
 
-  /* Returns true if the specified cursor is within a parsed URL pattern */
+  //-------------------------------------------------------------
+  // Returns true if the specified cursor is within a parsed URL pattern
   private bool cursor_in_url( TextIter cursor ) {
     var offset = cursor.get_line_offset();
     for( int i=0; i<_last_urls.length; i++ ) {
@@ -435,7 +455,8 @@ public class NoteView : GtkSource.View {
     return( false );
   }
 
-  /* Returns true if the specified cursor is within a parsed URL pattern */
+  //-------------------------------------------------------------
+  // Returns true if the specified cursor is within a parsed URL pattern
   private bool cursor_in_node_link( TextIter cursor ) {
     var offset = cursor.get_line_offset();
     for( int i=0; i<_last_links.length; i++ ) {
@@ -449,7 +470,9 @@ public class NoteView : GtkSource.View {
     return( false );
   }
 
-  /* Called when URL checking should be performed on the current line (if necessary) */
+  //-------------------------------------------------------------
+  // Called when URL checking should be performed on the current
+  // line (if necessary)
   private void enable_url_checking( int x, int y ) {
     TextIter cursor;
     get_iter_at_location( out cursor, x, y );
@@ -472,23 +495,25 @@ public class NoteView : GtkSource.View {
     }
   }
 
-  /* Called when URL checking should no longer be performed on the current line */
+  //-------------------------------------------------------------
+  // Called when URL checking should no longer be performed on the
+  // current line
   private void disable_url_checking() {
     set_cursor( null );
     _last_lnum = -1;
     tooltip_text = "";
   }
 
-  /* Adds the unicoder text completion service */
+  //-------------------------------------------------------------
+  // Adds the unicoder text completion service
   public void add_unicode_completion( MainWindow win, UnicodeInsert unicoder ) {
     var provider = new CompletionProvider( win, _buffer, "Unicode", unicoder.create_proposals() );
     completion.add_provider( provider );
   }
 
-  /*
-   If the cursor is moved in the text viewer when the control key is held down,
-   check to see if the cursor is over a URL.
-  */
+  //-------------------------------------------------------------
+  // If the cursor is moved in the text viewer when the control
+  // key is held down, check to see if the cursor is over a URL.
   private void on_motion( double x, double y ) {
     _last_x = (int)x;
     _last_y = (int)y;
@@ -499,10 +524,9 @@ public class NoteView : GtkSource.View {
     }
   }
 
-  /*
-   Called when the user clicks with the mouse.  If the cursor is over a URL,
-   open the URL in an external application.
-  */
+  //-------------------------------------------------------------
+  // Called when the user clicks with the mouse.  If the cursor
+  // is over a URL, open the URL in an external application.
   private void on_press( int n_press, double x, double y ) {
     if( _control ) {
       var int_x = (int)x;
@@ -526,27 +550,70 @@ public class NoteView : GtkSource.View {
 
   private void on_keyrelease( uint keyval, uint keycode, ModifierType state ) {
     if( keyval == 65507 ) {
-      _control = false;
+      _control = false; 
       disable_url_checking();
     }
   }
 
-  /* Clears the stored URL information */
+  //-------------------------------------------------------------
+  // Clears the stored URL information
   private void on_focus() {
     clear();
   }
 
-  /* Override the built-int paste operation */
+  //-------------------------------------------------------------
+  // Override the built-int paste operation
   public override void paste_clipboard() {
     MinderClipboard.paste_into_note( this );
   }
 
-  /* Inserts the given string into the text buffer at the current insertion point */
+  //-------------------------------------------------------------
+  // Inserts the given string into the text buffer at the current
+  // insertion point
   public void paste_text( string str ) {
     buffer.insert_at_cursor( str, str.length );
   }
 
-  /* Inserts the given node link at the current insertion point */
+  //-------------------------------------------------------------
+  // Inserts the given Markdown into the text buffer depending
+  // on the state of the text selection.
+  public void paste_markdown( string pretext, string midtext = "", string posttext = "" ) {
+    TextIter selstart, selend, cursor;
+    if( buffer.get_selection_bounds( out selstart, out selend ) ) {
+      var str  = buffer.get_text( selstart, selend, true );
+      buffer.delete( ref selstart, ref selend );
+      if( midtext != "" ) {
+        var istr       = pretext + str + midtext + posttext;
+        var back_chars = posttext.char_count();
+        if( Utils.is_url( str ) ) {
+          istr = pretext + midtext + str + posttext;
+          back_chars = midtext.char_count() + str.char_count() + posttext.char_count();
+        }
+        buffer.insert( ref selstart, istr, istr.length );
+        buffer.get_iter_at_mark( out cursor, buffer.get_insert() );
+        cursor.backward_chars( back_chars );
+        buffer.place_cursor( cursor );
+      } else {
+        var istr = pretext + str + posttext;
+        buffer.insert( ref selstart, istr, istr.length );
+      }
+    } else if( posttext == "" ) {
+      buffer.get_iter_at_mark( out cursor, buffer.get_insert() );
+      cursor.set_line_offset( 0 );
+      buffer.place_cursor( cursor );
+      buffer.insert_at_cursor( pretext, pretext.length );
+    } else {
+      var str = pretext + midtext + posttext;
+      buffer.insert_at_cursor( str, str.length );
+      buffer.get_iter_at_mark( out cursor, buffer.get_insert() );
+      cursor.backward_chars( midtext.char_count() + posttext.char_count() );
+      buffer.place_cursor( cursor );
+    }
+    grab_focus();
+  }
+
+  //-------------------------------------------------------------
+  // Inserts the given node link at the current insertion point
   public void paste_node_link( NodeLink link ) {
     string text = "";
     var id  = node_link_added( link, out text );
@@ -554,7 +621,8 @@ public class NoteView : GtkSource.View {
     buffer.insert_at_cursor( str, str.length );
   }
 
-  /* Displays the tooltip at the current cursor location */
+  //-------------------------------------------------------------
+  // Displays the tooltip at the current cursor location
   public void show_tooltip( string tooltip ) {
     tooltip_text = tooltip;
   }

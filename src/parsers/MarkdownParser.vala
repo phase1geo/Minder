@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 (https://github.com/phase1geo/Outliner)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Outliner)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -23,44 +23,48 @@ public class MarkdownParser : TextParser {
 
   private MindMap _map;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public MarkdownParser( MindMap map ) {
     base( "Markdown" );
 
     _map = map;
 
-    /* Header */
+    // Header
     add_regex( "^(#{1,6})[^#].*$", highlight_header );
 
-    /* Lists */
+    // Lists
     add_regex( "^\\s*(\\*|\\+|\\-|[0-9]+\\.)\\s", (text, match) => {
       add_tag( text, match, 1, FormatTag.COLOR, _map.get_theme().get_color( "markdown_listitem" ).to_string() );
     });
 
-    /* Code */
+    // Code
     add_regex( "(`)([^`]+)(`)", (text, match) => {
       make_grey( text, match, 1 );
       add_tag( text, match, 2, FormatTag.CODE );
       make_grey( text, match, 3 );
     });
 
-    /* Bold */
+    // Bold
     add_regex( "(\\*\\*)([^* \\t].*?)(?<!\\\\|\\*| |\\t)(\\*\\*)", highlight_bold );
     add_regex( "(__)([^_ \\t].*?(?<!\\\\|_| |\\t))(__)", highlight_bold );
 
-    /* Italics */
+    // Italics
     add_regex( "(?<!_)(_)([^_ \t].*?(?<!\\\\|_| |\\t))(_)(?!_)", highlight_italics );
     add_regex( "(?<!\\*)(\\*)([^* \t].*?(?<!\\\\|\\*| |\\t))(\\*)(?!\\*)", highlight_italics );
 
-    /* Strikethrough */
+    // Strikethrough
     add_regex( "(~~)([^~ \t].*?(?<!\\\\|~| |\\t))(~~)", highlight_strikethrough );
 
-    /* Links */
+    // Highlight
+    add_regex( "(==)([^= \t].*?(?<!\\\\|=| |\\t))(==)", highlight_highlight );
+
+    // Links
     add_regex( "(\\[)(.+?)(\\]\\s*\\((\\S+).*\\))", highlight_url1 );
     add_regex( "(<)((mailto:)?[a-z0-9.-]+@[-a-z0-9]+(\\.[-a-z0-9]+)*\\.[a-z]+)(>)", highlight_url2 );
     add_regex( "(<)((https?|ftp):[^'\">\\s]+)(>)", highlight_url3 );
 
-    /* Subscript/Superscript */
+    // Subscript/Superscript
     add_regex( "(<sub>)(.*?)(</sub>)", highlight_subscript );
     add_regex( "(<sup>)(.*?)(</sup>)", highlight_superscript );
 
@@ -95,6 +99,14 @@ public class MarkdownParser : TextParser {
     if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
       add_tag( text, match, 2, FormatTag.STRIKETHRU );
+      make_grey( text, match, 3 );
+    }
+  }
+
+  private void highlight_highlight( FormattedText text, MatchInfo match ) {
+    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+      make_grey( text, match, 1 );
+      add_tag( text, match, 2, FormatTag.HILITE, "#A98400" );
       make_grey( text, match, 3 );
     }
   }
@@ -139,7 +151,9 @@ public class MarkdownParser : TextParser {
     }
   }
 
-  /* Returns true if the associated tag should enable the associated FormatBar button */
+  //-------------------------------------------------------------
+  // Returns true if the associated tag should enable the associated
+  // FormatBar button
   public override bool tag_handled( FormatTag tag ) {
     switch( tag ) {
       case FormatTag.HEADER  :
@@ -151,7 +165,8 @@ public class MarkdownParser : TextParser {
     }
   }
 
-  /* This is called when the associated FormatBar button is clicked */
+  //-------------------------------------------------------------
+  // This is called when the associated FormatBar button is clicked
   public override void insert_tag( CanvasText ct, FormatTag tag, int start_pos, int end_pos, UndoTextBuffer undo_buffer, string? extra ) {
     switch( tag ) {
       case FormatTag.HEADER  :  insert_header( ct, start_pos, extra, undo_buffer );  break;

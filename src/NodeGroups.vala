@@ -1,5 +1,5 @@
- /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+/*
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -36,22 +36,26 @@ public class NodeGroups {
 
   private Array<NodeGroup> _groups;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public NodeGroups() {
     _groups = new Array<NodeGroup>();
   }
 
-  /* Removes all stored groups from memory */
+  //-------------------------------------------------------------
+  // Removes all stored groups from memory
   public void clear() {
     _groups.remove_range( 0, _groups.length );
   }
 
-  /* Creates a new group for the array of nodes */
+  //-------------------------------------------------------------
+  // Creates a new group for the array of nodes
   public void add_group( NodeGroup group ) {
     _groups.append_val( group );
   }
 
-  /* Removes the given group from this list */
+  //-------------------------------------------------------------
+  // Removes the given group from this list
   public void remove_group( NodeGroup group ) {
     for( int i=0; i<_groups.length; i++ ) {
       if( _groups.index( i ) == group ) {
@@ -61,7 +65,9 @@ public class NodeGroups {
     }
   }
 
-  /* Checks to see if this group contains the given node and removes it if found */
+  //-------------------------------------------------------------
+  // Checks to see if this group contains the given node and
+  // removes it if found
   public void remove_node( Node node, ref UndoNodeGroups? affected ) {
     var groups = new Array<NodeGroup>();
     for( int i=(int)(_groups.length - 1); i>=0; i-- ) {
@@ -77,7 +83,8 @@ public class NodeGroups {
     }
   }
 
-  /* Removes the given nodes from this group, if found */
+  //-------------------------------------------------------------
+  // Removes the given nodes from this group, if found
   public void remove_nodes( Array<Node> nodes, out Array<UndoNodeGroups?> affected ) {
     affected = new Array<UndoNodeGroups?>();
     for( int i=0; i<nodes.length; i++ ) {
@@ -89,7 +96,8 @@ public class NodeGroups {
     }
   }
 
-  /* Merges the specifies groups into a single group */
+  //-------------------------------------------------------------
+  // Merges the specifies groups into a single group
   public NodeGroup? merge_groups( Array<NodeGroup> groups ) {
     if( groups.length == 0 ) return( null );
     var group = new NodeGroup.copy( groups.index( 0 ) );
@@ -102,7 +110,8 @@ public class NodeGroups {
     return( group );
   }
 
-  /* Returns true if the specified node group exists in this list */
+  //-------------------------------------------------------------
+  // Returns true if the specified node group exists in this list
   private bool group_exists( NodeGroup group ) {
     for( int i=0; i<_groups.length; i++ ) {
       if( _groups.index( i ) == group ) {
@@ -112,7 +121,8 @@ public class NodeGroups {
     return( false );
   }
 
-  /* Applies the given undo */
+  //-------------------------------------------------------------
+  // Applies the given undo
   public void apply_undo( UndoNodeGroups? g ) {
     if( g != null ) {
       for( int i=0; i<g.groups.length; i++ ) {
@@ -124,14 +134,16 @@ public class NodeGroups {
     }
   }
 
-  /* Applies the given list of undos */
+  //-------------------------------------------------------------
+  // Applies the given list of undos
   public void apply_undos( Array<UndoNodeGroups?> g ) {
     for( int i=0; i<g.length; i++ ) {
       apply_undo( g.index( i ) );
     }
   }
 
-  /* Returns the node group that contains the given cursor */
+  //-------------------------------------------------------------
+  // Returns the node group that contains the given cursor
   public NodeGroup? node_group_containing( double x, double y ) {
     for( int i=(int)(_groups.length - 1); i>=0; i-- ) {
       if( _groups.index( i ).is_within( x, y ) ) {
@@ -141,14 +153,17 @@ public class NodeGroups {
     return( null );
   }
 
-  /* Searches the groups for ones that match the given pattern and search options */
+  //-------------------------------------------------------------
+  // Searches the groups for ones that match the given pattern
+  // and search options
   public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     for( int i=0; i<_groups.length; i++ ) {
       _groups.index( i ).get_match_items( tabname, pattern, search_opts, ref matches );
     }
   }
 
-  /* Saves the current group in Minder XML format */
+  //-------------------------------------------------------------
+  // Saves the current group in Minder XML format
   public Xml.Node* save() {
     Xml.Node* g = new Xml.Node( null, "groups" );
     for( int i=0; i<_groups.length; i++ ) {

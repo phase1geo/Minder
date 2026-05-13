@@ -1,5 +1,5 @@
  /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -51,14 +51,16 @@ public class NodeGroup : Object {
     }
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public NodeGroup( MindMap map, Node node ) {
     color  = node.link_color ?? map.get_theme().get_color( "root_background" );
     _nodes = new Array<Node>();
     add_node( node );
   }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public NodeGroup.array( MindMap map, Array<Node> nodes ) {
     color  = nodes.index( 0 ).link_color ?? map.get_theme().get_color( "root_background" );
     _nodes = new Array<Node>();
@@ -67,7 +69,8 @@ public class NodeGroup : Object {
     }
   }
 
-  /* Copy constructor */
+  //-------------------------------------------------------------
+  // Copy constructor
   public NodeGroup.copy( NodeGroup group ) {
     color  = group.color;
     _nodes = new Array<Node>();
@@ -76,13 +79,15 @@ public class NodeGroup : Object {
     }
   }
 
-  /* Constructor from XML */
+  //-------------------------------------------------------------
+  // Constructor from XML
   public NodeGroup.from_xml( MindMap map, Xml.Node* n, Array<Node> nodes ) {
     _nodes = new Array<Node>();
     load( map, n, nodes );
   }
 
-  /* Adds the given node to this node group */
+  //-------------------------------------------------------------
+  // Adds the given node to this node group
   public void add_node( Node node ) {
     for( int i=0; i<_nodes.length; i++ ) {
       var n = _nodes.index( i );
@@ -97,7 +102,9 @@ public class NodeGroup : Object {
     _nodes.append_val( node );
   }
 
-  /* Checks to see if this group contains the given node and removes it if found */
+  //-------------------------------------------------------------
+  // Checks to see if this group contains the given node and
+  // removes it if found
   public bool remove_node( Node node ) {
     for( int i=0; i<_nodes.length; i++ ) {
       if( _nodes.index( i ) == node ) {
@@ -120,14 +127,16 @@ public class NodeGroup : Object {
     return( false );
   }
 
-  /* Merges the other node group into this one */
+  //-------------------------------------------------------------
+  // Merges the other node group into this one
   public void merge( NodeGroup other ) {
     for( int i=0; i<other._nodes.length; i++ ) {
       add_node( other._nodes.index( i ) );
     }
   }
 
-  /* Returns true if the given coordinates are within a group */
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates are within a group
   public bool is_within( double x, double y ) {
     var cursor = new NodePoint( x, y );
     var points = new Array<NodePoint?>();
@@ -145,10 +154,9 @@ public class NodeGroup : Object {
     return( true );
   }
 
-  /*
-   Populates the given ListStore with all groups that have notes that match
-   the given string pattern.
-  */
+  //-------------------------------------------------------------
+  // Populates the given ListStore with all groups that have notes
+  // that match the given string pattern.
   public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     var tab = Utils.rootname( tabname );
     if( search_opts[SearchOptions.NOTES] ) {
@@ -161,7 +169,8 @@ public class NodeGroup : Object {
     }
   }
 
-  /* Saves the current group in Minder XML format */
+  //-------------------------------------------------------------
+  // Saves the current group in Minder XML format
   public Xml.Node* save() {
     Xml.Node* g = new Xml.Node( null, "group" );
     g->set_prop( "color", Utils.color_from_rgba( color ) );
@@ -174,7 +183,8 @@ public class NodeGroup : Object {
     return( g );
   }
 
-  /* Loads the given group information */
+  //-------------------------------------------------------------
+  // Loads the given group information
   public void load( MindMap map, Xml.Node* g, Array<Node> nodes ) {
     string? c = g->get_prop( "color" );
     if( c != null ) {
@@ -192,7 +202,8 @@ public class NodeGroup : Object {
     }
   }
 
-  /* Loads the given node */
+  //-------------------------------------------------------------
+  // Loads the given node
   private void load_node( MindMap map, Xml.Node* n, Array<Node> nodes ) {
     string? i = n->get_prop( "id" );
     if( i != null ) {
@@ -205,14 +216,16 @@ public class NodeGroup : Object {
     }
   }
 
-  /* Loads the note value from the given XML node */
+  //-------------------------------------------------------------
+  // Loads the note value from the given XML node
   private void load_note( Xml.Node* n ) {
     if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
       note = n->children->get_content();
     }
   }
 
-  /* Draws a group around the stored set of nodes from this structure */
+  //-------------------------------------------------------------
+  // Draws a group around the stored set of nodes from this structure
   public void draw( Context ctx, Theme theme, bool exporting ) {
     var points   = new Array<NodePoint?>();
     var selected = (mode == GroupMode.SELECTED) && !exporting;
@@ -224,24 +237,26 @@ public class NodeGroup : Object {
     draw_cloud( ctx, (selected ? theme.get_color( "nodesel_background" ) : color), selected, alpha, points );
   }
 
-  /* Draws a group around this given node's tree */
+  //-------------------------------------------------------------
+  // Draws a group around this given node's tree 
   public static void draw_tree( Context ctx, Node node, Theme theme ) {
     var points = new Array<NodePoint?>();
     get_tree_points( node, node, points );
     draw_cloud( ctx, node.link_color, false, node.alpha, points );
   }
 
-  /* Draws the cloud associated with this group */
+  //-------------------------------------------------------------
+  // Draws the cloud associated with this group
   private static void draw_cloud( Context ctx, RGBA color, bool selected, double alpha, Array<NodePoint?> points ) {
 
-    /* Calculate the hull points */
+    // Calculate the hull points
     var hull = new Array<NodePoint?>();
     get_convex_hull( points, hull );
 
-    /* If there is nothing to draw, return */
+    // If there is nothing to draw, return
     if( hull.length == 0 ) return;
 
-    /* Draw the fill */
+    // Draw the fill
     Utils.set_context_color_with_alpha( ctx, color, (alpha * 0.3) );
     ctx.move_to( hull.index( 0 ).x, hull.index( 0 ).y );
     for( int i=0; i<hull.length; i++ ) {
@@ -249,7 +264,7 @@ public class NodeGroup : Object {
     }
     ctx.close_path();
 
-    /* Draw the stroke */
+    // Draw the stroke
     if( selected ) {
       ctx.fill_preserve();
       Utils.set_context_color_with_alpha( ctx, color, alpha );
@@ -260,7 +275,8 @@ public class NodeGroup : Object {
 
   }
 
-  /* Add the given node points to the points array */
+  //-------------------------------------------------------------
+  // Add the given node points to the points array
   public static void add_node_points( Array<NodePoint?> points, Node node, int pad = 0 ) {
 
     var x1  = node.posx - pad;
@@ -286,7 +302,8 @@ public class NodeGroup : Object {
 
   }
 
-  /* Gets the set of all points in the given node tree */
+  //-------------------------------------------------------------
+  // Gets the set of all points in the given node tree
   public static void get_tree_points( Node origin, Node node, Array<NodePoint?> points ) {
     if( node.folded_ancestor() == null ) {
       var pad = node.groups_between( origin ) * 5;
@@ -297,14 +314,16 @@ public class NodeGroup : Object {
     }
   }
 
-  /* Gets the array of all points necessary to draw a tight perimeter around the given set of node points */
+  //-------------------------------------------------------------
+  // Gets the array of all points necessary to draw a tight
+  // perimeter around the given set of node points
   public static void get_convex_hull( Array<NodePoint?> points, Array<NodePoint?> hull ) {
 
     var n = (int)points.length;
 
     if( n == 0 ) return;
 
-    /* Get the left-most point */
+    // Get the left-most point
     var l = 0;
     for( int i=1; i<n; i++ ) {
       if( points.index( i ).x < points.index( l ).x ) l = i;
@@ -323,7 +342,8 @@ public class NodeGroup : Object {
 
   }
 
-  /* Returns the side of the line that point 'r' lands on */
+  //-------------------------------------------------------------
+  // Returns the side of the line that point 'r' lands on
   public static int calc_orientation( NodePoint p, NodePoint q, NodePoint r ) {
     var val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
     if( val == 0 ) return( 0 );

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -51,6 +51,9 @@ public class TagInspector : Box {
     _editor.tag_removed.connect( tag_removed );
     _editor.select_changed.connect( tag_select_changed );
     _editor.visible_changed.connect( tag_visible_changed );
+    _editor.escaped.connect(() => {
+      _map.hide_properties();
+    });
 
     win.canvas_changed.connect( tab_changed );
 

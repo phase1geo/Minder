@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2021 (https://github.com/phase1geo/Outliner)
+* Copyright (c) 2021-2026 (https://github.com/phase1geo/Outliner)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -76,7 +76,8 @@ public class ZoomWidget : Gtk.Box {
 
   public signal void zoom_changed( double factor );
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ZoomWidget( int min, int max, int step, bool fill = true ) {
 
     this.min  = min;
@@ -109,29 +110,33 @@ public class ZoomWidget : Gtk.Box {
     append( _zoom_actual );
     append( _zoom_in );
 
-    /* Update the state of the widget */
+    // Update the state of the widget
     update_state();
 
   }
 
-  /* Update the zoom label */
+  //-------------------------------------------------------------
+  // Update the zoom label
   private void update_state() {
     _zoom_in.set_sensitive( value < max );
     _zoom_out.set_sensitive( value > min );
     _zoom_actual.label = "%d%%".printf( value );
   }
 
-  /* Perform a zoom in function */
+  //-------------------------------------------------------------
+  // Perform a zoom in function
   public void zoom_in() {
     value += step;
   }
 
-  /* Perform a zoom to 100% function */
+  //-------------------------------------------------------------
+  // Perform a zoom to 100% function
   public void zoom_actual() {
     value = 100;
   }
 
-  /* Perform a zoom out function */
+  //-------------------------------------------------------------
+  // Perform a zoom out function
   public void zoom_out() {
     value -= step;
   }

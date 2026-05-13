@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,7 +25,8 @@ public class UndoStyleAffectChange : UndoStyleChange {
 
   private GenericArray<Style> _styles;
 
-  /* Constructor for a style affect change */
+  //-------------------------------------------------------------
+  // Constructor for a style affect change
   public UndoStyleAffectChange( StyleAffects affects, Style style, MindMap map ) {
     base( affects, map );
     _styles = new GenericArray<Style>();

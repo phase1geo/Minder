@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,20 +25,23 @@ public class UndoStickerAdd : UndoItem {
 
   private Sticker _sticker;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoStickerAdd( Sticker sticker ) {
     base( _( "add sticker" ) );
     _sticker = sticker;
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data
   public override void undo( MindMap map ) {
     map.stickers.remove_sticker( _sticker );
     map.queue_draw();
     map.auto_save();
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation
   public override void redo( MindMap map ) {
     map.stickers.add_sticker( _sticker );
     map.set_current_sticker( _sticker );

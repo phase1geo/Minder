@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 (https://github.com/phase1geo/Outliner)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Outliner)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -23,7 +23,8 @@ public class TaggerParser : TextParser {
 
   private MindMap _map;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public TaggerParser( MindMap map ) {
 
     base( "Tagger" );
@@ -35,22 +36,23 @@ public class TaggerParser : TextParser {
 
   }
 
-  /* Highlights the given tag */
+  //-------------------------------------------------------------
+  // Highlights the given tag
   private void handle_tag( FormattedText text, MatchInfo match ) {
 
     var tag = get_text( match, 2 );
 
-    /* Highlight the tag */
+    // Highlight the tag
     add_tag( text, match, 1, FormatTag.TAG, tag );
 
-    /* If the FormattedText item matches the currently edited */
+    // If the FormattedText item matches the currently edited
     var current = _map.get_current_node();
     if( (current != null) && (current.name.text == text) ) {
 
       int start, end;
       match.fetch_pos( 1, out start, out end );
 
-      /* If the cursor is at the end of the tag, display the auto-completer */
+      // If the cursor is at the end of the tag, display the auto-completer
       var cursor = current.name.cursor;
       if( (start <= cursor) && (cursor <= end) ) {
         _map.canvas.show_auto_completion( _map.canvas.tagger.get_matches( tag ), (start + 1), end );
@@ -60,7 +62,8 @@ public class TaggerParser : TextParser {
 
   }
 
-  /* Handles hiding the auto-completion window */
+  //-------------------------------------------------------------
+  // Handles hiding the auto-completion window
   private void handle_notag( FormattedText text, MatchInfo match ) {
     var current = _map.get_current_node();
     if( (current != null) && (current.name.text == text) ) {

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,7 +26,8 @@ public class UndoNodesLink : UndoItem {
   Array<Node>      _nodes;
   Array<NodeLink?> _linked;
 
-  /* Constructor for a node link change */
+  //-------------------------------------------------------------
+  // Constructor for a node link change
   public UndoNodesLink( Array<Node> nodes ) {
     base( _( "node link changes" ) );
     _nodes  = new Array<Node>();
@@ -47,12 +48,14 @@ public class UndoNodesLink : UndoItem {
     map.auto_save();
   }
 
-  /* Undoes a node image change */
+  //-------------------------------------------------------------
+  // Undoes a node image change
   public override void undo( MindMap map ) {
     toggle( map );
   }
 
-  /* Redoes a node image change */
+  //-------------------------------------------------------------
+  // Redoes a node image change
   public override void redo( MindMap map ) {
     toggle( map );
   }

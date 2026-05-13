@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -180,7 +180,7 @@ public class NodeImage {
       _orig = new Pixbuf.from_file( fname );
 
       // Initialize the variables
-      if( init ) {
+      if( init || (crop_w > _orig.width) || (crop_h > _orig.height) ) {
         crop_x = 0;
         crop_y = 0;
         crop_w = _orig.width;

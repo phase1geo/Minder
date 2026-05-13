@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -28,7 +28,8 @@ public class UndoNodeInsert : UndoItem {
   private int   _index;
   private bool  _parent_folded;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoNodeInsert( Node n, int index ) {
     base( _( "insert node" ) );
     _n             = n;
@@ -37,7 +38,8 @@ public class UndoNodeInsert : UndoItem {
     _parent_folded = (_parent == null) ? false : _parent.folded;
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data
   public override void undo( MindMap map ) {
     if( _parent == null ) {
       map.model.remove_root( _index );
@@ -54,7 +56,8 @@ public class UndoNodeInsert : UndoItem {
     map.auto_save();
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation
   public override void redo( MindMap map ) {
     if( _parent == null ) {
       map.model.add_root( _n, _index );

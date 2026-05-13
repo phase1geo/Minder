@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -31,7 +31,6 @@ public class ThemeEditor : Gtk.Box {
   private bool                        _edit;
   private Entry                       _name;
   private HashMap<string,ColorButton> _btns;
-  private Switch                      _prefer_dark;
   private Button                      _del;
   private bool                        _ignore = false;
 
@@ -49,12 +48,12 @@ public class ThemeEditor : Gtk.Box {
     _win  = win;
     _btns = new HashMap<string,ColorButton>();
 
-    /* Add title */
+    // Add title
     var title = new Label( _( "Customize Theme" ) + "\n" );
     title.add_css_class( "titled" );
     append( title );
 
-    /* Add name label */
+    // Add name label
     var nlbl = new Label( _( "Name" ) + ":" ) {
       xalign = (float)0,
     };
@@ -75,7 +74,7 @@ public class ThemeEditor : Gtk.Box {
     nbox.append( _name );
     append( nbox );
 
-    /* Add theme options to grid */
+    // Add theme options to grid
     var grid = new Grid() {
       row_spacing    = 5,
       column_spacing = 30,
@@ -85,7 +84,7 @@ public class ThemeEditor : Gtk.Box {
       margin_bottom  = 5
     };
 
-    /* Create scrollable options grid */
+    // Create scrollable options grid
     var sw = new ScrolledWindow() {
       vexpand = true,
       child = grid
@@ -93,67 +92,53 @@ public class ThemeEditor : Gtk.Box {
     sw.child.set_size_request( 180, 600 );
     append( sw );
 
+    var row = 0;
+
     var color_lbl = new Label( _( "Base Colors" ) + "\n" ) {
       xalign = (float)0,
     };
     color_lbl.add_css_class( "titled" );
-    grid.attach( color_lbl, 0, 0, 2 );
+    grid.attach( color_lbl, 0, row, 2 );
+    row++;
 
-    add_color( _( "Background" ),             "background",            grid, 1 );
-    add_color( _( "Foreground" ),             "foreground",            grid, 2 );
-    add_color( _( "Root Node Background" ),   "root_background",       grid, 3 );
-    add_color( _( "Root Node Foreground" ),   "root_foreground",       grid, 4 );
-    add_color( _( "Node Select Background" ), "nodesel_background",    grid, 5 );
-    add_color( _( "Node Select Foreground" ), "nodesel_foreground",    grid, 6 );
-    add_color( _( "Text Select Background" ), "textsel_background",    grid, 7 );
-    add_color( _( "Text Select Foreground" ), "textsel_foreground",    grid, 8 );
-    add_color( _( "Text Cursor" ),            "text_cursor",           grid, 9 );
-    add_color( _( "Attachable Highlight" ),   "attachable",            grid, 10 );
-    add_color( _( "Connection Color" ),       "connection_background", grid, 11 );
-    add_color( _( "Connection Title Color" ), "connection_foreground", grid, 12 );
-    add_color( _( "Callout Background" ),     "callout_background",    grid, 13 );
-    add_color( _( "URL Link Background" ),    "url_background",        grid, 14 );
-    add_color( _( "URL Link Foreground" ),    "url_foreground",        grid, 15 );
-    add_color( _( "Tag" ),                    "tag",                   grid, 16 );
-    add_color( _( "Markdown Syntax Chars" ),  "syntax",                grid, 17 );
-    add_color( _( "Match Background" ),       "match_background",      grid, 18 );
-    add_color( _( "Match Foreground" ),       "match_foreground",      grid, 19 );
-    add_color( _( "Markdown List Item" ),     "markdown_listitem",     grid, 20 );
-
-    var row = 20;
+    add_color( _( "Background" ),             "background",            grid, ref row );
+    add_color( _( "Foreground" ),             "foreground",            grid, ref row );
+    add_color( _( "Root Node Background" ),   "root_background",       grid, ref row );
+    add_color( _( "Root Node Foreground" ),   "root_foreground",       grid, ref row );
+    add_color( _( "Node Select Background" ), "nodesel_background",    grid, ref row );
+    add_color( _( "Node Select Foreground" ), "nodesel_foreground",    grid, ref row );
+    add_color( _( "Text Select Background" ), "textsel_background",    grid, ref row );
+    add_color( _( "Text Select Foreground" ), "textsel_foreground",    grid, ref row );
+    add_color( _( "Text Cursor" ),            "text_cursor",           grid, ref row );
+    add_color( _( "Attachable Highlight" ),   "attachable",            grid, ref row );
+    add_color( _( "Connection Color" ),       "connection_background", grid, ref row );
+    add_color( _( "Connection Title Color" ), "connection_foreground", grid, ref row );
+    add_color( _( "Callout Background" ),     "callout_background",    grid, ref row );
+    add_color( _( "URL Link Background" ),    "url_background",        grid, ref row );
+    add_color( _( "URL Link Foreground" ),    "url_foreground",        grid, ref row );
+    add_color( _( "Highlighter" ),            "highlighter",           grid, ref row );
+    add_color( _( "Tag" ),                    "tag",                   grid, ref row );
+    add_color( _( "Markdown Syntax Chars" ),  "syntax",                grid, ref row );
+    add_color( _( "Match Background" ),       "match_background",      grid, ref row );
+    add_color( _( "Match Foreground" ),       "match_foreground",      grid, ref row );
+    add_color( _( "Markdown List Item" ),     "markdown_listitem",     grid, ref row );
 
     grid.attach( new Label( "" ), 0, row );
-
-    var dark_lbl = new Label( _( "Prefer Dark Mode" ) ) {
-      xalign = (float)0,
-    };
-    dark_lbl.add_css_class( "titled" );
-
-    _prefer_dark = new Switch() {
-      margin_top = 20
-    };
-    _prefer_dark.notify["active"].connect((e) => {
-      if( _ignore ) return;
-      _theme.prefer_dark = _prefer_dark.active;
-      _win.get_current_map().model.set_theme( _theme, true );
-    });
-
-    grid.attach( dark_lbl,     0, (row + 1) );
-    grid.attach( _prefer_dark, 1, (row + 1) );
-    grid.attach( new Label( "" ), 0, (row + 2) );
+    row++;
 
     var link_lbl = new Label( _( "Link Colors" ) + "\n" ) {
       xalign = (float)0,
     };
     link_lbl.add_css_class( "titled" );
-    grid.attach( link_lbl, 0, (row + 3), 2 );
+    grid.attach( link_lbl, 0, row, 2 );
+    row++;
 
-    /* Add link colors */
+    // Add link colors
     for( int i=0; i<Theme.num_link_colors(); i++ ) {
-      add_color( _( "Link Color" ) + " #%d".printf( i + 1 ), "link_color%d".printf( i ), grid, ((row + 4) + i) );
+      add_color( _( "Link Color" ) + " #%d".printf( i + 1 ), "link_color%d".printf( i ), grid, ref row );
     }
 
-    /* Create the button bar */
+    // Create the button bar
     _del = new Button.with_label( _( "Delete" ) ) {
       halign  = Align.START,
       hexpand = true,
@@ -189,8 +174,9 @@ public class ThemeEditor : Gtk.Box {
 
   }
 
-  /* Adds a coloring row */
-  private void add_color( string lbl_str, string name, Grid grid, int row ) {
+  //-------------------------------------------------------------
+  // Adds a coloring row
+  private void add_color( string lbl_str, string name, Grid grid, ref int row ) {
 
     var lbl = new Label( "  " + lbl_str ) {
       xalign = (float)0
@@ -208,37 +194,40 @@ public class ThemeEditor : Gtk.Box {
     grid.attach( lbl, 0, row );
     grid.attach( btn, 1, row, 2 );
 
+    row++;
+
   }
 
-  /* This should be called prior to editing a theme */
+  //-------------------------------------------------------------
+  // This should be called prior to editing a theme
   public void initialize( Theme theme, bool edit ) {
 
-    /* Initialize class variables */
+    // Initialize class variables
     _orig_theme = theme;
     _edit       = edit;
-    _theme      = new Theme.from_theme( theme );
+    _theme      = new Theme.customized( theme );
 
-    /* Figure out a unique name for the new theme */
+    // Figure out a unique name for the new theme
     if( !edit ) {
       _theme.name = _theme.label = _win.themes.uniquify_name( _( "Custom" ) + " #1" );
     }
 
     _ignore = true;
 
-    /* Initialize the UI */
+    // Initialize the UI
     var colors = _theme.colors();
     for( int i=0; i<colors.length; i++ ) {
       _btns.get( colors.index( i ) ).rgba = _theme.get_color( colors.index( i ) );
     }
-    _name.text = _theme.name;
-    _prefer_dark.set_active( _theme.prefer_dark );
-    _del.visible = edit && !theme.temporary;
+    _name.text   = _theme.name;
+    _del.visible = edit;
 
     _ignore = false;
 
   }
 
-  /* Displays the dialog window to confirm theme deletion */
+  //-------------------------------------------------------------
+  // Displays the dialog window to confirm theme deletion
   private void confirm_deletion() {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
@@ -270,25 +259,27 @@ public class ThemeEditor : Gtk.Box {
 
   }
 
-  /* Deletes the current theme */
+  //-------------------------------------------------------------
+  // Deletes the current theme
   private void delete_theme() {
     _win.get_current_map().model.set_theme( _win.themes.get_theme( _( "Default" ) ), true );
     _win.themes.delete_theme( _orig_theme.name );
     _win.hide_theme_editor();
   }
 
-  /* Hides the theme editor panel without saving */
+  //-------------------------------------------------------------
+  // Hides the theme editor panel without saving
   private void close_window() {
     _win.get_current_map().model.set_theme( _orig_theme, true );
     _win.hide_theme_editor();
   }
 
-  /* Saves the theme and hides the theme editor panel */
+  //-------------------------------------------------------------
+  // Saves the theme and hides the theme editor panel
   private void save_theme() {
     _theme.name = _theme.label = _name.text;
     if( _edit ) {
       _orig_theme.copy( _theme );
-      _orig_theme.temporary = false;
       _win.themes.themes_changed();
     } else {
       _win.themes.add_theme( _theme );

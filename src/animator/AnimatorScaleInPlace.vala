@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2021 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2021-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -28,7 +28,8 @@ public class AnimatorScaleInPlace : AnimatorAction {
   private double? _ssx = null;     // Screen X to keep stable
   private double? _ssy = null;     // Screen X to keep stable
 
-  /* Constructor for a pan change */
+  //-------------------------------------------------------------
+  // Constructor for a pan change
   public AnimatorScaleInPlace( DrawArea da, string name, double ssx, double ssy ) {
     base( name, false );
     _sscale = da.sfactor;
@@ -36,17 +37,20 @@ public class AnimatorScaleInPlace : AnimatorAction {
     _ssy = ssy;
   }
 
-  /* Returns the NODES types */
+  //-------------------------------------------------------------
+  // Returns the NODES types
   public override AnimationType type() {
     return( AnimationType.PANSCALE );
   }
 
-  /* User method which performs the animation */
+  //-------------------------------------------------------------
+  // User method which performs the animation
   public override void capture( DrawArea da ) {
     _escale = da.sfactor;
   }
 
-  /* Adjusts the origin for the given frame */
+  //-------------------------------------------------------------
+  // Adjusts the origin for the given frame
   public override void adjust( DrawArea da ) {
     double divisor = index / frames;
     index++;

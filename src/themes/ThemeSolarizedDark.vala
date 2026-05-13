@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -24,14 +24,14 @@ using Gtk;
 
 public class ThemeSolarizedDark : Theme {
 
-  /* Create the theme colors */
+  //-------------------------------------------------------------
+  // Create the theme colors
   public ThemeSolarizedDark() {
 
-    name   = "solarized_dark";
-    label  = _( "Solarized Dark" );
-    custom = false;
+    name  = "solarized_dark";
+    label = _( "Solarized Dark" );
 
-    /* Generate the non-link colors */
+    // Generate the non-link colors
     set_color( "background",            color_from_string( "#002B36" ) );
     set_color( "foreground",            color_from_string( "#93A1A1" ) );
     set_color( "root_background",       color_from_string( "#d4d4d4" ) );
@@ -46,6 +46,7 @@ public class ThemeSolarizedDark : Theme {
     set_color( "connection_foreground", color_from_string( "#d4d4d4" ) );
     set_color( "url_background",        color_from_string( "Grey") );
     set_color( "url_foreground",        color_from_string( "#62a0ea" ) );
+    set_color( "highlighter",           color_from_string( "#aaaa00" ) );
     set_color( "tag",                   color_from_string( "#c00000" ) );
     set_color( "syntax",                color_from_string( "Grey" ) );
     set_color( "match_background",      color_from_string( "Gold" ) );
@@ -61,8 +62,6 @@ public class ThemeSolarizedDark : Theme {
     set_color( "link_color5", color_from_string( "#6C71C4" ) );
     set_color( "link_color6", color_from_string( "#D33682" ) );
     set_color( "link_color7", color_from_string( "#2AA198" ) );
-
-    prefer_dark = true;
 
   }
 

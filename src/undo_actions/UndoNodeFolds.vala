@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,7 +25,8 @@ public class UndoNodeFolds : UndoItem {
 
   Array<Node> _nodes;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoNodeFolds( Array<Node> nodes ) {
     base( _( "node fold changes" ) );
     _nodes = nodes;
@@ -37,7 +38,8 @@ public class UndoNodeFolds : UndoItem {
     _nodes.append_val( node );
   }
 
-  /* Toggles the fold indicators */
+  //-------------------------------------------------------------
+  // Toggles the fold indicators
   private void change( MindMap map ) {
     map.animator.add_nodes_fold( map.get_nodes(), _nodes, "undo nodes fold" );
     for( int i=0; i<_nodes.length; i++ ) {
@@ -49,12 +51,14 @@ public class UndoNodeFolds : UndoItem {
     map.auto_save();
   }
 
-  /* Undoes a node fold operation */
+  //-------------------------------------------------------------
+  // Undoes a node fold operation
   public override void undo( MindMap map ) {
     change( map );
   }
 
-  /* Redoes a node fold operation */
+  //-------------------------------------------------------------
+  // Redoes a node fold operation
   public override void redo( MindMap map ) {
     change( map );
   }

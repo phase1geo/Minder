@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,7 +25,8 @@ public class UndoStyleLinkType : UndoStyleChange {
 
   GenericArray<LinkType> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleLinkType( StyleAffects affects, LinkType link_type, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<LinkType>();

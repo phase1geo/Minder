@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -255,7 +255,7 @@ public class ImageEditor {
     var status  = create_status_area();
     var buttons = create_buttons( da, im );
 
-    /* Pack the widgets into the window */
+    // Pack the widgets into the window
     var box = new Box( Orientation.VERTICAL, 5 ) {
       margin_start  = 5,
       margin_end    = 5,
@@ -266,13 +266,13 @@ public class ImageEditor {
     box.append( status );
     box.append( buttons );
 
-    /* Add the box to the popover */
+    // Add the box to the popover
     _popover = new Popover() {
       child = box
     };
     _popover.set_parent( da );
 
-    /* Set the stage for keyboard shortcuts */
+    // Set the stage for keyboard shortcuts
     var key = new EventControllerKey();
     box.add_controller( key );
     key.key_pressed.connect( (keyval, keycode, state) => {
@@ -295,14 +295,14 @@ public class ImageEditor {
       return( true );
     });
 
-    /* Update the UI state whenever the mouse enters the popover area */
+    // Update the UI state whenever the mouse enters the popover area
     var motion = new EventControllerMotion();
     box.add_controller( motion );
     motion.enter.connect((x, y) => {
       update_ui();
     });
 
-    /* Initialize the past button state */
+    // Initialize the past button state
     update_ui();
 
   }
@@ -320,10 +320,8 @@ public class ImageEditor {
       draw_image( ctx );
     });
 
-    /*
-     Make sure that we add a CSS class name to ourselves so we can color
-     our background with the theme.
-    */
+    // Make sure that we add a CSS class name to ourselves so we can color
+    // our background with the theme.
     da.add_css_class( "canvas" );
 
     var click = new GestureClick();
@@ -364,7 +362,7 @@ public class ImageEditor {
       set_cursor_location( (int)scaled_x, (int)scaled_y );
     });
 
-    /* Set ourselves up to be a drag target */
+    // Set ourselves up to be a drag target
     var drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
     da.add_controller( drop );
     drop.drop.connect((val, x, y) => {
@@ -606,7 +604,8 @@ public class ImageEditor {
     remove_image( _im );
   }
 
-  /* Pastes the image from the clipboard */
+  //-------------------------------------------------------------
+  // Pastes the image from the clipboard
   private void action_paste() {
     if( image_pasteable() ) {
       var clipboard = Display.get_default().get_clipboard();

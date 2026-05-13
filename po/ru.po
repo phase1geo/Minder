@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-07 19:32-0600\n"
+"POT-Creation-Date: 2026-04-19 08:03-0500\n"
 "PO-Revision-Date: 2025-11-14 08:53+0100\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -24,13 +24,18 @@ msgstr ""
 msgid "Mind-mapping application"
 msgstr "Программа для построения ментальных карт"
 
-#: src/About.vala:39
-msgid "Copyright © 2018-2024 Trevor Williams"
-msgstr "Авторские права © 2018-2025 Trevor Williams"
+#: src/About.vala:39 src/StickerSet.vala:210
+msgid "Copyright"
+msgstr "Авторские права"
 
 #: src/About.vala:43
 msgid "Minder in AppCenter"
 msgstr "Minder в AppCenter"
+
+#: src/About.vala:60
+#, c-format
+msgid "Flatpak Runtime: %s"
+msgstr ""
 
 #: src/Application.vala:133
 #, c-format
@@ -58,7 +63,9 @@ msgstr "Запустить Minder и создать карту"
 #, fuzzy
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
-msgstr "Включить прозрачный фон для изображений PNG. По умолчанию прозрачность отключена."
+msgstr ""
+"Включить прозрачный фон для изображений PNG. По умолчанию прозрачность "
+"отключена."
 
 #: src/Application.vala:145
 #, fuzzy
@@ -73,34 +80,56 @@ msgstr "Качество JPEG (0-100). 90 по умолчанию."
 msgid "Enables image links in exported Markdown"
 msgstr "Включает ссылки на изображения в экспортированном Markdown"
 
+#: src/Application.vala:152
+#, fuzzy
+msgid "Import Example:\n"
+msgstr "Импортировать файл"
+
+#: src/Application.vala:153
+#, c-format
+msgid "  %scom.github.phase1geo.minder --import=markdown file.markdown\n"
+msgstr ""
+
+#: src/Application.vala:155
+#, fuzzy
+msgid "Export Example:\n"
+msgstr "Экспортировать файл"
+
 #: src/Application.vala:156
+#, c-format
+msgid ""
+"  %scom.github.phase1geo.minder --export=png --png-transparent file.minder "
+"file.png\n"
+msgstr ""
+
+#: src/Application.vala:165
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "Ошибка: %s\n"
 
-#: src/Application.vala:157
+#: src/Application.vala:166
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "Выполните '%s --help' для просмотра доступных опций\n"
 
-#: src/Application.vala:180
+#: src/Application.vala:189
 msgid "ERROR: Unable to import file"
 msgstr "Ошибка: не удалось импортировать файл"
 
-#: src/Application.vala:184
+#: src/Application.vala:193
 msgid "ERROR: Import is missing filename to import"
 msgstr "Ошибка: отсутствует имя импортируемого файла"
 
-#: src/Application.vala:207
+#: src/Application.vala:216
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr "Ошибка: для экспорта не хватает исходного и/или экспортируемого файла"
 
-#: src/Application.vala:217
+#: src/Application.vala:226
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "Ошибка: не удалось открыть файл '%s'\n"
 
-#: src/Application.vala:251
+#: src/Application.vala:262
 #, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "Ошибка: не удалось загрузить файл Minder, %s"
@@ -115,7 +144,7 @@ msgstr "Очистить список идей"
 
 #: src/CalloutMenu.vala:33 src/ConnectionMenu.vala:34
 #: src/ConnectionsMenu.vala:33 src/GroupsMenu.vala:33 src/NodeMenu.vala:40
-#: src/NodesMenu.vala:35 src/TemplateEditor.vala:110 src/ThemeEditor.vala:157
+#: src/NodesMenu.vala:35 src/TemplateEditor.vala:110 src/ThemeEditor.vala:142
 msgid "Delete"
 msgstr "Удалить"
 
@@ -123,33 +152,33 @@ msgstr "Удалить"
 msgid "Select Node"
 msgstr "Выбрать узел"
 
-#: src/Callout.vala:131 src/KeyCommands.vala:677 src/NodeMenu.vala:93
+#: src/Callout.vala:131 src/KeyCommands.vala:721 src/NodeMenu.vala:97
 msgid "Callout"
 msgstr "Выноска"
 
-#: src/CanvasText.vala:291 src/FormattedText.vala:1179
+#: src/CanvasText.vala:305 src/FormattedText.vala:1190
 msgid "No text found"
 msgstr "Текст не найден"
 
-#: src/ConnectionInspector.vala:77 src/KeyCommands.vala:680
-#: src/NodeMenu.vala:92
+#: src/ConnectionInspector.vala:84 src/KeyCommands.vala:724
+#: src/NodeMenu.vala:96
 msgid "Connection"
 msgstr "Соединения"
 
-#: src/ConnectionInspector.vala:90 src/NodeInspector.vala:199
+#: src/ConnectionInspector.vala:97 src/NodeInspector.vala:205
 msgid "Color"
 msgstr "Цвет"
 
-#: src/ConnectionInspector.vala:104
+#: src/ConnectionInspector.vala:111
 msgid "Use Theme Default Color"
 msgstr "Использовать цвет темы по умолчанию"
 
-#: src/ConnectionInspector.vala:130 src/GroupInspector.vala:86
-#: src/NodeInspector.vala:284
+#: src/ConnectionInspector.vala:137 src/GroupInspector.vala:92
+#: src/NodeInspector.vala:290
 msgid "Note"
 msgstr "Примечание"
 
-#: src/ConnectionInspector.vala:186
+#: src/ConnectionInspector.vala:193
 msgid "Delete Connection"
 msgstr "Удалить соединение"
 
@@ -157,11 +186,11 @@ msgstr "Удалить соединение"
 msgid "Edit Title…"
 msgstr "Изменить заголовок…"
 
-#: src/ConnectionMenu.vala:38 src/GroupsMenu.vala:36 src/NodeMenu.vala:50
+#: src/ConnectionMenu.vala:38 src/GroupsMenu.vala:36 src/NodeMenu.vala:54
 msgid "Edit Note"
 msgstr "Изменить примечание"
 
-#: src/ConnectionMenu.vala:39 src/NodeMenu.vala:54
+#: src/ConnectionMenu.vala:39 src/NodeMenu.vala:58
 msgid "Remove Sticker"
 msgstr "Удалить стикер"
 
@@ -181,16 +210,16 @@ msgstr "Следующее соединение"
 msgid "Previous Connection"
 msgstr "Предыдущее соединение"
 
-#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:313
-#: src/NodeMenu.vala:100 src/NodesMenu.vala:59
+#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:336
+#: src/NodeMenu.vala:104 src/NodesMenu.vala:59
 msgid "Select"
 msgstr "Выбрать"
 
-#: src/Connection.vala:804
+#: src/Connection.vala:810
 msgid "Connection Title"
 msgstr "Подпись соединения"
 
-#: src/Connection.vala:812
+#: src/Connection.vala:818
 msgid "Connection Note"
 msgstr "Примечание к соединению"
 
@@ -235,14 +264,14 @@ msgid ""
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:697 src/ImageEditor.vala:430 src/MainWindow.vala:1334
+#: src/Document.vala:697 src/ImageEditor.vala:428 src/MainWindow.vala:1373
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
-#: src/ThemeEditor.vala:169 src/UrlEditor.vala:62
+#: src/ThemeEditor.vala:154 src/UrlEditor.vala:63
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/Document.vala:700 src/ImageEditor.vala:433 src/MainWindow.vala:2211
-#: src/UrlEditor.vala:52
+#: src/Document.vala:700 src/ImageEditor.vala:431 src/MainWindow.vala:2238
+#: src/UrlEditor.vala:53
 msgid "Apply"
 msgstr "Применить"
 
@@ -250,7 +279,7 @@ msgstr "Применить"
 msgid "Don't show this dialog again"
 msgstr "Больше не показывать этот диалог"
 
-#: src/Document.vala:714 src/MainWindow.vala:2248
+#: src/Document.vala:714 src/MainWindow.vala:2275
 msgid "<small>This can be changed in preferences</small>"
 msgstr "<small>Это можно поменять в настройках программы</small>"
 
@@ -258,16 +287,16 @@ msgstr "<small>Это можно поменять в настройках про
 msgid "Upgrade Needed"
 msgstr "Необходимо обновление"
 
-#: src/DrawArea.vala:1520
+#: src/DrawArea.vala:1528
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% завершено"
 
-#: src/DrawArea.vala:1538
+#: src/DrawArea.vala:1546
 msgid "Drag to resize node"
 msgstr "Перетащите для смены размера узла"
 
-#: src/DrawArea.vala:1540
+#: src/DrawArea.vala:1548
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -275,29 +304,29 @@ msgstr ""
 "Перетаскивание меняет размер узла и изображения.\n"
 "Ctrl+перетаскивание меняет размер только узла."
 
-#: src/DrawArea.vala:1682
+#: src/DrawArea.vala:1690
 #, c-format
 msgid "Children: %u\n"
 msgstr "Потомки: %u\n"
 
-#: src/DrawArea.vala:1683
+#: src/DrawArea.vala:1691
 #, c-format
 msgid "Total: %d"
 msgstr "Всего: %d"
 
-#: src/DrawArea.vala:1736
+#: src/DrawArea.vala:1745
 msgid "connection endpoint change"
 msgstr "смену конечной точки соединения"
 
-#: src/DrawArea.vala:1743
+#: src/DrawArea.vala:1752
 msgid "connection drag"
 msgstr "перетаскивание соединения"
 
-#: src/DrawArea.vala:2268 src/MapModel.vala:1827 src/MapModel.vala:1842
+#: src/DrawArea.vala:2277 src/MapModel.vala:1835 src/MapModel.vala:1850
 msgid "Another Idea"
 msgstr "Ещё одна идея"
 
-#: src/EmptyInspector.vala:30
+#: src/EmptyInspector.vala:32
 msgid ""
 "Select a node, connection or group\n"
 "to view/edit information"
@@ -305,20 +334,20 @@ msgstr ""
 "Выберите узел, связь или группу,\n"
 "чтобы просмотреть/изменить данные"
 
-#: src/EmptyMenu.vala:32 src/NodeMenu.vala:38 src/NodeMenu.vala:249
+#: src/EmptyMenu.vala:33 src/NodeMenu.vala:38 src/NodeMenu.vala:253
 #: src/TextMenu.vala:38
 msgid "Paste"
 msgstr "Вставить"
 
-#: src/EmptyMenu.vala:35 src/NodeMenu.vala:67
+#: src/EmptyMenu.vala:36 src/NodeMenu.vala:71
 msgid "Add Root Node"
 msgstr "Вставить корневой узел"
 
-#: src/EmptyMenu.vala:36
+#: src/EmptyMenu.vala:37
 msgid "Add Nodes With Quick Entry"
 msgstr "Добавить узлы быстрым вводом"
 
-#: src/EmptyMenu.vala:39
+#: src/EmptyMenu.vala:40
 #, fuzzy
 msgid "Select First Root Node"
 msgstr "Выбрать начальный узел"
@@ -340,7 +369,7 @@ msgstr "Параметры экспорта"
 msgid "Export As %s"
 msgstr "Экспортировать как %s"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1073 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1070 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Экспортировать"
 
@@ -356,64 +385,65 @@ msgstr "Скопировать в буфер обмена"
 msgid "CSV"
 msgstr "CSV"
 
-#: src/exports/ExportFileSystem.vala:29
+#: src/exports/ExportFileSystem.vala:30
 msgid "File System"
 msgstr "Файловая система"
 
-#: src/exports/ExportFreemind.vala:29
+#: src/exports/ExportFreemind.vala:31
 msgid "Freemind"
 msgstr "Freemind"
 
-#: src/exports/ExportFreemind.vala:45 src/exports/ExportFreeplane.vala:47
-#: src/exports/ExportOPML.vala:38 src/exports/ExportYed.vala:41
+#: src/exports/ExportFreemind.vala:49 src/exports/ExportFreeplane.vala:50
+#: src/exports/ExportOPML.vala:38 src/exports/ExportYed.vala:43
 msgid "Generated by Minder"
 msgstr "Создано в Minder"
 
-#: src/exports/ExportFreeplane.vala:31
+#: src/exports/ExportFreeplane.vala:32
 msgid "Freeplane"
 msgstr "Freeplane"
 
-#: src/exports/ExportImage.vala:85 src/exports/ExportPNG.vala:92
+#: src/exports/ExportImage.vala:90 src/exports/ExportPNG.vala:95
 msgid "Zoom %"
 msgstr "Масштаб %"
 
-#: src/exports/ExportImage.vala:92
+#: src/exports/ExportImage.vala:99
 msgid "Quality"
 msgstr "Качество"
 
-#: src/exports/ExportMarkdown.vala:34
+#: src/exports/ExportMarkdown.vala:34 src/NoteView.vala:330
+#: src/TextMenu.vala:68
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/exports/ExportMarkdown.vala:383
+#: src/exports/ExportMarkdown.vala:382
 msgid "Include image links"
 msgstr "Включить ссылки на изображения"
 
-#: src/exports/ExportMarkdown.vala:384
+#: src/exports/ExportMarkdown.vala:383
 msgid "Creates a directory containing the Markdown and embedded images"
 msgstr "Создаст каталог с файлом Markdown и встроенными изображениями"
 
-#: src/exports/ExportMermaid.vala:29
+#: src/exports/ExportMermaid.vala:38
 msgid "Mermaid"
 msgstr "Mermaid"
 
-#: src/exports/ExportMermaid.vala:60 src/layouts/LayoutVertical.vala:26
+#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutVertical.vala:26
 msgid "Vertical"
 msgstr "Вертикально"
 
-#: src/exports/ExportMermaid.vala:60 src/layouts/LayoutDown.vala:26
+#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutDown.vala:26
 msgid "Downwards"
 msgstr "Вниз"
 
-#: src/exports/ExportMermaid.vala:62 src/layouts/LayoutLeft.vala:26
+#: src/exports/ExportMermaid.vala:77 src/layouts/LayoutLeft.vala:26
 msgid "To left"
 msgstr "Влево"
 
-#: src/exports/ExportMermaid.vala:64 src/layouts/LayoutUp.vala:26
+#: src/exports/ExportMermaid.vala:79 src/layouts/LayoutUp.vala:26
 msgid "Upwards"
 msgstr "Вверх"
 
-#: src/exports/ExportMermaid.vala:269
+#: src/exports/ExportMermaid.vala:481
 msgid "Use Mermaid Mindmap Format"
 msgstr "Использовать формат Mermaid Mindmap"
 
@@ -433,39 +463,39 @@ msgstr "Режим отступа"
 msgid "Export using indentation spaces"
 msgstr "Экспортировать с отступами пробелами"
 
-#: src/exports/ExportOutliner.vala:28
+#: src/exports/ExportOutliner.vala:29
 msgid "Outliner"
 msgstr "Outliner"
 
-#: src/exports/ExportPDF.vala:28
+#: src/exports/ExportPDF.vala:29
 msgid "PDF"
 msgstr "PDF"
 
-#: src/exports/ExportPlantUML.vala:29
+#: src/exports/ExportPlantUML.vala:30
 msgid "PlantUML"
 msgstr "PlantUML"
 
-#: src/exports/ExportPNG.vala:30
+#: src/exports/ExportPNG.vala:31
 msgid "PNG"
 msgstr "PNG"
 
-#: src/exports/ExportPNG.vala:93
+#: src/exports/ExportPNG.vala:96
 msgid "Enable Transparent Background"
 msgstr "Включить прозрачный фон"
 
-#: src/exports/ExportPNG.vala:94
+#: src/exports/ExportPNG.vala:97
 msgid "Compression"
 msgstr "Сжатие"
 
-#: src/exports/ExportPortableMinder.vala:28
+#: src/exports/ExportPortableMinder.vala:29
 msgid "Portable Minder"
 msgstr "Переносимый Minder"
 
-#: src/exports/ExportSVG.vala:28
+#: src/exports/ExportSVG.vala:29
 msgid "SVG"
 msgstr "SVG"
 
-#: src/exports/ExportText.vala:44
+#: src/exports/ExportText.vala:45
 msgid "PlainText"
 msgstr "Простой текст"
 
@@ -473,16 +503,16 @@ msgstr "Простой текст"
 msgid "WebP"
 msgstr "WebP"
 
-#: src/exports/ExportXMind2021.vala:79
+#: src/exports/ExportXMind2021.vala:80
 msgid "XMind 2021"
 msgstr "XMind 2021"
 
-#: src/exports/ExportXMind2021.vala:671 src/exports/ExportXMind8.vala:695
+#: src/exports/ExportXMind2021.vala:682 src/exports/ExportXMind8.vala:695
 #: src/layouts/LayoutHorizontal.vala:26
 msgid "Horizontal"
 msgstr "Горизонтально"
 
-#: src/exports/ExportXMind2021.vala:673 src/exports/ExportXMind8.vala:697
+#: src/exports/ExportXMind2021.vala:684 src/exports/ExportXMind8.vala:697
 #: src/layouts/LayoutRight.vala:26
 msgid "To right"
 msgstr "Вправо"
@@ -491,11 +521,11 @@ msgstr "Вправо"
 msgid "XMind 8"
 msgstr "XMind 8"
 
-#: src/exports/ExportYed.vala:26
+#: src/exports/ExportYed.vala:27
 msgid "Yed"
 msgstr "Yed"
 
-#: src/Exports.vala:36
+#: src/Exports.vala:37
 msgid "JPEG"
 msgstr "JPEG"
 
@@ -503,7 +533,7 @@ msgstr "JPEG"
 msgid "Export to clipboard"
 msgstr "Экспортировать в буфер обмена"
 
-#: src/GroupInspector.vala:73 src/KeyCommands.vala:686
+#: src/GroupInspector.vala:79 src/KeyCommands.vala:730
 msgid "Group"
 msgstr "Группа"
 
@@ -528,734 +558,795 @@ msgstr "Все сгруппированные узлы"
 msgid "Crop Area: %d,%d %3dx%3d"
 msgstr "Область обрезки: %d,%d %3dx%3d"
 
-#: src/ImageEditor.vala:401
+#: src/ImageEditor.vala:399
 #, c-format
 msgid "Cursor: %3d,%3d"
 msgstr "Указатель мыши: %3d,%3d"
 
-#: src/ImageEditor.vala:410
+#: src/ImageEditor.vala:408
 msgid "Change Image"
 msgstr "Сменить изображение"
 
-#: src/ImageEditor.vala:414
+#: src/ImageEditor.vala:412
 msgid "Paste Image from Clipboard"
 msgstr "Вставить избражение из бефера обмена"
 
-#: src/ImageEditor.vala:418 src/NodeInspector.vala:386 src/NodeMenu.vala:230
+#: src/ImageEditor.vala:416 src/NodeInspector.vala:392 src/NodeMenu.vala:234
 msgid "Remove Image"
 msgstr "Удалить изображение"
 
-#: src/ImageEditor.vala:422
+#: src/ImageEditor.vala:420
 msgid "Copy Image to Clipboard"
 msgstr "Скопировать изображение в буфер обмена"
 
-#: src/ImageEditor.vala:427
+#: src/ImageEditor.vala:425
 msgid "Cut Image to Clipboard"
 msgstr "Скопировать изображение в буфер обмена"
 
-#: src/ImageManager.vala:313
+#: src/ImageManager.vala:336
 msgid "Select Image"
 msgstr "Выберите изображение"
 
-#: src/ImageManager.vala:318
+#: src/ImageManager.vala:341
 msgid "Images"
 msgstr "Изображения"
 
-#: src/KeyCommands.vala:571 src/Shortcuts.vala:796
+#: src/KeyCommands.vala:615 src/Shortcuts.vala:802
 msgid "General"
 msgstr "Общие"
 
-#: src/KeyCommands.vala:572
+#: src/KeyCommands.vala:616
 msgid "File Commands"
 msgstr "Операции с файлами"
 
-#: src/KeyCommands.vala:573
+#: src/KeyCommands.vala:617
 msgid "Create new mindmap"
 msgstr "Создать ментальную карту"
 
-#: src/KeyCommands.vala:574
+#: src/KeyCommands.vala:618
 msgid "Open saved mindmap"
 msgstr "Открыть сохраненную ментальную карту"
 
-#: src/KeyCommands.vala:575
+#: src/KeyCommands.vala:619
 msgid "Create mindmap from directory structure"
 msgstr "Создать ментальную карту из структуры каталогов"
 
-#: src/KeyCommands.vala:576
+#: src/KeyCommands.vala:620
 msgid "Save mindmap to current file"
 msgstr "Сохранить ментальную карту в текущий файл"
 
-#: src/KeyCommands.vala:577
+#: src/KeyCommands.vala:621
 msgid "Save mindmap to new file"
 msgstr "Сохранить как новый файл"
 
-#: src/KeyCommands.vala:578
+#: src/KeyCommands.vala:622
 msgid "Show print dialog for current mindmap"
 msgstr "Показать диалог печати для текущей ментальной карты"
 
-#: src/KeyCommands.vala:579
+#: src/KeyCommands.vala:623
 msgid "Tab Commands"
 msgstr "Операции с вкладками"
 
-#: src/KeyCommands.vala:580
+#: src/KeyCommands.vala:624
 msgid "Select next tab"
 msgstr "Выбрать следующую вкладку"
 
-#: src/KeyCommands.vala:581
+#: src/KeyCommands.vala:625
 msgid "Select previous tab"
 msgstr "Выбрать предыдущую вкладку"
 
-#: src/KeyCommands.vala:582
+#: src/KeyCommands.vala:626
 msgid "Close the current mindmap"
 msgstr "Закрыть эту ментальную карту"
 
-#: src/KeyCommands.vala:583
+#: src/KeyCommands.vala:627
 msgid "Undo/Redo Commands"
 msgstr "Отменить/Вернуть действие"
 
-#: src/KeyCommands.vala:584
+#: src/KeyCommands.vala:628
 msgid "Undo last action"
 msgstr "Отменить последнее действие"
 
-#: src/KeyCommands.vala:585
+#: src/KeyCommands.vala:629
 msgid "Redo last undone action"
 msgstr "Вернуть отменённое действие"
 
-#: src/KeyCommands.vala:586
+#: src/KeyCommands.vala:630
 msgid "Zoom Commands"
 msgstr "Операции с масштабом просмотра"
 
-#: src/KeyCommands.vala:587
+#: src/KeyCommands.vala:631
 msgid "Zoom in"
 msgstr "Приблизить"
 
-#: src/KeyCommands.vala:588
+#: src/KeyCommands.vala:632
 msgid "Zoom out"
 msgstr "Отдалить"
 
-#: src/KeyCommands.vala:589
+#: src/KeyCommands.vala:633
 msgid "Zoom to fit entire mindmap in viewer"
 msgstr ""
 
-#: src/KeyCommands.vala:590
+#: src/KeyCommands.vala:634
 #, fuzzy
 msgid "Zoom selected node subtree in viewer"
 msgstr "Уместить выбранное дерево узлов"
 
-#: src/KeyCommands.vala:591
+#: src/KeyCommands.vala:635
 #, fuzzy
 msgid "Zoom to 100%"
 msgstr "Уместить всё"
 
-#: src/KeyCommands.vala:592
+#: src/KeyCommands.vala:636
 msgid "Sidebar Commands"
 msgstr "Операции с боковой панелью"
 
-#: src/KeyCommands.vala:593
+#: src/KeyCommands.vala:637
 #, fuzzy
 msgid "Show current tab in sidebar"
 msgstr "Показать текущую вкладку"
 
-#: src/KeyCommands.vala:594
+#: src/KeyCommands.vala:638
 #, fuzzy
 msgid "Show style tab in sidebar"
 msgstr "Показать вкладку «Стиль»"
 
-#: src/KeyCommands.vala:595
+#: src/KeyCommands.vala:639
 #, fuzzy
 msgid "Show tag tab in sidebar"
 msgstr "Показать панель свойств"
 
-#: src/KeyCommands.vala:596
+#: src/KeyCommands.vala:640
 #, fuzzy
 msgid "Show sticker tab in sidebar"
 msgstr "Показать вкладку «Стикеры»"
 
-#: src/KeyCommands.vala:597
+#: src/KeyCommands.vala:641
 #, fuzzy
 msgid "Show map tab in sidebar"
 msgstr "Показать панель свойств"
 
-#: src/KeyCommands.vala:598
+#: src/KeyCommands.vala:642
 #, fuzzy
 msgid "Show currently select node/connection/group information in sidebar"
 msgstr ""
 "Выберите узел, связь или группу,\n"
 "чтобы просмотреть/изменить данные"
 
-#: src/KeyCommands.vala:599
+#: src/KeyCommands.vala:643
 msgid "Map Commands"
 msgstr "Операции с картой"
 
-#: src/KeyCommands.vala:600
+#: src/KeyCommands.vala:644
 #, fuzzy
 msgid "Show/Hide Connections"
 msgstr "Скрывать соединения"
 
-#: src/KeyCommands.vala:601
+#: src/KeyCommands.vala:645
 #, fuzzy
 msgid "Show/Hide Callouts"
 msgstr "Скрыть выноски"
 
-#: src/KeyCommands.vala:602
+#: src/KeyCommands.vala:646
 msgid "Balance nodes in vertical/horizontal layouts"
 msgstr ""
 
-#: src/KeyCommands.vala:603
+#: src/KeyCommands.vala:647
 #, fuzzy
 msgid "Fold all completed tasks"
 msgstr "Свернуть завершённые задачи"
 
-#: src/KeyCommands.vala:604
+#: src/KeyCommands.vala:648
 #, fuzzy
 msgid "Unfold all folded nodes"
 msgstr "Развернуть все узлы"
 
-#: src/KeyCommands.vala:605
+#: src/KeyCommands.vala:649
 #, fuzzy
 msgid "Miscellaneous Commands"
 msgstr "Разное"
 
-#: src/KeyCommands.vala:606
+#: src/KeyCommands.vala:650
 #, fuzzy
 msgid "Show preferences window"
 msgstr "Показать параметры программы"
 
-#: src/KeyCommands.vala:607
+#: src/KeyCommands.vala:651
 #, fuzzy
 msgid "Show shortcuts cheatsheet"
 msgstr "Справка по горячим клавишам"
 
-#: src/KeyCommands.vala:608
+#: src/KeyCommands.vala:652
 msgid "Show contextual menu"
 msgstr "Показать контекстное меню"
 
-#: src/KeyCommands.vala:609
+#: src/KeyCommands.vala:653
 msgid "Show find popup"
 msgstr ""
 
-#: src/KeyCommands.vala:610
+#: src/KeyCommands.vala:654
 msgid "Show About window"
 msgstr "Показать окно о программе"
 
-#: src/KeyCommands.vala:611
+#: src/KeyCommands.vala:655
 msgid "Toggle braindump input mode"
 msgstr ""
 
-#: src/KeyCommands.vala:612
+#: src/KeyCommands.vala:656
 msgid "Toggle focus mode"
 msgstr "Переключить режим фокусировки"
 
-#: src/KeyCommands.vala:613
+#: src/KeyCommands.vala:657
 msgid "Edit note of current item"
 msgstr ""
 
-#: src/KeyCommands.vala:614
+#: src/KeyCommands.vala:658
 msgid "Edit currently selected item"
 msgstr ""
 
-#: src/KeyCommands.vala:615
+#: src/KeyCommands.vala:659
 msgid "Show currently selected item"
 msgstr ""
 
-#: src/KeyCommands.vala:616
+#: src/KeyCommands.vala:660
 msgid "Remove sticker from current node or connection"
 msgstr ""
 
-#: src/KeyCommands.vala:617
+#: src/KeyCommands.vala:661
 msgid "Quit the application"
 msgstr "Выйти из приложения"
 
-#: src/KeyCommands.vala:618 src/NodeInspector.vala:100
+#: src/KeyCommands.vala:662 src/NodeInspector.vala:106
 msgid "Node"
 msgstr "Узел"
 
-#: src/KeyCommands.vala:619
+#: src/KeyCommands.vala:663
 #, fuzzy
 msgid "Creation/Deletion Commands"
 msgstr "Создание/Удаление"
 
-#: src/KeyCommands.vala:620
+#: src/KeyCommands.vala:664
 msgid "Add root node"
 msgstr "Вставить корневой узел"
 
-#: src/KeyCommands.vala:621
+#: src/KeyCommands.vala:665
 msgid "Add sibling node after current node"
 msgstr ""
 
-#: src/KeyCommands.vala:622
+#: src/KeyCommands.vala:666
 msgid "Add sibling node before current node"
 msgstr ""
 
-#: src/KeyCommands.vala:623
+#: src/KeyCommands.vala:667
 msgid "Add child node to current node"
 msgstr ""
 
-#: src/KeyCommands.vala:624
+#: src/KeyCommands.vala:668
 #, fuzzy
 msgid "Add parent node to current node"
 msgstr "добавку узла-родителя"
 
-#: src/KeyCommands.vala:625
+#: src/KeyCommands.vala:669
 #, fuzzy
 msgid "Use quick entry to insert nodes"
 msgstr "Быстрая вставка записи"
 
-#: src/KeyCommands.vala:626
+#: src/KeyCommands.vala:670
 #, fuzzy
 msgid "Use quick entry to replace current node"
 msgstr "Быстрая замена записи"
 
-#: src/KeyCommands.vala:627
+#: src/KeyCommands.vala:671
 msgid "Remove selected node only (leave subtree)"
 msgstr ""
 
-#: src/KeyCommands.vala:628 src/KeyCommands.vala:700
+#: src/KeyCommands.vala:672 src/KeyCommands.vala:759
 #, fuzzy
 msgid "Clipboard Commands"
 msgstr "Операции с узлами"
 
-#: src/KeyCommands.vala:629
+#: src/KeyCommands.vala:673
 msgid "Paste node link from clipboard into current node"
 msgstr ""
 
-#: src/KeyCommands.vala:630
+#: src/KeyCommands.vala:674
 #, fuzzy
 msgid "Replace current node with clipboard content"
 msgstr "Заменить содержимым буфера обмена"
 
-#: src/KeyCommands.vala:631
+#: src/KeyCommands.vala:675
 #, fuzzy
 msgid "View Commands"
 msgstr "Операции с узлами"
 
-#: src/KeyCommands.vala:632
+#: src/KeyCommands.vala:676
 #, fuzzy
 msgid "Center current node in map canvas"
 msgstr "Центрировать выбранный узел"
 
-#: src/KeyCommands.vala:633 src/KeyCommands.vala:687
+#: src/KeyCommands.vala:677 src/KeyCommands.vala:731
 #, fuzzy
 msgid "Change Commands"
 msgstr "Операции с узлами"
 
-#: src/KeyCommands.vala:634
+#: src/KeyCommands.vala:678
 msgid "Change task status of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:635
+#: src/KeyCommands.vala:679
 msgid "Add/Edit image of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:636
+#: src/KeyCommands.vala:680
 msgid "Remove image from current node"
 msgstr ""
 
-#: src/KeyCommands.vala:637
+#: src/KeyCommands.vala:681
 #, fuzzy
 msgid "Change link color of current node"
 msgstr "смена цвета узла на родительский"
 
-#: src/KeyCommands.vala:638
+#: src/KeyCommands.vala:682
 #, fuzzy
 msgid "Randomize the current node link color"
 msgstr "назначение цвета связей случайным образом"
 
-#: src/KeyCommands.vala:639
+#: src/KeyCommands.vala:683
 #, fuzzy
 msgid "Set current node link color to match parent node"
 msgstr "назначение цвета связей случайным образом"
 
-#: src/KeyCommands.vala:640
+#: src/KeyCommands.vala:684
 msgid "Toggle folding of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:641
+#: src/KeyCommands.vala:685
 #, fuzzy
 msgid "Toggle folding of current node subtree"
 msgstr "Переключить выбор дерева/поддерева узлов"
 
-#: src/KeyCommands.vala:642
+#: src/KeyCommands.vala:686
 #, fuzzy
 msgid "Toggle the node link state"
 msgstr "Переключить ссылку на узел"
 
-#: src/KeyCommands.vala:643
+#: src/KeyCommands.vala:687
 msgid "Add group for current node and its subtree"
 msgstr ""
 
-#: src/KeyCommands.vala:644
+#: src/KeyCommands.vala:688
 msgid "Start creation of connection from current node"
 msgstr ""
 
-#: src/KeyCommands.vala:645
+#: src/KeyCommands.vala:689
 msgid "Add/Remove callout for current node"
 msgstr ""
 
-#: src/KeyCommands.vala:646
+#: src/KeyCommands.vala:690
 msgid "Toggle sequence state of children of current node"
 msgstr ""
 "Переключить состояние последовательности для всех узлов-потомков выбранного "
 "узла"
 
-#: src/KeyCommands.vala:647 src/KeyCommands.vala:678 src/KeyCommands.vala:681
-#: src/KeyCommands.vala:690 src/KeyCommands.vala:720
+#: src/KeyCommands.vala:691 src/KeyCommands.vala:722 src/KeyCommands.vala:725
+#: src/KeyCommands.vala:734 src/KeyCommands.vala:779
 msgid "Selection Commands"
 msgstr "Операции с выделением"
 
-#: src/KeyCommands.vala:648
+#: src/KeyCommands.vala:692
 #, fuzzy
 msgid "Select root node of current node"
 msgstr "Выбрать текущее слово"
 
-#: src/KeyCommands.vala:649
+#: src/KeyCommands.vala:693
 #, fuzzy
 msgid "Select parent node of current node"
 msgstr "Выбрать текущее слово"
 
-#: src/KeyCommands.vala:650
+#: src/KeyCommands.vala:694
 #, fuzzy
 msgid "Select all child nodes of current node"
 msgstr "Создаёт узел-потомок предыдущего узла."
 
-#: src/KeyCommands.vala:651
+#: src/KeyCommands.vala:695
 #, fuzzy
 msgid "Select single child node of current node"
 msgstr "Создаёт узел-потомок предыдущего узла."
 
-#: src/KeyCommands.vala:652
+#: src/KeyCommands.vala:696
 msgid "Select all nodes in subtree of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:653
+#: src/KeyCommands.vala:697
 msgid "Select next sibling node of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:654
+#: src/KeyCommands.vala:698
 #, fuzzy
 msgid "Select previous sibling node of current node"
 msgstr "Выбрать предыдущий узел-сиблинг"
 
-#: src/KeyCommands.vala:655
+#: src/KeyCommands.vala:699
 msgid "Select node to the left of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:656
+#: src/KeyCommands.vala:700
 msgid "Select node to the right of current node"
 msgstr ""
 
-#: src/KeyCommands.vala:657
+#: src/KeyCommands.vala:701
 #, fuzzy
 msgid "Select node above current node"
 msgstr "Выбрать текущее слово"
 
-#: src/KeyCommands.vala:658
+#: src/KeyCommands.vala:702
 #, fuzzy
 msgid "Select node below current node"
 msgstr "Выбрать текущее слово"
 
-#: src/KeyCommands.vala:659
+#: src/KeyCommands.vala:703
 #, fuzzy
 msgid "Select linked node of current node"
 msgstr "Выбрать текущее слово"
 
-#: src/KeyCommands.vala:660
+#: src/KeyCommands.vala:704
 #, fuzzy
 msgid "Select connection of current node"
 msgstr "Выбрать текущее слово"
 
-#: src/KeyCommands.vala:661
+#: src/KeyCommands.vala:705
 #, fuzzy
 msgid "Select callout of current node"
 msgstr "Выбрать текущее слово"
 
-#: src/KeyCommands.vala:662
+#: src/KeyCommands.vala:706
 #, fuzzy
 msgid "Move Commands"
 msgstr "Операции с узлами"
 
-#: src/KeyCommands.vala:663
+#: src/KeyCommands.vala:707
 msgid "Swap current node with right node"
 msgstr ""
 
-#: src/KeyCommands.vala:664
+#: src/KeyCommands.vala:708
 msgid "Swap current node with left node"
 msgstr ""
 
-#: src/KeyCommands.vala:665
+#: src/KeyCommands.vala:709
 msgid "Swap current node with above node"
 msgstr ""
 
-#: src/KeyCommands.vala:666
-msgid "Swap current node with below node"
-msgstr ""
-
-#: src/KeyCommands.vala:667
-#, fuzzy
-msgid "Sort child nodes of current node alphabetically"
-msgstr "Сортировать узлы-потомки в алфавитном порядке"
-
-#: src/KeyCommands.vala:668
-msgid "Sort child nodes of current node randomly"
-msgstr ""
-
-#: src/KeyCommands.vala:669
-msgid "Detaches current node and its subtree"
-msgstr ""
-
-#: src/KeyCommands.vala:670
-#, fuzzy
-msgid "Alignment Commands"
-msgstr "Выравнивание"
-
-#: src/KeyCommands.vala:671
-#, fuzzy
-msgid "Align selected node top edges"
-msgstr "Выровнять выбранные узлы по верхнему краю"
-
-#: src/KeyCommands.vala:672
-#, fuzzy
-msgid "Align selected node vertical centers"
-msgstr "По центру вертикально"
-
-#: src/KeyCommands.vala:673
-#, fuzzy
-msgid "Align selected node bottom edges"
-msgstr "Выровнять выбранные узлы по верхнему краю"
-
-#: src/KeyCommands.vala:674
-#, fuzzy
-msgid "Align selected node left edges"
-msgstr "Выровнять выбранные узлы по верхнему краю"
-
-#: src/KeyCommands.vala:675
-#, fuzzy
-msgid "Align selected node horizontal centers"
-msgstr "По центру горизонтально"
-
-#: src/KeyCommands.vala:676
-#, fuzzy
-msgid "Align selected node right edges"
-msgstr "Выровнять выбранные узлы по верхнему краю"
-
-#: src/KeyCommands.vala:679
-#, fuzzy
-msgid "Select callout node"
-msgstr "Выбрать выноску"
-
-#: src/KeyCommands.vala:682
-#, fuzzy
-msgid "Select connection source node"
-msgstr "Выбранные связи"
-
-#: src/KeyCommands.vala:683
-#, fuzzy
-msgid "Select connection target node"
-msgstr "Выбранные связи"
-
-#: src/KeyCommands.vala:684
-#, fuzzy
-msgid "Select next connection in map"
-msgstr "Выбрать следующее соединение"
-
-#: src/KeyCommands.vala:685
-#, fuzzy
-msgid "Select previous connection in map"
-msgstr "Выбрать предыдущее соединение"
-
-#: src/KeyCommands.vala:688
-msgid "Change the color of the current group"
-msgstr ""
-
-#: src/KeyCommands.vala:689
-msgid "Merge current groups into single group"
-msgstr ""
-
-#: src/KeyCommands.vala:691
-msgid "Select main node(s) of current group(s)"
-msgstr ""
-
-#: src/KeyCommands.vala:692
-msgid "Selects all nodes within current group(s)"
-msgstr ""
-
-#: src/KeyCommands.vala:693
-msgid "Text Editing"
-msgstr "Правка текста"
-
-#: src/KeyCommands.vala:694
-#, fuzzy
-msgid "Insertion/Deletion Commands"
-msgstr "Операции с соединениями"
-
-#: src/KeyCommands.vala:695
-msgid "Insert newline character"
-msgstr "Вставить перенос строки"
-
-#: src/KeyCommands.vala:696
-msgid "Insert TAB character"
-msgstr "Вставить табулятор"
-
-#: src/KeyCommands.vala:697
-msgid "Insert emoji"
-msgstr "Вставить эмотикон"
-
-#: src/KeyCommands.vala:698
-msgid "Remove next word"
-msgstr "Удалить следующее слово"
-
-#: src/KeyCommands.vala:699
-msgid "Remove previous word"
-msgstr "Удалить предыдущее слово"
-
-#: src/KeyCommands.vala:701
-#, fuzzy
-msgid "Copy selected nodes or text"
-msgstr "Скопировать выделенный текст"
-
-#: src/KeyCommands.vala:702
-#, fuzzy
-msgid "Cut selected nodes or text"
-msgstr "Вырезать выделенный текст"
-
-#: src/KeyCommands.vala:703
-#, fuzzy
-msgid "Paste nodes or text from clipboard"
-msgstr "Вставить избражение из бефера обмена"
-
-#: src/KeyCommands.vala:704
-msgid "URL Commands"
-msgstr "Операции с URL"
-
-#: src/KeyCommands.vala:705
-msgid "Open URL link at current cursor position"
-msgstr ""
-
-#: src/KeyCommands.vala:706
-msgid "Add URL link at current cursor position"
-msgstr ""
-
-#: src/KeyCommands.vala:707
-msgid "Change URL link at current cursor position"
-msgstr ""
-
-#: src/KeyCommands.vala:708
-msgid "Remove URL link at current cursor position"
-msgstr ""
-
-#: src/KeyCommands.vala:709
-msgid "Cursor Commands"
-msgstr "Операции с курсором"
-
 #: src/KeyCommands.vala:710
-msgid "Move cursor to next character"
+msgid "Swap current node with below node"
 msgstr ""
 
 #: src/KeyCommands.vala:711
 #, fuzzy
-msgid "Move cursor to previous character"
-msgstr "Предыдущий символ"
+msgid "Sort child nodes of current node alphabetically"
+msgstr "Сортировать узлы-потомки в алфавитном порядке"
 
 #: src/KeyCommands.vala:712
-msgid "Move cursor up one line"
+msgid "Sort child nodes of current node randomly"
 msgstr ""
 
 #: src/KeyCommands.vala:713
-msgid "Move cursor down one line"
+msgid "Detaches current node and its subtree"
 msgstr ""
 
 #: src/KeyCommands.vala:714
+#, fuzzy
+msgid "Alignment Commands"
+msgstr "Выравнивание"
+
+#: src/KeyCommands.vala:715
+#, fuzzy
+msgid "Align selected node top edges"
+msgstr "Выровнять выбранные узлы по верхнему краю"
+
+#: src/KeyCommands.vala:716
+#, fuzzy
+msgid "Align selected node vertical centers"
+msgstr "По центру вертикально"
+
+#: src/KeyCommands.vala:717
+#, fuzzy
+msgid "Align selected node bottom edges"
+msgstr "Выровнять выбранные узлы по верхнему краю"
+
+#: src/KeyCommands.vala:718
+#, fuzzy
+msgid "Align selected node left edges"
+msgstr "Выровнять выбранные узлы по верхнему краю"
+
+#: src/KeyCommands.vala:719
+#, fuzzy
+msgid "Align selected node horizontal centers"
+msgstr "По центру горизонтально"
+
+#: src/KeyCommands.vala:720
+#, fuzzy
+msgid "Align selected node right edges"
+msgstr "Выровнять выбранные узлы по верхнему краю"
+
+#: src/KeyCommands.vala:723
+#, fuzzy
+msgid "Select callout node"
+msgstr "Выбрать выноску"
+
+#: src/KeyCommands.vala:726
+#, fuzzy
+msgid "Select connection source node"
+msgstr "Выбранные связи"
+
+#: src/KeyCommands.vala:727
+#, fuzzy
+msgid "Select connection target node"
+msgstr "Выбранные связи"
+
+#: src/KeyCommands.vala:728
+#, fuzzy
+msgid "Select next connection in map"
+msgstr "Выбрать следующее соединение"
+
+#: src/KeyCommands.vala:729
+#, fuzzy
+msgid "Select previous connection in map"
+msgstr "Выбрать предыдущее соединение"
+
+#: src/KeyCommands.vala:732
+msgid "Change the color of the current group"
+msgstr ""
+
+#: src/KeyCommands.vala:733
+msgid "Merge current groups into single group"
+msgstr ""
+
+#: src/KeyCommands.vala:735
+msgid "Select main node(s) of current group(s)"
+msgstr ""
+
+#: src/KeyCommands.vala:736
+msgid "Selects all nodes within current group(s)"
+msgstr ""
+
+#: src/KeyCommands.vala:737
+msgid "Text Editing"
+msgstr "Правка текста"
+
+#: src/KeyCommands.vala:738
+#, fuzzy
+msgid "Insertion/Deletion Commands"
+msgstr "Операции с соединениями"
+
+#: src/KeyCommands.vala:739
+msgid "Insert newline character"
+msgstr "Вставить перенос строки"
+
+#: src/KeyCommands.vala:740
+msgid "Insert TAB character"
+msgstr "Вставить табулятор"
+
+#: src/KeyCommands.vala:741
+msgid "Insert emoji"
+msgstr "Вставить эмотикон"
+
+#: src/KeyCommands.vala:742
+msgid "Remove next word"
+msgstr "Удалить следующее слово"
+
+#: src/KeyCommands.vala:743
+msgid "Remove previous word"
+msgstr "Удалить предыдущее слово"
+
+#: src/KeyCommands.vala:744
+#, fuzzy
+msgid "Markdown Syntax"
+msgstr "Символы разметки Markdown"
+
+#: src/KeyCommands.vala:745
+msgid "Insert Markdown header-1 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:746
+msgid "Insert Markdown header-2 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:747
+msgid "Insert Markdown header-3 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:748
+msgid "Insert Markdown header-4 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:749
+msgid "Insert Markdown header-5 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:750
+msgid "Insert Markdown header-6 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:751
+msgid "Insert Markdown bold syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:752
+msgid "Insert Markdown italics syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:753
+msgid "Insert Markdown strikethrough syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:754
+msgid "Insert Markdown code syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:755
+msgid "Insert Markdown highlighting syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:756
+msgid "Insert Markdown superscript syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:757
+msgid "Insert Markdown subscript syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:758
+msgid "Insert Markdown URL link syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:760
+#, fuzzy
+msgid "Copy selected nodes or text"
+msgstr "Скопировать выделенный текст"
+
+#: src/KeyCommands.vala:761
+#, fuzzy
+msgid "Cut selected nodes or text"
+msgstr "Вырезать выделенный текст"
+
+#: src/KeyCommands.vala:762
+#, fuzzy
+msgid "Paste nodes or text from clipboard"
+msgstr "Вставить избражение из бефера обмена"
+
+#: src/KeyCommands.vala:763
+msgid "URL Commands"
+msgstr "Операции с URL"
+
+#: src/KeyCommands.vala:764
+msgid "Open URL link at current cursor position"
+msgstr ""
+
+#: src/KeyCommands.vala:765
+msgid "Add URL link at current cursor position"
+msgstr ""
+
+#: src/KeyCommands.vala:766
+msgid "Change URL link at current cursor position"
+msgstr ""
+
+#: src/KeyCommands.vala:767
+msgid "Remove URL link at current cursor position"
+msgstr ""
+
+#: src/KeyCommands.vala:768
+msgid "Cursor Commands"
+msgstr "Операции с курсором"
+
+#: src/KeyCommands.vala:769
+msgid "Move cursor to next character"
+msgstr ""
+
+#: src/KeyCommands.vala:770
+#, fuzzy
+msgid "Move cursor to previous character"
+msgstr "Предыдущий символ"
+
+#: src/KeyCommands.vala:771
+msgid "Move cursor up one line"
+msgstr ""
+
+#: src/KeyCommands.vala:772
+msgid "Move cursor down one line"
+msgstr ""
+
+#: src/KeyCommands.vala:773
 msgid "Move cursor to beginning of next word"
 msgstr ""
 
-#: src/KeyCommands.vala:715
+#: src/KeyCommands.vala:774
 msgid "Move cursor to beginning of previous word"
 msgstr ""
 
-#: src/KeyCommands.vala:716
+#: src/KeyCommands.vala:775
 msgid "Move cursor to start of text"
 msgstr ""
 
-#: src/KeyCommands.vala:717
+#: src/KeyCommands.vala:776
 msgid "Move cursor to end of text"
 msgstr ""
 
-#: src/KeyCommands.vala:718
+#: src/KeyCommands.vala:777
 msgid "Move cursor to start of current line"
 msgstr ""
 
-#: src/KeyCommands.vala:719
+#: src/KeyCommands.vala:778
 msgid "Move cursor to end of current line"
 msgstr ""
 
-#: src/KeyCommands.vala:721
+#: src/KeyCommands.vala:780
 msgid "Add next character to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:722
+#: src/KeyCommands.vala:781
 #, fuzzy
 msgid "Add previous character to current selection"
 msgstr "Добавить предыдущий символ"
 
-#: src/KeyCommands.vala:723
+#: src/KeyCommands.vala:782
 msgid "Add line up to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:724
+#: src/KeyCommands.vala:783
 msgid "Add line down to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:725
+#: src/KeyCommands.vala:784
 msgid "Add next word to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:726
+#: src/KeyCommands.vala:785
 msgid "Add previous word to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:727
+#: src/KeyCommands.vala:786
 msgid "Add start of text to current selection (Control-Up)"
 msgstr ""
 
-#: src/KeyCommands.vala:728
+#: src/KeyCommands.vala:787
 msgid "Add start of text to current selection (Control-Home)"
 msgstr ""
 
-#: src/KeyCommands.vala:729
+#: src/KeyCommands.vala:788
 msgid "Add end of text to current selection (Control-Down)"
 msgstr ""
 
-#: src/KeyCommands.vala:730
+#: src/KeyCommands.vala:789
 msgid "Add end of text to current selection (Control-End)"
 msgstr ""
 
-#: src/KeyCommands.vala:731
+#: src/KeyCommands.vala:790
 msgid "Add start of current line to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:732
+#: src/KeyCommands.vala:791
 msgid "Add end of current line to current selection"
 msgstr ""
 
-#: src/KeyCommands.vala:733 src/Shortcuts.vala:821
+#: src/KeyCommands.vala:792 src/Shortcuts.vala:827
 msgid "Select all text"
 msgstr "Выделить весь текст"
 
-#: src/KeyCommands.vala:734
+#: src/KeyCommands.vala:793
 #, fuzzy
 msgid "Deselect all text"
 msgstr "Выделить весь текст"
 
-#: src/KeyCommands.vala:1876
+#: src/KeyCommands.vala:1959
 msgid "Select a group color"
 msgstr "Выбрать цвет группы"
 
-#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:289
-#: src/MapInspector.vala:547 src/MapModel.vala:2315
+#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:271
+#: src/MapInspector.vala:524 src/MapModel.vala:2323
 msgid "Manual"
 msgstr "Вручную"
 
-#: src/MainWindow.vala:183 src/MainWindow.vala:1630
+#: src/MainWindow.vala:183 src/MainWindow.vala:1666
 msgid "Minder"
 msgstr "Minder"
 
@@ -1263,7 +1354,7 @@ msgstr "Minder"
 msgid "New File"
 msgstr "Создать документ"
 
-#: src/MainWindow.vala:247 src/MainWindow.vala:1424
+#: src/MainWindow.vala:247 src/MainWindow.vala:1463
 msgid "Open File"
 msgstr "Открыть файл"
 
@@ -1271,214 +1362,272 @@ msgstr "Открыть файл"
 msgid "Save File As"
 msgstr "Сохранить файл как"
 
-#: src/MainWindow.vala:259 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:259 src/StickerSet.vala:307 src/UndoBuffer.vala:91
 msgid "Undo"
 msgstr "Отменить"
 
-#: src/MainWindow.vala:266 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:266 src/StickerSet.vala:308 src/UndoBuffer.vala:98
 msgid "Redo"
 msgstr "Вернуть"
 
-#: src/MainWindow.vala:729
+#: src/MainWindow.vala:725
 msgid "Tag Highlight Mode"
 msgstr ""
 
-#: src/MainWindow.vala:731 src/MainWindow.vala:1143
+#: src/MainWindow.vala:727 src/MainWindow.vala:1140
 msgid "Focus Mode"
 msgstr "Режим фокусировки"
 
-#: src/MainWindow.vala:734
+#: src/MainWindow.vala:730
 msgid "Unnamed Document"
 msgstr "Безымянный документ"
 
-#: src/MainWindow.vala:737
+#: src/MainWindow.vala:733
 msgid "Read-Only"
 msgstr "Только чтение"
 
-#: src/MainWindow.vala:756
+#: src/MainWindow.vala:752
 msgid "Zoom to Fit"
 msgstr "Уместить всё"
 
-#: src/MainWindow.vala:757
+#: src/MainWindow.vala:753
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "Уместить выбранное дерево узлов"
 
-#: src/MainWindow.vala:758
+#: src/MainWindow.vala:754
 msgid "Zoom to Actual Size"
 msgstr "Настоящий размер"
 
-#: src/MainWindow.vala:766
+#: src/MainWindow.vala:762
 msgid "Zoom to Percent"
 msgstr "Масштаб в процентах"
 
-#: src/MainWindow.vala:781 src/ZoomWidget.vala:104
+#: src/MainWindow.vala:777 src/ZoomWidget.vala:105
 msgid "Zoom In"
 msgstr "Приблизить"
 
-#: src/MainWindow.vala:788 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:784 src/ZoomWidget.vala:93
 msgid "Zoom Out"
 msgstr "Отдалить"
 
-#: src/MainWindow.vala:806 src/MainWindow.vala:1696
+#: src/MainWindow.vala:802 src/MainWindow.vala:1732
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Масштаб (%d%%)"
 
-#: src/MainWindow.vala:819
+#: src/MainWindow.vala:815
 msgid "Search Nodes, Callouts and Connections"
 msgstr "Искать по узлам, выноскам и соединениям"
 
-#: src/MainWindow.vala:864
+#: src/MainWindow.vala:860
 msgid "Search Criteria"
 msgstr "Критерии поиска"
 
-#: src/MainWindow.vala:868
+#: src/MainWindow.vala:864
 msgid "Search all tabs"
 msgstr "Искать во всех вкладках"
 
-#: src/MainWindow.vala:909 src/StickerSet.vala:114
+#: src/MainWindow.vala:905 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Искать"
 
-#: src/MainWindow.vala:917
+#: src/MainWindow.vala:914
 msgid "Nodes"
 msgstr "Узлы"
 
-#: src/MainWindow.vala:918
+#: src/MainWindow.vala:915
 msgid "Connections"
 msgstr "Соединения"
 
-#: src/MainWindow.vala:919
+#: src/MainWindow.vala:916
 msgid "Callouts"
 msgstr "Выноски"
 
-#: src/MainWindow.vala:920
+#: src/MainWindow.vala:917
 msgid "Groups"
 msgstr "Группы"
 
-#: src/MainWindow.vala:921
+#: src/MainWindow.vala:918
 msgid "Titles"
 msgstr "Заголовки"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:919
 msgid "Notes"
 msgstr "Примечания"
 
-#: src/MainWindow.vala:923
+#: src/MainWindow.vala:920
 msgid "Folded"
 msgstr "Свёрнутые"
 
-#: src/MainWindow.vala:924
+#: src/MainWindow.vala:921
 msgid "Unfolded"
 msgstr "Развёрнутые"
 
-#: src/MainWindow.vala:925
+#: src/MainWindow.vala:922
 msgid "Tasks"
 msgstr "Задачи"
 
-#: src/MainWindow.vala:926
+#: src/MainWindow.vala:923
 msgid "Non-tasks"
 msgstr "Не задачи"
 
-#: src/MainWindow.vala:1048
+#: src/MainWindow.vala:1045
 msgid "Print…"
 msgstr "Печать…"
 
-#: src/MainWindow.vala:1087
+#: src/MainWindow.vala:1084
 msgid "Brain Dump"
 msgstr "Разгрузка памяти"
 
-#: src/MainWindow.vala:1163 src/Preferences.vala:50
+#: src/MainWindow.vala:1160 src/Preferences.vala:50
 msgid "Preferences"
 msgstr "Параметры"
 
-#: src/MainWindow.vala:1164
+#: src/MainWindow.vala:1161
 msgid "Shortcuts Cheatsheet"
 msgstr "Справка по горячим клавишам"
 
-#: src/MainWindow.vala:1167
+#: src/MainWindow.vala:1164
 msgid "About Minder"
 msgstr "О программе"
 
-#: src/MainWindow.vala:1194 src/MainWindow.vala:1780
+#: src/MainWindow.vala:1187 src/TextMenu.vala:52
+#, fuzzy
+msgid "# Header1"
+msgstr "Гарнитура"
+
+#: src/MainWindow.vala:1188 src/TextMenu.vala:53
+msgid "## Header2"
+msgstr ""
+
+#: src/MainWindow.vala:1189 src/TextMenu.vala:54
+msgid "### Header3"
+msgstr ""
+
+#: src/MainWindow.vala:1190 src/TextMenu.vala:55
+msgid "#### Header4"
+msgstr ""
+
+#: src/MainWindow.vala:1191 src/TextMenu.vala:56
+msgid "##### Header5"
+msgstr ""
+
+#: src/MainWindow.vala:1192 src/TextMenu.vala:57
+msgid "###### Header6"
+msgstr ""
+
+#: src/MainWindow.vala:1193 src/TextMenu.vala:58
+msgid "**Bold**"
+msgstr ""
+
+#: src/MainWindow.vala:1194 src/TextMenu.vala:59
+msgid "__Italicize_"
+msgstr ""
+
+#: src/MainWindow.vala:1195 src/TextMenu.vala:60
+msgid "~~Strikeout~~"
+msgstr ""
+
+#: src/MainWindow.vala:1196 src/TextMenu.vala:61
+msgid "`Code`"
+msgstr ""
+
+#: src/MainWindow.vala:1197 src/TextMenu.vala:62
+#, fuzzy
+msgid "==Highlight=="
+msgstr "Выровнять по правой стороне"
+
+#: src/MainWindow.vala:1198 src/TextMenu.vala:63
+msgid "<sup>Superscript</sup>"
+msgstr ""
+
+#: src/MainWindow.vala:1199 src/TextMenu.vala:64
+msgid "<sub>Subscript</sub>"
+msgstr ""
+
+#: src/MainWindow.vala:1200 src/TextMenu.vala:65
+msgid "[Link text](URL)"
+msgstr ""
+
+#: src/MainWindow.vala:1218 src/MainWindow.vala:1831
 msgid "Show Property Sidebar"
 msgstr "Показать панель свойств"
 
-#: src/MainWindow.vala:1205 src/MainWindow.vala:1248
+#: src/MainWindow.vala:1229 src/MainWindow.vala:1287
 msgid "Current"
 msgstr "Выбранное"
 
-#: src/MainWindow.vala:1206 src/MainWindow.vala:1249
-#: src/StyleInspector.vala:363
+#: src/MainWindow.vala:1230 src/MainWindow.vala:1288
+#: src/StyleInspector.vala:362
 msgid "Style"
 msgstr "Стиль"
 
-#: src/MainWindow.vala:1207 src/MainWindow.vala:1250 src/Preferences.vala:68
+#: src/MainWindow.vala:1231 src/MainWindow.vala:1289 src/Preferences.vala:68
 msgid "Tags"
 msgstr "Метки"
 
-#: src/MainWindow.vala:1208 src/MainWindow.vala:1251
+#: src/MainWindow.vala:1232 src/MainWindow.vala:1290
 msgid "Stickers"
 msgstr "Стикеры"
 
-#: src/MainWindow.vala:1209 src/MainWindow.vala:1252
+#: src/MainWindow.vala:1233 src/MainWindow.vala:1291
 msgid "Map"
 msgstr "Макет"
 
-#: src/MainWindow.vala:1325
+#: src/MainWindow.vala:1364
 msgid "Save current unnamed document?"
 msgstr "Сохранить текущий безымянный документ?"
 
-#: src/MainWindow.vala:1326
+#: src/MainWindow.vala:1365
 msgid "Changes will be permanently lost if not saved."
 msgstr "Без сохранения изменения будут утеряны навсегда."
 
-#: src/MainWindow.vala:1331
+#: src/MainWindow.vala:1370
 msgid "Discard Changes"
 msgstr "Отказаться от изменений"
 
-#: src/MainWindow.vala:1337 src/MainWindow.vala:1626 src/ThemeEditor.vala:174
+#: src/MainWindow.vala:1376 src/MainWindow.vala:1662 src/ThemeEditor.vala:159
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/MainWindow.vala:1369
+#: src/MainWindow.vala:1408
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "Файл %s был изменён другим приложением."
 
-#: src/MainWindow.vala:1370
+#: src/MainWindow.vala:1409
 msgid "What do you want to do?"
 msgstr "Как вы хотите поступить?"
 
-#: src/MainWindow.vala:1375
+#: src/MainWindow.vala:1414
 msgid "Discard Changes and reload"
 msgstr "Отказаться от изменений и перезагрузить"
 
-#: src/MainWindow.vala:1378
+#: src/MainWindow.vala:1417
 msgid "Save local version and overwrite"
 msgstr "Сохранить локальную версию и перезаписать"
 
-#: src/MainWindow.vala:1424
+#: src/MainWindow.vala:1463
 msgid "Open Directory"
 msgstr "Открыть папку"
 
-#: src/MainWindow.vala:1424
+#: src/MainWindow.vala:1463
 msgid "Open"
 msgstr "Открыть"
 
-#: src/MainWindow.vala:1626
+#: src/MainWindow.vala:1662
 msgid "Save File"
 msgstr "Сохранить файл"
 
-#: src/MainWindow.vala:1726
+#: src/MainWindow.vala:1762
 msgid "Hide Property Sidebar"
 msgstr "Скрыть панель свойств"
 
-#: src/MainWindow.vala:2202
+#: src/MainWindow.vala:2229
 msgid "File upgrades needed"
 msgstr "Необходимо обновить файлы"
 
-#: src/MainWindow.vala:2203
+#: src/MainWindow.vala:2230
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1490,16 +1639,16 @@ msgstr ""
 "\n"
 "Выберите способ обновления."
 
-#: src/MainWindow.vala:2208
+#: src/MainWindow.vala:2235
 msgid "Quit Minder"
 msgstr "Выйти из Minder"
 
-#: src/MainWindow.vala:2228
+#: src/MainWindow.vala:2255
 #, fuzzy
 msgid "Detail"
 msgstr "Открепить"
 
-#: src/MainWindow.vala:2236
+#: src/MainWindow.vala:2263
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
@@ -1509,7 +1658,7 @@ msgstr ""
 "необратимо, более старые версии программы не смогут прочитать обновленные "
 "файлы.</small>"
 
-#: src/MainWindow.vala:2237
+#: src/MainWindow.vala:2264
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
@@ -1518,7 +1667,7 @@ msgstr ""
 "<small>Обновит каждый открытый в прошлом сеансе файл Minder, но сохранит "
 "копию старого, оригинального файла в то же каталоге.</small>"
 
-#: src/MainWindow.vala:2238
+#: src/MainWindow.vala:2265
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1530,168 +1679,166 @@ msgstr ""
 "его в новом формате кнопкой «Сохранить как» на панели, чтобы получить "
 "возможность изменять.</small>"
 
-#: src/MainWindow.vala:2245
+#: src/MainWindow.vala:2272
 msgid "Use the selected option when future older Minder files are opened"
 msgstr "Использовать этот выбор при открытии других старых файлов"
 
-#: src/MainWindow.vala:2270
+#: src/MainWindow.vala:2297
 msgid "Upgrades Needed"
 msgstr "Необходимо обновление"
 
-#: src/MapInspector.vala:131
+#: src/MapInspector.vala:113
 msgid "Read-only"
 msgstr "Только для чтения"
 
-#: src/MapInspector.vala:166
+#: src/MapInspector.vala:148
 msgid "Hide connections"
 msgstr "Скрывать соединения"
 
-#: src/MapInspector.vala:202
+#: src/MapInspector.vala:184
 msgid "Hide callouts"
 msgstr "Скрыть выноски"
 
-#: src/MapInspector.vala:246
+#: src/MapInspector.vala:228
 msgid "Node Layouts"
 msgstr "Схемы узлов"
 
-#: src/MapInspector.vala:300
+#: src/MapInspector.vala:282
 msgid "Node Alignment"
 msgstr "Выравнивание узлов"
 
-#: src/MapInspector.vala:307
+#: src/MapInspector.vala:289
 #, fuzzy
 msgid "Align left edges"
 msgstr "Выровнять по левой стороне"
 
-#: src/MapInspector.vala:311
+#: src/MapInspector.vala:293
 #, fuzzy
 msgid "Align horizontal centers"
 msgstr "По центру горизонтально"
 
-#: src/MapInspector.vala:315
+#: src/MapInspector.vala:297
 #, fuzzy
 msgid "Align right edges"
 msgstr "Выровнять по правой стороне"
 
-#: src/MapInspector.vala:319
+#: src/MapInspector.vala:301
 #, fuzzy
 msgid "Align top edges"
 msgstr "Выровнять узлы"
 
-#: src/MapInspector.vala:323
+#: src/MapInspector.vala:305
 #, fuzzy
 msgid "Align vertical centers"
 msgstr "По центру вертикально"
 
-#: src/MapInspector.vala:327
+#: src/MapInspector.vala:309
 #, fuzzy
 msgid "Align bottom edges"
 msgstr "Выровнять по нижней стороне"
 
-#: src/MapInspector.vala:369
+#: src/MapInspector.vala:351
 msgid "Themes"
 msgstr "Темы"
 
-#: src/MapInspector.vala:396
+#: src/MapInspector.vala:378
 msgid "Add Custom Theme"
 msgstr "Добавить свою тему"
 
-#: src/MapInspector.vala:414
+#: src/MapInspector.vala:396
 msgid "Copy location of temporary directory"
 msgstr "Скопировать местоположение временного каталога"
 
-#: src/MapInspector.vala:439
+#: src/MapInspector.vala:421
 msgid "Balance nodes"
 msgstr "Отбалансировать узлы"
 
-#: src/MapInspector.vala:441
+#: src/MapInspector.vala:423
 msgid "Balance Nodes"
 msgstr "Сбалансировать узлы"
 
-#: src/MapInspector.vala:445
+#: src/MapInspector.vala:427
 #, fuzzy
 msgid "Fold nodes with completed tasks"
 msgstr "Свернуть завершённые задачи"
 
-#: src/MapInspector.vala:447
+#: src/MapInspector.vala:429
 msgid "Fold Completed Tasks"
 msgstr "Свернуть завершённые задачи"
 
-#: src/MapInspector.vala:451
+#: src/MapInspector.vala:433
 msgid "Unfold all nodes"
 msgstr "Развернуть все узлы"
 
-#: src/MapInspector.vala:453
+#: src/MapInspector.vala:435
 msgid "Unfold All Nodes"
 msgstr "Развернуть все узлы"
 
-#: src/MapInspector.vala:556
-msgid "Unsaved"
-msgstr "Несохранённые"
-
-#: src/MindMap.vala:430
+#: src/MindMap.vala:428
 msgid "Main Idea"
 msgstr "Главная идея"
 
-#: src/MindMap.vala:1062
+#: src/MindMap.vala:1079
 msgid "Select a link color"
 msgstr "Выбрать цвет связи"
 
-#: src/NodeGroup.vala:159
+#: src/NodeGroup.vala:167
 #, fuzzy
 msgid "Group Note"
 msgstr "Примечание группы"
 
-#: src/NodeInspector.vala:114
+#: src/NodeInspector.vala:120
 msgid "Task"
 msgstr "Задача"
 
-#: src/NodeInspector.vala:140
+#: src/NodeInspector.vala:146
 msgid "Fold"
 msgstr "Свернуть"
 
-#: src/NodeInspector.vala:166
+#: src/NodeInspector.vala:172
 msgid "Sequence"
 msgstr "Последовательность"
 
-#: src/NodeInspector.vala:175
+#: src/NodeInspector.vala:181
 msgid ""
 "When set, automatically numbers child nodes and displays them as a sequence."
-msgstr "При включении автоматически нумерует дочерние узлы и отображает их как последовательность."
+msgstr ""
+"При включении автоматически нумерует дочерние узлы и отображает их как "
+"последовательность."
 
-#: src/NodeInspector.vala:230
+#: src/NodeInspector.vala:236
 msgid "Override Color"
 msgstr "Использовать другой цвет"
 
-#: src/NodeInspector.vala:345 src/NodeInspector.vala:369
+#: src/NodeInspector.vala:351 src/NodeInspector.vala:375
 msgid "Image"
 msgstr "Изображение"
 
-#: src/NodeInspector.vala:351
+#: src/NodeInspector.vala:357
 msgid "Add Image…"
 msgstr "Добавить изображение…"
 
-#: src/NodeInspector.vala:378 src/Shortcuts.vala:798
+#: src/NodeInspector.vala:384 src/Shortcuts.vala:804
 msgid "Edit Image"
 msgstr "Изменить изображение"
 
-#: src/NodeInspector.vala:395
+#: src/NodeInspector.vala:401
 msgid "Resizable"
 msgstr "Размер изменяем"
 
-#: src/NodeInspector.vala:482
+#: src/NodeInspector.vala:488
 msgid "Copy Node To Clipboard"
 msgstr "Скопировать узел в буфер обмена"
 
-#: src/NodeInspector.vala:487
+#: src/NodeInspector.vala:493
 msgid "Cut Node To Clipboard"
 msgstr "Вырезать узел в буфер обмена"
 
-#: src/NodeInspector.vala:493
+#: src/NodeInspector.vala:499
 msgid "Detach Node"
 msgstr "Открепить узел"
 
-#: src/NodeInspector.vala:503
+#: src/NodeInspector.vala:509
 msgid "Delete Node"
 msgstr "Удалить узел"
 
@@ -1707,7 +1854,7 @@ msgstr "Скопировать"
 msgid "Cut"
 msgstr "Вырезать"
 
-#: src/NodeMenu.vala:39 src/NodeMenu.vala:241 src/NodeMenu.vala:250
+#: src/NodeMenu.vala:39 src/NodeMenu.vala:245 src/NodeMenu.vala:254
 msgid "Paste and Replace Node"
 msgstr "Вставить и заменить узел"
 
@@ -1728,170 +1875,183 @@ msgid "Use parent color"
 msgstr "Использовать цвет узла-родителя"
 
 #: src/NodeMenu.vala:49
+msgid "One Level"
+msgstr ""
+
+#: src/NodeMenu.vala:50
+msgid "All Levels"
+msgstr ""
+
+#: src/NodeMenu.vala:53
 msgid "Edit Text…"
 msgstr "Изменить текст…"
 
-#: src/NodeMenu.vala:51 src/NodesMenu.vala:43
+#: src/NodeMenu.vala:55 src/NodesMenu.vala:43
 msgid "Edit Tags"
 msgstr "Изменить метки"
 
-#: src/NodeMenu.vala:52 src/NodeMenu.vala:226
+#: src/NodeMenu.vala:56 src/NodeMenu.vala:230
 msgid "Add Task"
 msgstr "Добавить задачу"
 
-#: src/NodeMenu.vala:53 src/NodeMenu.vala:230
+#: src/NodeMenu.vala:57 src/NodeMenu.vala:234
 msgid "Add Image"
 msgstr "Добавить изображение"
 
-#: src/NodeMenu.vala:55 src/NodeMenu.vala:227
+#: src/NodeMenu.vala:59 src/NodeMenu.vala:231
 msgid "Add Node Link"
 msgstr "Добавить ссылку на узел"
 
-#: src/NodeMenu.vala:56
+#: src/NodeMenu.vala:60
 msgid "Add Connection"
 msgstr "Добавить связь"
 
-#: src/NodeMenu.vala:57
+#: src/NodeMenu.vala:61
 msgid "Add Group"
 msgstr "Создать группу"
 
-#: src/NodeMenu.vala:58 src/NodeMenu.vala:229
+#: src/NodeMenu.vala:62 src/NodeMenu.vala:233
 msgid "Add Callout"
 msgstr "Добавить выноску"
 
-#: src/NodeMenu.vala:59 src/ThemeEditor.vala:153
+#: src/NodeMenu.vala:63 src/ThemeEditor.vala:138
 msgid "Link Color"
 msgstr "Цвет ссылки"
 
-#: src/NodeMenu.vala:60 src/NodeMenu.vala:228
-msgid "Fold Children"
-msgstr "Свернуть узлы-потомки"
+#: src/NodeMenu.vala:64
+#, fuzzy
+msgid "Toggle Folding"
+msgstr "Развернуть или свернуть"
 
-#: src/NodeMenu.vala:61
+#: src/NodeMenu.vala:65
 msgid "Toggle Sequence"
 msgstr "Переключить последовательность"
 
-#: src/NodeMenu.vala:64
+#: src/NodeMenu.vala:68
 msgid "Change Node"
 msgstr "Изменить узел"
 
-#: src/NodeMenu.vala:68
+#: src/NodeMenu.vala:72
 msgid "Add Parent Node"
 msgstr "Добавить узел-родитель"
 
-#: src/NodeMenu.vala:69
+#: src/NodeMenu.vala:73
 msgid "Add Child Node"
 msgstr "Добавить узел-потомок"
 
-#: src/NodeMenu.vala:70
+#: src/NodeMenu.vala:74
 msgid "Add Sibling Node"
 msgstr "Добавить узел-сиблинг"
 
-#: src/NodeMenu.vala:73
+#: src/NodeMenu.vala:77
 msgid "Insert Nodes"
 msgstr "Вставить узлы"
 
-#: src/NodeMenu.vala:74
+#: src/NodeMenu.vala:78
 msgid "Replace Nodes"
 msgstr "Заменить узлы"
 
-#: src/NodeMenu.vala:77
+#: src/NodeMenu.vala:81
 msgid "Add Node"
 msgstr "Добавить узел"
 
-#: src/NodeMenu.vala:79 src/QuickEntry.vala:40
+#: src/NodeMenu.vala:83 src/QuickEntry.vala:40
 msgid "Quick Entry"
 msgstr "Быстрый ввод"
 
-#: src/NodeMenu.vala:82
+#: src/NodeMenu.vala:86
 msgid "Root Node"
 msgstr "Корневой узел"
 
-#: src/NodeMenu.vala:83
+#: src/NodeMenu.vala:87
 msgid "Next Sibling Node"
 msgstr "Следующий узел-сиблинг"
 
-#: src/NodeMenu.vala:84
+#: src/NodeMenu.vala:88
 msgid "Previous Sibling Node"
 msgstr "Предыдущий узел-сиблинг"
 
-#: src/NodeMenu.vala:85
+#: src/NodeMenu.vala:89
 msgid "Child Node"
 msgstr "Узел-потомок"
 
-#: src/NodeMenu.vala:86 src/NodesMenu.vala:56
+#: src/NodeMenu.vala:90 src/NodesMenu.vala:56
 msgid "Child Nodes"
 msgstr "Узлы-потомки"
 
-#: src/NodeMenu.vala:87
+#: src/NodeMenu.vala:91
 msgid "Subtree"
 msgstr "Всё поддерево"
 
-#: src/NodeMenu.vala:88
+#: src/NodeMenu.vala:92
 msgid "Parent Node"
 msgstr "Узел-родитель"
 
-#: src/NodeMenu.vala:89
+#: src/NodeMenu.vala:93
 msgid "Linked Node"
 msgstr "Связанный узел"
 
-#: src/NodeMenu.vala:101
+#: src/NodeMenu.vala:105
 msgid "Center Current Node"
 msgstr "Центрировать выбранный узел"
 
-#: src/NodeMenu.vala:104
+#: src/NodeMenu.vala:108
 msgid "Alphabetically"
 msgstr "По алфавиту"
 
-#: src/NodeMenu.vala:105
+#: src/NodeMenu.vala:109
 msgid "Randomly"
 msgstr "Случайным образом"
 
-#: src/NodeMenu.vala:108
+#: src/NodeMenu.vala:112
 msgid "Sort Children"
 msgstr "Отсортировать узлы-потомки"
 
-#: src/NodeMenu.vala:111
+#: src/NodeMenu.vala:115
 msgid "Detach"
 msgstr "Открепить"
 
-#: src/NodeMenu.vala:224
+#: src/NodeMenu.vala:228
 msgid "Remove Task"
 msgstr "Удалить задачу"
 
-#: src/NodeMenu.vala:225
+#: src/NodeMenu.vala:229
 msgid "Mark Task As Done"
 msgstr "Пометить задачу как выполненную"
 
-#: src/NodeMenu.vala:227
+#: src/NodeMenu.vala:231
 msgid "Remove Node Link"
 msgstr "Удалить ссылку на узел"
 
-#: src/NodeMenu.vala:228
+#: src/NodeMenu.vala:232
 msgid "Unfold Children"
 msgstr "Развернуть узлы-потомки"
 
-#: src/NodeMenu.vala:229
+#: src/NodeMenu.vala:232
+msgid "Fold Children"
+msgstr "Свернуть узлы-потомки"
+
+#: src/NodeMenu.vala:233
 msgid "Remove Callout"
 msgstr "Удалить выноску"
 
-#: src/NodeMenu.vala:240
+#: src/NodeMenu.vala:244
 msgid "Paste Node As Child"
 msgstr "Вставить узел как потомок"
 
-#: src/NodeMenu.vala:243
+#: src/NodeMenu.vala:247
 msgid "Paste Image As Child Node"
 msgstr "Вставить изображение как узел-потомок"
 
-#: src/NodeMenu.vala:244
+#: src/NodeMenu.vala:248
 msgid "Paste and Replace Node Image"
 msgstr "Вставить и заменить изображение узла"
 
-#: src/NodeMenu.vala:246
+#: src/NodeMenu.vala:250
 msgid "Paste Text As Child Node"
 msgstr "Вставить текст как узел-потомок"
 
-#: src/NodeMenu.vala:247
+#: src/NodeMenu.vala:251
 msgid "Paste and Replace Node Text"
 msgstr "Вставить и заменить текст узла"
 
@@ -1907,7 +2067,7 @@ msgstr "Выбрать случайные цвета"
 msgid "Use Parent Color"
 msgstr "Использовать цвет узла-родителя"
 
-#: src/NodesMenu.vala:44 src/ThemeEditor.vala:145
+#: src/NodesMenu.vala:44 src/ThemeEditor.vala:129
 msgid "Link Colors"
 msgstr "Цвета ссылок"
 
@@ -1963,15 +2123,15 @@ msgstr "По правому краю"
 msgid "Align"
 msgstr "Выровнять"
 
-#: src/Node.vala:2701
+#: src/Node.vala:2689
 msgid "Node Title"
 msgstr "Заголовок узла"
 
-#: src/Node.vala:2709
+#: src/Node.vala:2697
 msgid "Node Note"
 msgstr "Примечание к узлу"
 
-#: src/Node.vala:2719
+#: src/Node.vala:2707
 msgid "Callout Text"
 msgstr "Текст выноски"
 
@@ -1991,7 +2151,7 @@ msgstr "Горячие клавиши"
 msgid "Advanced"
 msgstr "Расширенные"
 
-#: src/Preferences.vala:93 src/StyleInspector.vala:255
+#: src/Preferences.vala:93 src/StyleInspector.vala:254
 msgid "Close"
 msgstr "Закрыть"
 
@@ -2083,34 +2243,32 @@ msgid ""
 msgstr ""
 
 #: src/Preferences.vala:187
-msgid "Hide themes not matching visual style"
-msgstr "Скрывать темы, не соответствующие визуальному стилю"
-
-#: src/Preferences.vala:191
 msgid "Default theme"
 msgstr "Тема по умолчанию"
 
-#: src/Preferences.vala:193
+#: src/Preferences.vala:189
 msgid ""
 "Sets the default theme to use for newly created mindmaps (use Map sidebar "
 "panel to make immediate changes)."
-msgstr "Устанавливает тему по умолчанию для новых ментальных карт (используйте панель Map для немедленных изменений)."
+msgstr ""
+"Устанавливает тему по умолчанию для новых ментальных карт (используйте "
+"панель Map для немедленных изменений)."
 
-#: src/Preferences.vala:196
+#: src/Preferences.vala:192
 #, fuzzy
 msgid "Enable mindmap animations"
 msgstr "Включить анимацию"
 
-#: src/Preferences.vala:200
+#: src/Preferences.vala:196
 #, fuzzy
 msgid "Enable window animations"
 msgstr "Включить анимацию"
 
-#: src/Preferences.vala:204
+#: src/Preferences.vala:200
 msgid "Text field font size"
 msgstr "Размер шрифта в текстовых полях"
 
-#: src/Preferences.vala:207
+#: src/Preferences.vala:203
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
@@ -2118,101 +2276,101 @@ msgstr ""
 "Какой заказной кегль шрифта использовать в любых полях ввода, например, в "
 "поле примечаний и поле быстрого ввода"
 
-#: src/Preferences.vala:210
+#: src/Preferences.vala:206
 msgid "Colorize note fields"
 msgstr "Раскрашивать поля заметок"
 
-#: src/Preferences.vala:214
+#: src/Preferences.vala:210
 msgid "Default global style"
 msgstr "Глобальный стиль по умолчанию"
 
-#: src/Preferences.vala:216
+#: src/Preferences.vala:212
 msgid "Specifies the global style to use for newly created mindmaps."
 msgstr ""
 
-#: src/Preferences.vala:239
+#: src/Preferences.vala:235
 msgid "Tags in this list will be the starting list of tags for new mindmaps."
 msgstr ""
 
-#: src/Preferences.vala:339
+#: src/Preferences.vala:335
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
 msgstr ""
 
-#: src/Preferences.vala:340
+#: src/Preferences.vala:336
 msgid "Escape to cancel.  Press key combination to set."
 msgstr ""
 
-#: src/Preferences.vala:348
+#: src/Preferences.vala:344
 msgid "Set Minder Defaults"
 msgstr ""
 
-#: src/Preferences.vala:351
+#: src/Preferences.vala:347
 msgid "Clear All Shortcuts"
 msgstr "Очистить все горячие клавиши"
 
-#: src/Preferences.vala:360
+#: src/Preferences.vala:356
 msgid "Search commands"
 msgstr "Операции с поиском"
 
-#: src/Preferences.vala:362
+#: src/Preferences.vala:358
 #, fuzzy
 msgid "Search shortcuts"
 msgstr "Горячие клавиши в Minder"
 
-#: src/Preferences.vala:470
+#: src/Preferences.vala:466
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr ""
 
-#: src/Preferences.vala:474
+#: src/Preferences.vala:470
 msgid "Show temporary directory containing current mindmap in map sidebar"
 msgstr ""
 
-#: src/Preferences.vala:484
+#: src/Preferences.vala:480
 msgid "Default file upgrade action"
 msgstr ""
 
-#: src/Preferences.vala:558 src/styles/NodeBorderNone.vala:34 src/Tags.vala:47
+#: src/Preferences.vala:554 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
 msgid "None"
 msgstr "Нет"
 
-#: src/Preferences.vala:559
+#: src/Preferences.vala:555
 #, fuzzy
 msgid "Enter shortcut"
 msgstr "Горячие клавиши в Minder"
 
-#: src/Preferences.vala:727
+#: src/Preferences.vala:723
 msgid "Unable to set new shortcut due to conflicts"
 msgstr ""
 
-#: src/Preferences.vala:728
+#: src/Preferences.vala:724
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr ""
 
-#: src/Preferences.vala:793
+#: src/Preferences.vala:789
 #, fuzzy
 msgid "Clear all shortcuts?"
 msgstr "Горячие клавиши в Minder"
 
-#: src/Preferences.vala:793 src/Preferences.vala:804
+#: src/Preferences.vala:789 src/Preferences.vala:800
 msgid "Current shortcut settings will be lost"
 msgstr ""
 
-#: src/Preferences.vala:804
+#: src/Preferences.vala:800
 #, fuzzy
 msgid "Use Minder Default Shortcuts?"
 msgstr "Горячие клавиши в Minder"
 
-#: src/Preferences.vala:836 src/Preferences.vala:854
+#: src/Preferences.vala:832 src/Preferences.vala:850
 #, fuzzy
 msgid "Minder Default"
 msgstr "По умолчанию"
 
-#: src/Preferences.vala:839 src/Preferences.vala:855
+#: src/Preferences.vala:835 src/Preferences.vala:851
 msgid "Last Used"
 msgstr "Последний использованный"
 
-#: src/Preferences.vala:841 src/Preferences.vala:859
+#: src/Preferences.vala:837 src/Preferences.vala:855
 #, c-format
 msgid "Named Style: %s"
 msgstr ""
@@ -2291,179 +2449,179 @@ msgstr "Заменить"
 msgid "Insert"
 msgstr "Вставить"
 
-#: src/Shortcuts.vala:773 src/Shortcuts.vala:779
+#: src/Shortcuts.vala:779 src/Shortcuts.vala:785
 #, fuzzy
 msgid "No Shortcuts Set"
 msgstr "Горячие клавиши"
 
-#: src/Shortcuts.vala:794
+#: src/Shortcuts.vala:800
 msgid "Mouse Events"
 msgstr "События с мышью"
 
-#: src/Shortcuts.vala:797
+#: src/Shortcuts.vala:803
 msgid "Show Contextual Menu"
 msgstr "Показать контекстное меню"
 
-#: src/Shortcuts.vala:797
+#: src/Shortcuts.vala:803
 msgid "[Right-click when item is selected]"
 msgstr "[Щелчок ПКМ, когда объект выбран]"
 
-#: src/Shortcuts.vala:798
+#: src/Shortcuts.vala:804
 #, fuzzy
 msgid "[Double left-click image]"
 msgstr "[Двойной щелчок по изображению]"
 
-#: src/Shortcuts.vala:800
+#: src/Shortcuts.vala:806
 msgid "Canvas Movement"
 msgstr "Перемещение по холсту"
 
-#: src/Shortcuts.vala:801
+#: src/Shortcuts.vala:807
 msgid "Pan Canvas"
 msgstr "Навигация по холсту"
 
-#: src/Shortcuts.vala:801
+#: src/Shortcuts.vala:807
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr "[Щелчок СКМ + перетаскивание / Alt + движение]"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:808
 msgid "Scroll Vertically"
 msgstr "Прокрутить по вертикали"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:808
 msgid "[Scrollwheel up/down]"
 msgstr "[Прокрутка колесом вверх/вниз]"
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:809
 msgid "Scroll Horizontally"
 msgstr "Прокрутить по горизонтали"
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:809
 msgid "[Scrollwhile left/right]"
 msgstr ""
 
-#: src/Shortcuts.vala:805
+#: src/Shortcuts.vala:811
 msgid "Item Selection"
 msgstr "Выделение объектов"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:812
 msgid "Select Single Item"
 msgstr "Выбрать один объект"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:812
 msgid "[Left-click on item]"
 msgstr "[Щелчок ЛКМ]"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:813
 msgid "Select Child Nodes"
 msgstr "Выбрать узлы-потомки"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:813
 msgid "[Control + Left-click on parent node]"
 msgstr "[Control + щелчок ЛКМ по родительскому узлу]"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:814
 msgid "Select Node Tree/Subtree"
 msgstr "Выбрать (под)дерево узлов"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:814
 #, fuzzy
 msgid "[Control + Double left-click on parent node"
 msgstr "[Control + двойной щелчок ЛКМ по родительскому узлу]"
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:815
 msgid "Select All Nodes at Same Depth Level"
 msgstr "Выбрать все узлы на одном уровне"
 
-#: src/Shortcuts.vala:809
+#: src/Shortcuts.vala:815
 msgid "[Control + Triple left-click on node]"
 msgstr "[Control + тройной щелчок ЛКМ по узлу]"
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:816
 msgid "Block Selection"
 msgstr "Заблокировать выделение"
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:816
 msgid "[Left-click + Drag]"
 msgstr "[Щелчок ЛКМ и перетаскивание]"
 
-#: src/Shortcuts.vala:812
+#: src/Shortcuts.vala:818
 #, fuzzy
 msgid "Item Selection Toggle"
 msgstr "Выделение объектов"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:819
 msgid "Toggle Selection of Item"
 msgstr "Переключить выделение объекта"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:819
 msgid "[Shift + Left-click on item]"
 msgstr "[Shift + щелчок ЛКМ по объекту]"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:820
 msgid "Toggle Selection of Child Nodes"
 msgstr "Переключить выбор узлов-потомков"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:820
 msgid "[Shift + Control + Left-click on item]"
 msgstr "[Shift + Control + щелчок ЛКМ по объекту]"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:821
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "Переключить выбор дерева/поддерева узлов"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:821
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr "[Shift + Control + двойной щелчок ЛКМ по родительскому узлу]"
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:822
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr "Переключить выбор всех узлов на одном уровне вложенности"
 
-#: src/Shortcuts.vala:816
+#: src/Shortcuts.vala:822
 #, fuzzy
 msgid "Shift + Control + Triple-click on node]"
 msgstr "[Shift + Control + тройной щелчок ЛКМ по узлу]"
 
-#: src/Shortcuts.vala:818
+#: src/Shortcuts.vala:824
 msgid "Text Selection"
 msgstr "Выделение текста"
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:825
 msgid "Set Cursor Insert Point"
 msgstr "Установить точку ввода"
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:825
 #, fuzzy
 msgid "[Left-click in text]"
 msgstr "[Щелчок ЛКМ]"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:826
 #, fuzzy
 msgid "Select Current Word"
 msgstr "Выбрать текущее слово"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:826
 msgid "[Double left-click on word]"
 msgstr "[Двойной щелчок по слову]"
 
-#: src/Shortcuts.vala:821
+#: src/Shortcuts.vala:827
 #, fuzzy
 msgid "[Triple left-click text]"
 msgstr "[Тройной щелчок в любой части текста]"
 
-#: src/StickerInspector.vala:61
+#: src/StickerInspector.vala:60
 msgid "Remove From Favorites"
 msgstr "Удалить из избранного"
 
-#: src/StickerInspector.vala:64 src/StickerInspector.vala:67
+#: src/StickerInspector.vala:63 src/StickerInspector.vala:66
 msgid "Add To Favorites"
 msgstr "Добавить в избранное"
 
-#: src/StickerInspector.vala:70
+#: src/StickerInspector.vala:69
 msgid "Remove Custom Sticker"
 msgstr "Удалить свой стикер"
 
-#: src/StickerInspector.vala:78
+#: src/StickerInspector.vala:77
 msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
@@ -2471,27 +2629,27 @@ msgstr ""
 "Чтобы добавить стикер, перетащите и бросьте стикер на узел или в любое место "
 "карты."
 
-#: src/StickerInspector.vala:85
+#: src/StickerInspector.vala:84
 msgid "Search Stickers"
 msgstr "Искать по стикерам"
 
-#: src/StickerInspector.vala:119
+#: src/StickerInspector.vala:133
 msgid "Favorites"
 msgstr "Избранное"
 
-#: src/StickerInspector.vala:125
+#: src/StickerInspector.vala:139
 msgid "Show Custom Sticker Directory"
 msgstr "Показать каталог с собственными стикерами"
 
-#: src/StickerInspector.vala:205
+#: src/StickerInspector.vala:219
 msgid "Add custom stickers"
 msgstr "Добавить свои стикеры"
 
-#: src/StickerInspector.vala:459
+#: src/StickerInspector.vala:484
 msgid "Import Sticker(s)"
 msgstr "Импортировать стикеры"
 
-#: src/StickerInspector.vala:459 src/StickerSet.vala:353
+#: src/StickerInspector.vala:484 src/StickerSet.vala:353
 msgid "Import"
 msgstr "Импортировать"
 
@@ -2515,7 +2673,7 @@ msgstr "Промышленность"
 msgid "Mobile"
 msgstr "Мобильная связь"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1225
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1240
 msgid "Arrows"
 msgstr "Стрелки"
 
@@ -3203,10 +3361,6 @@ msgstr "Зарегистрированная торговая марка"
 msgid "Trademark"
 msgstr "Торговая марка"
 
-#: src/StickerSet.vala:210
-msgid "Copyright"
-msgstr "Авторские права"
-
 #: src/StickerSet.vala:211
 msgid "Copyleft"
 msgstr "Копилефт"
@@ -3499,13 +3653,13 @@ msgstr "Вверх"
 msgid "Right up"
 msgstr "Направо вверх"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1037
-#: src/StyleInspector.vala:1463 src/StyleInspector.vala:1625
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1051
+#: src/StyleInspector.vala:1483 src/StyleInspector.vala:1648
 msgid "Left"
 msgstr "Влево"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1039
-#: src/StyleInspector.vala:1465 src/StyleInspector.vala:1627
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1053
+#: src/StyleInspector.vala:1485 src/StyleInspector.vala:1650
 msgid "Right"
 msgstr "Вправо"
 
@@ -3765,83 +3919,83 @@ msgstr "Выбранные выноски"
 msgid "Unknown"
 msgstr "Неизвестно"
 
-#: src/StyleInspector.vala:244
+#: src/StyleInspector.vala:243
 msgid "Deleted preferences default global style"
 msgstr ""
 
-#: src/StyleInspector.vala:245
+#: src/StyleInspector.vala:244
 #, c-format
 msgid ""
 "The default global style '%s' was deleted.  Setting default global style in "
 "preferences to use the default Minder global style."
 msgstr ""
 
-#: src/StyleInspector.vala:271
+#: src/StyleInspector.vala:270
 msgid "Changes affect:"
 msgstr "Изменения влияют на:"
 
-#: src/StyleInspector.vala:283
+#: src/StyleInspector.vala:282
 msgid "Copy current style"
 msgstr ""
 
-#: src/StyleInspector.vala:295
+#: src/StyleInspector.vala:294
 msgid "Paste copied style"
 msgstr ""
 
-#: src/StyleInspector.vala:306
+#: src/StyleInspector.vala:305
 #, fuzzy
 msgid "Style Templates"
 msgstr "Шаблон"
 
-#: src/StyleInspector.vala:340
+#: src/StyleInspector.vala:339
 msgid "Branch Options"
 msgstr "Параметры ветвей"
 
-#: src/StyleInspector.vala:410
+#: src/StyleInspector.vala:419
 msgid "Corner Radius"
 msgstr "Угловой радиус"
 
-#: src/StyleInspector.vala:458 src/StyleInspector.vala:894
+#: src/StyleInspector.vala:464 src/StyleInspector.vala:904
 msgid "Margin"
 msgstr "Поля"
 
-#: src/StyleInspector.vala:520
+#: src/StyleInspector.vala:527
 msgid "Link Options"
 msgstr "Параметры связей"
 
-#: src/StyleInspector.vala:543 src/StyleInspector.vala:1184
+#: src/StyleInspector.vala:550 src/StyleInspector.vala:1199
 msgid "Line Dash"
 msgstr "Пунктир"
 
-#: src/StyleInspector.vala:584 src/StyleInspector.vala:1311
+#: src/StyleInspector.vala:591 src/StyleInspector.vala:1327
 msgid "Line Width"
 msgstr "Толщина линии"
 
-#: src/StyleInspector.vala:635
+#: src/StyleInspector.vala:643
 msgid "Link Arrow"
 msgstr "Стрелка связи"
 
-#: src/StyleInspector.vala:669
+#: src/StyleInspector.vala:677
 msgid "Link Arrow Size"
 msgstr "Размер стрелки связи"
 
-#: src/StyleInspector.vala:743 src/Templates.vala:59 src/Templates.vala:64
+#: src/StyleInspector.vala:752 src/Templates.vala:59 src/Templates.vala:64
 msgid "Node Options"
 msgstr "Параметры узлов"
 
-#: src/StyleInspector.vala:766
+#: src/StyleInspector.vala:775
 msgid "Border Style"
 msgstr "Стиль края"
 
-#: src/StyleInspector.vala:809
+#: src/StyleInspector.vala:818
 msgid "Border Width"
 msgstr "Толщина края"
 
-#: src/StyleInspector.vala:859
+#: src/StyleInspector.vala:869
 msgid "Color Fill"
 msgstr "Заливка цветом"
 
-#: src/StyleInspector.vala:868
+#: src/StyleInspector.vala:878
 msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
@@ -3849,115 +4003,115 @@ msgstr ""
 "Залить этот узел цветом, когда его рамка квадратная,\n"
 "закругленная или в форме таблетки"
 
-#: src/StyleInspector.vala:938 src/StyleInspector.vala:1363
-#: src/StyleInspector.vala:1656
+#: src/StyleInspector.vala:949 src/StyleInspector.vala:1380
+#: src/StyleInspector.vala:1679
 msgid "Padding"
 msgstr "Отступы"
 
-#: src/StyleInspector.vala:982
+#: src/StyleInspector.vala:994
 msgid "Font"
 msgstr "Шрифт"
 
-#: src/StyleInspector.vala:1026 src/StyleInspector.vala:1452
-#: src/StyleInspector.vala:1614
+#: src/StyleInspector.vala:1040 src/StyleInspector.vala:1472
+#: src/StyleInspector.vala:1637
 msgid "Text Alignment"
 msgstr "Выравнивание текста"
 
-#: src/StyleInspector.vala:1038 src/StyleInspector.vala:1464
-#: src/StyleInspector.vala:1626
+#: src/StyleInspector.vala:1052 src/StyleInspector.vala:1484
+#: src/StyleInspector.vala:1649
 #, fuzzy
 msgid "Center"
 msgstr "Центрировать в окне"
 
-#: src/StyleInspector.vala:1068
+#: src/StyleInspector.vala:1082
 msgid "Width"
 msgstr "Ширина"
 
-#: src/StyleInspector.vala:1100
+#: src/StyleInspector.vala:1115
 msgid "Enable Markup"
 msgstr "Включить разметку"
 
-#: src/StyleInspector.vala:1161 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1176 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "Параметры соединения"
 
-#: src/StyleInspector.vala:1265
+#: src/StyleInspector.vala:1280
 msgid "Arrow Size"
 msgstr "Размер стрелки"
 
-#: src/StyleInspector.vala:1408
+#: src/StyleInspector.vala:1426
 msgid "Title Font"
 msgstr "Шрифт подписи"
 
-#: src/StyleInspector.vala:1494
+#: src/StyleInspector.vala:1514
 msgid "Title Width"
 msgstr "Ширина подписи"
 
-#: src/StyleInspector.vala:1546 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1567 src/Templates.vala:61 src/Templates.vala:66
 msgid "Callout Options"
 msgstr "Параметры выноски"
 
-#: src/StyleInspector.vala:1570
+#: src/StyleInspector.vala:1591
 msgid "Text Font"
 msgstr "Шрифт текста"
 
-#: src/StyleInspector.vala:1701
+#: src/StyleInspector.vala:1725
 msgid "Pointer Width"
 msgstr "Ширина указателя"
 
-#: src/StyleInspector.vala:1746
+#: src/StyleInspector.vala:1771
 msgid "Pointer Length"
 msgstr "Длина указателя"
 
-#: src/styles/LinkTypeCurved.vala:34
+#: src/styles/LinkTypeCurved.vala:37
 msgid "Curved"
 msgstr "Кривые"
 
-#: src/styles/LinkTypeRounded.vala:34
+#: src/styles/LinkTypeRounded.vala:37
 msgid "Rounded"
 msgstr "Скругленный"
 
-#: src/styles/LinkTypeSquared.vala:34
+#: src/styles/LinkTypeSquared.vala:37
 msgid "Squared"
 msgstr "Квадратный"
 
-#: src/styles/LinkTypeStraight.vala:34
+#: src/styles/LinkTypeStraight.vala:37
 msgid "Straight"
 msgstr "Прямой"
 
-#: src/styles/NodeBorderBracket.vala:34
+#: src/styles/NodeBorderBracket.vala:38
 msgid "Square Bracket"
 msgstr "Квадратная скобка"
 
-#: src/styles/NodeBorderPill.vala:34
+#: src/styles/NodeBorderPill.vala:38
 msgid "Pill-shaped"
 msgstr "Таблетка"
 
-#: src/styles/NodeBorderRounded.vala:34
+#: src/styles/NodeBorderRounded.vala:38
 msgid "Rounded Rectangle"
 msgstr "Скруглённый прямоугольник"
 
-#: src/styles/NodeBorderSquared.vala:34
+#: src/styles/NodeBorderSquared.vala:38
 msgid "Squared Off"
 msgstr "Прямоугольник"
 
-#: src/styles/NodeBorderUnderlined.vala:34
+#: src/styles/NodeBorderUnderlined.vala:37
 msgid "Underlined"
 msgstr "Подчёркивание"
 
-#: src/Styles.vala:57
+#: src/Styles.vala:58
 msgid "Solid"
 msgstr "Сплошная"
 
-#: src/Styles.vala:58
+#: src/Styles.vala:59
 msgid "Dotted"
 msgstr "Точки"
 
-#: src/Styles.vala:59
+#: src/Styles.vala:60
 msgid "Short Dash"
 msgstr "Короткое тире"
 
-#: src/Styles.vala:60
+#: src/Styles.vala:61
 msgid "Long Dash"
 msgstr "Длинное тире"
 
@@ -3989,11 +4143,11 @@ msgstr ""
 msgid "Click to remove tag from highlight"
 msgstr ""
 
-#: src/TagEditor.vala:311
+#: src/TagEditor.vala:312
 msgid "Enter name of tag to find or create"
 msgstr ""
 
-#: src/TagEditor.vala:413
+#: src/TagEditor.vala:429
 #, c-format
 msgid "Create '%s' tag"
 msgstr ""
@@ -4008,12 +4162,12 @@ msgid ""
 "Highlight tagged nodes in map."
 msgstr ""
 
-#: src/TagInspector.vala:67
+#: src/TagInspector.vala:70
 #, fuzzy
 msgid "Highlight Mode"
 msgstr "Выровнять по правой стороне"
 
-#: src/TagInspector.vala:77
+#: src/TagInspector.vala:80
 msgid "End Tag Highlighting"
 msgstr ""
 
@@ -4021,7 +4175,7 @@ msgstr ""
 msgid "Any"
 msgstr ""
 
-#: src/Tags.vala:82 src/ThemeEditor.vala:117
+#: src/Tags.vala:82 src/ThemeEditor.vala:120
 msgid "Tag"
 msgstr "Метка"
 
@@ -4095,139 +4249,140 @@ msgstr "Удалить ссылку"
 msgid "Parser regex error (re: %s, error: %s)\n"
 msgstr "Ошибка разбора регулярного выражения (выражение: %s, ошибка: %s)\n"
 
-#: src/ThemeEditor.vala:53
+#: src/ThemeEditor.vala:52
 msgid "Customize Theme"
 msgstr "Настроить тему"
 
-#: src/ThemeEditor.vala:58
+#: src/ThemeEditor.vala:57
 msgid "Name"
 msgstr "Название"
 
-#: src/ThemeEditor.vala:96
+#: src/ThemeEditor.vala:97
 msgid "Base Colors"
 msgstr "Основные цвета"
 
-#: src/ThemeEditor.vala:102
+#: src/ThemeEditor.vala:104
 msgid "Background"
 msgstr "Фон"
 
-#: src/ThemeEditor.vala:103
+#: src/ThemeEditor.vala:105
 msgid "Foreground"
 msgstr "Передний  план"
 
-#: src/ThemeEditor.vala:104
+#: src/ThemeEditor.vala:106
 msgid "Root Node Background"
 msgstr "Фон корневого узла"
 
-#: src/ThemeEditor.vala:105
+#: src/ThemeEditor.vala:107
 msgid "Root Node Foreground"
 msgstr "Передний план корневого узла"
 
-#: src/ThemeEditor.vala:106
+#: src/ThemeEditor.vala:108
 msgid "Node Select Background"
 msgstr "Фон выделения узла"
 
-#: src/ThemeEditor.vala:107
+#: src/ThemeEditor.vala:109
 msgid "Node Select Foreground"
 msgstr "Передний план выделения узла"
 
-#: src/ThemeEditor.vala:108
+#: src/ThemeEditor.vala:110
 msgid "Text Select Background"
 msgstr "Фон выделенного текста"
 
-#: src/ThemeEditor.vala:109
+#: src/ThemeEditor.vala:111
 msgid "Text Select Foreground"
 msgstr "Передний план выделенного текста"
 
-#: src/ThemeEditor.vala:110
+#: src/ThemeEditor.vala:112
 msgid "Text Cursor"
 msgstr "Текстовый курсор"
 
-#: src/ThemeEditor.vala:111
+#: src/ThemeEditor.vala:113
 msgid "Attachable Highlight"
 msgstr "Подсветка вложения"
 
-#: src/ThemeEditor.vala:112
+#: src/ThemeEditor.vala:114
 msgid "Connection Color"
 msgstr "Цвет соединения"
 
-#: src/ThemeEditor.vala:113
+#: src/ThemeEditor.vala:115
 msgid "Connection Title Color"
 msgstr "Цвет подписи соединения"
 
-#: src/ThemeEditor.vala:114
+#: src/ThemeEditor.vala:116
 msgid "Callout Background"
 msgstr "Фон выноски"
 
-#: src/ThemeEditor.vala:115
+#: src/ThemeEditor.vala:117
 msgid "URL Link Background"
 msgstr "Фон ссылки"
 
-#: src/ThemeEditor.vala:116
+#: src/ThemeEditor.vala:118
 msgid "URL Link Foreground"
 msgstr "Передний план ссылки"
 
-#: src/ThemeEditor.vala:118
+#: src/ThemeEditor.vala:119
+#, fuzzy
+msgid "Highlighter"
+msgstr "Выровнять по правой стороне"
+
+#: src/ThemeEditor.vala:121
 msgid "Markdown Syntax Chars"
 msgstr "Символы разметки Markdown"
 
-#: src/ThemeEditor.vala:119
+#: src/ThemeEditor.vala:122
 msgid "Match Background"
 msgstr "Совпадение фона"
 
-#: src/ThemeEditor.vala:120
+#: src/ThemeEditor.vala:123
 msgid "Match Foreground"
 msgstr "Совпадение переднего плана"
 
-#: src/ThemeEditor.vala:121
+#: src/ThemeEditor.vala:124
 msgid "Markdown List Item"
 msgstr "Элемент списка в Markdown"
 
-#: src/ThemeEditor.vala:127
-msgid "Prefer Dark Mode"
-msgstr "Предпочитать тёмный режим"
-
-#: src/ThemeEditor.vala:223
+#: src/ThemeEditor.vala:212
 msgid "Custom"
 msgstr "Своя тема"
 
-#: src/ThemeEditor.vala:245
+#: src/ThemeEditor.vala:234
 msgid "Delete theme?"
 msgstr "Удалить тему?"
 
-#: src/ThemeEditor.vala:246
+#: src/ThemeEditor.vala:235
 msgid "This operation cannot be undone."
 msgstr "Эта операция не может быть отменена."
 
-#: src/ThemeEditor.vala:251 src/Utils.vala:456
+#: src/ThemeEditor.vala:240 src/Utils.vala:473
 msgid "No"
 msgstr "Нет"
 
-#: src/ThemeEditor.vala:254 src/Utils.vala:459
+#: src/ThemeEditor.vala:243 src/Utils.vala:476
 msgid "Yes"
 msgstr "Да"
 
-#: src/ThemeEditor.vala:275
+#: src/ThemeEditor.vala:265
 msgid "Default"
 msgstr "По умолчанию"
 
-#: src/themes/ThemeDark.vala:28
+#: src/themes/ThemeDark.vala:29
 msgid "Dark"
 msgstr "Тёмная"
 
-#: src/themes/ThemeDefault.vala:28
+#: src/themes/ThemeDefault.vala:29
 msgid "Light"
 msgstr "Светлая"
 
-#: src/themes/ThemeSolarizedDark.vala:31
+#: src/themes/ThemeSolarizedDark.vala:32
 msgid "Solarized Dark"
 msgstr "Тёмная Solarized"
 
-#: src/themes/ThemeSolarizedLight.vala:31
+#: src/themes/ThemeSolarizedLight.vala:32
 msgid "Solarized Light"
 msgstr "Светлая Solarized"
 
-#: src/Themes.vala:196
+#: src/Themes.vala:209
 msgid "Error parsing regular expression"
 msgstr "Ошибка при разборе регулярного выражения"
 
@@ -4236,7 +4391,7 @@ msgstr "Ошибка при разборе регулярного выражен
 msgid "Unable to load background color: %s"
 msgstr "Не удалось загрузить цвет фона: %s"
 
-#: src/Theme.vala:321
+#: src/Theme.vala:308
 msgid "Root"
 msgstr "Корень"
 
@@ -4244,7 +4399,7 @@ msgstr "Корень"
 msgid "callout resize"
 msgstr "смена размера выноски"
 
-#: src/undo_actions/UndoCalloutText.vala:32
+#: src/undo_actions/UndoCalloutText.vala:33
 msgid "callout text change"
 msgstr "смена текст выноски"
 
@@ -4256,15 +4411,15 @@ msgstr "присоединение узла"
 msgid "add connection"
 msgstr "создание соединения"
 
-#: src/undo_actions/UndoConnectionColor.vala:33
+#: src/undo_actions/UndoConnectionColor.vala:34
 msgid "connection color change"
 msgstr "смену цвета соединения"
 
-#: src/undo_actions/UndoConnectionDelete.vala:30
+#: src/undo_actions/UndoConnectionDelete.vala:31
 msgid "delete connection"
 msgstr "удаление соединения"
 
-#: src/undo_actions/UndoConnectionNote.vala:32
+#: src/undo_actions/UndoConnectionNote.vala:33
 msgid "connection note change"
 msgstr "смену примечания к соединению"
 
@@ -4272,19 +4427,19 @@ msgstr "смену примечания к соединению"
 msgid "delete connections"
 msgstr "удаление соединений"
 
-#: src/undo_actions/UndoConnectionStickerAdd.vala:31
+#: src/undo_actions/UndoConnectionStickerAdd.vala:32
 msgid "add connection sticker"
 msgstr "добавление стикера соединения"
 
-#: src/undo_actions/UndoConnectionStickerChange.vala:31
+#: src/undo_actions/UndoConnectionStickerChange.vala:32
 msgid "change connection sticker"
 msgstr "смену стикера соединения"
 
-#: src/undo_actions/UndoConnectionStickerRemove.vala:31
+#: src/undo_actions/UndoConnectionStickerRemove.vala:32
 msgid "remove connection sticker"
 msgstr "удаление стикера соединения"
 
-#: src/undo_actions/UndoConnectionTitle.vala:32
+#: src/undo_actions/UndoConnectionTitle.vala:33
 msgid "connection title change"
 msgstr "смену подписи соединения"
 
@@ -4292,27 +4447,27 @@ msgstr "смену подписи соединения"
 msgid "add group"
 msgstr "создание группы"
 
-#: src/undo_actions/UndoGroupNote.vala:32
+#: src/undo_actions/UndoGroupNote.vala:33
 msgid "node group note change"
 msgstr "изменения в примечании к группе узлов"
 
-#: src/undo_actions/UndoGroupRemove.vala:30
+#: src/undo_actions/UndoGroupRemove.vala:31
 msgid "remove group"
 msgstr "удаление группы"
 
-#: src/undo_actions/UndoGroupsColor.vala:33
+#: src/undo_actions/UndoGroupsColor.vala:34
 msgid "group color change"
 msgstr "смену цвета группы"
 
-#: src/undo_actions/UndoGroupsMerge.vala:31
+#: src/undo_actions/UndoGroupsMerge.vala:32
 msgid "group merge"
 msgstr "объединение группы"
 
-#: src/undo_actions/UndoGroupsRemove.vala:30
+#: src/undo_actions/UndoGroupsRemove.vala:31
 msgid "remove groups"
 msgstr "удаление групп"
 
-#: src/undo_actions/UndoNodeAddParent.vala:32
+#: src/undo_actions/UndoNodeAddParent.vala:33
 msgid "add parent node"
 msgstr "добавку узла-родителя"
 
@@ -4325,11 +4480,11 @@ msgstr "прикрепление узла"
 msgid "balance nodes"
 msgstr "балансировку узлов"
 
-#: src/undo_actions/UndoNodeCallout.vala:31
+#: src/undo_actions/UndoNodeCallout.vala:32
 msgid "node callout changed"
 msgstr "смена выноски узла"
 
-#: src/undo_actions/UndoNodeCut.vala:33
+#: src/undo_actions/UndoNodeCut.vala:35
 msgid "cut node"
 msgstr "вырезание узла в буфер обмена"
 
@@ -4341,32 +4496,32 @@ msgstr "удаление узла"
 msgid "detach node"
 msgstr "открепление узла"
 
-#: src/undo_actions/UndoNodeFolds.vala:30
-#: src/undo_actions/UndoNodeFolds.vala:35
+#: src/undo_actions/UndoNodeFolds.vala:31
+#: src/undo_actions/UndoNodeFolds.vala:36
 msgid "node fold changes"
 msgstr "смену сворачивания узла"
 
-#: src/undo_actions/UndoNodeGroup.vala:30
+#: src/undo_actions/UndoNodeGroup.vala:31
 msgid "node group change"
 msgstr "смену группы узлов"
 
-#: src/undo_actions/UndoNodeImage.vala:32
+#: src/undo_actions/UndoNodeImage.vala:33
 msgid "node image change"
 msgstr "смену изображения узла"
 
-#: src/undo_actions/UndoNodeInsert.vala:33
+#: src/undo_actions/UndoNodeInsert.vala:34
 msgid "insert node"
 msgstr "вставку узла"
 
-#: src/undo_actions/UndoNodeLayout.vala:30
+#: src/undo_actions/UndoNodeLayout.vala:31
 msgid "change layout"
 msgstr "смену схемы узлов"
 
-#: src/undo_actions/UndoNodeLinkColor.vala:33
+#: src/undo_actions/UndoNodeLinkColor.vala:34
 msgid "link color change"
 msgstr "смену цвета ссылки"
 
-#: src/undo_actions/UndoNodeLink.vala:32
+#: src/undo_actions/UndoNodeLink.vala:33
 msgid "node link change"
 msgstr "смену ссылки узла"
 
@@ -4378,7 +4533,7 @@ msgstr "перемещение узла"
 msgid "node name change"
 msgstr "смену названия узла"
 
-#: src/undo_actions/UndoNodeNote.vala:32
+#: src/undo_actions/UndoNodeNote.vala:33
 msgid "node note change"
 msgstr "изменение комментария к узлу"
 
@@ -4386,8 +4541,8 @@ msgstr "изменение комментария к узлу"
 msgid "paste node"
 msgstr "вставку узла"
 
-#: src/undo_actions/UndoNodeReparentLinkColor.vala:32
-#: src/undo_actions/UndoNodesReparentLinkColor.vala:33
+#: src/undo_actions/UndoNodeReparentLinkColor.vala:33
+#: src/undo_actions/UndoNodesReparentLinkColor.vala:34
 msgid "node link color reparent"
 msgstr "смена цвета узла на родительский"
 
@@ -4395,11 +4550,11 @@ msgstr "смена цвета узла на родительский"
 msgid "reparent children"
 msgstr "выбор нового родительского узла для узлов-потомков"
 
-#: src/undo_actions/UndoNodeReplace.vala:31
+#: src/undo_actions/UndoNodeReplace.vala:32
 msgid "replace node"
 msgstr "замену узла"
 
-#: src/undo_actions/UndoNodeResize.vala:34
+#: src/undo_actions/UndoNodeResize.vala:35
 msgid "node resize"
 msgstr "смену размера узла"
 
@@ -4420,35 +4575,35 @@ msgstr "вырезание узлов в буфер обмена"
 msgid "delete nodes"
 msgstr "удаление узлов"
 
-#: src/undo_actions/UndoNodeSequences.vala:30
+#: src/undo_actions/UndoNodeSequences.vala:31
 msgid "node sequence changes"
 msgstr ""
 
-#: src/undo_actions/UndoNodesGroup.vala:30
+#: src/undo_actions/UndoNodesGroup.vala:31
 msgid "change node groups"
 msgstr "смену групп узлов"
 
-#: src/undo_actions/UndoNodesInsert.vala:37
+#: src/undo_actions/UndoNodesInsert.vala:38
 msgid "insert nodes"
 msgstr "вставку узлов"
 
-#: src/undo_actions/UndoNodesLinkColor.vala:33
+#: src/undo_actions/UndoNodesLinkColor.vala:34
 msgid "node link color changes"
 msgstr "смену цвета ссылки узла"
 
-#: src/undo_actions/UndoNodesLink.vala:31
+#: src/undo_actions/UndoNodesLink.vala:32
 msgid "node link changes"
 msgstr "изменение ссылки узла"
 
-#: src/undo_actions/UndoNodeSort.vala:57
+#: src/undo_actions/UndoNodeSort.vala:59
 msgid "sort nodes"
 msgstr "сортировку узлов"
 
-#: src/undo_actions/UndoNodesRandLinkColor.vala:33
+#: src/undo_actions/UndoNodesRandLinkColor.vala:34
 msgid "random node link color changes"
 msgstr "назначение цвета связей случайным образом"
 
-#: src/undo_actions/UndoNodesReplace.vala:31
+#: src/undo_actions/UndoNodesReplace.vala:32
 msgid "replace nodes"
 msgstr "замену узлов"
 
@@ -4462,31 +4617,31 @@ msgstr "добавление форматирующего тега"
 msgid "tag remove"
 msgstr "удаление форматирующего тега"
 
-#: src/undo_actions/UndoNodeStickerAdd.vala:31
+#: src/undo_actions/UndoNodeStickerAdd.vala:32
 msgid "add node sticker"
 msgstr "добавление стикера к узлу"
 
-#: src/undo_actions/UndoNodeStickerChange.vala:31
+#: src/undo_actions/UndoNodeStickerChange.vala:32
 msgid "change node sticker"
 msgstr "смену стикера узла"
 
-#: src/undo_actions/UndoNodeStickerRemove.vala:31
+#: src/undo_actions/UndoNodeStickerRemove.vala:32
 msgid "remove node sticker"
 msgstr "удаление стикера из узла"
 
-#: src/undo_actions/UndoNodeSummaryDelete.vala:32
+#: src/undo_actions/UndoNodeSummaryDelete.vala:33
 msgid "delete summary node"
 msgstr "удаление узла сводки"
 
-#: src/undo_actions/UndoNodeSummaryFromNode.vala:31
+#: src/undo_actions/UndoNodeSummaryFromNode.vala:32
 msgid "convert to summary node"
 msgstr "превращение в узел сводки"
 
-#: src/undo_actions/UndoNodeSummary.vala:32
+#: src/undo_actions/UndoNodeSummary.vala:33
 msgid "insert summary node"
 msgstr "вставка узла сводки"
 
-#: src/undo_actions/UndoNodeTasks.vala:30
+#: src/undo_actions/UndoNodeTasks.vala:31
 msgid "node task changes"
 msgstr "смену статуса задачи"
 
@@ -4495,12 +4650,12 @@ msgstr "смену статуса задачи"
 msgid "reparent node"
 msgstr "изменение родителя узла"
 
-#: src/undo_actions/UndoStickerAdd.vala:30
+#: src/undo_actions/UndoStickerAdd.vala:31
 #: src/undo_actions/UndoStickerMove.vala:33
 msgid "add sticker"
 msgstr "добавление стикера"
 
-#: src/undo_actions/UndoStickerChange.vala:31
+#: src/undo_actions/UndoStickerChange.vala:32
 msgid "change sticker"
 msgstr "смену стикера"
 
@@ -4512,7 +4667,7 @@ msgstr "удаление стикера"
 msgid "resize sticker"
 msgstr "смену размера стикера"
 
-#: src/undo_actions/UndoStyleChange.vala:39
+#: src/undo_actions/UndoStyleChange.vala:40
 msgid "style change"
 msgstr "смену стиля"
 
@@ -4535,47 +4690,59 @@ msgstr "удаление форматирующего тега"
 msgid "clear formatting"
 msgstr "очистку форматирования"
 
-#: src/undo_actions/UndoTextDelete.vala:30
+#: src/undo_actions/UndoTextDelete.vala:31
 msgid "text deletion"
 msgstr "удаление текста"
 
-#: src/undo_actions/UndoTextInsert.vala:29
-#: src/undo_actions/UndoTextMultiInsert.vala:33
+#: src/undo_actions/UndoTextInsert.vala:30
+#: src/undo_actions/UndoTextMultiInsert.vala:34
 msgid "text insertion"
 msgstr "вставку текста"
 
-#: src/undo_actions/UndoTextReplace.vala:31
+#: src/undo_actions/UndoTextReplace.vala:32
 msgid "text replacement"
 msgstr "замену текста"
 
-#: src/undo_actions/UndoTextTagAdd.vala:32
+#: src/undo_actions/UndoTextTagAdd.vala:33
 msgid "format tag add"
 msgstr "добавление форматирующего тега"
 
-#: src/undo_actions/UndoTextTagRemove.vala:32
+#: src/undo_actions/UndoTextTagRemove.vala:33
 msgid "format tag remove"
 msgstr "удаление форматирующего тега"
 
-#: src/UndoBuffer.vala:85
+#: src/UndoBuffer.vala:92
 msgid "Undo "
 msgstr "Отменить "
 
-#: src/UndoBuffer.vala:91
+#: src/UndoBuffer.vala:99
 msgid "Redo "
 msgstr "Вернуть "
 
-#: src/UrlEditor.vala:38
+#: src/UrlEditor.vala:39
 msgid "URL"
 msgstr "URL"
 
-#: src/Utils.vala:166
+#: src/Utils.vala:183
 #, c-format
 msgid "error: %s\n"
 msgstr "ошибка: %s\n"
 
-#: src/ZoomWidget.vala:98
+#: src/ZoomWidget.vala:99
 msgid "Zoom Actual"
 msgstr "Настоящий размер"
+
+#~ msgid "Unsaved"
+#~ msgstr "Несохранённые"
+
+#~ msgid "Copyright © 2018-2024 Trevor Williams"
+#~ msgstr "Авторские права © 2018-2025 Trevor Williams"
+
+#~ msgid "Hide themes not matching visual style"
+#~ msgstr "Скрывать темы, не соответствующие визуальному стилю"
+
+#~ msgid "Prefer Dark Mode"
+#~ msgstr "Предпочитать тёмный режим"
 
 #, fuzzy
 #~ msgid "No Commands Listed"
@@ -4583,9 +4750,6 @@ msgstr "Настоящий размер"
 
 #~ msgid "Minder Shortcuts"
 #~ msgstr "Горячие клавиши в Minder"
-
-#~ msgid "Import File"
-#~ msgstr "Импортировать файл"
 
 #~ msgid "Print File"
 #~ msgstr "Напечатать файл"
@@ -4715,9 +4879,6 @@ msgstr "Настоящий размер"
 
 #~ msgid "View Properties"
 #~ msgstr "Открыть свойства"
-
-#~ msgid "Toggle Fold"
-#~ msgstr "Развернуть или свернуть"
 
 #~ msgid "Toggle Node Link"
 #~ msgstr "Переключить ссылку на узел"
@@ -5043,6 +5204,3 @@ msgstr "Настоящий размер"
 
 #~ msgid "Format to export as (only used when --export is used)"
 #~ msgstr "В какой формат экспортировать (использовать только с --export)"
-
-#~ msgid "Export File"
-#~ msgstr "Экспортировать файл"

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,7 +25,8 @@ public class UndoStyleNodeFill : UndoStyleChange {
 
   GenericArray<bool> _values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleNodeFill( StyleAffects affects, bool node_fill, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<bool>();

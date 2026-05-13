@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,25 +21,30 @@
 
 public class LinkTypeStraight : Object, LinkType {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public LinkTypeStraight() {}
 
-  /* Returns the search name */
+  //-------------------------------------------------------------
+  // Returns the search name
   public string name() {
     return( "straight" );
   }
 
-  /* Returns the name of the link type */
+  //-------------------------------------------------------------
+  // Returns the name of the link type
   public string display_name() {
     return( _( "Straight" ) );
   }
 
-  /* Returns the name of the light-mode icon */
+  //-------------------------------------------------------------
+  // Returns the name of the light-mode icon
   public string light_icon_name() {
     return( "minder-link-straight-light-symbolic" );
   }
 
-  /* Returns the name of the dark-mode icon */
+  //-------------------------------------------------------------
+  // Returns the name of the dark-mode icon
   public string dark_icon_name() {
     return( "minder-link-straight-dark-symbolic" );
   }
@@ -74,7 +79,8 @@ public class LinkTypeStraight : Object, LinkType {
     return( adjusted );
   }
 
-  /* Draw method for the link */
+  //-------------------------------------------------------------
+  // Draw method for the link
   public void draw( Cairo.Context ctx, Node from_node, Node to_node,
                     double from_x, double from_y, double to_x, double to_y,
                     out double tailx, out double taily, out double tipx, out double tipy ) {

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,7 +26,8 @@ public class UndoNodesReplace : UndoItem {
   private Node        _orig_node;
   private Array<Node> _new_nodes;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoNodesReplace( Node? orig_node, Array<Node> new_nodes ) {
     base( _( "replace nodes" ) );
     _orig_node = orig_node;
@@ -36,7 +37,8 @@ public class UndoNodesReplace : UndoItem {
     }
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data
   public override void undo( MindMap map ) {
     map.model.replace_node( _new_nodes.index( 0 ), _orig_node );
     for( int i=1; i<_new_nodes.length; i++ ) {
@@ -47,7 +49,8 @@ public class UndoNodesReplace : UndoItem {
     map.auto_save();
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation
   public override void redo( MindMap map ) {
     map.model.replace_node( _orig_node, _new_nodes.index( 0 ) );
     for( int i=1; i<_new_nodes.length; i++ ) {

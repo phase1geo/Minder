@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -142,7 +142,6 @@ public class CurrentInspector : Box {
   //-------------------------------------------------------------
   // Gives the node or connection note field keyboard focus
   public void grab_note() {
-
     if( _map.get_current_node() != null ) {
       var ni = _stack.get_child_by_name( "node" ) as NodeInspector;
       if( ni != null ) {
@@ -160,6 +159,28 @@ public class CurrentInspector : Box {
       }
     }
 
+  }
+
+  //-------------------------------------------------------------
+  // Returns the note for the currently selected item.
+  public NoteView? get_note() {
+    if( _map.get_current_node() != null ) {
+      var ni = _stack.get_child_by_name( "node" ) as NodeInspector;
+      if( ni != null ) {
+        return( ni.note );
+      }
+    } else if( _map.get_current_connection() != null ) {
+      var ci = _stack.get_child_by_name( "connection" ) as ConnectionInspector;
+      if( ci != null ) {
+        return( ci.note );
+      }
+    } else if( _map.get_current_group() != null ) {
+      var gi = _stack.get_child_by_name( "group" ) as GroupInspector;
+      if( gi != null ) {
+        return( gi.note );
+      }
+    }
+    return( null );
   }
 
   //-------------------------------------------------------------

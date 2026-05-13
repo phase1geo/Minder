@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 (https://github.com/phase1geo/Outliner)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Outliner)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,7 +25,8 @@ public class UndoTextDelete : UndoTextItem {
   public int                start { private set; get; }
   public Array<UndoTagInfo> tags  { private set; get; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoTextDelete( string text, int start, Array<UndoTagInfo> tags, int start_cursor, int end_cursor ) {
     base( _( "text deletion" ), UndoTextOp.DELETE, start_cursor, end_cursor );
     this.text  = text;
@@ -33,7 +34,8 @@ public class UndoTextDelete : UndoTextItem {
     this.tags  = tags;
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo_text( MindMap map, CanvasText ct ) {
     ct.text.insert_text( start, text );
     ct.text.apply_tags( tags, start );
@@ -41,14 +43,16 @@ public class UndoTextDelete : UndoTextItem {
     map.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo_text( MindMap map, CanvasText ct ) {
     ct.text.remove_text( start, text.length );
     ct.set_cursor_only( end_cursor );
     map.queue_draw();
   }
 
-  /* Merges the given text item with the current only */
+  //-------------------------------------------------------------
+  // Merges the given text item with the current only
   public override bool merge( CanvasText ct, UndoTextItem item ) {
     if( (end_cursor == item.start_cursor) && (item.op == UndoTextOp.DELETE) ) {
       var delete = item as UndoTextDelete;

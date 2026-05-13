@@ -209,8 +209,7 @@ namespace MinderTest {
       }
 
       if (builddir == null) {
-        builddir = "..";  /* fallback to parent dir, test should be ran
-                             from 'tests' dir */
+        builddir = "..";  // fallback to parent dir, test should be ran from 'tests' dir
       }
 
       return builddir;

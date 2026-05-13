@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -35,6 +35,12 @@ public class ConnectionInspector : Box {
 
   public signal void editable_changed();
 
+  public NoteView note {
+    get {
+      return( _note );
+    }
+  }
+
   //-------------------------------------------------------------
   // Default constructor
   public ConnectionInspector( MainWindow win ) {
@@ -53,7 +59,8 @@ public class ConnectionInspector : Box {
 
   }
 
-  /* Called whenever the tab in the main window changes */
+  //-------------------------------------------------------------
+  // Called whenever the tab in the main window changes
   private void tab_changed( MindMap? map ) {
     if( _map != null ) {
       _map.current_changed.disconnect( connection_changed );
@@ -133,7 +140,7 @@ public class ConnectionInspector : Box {
     };
     lbl.add_css_class( "titled" );
 
-    _note = new NoteView() {
+    _note = new NoteView( win ) {
       valign    = Align.FILL,
       vexpand   = true,
       wrap_mode = Gtk.WrapMode.WORD
@@ -181,16 +188,16 @@ public class ConnectionInspector : Box {
       column_spacing     = 5
     };
 
-    /* Create the node deletion button */
+    // Create the node deletion button
     var del_btn = new Button.from_icon_name( "edit-delete-symbolic" ) {
       tooltip_text = _( "Delete Connection" )
     };
     del_btn.clicked.connect( connection_delete );
 
-    /* Add the buttons to the button grid */
+    // Add the buttons to the button grid
     grid.attach( del_btn, 0, 0 );
 
-    /* Add the button grid to the popover */
+    // Add the button grid to the popover
     // pack_start( grid, false, true );
 
   }
@@ -207,6 +214,7 @@ public class ConnectionInspector : Box {
   private void note_focus_in() {
     _connection = _map.get_current_connection();
     _orig_note  = _note.buffer.text;
+    _map.unedit_text();
   }
 
   //-------------------------------------------------------------

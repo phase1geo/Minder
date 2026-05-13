@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -48,8 +48,8 @@ public class StyleInspector : Box {
   private MainWindow       _win;
   private MindMap?         _map = null;
   private GLib.Settings    _settings;
-  private Revealer         _branch_radius_revealer;
   private Scale            _branch_radius;
+  private Box              _branch_radius_box;
   private Scale            _branch_margin;
   private ModeButtons      _link_types;
   private Scale            _link_width;
@@ -134,7 +134,6 @@ public class StyleInspector : Box {
       vexpand = true,
       child = box
     };
-    sw.child.set_size_request( 200, 600 );
 
     // Pack the elements into this widget
     append( affect );
@@ -404,8 +403,18 @@ public class StyleInspector : Box {
   }
 
   //-------------------------------------------------------------
+  // Ignores scroll events for the given widget.
+  private void ignore_scroll( Widget w ) {
+    var scroller = new EventControllerScroll( Gtk.EventControllerScrollFlags.VERTICAL | Gtk.EventControllerScrollFlags.HORIZONTAL );
+    w.add_controller( scroller );
+    scroller.scroll.connect((dx, dy) => {
+      return true;  // consume the event → scale will not change value
+    });
+  }
+
+  //-------------------------------------------------------------
   // Creates the UI for changing the branch drawing type.
-  private Revealer create_branch_radius_ui() {
+  private Box create_branch_radius_ui() {
 
     var lbl = new Label( _( "Corner Radius" ) ) {
       hexpand = true,
@@ -416,20 +425,17 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _branch_radius );
     _branch_radius.change_value.connect( branch_radius_changed );
 
-    var box = new Box( Orientation.HORIZONTAL, 10 ) {
-      homogeneous = true
+    _branch_radius_box = new Box( Orientation.HORIZONTAL, 10 ) {
+      homogeneous = true,
+      visible     = false
     };
-    box.append( lbl );
-    box.append( _branch_radius );
+    _branch_radius_box.append( lbl );
+    _branch_radius_box.append( _branch_radius );
 
-    _branch_radius_revealer = new Revealer() {
-      reveal_child = false,
-      child        = box
-    };
-
-    return( _branch_radius_revealer );
+    return( _branch_radius_box );
 
   }
 
@@ -464,6 +470,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _branch_margin );
     _branch_margin.change_value.connect( branch_margin_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 10 ) {
@@ -591,6 +598,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = false
     };
+    ignore_scroll( _link_width );
 
     for( int i=2; i<=8; i++ ) {
       if( (i % 2) == 0 ) {
@@ -675,6 +683,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = false
     };
+    ignore_scroll( _link_arrow_size );
 
     _link_arrow_size.add_mark( 0, PositionType.BOTTOM, "S" );
     _link_arrow_size.add_mark( 1, PositionType.BOTTOM, "M" );
@@ -816,6 +825,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = false
     };
+    ignore_scroll( _node_borderwidth );
 
     for( int i=2; i<=8; i++ ) {
       if( (i % 2) == 0 ) {
@@ -901,6 +911,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _node_margin );
     _node_margin.change_value.connect( node_margin_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -945,6 +956,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _node_padding );
     _node_padding.change_value.connect( node_padding_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1003,10 +1015,12 @@ public class StyleInspector : Box {
     });
     font_dialog.set_filter( font_filter );
     _node_font.notify["font-desc"].connect(() => {
-      var family = _node_font.font_desc.get_family();
-      var size   = _node_font.font_desc.get_size();
-      _curr_style.node_font = _node_font.font_desc.copy();
-      _map.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _map ) );
+      if( !_ignore ) {
+        var family = _node_font.font_desc.get_family();
+        var size   = _node_font.font_desc.get_size();
+        _curr_style.node_font = _node_font.font_desc.copy();
+        _map.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _map ) );
+      }
     });
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1075,6 +1089,7 @@ public class StyleInspector : Box {
       halign = Align.END,
       valign = Align.CENTER,
     };
+    ignore_scroll( _node_width );
     _node_width.value_changed.connect(() => {
       if( !_ignore ) {
         var width = (int)_node_width.get_value();
@@ -1271,6 +1286,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = false
     };
+    ignore_scroll( _conn_arrow_size );
 
     _conn_arrow_size.add_mark( 0, PositionType.BOTTOM, "S" );
     _conn_arrow_size.add_mark( 1, PositionType.BOTTOM, "M" );
@@ -1318,6 +1334,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = false
     };
+    ignore_scroll( _conn_lwidth );
 
     for( int i=2; i<=8; i++ ) {
       if( (i % 2) == 0 ) {
@@ -1370,6 +1387,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _conn_padding );
     _conn_padding.change_value.connect( connection_padding_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1429,10 +1447,12 @@ public class StyleInspector : Box {
     });
     font_dialog.set_filter( font_filter );
     _conn_font.notify["font-desc"].connect(() => {
-      var family = _conn_font.font_desc.get_family();
-      var size   = _conn_font.font_desc.get_size();
-      _curr_style.connection_font = _conn_font.font_desc.copy();
-      _map.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _map ) );
+      if( !_ignore ) {
+        var family = _conn_font.font_desc.get_family();
+        var size   = _conn_font.font_desc.get_size();
+        _curr_style.connection_font = _conn_font.font_desc.copy();
+        _map.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _map ) );
+      }
     });
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1501,6 +1521,7 @@ public class StyleInspector : Box {
       halign = Align.END,
       valign = Align.CENTER,
     };
+    ignore_scroll( _conn_twidth );
     _conn_twidth.value_changed.connect(() => {
       if( !_ignore ) {
         var width = (int)_conn_twidth.get_value();
@@ -1591,10 +1612,12 @@ public class StyleInspector : Box {
     });
     font_dialog.set_filter( font_filter );
     _callout_font.notify["font-desc"].connect(() => {
-      var family = _callout_font.font_desc.get_family();
-      var size   = _callout_font.font_desc.get_size();
-      _curr_style.callout_font = _callout_font.font_desc.copy();
-      _map.add_undo( new UndoStyleCalloutFont( _affects, family, size, _map ) );
+      if( !_ignore ) {
+        var family = _callout_font.font_desc.get_family();
+        var size   = _callout_font.font_desc.get_size();
+        _curr_style.callout_font = _callout_font.font_desc.copy();
+        _map.add_undo( new UndoStyleCalloutFont( _affects, family, size, _map ) );
+      }
     });
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1663,6 +1686,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _callout_padding );
     _callout_padding.change_value.connect( callout_padding_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1708,6 +1732,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _callout_ptr_width );
     _callout_ptr_width.change_value.connect( callout_pointer_width_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1753,6 +1778,7 @@ public class StyleInspector : Box {
       halign     = Align.FILL,
       draw_value = true
     };
+    ignore_scroll( _callout_ptr_length );
     _callout_ptr_length.change_value.connect( callout_pointer_length_changed );
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1845,7 +1871,8 @@ public class StyleInspector : Box {
         _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_GENERAL );
         break;
       case StyleAffects.SELECTED_NODES :
-        _curr_style = selected.nodes().index( 0 ).style;
+        _curr_style = new Style();
+        _curr_style.copy( selected.nodes().index( 0 ).style );
         _branch_group.visible  = true;
         _link_group.visible    = true;
         _node_group.visible    = true;
@@ -1854,7 +1881,8 @@ public class StyleInspector : Box {
         _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_NODE );
         break;
       case StyleAffects.SELECTED_CONNECTIONS :
-        _curr_style = selected.connections().index( 0 ).style;
+        _curr_style = new Style();
+        _curr_style.copy( selected.connections().index( 0 ).style );
         _branch_group.visible  = false;
         _link_group.visible    = false;
         _node_group.visible    = false;
@@ -1864,7 +1892,8 @@ public class StyleInspector : Box {
         _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_CONNECTION );
         break;
       case StyleAffects.SELECTED_CALLOUTS :
-        _curr_style = selected.callouts().index( 0 ).style;
+        _curr_style = new Style();
+        _curr_style.copy( selected.callouts().index( 0 ).style );
         _branch_group.visible  = false;
         _link_group.visible    = false;
         _node_group.visible    = false;
@@ -1923,6 +1952,7 @@ public class StyleInspector : Box {
   // Updates the state of the link types modebutton widget with the
   // link type style information.
   private void update_link_types_with_style( Style style ) {
+    update_link_types_state();
     if( style.link_type != null ) {
       var link_types = styles.get_link_types();
       for( int i=0; i<link_types.length; i++ ) {
@@ -1931,10 +1961,8 @@ public class StyleInspector : Box {
           break;
         }
       }
-      _branch_radius_revealer.visible      = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
-      _branch_radius_revealer.reveal_child = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
+      _branch_radius_box.visible = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
     }
-    update_link_types_state();
   }
 
   //-------------------------------------------------------------
@@ -2094,14 +2122,14 @@ public class StyleInspector : Box {
       if( node_fill != null ) {
         _node_fill.set_active( (bool)node_fill );
       }
-      if( node_margin != null ) {
+      if( node_margin != 0 ) {
         _node_margin.set_value( (double)node_margin );
       }
-      if( node_padding != null ) {
+      if( node_padding != 0 ) {
         _node_padding.set_value( (double)node_padding );
       }
       if( style.node_font != null ) {
-        _node_font.set_font_features( style.node_font.to_string() );
+        _node_font.set_font_desc( style.node_font );
       }
       if( node_width != null ) {
         _node_width.set_value( (float)node_width );
@@ -2125,7 +2153,7 @@ public class StyleInspector : Box {
         _conn_lwidth.set_value( (double)conn_line_width );
       }
       if( style.connection_font != null ) {
-        _conn_font.set_font_features( style.connection_font.to_string() );
+        _conn_font.set_font_desc( style.connection_font );
       }
       if( style.connection_title_width != null ) {
         _conn_twidth.set_value( style.connection_title_width );
@@ -2139,7 +2167,7 @@ public class StyleInspector : Box {
     if( (_affects == StyleAffects.ALL) || (_affects == StyleAffects.SELECTED_CALLOUTS) ) {
       update_callout_text_align_with_style( style );
       if( style.callout_font != null ) {
-        _callout_font.set_font_features( style.callout_font.to_string() );
+        _callout_font.set_font_desc( style.callout_font );
       }
       if( callout_padding != null ) {
         _callout_padding.set_value( (double)callout_padding );

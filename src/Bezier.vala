@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -283,28 +283,28 @@ public class Bezier {
 
     double? isect;
 
-    /* Check the top of the node */
+    // Check the top of the node
     isect = get_intersecting_point( top, false, from );
     if( (isect != null) && (left <= isect) && (isect <= right) ) {
       if( from ) { _from.set_coordinate( isect, top ); } else { _to.set_coordinate( isect, top ); }
       return;
     }
 
-    /* Check the bottom of the node */
+    // Check the bottom of the node
     isect = get_intersecting_point( bottom, false, from );
     if( (isect != null) && (left <= isect) && (isect <= right) ) {
       if( from ) { _from.set_coordinate( isect, bottom ); } else { _to.set_coordinate( isect, bottom ); }
       return;
     }
 
-    /* Check the left side of the node */
+    // Check the left side of the node
     isect = get_intersecting_point( left, true, from );
     if( (isect != null) && (top <= isect) && (isect <= bottom) ) {
       if( from ) { _from.set_coordinate( left, isect ); } else { _to.set_coordinate( left, isect ); }
       return;
     }
 
-    /* Check the right side of the node */
+    // Check the right side of the node
     isect = get_intersecting_point( right, true, from );
     if( (isect != null) && (top <= isect) && (isect <= bottom) ) {
       if( from ) { _from.set_coordinate( right, isect ); } else { _to.set_coordinate( right, isect ); }

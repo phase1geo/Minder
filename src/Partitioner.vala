@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -19,16 +19,16 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-/*
- This class stores a pointer to a node to partition as well as its pixel size
- that is used for balancing purposes.
-*/
+//-------------------------------------------------------------
+// This class stores a pointer to a node to partition as well
+// as its pixel size that is used for balancing purposes.
 public class PartNode : Object {
 
   private Node?  _node = null;
   private double _size;
 
-  /* Creates a single partitioner node */
+  //-------------------------------------------------------------
+  // Creates a single partitioner node
   public PartNode( Node n ) {
     var nb = n.tree_bbox;
     if( (n.side == NodeSide.LEFT) || (n.side == NodeSide.RIGHT) ) {
@@ -39,13 +39,16 @@ public class PartNode : Object {
     _node = n;
   }
 
-  /* Returns the size required by this node */
+  //-------------------------------------------------------------
+  // Returns the size required by this node
   public double size() { return( _size ); }
 
-  /* Returns the stored node */
+  //-------------------------------------------------------------
+  // Returns the stored node
   public Node? node() { return( _node ); }
 
-  /* Updates the node based on the given information */
+  //-------------------------------------------------------------
+  // Updates the node based on the given information
   public void update_node( Node root, int index, int side ) {
     NodeSide orig_side = _node.side;
     if( (_node.side == NodeSide.LEFT) || (_node.side == NodeSide.RIGHT) ) {
@@ -61,16 +64,17 @@ public class PartNode : Object {
 
 }
 
-/*
- Main class used for root node balancing.  This class uses a greedy partioning
- algorithm to provide node balancing.
-*/
+//-------------------------------------------------------------
+// Main class used for root node balancing.  This class uses a
+// greedy partioning algorithm to provide node balancing.
 public class Partitioner : Object {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public Partitioner() {}
 
-  /* Partitions the given root node */
+  //-------------------------------------------------------------
+  // Partitions the given root node
   public void partition_node( Node root ) {
     if( root.children().length > 1 ) {
       var data = new SList<PartNode>();
@@ -91,24 +95,23 @@ public class Partitioner : Object {
     }
   }
 
-  /*
-   Performs a greedy algorithm for node balancing. This is not an optimal
-   algorithm (unlike the KK number partioning algorithm), but it is simple
-   to implement and I'm not sure that it really matters that we are completely
-   optimal anyways.
-  */
+  //-------------------------------------------------------------
+  // Performs a greedy algorithm for node balancing. This is not
+  // an optimal algorithm (unlike the KK number partioning algorithm),
+  // but it is simple to implement and I'm not sure that it really
+  // matters that we are completely optimal anyways.
   protected virtual void partition( Node root, SList<PartNode> data ) {
 
     double sum0  = 0;
     double sum1  = 0;
     int    size0 = 0;
 
-    /* Detach all of the nodes */
+    // Detach all of the nodes
     data.@foreach((item) => {
       item.node().detach( item.node().side );
     });
 
-    /* Attach the nodes according to the side */
+    // Attach the nodes according to the side
     var last_side = -1;
     data.@foreach((item) => {
       var place_node = !item.node().is_summarized() || item.node().first_summarized();

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,14 +26,16 @@ public class UndoConnectionChange : UndoItem {
   Connection? _old_connection;
   Connection? _new_connection;
 
-  /* Constructor for adding/removing/changing a connection */
+  //-------------------------------------------------------------
+  // Constructor for adding/removing/changing a connection
   public UndoConnectionChange( string name, Connection? old_connection, Connection? new_connection ) {
     base( name );
     _old_connection = old_connection;
     _new_connection = new_connection;
   }
 
-  /* Undoes a connection change */
+  //-------------------------------------------------------------
+  // Undoes a connection change
   public override void undo( MindMap map ) {
     if( _old_connection == null ) {
       map.connections.remove_connection( _new_connection, true );
@@ -43,7 +45,8 @@ public class UndoConnectionChange : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a connection change */
+  //-------------------------------------------------------------
+  // Redoes a connection change
   public override void redo( MindMap map ) {
     if( _new_connection == null ) {
       map.connections.remove_connection( _old_connection, true );

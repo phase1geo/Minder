@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2025-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,7 +21,7 @@
 
 using Gee;
 
-public delegate void KeyCommandFunc( MindMap map );
+public delegate void KeyCommandFunc( MindMap map, bool key_activated );
 
 public enum KeyCommand {
   DO_NOTHING,
@@ -192,6 +192,22 @@ public enum KeyCommand {
       EDIT_REMOVE_WORD_NEXT,
       EDIT_REMOVE_WORD_PREV,
     EDIT_TEXT_END,
+    EDIT_MARKDOWN_START,
+      EDIT_HEADER1,
+      EDIT_HEADER2,
+      EDIT_HEADER3,
+      EDIT_HEADER4,
+      EDIT_HEADER5,
+      EDIT_HEADER6,
+      EDIT_BOLD,
+      EDIT_ITALICS,
+      EDIT_STRIKE,
+      EDIT_CODE,
+      EDIT_HIGHLIGHT,
+      EDIT_SUPERSCRIPT,
+      EDIT_SUBSCRIPT,
+      EDIT_LINK,
+    EDIT_MARKDOWN_END,
     EDIT_CLIPBOARD_START,
       EDIT_COPY,
       EDIT_CUT,
@@ -366,6 +382,20 @@ public enum KeyCommand {
       case EDIT_DELETE               :  return( "edit-delete" );
       case EDIT_REMOVE_WORD_NEXT     :  return( "edit-remove-word-next" );
       case EDIT_REMOVE_WORD_PREV     :  return( "edit-remove-word-prev" );
+      case EDIT_HEADER1              :  return( "edit-header-1" );
+      case EDIT_HEADER2              :  return( "edit-header-2" );
+      case EDIT_HEADER3              :  return( "edit-header-3" );
+      case EDIT_HEADER4              :  return( "edit-header-4" );
+      case EDIT_HEADER5              :  return( "edit-header-5" );
+      case EDIT_HEADER6              :  return( "edit-header-6" );
+      case EDIT_BOLD                 :  return( "edit-bold" );
+      case EDIT_ITALICS              :  return( "edit-italics" );
+      case EDIT_STRIKE               :  return( "edit-strike" );
+      case EDIT_CODE                 :  return( "edit-code" );
+      case EDIT_HIGHLIGHT            :  return( "edit-highlight" );
+      case EDIT_SUPERSCRIPT          :  return( "edit-superscript" );
+      case EDIT_SUBSCRIPT            :  return( "edit-subscript" );
+      case EDIT_LINK                 :  return( "edit-link" );
       case EDIT_COPY                 :  return( "edit-copy" );
       case EDIT_CUT                  :  return( "edit-cut" );
       case EDIT_PASTE                :  return( "edit-paste" );
@@ -524,6 +554,20 @@ public enum KeyCommand {
       case "edit-delete"               :  return( EDIT_DELETE );
       case "edit-remove-word-next"     :  return( EDIT_REMOVE_WORD_NEXT );
       case "edit-remove-word-prev"     :  return( EDIT_REMOVE_WORD_PREV );
+      case "edit-header-1"             :  return( EDIT_HEADER1 );
+      case "edit-header-2"             :  return( EDIT_HEADER2 );
+      case "edit-header-3"             :  return( EDIT_HEADER3 );
+      case "edit-header-4"             :  return( EDIT_HEADER4 );
+      case "edit-header-5"             :  return( EDIT_HEADER5 );
+      case "edit-header-6"             :  return( EDIT_HEADER6 );
+      case "edit-bold"                 :  return( EDIT_BOLD );
+      case "edit-italics"              :  return( EDIT_ITALICS );
+      case "edit-strike"               :  return( EDIT_STRIKE );
+      case "edit-code"                 :  return( EDIT_CODE );
+      case "edit-highlight"            :  return( EDIT_HIGHLIGHT );
+      case "edit-superscript"          :  return( EDIT_SUPERSCRIPT );
+      case "edit-subscript"            :  return( EDIT_SUBSCRIPT );
+      case "edit-link"                 :  return( EDIT_LINK );
       case "edit-copy"                 :  return( EDIT_COPY );
       case "edit-cut"                  :  return( EDIT_CUT );
       case "edit-paste"                :  return( EDIT_PASTE );
@@ -697,6 +741,21 @@ public enum KeyCommand {
       case EDIT_INSERT_EMOJI         :  return( _( "Insert emoji" ) );
       case EDIT_REMOVE_WORD_NEXT     :  return( _( "Remove next word" ) );
       case EDIT_REMOVE_WORD_PREV     :  return( _( "Remove previous word" ) );
+      case EDIT_MARKDOWN_START       :  return( _( "Markdown Syntax" ) );
+      case EDIT_HEADER1              :  return( _( "Insert Markdown header-1 syntax" ) );
+      case EDIT_HEADER2              :  return( _( "Insert Markdown header-2 syntax" ) );
+      case EDIT_HEADER3              :  return( _( "Insert Markdown header-3 syntax" ) );
+      case EDIT_HEADER4              :  return( _( "Insert Markdown header-4 syntax" ) );
+      case EDIT_HEADER5              :  return( _( "Insert Markdown header-5 syntax" ) );
+      case EDIT_HEADER6              :  return( _( "Insert Markdown header-6 syntax" ) );
+      case EDIT_BOLD                 :  return( _( "Insert Markdown bold syntax" ) );
+      case EDIT_ITALICS              :  return( _( "Insert Markdown italics syntax" ) );
+      case EDIT_STRIKE               :  return( _( "Insert Markdown strikethrough syntax" ) );
+      case EDIT_CODE                 :  return( _( "Insert Markdown code syntax" ) );
+      case EDIT_HIGHLIGHT            :  return( _( "Insert Markdown highlighting syntax" ) );
+      case EDIT_SUPERSCRIPT          :  return( _( "Insert Markdown superscript syntax" ) );
+      case EDIT_SUBSCRIPT            :  return( _( "Insert Markdown subscript syntax" ) );
+      case EDIT_LINK                 :  return( _( "Insert Markdown URL link syntax" ) );
       case EDIT_CLIPBOARD_START      :  return( _( "Clipboard Commands" ) );
       case EDIT_COPY                 :  return( _( "Copy selected nodes or text" ) );
       case EDIT_CUT                  :  return( _( "Cut selected nodes or text" ) );
@@ -855,6 +914,20 @@ public enum KeyCommand {
       case EDIT_DELETE               :  return( edit_delete );
       case EDIT_REMOVE_WORD_NEXT     :  return( edit_remove_word_next );
       case EDIT_REMOVE_WORD_PREV     :  return( edit_remove_word_previous );
+      case EDIT_HEADER1              :  return( edit_header1 );
+      case EDIT_HEADER2              :  return( edit_header2 );
+      case EDIT_HEADER3              :  return( edit_header3 );
+      case EDIT_HEADER4              :  return( edit_header4 );
+      case EDIT_HEADER5              :  return( edit_header5 );
+      case EDIT_HEADER6              :  return( edit_header6 );
+      case EDIT_BOLD                 :  return( edit_bold );
+      case EDIT_ITALICS              :  return( edit_italics );
+      case EDIT_STRIKE               :  return( edit_strike );
+      case EDIT_CODE                 :  return( edit_code );
+      case EDIT_HIGHLIGHT            :  return( edit_highlight );
+      case EDIT_SUPERSCRIPT          :  return( edit_superscript );
+      case EDIT_SUBSCRIPT            :  return( edit_subscript );
+      case EDIT_LINK                 :  return( edit_link );
       case EDIT_COPY                 :  return( edit_copy );
       case EDIT_CUT                  :  return( edit_cut );
       case EDIT_PASTE                :  return( edit_paste );
@@ -943,7 +1016,10 @@ public enum KeyCommand {
   //-------------------------------------------------------------
   // Returns true if this command is valid for a selected sticker.
   public bool for_sticker() {
-    return( ((STICKER_START < this) && (this < STICKER_END)) );
+    return(
+      ((STICKER_START < this) && (this < STICKER_END)) ||
+      (this == ESCAPE)
+    );
   }
 
   //-------------------------------------------------------------
@@ -952,7 +1028,8 @@ public enum KeyCommand {
     return(
       ((GROUP_START < this) && (this < GROUP_END)) ||
       (this == EDIT_NOTE) ||
-      (this == SHOW_CURRENT_INFO)
+      (this == SHOW_CURRENT_INFO) ||
+      (this == ESCAPE)
     );
   }
 
@@ -964,7 +1041,9 @@ public enum KeyCommand {
       case NODE_QUICK_ENTRY_INSERT :
       case NODE_ADD_SIBLING_AFTER  :
       case NODE_ADD_SIBLING_BEFORE :
+      case NODE_SELECT_ROOT        :
       case EDIT_PASTE              :
+      case ESCAPE                  :
         return( true );
       default :
         return( false );
@@ -1131,6 +1210,7 @@ public enum KeyCommand {
       case GROUP_CHANGE_START      :
       case GROUP_SELECT_START      :
       case EDIT_TEXT_START         :
+      case EDIT_MARKDOWN_START     :
       case EDIT_CLIPBOARD_START    :
       case EDIT_URL_START          :
       case EDIT_CURSOR_START       :
@@ -1167,6 +1247,7 @@ public enum KeyCommand {
       case GROUP_CHANGE_END      :
       case GROUP_SELECT_END      :
       case EDIT_TEXT_END         :
+      case EDIT_MARKDOWN_END     :
       case EDIT_CLIPBOARD_END    :
       case EDIT_URL_END          :
       case EDIT_CURSOR_END       :
@@ -1237,15 +1318,17 @@ public enum KeyCommand {
 
   public static void undo_action( MindMap map ) {
     if( !map.editable ) return;
-    if( map.undo_buffer.undoable() ) {
-      map.undo_buffer.undo();
+    var buffer = map.current_undo_buffer();
+    if( buffer.undoable() ) {
+      buffer.undo();
     }
   }
 
   public static void redo_action( MindMap map ) {
     if( !map.editable ) return;
-    if( map.undo_buffer.redoable() ) {
-      map.undo_buffer.redo();
+    var buffer = map.current_undo_buffer();
+    if( buffer.redoable() ) {
+      buffer.redo();
     }
   }
 
@@ -1326,7 +1409,7 @@ public enum KeyCommand {
     win.transient_for = map.win;
     win.view_name     = null;
 
-    /* Display the most relevant information based on the current state */
+    // Display the most relevant information based on the current state
     if( map.is_node_editable() || map.is_connection_editable() ) {
       win.section_name = "editing";
     } else if( map.is_node_selected() ) {
@@ -2051,6 +2134,75 @@ public enum KeyCommand {
       text.delete_word( map.undo_text );
       text_changed( map );
     }
+  }
+
+  private static void edit_insert_markdown( MindMap map, bool key_used, string pretext, string posttext = "", string midtext = "" ) {
+    if( !map.editable ) return;
+    var text = map.get_current_text();
+    var note = map.win.get_current_note();
+    if( text != null ) {
+      text.insert_markdown( pretext, midtext, posttext, map.undo_text );
+      map.canvas.grab_focus();
+      text_changed( map );
+    } else if( (note != null) && (!key_used || note.has_focus) ) {
+      note.paste_markdown( pretext, midtext, posttext );
+    }
+  }
+
+  public static void edit_header1( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "# " );
+  }
+
+  public static void edit_header2( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "## " );
+  }
+
+  public static void edit_header3( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "### " );
+  }
+
+  public static void edit_header4( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "#### " );
+  }
+
+  public static void edit_header5( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "##### " );
+  }
+
+  public static void edit_header6( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "###### " );
+  }
+
+  public static void edit_bold( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "**", "**" );
+  }
+
+  public static void edit_italics( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "_", "_" );
+  }
+
+  public static void edit_strike( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "~~", "~~" );
+  }
+
+  public static void edit_code( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "`", "`" );
+  }
+
+  public static void edit_highlight( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "==", "==" );
+  }
+
+  public static void edit_superscript( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "<sup>", "</sup>" );
+  }
+
+  public static void edit_subscript( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "<sub>", "</sub>" );
+  }
+
+  public static void edit_link( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "[", ")", "](" );
   }
 
   public static void edit_cursor_char_next( MindMap map ) {

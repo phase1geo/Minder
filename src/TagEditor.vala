@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2025-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -296,6 +296,7 @@ public class TagEditor : Box {
   public signal void select_changed( Tag tag, bool select );
   public signal void visible_changed( Tag tag, bool visible );
   public signal void update_icons();
+  public signal void escaped();
 
   //-------------------------------------------------------------
   // Constructor.
@@ -321,6 +322,21 @@ public class TagEditor : Box {
     _entry.activate.connect(() => {
       add_new_tag( _entry.text );
       _entry.text = "";
+    });
+
+    var entry_key = new EventControllerKey();
+    _entry.add_controller( entry_key );
+
+    entry_key.key_pressed.connect((keyval, keycode, state) => {
+      if( keyval == Gdk.Key.Escape ) {
+        if( _entry.text == "" ) {
+          escaped();
+        } else {
+          _entry.text = "";
+        }
+        return( true );
+      }
+      return( false );
     });
 
     _taglist = new ListBox() {

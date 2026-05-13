@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,7 +21,7 @@
 
 public class Layout : Object {
 
-  protected double _rt_gap = 100;  /* Root node gaps */
+  protected double _rt_gap = 100;  // Root node gaps
 
   public string name        { protected set; get; default = ""; }
   public string light_icon  { protected set; get; default = ""; }
@@ -147,13 +147,13 @@ public class Layout : Object {
   // Updates the tree size
   protected void update_tree_size( Node n ) {
 
-    /* Get the node's tree dimensions */
+    // Get the node's tree dimensions
     var nb = bbox( n, -1, "update_tree_size" );  // n.is_summarized() ? n.summary_node().tree_bbox : bbox( n, -1 );
 
-    /* Store the newly calculated node bounds back to the node */
+    // Store the newly calculated node bounds back to the node
     n.tree_bbox = nb;
 
-    /* Set the tree size in the node */
+    // Set the tree size in the node
     n.tree_size = n.side.horizontal() ? nb.height : nb.width;
 
   }

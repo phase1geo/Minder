@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,7 +25,8 @@ public class UndoNodeSort : UndoItem {
 
     private Array<Node> _nodes;
 
-    /* Stores the given node into this class */
+    //-------------------------------------------------------------
+    // Stores the given node into this class
     public SortNodes( Node n ) {
       _nodes = new Array<Node>();
       for( int i=0; i<n.children().length; i++ ) {
@@ -33,7 +34,8 @@ public class UndoNodeSort : UndoItem {
       }
     }
 
-    /* Performs an undo operation for the stored nodes */
+    //-------------------------------------------------------------
+    // Performs an undo operation for the stored nodes
     public void change( Node parent ) {
       for( int i=0; i<_nodes.length; i++ ) {
         Node n = _nodes.index( i );

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -321,9 +321,11 @@ public class Node : Object {
         _mode = value;
         if( _mode == NodeMode.EDITABLE ) {
           name.edit = true;
+          name.node_selected = false;
           name.set_cursor_all( false );
         } else {
           name.edit = false;
+          name.node_selected = _mode.is_selected();
           name.clear_selection();
         }
       }
@@ -700,7 +702,7 @@ public class Node : Object {
     tree_bbox.copy_from( n.tree_bbox );
     sticker          = n.sticker;
     sequence         = n.sequence;
-    _tags            = n.tags.copy();
+    _tags.copy_tags( n.tags );
   }
 
   //-------------------------------------------------------------
@@ -853,8 +855,8 @@ public class Node : Object {
   // width was dictated by the embedded image or not.
   private void calculate_node_size( out double width, out double height, out double name_space ) {
 
-    var margin       = style.node_margin  ?? 0;
-    var padding      = style.node_padding ?? 0;
+    int margin       = style.node_margin;
+    int padding      = style.node_padding;
     var stk_height   = sticker_height();
     var noname_width = task_width() + sticker_width() + sequence_width() + note_width() + linked_node_width();
     var name_width   = noname_width + _name.width;
@@ -905,13 +907,13 @@ public class Node : Object {
       _total_width  = _width;
       _total_height = _height;
     } else if( side.horizontal() ) {
-      var margin         = style.node_margin  ?? 0;
+      var margin         = style.node_margin;
       var callout_width  = _callout.total_width + (margin * 2);
       var callout_height = _callout.total_height + margin;
       _total_width  = (_width < callout_width) ? callout_width : _width;
       _total_height = _height + callout_height;
     } else {
-      var margin         = style.node_margin  ?? 0;
+      var margin         = style.node_margin;
       var callout_width  = _callout.total_width + margin;
       var callout_height = _callout.total_height + (margin * 2);
       _total_width  = _width + callout_width;
@@ -1160,7 +1162,7 @@ public class Node : Object {
   // Returns true if the given cursor coordinates lies within
   // the node bounding box.
   public virtual bool is_within_node( double x, double y ) {
-    double margin = style.node_margin ?? 0;
+    double margin = style.node_margin;
     double cx, cy, cw, ch;
     node_bbox( out cx, out cy, out cw, out ch );
     cx += margin;
@@ -1174,8 +1176,8 @@ public class Node : Object {
   // Returns the positional information for where the task item
   // is located (if it exists).
   protected virtual void task_bbox( out double x, out double y, out double w, out double h ) {
-    int    margin     = style.node_margin  ?? 0;
-    int    padding    = style.node_padding ?? 0;
+    int    margin     = style.node_margin;
+    int    padding    = style.node_padding;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
     x = posx + margin + padding;
     y = posy + margin + padding + img_height + (((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - _task_radius);
@@ -1187,8 +1189,8 @@ public class Node : Object {
   // Returns the positional information for where the sticker is
   // located (if it exists).
   protected virtual void sticker_bbox( out double x, out double y, out double w, out double h ) {
-    int    margin     = style.node_margin  ?? 0;
-    int    padding    = style.node_padding ?? 0;
+    int    margin     = style.node_margin;
+    int    padding    = style.node_padding;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
     double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
     x = posx + margin + padding + task_width();
@@ -1201,8 +1203,8 @@ public class Node : Object {
   // Returns the positional information for where the sequence
   // number is located (if it exists).
   protected virtual void sequence_bbox( out double x, out double y, out double w, out double h ) {
-    int    margin     = style.node_margin  ?? 0;
-    int    padding    = style.node_padding ?? 0;
+    int    margin     = style.node_margin;
+    int    padding    = style.node_padding;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
     double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
     double seq_height = (_sequence_num == null) ? 0 : _sequence_num.height;
@@ -1216,8 +1218,8 @@ public class Node : Object {
   // Returns the positional information for where the linked node
   // indicator is located (if it exists).
   protected virtual void linked_node_bbox( out double x, out double y, out double w, out double h ) {
-    int    margin     = style.node_margin  ?? 0;
-    int    padding    = style.node_padding ?? 0;
+    int    margin     = style.node_margin;
+    int    padding    = style.node_padding;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
     x = posx + (_width - (linked_node_width() + padding + margin)) + _ipadx;
     y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
@@ -1229,8 +1231,8 @@ public class Node : Object {
   // Returns the positional information for where the note item
   // is located (if it exists).
   protected virtual void note_bbox( out double x, out double y, out double w, out double h ) {
-    int    margin     = style.node_margin  ?? 0;
-    int    padding    = style.node_padding ?? 0;
+    int    margin     = style.node_margin;
+    int    padding    = style.node_padding;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
     x = posx + (_width - (note_width() + linked_node_width() + padding + margin)) + _ipadx;
     y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
@@ -1242,8 +1244,8 @@ public class Node : Object {
   // Returns the positional information of the stored image (if
   // no image exists, the behavior of this method is undefined).
   protected virtual void image_bbox( out double x, out double y, out double w, out double h ) {
-    int margin  = style.node_margin  ?? 0;
-    int padding = style.node_padding ?? 0;
+    int margin  = style.node_margin;
+    int padding = style.node_padding;
     x = (posx + (_width / 2)) - ((_image == null) ? 0 : (_image.width / 2));
     y = posy + padding + margin;
     w = (_image == null) ? 0 : _image.width;
@@ -1254,7 +1256,7 @@ public class Node : Object {
   // Returns the positional information for where the resizer box
   // is located (if it exists).
   protected virtual void resizer_bbox( out double x, out double y, out double w, out double h ) {
-    int margin  = style.node_margin  ?? 0;
+    int margin  = style.node_margin;
     x = resizer_on_left() ? (posx + margin) : (posx + _width - margin - 8);
     y = posy + margin;
     w = 8;
@@ -1265,8 +1267,8 @@ public class Node : Object {
   // Returns the positional information for where the given tag
   // indicator exists.
   protected virtual void tag_bbox( int index, out double x, out double y, out double w, out double h ) {
-    int margin  = style.node_margin ?? 0;
-    int padding = style.node_padding ?? 0;
+    int margin  = style.node_margin;
+    int padding = style.node_padding;
     x = name.posx + (index * 17);
     y = posy + (_height - (margin + padding) - 8);
     w = 12;
@@ -1451,12 +1453,12 @@ public class Node : Object {
   //-------------------------------------------------------------
   // Adds all nodes within this tree that intersect with the
   // given box.
-  public void select_within_box( Gdk.Rectangle box, Selection select ) {
+  public void get_nodes_within_box( Gdk.Rectangle box, Array<Node> nodes ) {
     if( intersects_with( box ) ) {
-      select.add_node( this );
+      nodes.append_val( this );
     }
     for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).select_within_box( box, select );
+      _children.index( i ).get_nodes_within_box( box, nodes );
     }
   }
 
@@ -1599,6 +1601,7 @@ public class Node : Object {
   // Loads the style information from the given XML node.
   private void load_style( Xml.Node* n ) {
     _style.load_node( n );
+    _name.set_text_alignment( _style.node_text_align );
     _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
     if( _sequence_num != null ) {
       _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
@@ -1993,9 +1996,9 @@ public class Node : Object {
   // Sets the fold for this node to the given value.  Appends
   // this node to the changed list if the folded value changed.
   public void set_fold( bool value, bool deep, Array<Node>? changed = null ) {
-    if( !value && deep ) {
+    if( deep ) {
       for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).clear_tree_folds( changed );
+        _children.index( i ).set_fold( value, deep, changed );
       }
     }
     if( folded != value ) {
@@ -2013,21 +2016,6 @@ public class Node : Object {
   public void set_fold_only( bool value ) {
     folded = value;
     layout.handle_update_by_fold( this );
-  }
-
-  //-------------------------------------------------------------
-  // Clears all of the folds below the current node.
-  private void clear_tree_folds( Array<Node>? changed ) {
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).clear_tree_folds( changed );
-    }
-    if( folded ) {
-      folded = false;
-      if( changed != null ) {
-        changed.append_val( this );
-      }
-      layout.handle_update_by_fold( this );
-    }
   }
 
   //-------------------------------------------------------------
@@ -2265,8 +2253,8 @@ public class Node : Object {
 
     calculate_node_size( out node_width, out node_height, out name_space );
 
-    var margin     = style.node_margin  ?? 0;
-    var padding    = style.node_padding ?? 0;
+    var margin     = style.node_margin;
+    var padding    = style.node_padding;
     var stk_height = sticker_height();
     var img_height = (_image != null) ? (_image.height + padding) : 0;
     var orig_posx  = name.posx;
@@ -2790,8 +2778,8 @@ public class Node : Object {
       x = posx + (_width / 2);
       y = posy + (_height / 2);
     } else if( seq ) {
-      int margin  = style.node_margin ?? 0;
-      int padding = style.node_padding ?? 0;
+      int margin  = style.node_margin;
+      int padding = style.node_padding;
       switch( side ) {
         case NodeSide.LEFT :
           x = posx + _total_width - margin - padding;
@@ -2812,7 +2800,7 @@ public class Node : Object {
           break;
       }
     } else {
-      int    margin = style.node_margin ?? 0;
+      int    margin = style.node_margin;
       double height = (style.node_border.name() == "underlined") ? (_height - margin) : (_height / 2);
       switch( side ) {
         case NodeSide.LEFT :
@@ -2885,13 +2873,13 @@ public class Node : Object {
       if( (side == NodeSide.RIGHT) && (_width < _total_width) ) {
         link_point( out x, out y );
         ctx.set_line_width( max_width );
-        ctx.move_to( (posx + _width - (style.node_margin ?? 0)), y );
+        ctx.move_to( (posx + _width - style.node_margin), y );
         ctx.line_to( x, y );
         ctx.stroke();
       } else if( (side == NodeSide.BOTTOM) && (_height < _total_height) ) {
         link_point( out x, out y );
         ctx.set_line_width( max_width );
-        ctx.move_to( x, (posy + _height - (style.node_margin ?? 0)) );
+        ctx.move_to( x, (posy + _height - style.node_margin) );
         ctx.line_to( x, y );
         ctx.stroke();
       }
@@ -2919,8 +2907,8 @@ public class Node : Object {
 
     // Draw the selection box around the text if the node is in the 'selected' state
     if( mode.is_selected() && !exporting ) {
-      var padding = style.node_padding ?? 0;
-      var margin  = style.node_margin  ?? 0;
+      var padding = style.node_padding;
+      var margin  = style.node_margin;
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
       ctx.rectangle( ((posx + padding + margin) - hmargin),
                      ((posy + padding + margin) - vmargin),
@@ -3056,13 +3044,6 @@ public class Node : Object {
                    fg_color;
 
       sequence_bbox( out x, out y, out w, out h );
-
-      if( _mode == NodeMode.SELECTED ) {
-        Utils.set_context_color_with_alpha( ctx, color, _alpha );
-        ctx.move_to( x, y );
-        ctx.rectangle( x, y, w, h );
-        ctx.fill();
-      }
 
       // Draw sequence number
       Pango.Rectangle ink_rect, log_rect;
@@ -3225,8 +3206,8 @@ public class Node : Object {
     double  child_y2 = 0;
     double? ext_x, ext_y;
 
-    var margin  = style.node_margin  ?? 0;
-    var padding = style.node_padding ?? 0;
+    var margin  = style.node_margin;
+    var padding = style.node_padding;
 
     // Get the parent's link point
     var prev = previous_sibling();

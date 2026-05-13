@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -30,7 +30,8 @@ public class AnimatorPanScale : AnimatorAction {
   private double? _sscale = null;  // Starting scaling factor
   private double? _escale = null;  // Ending scaling factor
 
-  /* Constructor for a pan change */
+  //-------------------------------------------------------------
+  // Constructor for a pan change
   public AnimatorPanScale( DrawArea da, string name ) {
     base( name, false );
     da.get_origin( out _sox, out _soy );
@@ -39,12 +40,14 @@ public class AnimatorPanScale : AnimatorAction {
     _soy    = _soy * _sscale;
   }
 
-  /* Returns the NODES types */
+  //-------------------------------------------------------------
+  // Returns the NODES types
   public override AnimationType type() {
     return( AnimationType.PANSCALE );
   }
 
-  /* User method which performs the animation */
+  //-------------------------------------------------------------
+  // User method which performs the animation
   public override void capture( DrawArea da ) {
     da.get_origin( out _eox, out _eoy );
     _escale = da.sfactor;
@@ -52,7 +55,8 @@ public class AnimatorPanScale : AnimatorAction {
     _eoy    = _eoy * _escale;
   }
 
-  /* Adjusts the origin for the given frame */
+  //-------------------------------------------------------------
+  // Adjusts the origin for the given frame
   public override void adjust( DrawArea da ) {
     double divisor = index / frames;
     index++;

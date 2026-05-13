@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 (https://github.com/phase1geo/Outliner)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Outliner)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -28,13 +28,15 @@ public class UndoTextMultiInsert : UndoTextItem {
 
   private Array<InsertText?> _inserts;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoTextMultiInsert( Array<InsertText?> inserts, int start_cursor, int end_cursor ) {
     base( _( "text insertion" ), UndoTextOp.INSERT, start_cursor, end_cursor );
     _inserts = inserts;
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo_text( MindMap map, CanvasText ct ) {
     for( int i=0; i<_inserts.length; i++ ) {
       var insert = _inserts.index( i );
@@ -44,7 +46,8 @@ public class UndoTextMultiInsert : UndoTextItem {
     map.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo_text( MindMap map, CanvasText ct ) {
     for( int i=(int)(_inserts.length - 1); i>=0; i-- ) {
       var insert = _inserts.index( i );

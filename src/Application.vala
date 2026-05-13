@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -33,7 +33,7 @@ public class Minder : Gtk.Application {
   private        GLib.Settings       touch_settings;
 
   public  static GLib.Settings settings;
-  public  static string        version       = "2.0.0";
+  public  static string        version       = "2.0.9";
   public  static bool          debug         = false;
   public  static bool          debug_advance = false;
   public  static int           debug_count   = 0;
@@ -147,6 +147,15 @@ public class Minder : Gtk.Application {
     options[8] = {"markdown-include-image-links", 0, 0, OptionArg.NONE, ref image_links, _( "Enables image links in exported Markdown" ), null};
     options[9] = {null};
 
+    // Add some description for importing and exporting
+    var description_prefix = (Utils.get_flatpak_runtime() != "") ? "flatpak run " : "";
+    var description = _( "Import Example:\n" );
+    description += _( "  %scom.github.phase1geo.minder --import=markdown file.markdown\n".printf( description_prefix ) );
+    description += "\n";
+    description += _( "Export Example:\n" );
+    description += _( "  %scom.github.phase1geo.minder --export=png --png-transparent file.minder file.png\n".printf( description_prefix ) );
+    context.set_description( description );
+
     // Parse the arguments
     try {
       context.set_help_enabled( false );
@@ -219,6 +228,8 @@ public class Minder : Gtk.Application {
         }
       }
       appwin.present();
+    } else {
+      appwin.present();
     }
 
     return( 0 );
@@ -244,13 +255,14 @@ public class Minder : Gtk.Application {
         });
         var map = appwin.create_map();
         map.doc.load_filename( infile, false );
-        map.doc.load( true, (loaded) => {
+        map.doc.load( UpgradeAction.READ_ONLY, (loaded) => {
           if( loaded ) {
             export.export( outfile, map );
           } else {
             stderr.printf( _( "ERROR:  Unable to load Minder input file %s" ).printf( infile ) + "\n" );
           }
         });
+        return( true );
       }
     }
 

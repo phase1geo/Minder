@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -77,7 +77,7 @@ public class Exporter : Box {
     append( bbox );
     append( _stack_reveal );
 
-    /* Initialize the UI */
+    // Initialize the UI
     var last = win.settings.get_string( "last-export" );
     mb.set_selected( win.exports.get_index_by_name( last ) );
 
@@ -95,7 +95,7 @@ public class Exporter : Box {
   // Add the given export
   private void add_export( MainWindow win, Export export ) {
 
-    /* Add the page */
+    // Add the page
     var opts = new Grid() {
       margin_start       = 5,
       margin_end         = 5,
@@ -119,7 +119,7 @@ public class Exporter : Box {
       child         = opts
     };
 
-    /* Add the options to the options stack */
+    // Add the options to the options stack
     _stack.add_named( frame, export.name );
 
   }
@@ -130,13 +130,13 @@ public class Exporter : Box {
 
     var dialog = Utils.make_file_chooser( _( "Export As %s" ).printf( export.label ), _( "Export" ) );
 
-    /* Set the default filename */
+    // Set the default filename
     var default_fname = Utils.rootname( win.get_current_map().doc.filename );
     dialog.set_initial_name( win.repair_filename( default_fname, export.extensions ) );
 
     var filters = new GLib.ListStore( typeof( FileFilter ) );
 
-    /* Set the filter */
+    // Set the filter
     FileFilter filter = new FileFilter();
     filter.set_filter_name( export.label );
     foreach( string extension in export.extensions ) {
@@ -173,6 +173,9 @@ public class Exporter : Box {
 
     var name   = _stack.visible_child_name;
     var export = win.exports.get_by_name( name );
+    var map    = win.get_current_map();
+
+    map.unedit_text();
 
     if( export.send_to_clipboard() ) {
       do_export_to_clipboard( win, export );

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2025-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -170,7 +170,7 @@ public class Shortcut {
   //-------------------------------------------------------------
   // Executes the stored function with the given map.
   public void execute( MindMap map ) {
-    _func( map );
+    _func( map, true );
   }
 
   //-------------------------------------------------------------
@@ -292,13 +292,14 @@ public class Shortcuts {
   // Removes the shortcut associated with the given command.  Returns
   // true if the shortcut is found and removed.
   private bool remove_shortcut( KeyCommand command ) {
+    var removed = false;
     for( int i=0; i<_shortcuts.length; i++ ) {
       if( _shortcuts.index( i ).matches_command( command ) ) {
         _shortcuts.remove_index( i );
-        return( true );
+        removed = true;
       }
     }
-    return( false );
+    return( removed );
   }
 
   //-------------------------------------------------------------
@@ -426,7 +427,7 @@ public class Shortcuts {
       }
     }
 
-    /* Save the file */
+    // Save the file
     doc->save_format_file( shortcuts_path(), 1 );
 
     delete doc;
@@ -480,7 +481,6 @@ public class Shortcuts {
   public void add_default_shortcuts() {
     for( int i=0; i<_defaults.length; i++ ) {
       _shortcuts.append_val( _defaults.index( i ) );
-      // FOOBAR
     }
   }
 
@@ -493,6 +493,7 @@ public class Shortcuts {
     for( int i=0; i<_shortcuts.length; i++ ) {
       shortcut_changed( _shortcuts.index( i ).command, _shortcuts.index( i ) );
     }
+    save();
   }
 
   //-------------------------------------------------------------
@@ -607,6 +608,11 @@ public class Shortcuts {
     add_default( Key.k,            true, true,  false, KeyCommand.EDIT_REMOVE_URL );
     add_default( Key.r,            true, true,  false, KeyCommand.NODE_QUICK_ENTRY_REPLACE );
     add_default( Key.y,            true, false, false, KeyCommand.NODE_PASTE_NODE_LINK );
+
+    add_default( Key.b,            true, false, false, KeyCommand.EDIT_BOLD );
+    add_default( Key.i,            true, false, false, KeyCommand.EDIT_ITALICS );
+    add_default( Key.x,            true, true,  false, KeyCommand.EDIT_STRIKE );
+    add_default( Key.grave,        true, false, false, KeyCommand.EDIT_CODE );
 
     add_default( Key.F10,          false, true,  false, KeyCommand.SHOW_CONTEXTUAL_MENU );
     add_default( Key.Menu,         false, false, false, KeyCommand.SHOW_CONTEXTUAL_MENU );

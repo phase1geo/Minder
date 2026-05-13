@@ -78,13 +78,25 @@ case $1 in
     initialize
     ./com.github.phase1geo.minder "${@:2}"
     ;;
+"run-rtl")
+    initialize
+    LANG=he_IL.utf8 ./com.github.phase1geo.minder "${@:2}"
+    ;;
 "run-flatpak")
-    flatpak run com.github.phase1geo.minder
+    flatpak run com.github.phase1geo.minder "${@:2}"
     ;;
 "debug")
     initialize
     # G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.minder "${@:2}"
     G_DEBUG=fatal-warnings gdb --args ./com.github.phase1geo.minder "${@:2}"
+    ;;
+"heaptrack")
+    initialize
+    heaptrack ./com.github.phase1geo.minder "${@:2}"
+    ;;
+"valgrind")
+    initialize
+    valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --num-callers=30 ./com.github.phase1geo.minder "${0:2}" | tee ../valgrind.out
     ;;
 "flatpak-debug")
     echo "Run command at prompt: G_DEBUG=fatal-criticals gdb /app/bin/com.github.phase1geo.minder"

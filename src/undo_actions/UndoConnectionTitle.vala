@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,7 +27,8 @@ public class UndoConnectionTitle : UndoItem {
   private CanvasText _text;
   private CanvasText _orig_text;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoConnectionTitle( MindMap map, Connection conn, CanvasText orig_text ) {
     base( _( "connection title change" ) );
     _conn      = conn;
@@ -37,7 +38,8 @@ public class UndoConnectionTitle : UndoItem {
     _orig_text.copy( orig_text );
   }
 
-  /* Undoes a node name change */
+  //-------------------------------------------------------------
+  // Undoes a node name change
   public override void undo( MindMap map ) {
     _conn.title.copy( _orig_text );
     map.queue_draw();
@@ -45,7 +47,8 @@ public class UndoConnectionTitle : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a node name change */
+  //-------------------------------------------------------------
+  // Redoes a node name change
   public override void redo( MindMap map ) {
     _conn.title.copy( _text );
     map.queue_draw();

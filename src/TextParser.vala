@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 (https://github.com/phase1geo/Outliner)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Outliner)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -84,7 +84,6 @@ public class TextParser {
   protected void remove_tags( FormattedText text, MatchInfo matches, int paren ) {
     int start, end;
     matches.fetch_pos( paren, out start, out end );
-    stdout.printf( "Removing all tags from %d to %d\n", start, end );
     text.remove_all_tags( start, end );
   }
 

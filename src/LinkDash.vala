@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,7 +27,8 @@ public class LinkDash : Object {
   public string   display_name;
   public double[] pattern;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public LinkDash( string name, string display_name, double[] pattern ) {
 
     this.name         = name;
@@ -36,7 +37,8 @@ public class LinkDash : Object {
 
   }
  
-  /* Makes an icon for the given dash */
+  //-------------------------------------------------------------
+  // Makes an icon for the given dash
   public Gdk.Paintable make_icon( bool dark ) {
 
     var rect = Graphene.Rect.alloc();
@@ -58,7 +60,8 @@ public class LinkDash : Object {
 
   }
 
-  /* Sets the given context for the dash information */
+  //-------------------------------------------------------------
+  // Sets the given context for the dash information
   public void set_context( Cairo.Context ctx, int line_width ) {
 
     double[] adjusted_pattern = {};

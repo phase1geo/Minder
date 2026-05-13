@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 (https://github.com/phase1geo/Outliner)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Outliner)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -172,7 +172,7 @@ public class Tagger {
 
     popover.popup();
 
-    /* Preload the tags */
+    // Preload the tags
     populate_listbox( listbox, get_matches( "" ) );
 
   }
