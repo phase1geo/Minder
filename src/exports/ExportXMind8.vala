@@ -534,7 +534,7 @@ public class ExportXMind8 : Export {
 
     time->set_content( timestamp );
     name->set_content( "Minder" );
-    version->set_content( Minder.version );
+    version->set_content( Minder.static_version );
 
     create->add_child( time );
     meta->add_child( create );

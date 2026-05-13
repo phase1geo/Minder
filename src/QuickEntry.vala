@@ -257,7 +257,7 @@ public class QuickEntry : Gtk.Window {
     if( _node_stack != null ) {
 
       TextIter iter, first, last;
-      int first_line, last_line, line_top;
+      int line_top;
 
       _entry.get_line_at_y( out iter, (int)y, out line_top );
       var node_info = _export.get_node_at_line( _node_stack, iter.get_line() );
@@ -281,9 +281,7 @@ public class QuickEntry : Gtk.Window {
   private bool handle_drop( Value val, double x, double y ) {
 
     TextIter iter;
-    Node     node;
     int      line_top;
-    string   prefix;
 
     _entry.get_line_at_y( out iter, (int)y, out line_top );
     var node_info = _export.get_node_at_line( _node_stack, iter.get_line() );
@@ -446,7 +444,7 @@ public class QuickEntry : Gtk.Window {
   private bool on_keypress( uint keyval, uint keycode, ModifierType state ) {
 
     var control = (bool)(state & ModifierType.CONTROL_MASK);
-    var shift   = (bool)(state & ModifierType.SHIFT_MASK);
+    // var shift   = (bool)(state & ModifierType.SHIFT_MASK);
     var ch      = (unichar)keyval;
 
     switch( keyval ) {
@@ -541,8 +539,6 @@ public class QuickEntry : Gtk.Window {
   private bool handle_printable( string str ) {
 
     TextIter current;
-    var      prev = "";
-    var      curr = "";
 
     _entry.buffer.get_iter_at_mark( out current, _entry.buffer.get_insert() );
 

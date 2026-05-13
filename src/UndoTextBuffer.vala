@@ -41,7 +41,8 @@ public class UndoTextBuffer : UndoBuffer {
   // true; otherwise, return false.
   private bool merge_with_last( UndoTextItem item ) {
     if( (_undo_buffer.length > 0) && (_redo_buffer.length == 0) && mergeable ) {
-      return( (_undo_buffer.index( _undo_buffer.length - 1 ) as UndoTextItem).merge( ct, item ) );
+      var uti = (_undo_buffer.index( _undo_buffer.length - 1 ) as UndoTextItem);
+      return( (uti != null) && uti.merge( ct, item ) );
     }
     mergeable = true;
     return( false );

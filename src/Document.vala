@@ -448,7 +448,7 @@ public class Document : Object {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
     var orig_etag  = _etag;
-    root->set_prop( "version", Minder.version );
+    root->set_prop( "version", Minder.static_version );
 
     if ( bump_etag ) {
       // Save previous Etag

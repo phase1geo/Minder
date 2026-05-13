@@ -491,7 +491,7 @@ public class ExportXMind2021 : Export {
     top.set_object_member( "creator", creator );
 
     creator.set_string_member( "name", "Minder" );
-    creator.set_string_member( "version", Minder.version );
+    creator.set_string_member( "version", Minder.static_version );
 
     var generator = new Json.Generator();
     generator.root   = root;

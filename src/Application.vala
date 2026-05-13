@@ -27,22 +27,26 @@ using Gee;
 public class Minder : Gtk.Application {
 
   private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
+  public const  string static_version   = "2.0.9";
 
   private        MainWindow          appwin;
   private        GLib.Settings       iface_settings;
   private        GLib.Settings       touch_settings;
 
-  public  static GLib.Settings settings;
-  public  static string        version       = "2.0.9";
-  public  static bool          debug         = false;
-  public  static bool          debug_advance = false;
-  public  static int           debug_count   = 0;
+  public static GLib.Settings settings;
+  public static bool          debug          = false;
+  public static bool          debug_advance  = false;
+  public static int           debug_count    = 0;
 
   //-------------------------------------------------------------
   // Default constructor
   public Minder () {
 
-    Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.HANDLES_COMMAND_LINE );
+    Object(
+      application_id: "com.github.phase1geo.minder",
+      flags: ApplicationFlags.HANDLES_COMMAND_LINE,
+      version: static_version
+    );
 
     Intl.setlocale( LocaleCategory.ALL, "" );
     Intl.bindtextdomain( GETTEXT_PACKAGE, LOCALEDIR );

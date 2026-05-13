@@ -64,13 +64,11 @@ public class MapModel {
   private Connection?   _attach_conn    = null;
   private Sticker?      _attach_sticker = null;
   private uint?         _auto_save_id   = null;
-  private bool          _debug          = true;
   private NodeGroups    _groups;
   private int           _next_node_id   = -1;
   private NodeLinks     _node_links;
   private bool          _hide_callouts  = false;
   private Array<string> _braindump;
-  private bool          _modifiable     = true;
   private Tags          _tags;
 
   public Layouts        layouts         { set; get; default = new Layouts(); }
@@ -1716,8 +1714,8 @@ public class MapModel {
   // adding it.
   public void position_root_node( Node node ) {
     if( _nodes.length == 0 ) {
-      var width  = (_map.canvas.get_allocated_width()  == 0) ? 600 : _map.canvas.get_allocated_width();
-      var height = (_map.canvas.get_allocated_height() == 0) ? 600 : _map.canvas.get_allocated_height();
+      var width  = (_map.canvas.get_width()  == 0) ? 600 : _map.canvas.get_width();
+      var height = (_map.canvas.get_height() == 0) ? 600 : _map.canvas.get_height();
       node.posx = (width  / 4) - 50;
       node.posy = (height / 2) - 30;
     } else {
@@ -2450,6 +2448,7 @@ public class MapModel {
       switch( current.mode ) {
         case NodeMode.CURRENT  :  MinderClipboard.copy_nodes( _map );  break;
         case NodeMode.EDITABLE :  copy_selected_text();  break;
+        default                :  break;
       }
     } else if( _map.selected.nodes().length > 1 ) {
       MinderClipboard.copy_nodes( _map );
