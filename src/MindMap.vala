@@ -690,7 +690,9 @@ public class MindMap {
       var node = child_nodes.index( i );
       if( (node != null) && !node.is_root() ) {
         if( node.is_summary() ) {
-          parent_nodes.append_val( (node as SummaryNode).last_selected_node );
+          var sn = (node as SummaryNode);
+          assert( sn != null );
+          parent_nodes.append_val( sn.last_selected_node );
         } else {
           parent_nodes.append_val( node.parent );
         }

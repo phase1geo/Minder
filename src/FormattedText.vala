@@ -55,11 +55,12 @@ public enum FormatTag {
       case COLOR      :  return( "color" );
       case HILITE     :  return( "hilite" );
       case URL        :  return( "url" );
-      case TAG        :  return( "tag" );
       case SYNTAX     :  return( "syntax" );
+      case TAG        :  return( "tag" );
       case MATCH      :  return( "match" );
+      case SELECT     :  return( "select" );
+      default         :  return( "bold" );
     }
-    return( "bold" );
   }
 
   public static FormatTag from_string( string str ) {
@@ -78,8 +79,8 @@ public enum FormatTag {
       case "tag"         :  return( TAG );
       case "syntax"      :  return( SYNTAX );
       case "match"       :  return( MATCH );
+      default            :  return( LENGTH );
     }
-    return( LENGTH );
   }
 
 }
@@ -1199,7 +1200,7 @@ public class FormattedText {
     }
     string? pa = n->get_prop( "parse-as" );
     if( pa != null ) {
-      var str = _text;
+      // var str = _text;
       _text = "";  // Clear the text
       /* TBD
       switch( pa ) {

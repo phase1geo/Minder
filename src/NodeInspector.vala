@@ -38,8 +38,6 @@ public class NodeInspector : Box {
   private Node?          _node = null;
   private Stack          _image_stack;
   private Picture        _image;
-  private Button         _image_btn;
-  private Label          _image_loc;
   private Switch         _override;
   private ColorButton    _root_color;
   private Box            _root_color_box;
@@ -454,6 +452,8 @@ public class NodeInspector : Box {
 
   //-------------------------------------------------------------
   // Called if the user clicks on the image URI.
+  /*
+   NOTE:  This function is not called according to valac
   private bool image_link_clicked( string uri ) {
 
     File file = File.new_for_uri( uri );
@@ -474,6 +474,7 @@ public class NodeInspector : Box {
     return( false );
 
   }
+  */
 
   //-------------------------------------------------------------
   // Creates the node editing button grid and adds it to the popover.
@@ -654,6 +655,8 @@ public class NodeInspector : Box {
 
   //-------------------------------------------------------------
   // Called whenever the fold switch is changed within the inspector
+  /*
+   NOTE:  This function is not called according to valac
   private void resize_changed() {
     var current = _map.get_current_node();
     if( current != null ) {
@@ -661,6 +664,7 @@ public class NodeInspector : Box {
       _map.auto_save();
     }
   }
+  */
 
   //-------------------------------------------------------------
   // Called whenever the theme is changed.
@@ -724,8 +728,8 @@ public class NodeInspector : Box {
       _note.buffer.text = note;
       _note.editable    = _map.editable;
       if( current.image != null ) {
-        var url = _map.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
-        var str = "<a href=\"" + url + "\">" + url + "</a>";
+        // var url = _map.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
+        // var str = "<a href=\"" + url + "\">" + url + "</a>";
         current.image.set_image( _image );
         _resize.set_active( current.image_resizable && _map.editable );
         _image_stack.visible_child_name = "edit";

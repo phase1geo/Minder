@@ -129,7 +129,7 @@ public class Animator : Object {
       var action = _actions.pop_tail();
       if( action.can_cancel() ) {
         if( action.save() ) {
-          _da.map.auto_save();
+          _da.mmap.auto_save();
         }
         _da.queue_draw();
       } else {
@@ -157,7 +157,7 @@ public class Animator : Object {
       }
       _running = false;
       if( save_needed ) {
-        _da.map.auto_save();
+        _da.mmap.auto_save();
       }
       _da.queue_draw();
     }
@@ -174,7 +174,7 @@ public class Animator : Object {
         action.on_completion( _da );
       }
       if( save_needed ) {
-        _da.map.auto_save();
+        _da.mmap.auto_save();
       }
       _da.queue_draw();
       return;
@@ -194,7 +194,7 @@ public class Animator : Object {
     if( _actions.peek_head().done() ) {
       _actions.peek_head().on_completion( _da );
       if( _actions.peek_head().save() ) {
-        _da.map.auto_save();
+        _da.mmap.auto_save();
       }
       _actions.pop_head();
     }

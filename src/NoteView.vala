@@ -130,7 +130,6 @@ public class CompletionProvider : GtkSource.CompletionProvider, Object {
     TextIter start_iter, end_iter;
     var proposals = new GLib.ListStore( typeof(CompletionItem) );
     if( context.get_bounds( out start_iter, out end_iter ) ) {
-      var buffer = start_iter.get_buffer();
       start_iter.backward_char();
       if( is_trigger( start_iter, start_iter.get_char() ) ) {
         foreach( var item in _proposals ) {
@@ -237,7 +236,6 @@ public class NoteView : GtkSource.View {
   private int               _last_y;
   private Regex?            _url_re;
   private Regex?            _link_re;
-  private Tooltip           _tooltip;
   private bool              _control   = false;
   private SimpleActionGroup _group;
   public  GtkSource.Style   _srcstyle  = null;

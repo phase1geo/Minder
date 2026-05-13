@@ -2536,6 +2536,7 @@ public class MapModel {
       switch( current.mode ) {
         case NodeMode.CURRENT  :  cut_node_to_clipboard();  break;
         case NodeMode.EDITABLE :  cut_selected_text();      break;
+        default                :  break;
       }
     } else if( _map.selected.nodes().length > 1 ) {
       cut_selected_nodes_to_clipboard();

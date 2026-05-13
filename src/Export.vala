@@ -303,10 +303,8 @@ public class Export {
   // Returns true if the given filename is targetted for this
   // export type
   public bool filename_matches( string fname, out string basename ) {
-    if( dir ) {
-      basename = fname;
-      return( true );
-    } else {
+    basename = fname;
+    if( !dir ) {
       foreach( string extension in extensions ) {
         if( fname.has_suffix( extension ) ) {
           basename = fname.slice( 0, (fname.length - extension.length) );
@@ -315,6 +313,7 @@ public class Export {
       }
       return( false );
     }
+    return( true );
   }
 
   //-------------------------------------------------------------

@@ -34,7 +34,7 @@ public class UrlEditor {
   // Default constructor
   public UrlEditor( DrawArea da ) {
 
-    _map = da.map;
+    _map = da.mmap;
 
     var lbl = new Label( _( "URL" ) + ":" );
     _entry = new Entry() {

@@ -115,12 +115,14 @@ public class UndoTextBuffer : UndoBuffer {
   // Performs the next undo action in the buffer
   public override void undo() {
     if( undoable() ) {
-      UndoItem item = _undo_buffer.index( _undo_buffer.length - 1 );
-      (item as UndoTextItem).undo_text( _map, ct );
-      _undo_buffer.remove_index( _undo_buffer.length - 1 );
-      _redo_buffer.append_val( item );
-      mergeable = false;
-      buffer_changed( this );
+      var item = (_undo_buffer.index( _undo_buffer.length - 1 ) as UndoTextItem);
+      if( item != null ) {
+        item.undo_text( _map, ct );
+        _undo_buffer.remove_index( _undo_buffer.length - 1 );
+        _redo_buffer.append_val( item );
+        mergeable = false;
+        buffer_changed( this );
+      }
     }
   }
 
@@ -128,12 +130,14 @@ public class UndoTextBuffer : UndoBuffer {
   // Performs the next redo action in the buffer
   public override void redo() {
     if( redoable() ) {
-      UndoItem item = _redo_buffer.index( _redo_buffer.length - 1 );
-      (item as UndoTextItem).redo_text( _map, ct );
-      _redo_buffer.remove_index( _redo_buffer.length - 1 );
-      _undo_buffer.append_val( item );
-      mergeable = false;
-      buffer_changed( this );
+      var item = (_redo_buffer.index( _redo_buffer.length - 1 ) as UndoTextItem);
+      if( item != null ) {
+        item.redo_text( _map, ct );
+        _redo_buffer.remove_index( _redo_buffer.length - 1 );
+        _undo_buffer.append_val( item );
+        mergeable = false;
+        buffer_changed( this );
+      }
     }
   }
 }

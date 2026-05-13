@@ -29,9 +29,8 @@ public class Minder : Gtk.Application {
   private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
   public const  string static_version   = "2.0.9";
 
-  private        MainWindow          appwin;
-  private        GLib.Settings       iface_settings;
-  private        GLib.Settings       touch_settings;
+  private MainWindow    appwin;
+  private GLib.Settings iface_settings;
 
   public static GLib.Settings settings;
   public static bool          debug          = false;

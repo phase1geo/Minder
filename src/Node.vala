@@ -404,7 +404,6 @@ public class Node : Object {
       return( _style );
     }
     set {
-      var branch_margin = style.branch_margin;
       if( _style.copy( value ) ) {
         name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
         name.set_text_alignment( _style.node_text_align );
@@ -1203,11 +1202,8 @@ public class Node : Object {
   // Returns the positional information for where the sequence
   // number is located (if it exists).
   protected virtual void sequence_bbox( out double x, out double y, out double w, out double h ) {
-    int    margin     = style.node_margin;
-    int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
-    double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
-    double seq_height = (_sequence_num == null) ? 0 : _sequence_num.height;
+    int margin  = style.node_margin;
+    int padding = style.node_padding;
     x = posx + margin + padding + task_width() + sticker_width();
     y = name.posy;
     w = sequence_width();
@@ -2198,7 +2194,6 @@ public class Node : Object {
     if( other == null ) return;
 
     var other_summary = other.summary_node();
-    var our_index     = index();
     var our_summary   = summary_node();
 
     detach( side );
@@ -2267,6 +2262,7 @@ public class Node : Object {
       switch( style.node_text_align ) {
         case Pango.Alignment.CENTER :  name.posx += (name_space / 2);  break;
         case Pango.Alignment.RIGHT  :  name.posx += name_space;        break;
+        default                     :  break;
       }
     }
 
@@ -3204,7 +3200,6 @@ public class Node : Object {
     double  child_y1 = 0;
     double  child_x2 = 0;
     double  child_y2 = 0;
-    double? ext_x, ext_y;
 
     var margin  = style.node_margin;
     var padding = style.node_padding;

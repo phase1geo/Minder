@@ -372,7 +372,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private MindMap get_map( int page ) {
     var ol = (Overlay)_nb.get_nth_page( page );
     var da = (DrawArea)ol.child;
-    return( da.map );
+    return( da.mmap );
   }
 
   //-------------------------------------------------------------

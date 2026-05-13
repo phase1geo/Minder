@@ -43,7 +43,7 @@ public class BaseMenu {
   // Default constructor
   public BaseMenu( Gtk.Application app, DrawArea canvas, string group ) {
 
-    _map        = canvas.map;
+    _map        = canvas.mmap;
     _app        = app;
     _group_name = group;
 

@@ -55,7 +55,6 @@ public class Connection : Object {
   private Bezier      _curve;
   private CanvasText? _title     = null;
   private string      _note      = "";
-  private double      _max_width = 100;
   private RGBA?       _color;
   private string?     _sticker     = null;
   private Pixbuf?     _sticker_buf = null;

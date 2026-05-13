@@ -527,8 +527,6 @@ public class Document : Object {
       FileUtils.unlink( bak_file );
     }
 
-    var upgrade_ro = _upgrade_ro;
-
     // Indicate that a save is no longer needed
     _save_needed = false;
     _upgrade_ro = false;
@@ -600,6 +598,8 @@ public class Document : Object {
 
   //-------------------------------------------------------------
   // Copies a file from one location to another
+  /*
+   NOTE: This function is not called according to valac
   private bool move_file( string from, string to ) {
     var from_file = File.new_for_path( from );
     var to_file   = File.new_for_path( to );
@@ -611,6 +611,7 @@ public class Document : Object {
     }
     return( true );
   }
+  */
 
   //-------------------------------------------------------------
   // Copies a file from one location to another */
@@ -674,6 +675,7 @@ public class Document : Object {
       case UpgradeAction.OVERRIDE  :  save();  break;
       case UpgradeAction.SAVE_ORIG :  copy_as_orig();  save();  break;
       case UpgradeAction.READ_ONLY :  _upgrade_ro = true;  _map.editable_changed( _map );  break;
+      default                      :  break;
     }
 
     if( func != null ) {

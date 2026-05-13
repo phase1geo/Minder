@@ -104,7 +104,7 @@ public class DrawArea : Gtk.DrawingArea {
   public MainWindow win      { private set; get; }
   public Animator   animator { set; get; }
 
-  public MindMap map {
+  public MindMap mmap {
     get {
       return( _map );
     }
@@ -684,6 +684,7 @@ public class DrawArea : Gtk.DrawingArea {
           return( false );
         }
         break;
+      default :  break;
     }
 
     if( callout.mode == CalloutMode.EDITABLE ) {
@@ -1360,6 +1361,7 @@ public class DrawArea : Gtk.DrawingArea {
               _map.model.set_attach_node( match );
             }
             break;
+          default :  break;
         }
 
       // If we are dealing with a node, handle it based on its mode
@@ -1372,7 +1374,7 @@ public class DrawArea : Gtk.DrawingArea {
             current_node.resize( diffx );
             _map.auto_save();
           } else if( _map.editable ) {
-            var attach_summary = _map.model.attachable_summary_node( _scaled_x, _scaled_y );
+            // var attach_summary = _map.model.attachable_summary_node( _scaled_x, _scaled_y );
             if( _map.model.attach_summary != null ) {
               _map.model.set_attach_summary( _map.model.attach_summary );
             }
@@ -2100,9 +2102,12 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // This function should be called when a drop target is deciding
   // whether to accept a drop action or not.
+  /*
+   NOTE:  This function is not called according to valac
   private bool handle_drop_accept( Drop drop ) {
     return( _map.editable );
   }
+  */
 
   //-------------------------------------------------------------
   // Handle any drag operations involving text.

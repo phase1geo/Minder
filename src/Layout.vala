@@ -169,7 +169,9 @@ public class Layout : Object {
     if( parent.is_summary() ) {
 
       double xy1, xy2;
-      (parent as SummaryNode).get_extents( out xy1, out xy2 );
+      var sn = (parent as SummaryNode);
+      assert( sn != null );
+      sn.get_extents( out xy1, out xy2 );
 
       var extent_size    = xy2 - xy1;
       var orig_tree_size = (extent_size < parent.tree_size) ? parent.tree_size : extent_size;
