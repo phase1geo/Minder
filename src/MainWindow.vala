@@ -1416,7 +1416,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     dialog.add_action_widget( cancel, ResponseType.CANCEL );
 
     var save = new Button.with_label( _( "Save" ) );
-    save.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    save.add_css_class( Granite.CssClass.SUGGESTED );
     dialog.add_action_widget( save, ResponseType.ACCEPT );
 
     dialog.set_transient_for( this );

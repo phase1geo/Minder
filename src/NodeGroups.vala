@@ -79,7 +79,7 @@ public class NodeGroups {
       }
     }
     if( groups.length > 0 ) {
-      affected = new UndoNodeGroups( node, groups );
+      affected = UndoNodeGroups( node, groups );
     }
   }
 

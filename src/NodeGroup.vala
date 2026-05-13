@@ -138,7 +138,7 @@ public class NodeGroup : Object {
   //-------------------------------------------------------------
   // Returns true if the given coordinates are within a group
   public bool is_within( double x, double y ) {
-    var cursor = new NodePoint( x, y );
+    var cursor = NodePoint( x, y );
     var points = new Array<NodePoint?>();
     var hull   = new Array<NodePoint?>();
     points.append_val( cursor );
@@ -295,10 +295,10 @@ public class NodeGroup : Object {
       }
     }
 
-    points.append_val( new NodePoint( x1, y1 ) );
-    points.append_val( new NodePoint( x2, y1 ) );
-    points.append_val( new NodePoint( x1, y2 ) );
-    points.append_val( new NodePoint( x2, y2 ) );
+    points.append_val( NodePoint( x1, y1 ) );
+    points.append_val( NodePoint( x2, y1 ) );
+    points.append_val( NodePoint( x1, y2 ) );
+    points.append_val( NodePoint( x2, y2 ) );
 
   }
 

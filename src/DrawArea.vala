@@ -1908,7 +1908,7 @@ public class DrawArea : Gtk.DrawingArea {
     int    cursor, selstart, selend;
     string text = ct.text.text;
     ct.get_cursor_info( out cursor, out selstart, out selend );
-    _im_context.set_surrounding( text, text.length, text.index_of_nth_char( cursor ) );
+    _im_context.set_surrounding_with_selection( text, text.length, text.index_of_nth_char( cursor ), text.index_of_nth_char( selstart ) );
   }
 
   //-------------------------------------------------------------

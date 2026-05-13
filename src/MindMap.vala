@@ -1078,11 +1078,19 @@ public class MindMap {
   //-------------------------------------------------------------
   // Display a color picker to change the color of the current link.
   public void change_current_link_color() {
-    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _win );
-    color_picker.color_activated.connect((color) => {
-      _model.change_current_link_color( color );
+    var color_picker = new ColorDialog() {
+      modal = true,
+      title = _( "Select a link color" ),
+      with_alpha = false
+    };
+    color_picker.choose_rgba.begin( _win, null, null, (obj, res) => {
+      try {
+        var color = color_picker.choose_rgba.end( res );
+        if( color != null ) {
+          _model.change_current_link_color( color );
+        }
+      } catch( Error e ) {}
     });
-    color_picker.present();
   }
 
   //-------------------------------------------------------------

@@ -29,7 +29,7 @@ public class TagBox : Box {
   private uint  _timeout_id = 0;
   private bool  _visible    = false;
 
-  public Label name {
+  public Label name_label {
     get {
       return( _name_lbl );
     }
@@ -169,7 +169,7 @@ public class TagBox : Box {
 
     visible_btn.clicked.connect(() => {
       if( enable_visible ) {
-        set_visible( !_visible );
+        set_box_visible( !_visible );
         visible_changed( tag, _visible );
       }
     });
@@ -240,7 +240,7 @@ public class TagBox : Box {
 
   //-------------------------------------------------------------
   // Called when the given child changes its visible state.
-  public void set_visible( bool visible ) {
+  public void set_box_visible( bool visible ) {
     var box = Utils.get_child_at_index( this, 1 );
     var stack = (Stack)Utils.get_child_at_index( box, 2 );
     if( stack != null ) {
@@ -469,10 +469,10 @@ public class TagEditor : Box {
 
       tagbox.add_controller( drag );
 
-      drag.set_icon( create_icon( tagbox.name ), 10, 10 );
+      drag.set_icon( create_icon( tagbox.name_label ), 10, 10 );
 
       drag.prepare.connect((x, y) => {
-        var val = new Value( typeof(Tag) );
+        var val = Value( typeof(Tag) );
         val.set_object( tag.copy() );
         var provider = new ContentProvider.for_value( val );
         return( provider );
@@ -502,7 +502,7 @@ public class TagEditor : Box {
     var width   = (log.width  / Pango.SCALE) + (padding * 2);
     var height  = (log.height / Pango.SCALE) + (padding * 2);
 
-    var rect = Graphene.Rect.alloc();
+    var rect = Graphene.Rect();
     rect.init( (float)0.0, (float)0.0, (float)width, (float)height );
 
     var snapshot = new Gtk.Snapshot();
@@ -591,7 +591,7 @@ public class TagEditor : Box {
     for( int i=0; i<_tags.size(); i++ ) {
       var tagbox = get_tagbox( _taglist.get_row_at_index( i ) );
       if( tagbox != null ) {
-        tagbox.set_visible( false );
+        tagbox.set_box_visible( false );
       }
     }
 

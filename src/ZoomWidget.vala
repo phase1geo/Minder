@@ -21,7 +21,7 @@
 
 using Gtk;
 
-public class ZoomWidget : Gtk.Box {
+public class ZoomWidget : Granite.Box {
 
   private Button _zoom_out;
   private Button _zoom_actual;
@@ -80,13 +80,13 @@ public class ZoomWidget : Gtk.Box {
   // Constructor
   public ZoomWidget( int min, int max, int step, bool fill = true ) {
 
+    Object( orientation: Orientation.HORIZONTAL, child_spacing: Granite.Box.Spacing.LINKED );
+
     this.min  = min;
     this.max  = max;
     this.step = step;
 
     homogeneous = true;
-
-    add_css_class( Granite.STYLE_CLASS_LINKED );
 
     _zoom_out = new Button.from_icon_name( "zoom-out-symbolic" ) {
       has_frame      = false,

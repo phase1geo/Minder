@@ -994,13 +994,15 @@ public class Node : Object {
   //-------------------------------------------------------------
   // Returns true if this node is the first node of a summary node.
   public virtual bool first_summarized() {
-    return( is_summarized() && ((_children.index( 0 ) as SummaryNode).first_node() == this) );
+    var sn = (_children.index( 0 ) as SummaryNode);
+    return( is_summarized() && (sn != null) && (sn.first_node() == this) );
   }
 
   //-------------------------------------------------------------
   // Returns true if this node is the last node of a summary node.
   public virtual bool last_summarized() {
-    return( is_summarized() && ((_children.index( 0 ) as SummaryNode).last_node() == this) );
+    var sn = (_children.index( 0 ) as SummaryNode);
+    return( is_summarized() && (sn != null) && (sn.last_node() == this) );
   }
 
   //-------------------------------------------------------------
@@ -2594,7 +2596,7 @@ public class Node : Object {
   // Toggles the current value of task done and propagates the
   // change to all parent nodes.
   public void toggle_task_done( ref Array<NodeTaskInfo?> changed ) {
-    var change = new NodeTaskInfo( task_enabled(), task_done(), this );
+    var change = NodeTaskInfo( task_enabled(), task_done(), this );
     changed.append_val( change );
     set_task_done( _task_done == 0 );
   }

@@ -801,8 +801,10 @@ public class Document : Object {
     }
 
     // Delete the temporary directory
-    var dir = File.new_for_path( _temp_dir );
-    delete_recursively( dir );
+    try {
+      var dir = File.new_for_path( _temp_dir );
+      delete_recursively( dir );
+    } catch( Error e ) {}
 
   }
 

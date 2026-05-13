@@ -420,11 +420,14 @@ public class Layout : Object {
     // If we are adding a summary node, get the summary node extent and place ourselves in the middle
     if( child.is_summary() ) {
       double xy1, xy2;
-      (child as SummaryNode).get_extents( out xy1, out xy2 );
-      if( child.side.horizontal() ) {
-        child.posy = xy1 + (((xy2 - xy1) / 2) - (oh / 2));
-      } else {
-        child.posx = xy1 + (((xy2 - xy1) / 2) - (ow / 2));
+      var sn = (child as SummaryNode);
+      if( sn != null ) {
+        sn.get_extents( out xy1, out xy2 );
+        if( child.side.horizontal() ) {
+          child.posy = xy1 + (((xy2 - xy1) / 2) - (oh / 2));
+        } else {
+          child.posx = xy1 + (((xy2 - xy1) / 2) - (ow / 2));
+        }
       }
 
     // If we are the only child on our side, place ourselves on the same plane as the

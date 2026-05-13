@@ -474,7 +474,7 @@ public class Utils {
     dialog.add_action_widget( no, ResponseType.CANCEL );
 
     var yes = new Button.with_label( _( "Yes" ) );
-    yes.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    yes.add_css_class( Granite.CssClass.SUGGESTED );
     dialog.add_action_widget( yes, ResponseType.ACCEPT );
 
     dialog.set_transient_for( win );

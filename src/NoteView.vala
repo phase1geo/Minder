@@ -286,7 +286,7 @@ public class NoteView : GtkSource.View {
 
     string[] lang_paths = {};
 
-    get_style_context().add_class( "textfield" );
+    add_css_class( "textfield" );
 
     var manager = GtkSource.LanguageManager.get_default();
     if( !_path_init ) {

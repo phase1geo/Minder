@@ -967,7 +967,7 @@ public class CanvasText : Object {
 
   //-------------------------------------------------------------
   // Inserts the Markdown formatting
-  public void insert_markdown( string pretext, string midtext = "", string posttext = "", UndoTextBuffer undo_buffer ) {
+  public void insert_markdown( string pretext, string midtext, string posttext, UndoTextBuffer undo_buffer ) {
     var cur = _cursor;
     if( _selstart != _selend ) {
       var spos = text.text.index_of_nth_char( _selstart );

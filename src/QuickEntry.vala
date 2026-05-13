@@ -137,7 +137,7 @@ public class QuickEntry : Gtk.Window {
       _apply = new Button.with_label( _( "Replace" ) ) {
         halign = Align.END
       };
-      _apply.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+      _apply.add_css_class( Granite.CssClass.SUGGESTED );
       _apply.clicked.connect( () => {
         if( handle_replace() ) {
           close();
@@ -152,7 +152,7 @@ public class QuickEntry : Gtk.Window {
       _apply = new Button.with_label( _( "Insert" ) ) {
         halign = Align.END
       };
-      _apply.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+      _apply.add_css_class( Granite.CssClass.SUGGESTED );
       _apply.clicked.connect(() => {
         if( handle_insert() ) {
           close();

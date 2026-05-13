@@ -45,10 +45,12 @@ public class MinderClipboard {
   //-------------------------------------------------------------
   // Copies the given image buffer to the clipboard.
   public static void copy_image_buffer( uint8[] img ) {
-    var clipboard = Display.get_default().get_clipboard();
-    var bytes     = new Bytes( img );
-    var texture   = Texture.from_bytes( bytes );
-    clipboard.set_texture( texture );
+    try {
+      var clipboard = Display.get_default().get_clipboard();
+      var bytes     = new Bytes( img );
+      var texture   = Texture.from_bytes( bytes );
+      clipboard.set_texture( texture );
+    } catch( Error e ) {}
   }
 
   //-------------------------------------------------------------

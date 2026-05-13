@@ -285,7 +285,7 @@ public class Theme : Object {
     double ypos[6];
     int    width, height;
 
-    var rect = Graphene.Rect.alloc();
+    var rect = Graphene.Rect();
     rect.init( (float)0.0, (float)0.0, (float)side, (float)side );
 
     var snapshot = new Gtk.Snapshot();

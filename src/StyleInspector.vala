@@ -252,7 +252,7 @@ public class StyleInspector : Box {
     dialog.set_default_response( ResponseType.CLOSE );
 
     var close = new Button.with_label( _( "Close" ) );
-    close.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    close.add_css_class( Granite.CssClass.SUGGESTED );
     dialog.add_action_widget( close, ResponseType.CLOSE );
 
     dialog.response.connect((id) => {

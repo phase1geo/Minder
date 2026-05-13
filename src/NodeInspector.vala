@@ -25,25 +25,25 @@ using Granite.Widgets;
 
 public class NodeInspector : Box {
 
-  private ScrolledWindow _sw;
-  private Switch         _task;
-  private Switch         _fold;
-  private Switch         _sequence;
-  private Box            _link_box;
-  private ColorButton    _link_color;
-  private NoteView       _note;
-  private MindMap?       _map = null;
-  private Button         _detach_btn;
-  private string         _orig_note = "";
-  private Node?          _node = null;
-  private Stack          _image_stack;
-  private Picture        _image;
-  private Switch         _override;
-  private ColorButton    _root_color;
-  private Box            _root_color_box;
-  private Revealer       _color_reveal;
-  private ToggleButton   _resize;
-  private bool           _ignore = false;
+  private ScrolledWindow    _sw;
+  private Switch            _task;
+  private Switch            _fold;
+  private Switch            _sequence;
+  private Box               _link_box;
+  private ColorDialogButton _link_color;
+  private NoteView          _note;
+  private MindMap?          _map = null;
+  private Button            _detach_btn;
+  private string            _orig_note = "";
+  private Node?             _node = null;
+  private Stack             _image_stack;
+  private Picture           _image;
+  private Switch            _override;
+  private ColorDialogButton _root_color;
+  private Box               _root_color_box;
+  private Revealer          _color_reveal;
+  private ToggleButton      _resize;
+  private bool              _ignore = false;
 
   public signal void update_icons();
   public signal void editable_changed();
@@ -80,12 +80,10 @@ public class NodeInspector : Box {
   private void tab_changed( MindMap? map ) {
     if( _map != null ) {
       _map.current_changed.disconnect( node_changed );
-      _map.theme_changed.disconnect( theme_changed );
     }
     _map = map;
     if( map != null ) {
       map.current_changed.connect( node_changed );
-      map.theme_changed.connect( theme_changed );
       node_changed();
       editable_changed();
     }
@@ -207,11 +205,18 @@ public class NodeInspector : Box {
     };
     lbl.add_css_class( "titled" );
 
-    _link_color = new ColorButton() {
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Select Link Color" ),
+      with_alpha = false
+    };
+
+    _link_color = new ColorDialogButton( dialog ) {
       halign = Align.FILL
     };
-    _link_color.color_set.connect(() => {
-      _map.model.change_current_link_color( _link_color.rgba );
+
+    _link_color.notify["rgba"].connect(() => {
+      _map.model.change_current_link_color( _link_color.get_rgba() );
     });
 
     _link_box = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -253,11 +258,18 @@ public class NodeInspector : Box {
 
     var l = new Label( "" );
 
-    _root_color = new ColorButton() {
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Select Root Color" ),
+      with_alpha = false
+    };
+
+    _root_color = new ColorDialogButton( dialog ) {
       halign = Align.FILL
     };
-    _root_color.color_set.connect(() => {
-      _map.model.change_current_link_color( _root_color.rgba );
+
+    _root_color.notify["rgba"].connect(() => {
+      _map.model.change_current_link_color( _root_color.get_rgba() );
     });
 
     var cbox = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -569,7 +581,7 @@ public class NodeInspector : Box {
       }
     } else {
       _color_reveal.reveal_child = true;
-      if( (current != null) && (_root_color.rgba != _map.get_theme().get_color( "root_background" )) ) {
+      if( (current != null) && (_root_color.get_rgba() != _map.get_theme().get_color( "root_background" )) ) {
         _map.model.change_current_link_color( _root_color.get_rgba() );
       }
     }
@@ -665,26 +677,6 @@ public class NodeInspector : Box {
     }
   }
   */
-
-  //-------------------------------------------------------------
-  // Called whenever the theme is changed.
-  private void theme_changed( MindMap map ) {
-
-    int    num_colors = Theme.num_link_colors();
-    RGBA[] colors     = new RGBA[num_colors];
-
-    // Gather the theme colors into an RGBA array
-    for( int i=0; i<num_colors; i++ ) {
-      colors[i] = _map.get_theme().link_color( i );
-    }
-
-    // Clear the palette
-    _link_color.add_palette( Orientation.HORIZONTAL, 10, null );
-
-    // Set the palette with the new theme colors
-    _link_color.add_palette( Orientation.HORIZONTAL, 10, colors );
-
-  }
 
   //-------------------------------------------------------------
   // Called whenever the user changes the current node in the canvas.

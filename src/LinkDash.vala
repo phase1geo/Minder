@@ -41,7 +41,7 @@ public class LinkDash : Object {
   // Makes an icon for the given dash
   public Gdk.Paintable make_icon( bool dark ) {
 
-    var rect = Graphene.Rect.alloc();
+    var rect = Graphene.Rect();
     rect.init( (float)0.0, (float)0.0, (float)100, (float) 20 );
 
     var snapshot = new Gtk.Snapshot();

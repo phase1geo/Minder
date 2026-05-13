@@ -54,7 +54,7 @@ public class UrlEditor {
       halign = Align.END,
       sensitive = false
     };
-    _apply.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    _apply.add_css_class( Granite.CssClass.SUGGESTED );
     _apply.clicked.connect(() => {
       set_url();
       _popover.popdown();
