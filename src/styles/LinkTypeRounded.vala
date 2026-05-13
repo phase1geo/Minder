@@ -64,7 +64,7 @@ public class LinkTypeRounded : Object, LinkType {
 
     var side       = to_node.side;
     var horizontal = side.horizontal();
-    var fstyle     = from_node.style;
+    // var fstyle     = from_node.style;
     var tstyle     = to_node.style;
     var adj_a      = adjust_a( tstyle );
     var adj_t      = adjust_tip( tstyle );

@@ -138,7 +138,7 @@ public class Utils {
       while (value.get_next_char(ref current_index, out c) && i < 10) {
         i++;
       }
-      int end = i < 10 ? -1 : current_index - ( pattern_byte_idx + pattern.length );
+      // int end = i < 10 ? -1 : current_index - ( pattern_byte_idx + pattern.length );
       string str = (start > 0 ? "..." : "") +
         value.substring(start, pattern_byte_idx - start) + "<u>" + pattern + "</u>" +
         value.substring(pattern_byte_idx + pattern.length);

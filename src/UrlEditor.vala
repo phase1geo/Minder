@@ -210,15 +210,15 @@ public class UrlEditor {
   private void set_url_from_clipboard() {
     var clipboard   = Display.get_default().get_clipboard();
     if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
-      try {
-        clipboard.read_text_async.begin( null, (obj, res) => {
+      clipboard.read_text_async.begin( null, (obj, res) => {
+        try {
           var text = clipboard.read_text_async.end( res );
           if( text != null ) {
             _entry.text = text;
             check_entry();
           }
-        });
-      } catch( Error e ) {}
+        } catch( Error e ) {}
+      });
     }
   }
 

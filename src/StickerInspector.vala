@@ -105,7 +105,7 @@ public class StickerInspector : Box {
     var sw  = new ScrolledWindow() {
       child = box
     };
-    var vp = (Viewport)sw.child;
+    // var vp = (Viewport)sw.child;
     // vp.set_size_request( 200, 600 );
 
     // Create search result flowbox
