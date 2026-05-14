@@ -55,11 +55,12 @@ public enum FormatTag {
       case COLOR      :  return( "color" );
       case HILITE     :  return( "hilite" );
       case URL        :  return( "url" );
-      case TAG        :  return( "tag" );
       case SYNTAX     :  return( "syntax" );
+      case TAG        :  return( "tag" );
       case MATCH      :  return( "match" );
+      case SELECT     :  return( "select" );
+      default         :  return( "bold" );
     }
-    return( "bold" );
   }
 
   public static FormatTag from_string( string str ) {
@@ -78,8 +79,8 @@ public enum FormatTag {
       case "tag"         :  return( TAG );
       case "syntax"      :  return( SYNTAX );
       case "match"       :  return( MATCH );
+      default            :  return( LENGTH );
     }
-    return( LENGTH );
   }
 
 }
@@ -848,12 +849,30 @@ public class FormattedText {
   // Called whenever the theme changes.
   public static void set_theme( Theme theme ) {
     if( _attr_tags == null ) return;
-    (_attr_tags[FormatTag.HILITE] as HighlightInfo).update_color( theme.get_color( "highlighter" ) );
-    (_attr_tags[FormatTag.URL] as UrlInfo).update_color( theme.get_color( "url_foreground" ) );
-    (_attr_tags[FormatTag.TAG] as TaggingInfo).update_color( theme.get_color( "tag" ) );
-    (_attr_tags[FormatTag.SYNTAX] as SyntaxInfo).update_color( theme.get_color( "syntax" ) );
-    (_attr_tags[FormatTag.MATCH] as MatchInfo).update_color( theme.get_color( "match_foreground" ), theme.get_color( "match_background" ) );
-    (_attr_tags[FormatTag.SELECT] as SelectInfo).update_color( theme.get_color( "textsel_foreground" ), theme.get_color( "textsel_background" ) );
+    var hilite = (_attr_tags[FormatTag.HILITE] as HighlightInfo);
+    var url    = (_attr_tags[FormatTag.URL]    as UrlInfo);
+    var tag    = (_attr_tags[FormatTag.TAG]    as TaggingInfo);
+    var syntax = (_attr_tags[FormatTag.SYNTAX] as SyntaxInfo);
+    var match  = (_attr_tags[FormatTag.MATCH]  as MatchInfo);
+    var select = (_attr_tags[FormatTag.SELECT] as SelectInfo);
+    if( hilite != null ) {
+      hilite.update_color( theme.get_color( "highlighter" ) );
+    }
+    if( url != null ) {
+      url.update_color( theme.get_color( "url_foreground" ) );
+    }
+    if( tag != null ) {
+      tag.update_color( theme.get_color( "tag" ) );
+    }
+    if( syntax != null ) {
+      syntax.update_color( theme.get_color( "syntax" ) );
+    }
+    if( match != null ) {
+      match.update_color( theme.get_color( "match_foreground" ), theme.get_color( "match_background" ) );
+    }
+    if( select != null ) {
+      select.update_color( theme.get_color( "textsel_foreground" ), theme.get_color( "textsel_background" ) );
+    }
   }
 
   //-------------------------------------------------------------
@@ -1199,7 +1218,7 @@ public class FormattedText {
     }
     string? pa = n->get_prop( "parse-as" );
     if( pa != null ) {
-      var str = _text;
+      // var str = _text;
       _text = "";  // Clear the text
       /* TBD
       switch( pa ) {

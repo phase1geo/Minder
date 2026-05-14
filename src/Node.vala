@@ -404,7 +404,6 @@ public class Node : Object {
       return( _style );
     }
     set {
-      var branch_margin = style.branch_margin;
       if( _style.copy( value ) ) {
         name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
         name.set_text_alignment( _style.node_text_align );
@@ -995,13 +994,15 @@ public class Node : Object {
   //-------------------------------------------------------------
   // Returns true if this node is the first node of a summary node.
   public virtual bool first_summarized() {
-    return( is_summarized() && ((_children.index( 0 ) as SummaryNode).first_node() == this) );
+    var sn = (_children.index( 0 ) as SummaryNode);
+    return( is_summarized() && (sn != null) && (sn.first_node() == this) );
   }
 
   //-------------------------------------------------------------
   // Returns true if this node is the last node of a summary node.
   public virtual bool last_summarized() {
-    return( is_summarized() && ((_children.index( 0 ) as SummaryNode).last_node() == this) );
+    var sn = (_children.index( 0 ) as SummaryNode);
+    return( is_summarized() && (sn != null) && (sn.last_node() == this) );
   }
 
   //-------------------------------------------------------------
@@ -1203,11 +1204,8 @@ public class Node : Object {
   // Returns the positional information for where the sequence
   // number is located (if it exists).
   protected virtual void sequence_bbox( out double x, out double y, out double w, out double h ) {
-    int    margin     = style.node_margin;
-    int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
-    double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
-    double seq_height = (_sequence_num == null) ? 0 : _sequence_num.height;
+    int margin  = style.node_margin;
+    int padding = style.node_padding;
     x = posx + margin + padding + task_width() + sticker_width();
     y = name.posy;
     w = sequence_width();
@@ -2198,7 +2196,6 @@ public class Node : Object {
     if( other == null ) return;
 
     var other_summary = other.summary_node();
-    var our_index     = index();
     var our_summary   = summary_node();
 
     detach( side );
@@ -2267,6 +2264,7 @@ public class Node : Object {
       switch( style.node_text_align ) {
         case Pango.Alignment.CENTER :  name.posx += (name_space / 2);  break;
         case Pango.Alignment.RIGHT  :  name.posx += name_space;        break;
+        default                     :  break;
       }
     }
 
@@ -2598,7 +2596,7 @@ public class Node : Object {
   // Toggles the current value of task done and propagates the
   // change to all parent nodes.
   public void toggle_task_done( ref Array<NodeTaskInfo?> changed ) {
-    var change = new NodeTaskInfo( task_enabled(), task_done(), this );
+    var change = NodeTaskInfo( task_enabled(), task_done(), this );
     changed.append_val( change );
     set_task_done( _task_done == 0 );
   }
@@ -2673,7 +2671,7 @@ public class Node : Object {
   //-------------------------------------------------------------
   // Populates the given ListStore with all nodes that have names
   // that match the given string pattern.
-  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref GLib.ListStore matches ) {
     if( search_opts[SearchOptions.NODES] &&
         (_alpha == 1.0) &&
         (((((_task_count == 0) || !is_leaf()) && search_opts[SearchOptions.NONTASKS]) ||
@@ -2684,27 +2682,21 @@ public class Node : Object {
       if( search_opts[SearchOptions.TITLES] ) {
         string str = Utils.match_string( pattern, name.text.text );
         if( str.length > 0 ) {
-          TreeIter it;
-          matches.append( out it );
-          matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Node Title" ) ), 1, str, 2, this, 3, null, 4, null, 5, null, 6, tabname, 7, tab, -1 );
+          matches.append( new SearchItem.node( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Node Title" ) ), str ) );
         }
       }
       if( search_opts[SearchOptions.NOTES] ) {
         string str = Utils.match_string( pattern, note);
-        if(str.length > 0) {
-          TreeIter it;
-          matches.append( out it );
-          matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), 1, str, 2, this, 3, null, 4, null, 5, null, 6, tabname, 7, tab, -1 );
+        if( str.length > 0 ) {
+          matches.append( new SearchItem.node( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), str ) );
         }
       }
     }
     if( (_callout != null) && search_opts[SearchOptions.CALLOUTS] && search_opts[SearchOptions.TITLES] ) {
       string str = Utils.match_string( pattern, _callout.text.text.text );
       if( str.length > 0 ) {
-        TreeIter it;
         var tab = "<i>" + Utils.rootname( tabname ) + "</i>";
-        matches.append( out it );
-        matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Callout Text" ) ), 1, str, 2, null, 3, null, 4, _callout, 5, null, 6, tabname, 7, tab, -1 );
+        matches.append( new SearchItem.callout( tabname, tab, _callout, "<b><i>%s:</i></b>".printf( _( "Callout Text" ) ), str ) );
       }
     }
     for( int i=0; i<_children.length; i++ ) {
@@ -3204,7 +3196,6 @@ public class Node : Object {
     double  child_y1 = 0;
     double  child_x2 = 0;
     double  child_y2 = 0;
-    double? ext_x, ext_y;
 
     var margin  = style.node_margin;
     var padding = style.node_padding;

@@ -45,10 +45,12 @@ public class MinderClipboard {
   //-------------------------------------------------------------
   // Copies the given image buffer to the clipboard.
   public static void copy_image_buffer( uint8[] img ) {
-    var clipboard = Display.get_default().get_clipboard();
-    var bytes     = new Bytes( img );
-    var texture   = Texture.from_bytes( bytes );
-    clipboard.set_texture( texture );
+    try {
+      var clipboard = Display.get_default().get_clipboard();
+      var bytes     = new Bytes( img );
+      var texture   = Texture.from_bytes( bytes );
+      clipboard.set_texture( texture );
+    } catch( Error e ) {}
   }
 
   //-------------------------------------------------------------
@@ -136,16 +138,16 @@ public class MinderClipboard {
 
     var clipboard = Display.get_default().get_clipboard();
 
-    try {
-      if( clipboard.get_formats().contain_mime_type( NODES_TARGET_NAME ) ) {
-        clipboard.read_async.begin( { NODES_TARGET_NAME }, 0, null, (obj, res) => {
+    if( clipboard.get_formats().contain_mime_type( NODES_TARGET_NAME ) ) {
+      clipboard.read_async.begin( { NODES_TARGET_NAME }, 0, null, (obj, res) => {
+        try {
           string str;
           var stream = clipboard.read_async.end( res, out str );
           var contents = Utils.read_stream( stream );
           map.model.paste_node_link( contents );
-        });
-      }
-    } catch( Error e ) {}
+        } catch( Error e ) {}
+      });
+    }
 
   }
 
@@ -155,9 +157,9 @@ public class MinderClipboard {
 
     var clipboard = Display.get_default().get_clipboard();
 
-    try {
-      if( clipboard.get_formats().contain_mime_type( NODES_TARGET_NAME ) ) {
-        clipboard.read_async.begin( { NODES_TARGET_NAME }, 0, null, (obj, res) => {
+    if( clipboard.get_formats().contain_mime_type( NODES_TARGET_NAME ) ) {
+      clipboard.read_async.begin( { NODES_TARGET_NAME }, 0, null, (obj, res) => {
+        try {
           string str;
           var stream   = clipboard.read_async.end( res, out str );
           var contents = Utils.read_stream( stream );
@@ -165,14 +167,16 @@ public class MinderClipboard {
           if( link != null ) {
             note.paste_node_link( link );
           }
-        });
-      } else if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
-        clipboard.read_text_async.begin( null, (obj, res) => {
+        } catch( Error e ) {}
+      });
+    } else if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
+      clipboard.read_text_async.begin( null, (obj, res) => {
+        try {
           var text = clipboard.read_text_async.end( res );
           note.paste_text( text );
-        });
-      }
-    } catch( Error e ) {}
+        } catch( Error e ) {}
+      });
+    }
 
   }
 

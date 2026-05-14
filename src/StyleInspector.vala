@@ -37,8 +37,8 @@ public enum StyleAffects {
       case SELECTED_NODES       :  return( _( "Selected Nodes" ) );
       case SELECTED_CONNECTIONS :  return( _( "Selected Connections" ) );
       case SELECTED_CALLOUTS    :  return( _( "Selected Callouts" ) );
+      default                   :  return( _( "Unknown" ) );
     }
-    return( _( "Unknown" ) );
   }
 
 }
@@ -252,7 +252,7 @@ public class StyleInspector : Box {
     dialog.set_default_response( ResponseType.CLOSE );
 
     var close = new Button.with_label( _( "Close" ) );
-    close.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    close.add_css_class( Granite.CssClass.SUGGESTED );
     dialog.add_action_widget( close, ResponseType.CLOSE );
 
     dialog.response.connect((id) => {
@@ -1842,6 +1842,7 @@ public class StyleInspector : Box {
           callouts.index( i ).style = style;
         }
         break;
+      default :  break;
     }
     update_ui_with_style( style );
     _map.queue_draw();
@@ -1902,6 +1903,7 @@ public class StyleInspector : Box {
         _callout_exp.expanded  = true;
         _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_CALLOUT );
         break;
+      default :  break;
     }
     update_ui_with_style( _curr_style );
   }
@@ -1909,6 +1911,8 @@ public class StyleInspector : Box {
   //-------------------------------------------------------------
   // Checks the nodes in the given tree at the specified level to
   // see if there are any non-leaf nodes.
+  /*
+   NOTE:  This function is not called by anything
   private bool check_level_for_branches( Node node, int levels, int level ) {
     if( (levels & (1 << level)) != 0 ) {
       return( !node.is_leaf() );
@@ -1921,6 +1925,7 @@ public class StyleInspector : Box {
       return( false );
     }
   }
+  */
 
   //-------------------------------------------------------------
   // We need to disable the link types widget if our affected
@@ -1944,6 +1949,7 @@ public class StyleInspector : Box {
           }
         }
         break;
+      default :  break;
     }
     _link_types.set_sensitive( sensitive && _map.editable );
   }

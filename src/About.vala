@@ -37,7 +37,7 @@ public class About {
       program_name       = "Minder",
       comments           = _( "Mind-mapping application" ),
       copyright          = _( "Copyright" ) + " © 2018-2026 Trevor Williams",
-      version            = Minder.version,
+      version            = Minder.static_version,
       license_type       = License.GPL_3_0,
       website            = "https://appcenter.elementary.io/com.github.phase1geo.minder/",
       website_label      = _( "Minder in AppCenter" ),

@@ -46,8 +46,8 @@ if libmarkdown.version().version_compare('>=3.0')
 endif
 
 add_project_arguments([
-        '--vapidir=' + join_paths(meson.project_source_root(), 'vapi'),
-        '--disable-warnings'
+        '--vapidir=' + join_paths(meson.project_source_root(), 'vapi')
+        # '--disable-warnings'
     ],
     language: 'vala',
 )

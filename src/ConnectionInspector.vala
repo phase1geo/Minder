@@ -25,13 +25,13 @@ using Granite.Widgets;
 
 public class ConnectionInspector : Box {
 
-  private ScrolledWindow _sw;
-  private ColorButton    _color;
-  private Button         _reset;
-  private NoteView       _note;
-  private MindMap?       _map        = null;
-  private string         _orig_note  = "";
-  private Connection?    _connection = null;
+  private ScrolledWindow    _sw;
+  private ColorDialogButton _color;
+  private Button            _reset;
+  private NoteView          _note;
+  private MindMap?          _map        = null;
+  private string            _orig_note  = "";
+  private Connection?       _connection = null;
 
   public signal void editable_changed();
 
@@ -100,11 +100,18 @@ public class ConnectionInspector : Box {
     };
     lbl.add_css_class( "titled" );
 
-    _color = new ColorButton() {
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Select Connection Color" ),
+      with_alpha = false
+    };
+
+    _color = new ColorDialogButton( dialog ) {
       hexpand = true
     };
-    _color.color_set.connect(() => {
-      _map.model.change_current_connection_color( _color.rgba );
+
+    _color.notify["rgba"].connect(() => {
+      _map.model.change_current_connection_color( _color.get_rgba() );
     });
 
     _reset = new Button.from_icon_name( "edit-undo-symbolic" ) {

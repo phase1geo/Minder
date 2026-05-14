@@ -34,7 +34,7 @@ public class UrlEditor {
   // Default constructor
   public UrlEditor( DrawArea da ) {
 
-    _map = da.map;
+    _map = da.mmap;
 
     var lbl = new Label( _( "URL" ) + ":" );
     _entry = new Entry() {
@@ -54,7 +54,7 @@ public class UrlEditor {
       halign = Align.END,
       sensitive = false
     };
-    _apply.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    _apply.add_css_class( Granite.CssClass.SUGGESTED );
     _apply.clicked.connect(() => {
       set_url();
       _popover.popdown();
@@ -210,15 +210,15 @@ public class UrlEditor {
   private void set_url_from_clipboard() {
     var clipboard   = Display.get_default().get_clipboard();
     if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
-      try {
-        clipboard.read_text_async.begin( null, (obj, res) => {
+      clipboard.read_text_async.begin( null, (obj, res) => {
+        try {
           var text = clipboard.read_text_async.end( res );
           if( text != null ) {
             _entry.text = text;
             check_entry();
           }
-        });
-      } catch( Error e ) {}
+        } catch( Error e ) {}
+      });
     }
   }
 

@@ -194,7 +194,6 @@ public class ExportXMind8 : Export {
   // Exports the map contents.
   private void export_map( MindMap map, Xml.Node* sheet, string timestamp, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
     var nodes = map.get_nodes();
-    var conns = map.connections.connections;
     Xml.Node* top = export_node( map, nodes.index( 0 ), timestamp, true, dir, file_list, styles );
     if( nodes.length > 1 ) {
       for( Xml.Node* it=top->children; it!=null; it=it->next ) {
@@ -318,7 +317,6 @@ public class ExportXMind8 : Export {
     var img_name  = map.image_manager.get_file( node.image.id );
     var mime_type = map.image_manager.get_mime_type( node.image.id );
     var src       = Path.build_filename( "attachments", Filename.display_basename( img_name ) );
-    var parts     = src.split( "." );
     Xml.Node* img = new Xml.Node( null, "xhtml:img" );
 
     // XMind doesn't support SVG images so cut short if we have this type of image
@@ -536,7 +534,7 @@ public class ExportXMind8 : Export {
 
     time->set_content( timestamp );
     name->set_content( "Minder" );
-    version->set_content( Minder.version );
+    version->set_content( Minder.static_version );
 
     create->add_child( time );
     meta->add_child( create );

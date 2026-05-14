@@ -203,7 +203,6 @@ public class Shortcut {
   public string get_label() {
     string[] lbl = {};
     unichar  uc  = keyval_to_unicode( _keycode );
-    string   str = "";
     if( _control ) {
       lbl += "Ctrl";
     }

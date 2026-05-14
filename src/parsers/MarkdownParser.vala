@@ -169,11 +169,16 @@ public class MarkdownParser : TextParser {
   // This is called when the associated FormatBar button is clicked
   public override void insert_tag( CanvasText ct, FormatTag tag, int start_pos, int end_pos, UndoTextBuffer undo_buffer, string? extra ) {
     switch( tag ) {
-      case FormatTag.HEADER  :  insert_header( ct, start_pos, extra, undo_buffer );  break;
-      case FormatTag.CODE    :  insert_surround( ct, "`", start_pos, end_pos, undo_buffer );  break;
-      case FormatTag.BOLD    :  insert_surround( ct, "**", start_pos, end_pos, undo_buffer );  break;
-      case FormatTag.ITALICS :  insert_surround( ct, "_", start_pos, end_pos, undo_buffer );  break;
-      case FormatTag.URL     :  insert_link( ct, start_pos, end_pos, extra, undo_buffer );  break;
+      case FormatTag.HEADER     :  insert_header( ct, start_pos, extra, undo_buffer );  break;
+      case FormatTag.CODE       :  insert_surround( ct, "`", start_pos, end_pos, undo_buffer );  break;
+      case FormatTag.BOLD       :  insert_surround( ct, "**", start_pos, end_pos, undo_buffer );  break;
+      case FormatTag.ITALICS    :  insert_surround( ct, "_", start_pos, end_pos, undo_buffer );  break;
+      case FormatTag.STRIKETHRU :  insert_surround( ct, "~~", start_pos, end_pos, undo_buffer );  break;
+      case FormatTag.HILITE     :  insert_surround( ct, "==", start_pos, end_pos, undo_buffer );  break;
+      case FormatTag.SUPER      :  insert_xml( ct, "sup", start_pos, end_pos, undo_buffer );  break;
+      case FormatTag.SUB        :  insert_xml( ct, "sub", start_pos, end_pos, undo_buffer );  break;
+      case FormatTag.URL        :  insert_link( ct, start_pos, end_pos, extra, undo_buffer );  break;
+      default                   :  break;
     }
   }
 
@@ -197,6 +202,15 @@ public class MarkdownParser : TextParser {
     var inserts = new Array<InsertText?>();
     inserts.append_val( {start_pos, surround} );
     inserts.append_val( {end_pos,   surround} );
+    ct.insert_ranges( inserts, undo_buffer );
+  }
+
+  private void insert_xml( CanvasText ct, string tag, int start_pos, int end_pos, UndoTextBuffer undo_buffer ) {
+    var inserts   = new Array<InsertText?>();
+    var start_tag = "<" + tag + ">";
+    var end_tag   = "</" + tag + ">";
+    inserts.append_val( {start_pos, start_tag} );
+    inserts.append_val( {end_pos,   end_tag} );
     ct.insert_ranges( inserts, undo_buffer );
   }
 

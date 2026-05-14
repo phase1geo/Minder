@@ -61,24 +61,77 @@ public class ShortcutTooltip {
   }
 }
 
+public class SearchItem : GLib.Object {
+  public string      match_type  { get; private set; default = ""; }
+  public string      match_str   { get; private set; default = ""; }
+  public Node?       match_node  { get; private set; default = null; }
+  public Connection? match_conn  { get; private set; default = null; }
+  public Callout?    match_call  { get; private set; default = null; }
+  public NodeGroup?  match_group { get; private set; default = null; }
+  public string      tab_name    { get; private set; default = ""; }
+  public string      tab_label   { get; private set; default = ""; }
+
+  //-------------------------------------------------------------
+  // Default constructor
+  public SearchItem() {}
+
+  //-------------------------------------------------------------
+  // Constructor for node
+  public SearchItem.node( string tname, string tlabel, Node node, string mtype, string mstr ) {
+    match_type = mtype;
+    match_str  = mstr;
+    match_node = node;
+    tab_name   = tname;
+    tab_label  = tlabel;
+  }
+
+  //-------------------------------------------------------------
+  // Constructor for connection
+  public SearchItem.connection( string tname, string tlabel, Connection conn, string mtype, string mstr ) {
+    match_type = mtype;
+    match_str  = mstr;
+    match_conn = conn;
+    tab_name   = tname;
+    tab_label  = tlabel;
+  }
+
+  //-------------------------------------------------------------
+  // Constructor for callout
+  public SearchItem.callout( string tname, string tlabel, Callout callout, string mtype, string mstr ) {
+    match_type = mtype;
+    match_str  = mstr;
+    match_call = callout;
+    tab_name   = tname;
+    tab_label  = tlabel;
+  }
+
+  //-------------------------------------------------------------
+  // Constructor for group
+  public SearchItem.group( string tname, string tlabel, NodeGroup group, string mtype, string mstr ) {
+    match_type  = mtype;
+    match_str   = mstr;
+    match_group = group;
+    tab_name    = tname;
+    tab_label   = tlabel;
+  }
+
+}
+
 public delegate void AfterLoadTabFunc();
 
 public class MainWindow : Gtk.ApplicationWindow {
 
   private GLib.Settings     _settings;
   private HeaderBar         _header;
-  private Label             _title;
   private Notebook?         _nb             = null;
-  private Revealer?         _inspector      = null;
   private Paned             _pane           = null;
   private Notebook?         _inspector_nb   = null;
   private Stack?            _stack          = null;
-  private Popover?          _zoom           = null;
   private Popover?          _search         = null;
   private MenuButton?       _search_btn     = null;
   private SearchEntry?      _search_entry   = null;
-  private TreeView          _search_list;
-  private Gtk.ListStore     _search_items;
+  private ColumnView        _search_list;
+  private GLib.ListStore    _search_items;
   private ScrolledWindow    _search_scroll;
   private CheckButton       _search_nodes;
   private CheckButton       _search_connections;
@@ -238,29 +291,29 @@ public class MainWindow : Gtk.ApplicationWindow {
     content.append( _brain );
 
     // Create title toolbar
-    var new_btn = new Button.from_icon_name( get_icon_name( "document-new" ) );
+    var new_btn = new Button.from_icon_name( get_header_icon_name( "document-new" ) );
     register_widget_for_shortcut( new_btn, KeyCommand.FILE_NEW, _( "New File" ) );
     new_btn.clicked.connect(() => { execute_command( KeyCommand.FILE_NEW ); });
     _header.pack_start( new_btn );
 
-    var open_btn = new Button.from_icon_name( get_icon_name( "document-open" ) );
+    var open_btn = new Button.from_icon_name( get_header_icon_name( "document-open" ) );
     register_widget_for_shortcut( open_btn, KeyCommand.FILE_OPEN, _( "Open File" ) );
     open_btn.clicked.connect(() => { execute_command( KeyCommand.FILE_OPEN ); });
     _header.pack_start( open_btn );
 
-    var save_btn = new Button.from_icon_name( get_icon_name( "document-save-as" ) );
+    var save_btn = new Button.from_icon_name( get_header_icon_name( "document-save-as" ) );
     register_widget_for_shortcut( save_btn, KeyCommand.FILE_SAVE_AS, _( "Save File As" ) );
     save_btn.clicked.connect(() => { execute_command( KeyCommand.FILE_SAVE_AS ); });
     _header.pack_start( save_btn );
 
-    _undo_btn = new Button.from_icon_name( get_icon_name( "edit-undo" ) ) {
+    _undo_btn = new Button.from_icon_name( get_header_icon_name( "edit-undo" ) ) {
       sensitive = false
     };
     register_widget_for_shortcut( _undo_btn, KeyCommand.UNDO_ACTION, _( "Undo" ) );
     _undo_btn.clicked.connect(() => { execute_command( KeyCommand.UNDO_ACTION ); });
     _header.pack_start( _undo_btn );
 
-    _redo_btn = new Button.from_icon_name( get_icon_name( "edit-redo" ) ) {
+    _redo_btn = new Button.from_icon_name( get_header_icon_name( "edit-redo" ) ) {
       sensitive = false
     };
     register_widget_for_shortcut( _redo_btn, KeyCommand.REDO_ACTION, _( "Redo" ) );
@@ -365,7 +418,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Returns the name of the icon to use for a headerbar icon.
-  private string get_icon_name( string icon_name ) {
+  private string get_header_icon_name( string icon_name ) {
     return( "%s%s".printf( icon_name, (on_elementary ? "" : "-symbolic") ) );
   }
 
@@ -375,7 +428,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private MindMap get_map( int page ) {
     var ol = (Overlay)_nb.get_nth_page( page );
     var da = (DrawArea)ol.child;
-    return( da.map );
+    return( da.mmap );
   }
 
   //-------------------------------------------------------------
@@ -394,7 +447,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     var tab  = _nb.get_tab_label( page );
     var lock = (Image)Utils.get_child_at_index( tab, 0 );
     var lbl  = (Label)Utils.get_child_at_index( tab, 1 );
-    lock.visible     = !editable;
+    @lock.visible    = !editable;
     lbl.label        = label;
     lbl.tooltip_text = tooltip;
   }
@@ -798,11 +851,103 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     // Create the menu button
     _zoom_btn = new MenuButton() {
-      icon_name    = get_icon_name( "zoom-fit-best" ),
+      icon_name    = get_header_icon_name( "zoom-fit-best" ),
       tooltip_text = _( "Zoom (%d%%)" ).printf( 100 ),
       popover      = popover
     };
     _header.pack_end( _zoom_btn );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the search type column contents.
+  private ColumnViewColumn make_type_column() {
+
+    var factory = new Gtk.SignalListItemFactory();
+
+    factory.setup.connect((item) => {
+      var li    = (ListItem)item;
+      var label = new Gtk.Label( "" ) {
+        halign = Align.START,
+        use_markup = true
+      };
+      li.set_child( label );
+    });
+
+    factory.bind.connect((item) => {
+      var li    = (ListItem)item;
+      var si    = (SearchItem)li.get_item();
+      var label = (Label)li.get_child();
+      label.label = si.match_type;
+    });
+
+    var column = new ColumnViewColumn( _( "Where" ), factory ) {
+      expand = false
+    };
+
+    return( column );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the search content column contents.
+  private ColumnViewColumn make_content_column() {
+
+    var factory = new Gtk.SignalListItemFactory();
+
+    factory.setup.connect((item) => {
+      var li    = (ListItem)item;
+      var label = new Gtk.Label( "" ) {
+        halign = Align.START,
+        hexpand = true,
+        margin_start = 10,
+        use_markup = true
+      };
+      li.set_child( label );
+    });
+
+    factory.bind.connect((item) => {
+      var li    = (ListItem)item;
+      var si    = (SearchItem)li.get_item();
+      var label = (Label)li.get_child();
+      label.label = si.match_str;
+    });
+
+    var column = new ColumnViewColumn( _( "Matched Content" ), factory ) {
+      expand = true
+    };
+
+    return( column );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the search tab column contents.
+  private ColumnViewColumn make_tab_column() {
+
+    var factory = new Gtk.SignalListItemFactory();
+
+    factory.setup.connect((item) => {
+      var li    = (ListItem)item;
+      var label = new Gtk.Label( "" ) {
+        halign = Align.START,
+        use_markup = true
+      };
+      li.set_child( label );
+    });
+
+    factory.bind.connect((item) => {
+      var li    = (ListItem)item;
+      var si    = (SearchItem)li.get_item();
+      var label = (Label)li.get_child();
+      label.label = si.tab_label;
+    });
+
+    var column = new ColumnViewColumn( _( "Tab" ), factory ) {
+      expand = false
+    };
+
+    return( column );
 
   }
 
@@ -813,7 +958,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     // Create the search entry field
     _search_entry = new SearchEntry() {
       placeholder_text = _( "Search Nodes, Callouts and Connections" ),
-      width_chars      = 60
+      width_chars      = 80
     };
     _search_entry.search_changed.connect( on_search_change );
 
@@ -828,32 +973,25 @@ public class MainWindow : Gtk.ApplicationWindow {
       return( false );
     });
 
-    _search_items = new Gtk.ListStore( 8, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(Callout), typeof(NodeGroup), typeof(string), typeof(string) );
+    _search_items = new GLib.ListStore( typeof( SearchItem ) );
 
-    // Create the treeview
-    _search_list  = new TreeView.with_model( _search_items ) {
-      headers_visible          = false,
-      activate_on_single_click = true,
-      enable_search            = false,
+    var search_selection = new SingleSelection( _search_items );
+
+    // Create the column view
+    _search_list  = new ColumnView( search_selection ) {
+      single_click_activate = true
     };
-    var type_cell = new CellRendererText() {
-      xalign = 1
-    };
-    var str_cell = new CellRendererText() {
-      ellipsize     = Pango.EllipsizeMode.END,
-      ellipsize_set = true,
-      width_chars   = 50,
-    };
-    var tab_cell = new CellRendererText();
-    _search_list.insert_column_with_attributes( -1, null, type_cell, "markup", 0, null );
-    _search_list.insert_column_with_attributes( -1, null, str_cell,  "markup", 1, null );
-    _search_list.insert_column_with_attributes( -1, null, tab_cell,  "markup", 7, null );
-    _search_list.row_activated.connect( on_search_clicked );
+
+    _search_list.append_column( make_type_column() );
+    _search_list.append_column( make_content_column() );
+    _search_list.append_column( make_tab_column() );
+
+    _search_list.activate.connect( on_search_clicked );
 
     // Create the scrolled window for the treeview
     _search_scroll = new ScrolledWindow() {
       height_request    = 200,
-      hscrollbar_policy = PolicyType.EXTERNAL,
+      hscrollbar_policy = PolicyType.NEVER,
       child             = _search_list
     };
 
@@ -870,7 +1008,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       active = _settings.get_boolean( "search-opt-all-tabs" )
     };
     _search_all_tabs.notify["active"].connect(() => {
-      _settings.set_boolean( "search-opt-all-tabs", !_search_all_tabs.active );
+      _settings.set_boolean( "search-opt-all-tabs", _search_all_tabs.active );
       on_search_change();
     });
 
@@ -1169,7 +1307,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     // Create the menu button
     var misc_btn = new MenuButton() {
-      icon_name  = get_icon_name( "open-menu" ),
+      icon_name  = get_header_icon_name( "open-menu" ),
       menu_model = menu
     };
     _header.pack_end( misc_btn );
@@ -1201,6 +1339,51 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     return( md_menu );
 
+  }
+
+  //-------------------------------------------------------------
+  // Grabs the first widget in the current tab.
+  private void current_grab_first() {
+    var tab = (_stack.visible_child as CurrentInspector);
+    if( tab != null ) {
+      tab.grab_first();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Grabs the first widget in the style tab.
+  private void style_grab_first() {
+    var tab = (_stack.visible_child as StyleInspector);
+    if( tab != null ) {
+      tab.grab_first();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Grabs the first widget in the tag tab.
+  private void tag_grab_first() {
+    var tab = (_stack.visible_child as TagInspector);
+    if( tab != null ) {
+      tab.grab_first();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Grabs the first widget in the sticker tab.
+  private void sticker_grab_first() {
+    var tab = (_stack.visible_child as StickerInspector);
+    if( tab != null ) {
+      tab.grab_first();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Grabs the first widget in the map tab.
+  private void map_grab_first() {
+    var tab = (_stack.visible_child as MapInspector);
+    if( tab != null ) {
+      tab.grab_first();
+    }
   }
 
   //-------------------------------------------------------------
@@ -1245,11 +1428,11 @@ public class MainWindow : Gtk.ApplicationWindow {
         _settings.set_boolean( "sticker-properties-shown", (_stack.visible_child_name == "sticker" ) );
         _settings.set_boolean( "map-properties-shown",     (_stack.visible_child_name == "map") );
         switch( _stack.visible_child_name ) {
-          case "current" :  (_stack.visible_child as CurrentInspector).grab_first();  break;
-          case "style"   :  (_stack.visible_child as StyleInspector).grab_first();    break;
-          case "tag"     :  (_stack.visible_child as TagInspector).grab_first();      break;
-          case "sticker" :  (_stack.visible_child as StickerInspector).grab_first();  break;
-          case "map"     :  (_stack.visible_child as MapInspector).grab_first();      break;
+          case "current" :  current_grab_first();  break;
+          case "style"   :  style_grab_first();    break;
+          case "tag"     :  tag_grab_first();      break;
+          case "sticker" :  sticker_grab_first();  break;
+          case "map"     :  map_grab_first();      break;
           default        :  break;
         }
       }
@@ -1374,7 +1557,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     dialog.add_action_widget( cancel, ResponseType.CANCEL );
 
     var save = new Button.with_label( _( "Save" ) );
-    save.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    save.add_css_class( Granite.CssClass.SUGGESTED );
     dialog.add_action_widget( save, ResponseType.ACCEPT );
 
     dialog.set_transient_for( this );
@@ -1593,10 +1776,22 @@ public class MainWindow : Gtk.ApplicationWindow {
       if( !on_elementary ) {
         _prop_btn.icon_name = Utils.use_dark_mode( _header ) ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
       }
-      (_stack.get_child_by_name( "current" ) as CurrentInspector).update_icons();
-      (_stack.get_child_by_name( "style" )   as StyleInspector).update_icons();
-      (_stack.get_child_by_name( "tag" )     as TagInspector).update_icons();
-      (_stack.get_child_by_name( "map" )     as MapInspector).update_icons();
+      var current_tab = (_stack.get_child_by_name( "current" ) as CurrentInspector);
+      var style_tab   = (_stack.get_child_by_name( "style" )   as StyleInspector);
+      var tag_tab     = (_stack.get_child_by_name( "tag" )     as TagInspector);
+      var map_tab     = (_stack.get_child_by_name( "map" )     as MapInspector);
+      if( current_tab != null ) {
+        current_tab.update_icons();
+      }
+      if( style_tab != null ) {
+        style_tab.update_icons();
+      }
+      if( tag_tab != null ) {
+        tag_tab.update_icons();
+      }
+      if( map_tab != null ) {
+        map_tab.update_icons();
+      }
     }
   }
 
@@ -1605,10 +1800,22 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void on_editable_changed( MindMap map ) {
     _brain_btn.sensitive = map.editable;
     set_braindump_ui( map, map.model.braindump_shown );
-    (_stack.get_child_by_name( "current" ) as CurrentInspector).editable_changed();
-    (_stack.get_child_by_name( "style" )   as StyleInspector).editable_changed();
-    (_stack.get_child_by_name( "tag" )     as TagInspector).editable_changed();
-    (_stack.get_child_by_name( "map" )     as MapInspector).editable_changed();
+    var current_tab = (_stack.get_child_by_name( "current" ) as CurrentInspector);
+    var style_tab   = (_stack.get_child_by_name( "style" )   as StyleInspector);
+    var tag_tab     = (_stack.get_child_by_name( "tag" )     as TagInspector);
+    var map_tab     = (_stack.get_child_by_name( "map" )     as MapInspector);
+    if( current_tab != null ) {
+      current_tab.editable_changed();
+    }
+    if( style_tab != null ) {
+      style_tab.editable_changed();
+    }
+    if( tag_tab != null ) {
+      tag_tab.editable_changed();
+    }
+    if( map_tab != null ) {
+      map_tab.editable_changed();
+    }
     var label = map.doc.label;
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       if( get_map( i ) == map ) {
@@ -1776,11 +1983,12 @@ public class MainWindow : Gtk.ApplicationWindow {
     switch( grab_type ) {
       case PropertyGrab.FIRST :
         switch( _stack.visible_child_name ) {
-          case "current" :  (_stack.get_child_by_name( "current" ) as CurrentInspector).grab_first();  break;
-          case "style"   :  (_stack.get_child_by_name( "style" )   as StyleInspector).grab_first();    break;
-          case "tag"     :  (_stack.get_child_by_name( "tag" )     as TagInspector).grab_first();      break;
-          case "sticker" :  (_stack.get_child_by_name( "sticker" ) as StickerInspector).grab_first();  break;
-          case "map"     :  (_stack.get_child_by_name( "map" )     as MapInspector).grab_first();      break;
+          case "current" :  current_grab_first();  break;
+          case "style"   :  style_grab_first();    break;
+          case "tag"     :  tag_grab_first();      break;
+          case "sticker" :  sticker_grab_first();  break;
+          case "map"     :  map_grab_first();      break;
+          default        :  break;
         }
         break;
       case PropertyGrab.NOTE  :
@@ -1791,6 +1999,7 @@ public class MainWindow : Gtk.ApplicationWindow {
           }
         }
         break;
+      default :  break;
     }
 
   }
@@ -1868,35 +2077,6 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
-  // Called when the user uses the Control-n keyboard shortcut
-  private void action_new() {
-    do_new_file();
-  }
-
-  //-------------------------------------------------------------
-  // Called when the user uses the Control-o keyboard shortcut
-  private void action_open() {
-    do_open_file();
-  }
-
-  //-------------------------------------------------------------
-  // Called when the user uses the Control-s keyboard shortcut
-  private void action_save() {
-    var map = get_current_map( "action_save" );
-    if( map.doc.is_saved() ) {
-      map.doc.save();
-    } else {
-      save_file( map, false );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Called when the user uses the Control-Shift-s keyboard shortcut
-  private void action_save_as() {
-    do_save_as_file();
-  }
-
-  //-------------------------------------------------------------
   // Saves the window size to gsettings.
   private void save_window_size() {
     Minder.settings.set_int( "window-w", get_width() );
@@ -1907,65 +2087,6 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Restores the window size from gsettings.
   private void set_window_size() {
     set_default_size( Minder.settings.get_int( "window-w" ), Minder.settings.get_int( "window-h" ) );
-  }
-
-  //-------------------------------------------------------------
-  // Called when the user uses the Control-q keyboard shortcut
-  private void action_quit() {
-    save_window_size();
-    save_tabs();
-    destroy();
-  }
-
-  //-------------------------------------------------------------
-  // Called when the user uses the Control-z keyboard shortcut
-  private void action_undo() {
-    do_undo();
-  }
-
-  //-------------------------------------------------------------
-  // Called when the user uses the Control-Shift-z keyboard shortcut
-  private void action_redo() {
-    do_redo();
-  }
-
-  //-------------------------------------------------------------
-  // Zooms into the image (makes things larger)
-  private void action_zoom_in() {
-    var map = get_current_map( "action_zoom_in" );
-    map.canvas.zoom_in();
-  }
-
-  //-------------------------------------------------------------
-  // Zooms out of the image (makes things smaller)
-  private void action_zoom_out() {
-    var map = get_current_map( "action_zoom_out" );
-    map.canvas.zoom_out();
-  }
-
-  //-------------------------------------------------------------
-  // Zooms to make all nodes visible within the viewer
-  private void action_zoom_fit() {
-    var map = get_current_map( "action_zoom_fit" );
-    map.canvas.zoom_to_fit();
-    map.canvas.grab_focus();
-  }
-
-  //-------------------------------------------------------------
-  // Zooms to make the currently selected node and its tree put
-  // into view.
-  private void action_zoom_selected() {
-    var map = get_current_map( "action_zoom_selected" );
-    map.canvas.zoom_to_selected();
-    map.canvas.grab_focus();
-  }
-
-  //-------------------------------------------------------------
-  // Sets the zoom to 100%.
-  private void action_zoom_actual() {
-    var map = get_current_map( "action_zoom_actual" );
-    map.canvas.zoom_actual();
-    map.canvas.grab_focus();
   }
 
   //-------------------------------------------------------------
@@ -1982,7 +2103,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     search_opts[SearchOptions.UNFOLDED]    = _search_unfolded.active;
     search_opts[SearchOptions.TASKS]       = _search_tasks.active;
     search_opts[SearchOptions.NONTASKS]    = _search_nontasks.active;
-    _search_items.clear();
+    _search_items.remove_all();
     var all_tabs = _settings.get_boolean( "search-opt-all-tabs" );
     var current  = get_current_map( "on_search_change" );
     var text     = _search_entry.get_text().casefold();
@@ -2003,38 +2124,36 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Called when the user selects an item in the search list.
   // The current node will be set to the node associated with the
   // selection.
-  private void on_search_clicked( TreeView view, TreePath path, TreeViewColumn? col ) {
-    TreeIter    it;
-    string      tabname = "";
-    Node?       node    = null;
-    Connection? conn    = null;
-    Callout?    callout = null;
-    NodeGroup?  group   = null;
-    var         map     = get_current_map( "on_search_clicked" );
-    _search_items.get_iter( out it, path );
-    _search_items.get( it, 2, &node, 3, &conn, 4, &callout, 5, &group, 6, &tabname, -1 );
+  private void on_search_clicked( uint position ) {
+
+    var item = (SearchItem)_search_items.get_item( position );
+    var map  = get_current_map( "on_search_clicked" );
+
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      if( get_tab_label_name( i ) == tabname ) {
+      if( get_tab_label_name( i ) == item.tab_name ) {
         map = get_map( i );
         _nb.page = i;
         break;
       }
     }
-    if( node != null ) {
-      map.set_current_node( node );
+
+    if( item.match_node != null ) {
+      map.set_current_node( item.match_node );
       map.canvas.see();
-    } else if( conn != null ) {
-      map.set_current_connection( conn );
+    } else if( item.match_conn != null ) {
+      map.set_current_connection( item.match_conn );
       map.canvas.see();
-    } else if( callout != null ) {
-      map.set_current_callout( callout );
+    } else if( item.match_call != null ) {
+      map.set_current_callout( item.match_call );
       map.canvas.see();
-    } else if( group != null ) {
-      map.set_current_group( group );
+    } else if( item.match_group != null ) {
+      map.set_current_group( item.match_group );
       map.canvas.see();
     }
+
     _search.closed();
     map.canvas.grab_focus();
+
   }
 
   //-------------------------------------------------------------
@@ -2049,71 +2168,6 @@ public class MainWindow : Gtk.ApplicationWindow {
       }
     }
     return( fname + extensions[0] );
-  }
-
-  //-------------------------------------------------------------
-  // Exports the model to the printer
-  private void action_print() {
-    var print = new ExportPrint();
-    print.print( get_current_map( "action_print" ), this );
-  }
-
-  //-------------------------------------------------------------
-  // Displays the preferences dialog
-  private void action_prefs() {
-    var prefs = new Preferences( this );
-    prefs.present();
-  }
-
-  //-------------------------------------------------------------
-  // Displays the shortcuts cheatsheet
-  private void action_shortcuts() {
-
-    var ui_str  = shortcuts.get_ui_string();
-    var builder = new Builder.from_string( ui_str, ui_str.length );
-    // var builder = new Builder.from_resource( "/com/github/phase1geo/minder/shortcuts.ui" );
-    var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
-    var map     = get_current_map();
-
-    win.transient_for = this;
-    win.view_name     = null;
-
-    // Display the most relevant information based on the current state
-    if( map.is_node_editable() || map.is_connection_editable() ) {
-      win.section_name = "editing";
-    } else if( map.is_node_selected() ) {
-      win.section_name = "node";
-    } else if( map.is_connection_selected() ) {
-      win.section_name = "connection";
-    } else if( map.is_callout_selected() ) {
-      win.section_name = "callout";
-    } else if( map.is_group_selected() ) {
-      win.section_name = "group";
-    } else {
-      win.section_name = "general";
-    }
-
-    win.show();
-
-  }
-
-  //-------------------------------------------------------------
-  // Shows the next tab in the tabbar
-  private void action_next_tab() {
-    _nb.next_page();
-  }
-
-  //-------------------------------------------------------------
-  // Shows the previous tab in the tabbar
-  private void action_prev_tab() {
-    _nb.prev_page();
-  }
-
-  //-------------------------------------------------------------
-  // Displays the about dialog window.
-  private void action_about() {
-    var about_win = new About( this );
-    about_win.show();
   }
 
   //-------------------------------------------------------------
@@ -2132,12 +2186,6 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Toggles the find toggle button
   public void show_find() {
     _search_btn.activate();
-  }
-
-  //-------------------------------------------------------------
-  // Closes the curren tab
-  private void action_close_current_tab() {
-    close_current_tab();
   }
 
   //-------------------------------------------------------------
@@ -2328,7 +2376,6 @@ public class MainWindow : Gtk.ApplicationWindow {
     var tabs        = 0;
     var tab_skipped = false;
 
-    UpgradeAction? upgrade_action = null;
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
         var fname = it->get_prop( "path" );

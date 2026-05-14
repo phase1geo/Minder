@@ -446,7 +446,6 @@ public class StickerSet {
 
   private string make_label( string category ) {
     var name = category.replace( "_", " " ).down();
-    string[]  parts;
     MatchInfo matches;
     int       start, end;
     while( _title_re.match( name, 0, out matches ) ) {

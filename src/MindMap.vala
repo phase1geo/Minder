@@ -690,7 +690,9 @@ public class MindMap {
       var node = child_nodes.index( i );
       if( (node != null) && !node.is_root() ) {
         if( node.is_summary() ) {
-          parent_nodes.append_val( (node as SummaryNode).last_selected_node );
+          var sn = (node as SummaryNode);
+          assert( sn != null );
+          parent_nodes.append_val( sn.last_selected_node );
         } else {
           parent_nodes.append_val( node.parent );
         }
@@ -1076,11 +1078,19 @@ public class MindMap {
   //-------------------------------------------------------------
   // Display a color picker to change the color of the current link.
   public void change_current_link_color() {
-    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _win );
-    color_picker.color_activated.connect((color) => {
-      _model.change_current_link_color( color );
+    var color_picker = new ColorDialog() {
+      modal = true,
+      title = _( "Select a link color" ),
+      with_alpha = false
+    };
+    color_picker.choose_rgba.begin( _win, null, null, (obj, res) => {
+      try {
+        var color = color_picker.choose_rgba.end( res );
+        if( color != null ) {
+          _model.change_current_link_color( color );
+        }
+      } catch( Error e ) {}
     });
-    color_picker.present();
   }
 
   //-------------------------------------------------------------

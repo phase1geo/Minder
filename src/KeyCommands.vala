@@ -121,6 +121,8 @@ public enum KeyCommand {
       NODE_SELECT_PARENT,
       NODE_SELECT_SIBLING_NEXT,
       NODE_SELECT_SIBLING_PREV,
+      NODE_SELECT_SIBLING_FIRST,
+      NODE_SELECT_SIBLING_LAST,
       NODE_SELECT_CHILD,
       NODE_SELECT_CHILDREN,
       NODE_SELECT_TREE,
@@ -333,6 +335,8 @@ public enum KeyCommand {
       case NODE_SELECT_PARENT        :  return( "node-select-parent" );
       case NODE_SELECT_SIBLING_NEXT  :  return( "node-select-sibling-next" );
       case NODE_SELECT_SIBLING_PREV  :  return( "node-select-sibling-prev" );
+      case NODE_SELECT_SIBLING_FIRST :  return( "node-select-sibling-first" );
+      case NODE_SELECT_SIBLING_LAST  :  return( "node-select-sibling-last" );
       case NODE_SELECT_CHILD         :  return( "node-select-child" );
       case NODE_SELECT_CHILDREN      :  return( "node-select-children" );
       case NODE_SELECT_TREE          :  return( "node-select-tree" );
@@ -510,6 +514,8 @@ public enum KeyCommand {
       case "node-select-parent"        :  return( NODE_SELECT_PARENT );
       case "node-select-sibling-next"  :  return( NODE_SELECT_SIBLING_NEXT );
       case "node-select-sibling-prev"  :  return( NODE_SELECT_SIBLING_PREV );
+      case "node-select-sibling-first" :  return( NODE_SELECT_SIBLING_FIRST );
+      case "node-select-sibling-last"  :  return( NODE_SELECT_SIBLING_LAST );
       case "node-select-child"         :  return( NODE_SELECT_CHILD );
       case "node-select-children"      :  return( NODE_SELECT_CHILDREN );
       case "node-select-tree"          :  return( NODE_SELECT_TREE );
@@ -696,6 +702,8 @@ public enum KeyCommand {
       case NODE_SELECT_TREE          :  return( _( "Select all nodes in subtree of current node" ) );
       case NODE_SELECT_SIBLING_NEXT  :  return( _( "Select next sibling node of current node" ) );
       case NODE_SELECT_SIBLING_PREV  :  return( _( "Select previous sibling node of current node" ) );
+      case NODE_SELECT_SIBLING_FIRST :  return( _( "Select first sibling node of current node" ) );
+      case NODE_SELECT_SIBLING_LAST  :  return( _( "Select last sibling node of current node" ) );
       case NODE_SELECT_LEFT          :  return( _( "Select node to the left of current node" ) );
       case NODE_SELECT_RIGHT         :  return( _( "Select node to the right of current node" ) );
       case NODE_SELECT_UP            :  return( _( "Select node above current node" ) );
@@ -870,6 +878,8 @@ public enum KeyCommand {
       case NODE_SELECT_PARENT        :  return( node_select_parent );
       case NODE_SELECT_SIBLING_NEXT  :  return( node_select_sibling_next );
       case NODE_SELECT_SIBLING_PREV  :  return( node_select_sibling_previous );
+      case NODE_SELECT_SIBLING_FIRST :  return( node_select_sibling_first );
+      case NODE_SELECT_SIBLING_LAST  :  return( node_select_sibling_last );
       case NODE_SELECT_CHILD         :  return( node_select_child );
       case NODE_SELECT_CHILDREN      :  return( node_select_children );
       case NODE_SELECT_TREE          :  return( node_select_tree );
@@ -1120,6 +1130,8 @@ public enum KeyCommand {
       (this != NODE_SELECT_DOWN) &&
       (this != NODE_SELECT_SIBLING_PREV) &&
       (this != NODE_SELECT_SIBLING_NEXT) &&
+      (this != NODE_SELECT_SIBLING_FIRST) &&
+      (this != NODE_SELECT_SIBLING_LAST) &&
       (this != NODE_SWAP_UP) &&
       (this != NODE_SWAP_DOWN) &&
       ((this < CONNECTION_EXIST_START) || (CONNECTION_EXIST_END < this)) &&
@@ -1615,6 +1627,14 @@ public enum KeyCommand {
     node_select( map, "sibling-prev" );
   }
 
+  private static void node_select_sibling_first( MindMap map ) {
+    node_select( map, "sibling-first" );
+  }
+
+  private static void node_select_sibling_last( MindMap map ) {
+    node_select( map, "sibling-last" );
+  }
+
   public static void node_select_left( MindMap map ) {
     node_select( map, "left" );
   }
@@ -1629,14 +1649,6 @@ public enum KeyCommand {
 
   public static void node_select_down( MindMap map ) {
     node_select( map, "down" );
-  }
-
-  private static void node_select_first_sibling( MindMap map ) {
-    node_select( map, "sibling-first" );
-  }
-
-  private static void node_select_last_sibling( MindMap map ) {
-    node_select( map, "sibling-last" );
   }
 
   public static void node_select_linked( MindMap map ) {
@@ -1956,11 +1968,19 @@ public enum KeyCommand {
 
   public static void group_change_color( MindMap map ) {
     if( !map.editable ) return;
-    var color_picker = new Gtk.ColorChooserDialog( _( "Select a group color" ), map.win );
-    color_picker.color_activated.connect((color) => {
-      map.model.change_group_color( color );
+    var color_picker = new Gtk.ColorDialog() {
+      modal = true,
+      title = _( "Select a group color" ),
+      with_alpha = false
+    };
+    color_picker.choose_rgba.begin( map.win, null, null, (obj, res) => {
+      try {
+        var color = color_picker.choose_rgba.end( res );
+        if( color != null ) {
+          map.model.change_group_color( color );
+        }
+      } catch( Error e ) {}
     });
-    color_picker.present();
   }
 
   public static void group_merge( MindMap map ) {
