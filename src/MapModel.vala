@@ -543,7 +543,7 @@ public class MapModel {
   //-------------------------------------------------------------
   // Populates the list of matches with any nodes that match the
   // given string pattern.
-  public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref GLib.ListStore matches ) {
     if( search_opts[SearchOptions.NODES] || search_opts[SearchOptions.CALLOUTS] ) {
       for( int i=0; i<_nodes.length; i++ ) {
         _nodes.index( i ).get_match_items( tabname, pattern, search_opts, ref matches );

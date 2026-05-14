@@ -2671,7 +2671,7 @@ public class Node : Object {
   //-------------------------------------------------------------
   // Populates the given ListStore with all nodes that have names
   // that match the given string pattern.
-  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref GLib.ListStore matches ) {
     if( search_opts[SearchOptions.NODES] &&
         (_alpha == 1.0) &&
         (((((_task_count == 0) || !is_leaf()) && search_opts[SearchOptions.NONTASKS]) ||
@@ -2682,27 +2682,21 @@ public class Node : Object {
       if( search_opts[SearchOptions.TITLES] ) {
         string str = Utils.match_string( pattern, name.text.text );
         if( str.length > 0 ) {
-          TreeIter it;
-          matches.append( out it );
-          matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Node Title" ) ), 1, str, 2, this, 3, null, 4, null, 5, null, 6, tabname, 7, tab, -1 );
+          matches.append( new SearchItem.node( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Node Title" ) ), str ) );
         }
       }
       if( search_opts[SearchOptions.NOTES] ) {
         string str = Utils.match_string( pattern, note);
-        if(str.length > 0) {
-          TreeIter it;
-          matches.append( out it );
-          matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), 1, str, 2, this, 3, null, 4, null, 5, null, 6, tabname, 7, tab, -1 );
+        if( str.length > 0 ) {
+          matches.append( new SearchItem.node( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), str ) );
         }
       }
     }
     if( (_callout != null) && search_opts[SearchOptions.CALLOUTS] && search_opts[SearchOptions.TITLES] ) {
       string str = Utils.match_string( pattern, _callout.text.text.text );
       if( str.length > 0 ) {
-        TreeIter it;
         var tab = "<i>" + Utils.rootname( tabname ) + "</i>";
-        matches.append( out it );
-        matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Callout Text" ) ), 1, str, 2, null, 3, null, 4, _callout, 5, null, 6, tabname, 7, tab, -1 );
+        matches.append( new SearchItem.callout( tabname, tab, _callout, "<b><i>%s:</i></b>".printf( _( "Callout Text" ) ), str ) );
       }
     }
     for( int i=0; i<_children.length; i++ ) {

@@ -61,6 +61,62 @@ public class ShortcutTooltip {
   }
 }
 
+public class SearchItem : GLib.Object {
+  public string      match_type  { get; private set; default = ""; }
+  public string      match_str   { get; private set; default = ""; }
+  public Node?       match_node  { get; private set; default = null; }
+  public Connection? match_conn  { get; private set; default = null; }
+  public Callout?    match_call  { get; private set; default = null; }
+  public NodeGroup?  match_group { get; private set; default = null; }
+  public string      tab_name    { get; private set; default = ""; }
+  public string      tab_label   { get; private set; default = ""; }
+
+  //-------------------------------------------------------------
+  // Default constructor
+  public SearchItem() {}
+
+  //-------------------------------------------------------------
+  // Constructor for node
+  public SearchItem.node( string tname, string tlabel, Node node, string mtype, string mstr ) {
+    match_type = mtype;
+    match_str  = mstr;
+    match_node = node;
+    tab_name   = tname;
+    tab_label  = tlabel;
+  }
+
+  //-------------------------------------------------------------
+  // Constructor for connection
+  public SearchItem.connection( string tname, string tlabel, Connection conn, string mtype, string mstr ) {
+    match_type = mtype;
+    match_str  = mstr;
+    match_conn = conn;
+    tab_name   = tname;
+    tab_label  = tlabel;
+  }
+
+  //-------------------------------------------------------------
+  // Constructor for callout
+  public SearchItem.callout( string tname, string tlabel, Callout callout, string mtype, string mstr ) {
+    match_type = mtype;
+    match_str  = mstr;
+    match_call = callout;
+    tab_name   = tname;
+    tab_label  = tlabel;
+  }
+
+  //-------------------------------------------------------------
+  // Constructor for group
+  public SearchItem.group( string tname, string tlabel, NodeGroup group, string mtype, string mstr ) {
+    match_type  = mtype;
+    match_str   = mstr;
+    match_group = group;
+    tab_name    = tname;
+    tab_label   = tlabel;
+  }
+
+}
+
 public delegate void AfterLoadTabFunc();
 
 public class MainWindow : Gtk.ApplicationWindow {
@@ -74,8 +130,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   private Popover?          _search         = null;
   private MenuButton?       _search_btn     = null;
   private SearchEntry?      _search_entry   = null;
-  private TreeView          _search_list;
-  private Gtk.ListStore     _search_items;
+  private ColumnView        _search_list;
+  private GLib.ListStore    _search_items;
   private ScrolledWindow    _search_scroll;
   private CheckButton       _search_nodes;
   private CheckButton       _search_connections;
@@ -804,6 +860,87 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
+  // Creates the search type column contents.
+  private ColumnViewColumn make_type_column() {
+
+    var factory = new Gtk.SignalListItemFactory();
+
+    factory.setup.connect((item) => {
+      var li    = (ListItem)item;
+      var label = new Gtk.Label( "" ) {
+        use_markup = true
+      };
+      li.set_child( label );
+    });
+
+    factory.bind.connect((item) => {
+      var li    = (ListItem)item;
+      var si    = (SearchItem)li.get_item();
+      var label = (Label)li.get_child();
+      label.label = si.match_type;
+    });
+
+    var column = new ColumnViewColumn( "Type", factory );
+
+    return( column );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the search content column contents.
+  private ColumnViewColumn make_content_column() {
+
+    var factory = new Gtk.SignalListItemFactory();
+
+    factory.setup.connect((item) => {
+      var li    = (ListItem)item;
+      var label = new Gtk.Label( "" ) {
+        use_markup = true
+      };
+      li.set_child( label );
+    });
+
+    factory.bind.connect((item) => {
+      var li    = (ListItem)item;
+      var si    = (SearchItem)li.get_item();
+      var label = (Label)li.get_child();
+      label.label = si.match_str;
+    });
+
+    var column = new ColumnViewColumn( "Content", factory );
+
+    return( column );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the search tab column contents.
+  private ColumnViewColumn make_tab_column() {
+
+    var factory = new Gtk.SignalListItemFactory();
+
+    factory.setup.connect((item) => {
+      var li    = (ListItem)item;
+      var label = new Gtk.Label( "" ) {
+        use_markup = true
+      };
+      li.set_child( label );
+    });
+
+    factory.bind.connect((item) => {
+      var li    = (ListItem)item;
+      var si    = (SearchItem)li.get_item();
+      var label = (Label)li.get_child();
+      label.label = si.tab_label;
+    });
+
+    var column = new ColumnViewColumn( "Tab", factory );
+
+    return( column );
+
+  }
+
+  //-------------------------------------------------------------
   // Adds the search functionality.
   private void add_search_button() {
 
@@ -825,27 +962,20 @@ public class MainWindow : Gtk.ApplicationWindow {
       return( false );
     });
 
-    _search_items = new Gtk.ListStore( 8, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(Callout), typeof(NodeGroup), typeof(string), typeof(string) );
+    _search_items = new GLib.ListStore( typeof( SearchItem ) );
 
-    // Create the treeview
-    _search_list  = new TreeView.with_model( _search_items ) {
-      headers_visible          = false,
-      activate_on_single_click = true,
-      enable_search            = false,
+    var search_selection = new SingleSelection( _search_items );
+
+    // Create the column view
+    _search_list  = new ColumnView( search_selection ) {
+      single_click_activate = true
     };
-    var type_cell = new CellRendererText() {
-      xalign = 1
-    };
-    var str_cell = new CellRendererText() {
-      ellipsize     = Pango.EllipsizeMode.END,
-      ellipsize_set = true,
-      width_chars   = 50,
-    };
-    var tab_cell = new CellRendererText();
-    _search_list.insert_column_with_attributes( -1, null, type_cell, "markup", 0, null );
-    _search_list.insert_column_with_attributes( -1, null, str_cell,  "markup", 1, null );
-    _search_list.insert_column_with_attributes( -1, null, tab_cell,  "markup", 7, null );
-    _search_list.row_activated.connect( on_search_clicked );
+
+    _search_list.append_column( make_type_column() );
+    _search_list.append_column( make_content_column() );
+    _search_list.append_column( make_tab_column() );
+
+    _search_list.activate.connect( on_search_clicked );
 
     // Create the scrolled window for the treeview
     _search_scroll = new ScrolledWindow() {
@@ -1962,7 +2092,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     search_opts[SearchOptions.UNFOLDED]    = _search_unfolded.active;
     search_opts[SearchOptions.TASKS]       = _search_tasks.active;
     search_opts[SearchOptions.NONTASKS]    = _search_nontasks.active;
-    _search_items.clear();
+    _search_items.remove_all();
     var all_tabs = _settings.get_boolean( "search-opt-all-tabs" );
     var current  = get_current_map( "on_search_change" );
     var text     = _search_entry.get_text().casefold();
@@ -1983,38 +2113,36 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Called when the user selects an item in the search list.
   // The current node will be set to the node associated with the
   // selection.
-  private void on_search_clicked( TreeView view, TreePath path, TreeViewColumn? col ) {
-    TreeIter    it;
-    string      tabname = "";
-    Node?       node    = null;
-    Connection? conn    = null;
-    Callout?    callout = null;
-    NodeGroup?  group   = null;
-    var         map     = get_current_map( "on_search_clicked" );
-    _search_items.get_iter( out it, path );
-    _search_items.get( it, 2, &node, 3, &conn, 4, &callout, 5, &group, 6, &tabname, -1 );
+  private void on_search_clicked( uint position ) {
+
+    var item = (SearchItem)_search_items.get_item( position );
+    var map  = get_current_map( "on_search_clicked" );
+
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      if( get_tab_label_name( i ) == tabname ) {
+      if( get_tab_label_name( i ) == item.tab_name ) {
         map = get_map( i );
         _nb.page = i;
         break;
       }
     }
-    if( node != null ) {
-      map.set_current_node( node );
+
+    if( item.match_node != null ) {
+      map.set_current_node( item.match_node );
       map.canvas.see();
-    } else if( conn != null ) {
-      map.set_current_connection( conn );
+    } else if( item.match_conn != null ) {
+      map.set_current_connection( item.match_conn );
       map.canvas.see();
-    } else if( callout != null ) {
-      map.set_current_callout( callout );
+    } else if( item.match_call != null ) {
+      map.set_current_callout( item.match_call );
       map.canvas.see();
-    } else if( group != null ) {
-      map.set_current_group( group );
+    } else if( item.match_group != null ) {
+      map.set_current_group( item.match_group );
       map.canvas.see();
     }
+
     _search.closed();
     map.canvas.grab_focus();
+
   }
 
   //-------------------------------------------------------------
