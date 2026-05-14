@@ -868,6 +868,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     factory.setup.connect((item) => {
       var li    = (ListItem)item;
       var label = new Gtk.Label( "" ) {
+        halign = Align.START,
         use_markup = true
       };
       li.set_child( label );
@@ -880,7 +881,9 @@ public class MainWindow : Gtk.ApplicationWindow {
       label.label = si.match_type;
     });
 
-    var column = new ColumnViewColumn( "Type", factory );
+    var column = new ColumnViewColumn( _( "Where" ), factory ) {
+      expand = false
+    };
 
     return( column );
 
@@ -895,6 +898,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     factory.setup.connect((item) => {
       var li    = (ListItem)item;
       var label = new Gtk.Label( "" ) {
+        halign = Align.START,
+        hexpand = true,
+        margin_start = 10,
         use_markup = true
       };
       li.set_child( label );
@@ -907,7 +913,9 @@ public class MainWindow : Gtk.ApplicationWindow {
       label.label = si.match_str;
     });
 
-    var column = new ColumnViewColumn( "Content", factory );
+    var column = new ColumnViewColumn( _( "Matched Content" ), factory ) {
+      expand = true
+    };
 
     return( column );
 
@@ -922,6 +930,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     factory.setup.connect((item) => {
       var li    = (ListItem)item;
       var label = new Gtk.Label( "" ) {
+        halign = Align.START,
         use_markup = true
       };
       li.set_child( label );
@@ -934,7 +943,9 @@ public class MainWindow : Gtk.ApplicationWindow {
       label.label = si.tab_label;
     });
 
-    var column = new ColumnViewColumn( "Tab", factory );
+    var column = new ColumnViewColumn( _( "Tab" ), factory ) {
+      expand = false
+    };
 
     return( column );
 
@@ -947,7 +958,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     // Create the search entry field
     _search_entry = new SearchEntry() {
       placeholder_text = _( "Search Nodes, Callouts and Connections" ),
-      width_chars      = 60
+      width_chars      = 80
     };
     _search_entry.search_changed.connect( on_search_change );
 
@@ -980,7 +991,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     // Create the scrolled window for the treeview
     _search_scroll = new ScrolledWindow() {
       height_request    = 200,
-      hscrollbar_policy = PolicyType.EXTERNAL,
+      hscrollbar_policy = PolicyType.NEVER,
       child             = _search_list
     };
 
@@ -997,7 +1008,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       active = _settings.get_boolean( "search-opt-all-tabs" )
     };
     _search_all_tabs.notify["active"].connect(() => {
-      _settings.set_boolean( "search-opt-all-tabs", !_search_all_tabs.active );
+      _settings.set_boolean( "search-opt-all-tabs", _search_all_tabs.active );
       on_search_change();
     });
 
