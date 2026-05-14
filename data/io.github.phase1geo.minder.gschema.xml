@@ -1,6 +1,6 @@
  <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema path="/com/github/phase1geo/minder/" id="com.github.phase1geo.minder" gettext-domain="com.github.phase1geo.minder">
+  <schema path="/io/github/phase1geo/minder/" id="io.github.phase1geo.minder" gettext-domain="io.github.phase1geo.minder">
     <key name="window-w" type="i">
       <default>1000</default>
       <summary>Most recent width of minder window</summary>
