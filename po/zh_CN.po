@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-14 19:01-0500\n"
+"POT-Creation-Date: 2026-05-15 08:00-0500\n"
 "PO-Revision-Date: 2023-10-10 17:50+0800\n"
 "Last-Translator: Aerowolf <aerowolf@tom.com>\n"
 "Language-Team: 简体中文\n"
@@ -158,7 +158,7 @@ msgstr "选择节点"
 msgid "Callout"
 msgstr "标记"
 
-#: src/CanvasText.vala:305 src/FormattedText.vala:1209
+#: src/CanvasText.vala:326 src/FormattedText.vala:1209
 msgid "No text found"
 msgstr "未找到文本"
 
@@ -271,13 +271,13 @@ msgid ""
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:699 src/ImageEditor.vala:428 src/MainWindow.vala:1556
+#: src/Document.vala:699 src/ImageEditor.vala:428 src/MainWindow.vala:1587
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
 #: src/ThemeEditor.vala:154 src/UrlEditor.vala:63
 msgid "Cancel"
 msgstr "取消"
 
-#: src/Document.vala:702 src/ImageEditor.vala:431 src/MainWindow.vala:2286
+#: src/Document.vala:702 src/ImageEditor.vala:431 src/MainWindow.vala:2317
 #: src/UrlEditor.vala:53
 msgid "Apply"
 msgstr "应用"
@@ -286,7 +286,7 @@ msgstr "应用"
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:716 src/MainWindow.vala:2323
+#: src/Document.vala:716 src/MainWindow.vala:2354
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
@@ -374,7 +374,7 @@ msgstr "导出选项"
 msgid "Export As %s"
 msgstr "导出为 %s"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1208 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1239 src/StickerSet.vala:352
 msgid "Export"
 msgstr "导出"
 
@@ -1390,7 +1390,7 @@ msgstr "选择链接颜色"
 msgid "Manual"
 msgstr "手动"
 
-#: src/MainWindow.vala:236 src/MainWindow.vala:1873
+#: src/MainWindow.vala:236 src/MainWindow.vala:1904
 msgid "Minder"
 msgstr "Minder"
 
@@ -1398,7 +1398,7 @@ msgstr "Minder"
 msgid "New File"
 msgstr "新建文件"
 
-#: src/MainWindow.vala:300 src/MainWindow.vala:1646
+#: src/MainWindow.vala:300 src/MainWindow.vala:1677
 msgid "Open File"
 msgstr "打开文件"
 
@@ -1418,7 +1418,7 @@ msgstr "重做"
 msgid "Tag Highlight Mode"
 msgstr ""
 
-#: src/MainWindow.vala:780 src/MainWindow.vala:1278
+#: src/MainWindow.vala:780 src/MainWindow.vala:1309
 msgid "Focus Mode"
 msgstr "聚焦模式"
 
@@ -1454,7 +1454,7 @@ msgstr "放大"
 msgid "Zoom Out"
 msgstr "缩小"
 
-#: src/MainWindow.vala:855 src/MainWindow.vala:1939
+#: src/MainWindow.vala:855 src/MainWindow.vala:1970
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "缩放 （%d%%）"
@@ -1471,220 +1471,220 @@ msgstr ""
 msgid "Tab"
 msgstr "Tab键"
 
-#: src/MainWindow.vala:960
+#: src/MainWindow.vala:963
 msgid "Search Nodes, Callouts and Connections"
 msgstr "搜索节点、标记和连接"
 
-#: src/MainWindow.vala:998
+#: src/MainWindow.vala:1029
 msgid "Search Criteria"
 msgstr "搜索条件"
 
-#: src/MainWindow.vala:1002
+#: src/MainWindow.vala:1033
 msgid "Search all tabs"
 msgstr "搜索所有选项卡"
 
-#: src/MainWindow.vala:1043 src/StickerSet.vala:114
+#: src/MainWindow.vala:1074 src/StickerSet.vala:114
 msgid "Search"
 msgstr "搜索"
 
-#: src/MainWindow.vala:1052
+#: src/MainWindow.vala:1083
 msgid "Nodes"
 msgstr "节点"
 
-#: src/MainWindow.vala:1053
+#: src/MainWindow.vala:1084
 msgid "Connections"
 msgstr "连接"
 
-#: src/MainWindow.vala:1054
+#: src/MainWindow.vala:1085
 msgid "Callouts"
 msgstr "标记"
 
-#: src/MainWindow.vala:1055
+#: src/MainWindow.vala:1086
 #, fuzzy
 msgid "Groups"
 msgstr "添加群组"
 
-#: src/MainWindow.vala:1056
+#: src/MainWindow.vala:1087
 msgid "Titles"
 msgstr "标题"
 
-#: src/MainWindow.vala:1057
+#: src/MainWindow.vala:1088
 msgid "Notes"
 msgstr "备注"
 
-#: src/MainWindow.vala:1058
+#: src/MainWindow.vala:1089
 msgid "Folded"
 msgstr "折叠"
 
-#: src/MainWindow.vala:1059
+#: src/MainWindow.vala:1090
 msgid "Unfolded"
 msgstr "展开"
 
-#: src/MainWindow.vala:1060
+#: src/MainWindow.vala:1091
 msgid "Tasks"
 msgstr "任务"
 
-#: src/MainWindow.vala:1061
+#: src/MainWindow.vala:1092
 msgid "Non-tasks"
 msgstr "非任务"
 
-#: src/MainWindow.vala:1183
+#: src/MainWindow.vala:1214
 msgid "Print…"
 msgstr "打印……"
 
-#: src/MainWindow.vala:1222
+#: src/MainWindow.vala:1253
 msgid "Brain Dump"
 msgstr ""
 
-#: src/MainWindow.vala:1298 src/Preferences.vala:50
+#: src/MainWindow.vala:1329 src/Preferences.vala:50
 msgid "Preferences"
 msgstr "参数设置"
 
-#: src/MainWindow.vala:1299
+#: src/MainWindow.vala:1330
 msgid "Shortcuts Cheatsheet"
 msgstr "快捷键"
 
-#: src/MainWindow.vala:1302
+#: src/MainWindow.vala:1333
 msgid "About Minder"
 msgstr "关于 Minder"
 
-#: src/MainWindow.vala:1325 src/TextMenu.vala:52
+#: src/MainWindow.vala:1356 src/TextMenu.vala:52
 #, fuzzy
 msgid "# Header1"
 msgstr "耳机"
 
-#: src/MainWindow.vala:1326 src/TextMenu.vala:53
+#: src/MainWindow.vala:1357 src/TextMenu.vala:53
 msgid "## Header2"
 msgstr ""
 
-#: src/MainWindow.vala:1327 src/TextMenu.vala:54
+#: src/MainWindow.vala:1358 src/TextMenu.vala:54
 msgid "### Header3"
 msgstr ""
 
-#: src/MainWindow.vala:1328 src/TextMenu.vala:55
+#: src/MainWindow.vala:1359 src/TextMenu.vala:55
 msgid "#### Header4"
 msgstr ""
 
-#: src/MainWindow.vala:1329 src/TextMenu.vala:56
+#: src/MainWindow.vala:1360 src/TextMenu.vala:56
 msgid "##### Header5"
 msgstr ""
 
-#: src/MainWindow.vala:1330 src/TextMenu.vala:57
+#: src/MainWindow.vala:1361 src/TextMenu.vala:57
 msgid "###### Header6"
 msgstr ""
 
-#: src/MainWindow.vala:1331 src/TextMenu.vala:58
+#: src/MainWindow.vala:1362 src/TextMenu.vala:58
 msgid "**Bold**"
 msgstr ""
 
-#: src/MainWindow.vala:1332 src/TextMenu.vala:59
+#: src/MainWindow.vala:1363 src/TextMenu.vala:59
 msgid "__Italicize_"
 msgstr ""
 
-#: src/MainWindow.vala:1333 src/TextMenu.vala:60
+#: src/MainWindow.vala:1364 src/TextMenu.vala:60
 msgid "~~Strikeout~~"
 msgstr ""
 
-#: src/MainWindow.vala:1334 src/TextMenu.vala:61
+#: src/MainWindow.vala:1365 src/TextMenu.vala:61
 msgid "`Code`"
 msgstr ""
 
-#: src/MainWindow.vala:1335 src/TextMenu.vala:62
+#: src/MainWindow.vala:1366 src/TextMenu.vala:62
 #, fuzzy
 msgid "==Highlight=="
 msgstr "右对齐"
 
-#: src/MainWindow.vala:1336 src/TextMenu.vala:63
+#: src/MainWindow.vala:1367 src/TextMenu.vala:63
 msgid "<sup>Superscript</sup>"
 msgstr ""
 
-#: src/MainWindow.vala:1337 src/TextMenu.vala:64
+#: src/MainWindow.vala:1368 src/TextMenu.vala:64
 msgid "<sub>Subscript</sub>"
 msgstr ""
 
-#: src/MainWindow.vala:1338 src/TextMenu.vala:65
+#: src/MainWindow.vala:1369 src/TextMenu.vala:65
 msgid "[Link text](URL)"
 msgstr ""
 
-#: src/MainWindow.vala:1401 src/MainWindow.vala:2040
+#: src/MainWindow.vala:1432 src/MainWindow.vala:2071
 msgid "Show Property Sidebar"
 msgstr "显示属性侧边栏"
 
-#: src/MainWindow.vala:1412 src/MainWindow.vala:1470
+#: src/MainWindow.vala:1443 src/MainWindow.vala:1501
 msgid "Current"
 msgstr "当前"
 
-#: src/MainWindow.vala:1413 src/MainWindow.vala:1471
+#: src/MainWindow.vala:1444 src/MainWindow.vala:1502
 #: src/StyleInspector.vala:362
 msgid "Style"
 msgstr "样式"
 
-#: src/MainWindow.vala:1414 src/MainWindow.vala:1472 src/Preferences.vala:68
+#: src/MainWindow.vala:1445 src/MainWindow.vala:1503 src/Preferences.vala:68
 msgid "Tags"
 msgstr ""
 
-#: src/MainWindow.vala:1415 src/MainWindow.vala:1473
+#: src/MainWindow.vala:1446 src/MainWindow.vala:1504
 msgid "Stickers"
 msgstr "贴纸"
 
-#: src/MainWindow.vala:1416 src/MainWindow.vala:1474
+#: src/MainWindow.vala:1447 src/MainWindow.vala:1505
 msgid "Map"
 msgstr "地图"
 
-#: src/MainWindow.vala:1547
+#: src/MainWindow.vala:1578
 msgid "Save current unnamed document?"
 msgstr "要保存当前未命名的文档吗？"
 
-#: src/MainWindow.vala:1548
+#: src/MainWindow.vala:1579
 msgid "Changes will be permanently lost if not saved."
 msgstr "如不保存，修改内容将永久丢失。"
 
-#: src/MainWindow.vala:1553
+#: src/MainWindow.vala:1584
 msgid "Discard Changes"
 msgstr "放弃修改"
 
-#: src/MainWindow.vala:1559 src/MainWindow.vala:1869 src/ThemeEditor.vala:159
+#: src/MainWindow.vala:1590 src/MainWindow.vala:1900 src/ThemeEditor.vala:159
 msgid "Save"
 msgstr "保存"
 
-#: src/MainWindow.vala:1591
+#: src/MainWindow.vala:1622
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "文件 %s 已被其他应用程序修改。"
 
-#: src/MainWindow.vala:1592
+#: src/MainWindow.vala:1623
 msgid "What do you want to do?"
 msgstr "想做什么？"
 
-#: src/MainWindow.vala:1597
+#: src/MainWindow.vala:1628
 msgid "Discard Changes and reload"
 msgstr "放弃修改并重新加载"
 
-#: src/MainWindow.vala:1600
+#: src/MainWindow.vala:1631
 msgid "Save local version and overwrite"
 msgstr "保存本地版本并覆盖"
 
-#: src/MainWindow.vala:1646
+#: src/MainWindow.vala:1677
 msgid "Open Directory"
 msgstr "打开目录"
 
-#: src/MainWindow.vala:1646
+#: src/MainWindow.vala:1677
 msgid "Open"
 msgstr "打开"
 
-#: src/MainWindow.vala:1869
+#: src/MainWindow.vala:1900
 msgid "Save File"
 msgstr "保存文件"
 
-#: src/MainWindow.vala:1969
+#: src/MainWindow.vala:2000
 msgid "Hide Property Sidebar"
 msgstr "隐藏属性侧边栏"
 
-#: src/MainWindow.vala:2277
+#: src/MainWindow.vala:2308
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2278
+#: src/MainWindow.vala:2309
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1692,31 +1692,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2283
+#: src/MainWindow.vala:2314
 #, fuzzy
 msgid "Quit Minder"
 msgstr "关于 Minder"
 
-#: src/MainWindow.vala:2303
+#: src/MainWindow.vala:2334
 #, fuzzy
 msgid "Detail"
 msgstr "拆分"
 
-#: src/MainWindow.vala:2311
+#: src/MainWindow.vala:2342
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2312
+#: src/MainWindow.vala:2343
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2313
+#: src/MainWindow.vala:2344
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1724,11 +1724,11 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2320
+#: src/MainWindow.vala:2351
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2345
+#: src/MainWindow.vala:2376
 msgid "Upgrades Needed"
 msgstr ""
 
@@ -2189,15 +2189,15 @@ msgstr "右对齐"
 msgid "Align"
 msgstr "上部对齐"
 
-#: src/Node.vala:2685
+#: src/Node.vala:2671
 msgid "Node Title"
 msgstr "节点标题"
 
-#: src/Node.vala:2691
+#: src/Node.vala:2677
 msgid "Node Note"
 msgstr "节点备注"
 
-#: src/Node.vala:2699
+#: src/Node.vala:2685
 msgid "Callout Text"
 msgstr "标记文本"
 
@@ -4412,11 +4412,11 @@ msgstr "要删除主题吗？"
 msgid "This operation cannot be undone."
 msgstr "此操作无法撤消。"
 
-#: src/ThemeEditor.vala:247 src/Utils.vala:473
+#: src/ThemeEditor.vala:247 src/Utils.vala:507
 msgid "No"
 msgstr "否"
 
-#: src/ThemeEditor.vala:250 src/Utils.vala:476
+#: src/ThemeEditor.vala:250 src/Utils.vala:510
 msgid "Yes"
 msgstr "是"
 
