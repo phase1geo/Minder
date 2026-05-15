@@ -2672,14 +2672,14 @@ public class Node : Object {
         }
       }
       if( search_opts[SearchOptions.NOTES] ) {
-        string str = Utils.match_string( pattern, note);
+        string str = Utils.match_string( pattern, Utils.remove_markdown( note ) );
         if( str.length > 0 ) {
           matches.append( new SearchItem.node( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), str ) );
         }
       }
     }
     if( (_callout != null) && search_opts[SearchOptions.CALLOUTS] && search_opts[SearchOptions.TITLES] ) {
-      string str = Utils.match_string( pattern, _callout.text.text.text );
+      string str = Utils.match_string( pattern, _callout.text.stripped_text.text );
       if( str.length > 0 ) {
         var tab = "<i>" + Utils.rootname( tabname ) + "</i>";
         matches.append( new SearchItem.callout( tabname, tab, _callout, "<b><i>%s:</i></b>".printf( _( "Callout Text" ) ), str ) );

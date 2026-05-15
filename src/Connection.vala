@@ -802,13 +802,13 @@ public class Connection : Object {
   public void get_match_items( string tabname, string pattern, bool[] search_opts, ref GLib.ListStore matches ) {
     var tab = Utils.rootname( tabname );
     if( search_opts[SearchOptions.TITLES] && (title != null) ) {
-      string str = Utils.match_string( pattern, title.text.text);
+      string str = Utils.match_string( pattern, title.stripped_text.text);
       if(str.length > 0) {
         matches.append( new SearchItem.connection( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), str ) );
       }
     }
     if( search_opts[SearchOptions.NOTES] ) {
-      string str = Utils.match_string( pattern, note);
+      string str = Utils.match_string( pattern, Utils.remove_markdown( note ) );
       if(str.length > 0) {
         matches.append( new SearchItem.connection( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Connection Note" ) ), str ) );
       }

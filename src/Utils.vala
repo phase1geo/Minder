@@ -187,8 +187,7 @@ public class Utils {
   //-------------------------------------------------------------
   // Prepares the given note string for use in a markup tooltip.
   public static string prepare_note_markup( string note ) {
-    var str = markdown_to_html( note );  // .replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
-    // stdout.printf( "---------------\n%s--------------\n", str );
+    var str = markdown_to_html( note );
     try {
       MatchInfo match_info;
       var re    = new Regex( "</?(\\w+)[^>]*>" );
@@ -213,6 +212,8 @@ public class Utils {
           case "strong" :  new_tag = end_tag ? "</b>" : "<b>";  break;
           case "em"     :  new_tag = end_tag ? "</i>" : "<i>";  break;
           case "code"   :  new_tag = end_tag ? "</tt>" : "<tt>";  break;
+          case "del"    :  new_tag = end_tag ? "</span>" : "<span strikethrough=\"true\">";  break;
+          case "mark"   :  new_tag = end_tag ? "</span>" : "<span background=\"yellow\" foreground=\"black\">";  break;
           case "blockquote" :  new_tag = end_tag ? "</i>" : "<i>";  break;
           case "hr"     :  new_tag = end_tag ? "" : "---";  break;
           case "p"      :  new_tag = "";  break;
@@ -251,11 +252,44 @@ public class Utils {
   }
 
   //-------------------------------------------------------------
+  // Returns a text string with all of the Markdown characters removed.
+  public static string remove_markdown( string md ) {
+    try {
+      var html = markdown_to_html( md );
+      var re   = new Regex( "</?(\\w+)[^>]*>" );
+      return( re.replace( html, html.length, 0, "", 0 ) );
+    } catch( RegexError e ) {
+      return( md );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Preprocesses the Markdown string to remove any Markdown highlighting
+  // syntax to convert it to HTML highlighting syntax.
+  private static string preprocess_markdown_highlighting( string md ) {
+
+    try {
+      var re     = new Regex( "(?<!\\\\)==(.+?)==" );
+      var pre_md = re.replace_eval( md, md.length, 0, 0, (match, result) => {
+        result.append( "<mark>" );
+        result.append( GLib.Markup.escape_text( match.fetch( 1 ) ) );
+        result.append( "</mark>" );
+        return( false );
+      });
+      return( pre_md );
+    } catch( RegexError e ) {
+      return( md );
+    }
+
+  }
+
+  //-------------------------------------------------------------
   // Converts the given Markdown into HTML.
   public static string markdown_to_html( string md, string? tag = null ) {
     string html;
+    var pre_md = preprocess_markdown_highlighting( md );
 #if MD30
-    html = Markup.escape_text( md );
+    html = Markup.escape_text( pre_md );
 #else
     uint32 flags = Markdown.DocumentFlags.NOPANTS |
                 Markdown.DocumentFlags.TOC |
@@ -267,7 +301,7 @@ public class Utils {
                 Markdown.DocumentFlags.FENCEDCODE |
                 Markdown.DocumentFlags.IDANCHOR |
                 Markdown.DocumentFlags.LATEX;
-    var mkd = new Markdown.Document.from_gfm_string( md.data, flags );
+    var mkd = new Markdown.Document.from_gfm_string( pre_md.data, flags );
     mkd.compile( flags );
     mkd.document( out html );
 #endif
