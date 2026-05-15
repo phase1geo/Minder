@@ -27,7 +27,7 @@ using Gee;
 public class Minder : Gtk.Application {
 
   private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
-  public const  string static_version   = "2.0.9";
+  public const  string static_version   = "2.1.0";
 
   private MainWindow    appwin;
   private GLib.Settings iface_settings;
