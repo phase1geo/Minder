@@ -955,30 +955,47 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Adds the search functionality.
   private void add_search_button() {
 
+    _search_items = new GLib.ListStore( typeof( SearchItem ) );
+    var search_selection = new SingleSelection( _search_items );
+
     // Create the search entry field
     _search_entry = new SearchEntry() {
       placeholder_text = _( "Search Nodes, Callouts and Connections" ),
       width_chars      = 80
     };
-    _search_entry.search_changed.connect( on_search_change );
 
-    var search_key = new EventControllerKey();
-    _search_entry.add_controller( search_key );
+    var entry_key = new EventControllerKey();
+    _search_entry.add_controller( entry_key );
 
-    search_key.key_pressed.connect((keyval, keycode, state) => {
-      if( keyval == Gdk.Key.Escape ) {
-        _search_btn.active = false;
-        return( true );
+    entry_key.key_pressed.connect((keyval, keymod, state) => {
+      switch( keyval ) {
+        case Gdk.Key.Down :  _search_entry.next_match();      break;
+        case Gdk.Key.Up   :  _search_entry.previous_match();  break;
+        default           :  return( false );
       }
-      return( false );
+      return( true );
     });
 
-    _search_items = new GLib.ListStore( typeof( SearchItem ) );
-
-    var search_selection = new SingleSelection( _search_items );
+    _search_entry.search_changed.connect( on_search_change );
+    _search_entry.activate.connect(() => {
+      on_search_clicked( search_selection.selected );
+    });
+    _search_entry.next_match.connect(() => {
+      if( (search_selection.selected + 1) < search_selection.n_items ) {
+        search_selection.selected++;
+      }
+    });
+    _search_entry.previous_match.connect(() => {
+      if( search_selection.selected > 0 ) {
+        search_selection.selected--;
+      }
+    });
+    _search_entry.stop_search.connect(() => {
+      _search_btn.active = false;
+    });
 
     // Create the column view
-    _search_list  = new ColumnView( search_selection ) {
+    _search_list = new ColumnView( search_selection ) {
       single_click_activate = true
     };
 
@@ -987,6 +1004,20 @@ public class MainWindow : Gtk.ApplicationWindow {
     _search_list.append_column( make_tab_column() );
 
     _search_list.activate.connect( on_search_clicked );
+
+    var list_key = new EventControllerKey();
+    _search_list.add_controller( list_key );
+
+    list_key.key_pressed.connect((keyval, keymod, state) => {
+      switch( keyval ) {
+        case Gdk.Key.Down   :  _search_entry.next_match();      break;
+        case Gdk.Key.Up     :  _search_entry.previous_match();  break;
+        case Gdk.Key.Return :  _search_entry.activate();        break;
+        case Gdk.Key.Escape :  _search_entry.stop_search();     break;
+        default             :  return( false );
+      }
+      return( true );
+    });
 
     // Create the scrolled window for the treeview
     _search_scroll = new ScrolledWindow() {
