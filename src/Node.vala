@@ -582,7 +582,6 @@ public class Node : Object {
     _name      = new CanvasText( map );
     _name.resized.connect( position_text_and_update_size );
     _tags      = new Tags();
-    set_parsers();
   }
 
   //-------------------------------------------------------------
@@ -596,7 +595,6 @@ public class Node : Object {
     _name      = new CanvasText.with_text( map, n );
     _name.resized.connect( position_text_and_update_size );
     _tags      = new Tags();
-    set_parsers();
   }
 
   //-------------------------------------------------------------
@@ -609,7 +607,6 @@ public class Node : Object {
     _name      = new CanvasText.with_text( map, "" );
     _name.resized.connect( position_text_and_update_size );
     _tags      = new Tags();
-    set_parsers();
     siblings.append_val( this );
     load( map, n, isroot, sibling_parent, ref siblings );
   }
@@ -625,7 +622,6 @@ public class Node : Object {
     _tags      = new Tags();
     copy_variables( n, im );
     _name.resized.connect( position_text_and_update_size );
-    set_parsers();
     mode      = NodeMode.NONE;
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).parent = this;
@@ -653,7 +649,6 @@ public class Node : Object {
     _tags      = new Tags();
     copy_variables( n, im );
     _name.resized.connect( position_text_and_update_size );
-    set_parsers();
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
     for( int i=0; i<n._children.length; i++ ) {
@@ -661,15 +656,6 @@ public class Node : Object {
       child.parent = this;
       _children.append_val( child );
     }
-  }
-
-  //-------------------------------------------------------------
-  // Adds the valid parsers.
-  public void set_parsers() {
-    _name.text.add_parser( _map.markdown_parser );
-    // _name.text.add_parser( _map.tagger_parser );
-    _name.text.add_parser( _map.url_parser );
-    _name.text.add_parser( _map.unicode_parser );
   }
 
   //-------------------------------------------------------------
@@ -2680,7 +2666,7 @@ public class Node : Object {
           (((parent == null) || !parent.folded) && search_opts[SearchOptions.UNFOLDED]))) ) {
       var tab = "<i>" + Utils.rootname( tabname ) + "</i>";
       if( search_opts[SearchOptions.TITLES] ) {
-        string str = Utils.match_string( pattern, name.text.text );
+        string str = Utils.match_string( pattern, name.stripped_text.text );
         if( str.length > 0 ) {
           matches.append( new SearchItem.node( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Node Title" ) ), str ) );
         }
