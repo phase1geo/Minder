@@ -2238,7 +2238,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var       map  = get_map( i );
       Xml.Node* node = new Xml.Node( null, "tab" );
-      node->new_prop( "path",      map.doc.filename );
+      var       path = map.doc.is_saved() ? map.doc.filename : GLib.Path.get_basename( map.doc.filename );
+      node->new_prop( "path",      path );
       node->new_prop( "saved",     map.doc.is_saved().to_string() );
       node->new_prop( "origin-x",  map.canvas.origin_x.to_string() );
       node->new_prop( "origin-y",  map.canvas.origin_y.to_string() );
@@ -2410,8 +2411,11 @@ public class MainWindow : Gtk.ApplicationWindow {
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
         var fname = it->get_prop( "path" );
+        var saved = it->get_prop( "saved" );
+        if( (saved != null) && !bool.parse( saved ) ) {
+          fname = Path.build_filename( Document.get_unsaved_dir(), Path.get_basename( fname ) );
+        }
         if( FileUtils.test( fname, FileTest.EXISTS ) ) {
-          var saved     = it->get_prop( "saved" );
           var origin_x  = it->get_prop( "origin-x" );
           var origin_y  = it->get_prop( "origin-y" );
           var sfactor   = it->get_prop( "scale" );

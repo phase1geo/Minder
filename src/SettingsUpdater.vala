@@ -23,7 +23,7 @@ public class SettingsUpdater {
 
   //-------------------------------------------------------------
   // Returns true if the settings need to be updated.
-  private static bool needs_update( GLib.Settings settings ) {
+  public static bool needs_update( GLib.Settings settings ) {
     return( !settings.get_boolean( "internal-updated" ) );
   }
 

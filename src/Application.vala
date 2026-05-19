@@ -64,6 +64,9 @@ public class Minder : Gtk.Application {
     // Initialize the settings
     settings = new GLib.Settings( "io.github.phase1geo.minder" );
 
+    // Update the data directory format
+    DataDirUpdater.update( settings );
+
     // Update the settings value, if necessary
     SettingsUpdater.update( settings );
 

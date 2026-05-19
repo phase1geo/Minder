@@ -153,7 +153,7 @@ public class Document : Object {
     _etag = generate_etag();
 
     // Create the temporary file
-    var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
+    var dir = get_unsaved_dir();
     if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
       int i = 1;
       do {
@@ -168,6 +168,12 @@ public class Document : Object {
     // Listen for any changes from the canvas
     map.changed.connect( canvas_changed );
 
+  }
+
+  //-------------------------------------------------------------
+  // Returns the directory where unsaved minder files.
+  public static string get_unsaved_dir() {
+    return( GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "unsaved" ) );
   }
 
   //-------------------------------------------------------------

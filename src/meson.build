@@ -15,6 +15,7 @@ sources += files(
     'Connections.vala',
     'ConnectionsMenu.vala',
     'CurrentInspector.vala',
+    'DataDirUpdater.vala',
     'Document.vala',
     'DrawArea.vala',
     'EmptyInspector.vala',
