@@ -142,7 +142,14 @@ public enum KeyCommand {
       NODE_SORT_ALPHABETICALLY,
       NODE_SORT_RANDOMLY,
       NODE_DETACH,
+      NODE_ATTACH,
     NODE_MOVE_END,
+    NODE_ATTACH_START,
+      NODE_ATTACH_LEFT,
+      NODE_ATTACH_RIGHT,
+      NODE_ATTACH_UP,
+      NODE_ATTACH_DOWN,
+    NODE_ATTACH_END,
     NODE_ALIGN_START,
       NODE_ALIGN_TOP,
       NODE_ALIGN_VCENTER,
@@ -354,6 +361,11 @@ public enum KeyCommand {
       case NODE_SORT_ALPHABETICALLY  :  return( "node-sort-alphabetically" );
       case NODE_SORT_RANDOMLY        :  return( "node-sort-randomly" );
       case NODE_DETACH               :  return( "node-detach" );
+      case NODE_ATTACH               :  return( "node-attach" );
+      case NODE_ATTACH_LEFT          :  return( "node-attach-left" );
+      case NODE_ATTACH_RIGHT         :  return( "node-attach-right" );
+      case NODE_ATTACH_UP            :  return( "node-attach-up" );
+      case NODE_ATTACH_DOWN          :  return( "node-attach-down" );
       case NODE_ALIGN_TOP            :  return( "node-align-top" );
       case NODE_ALIGN_VCENTER        :  return( "node-align-vcenter" );
       case NODE_ALIGN_BOTTOM         :  return( "node-align-bottom" );
@@ -533,6 +545,11 @@ public enum KeyCommand {
       case "node-sort-alphabetically"  :  return( NODE_SORT_ALPHABETICALLY );
       case "node-sort-randomly"        :  return( NODE_SORT_RANDOMLY );
       case "node-detach"               :  return( NODE_DETACH );
+      case "node-attach"               :  return( NODE_ATTACH );
+      case "node-attach-left"          :  return( NODE_ATTACH_LEFT );
+      case "node-attach-right"         :  return( NODE_ATTACH_RIGHT );
+      case "node-attach-up"            :  return( NODE_ATTACH_UP );
+      case "node-attach-down"          :  return( NODE_ATTACH_DOWN );
       case "node-align-top"            :  return( NODE_ALIGN_TOP );
       case "node-align-vcenter"        :  return( NODE_ALIGN_VCENTER );
       case "node-align-bottom"         :  return( NODE_ALIGN_BOTTOM );
@@ -719,6 +736,12 @@ public enum KeyCommand {
       case NODE_SORT_ALPHABETICALLY  :  return( _( "Sort child nodes of current node alphabetically" ) );
       case NODE_SORT_RANDOMLY        :  return( _( "Sort child nodes of current node randomly" ) );
       case NODE_DETACH               :  return( _( "Detaches current node and its subtree" ) );
+      case NODE_ATTACH               :  return( _( "Attach current node to the current attach node" ) );
+      case NODE_ATTACH_START         :  return( _( "Attach Node Commands" ) );
+      case NODE_ATTACH_LEFT          :  return( _( "Change the attach node to node to left of current" ) );
+      case NODE_ATTACH_RIGHT         :  return( _( "Change the attach node to node to right of current" ) );
+      case NODE_ATTACH_UP            :  return( _( "Change the attach node to node above current" ) );
+      case NODE_ATTACH_DOWN          :  return( _( "Change the attach node to node below current" ) );
       case NODE_ALIGN_START          :  return( _( "Alignment Commands" ) );
       case NODE_ALIGN_TOP            :  return( _( "Align selected node top edges" ) );
       case NODE_ALIGN_VCENTER        :  return( _( "Align selected node vertical centers" ) );
@@ -897,6 +920,11 @@ public enum KeyCommand {
       case NODE_SORT_ALPHABETICALLY  :  return( node_sort_alphabetically );
       case NODE_SORT_RANDOMLY        :  return( node_sort_randomly );
       case NODE_DETACH               :  return( node_detach );
+      case NODE_ATTACH               :  return( node_attach );
+      case NODE_ATTACH_LEFT          :  return( node_attach_left );
+      case NODE_ATTACH_RIGHT         :  return( node_attach_right );
+      case NODE_ATTACH_UP            :  return( node_attach_up );
+      case NODE_ATTACH_DOWN          :  return( node_attach_down );
       case NODE_ALIGN_TOP            :  return( node_align_top );
       case NODE_ALIGN_VCENTER        :  return( node_align_vcenter );
       case NODE_ALIGN_BOTTOM         :  return( node_align_bottom );
@@ -1513,6 +1541,8 @@ public enum KeyCommand {
       map.selected.set_current_node( map.model.last_node );
       map.canvas.last_connection = null;
       map.queue_draw();
+    } else if( map.model.attach_node != null ) {
+      map.model.set_attach_node( null );
     } else {
       map.hide_properties();
     }
@@ -1913,6 +1943,55 @@ public enum KeyCommand {
   public static void node_swap_down( MindMap map ) {
     if( !map.editable ) return;
     node_swap( map, "down" );
+  }
+
+  private static void move_attach( MindMap map, string dir ) {
+    var current = map.get_current_node();
+    var start   = (map.model.attach_node == null) ? current : map.model.attach_node;
+    if( start != null ) {
+      Node? other    = start;
+      int   attempts = 0;
+      do {
+        switch( dir ) {
+          case "left"  :  other = map.model.get_node_left( other );   break;
+          case "right" :  other = map.model.get_node_right( other );  break;
+          case "up"    :  other = map.model.get_node_up( other );     break;
+          case "down"  :  other = map.model.get_node_down( other );   break;
+          default      :  return;
+        }
+      } while( (other != null) && (++attempts < 2) && ((other == current) || (other == current.parent)) );
+      if( (other != null) && (other != current) && (other != current.parent) && !current.contains_node( other ) && !other.is_summarized() ) {
+        map.model.set_attach_node( other );
+      }
+    }
+  }
+
+  public static void node_attach_left( MindMap map ) {
+    if( !map.editable ) return;
+    move_attach( map, "left" );
+  }
+
+  public static void node_attach_right( MindMap map ) {
+    if( !map.editable ) return;
+    move_attach( map, "right" );
+  }
+
+  public static void node_attach_up( MindMap map ) {
+    if( !map.editable ) return;
+    move_attach( map, "up" );
+  }
+
+  public static void node_attach_down( MindMap map ) {
+    if( !map.editable ) return;
+    move_attach( map, "down" );
+  }
+
+  public static void node_attach( MindMap map ) {
+    if( !map.editable ) return;
+    var current = map.get_current_node();
+    if( (map.model.attach_node != null) && (current != null) ) {
+      map.model.attach_current_node();
+    }
   }
 
   //-------------------------------------------------------------
