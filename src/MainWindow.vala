@@ -2006,7 +2006,7 @@ public class MainWindow : Gtk.ApplicationWindow {
         _pane.end_child = _inspector_nb;
         _pane.position  = _settings.get_int( "properties-width" );
         if( get_current_map( "show_properties 1" ) != null ) {
-          get_current_map( "show_properties 2" ).canvas.see( true, -300 );
+          get_current_map( "show_properties 2" ).canvas.see( false, true, -300 );
         }
       }
       _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
