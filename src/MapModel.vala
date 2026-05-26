@@ -173,7 +173,7 @@ public class MapModel {
   public signal void theme_changed();
   public signal void loaded();
   public signal void queue_draw();
-  public signal void see( bool animate = true, double width_adjust = 0, double pad = 100.0 );
+  public signal void see( bool show_attach = false, bool animate = true, double width_adjust = 0, double pad = 100.0 );
 
   //-------------------------------------------------------------
   // Default constructor
@@ -1330,7 +1330,7 @@ public class MapModel {
   public void set_attach_node( Node? n, NodeMode mode = NodeMode.ATTACHABLE ) {
     var change = _attach_node != n;
     if( _attach_node != null ) {
-      set_node_mode( _attach_node, NodeMode.NONE );
+      set_node_mode( _attach_node, _attach_node.mode.get_attach_reset_mode() );
     }
     _attach_node = n;
     if( n != null ) {

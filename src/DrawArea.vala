@@ -1037,12 +1037,12 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Brings the given node into view in its entirety including
   // the given amount of padding.
-  public void see( bool animate = true, double width_adjust = 0, double pad = 100.0 ) {
+  public void see( bool show_attach = false, bool animate = true, double width_adjust = 0, double pad = 100.0 ) {
 
     double x, y, w, h;
 
     var current_conn    = _map.selected.current_connection();
-    var current_node    = _map.selected.current_node();
+    var current_node    = (show_attach && (_map.model.attach_node != null)) ? _map.model.attach_node : _map.selected.current_node();
     var current_callout = _map.selected.current_callout();
     var current_group   = _map.selected.current_group();
 
@@ -1966,6 +1966,8 @@ public class DrawArea : Gtk.DrawingArea {
         break;
       case Gdk.Key.Alt_L :
       case Gdk.Key.Alt_R :
+      case Gdk.Key.Meta_L :
+      case Gdk.Key.Meta_R :
         _alt = true;
         break;
     }
@@ -1999,6 +2001,8 @@ public class DrawArea : Gtk.DrawingArea {
         break;
       case Gdk.Key.Alt_L :
       case Gdk.Key.Alt_R :
+      case Gdk.Key.Meta_L :
+      case Gdk.Key.Meta_R :
         _alt = false;
         break;
     }

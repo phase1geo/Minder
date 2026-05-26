@@ -28,19 +28,74 @@ using Gee;
 //-------------------------------------------------------------
 // Enumeration describing the different modes a node can be in
 public enum NodeMode {
-  NONE = 0,    // Specifies that this node is not the current node
-  CURRENT,     // Specifies that this node is the current node and is not being edited
-  SELECTED,    // Specifies that this node is one of several selected nodes
-  EDITABLE,    // Specifies that this node's text has been and currently is actively being edited
-  ATTACHABLE,  // Specifies that this node is the currently attachable node (affects display)
-  DROPPABLE,   // Specifies that this node can receive a dropped item
-  HIGHLIGHTED; // Specifies that this node is both selected and being highlighted
+  NONE = 0,      // Specifies that this node is not the current node
+  CURRENT,       // Specifies that this node is the current node and is not being edited
+  SELECTED,      // Specifies that this node is one of several selected nodes
+  EDITABLE,      // Specifies that this node's text has been and currently is actively being edited
+  ATTACHABLE,    // Specifies that this node is the currently attachable node (affects display)
+  DROPPABLE,     // Specifies that this node can receive a dropped item
+  HIGHLIGHTED,   // Specifies that this node is both selected and being highlighted
+  MARKED_NONE,   // Specifies that this node is marked (highlight with dashed line) and previous state was NONE
+  MARKED_CURR,   // Specifies that this node is marked and previous state was CURRENT
+  MARKED_SEL;    // Specifies that this node is marked and previous state was SELECTED
+
+  //-------------------------------------------------------------
+  // Returns the mode to set a node to whose current state is
+  // not an attachable state.
+  public NodeMode get_attach_set_mode( bool mark ) {
+    switch( this ) {
+      case CURRENT  :  return( MARKED_CURR );
+      case SELECTED :  return( MARKED_SEL );
+      default       :  return( mark ? MARKED_NONE : ATTACHABLE );  
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the mode to set a node to whose current state is an
+  // attachable state.
+  public NodeMode get_attach_reset_mode() {
+    switch( this ) {
+      case MARKED_CURR :  return( CURRENT );
+      case MARKED_SEL  :  return( SELECTED );
+      default          :  return( NONE );
+    }
+  }
 
   //-------------------------------------------------------------
   // Returns true if the mode indicates that this node will be
   // drawn as selected.
   public bool is_selected() {
-    return( (this == CURRENT) || (this == SELECTED) || (this == HIGHLIGHTED) );
+    return(
+      (this == CURRENT)     ||
+      (this == SELECTED)    ||
+      (this == HIGHLIGHTED) ||
+      (this == MARKED_CURR) ||
+      (this == MARKED_SEL)
+    );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this node is indicating that the node should
+  // be distinguished as an attachable/droppable node.
+  public bool attachable() {
+    return(
+      (this == ATTACHABLE)  ||
+      (this == DROPPABLE)   ||
+      (this == HIGHLIGHTED) ||
+      is_marked()
+    );
+  }
+
+  //-------------------------------------------------------------
+  // Specifies if this node should be drawn as "marked" which means
+  // this it looks like an attachable node but is not as noted by
+  // a dashed highlight.
+  public bool is_marked() {
+    return(
+      (this == MARKED_NONE) ||
+      (this == MARKED_CURR) ||
+      (this == MARKED_SEL)
+    );
   }
 }
 
@@ -3155,16 +3210,21 @@ public class Node : Object {
   // node is attachable.
   protected virtual void draw_attachable( Context ctx, Theme theme, RGBA? frost_background ) {
 
-    if( (mode == NodeMode.ATTACHABLE) || (mode == NodeMode.DROPPABLE) || (mode == NodeMode.HIGHLIGHTED) ) {
+    if( mode.attachable() ) {
 
       double x, y, w, h;
       node_bbox( out x, out y, out w, out h );
 
       // Draw highlight border
+      ctx.save();
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), _alpha );
       ctx.set_line_width( 4 );
+      if( mode.is_marked() ) {
+        ctx.set_dash( {5, 10}, 0 );
+      }
       ctx.rectangle( x, y, w, h );
       ctx.stroke();
+      ctx.restore();
 
     }
 

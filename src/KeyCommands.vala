@@ -1949,19 +1949,17 @@ public enum KeyCommand {
     var current = map.get_current_node();
     var start   = (map.model.attach_node == null) ? current : map.model.attach_node;
     if( start != null ) {
-      Node? other    = start;
-      int   attempts = 0;
-      do {
-        switch( dir ) {
-          case "left"  :  other = map.model.get_node_left( other );   break;
-          case "right" :  other = map.model.get_node_right( other );  break;
-          case "up"    :  other = map.model.get_node_up( other );     break;
-          case "down"  :  other = map.model.get_node_down( other );   break;
-          default      :  return;
-        }
-      } while( (other != null) && (++attempts < 2) && ((other == current) || (other == current.parent)) );
-      if( (other != null) && (other != current) && (other != current.parent) && !current.contains_node( other ) && !other.is_summarized() ) {
-        map.model.set_attach_node( other );
+      Node? other = null;
+      switch( dir ) {
+        case "left"  :  other = map.model.get_node_left( start );   break;
+        case "right" :  other = map.model.get_node_right( start );  break;
+        case "up"    :  other = map.model.get_node_up( start );     break;
+        case "down"  :  other = map.model.get_node_down( start );   break;
+        default      :  return;
+      }
+      if( (other != null) && ((other == current) || !current.contains_node( other )) && !other.is_summarized() ) {
+        map.model.set_attach_node( other, other.mode.get_attach_set_mode( (other == current) || (other == current.parent) ) );
+        map.canvas.see( true );
       }
     }
   }
@@ -1989,7 +1987,7 @@ public enum KeyCommand {
   public static void node_attach( MindMap map ) {
     if( !map.editable ) return;
     var current = map.get_current_node();
-    if( (map.model.attach_node != null) && (current != null) ) {
+    if( (map.model.attach_node != null) && !map.model.attach_node.mode.is_marked() && (current != null) ) {
       map.model.attach_current_node();
     }
   }
