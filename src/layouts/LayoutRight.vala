@@ -21,7 +21,8 @@
 
 public class LayoutRight : Layout {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public LayoutRight() {
     name        = _( "To right" );
     light_icon  = "minder-layout-right-light-symbolic";
@@ -29,12 +30,14 @@ public class LayoutRight : Layout {
     balanceable = false;
   }
 
-  /* Maps the given side to the appropriate side for this layout */
+  //-------------------------------------------------------------
+  // Maps the given side to the appropriate side for this layout
   public override NodeSide side_mapping( NodeSide side ) {
     return( NodeSide.RIGHT );
   }
 
-  /* The side should always be set to the right */
+  //-------------------------------------------------------------
+  // The side should always be set to the right
   public override void set_side( Node current ) {
     current.side = NodeSide.RIGHT;
   }

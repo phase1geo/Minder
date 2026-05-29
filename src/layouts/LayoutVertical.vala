@@ -21,7 +21,8 @@
 
 public class LayoutVertical : Layout {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public LayoutVertical() {
     name        = _( "Vertical" );
     light_icon  = "minder-layout-vertical-light-symbolic";
@@ -29,7 +30,8 @@ public class LayoutVertical : Layout {
     balanceable = true;
   }
 
-  /* Maps the given side to the appropriate side for this layout */
+  //-------------------------------------------------------------
+  // Maps the given side to the appropriate side for this layout
   public override NodeSide side_mapping( NodeSide side ) {
     switch( side ) {
       case NodeSide.LEFT   :  return( NodeSide.TOP );

@@ -21,7 +21,8 @@
 
 public class LayoutHorizontal : Layout {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public LayoutHorizontal() {
     name        = _( "Horizontal" );
     light_icon  = "minder-layout-horizontal-light-symbolic";
