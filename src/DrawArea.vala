@@ -1773,9 +1773,11 @@ public class DrawArea : Gtk.DrawingArea {
             var orig_summary = current_node.summary_node();
             var moved        = false;
             animator.add_nodes( _map.get_nodes(), false, "move to position" );
+            /*
             if( current_node.parent != null ) {
               current_node.parent.clear_summary_extents();
             }
+            */
             if( current_node.is_summary() ) {
               var sn = (current_node as SummaryNode);
               if( sn != null ) {

@@ -78,13 +78,16 @@ public class Layout : Object {
         if( item.last_summarized() ) {
           var child = item.children().index( 0 );
           double xy1, xy2;
-          (child as SummaryNode).get_extents( out xy1, out xy2 );
-          if( child.side.horizontal() ) {
-            child.posy = xy1 + (((xy2 - xy1) / 2) - (child.total_height / 2));
-          } else {
-            child.posx = xy1 + (((xy2 - xy1) / 2) - (child.total_width / 2));
+          var sn = (child as SummaryNode);
+          if( sn != null ) {
+            sn.get_extents( out xy1, out xy2 );
+            if( child.side.horizontal() ) {
+              child.posy = xy1 + (((xy2 - xy1) / 2) - (child.total_height / 2));
+            } else {
+              child.posx = xy1 + (((xy2 - xy1) / 2) - (child.total_width / 2));
+            }
+            sn.update_tree_bboxes();
           }
-          (child as SummaryNode).update_tree_bboxes();
         }
       });
     }

@@ -116,7 +116,7 @@ public class NodesMenu : BaseMenu {
 
     var nodes        = map.get_selected_nodes();
     var node_num     = nodes.length;
-    // var summarizable = map.model.nodes_summarizable();
+    var summarizable = map.model.nodes_summarizable();
     var alignable    = map.model.nodes_alignable();
 
     bool foldable, unfoldable;

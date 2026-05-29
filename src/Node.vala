@@ -662,8 +662,7 @@ public class Node : Object {
     _name      = new CanvasText.with_text( map, "" );
     _name.resized.connect( position_text_and_update_size );
     _tags      = new Tags();
-    siblings.append_val( this );
-    load( map, n, isroot, sibling_parent, ref siblings );
+    load( map, n, isroot, ref first_summary );
   }
 
   //-------------------------------------------------------------
