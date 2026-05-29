@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,22 +27,25 @@ using Gee;
 public class Minder : Gtk.Application {
 
   private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
+  public const  string static_version   = "2.1.0";
 
-  private        MainWindow          appwin;
-  private        GLib.Settings       iface_settings;
-  private        GLib.Settings       touch_settings;
+  private MainWindow    appwin;
+  private GLib.Settings iface_settings;
 
-  public  static GLib.Settings settings;
-  public  static string        version       = "2.0.3";
-  public  static bool          debug         = true;
-  public  static bool          debug_advance = false;
-  public  static int           debug_count   = 0;
+  public static GLib.Settings settings;
+  public static bool          debug          = false;
+  public static bool          debug_advance  = false;
+  public static int           debug_count    = 0;
 
   //-------------------------------------------------------------
   // Default constructor
   public Minder () {
 
-    Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.HANDLES_COMMAND_LINE );
+    Object(
+      application_id: "io.github.phase1geo.minder",
+      flags: ApplicationFlags.HANDLES_COMMAND_LINE,
+      version: static_version
+    );
 
     Intl.setlocale( LocaleCategory.ALL, "" );
     Intl.bindtextdomain( GETTEXT_PACKAGE, LOCALEDIR );
@@ -59,11 +62,17 @@ public class Minder : Gtk.Application {
   private void start_application() {
 
     // Initialize the settings
-    settings = new GLib.Settings( "com.github.phase1geo.minder" );
+    settings = new GLib.Settings( "io.github.phase1geo.minder" );
+
+    // Update the data directory format
+    DataDirUpdater.update( settings );
+
+    // Update the settings value, if necessary
+    SettingsUpdater.update( settings );
 
     // Add the application-specific icons
     weak IconTheme default_theme = IconTheme.get_for_display( Gdk.Display.get_default() );
-    default_theme.add_resource_path( "/com/github/phase1geo/minder" );
+    default_theme.add_resource_path( "/io/github/phase1geo/minder" );
 
     // Create the main window
     appwin = new MainWindow( this, settings );
@@ -150,10 +159,10 @@ public class Minder : Gtk.Application {
     // Add some description for importing and exporting
     var description_prefix = (Utils.get_flatpak_runtime() != "") ? "flatpak run " : "";
     var description = _( "Import Example:\n" );
-    description += _( "  %scom.github.phase1geo.minder --import=markdown file.markdown\n".printf( description_prefix ) );
+    description += _( "  %sio.github.phase1geo.minder --import=markdown file.markdown\n".printf( description_prefix ) );
     description += "\n";
     description += _( "Export Example:\n" );
-    description += _( "  %scom.github.phase1geo.minder --export=png --png-transparent file.minder file.png\n".printf( description_prefix ) );
+    description += _( "  %sio.github.phase1geo.minder --export=png --png-transparent file.minder file.png\n".printf( description_prefix ) );
     context.set_description( description );
 
     // Parse the arguments
@@ -255,7 +264,7 @@ public class Minder : Gtk.Application {
         });
         var map = appwin.create_map();
         map.doc.load_filename( infile, false );
-        map.doc.load( true, (loaded) => {
+        map.doc.load( UpgradeAction.READ_ONLY, (loaded) => {
           if( loaded ) {
             export.export( outfile, map );
           } else {

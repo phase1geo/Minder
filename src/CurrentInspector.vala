@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -142,7 +142,6 @@ public class CurrentInspector : Box {
   //-------------------------------------------------------------
   // Gives the node or connection note field keyboard focus
   public void grab_note() {
-
     if( _map.get_current_node() != null ) {
       var ni = _stack.get_child_by_name( "node" ) as NodeInspector;
       if( ni != null ) {
@@ -163,12 +162,61 @@ public class CurrentInspector : Box {
   }
 
   //-------------------------------------------------------------
+  // Returns the note for the currently selected item.
+  public NoteView? get_note() {
+    if( _map.get_current_node() != null ) {
+      var ni = _stack.get_child_by_name( "node" ) as NodeInspector;
+      if( ni != null ) {
+        return( ni.note );
+      }
+    } else if( _map.get_current_connection() != null ) {
+      var ci = _stack.get_child_by_name( "connection" ) as ConnectionInspector;
+      if( ci != null ) {
+        return( ci.note );
+      }
+    } else if( _map.get_current_group() != null ) {
+      var gi = _stack.get_child_by_name( "group" ) as GroupInspector;
+      if( gi != null ) {
+        return( gi.note );
+      }
+    }
+    return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Grabs the first widget in the node inspector pane.
+  private void node_grab_first() {
+    var tab = (_stack.get_child_by_name( "node" ) as NodeInspector);
+    if( tab != null ) {
+      tab.grab_first();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Grabs the first widget in the connection inspector pane.
+  private void connection_grab_first() {
+    var tab = (_stack.get_child_by_name( "connection" ) as ConnectionInspector);
+    if( tab != null ) {
+      tab.grab_first();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Grabs the first widget in the group inspector pane.
+  private void group_grab_first() {
+    var tab = (_stack.get_child_by_name( "group" ) as GroupInspector);
+    if( tab != null ) {
+      tab.grab_first();
+    }
+  }
+
+  //-------------------------------------------------------------
   // Grabs the focus on the first field of the displayed pane
   public void grab_first() {
     switch( _stack.visible_child_name ) {
-      case "node"       :  (_stack.get_child_by_name( "node" )       as NodeInspector).grab_first();        break;
-      case "connection" :  (_stack.get_child_by_name( "connection" ) as ConnectionInspector).grab_first();  break;
-      case "group"      :  (_stack.get_child_by_name( "group" )      as GroupInspector).grab_first();       break;
+      case "node"       :  node_grab_first();        break;
+      case "connection" :  connection_grab_first();  break;
+      case "group"      :  group_grab_first();       break;
     }
   }
 

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -34,7 +34,8 @@ public class UndoStyleChange : UndoItem {
     REDO
   }
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoStyleChange( StyleAffects affects, MindMap map ) {
     base( _( "style change" ) );
     _affects  = affects;
@@ -43,7 +44,8 @@ public class UndoStyleChange : UndoItem {
     _callouts = map.get_selected_callouts();
   }
 
-  /* Returns true if the given undo item matches our item */
+  //-------------------------------------------------------------
+  // Returns true if the given undo item matches our item
   protected override bool matches( UndoItem item ) {
     UndoStyleChange other = (UndoStyleChange)item;
     if( (_affects == other._affects) && (_nodes.length == other._nodes.length) && (_conns.length == other._conns.length) && (_callouts.length == other._callouts.length) ) {
@@ -109,6 +111,7 @@ public class UndoStyleChange : UndoItem {
           set_callout_style( callouts.index( i ), change_type, ref index );
         }
         break;
+      default :  break;
     }
     map.current_changed( map );
     map.auto_save();
@@ -158,6 +161,8 @@ public class UndoStyleChange : UndoItem {
     }
   }
 
+  /*
+   NOTE:  This function is currently not being used according to the valac compiler -- commenting it out for now
   private void set_style_for_level( Node node, int levels, StyleChangeType change_type, ref int index, int level ) {
     if( (levels & (1 << level)) != 0 ) {
       set_node_style( node, change_type, ref index );
@@ -169,21 +174,24 @@ public class UndoStyleChange : UndoItem {
       set_style_for_level( node.children().index( i ), levels, change_type, ref index, ((level == 9) ? 9 : (level + 1)) );
     }
   }
+  */
 
   protected virtual void load_style_value( Style style ) {
-    /* This method will be overridden */
+    // This method will be overridden
   }
 
   protected virtual void store_style_value( Style style, int index ) {
-    /* This method will be overridden */
+    // This method will be overridden
   }
 
-  /* Undoes a node name change */
+  //-------------------------------------------------------------
+  // Undoes a node name change
   public override void undo( MindMap map ) {
     traverse_styles( map, StyleChangeType.UNDO );
   }
 
-  /* Redoes a node name change */
+  //-------------------------------------------------------------
+  // Redoes a node name change
   public override void redo( MindMap map ) {
     traverse_styles( map, StyleChangeType.REDO );
   }

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2025-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -161,6 +161,18 @@ public class Tags {
   }
 
   //-------------------------------------------------------------
+  // Returns the tag associated with the given name.
+  public Tag? get_tag_from_name( string name ) {
+    for( int i=0; i<_tags.length; i++ ) {
+      var tag = _tags.index( i );
+      if( tag.name == name ) {
+        return( tag );
+      }
+    }
+    return( null );
+  }
+
+  //-------------------------------------------------------------
   // Returns the index of the given tag.  Returns -1 if the tag
   // cannot be found.
   public int get_tag_index( Tag tag ) {
@@ -206,6 +218,14 @@ public class Tags {
       tags.add_tag( _tags.index( i ) );
     }
     return( tags );
+  }
+
+  //-------------------------------------------------------------
+  // Copies the tag list from the other tags list to ours.
+  public void copy_tags( Tags other ) {
+    for( int i=0; i<other.size(); i++ ) {
+      add_tag( other.get_tag( i ) );
+    }
   }
 
   //-------------------------------------------------------------

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,60 +27,64 @@ public class Theme : Object {
 
   private HashMap<string,RGBA?> _colors;
 
-  public string name        { set; get; }
-  public string label       { set; get; }
-  public int    index       { set; get; default = -1; }
-  public bool   custom      { protected set; get; default = true; }
-  public bool   temporary   { set; get; default = false; }
+  public string name   { set; get; }
+  public string label  { set; get; }
+  public int    index  { set; get; default = -1; }
+  public bool   custom { private set; get; default = false; }
 
   //-------------------------------------------------------------
   // Default constructor.
   public Theme() {
+
     _colors = new HashMap<string,RGBA?>();
-    _colors.set( "background",            null );
-    _colors.set( "foreground",            null );
-    _colors.set( "root_background",       null );
-    _colors.set( "root_foreground",       null );
-    _colors.set( "nodesel_background",    null );
-    _colors.set( "nodesel_foreground",    null );
-    _colors.set( "textsel_background",    null );
-    _colors.set( "textsel_foreground",    null );
-    _colors.set( "text_cursor",           null );
-    _colors.set( "attachable",            null );
-    _colors.set( "connection_background", null );
-    _colors.set( "connection_foreground", null );
-    _colors.set( "url_background",        null );
-    _colors.set( "url_foreground",        null );
-    _colors.set( "tag",                   null );
-    _colors.set( "syntax",                null );
-    _colors.set( "match_background",      null );
-    _colors.set( "match_foreground",      null );
-    _colors.set( "markdown_listitem",     null );
-    _colors.set( "callout_background",    null );
-    _colors.set( "link_color0",           null );
-    _colors.set( "link_color1",           null );
-    _colors.set( "link_color2",           null );
-    _colors.set( "link_color3",           null );
-    _colors.set( "link_color4",           null );
-    _colors.set( "link_color5",           null );
-    _colors.set( "link_color6",           null );
-    _colors.set( "link_color7",           null );
+
+    _colors.set( "background",            color_from_string( "#ffffff" ) );
+    _colors.set( "foreground",            color_from_string( "Black" ) );
+    _colors.set( "root_background",       color_from_string( "#d4d4d4" ) );
+    _colors.set( "root_foreground",       color_from_string( "Black" ) );
+    _colors.set( "nodesel_background",    color_from_string( "#64baff" ) );
+    _colors.set( "nodesel_foreground",    color_from_string( "Black" ) );
+    _colors.set( "textsel_background",    color_from_string( "#0d52bf" ) );
+    _colors.set( "textsel_foreground",    color_from_string( "White" ) );
+    _colors.set( "text_cursor",           color_from_string( "Black" ) );
+    _colors.set( "attachable",            color_from_string( "#9bdb4d" ) );
+    _colors.set( "connection_background", color_from_string( "#777777" ) );
+    _colors.set( "connection_foreground", color_from_string( "#ffffff" ) );
+    _colors.set( "url_background",        color_from_string( "Grey") );
+    _colors.set( "url_foreground",        color_from_string( "Blue" ) );
+    _colors.set( "highlighter",           color_from_string( "Yellow" ) );
+    _colors.set( "tag",                   color_from_string( "#c00000" ) );
+    _colors.set( "syntax",                color_from_string( "Grey" ) );
+    _colors.set( "match_background",      color_from_string( "Gold" ) );
+    _colors.set( "match_foreground",      color_from_string( "Black" ) );
+    _colors.set( "markdown_listitem",     color_from_string( "Red" ) );
+    _colors.set( "callout_background",    color_from_string( "#f9c440" ) );
+
+    _colors.set( "link_color0", color_from_string( "#c6262e" ) );
+    _colors.set( "link_color1", color_from_string( "#f37329" ) );
+    _colors.set( "link_color2", color_from_string( "#f9c440" ) );
+    _colors.set( "link_color3", color_from_string( "#68b723" ) );
+    _colors.set( "link_color4", color_from_string( "#3689e6" ) );
+    _colors.set( "link_color5", color_from_string( "#7a36b1" ) );
+    _colors.set( "link_color6", color_from_string( "#715344" ) );
+    _colors.set( "link_color7", color_from_string( "#333333" ) );
+
   }
 
   //-------------------------------------------------------------
   // Copy constructor
-  public Theme.from_theme( Theme theme ) {
+  public Theme.customized( Theme theme ) {
     copy( theme );
+    custom = true;
   }
 
   //-------------------------------------------------------------
   // Copies the given theme to this theme
   public void copy( Theme theme ) {
-    name        = theme.name;
-    label       = theme.label;
-    temporary   = theme.temporary;
-    custom      = theme.custom;
-    _colors     = new HashMap<string,RGBA?>();
+    name    = theme.name;
+    label   = theme.label;
+    custom  = theme.custom;
+    _colors = new HashMap<string,RGBA?>();
     var it = theme._colors.map_iterator();
     while( it.next() ) {
       _colors.set( it.get_key(), it.get_value() );
@@ -191,22 +195,20 @@ public class Theme : Object {
   // Returns the CSS provider for this theme.
   public CssProvider get_css_provider( int text_size ) {
     var provider     = new CssProvider();
-    var foreground   = Granite.contrasting_foreground_color( get_color( "background" ) );
+    // var foreground   = Granite.contrasting_foreground_color( get_color( "background" ) );
     var granite_settings = Granite.Settings.get_default();
-    try {
-      var tv_size  = (text_size == -1) ? ".textfield { font: 1em \"Sans\"; } " :
-                                         ".textfield { font: %dpx \"Sans\"; } ".printf( text_size );
-      var css_data = "@define-color colorPrimary #603461; " +
-                     "@define-color textColorPrimary @SILVER_100; " +
-                     "@define-color colorAccent #603461; " +
-                     tv_size +
-                     ".theme-selected { background: #087DFF; } " +
-                     ".canvas { background: " + get_color( "background" ).to_string() + "; }" +
-                     ".highlighted { background: rgba(255, 255, 129, " + ((granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK) ? "0.15" : "1.0") + "); }";
-      provider.load_from_string( css_data );
-    } catch( GLib.Error e ) {
-      stdout.printf( _( "Unable to load background color: %s" ), e.message );
-    }
+    var tv_size  = (text_size == -1) ? ".textfield { font: 1em \"Sans\"; } " :
+                                       ".textfield { font: %dpx \"Sans\"; } ".printf( text_size );
+    var css_data = "@define-color colorPrimary #603461; " +
+                   "@define-color textColorPrimary @SILVER_100; " +
+                   "@define-color colorAccent #603461; " +
+                   tv_size +
+                   ".theme-selected { background: #087DFF; } " +
+                   ".canvas { background: " + get_color( "background" ).to_string() + "; }" +
+                   ".highlighted { background: rgba(255, 255, 129, " + ((granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK) ? "0.15" : "1.0") + "); }";
+
+    provider.load_from_string( css_data );
+
     return( provider );
   }
 
@@ -218,9 +220,8 @@ public class Theme : Object {
 
   //-------------------------------------------------------------
   // Parses the specified XML node for theme coloring information.
-  public bool load( Xml.Node* n ) {
-
-    bool contains_data = false;
+  // Returns true if this is a custom theme.
+  public void load( Xml.Node* n ) {
 
     string? nn = n->get_prop( "name" );
     if( nn != null ) {
@@ -245,11 +246,9 @@ public class Theme : Object {
       string? s = n->get_prop( name );
       if( s != null ) {
         set_color( name, color_from_string( s ) );
-        contains_data = true;
+        custom = true;
       }
     }
-
-    return( contains_data );
 
   }
 
@@ -286,7 +285,7 @@ public class Theme : Object {
     double ypos[6];
     int    width, height;
 
-    var rect = Graphene.Rect.alloc();
+    var rect = Graphene.Rect();
     rect.init( (float)0.0, (float)0.0, (float)side, (float)side );
 
     var snapshot = new Gtk.Snapshot();

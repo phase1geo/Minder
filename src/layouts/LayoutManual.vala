@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,7 +21,8 @@
 
 public class LayoutManual : Layout {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public LayoutManual() {
     name        = _( "Manual" );
     light_icon  = "minder-layout-manual-light-symbolic";
@@ -33,15 +34,18 @@ public class LayoutManual : Layout {
     return( true );
   }
 
-  /* Initializes this layout */
+  //-------------------------------------------------------------
+  // Initializes this layout
   public override void initialize( Node parent ) {}
 
-  /* Maps the given side to the appropriate side for this layout */
+  //-------------------------------------------------------------
+  // Maps the given side to the appropriate side for this layout
   public override NodeSide side_mapping( NodeSide side ) {
     return( side );
   }
 
-  /* Updates the tree boundaries */
+  //-------------------------------------------------------------
+  // Updates the tree boundaries
   private void update_tree( Node n ) {
     update_tree_size( n );
     while( n.parent != null ) {
@@ -50,17 +54,20 @@ public class LayoutManual : Layout {
     }
   }
 
-  /* Updates the layout when necessary when a node is edited */
+  //-------------------------------------------------------------
+  // Updates the layout when necessary when a node is edited
   public override void handle_update_by_edit( Node n, double diffw, double diffh ) {
     update_tree( n );
   }
 
-  /* Called when a node's fold indicator changes */
+  //-------------------------------------------------------------
+  // Called when a node's fold indicator changes
   public override void handle_update_by_fold( Node n ) {
     update_tree( n );
   }
 
-  /* Called when we are inserting a node within a parent */
+  //-------------------------------------------------------------
+  // Called when we are inserting a node within a parent
   public override void handle_update_by_insert( Node parent, Node child, int pos ) {
     if( !child.attached ) {
       base.handle_update_by_insert( parent, child, pos );
@@ -69,7 +76,9 @@ public class LayoutManual : Layout {
     }
   }
 
-  /* Called to layout the leftover children of a parent node when a node is deleted */
+  //-------------------------------------------------------------
+  // Called to layout the leftover children of a parent node when
+  // a node is deleted
   public override void handle_update_by_delete( Node parent, int index, NodeSide side, double size ) {
     update_tree( parent );
   }

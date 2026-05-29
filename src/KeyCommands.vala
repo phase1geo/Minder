@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2025-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,7 +21,7 @@
 
 using Gee;
 
-public delegate void KeyCommandFunc( MindMap map );
+public delegate void KeyCommandFunc( MindMap map, bool key_activated );
 
 public enum KeyCommand {
   DO_NOTHING,
@@ -122,6 +122,8 @@ public enum KeyCommand {
       NODE_SELECT_PARENT,
       NODE_SELECT_SIBLING_NEXT,
       NODE_SELECT_SIBLING_PREV,
+      NODE_SELECT_SIBLING_FIRST,
+      NODE_SELECT_SIBLING_LAST,
       NODE_SELECT_CHILD,
       NODE_SELECT_CHILDREN,
       NODE_SELECT_TREE,
@@ -141,7 +143,14 @@ public enum KeyCommand {
       NODE_SORT_ALPHABETICALLY,
       NODE_SORT_RANDOMLY,
       NODE_DETACH,
+      NODE_ATTACH,
     NODE_MOVE_END,
+    NODE_ATTACH_START,
+      NODE_ATTACH_LEFT,
+      NODE_ATTACH_RIGHT,
+      NODE_ATTACH_UP,
+      NODE_ATTACH_DOWN,
+    NODE_ATTACH_END,
     NODE_ALIGN_START,
       NODE_ALIGN_TOP,
       NODE_ALIGN_VCENTER,
@@ -193,6 +202,22 @@ public enum KeyCommand {
       EDIT_REMOVE_WORD_NEXT,
       EDIT_REMOVE_WORD_PREV,
     EDIT_TEXT_END,
+    EDIT_MARKDOWN_START,
+      EDIT_HEADER1,
+      EDIT_HEADER2,
+      EDIT_HEADER3,
+      EDIT_HEADER4,
+      EDIT_HEADER5,
+      EDIT_HEADER6,
+      EDIT_BOLD,
+      EDIT_ITALICS,
+      EDIT_STRIKE,
+      EDIT_CODE,
+      EDIT_HIGHLIGHT,
+      EDIT_SUPERSCRIPT,
+      EDIT_SUBSCRIPT,
+      EDIT_LINK,
+    EDIT_MARKDOWN_END,
     EDIT_CLIPBOARD_START,
       EDIT_COPY,
       EDIT_CUT,
@@ -319,6 +344,8 @@ public enum KeyCommand {
       case NODE_SELECT_PARENT        :  return( "node-select-parent" );
       case NODE_SELECT_SIBLING_NEXT  :  return( "node-select-sibling-next" );
       case NODE_SELECT_SIBLING_PREV  :  return( "node-select-sibling-prev" );
+      case NODE_SELECT_SIBLING_FIRST :  return( "node-select-sibling-first" );
+      case NODE_SELECT_SIBLING_LAST  :  return( "node-select-sibling-last" );
       case NODE_SELECT_CHILD         :  return( "node-select-child" );
       case NODE_SELECT_CHILDREN      :  return( "node-select-children" );
       case NODE_SELECT_TREE          :  return( "node-select-tree" );
@@ -336,6 +363,11 @@ public enum KeyCommand {
       case NODE_SORT_ALPHABETICALLY  :  return( "node-sort-alphabetically" );
       case NODE_SORT_RANDOMLY        :  return( "node-sort-randomly" );
       case NODE_DETACH               :  return( "node-detach" );
+      case NODE_ATTACH               :  return( "node-attach" );
+      case NODE_ATTACH_LEFT          :  return( "node-attach-left" );
+      case NODE_ATTACH_RIGHT         :  return( "node-attach-right" );
+      case NODE_ATTACH_UP            :  return( "node-attach-up" );
+      case NODE_ATTACH_DOWN          :  return( "node-attach-down" );
       case NODE_ALIGN_TOP            :  return( "node-align-top" );
       case NODE_ALIGN_VCENTER        :  return( "node-align-vcenter" );
       case NODE_ALIGN_BOTTOM         :  return( "node-align-bottom" );
@@ -368,6 +400,20 @@ public enum KeyCommand {
       case EDIT_DELETE               :  return( "edit-delete" );
       case EDIT_REMOVE_WORD_NEXT     :  return( "edit-remove-word-next" );
       case EDIT_REMOVE_WORD_PREV     :  return( "edit-remove-word-prev" );
+      case EDIT_HEADER1              :  return( "edit-header-1" );
+      case EDIT_HEADER2              :  return( "edit-header-2" );
+      case EDIT_HEADER3              :  return( "edit-header-3" );
+      case EDIT_HEADER4              :  return( "edit-header-4" );
+      case EDIT_HEADER5              :  return( "edit-header-5" );
+      case EDIT_HEADER6              :  return( "edit-header-6" );
+      case EDIT_BOLD                 :  return( "edit-bold" );
+      case EDIT_ITALICS              :  return( "edit-italics" );
+      case EDIT_STRIKE               :  return( "edit-strike" );
+      case EDIT_CODE                 :  return( "edit-code" );
+      case EDIT_HIGHLIGHT            :  return( "edit-highlight" );
+      case EDIT_SUPERSCRIPT          :  return( "edit-superscript" );
+      case EDIT_SUBSCRIPT            :  return( "edit-subscript" );
+      case EDIT_LINK                 :  return( "edit-link" );
       case EDIT_COPY                 :  return( "edit-copy" );
       case EDIT_CUT                  :  return( "edit-cut" );
       case EDIT_PASTE                :  return( "edit-paste" );
@@ -483,6 +529,8 @@ public enum KeyCommand {
       case "node-select-parent"        :  return( NODE_SELECT_PARENT );
       case "node-select-sibling-next"  :  return( NODE_SELECT_SIBLING_NEXT );
       case "node-select-sibling-prev"  :  return( NODE_SELECT_SIBLING_PREV );
+      case "node-select-sibling-first" :  return( NODE_SELECT_SIBLING_FIRST );
+      case "node-select-sibling-last"  :  return( NODE_SELECT_SIBLING_LAST );
       case "node-select-child"         :  return( NODE_SELECT_CHILD );
       case "node-select-children"      :  return( NODE_SELECT_CHILDREN );
       case "node-select-tree"          :  return( NODE_SELECT_TREE );
@@ -500,6 +548,11 @@ public enum KeyCommand {
       case "node-sort-alphabetically"  :  return( NODE_SORT_ALPHABETICALLY );
       case "node-sort-randomly"        :  return( NODE_SORT_RANDOMLY );
       case "node-detach"               :  return( NODE_DETACH );
+      case "node-attach"               :  return( NODE_ATTACH );
+      case "node-attach-left"          :  return( NODE_ATTACH_LEFT );
+      case "node-attach-right"         :  return( NODE_ATTACH_RIGHT );
+      case "node-attach-up"            :  return( NODE_ATTACH_UP );
+      case "node-attach-down"          :  return( NODE_ATTACH_DOWN );
       case "node-align-top"            :  return( NODE_ALIGN_TOP );
       case "node-align-vcenter"        :  return( NODE_ALIGN_VCENTER );
       case "node-align-bottom"         :  return( NODE_ALIGN_BOTTOM );
@@ -527,6 +580,20 @@ public enum KeyCommand {
       case "edit-delete"               :  return( EDIT_DELETE );
       case "edit-remove-word-next"     :  return( EDIT_REMOVE_WORD_NEXT );
       case "edit-remove-word-prev"     :  return( EDIT_REMOVE_WORD_PREV );
+      case "edit-header-1"             :  return( EDIT_HEADER1 );
+      case "edit-header-2"             :  return( EDIT_HEADER2 );
+      case "edit-header-3"             :  return( EDIT_HEADER3 );
+      case "edit-header-4"             :  return( EDIT_HEADER4 );
+      case "edit-header-5"             :  return( EDIT_HEADER5 );
+      case "edit-header-6"             :  return( EDIT_HEADER6 );
+      case "edit-bold"                 :  return( EDIT_BOLD );
+      case "edit-italics"              :  return( EDIT_ITALICS );
+      case "edit-strike"               :  return( EDIT_STRIKE );
+      case "edit-code"                 :  return( EDIT_CODE );
+      case "edit-highlight"            :  return( EDIT_HIGHLIGHT );
+      case "edit-superscript"          :  return( EDIT_SUPERSCRIPT );
+      case "edit-subscript"            :  return( EDIT_SUBSCRIPT );
+      case "edit-link"                 :  return( EDIT_LINK );
       case "edit-copy"                 :  return( EDIT_COPY );
       case "edit-cut"                  :  return( EDIT_CUT );
       case "edit-paste"                :  return( EDIT_PASTE );
@@ -656,6 +723,8 @@ public enum KeyCommand {
       case NODE_SELECT_TREE          :  return( _( "Select all nodes in subtree of current node" ) );
       case NODE_SELECT_SIBLING_NEXT  :  return( _( "Select next sibling node of current node" ) );
       case NODE_SELECT_SIBLING_PREV  :  return( _( "Select previous sibling node of current node" ) );
+      case NODE_SELECT_SIBLING_FIRST :  return( _( "Select first sibling node of current node" ) );
+      case NODE_SELECT_SIBLING_LAST  :  return( _( "Select last sibling node of current node" ) );
       case NODE_SELECT_LEFT          :  return( _( "Select node to the left of current node" ) );
       case NODE_SELECT_RIGHT         :  return( _( "Select node to the right of current node" ) );
       case NODE_SELECT_UP            :  return( _( "Select node above current node" ) );
@@ -671,6 +740,12 @@ public enum KeyCommand {
       case NODE_SORT_ALPHABETICALLY  :  return( _( "Sort child nodes of current node alphabetically" ) );
       case NODE_SORT_RANDOMLY        :  return( _( "Sort child nodes of current node randomly" ) );
       case NODE_DETACH               :  return( _( "Detaches current node and its subtree" ) );
+      case NODE_ATTACH               :  return( _( "Attach current node to the current attach node" ) );
+      case NODE_ATTACH_START         :  return( _( "Attach Node Commands" ) );
+      case NODE_ATTACH_LEFT          :  return( _( "Change the attach node to node to left of current" ) );
+      case NODE_ATTACH_RIGHT         :  return( _( "Change the attach node to node to right of current" ) );
+      case NODE_ATTACH_UP            :  return( _( "Change the attach node to node above current" ) );
+      case NODE_ATTACH_DOWN          :  return( _( "Change the attach node to node below current" ) );
       case NODE_ALIGN_START          :  return( _( "Alignment Commands" ) );
       case NODE_ALIGN_TOP            :  return( _( "Align selected node top edges" ) );
       case NODE_ALIGN_VCENTER        :  return( _( "Align selected node vertical centers" ) );
@@ -701,6 +776,21 @@ public enum KeyCommand {
       case EDIT_INSERT_EMOJI         :  return( _( "Insert emoji" ) );
       case EDIT_REMOVE_WORD_NEXT     :  return( _( "Remove next word" ) );
       case EDIT_REMOVE_WORD_PREV     :  return( _( "Remove previous word" ) );
+      case EDIT_MARKDOWN_START       :  return( _( "Markdown Syntax" ) );
+      case EDIT_HEADER1              :  return( _( "Insert Markdown header-1 syntax" ) );
+      case EDIT_HEADER2              :  return( _( "Insert Markdown header-2 syntax" ) );
+      case EDIT_HEADER3              :  return( _( "Insert Markdown header-3 syntax" ) );
+      case EDIT_HEADER4              :  return( _( "Insert Markdown header-4 syntax" ) );
+      case EDIT_HEADER5              :  return( _( "Insert Markdown header-5 syntax" ) );
+      case EDIT_HEADER6              :  return( _( "Insert Markdown header-6 syntax" ) );
+      case EDIT_BOLD                 :  return( _( "Insert Markdown bold syntax" ) );
+      case EDIT_ITALICS              :  return( _( "Insert Markdown italics syntax" ) );
+      case EDIT_STRIKE               :  return( _( "Insert Markdown strikethrough syntax" ) );
+      case EDIT_CODE                 :  return( _( "Insert Markdown code syntax" ) );
+      case EDIT_HIGHLIGHT            :  return( _( "Insert Markdown highlighting syntax" ) );
+      case EDIT_SUPERSCRIPT          :  return( _( "Insert Markdown superscript syntax" ) );
+      case EDIT_SUBSCRIPT            :  return( _( "Insert Markdown subscript syntax" ) );
+      case EDIT_LINK                 :  return( _( "Insert Markdown URL link syntax" ) );
       case EDIT_CLIPBOARD_START      :  return( _( "Clipboard Commands" ) );
       case EDIT_COPY                 :  return( _( "Copy selected nodes or text" ) );
       case EDIT_CUT                  :  return( _( "Cut selected nodes or text" ) );
@@ -816,6 +906,8 @@ public enum KeyCommand {
       case NODE_SELECT_PARENT        :  return( node_select_parent );
       case NODE_SELECT_SIBLING_NEXT  :  return( node_select_sibling_next );
       case NODE_SELECT_SIBLING_PREV  :  return( node_select_sibling_previous );
+      case NODE_SELECT_SIBLING_FIRST :  return( node_select_sibling_first );
+      case NODE_SELECT_SIBLING_LAST  :  return( node_select_sibling_last );
       case NODE_SELECT_CHILD         :  return( node_select_child );
       case NODE_SELECT_CHILDREN      :  return( node_select_children );
       case NODE_SELECT_TREE          :  return( node_select_tree );
@@ -833,6 +925,11 @@ public enum KeyCommand {
       case NODE_SORT_ALPHABETICALLY  :  return( node_sort_alphabetically );
       case NODE_SORT_RANDOMLY        :  return( node_sort_randomly );
       case NODE_DETACH               :  return( node_detach );
+      case NODE_ATTACH               :  return( node_attach );
+      case NODE_ATTACH_LEFT          :  return( node_attach_left );
+      case NODE_ATTACH_RIGHT         :  return( node_attach_right );
+      case NODE_ATTACH_UP            :  return( node_attach_up );
+      case NODE_ATTACH_DOWN          :  return( node_attach_down );
       case NODE_ALIGN_TOP            :  return( node_align_top );
       case NODE_ALIGN_VCENTER        :  return( node_align_vcenter );
       case NODE_ALIGN_BOTTOM         :  return( node_align_bottom );
@@ -860,6 +957,20 @@ public enum KeyCommand {
       case EDIT_DELETE               :  return( edit_delete );
       case EDIT_REMOVE_WORD_NEXT     :  return( edit_remove_word_next );
       case EDIT_REMOVE_WORD_PREV     :  return( edit_remove_word_previous );
+      case EDIT_HEADER1              :  return( edit_header1 );
+      case EDIT_HEADER2              :  return( edit_header2 );
+      case EDIT_HEADER3              :  return( edit_header3 );
+      case EDIT_HEADER4              :  return( edit_header4 );
+      case EDIT_HEADER5              :  return( edit_header5 );
+      case EDIT_HEADER6              :  return( edit_header6 );
+      case EDIT_BOLD                 :  return( edit_bold );
+      case EDIT_ITALICS              :  return( edit_italics );
+      case EDIT_STRIKE               :  return( edit_strike );
+      case EDIT_CODE                 :  return( edit_code );
+      case EDIT_HIGHLIGHT            :  return( edit_highlight );
+      case EDIT_SUPERSCRIPT          :  return( edit_superscript );
+      case EDIT_SUBSCRIPT            :  return( edit_subscript );
+      case EDIT_LINK                 :  return( edit_link );
       case EDIT_COPY                 :  return( edit_copy );
       case EDIT_CUT                  :  return( edit_cut );
       case EDIT_PASTE                :  return( edit_paste );
@@ -948,7 +1059,10 @@ public enum KeyCommand {
   //-------------------------------------------------------------
   // Returns true if this command is valid for a selected sticker.
   public bool for_sticker() {
-    return( ((STICKER_START < this) && (this < STICKER_END)) );
+    return(
+      ((STICKER_START < this) && (this < STICKER_END)) ||
+      (this == ESCAPE)
+    );
   }
 
   //-------------------------------------------------------------
@@ -957,7 +1071,8 @@ public enum KeyCommand {
     return(
       ((GROUP_START < this) && (this < GROUP_END)) ||
       (this == EDIT_NOTE) ||
-      (this == SHOW_CURRENT_INFO)
+      (this == SHOW_CURRENT_INFO) ||
+      (this == ESCAPE)
     );
   }
 
@@ -969,7 +1084,9 @@ public enum KeyCommand {
       case NODE_QUICK_ENTRY_INSERT :
       case NODE_ADD_SIBLING_AFTER  :
       case NODE_ADD_SIBLING_BEFORE :
+      case NODE_SELECT_ROOT        :
       case EDIT_PASTE              :
+      case ESCAPE                  :
         return( true );
       default :
         return( false );
@@ -1046,6 +1163,8 @@ public enum KeyCommand {
       (this != NODE_SELECT_DOWN) &&
       (this != NODE_SELECT_SIBLING_PREV) &&
       (this != NODE_SELECT_SIBLING_NEXT) &&
+      (this != NODE_SELECT_SIBLING_FIRST) &&
+      (this != NODE_SELECT_SIBLING_LAST) &&
       (this != NODE_SWAP_UP) &&
       (this != NODE_SWAP_DOWN) &&
       ((this < CONNECTION_EXIST_START) || (CONNECTION_EXIST_END < this)) &&
@@ -1136,6 +1255,7 @@ public enum KeyCommand {
       case GROUP_CHANGE_START      :
       case GROUP_SELECT_START      :
       case EDIT_TEXT_START         :
+      case EDIT_MARKDOWN_START     :
       case EDIT_CLIPBOARD_START    :
       case EDIT_URL_START          :
       case EDIT_CURSOR_START       :
@@ -1172,6 +1292,7 @@ public enum KeyCommand {
       case GROUP_CHANGE_END      :
       case GROUP_SELECT_END      :
       case EDIT_TEXT_END         :
+      case EDIT_MARKDOWN_END     :
       case EDIT_CLIPBOARD_END    :
       case EDIT_URL_END          :
       case EDIT_CURSOR_END       :
@@ -1242,15 +1363,17 @@ public enum KeyCommand {
 
   public static void undo_action( MindMap map ) {
     if( !map.editable ) return;
-    if( map.undo_buffer.undoable() ) {
-      map.undo_buffer.undo();
+    var buffer = map.current_undo_buffer();
+    if( buffer.undoable() ) {
+      buffer.undo();
     }
   }
 
   public static void redo_action( MindMap map ) {
     if( !map.editable ) return;
-    if( map.undo_buffer.redoable() ) {
-      map.undo_buffer.redo();
+    var buffer = map.current_undo_buffer();
+    if( buffer.redoable() ) {
+      buffer.redo();
     }
   }
 
@@ -1331,7 +1454,7 @@ public enum KeyCommand {
     win.transient_for = map.win;
     win.view_name     = null;
 
-    /* Display the most relevant information based on the current state */
+    // Display the most relevant information based on the current state
     if( map.is_node_editable() || map.is_connection_editable() ) {
       win.section_name = "editing";
     } else if( map.is_node_selected() ) {
@@ -1423,6 +1546,8 @@ public enum KeyCommand {
       map.selected.set_current_node( map.model.last_node );
       map.canvas.last_connection = null;
       map.queue_draw();
+    } else if( map.model.attach_node != null ) {
+      map.model.set_attach_node( null );
     } else {
       map.hide_properties();
     }
@@ -1537,6 +1662,14 @@ public enum KeyCommand {
     node_select( map, "sibling-prev" );
   }
 
+  private static void node_select_sibling_first( MindMap map ) {
+    node_select( map, "sibling-first" );
+  }
+
+  private static void node_select_sibling_last( MindMap map ) {
+    node_select( map, "sibling-last" );
+  }
+
   public static void node_select_left( MindMap map ) {
     node_select( map, "left" );
   }
@@ -1551,14 +1684,6 @@ public enum KeyCommand {
 
   public static void node_select_down( MindMap map ) {
     node_select( map, "down" );
-  }
-
-  private static void node_select_first_sibling( MindMap map ) {
-    node_select( map, "sibling-first" );
-  }
-
-  private static void node_select_last_sibling( MindMap map ) {
-    node_select( map, "sibling-last" );
   }
 
   public static void node_select_linked( MindMap map ) {
@@ -1830,6 +1955,53 @@ public enum KeyCommand {
     node_swap( map, "down" );
   }
 
+  private static void move_attach( MindMap map, string dir ) {
+    var current = map.get_current_node();
+    var start   = (map.model.attach_node == null) ? current : map.model.attach_node;
+    if( start != null ) {
+      Node? other = null;
+      switch( dir ) {
+        case "left"  :  other = map.model.get_node_left( start );   break;
+        case "right" :  other = map.model.get_node_right( start );  break;
+        case "up"    :  other = map.model.get_node_up( start );     break;
+        case "down"  :  other = map.model.get_node_down( start );   break;
+        default      :  return;
+      }
+      if( (other != null) && ((other == current) || !current.contains_node( other )) && !other.is_summarized() ) {
+        map.model.set_attach_node( other, other.mode.get_attach_set_mode( (other == current) || (other == current.parent) ) );
+        map.canvas.see( true );
+      }
+    }
+  }
+
+  public static void node_attach_left( MindMap map ) {
+    if( !map.editable ) return;
+    move_attach( map, "left" );
+  }
+
+  public static void node_attach_right( MindMap map ) {
+    if( !map.editable ) return;
+    move_attach( map, "right" );
+  }
+
+  public static void node_attach_up( MindMap map ) {
+    if( !map.editable ) return;
+    move_attach( map, "up" );
+  }
+
+  public static void node_attach_down( MindMap map ) {
+    if( !map.editable ) return;
+    move_attach( map, "down" );
+  }
+
+  public static void node_attach( MindMap map ) {
+    if( !map.editable ) return;
+    var current = map.get_current_node();
+    if( (map.model.attach_node != null) && !map.model.attach_node.mode.is_marked() && (current != null) ) {
+      map.model.attach_current_node();
+    }
+  }
+
   //-------------------------------------------------------------
   // CONNECTION FUNCTIONS
 
@@ -1883,11 +2055,19 @@ public enum KeyCommand {
 
   public static void group_change_color( MindMap map ) {
     if( !map.editable ) return;
-    var color_picker = new Gtk.ColorChooserDialog( _( "Select a group color" ), map.win );
-    color_picker.color_activated.connect((color) => {
-      map.model.change_group_color( color );
+    var color_picker = new Gtk.ColorDialog() {
+      modal = true,
+      title = _( "Select a group color" ),
+      with_alpha = false
+    };
+    color_picker.choose_rgba.begin( map.win, null, null, (obj, res) => {
+      try {
+        var color = color_picker.choose_rgba.end( res );
+        if( color != null ) {
+          map.model.change_group_color( color );
+        }
+      } catch( Error e ) {}
     });
-    color_picker.present();
   }
 
   public static void group_merge( MindMap map ) {
@@ -2061,6 +2241,75 @@ public enum KeyCommand {
       text.delete_word( map.undo_text );
       text_changed( map );
     }
+  }
+
+  private static void edit_insert_markdown( MindMap map, bool key_used, string pretext, string posttext = "", string midtext = "" ) {
+    if( !map.editable ) return;
+    var text = map.get_current_text();
+    var note = map.win.get_current_note();
+    if( text != null ) {
+      text.insert_markdown( pretext, midtext, posttext, map.undo_text );
+      map.canvas.grab_focus();
+      text_changed( map );
+    } else if( (note != null) && (!key_used || note.has_focus) ) {
+      note.paste_markdown( pretext, midtext, posttext );
+    }
+  }
+
+  public static void edit_header1( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "# " );
+  }
+
+  public static void edit_header2( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "## " );
+  }
+
+  public static void edit_header3( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "### " );
+  }
+
+  public static void edit_header4( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "#### " );
+  }
+
+  public static void edit_header5( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "##### " );
+  }
+
+  public static void edit_header6( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "###### " );
+  }
+
+  public static void edit_bold( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "**", "**" );
+  }
+
+  public static void edit_italics( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "_", "_" );
+  }
+
+  public static void edit_strike( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "~~", "~~" );
+  }
+
+  public static void edit_code( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "`", "`" );
+  }
+
+  public static void edit_highlight( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "==", "==" );
+  }
+
+  public static void edit_superscript( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "<sup>", "</sup>" );
+  }
+
+  public static void edit_subscript( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "<sub>", "</sub>" );
+  }
+
+  public static void edit_link( MindMap map, bool key_activated ) {
+    edit_insert_markdown( map, key_activated, "[", ")", "](" );
   }
 
   public static void edit_cursor_char_next( MindMap map ) {

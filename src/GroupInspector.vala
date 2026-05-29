@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -32,6 +32,12 @@ public class GroupInspector : Box {
   private NodeGroup?     _group     = null;
 
   public signal void editable_changed();
+
+  public NoteView note {
+    get {
+      return( _note );
+    }
+  }
 
   //-------------------------------------------------------------
   // Constructor
@@ -88,7 +94,7 @@ public class GroupInspector : Box {
     };
     lbl.add_css_class( "titled" );
 
-    _note = new NoteView() {
+    _note = new NoteView( win ) {
       vexpand   = true,
       wrap_mode = Gtk.WrapMode.WORD
     };
@@ -125,6 +131,7 @@ public class GroupInspector : Box {
   private void note_focus_in() {
     _group     = _map.get_current_group();
     _orig_note = _note.buffer.text;
+    _map.unedit_text();
   }
 
   //-------------------------------------------------------------

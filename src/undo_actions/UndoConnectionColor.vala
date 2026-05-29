@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -28,7 +28,8 @@ public class UndoConnectionColor : UndoItem {
   RGBA?      _old_color;
   RGBA?      _new_color;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoConnectionColor( Connection c, RGBA? old_color ) {
     base( _( "connection color change" ) );
     _conn      = c;
@@ -36,7 +37,8 @@ public class UndoConnectionColor : UndoItem {
     _new_color = c.color;
   }
 
-  /* Undoes a node name change */
+  //-------------------------------------------------------------
+  // Undoes a node name change
   public override void undo( MindMap map ) {
     _conn.color = _old_color;
     map.queue_draw();
@@ -44,7 +46,8 @@ public class UndoConnectionColor : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a node name change */
+  //-------------------------------------------------------------
+  // Redoes a node name change
   public override void redo( MindMap map ) {
     _conn.color = _new_color;
     map.queue_draw();

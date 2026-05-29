@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2025-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -39,7 +39,7 @@ public class MindMap {
   private bool           _editable       = true;
   private Style          _global_style;
 
-  /* Allocate static parsers */
+  // Allocate static parsers
   public MarkdownParser markdown_parser { get; private set; }
   public TaggerParser   tagger_parser   { get; private set; }
   public UrlParser      url_parser      { get; private set; }
@@ -393,9 +393,6 @@ public class MindMap {
         break;
     }
 
-    // Initialize variables
-    // TBD
-
   }
 
   //-------------------------------------------------------------
@@ -443,7 +440,16 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
-  // NODE SELECTION METHODS
+  // Called whenever the enable-markdown setting value is changed.
+  public void update_enable_markdown( bool enable ) {
+    if( markdown_parser.enable != enable ) {
+      markdown_parser.enable = enable;
+      queue_draw();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // TEXT SELECTION METHODS
   //-------------------------------------------------------------
 
   //-------------------------------------------------------------
@@ -460,6 +466,24 @@ public class MindMap {
       return( null );
     }
   }
+
+  //-------------------------------------------------------------
+  // If any text is being edited, end the editing mode and return
+  // it to its selected state.
+  public void unedit_text() {
+    if( is_node_editable() ) {
+      _model.set_node_mode( get_current_node(), NodeMode.CURRENT );
+    } else if( is_connection_editable() ) {
+      _model.set_connection_mode( get_current_connection(), ConnMode.SELECTED );
+    } else if( is_callout_editable() ) {
+      _model.set_callout_mode( get_current_callout(), CalloutMode.SELECTED );
+    }
+    queue_draw();
+  }
+
+  //-------------------------------------------------------------
+  // NODE SELECTION METHODS
+  //-------------------------------------------------------------
 
   //-------------------------------------------------------------
   // Returns the current node.
@@ -666,7 +690,9 @@ public class MindMap {
       var node = child_nodes.index( i );
       if( (node != null) && !node.is_root() ) {
         if( node.is_summary() ) {
-          parent_nodes.append_val( (node as SummaryNode).last_selected_node );
+          var sn = (node as SummaryNode);
+          assert( sn != null );
+          parent_nodes.append_val( sn.last_selected_node );
         } else {
           parent_nodes.append_val( node.parent );
         }
@@ -1052,11 +1078,19 @@ public class MindMap {
   //-------------------------------------------------------------
   // Display a color picker to change the color of the current link.
   public void change_current_link_color() {
-    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _win );
-    color_picker.color_activated.connect((color) => {
-      _model.change_current_link_color( color );
+    var color_picker = new ColorDialog() {
+      modal = true,
+      title = _( "Select a link color" ),
+      with_alpha = false
+    };
+    color_picker.choose_rgba.begin( _win, null, null, (obj, res) => {
+      try {
+        var color = color_picker.choose_rgba.end( res );
+        if( color != null ) {
+          _model.change_current_link_color( color );
+        }
+      } catch( Error e ) {}
     });
-    color_picker.present();
   }
 
   //-------------------------------------------------------------

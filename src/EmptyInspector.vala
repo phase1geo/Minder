@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,6 +25,8 @@ using Granite.Widgets;
 
 public class EmptyInspector : Box {
 
+  //-------------------------------------------------------------
+  // Default constructor
   public EmptyInspector( MainWindow win ) {
 
     var empty_lbl = new Label( "<big>" + _( "Select a node, connection or group\nto view/edit information" ) + "</big>" ) {
@@ -39,8 +41,9 @@ public class EmptyInspector : Box {
 
   }
 
-  /* Returns the width of this window */
-  public int get_width() {
+  //-------------------------------------------------------------
+  // Returns the width of this window
+  public int get_win_width() {
     return( 300 );
   }
 

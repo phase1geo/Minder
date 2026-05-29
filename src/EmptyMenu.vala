@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -23,7 +23,8 @@ using Gtk;
 
 public class EmptyMenu : BaseMenu {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public EmptyMenu( Gtk.Application app, DrawArea da ) {
 
     base( app, da, "empty" );
@@ -44,7 +45,8 @@ public class EmptyMenu : BaseMenu {
 
   }
 
-  /* Called when the menu is popped up */
+  //-------------------------------------------------------------
+  // Called when the menu is popped up
   protected override void on_popup() {
 
     set_enabled( KeyCommand.EDIT_PASTE,              (map.model.node_pasteable() && map.editable) );

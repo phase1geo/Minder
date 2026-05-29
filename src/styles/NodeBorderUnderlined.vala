@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,42 +21,50 @@
 
 public class NodeBorderUnderlined : Object, NodeBorder {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public NodeBorderUnderlined() {}
 
-  /* Search name of this instance */
+  //-------------------------------------------------------------
+  // Search name of this instance
   public string name() {
     return( "underlined" );
   }
 
-  /* Returns the name of the link type */
+  //-------------------------------------------------------------
+  // Returns the name of the link type
   public string display_name() {
     return( _( "Underlined" ) );
   }
 
-  /* Returns the name of the light-mode icon */
+  //-------------------------------------------------------------
+  // Returns the name of the light-mode icon
   public string light_icon_name() {
     return( "minder-node-border-underlined-light-symbolic" );
   }
 
-  /* Returns the name of the light-mode icon */
+  //-------------------------------------------------------------
+  // Returns the name of the light-mode icon
   public string? dark_icon_name() {
     return( "minder-node-border-underlined-dark-symbolic" );
   }
 
-  /* Indicate that this border is not fillable */
+  //-------------------------------------------------------------
+  // Indicate that this border is not fillable
   public bool is_fillable() {
     return( false );
   }
 
-  /* Draw method for the link */
+  //-------------------------------------------------------------
+  // Draw method for the link
   public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding ) {
     ctx.move_to( x, (y + h) );
     ctx.line_to( (x + w), (y + h) );
     ctx.stroke();
   }
 
-  /* Draw method for the fill */
+  //-------------------------------------------------------------
+  // Draw method for the fill
   public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding ) {
     ctx.rectangle( x, y, w, h );
     ctx.fill();

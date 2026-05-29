@@ -58,6 +58,7 @@ src/NodeLink.vala
 src/NodeMenu.vala
 src/NodesMenu.vala
 src/Node.vala
+src/NoteView.vala
 src/Preferences.vala
 src/QuickEntry.vala
 src/Shortcuts.vala

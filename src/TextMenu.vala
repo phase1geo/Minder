@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -48,10 +48,30 @@ public class TextMenu : BaseMenu {
     append_menu_item( other_menu, KeyCommand.EDIT_EDIT_URL,   _( "Edit Link" ) );
     append_menu_item( other_menu, KeyCommand.EDIT_REMOVE_URL, _( "Remove Link" ) );
 
+    var md_menu = new GLib.Menu();
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER1,     _( "# Header1" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER2,     _( "## Header2" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER3,     _( "### Header3" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER4,     _( "#### Header4" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER5,     _( "##### Header5" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HEADER6,     _( "###### Header6" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_BOLD,        _( "**Bold**" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_ITALICS,     _( "__Italicize_" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_STRIKE,      _( "~~Strikeout~~" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_CODE,        _( "`Code`" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_HIGHLIGHT,   _( "==Highlight==" ) );
+    append_menu_item( md_menu, KeyCommand.EDIT_SUPERSCRIPT, _( "<sup>Superscript</sup>") );
+    append_menu_item( md_menu, KeyCommand.EDIT_SUBSCRIPT,   _( "<sub>Subscript</sub>") );
+    append_menu_item( md_menu, KeyCommand.EDIT_LINK,        _( "[Link text](URL)" ) );
+
+    var md_submenu = new GLib.Menu();
+    md_submenu.append_submenu( _( "Markdown" ), md_menu );
+
     menu.append_section( null, edit_menu );
     menu.append_section( null, emoji_menu );
     menu.append_section( null, open_menu );
     menu.append_section( null, other_menu );
+    menu.append_section( null, md_submenu );
 
   }
 
@@ -95,11 +115,16 @@ public class TextMenu : BaseMenu {
 
     }
 
-    /* Set the menu sensitivity */
+    // Set the menu sensitivity
     var copy_or_cut = copy_or_cut_possible();
     set_enabled( KeyCommand.EDIT_COPY,  copy_or_cut );
     set_enabled( KeyCommand.EDIT_CUT,   copy_or_cut );
     set_enabled( KeyCommand.EDIT_PASTE, paste_possible() );
+
+    var md_enabled = Minder.settings.get_boolean( "enable-markdown" );
+    for( int i=(KeyCommand.EDIT_MARKDOWN_START + 1); i<KeyCommand.EDIT_MARKDOWN_END; i++ ) {
+      set_enabled( (KeyCommand)i, md_enabled );
+    }
 
   }
 

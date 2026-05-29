@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -61,18 +61,12 @@ public class ExportPlantUML : Export {
   private string export_top_nodes( MindMap map ) {
 
     var retval = "";
+    var nodes = map.get_nodes();
 
-    try {
-
-      var nodes = map.get_nodes();
-      for( int i=0; i<nodes.length; i++ ) {
-        retval += export_header( map );
-        retval += export_node( nodes.index( i ), 1 );
-        retval += export_footer( map );
-      }
-
-    } catch( Error e ) {
-      // Handle the error
+    for( int i=0; i<nodes.length; i++ ) {
+      retval += export_header( map );
+      retval += export_node( nodes.index( i ), 1 );
+      retval += export_footer( map );
     }
 
     return( retval );
@@ -84,42 +78,34 @@ public class ExportPlantUML : Export {
   private string export_node( Node node, int depth ) {
 
     var retval = "";
+    var title  = "";
 
-    try {
-
-      string layout_name = node.layout.name;
-      var    title       = "";
-
-      if( node.main_branch() && ((node.index() == 0) || (node.side != node.parent.prev_child( node ).side)) ) {
-        switch( node.side ) {
-          case NodeSide.LEFT :
-          case NodeSide.TOP  :  title += "\nleft side\n";   break;
-          default            :  title += "\nright side\n";  break;
-        }
+    if( node.main_branch() && ((node.index() == 0) || (node.side != node.parent.prev_child( node ).side)) ) {
+      switch( node.side ) {
+        case NodeSide.LEFT :
+        case NodeSide.TOP  :  title += "\nleft side\n";   break;
+        default            :  title += "\nright side\n";  break;
       }
+    }
 
-      title += string.nfill( depth, '*' );
+    title += string.nfill( depth, '*' );
 
-      if( !node.is_root() ) {
-        if( node.style.node_border.is_fillable() ) {
-          title += "[%s] ".printf( Utils.color_from_rgba( node.link_color ) );
-        } else {
-          title += "_ ";
-        }
+    if( !node.is_root() ) {
+      if( node.style.node_border.is_fillable() ) {
+        title += "[%s] ".printf( Utils.color_from_rgba( node.link_color ) );
       } else {
-        title += " ";
+        title += "_ ";
       }
+    } else {
+      title += " ";
+    }
 
-      title  += node.name.text.text.replace( "\n", "\\n" ) + "\n";
-      retval += title;
+    title  += node.name.text.text.replace( "\n", "\\n" ) + "\n";
+    retval += title;
 
-      var children = node.children();
-      for( int i=0; i<children.length; i++ ) {
-        retval += export_node( children.index( i ), (depth + 1) );
-      }
-
-    } catch( Error e ) {
-      // Handle error
+    var children = node.children();
+    for( int i=0; i<children.length; i++ ) {
+      retval += export_node( children.index( i ), (depth + 1) );
     }
 
     return( retval );
@@ -139,7 +125,6 @@ public class ExportPlantUML : Export {
       File            file = File.new_for_path( fname );
       DataInputStream dis  = new DataInputStream( file.read() );
       size_t          len;
-      Array<Node>     nodes;
 
       // Read the entire file contents
       var str = dis.read_upto( "\0", 1, out len ) + "\0";

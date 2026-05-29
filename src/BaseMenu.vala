@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2025-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -43,7 +43,7 @@ public class BaseMenu {
   // Default constructor
   public BaseMenu( Gtk.Application app, DrawArea canvas, string group ) {
 
-    _map        = canvas.map;
+    _map        = canvas.mmap;
     _app        = app;
     _group_name = group;
 
@@ -109,7 +109,7 @@ public class BaseMenu {
     var action = new SimpleAction( command.to_string(), null );
     action.activate.connect((v) => {
       var func = command.get_func();
-      func( map );
+      func( map, false );
       if( grab_canvas ) {
         map.canvas.grab_focus();
       }
@@ -140,9 +140,9 @@ public class BaseMenu {
   //-------------------------------------------------------------
   // Sets the action enable for the given command to the given value.
   protected void set_enabled( KeyCommand command, bool enable ) {
-    var action = _group.lookup_action( command.to_string() );
+    var action = (_group.lookup_action( command.to_string() ) as SimpleAction);
     if( action != null ) {
-      (action as SimpleAction).set_enabled( enable );
+      action.set_enabled( enable );
     }
   }
 

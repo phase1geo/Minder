@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,41 +21,50 @@
 
 public class NodeBorderRounded : Object, NodeBorder {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public NodeBorderRounded() {}
 
-  /* Returns the searchable name of the node border */
+  //-------------------------------------------------------------
+  // Returns the searchable name of the node border
   public string name() {
     return( "rounded" );
   }
 
-  /* Returns the name of the node border to display (should be translatable) */
+  //-------------------------------------------------------------
+  // Returns the name of the node border to display (should be
+  // translatable)
   public string display_name() {
     return( _( "Rounded Rectangle" ) );
   }
 
-  /* Returns the name of the light-mode icon */
+  //-------------------------------------------------------------
+  // Returns the name of the light-mode icon
   public string light_icon_name() {
     return( "minder-node-border-rounded-light-symbolic" );
   }
 
-  /* Returns the name of the dark-mode icon */
+  //-------------------------------------------------------------
+  // Returns the name of the dark-mode icon
   public string? dark_icon_name() {
     return( "minder-node-border-rounded-dark-symbolic" );
   }
 
-  /* Indicate that this node is fillable */
+  //-------------------------------------------------------------
+  // Indicate that this node is fillable
   public bool is_fillable() {
     return( true );
   }
 
-  /* Draw method for the node border */
+  //-------------------------------------------------------------
+  // Draw method for the node border
   public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding ) {
     Utils.draw_rounded_rectangle( ctx, x, y, w, h, padding );
     ctx.stroke();
   }
 
-  /* Draw method for the node fill */
+  //-------------------------------------------------------------
+  // Draw method for the node fill
   public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding ) {
     Utils.draw_rounded_rectangle( ctx, x, y, w, h, padding );
     ctx.fill();

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -64,13 +64,11 @@ public class MapModel {
   private Connection?   _attach_conn    = null;
   private Sticker?      _attach_sticker = null;
   private uint?         _auto_save_id   = null;
-  private bool          _debug          = true;
   private NodeGroups    _groups;
   private int           _next_node_id   = -1;
   private NodeLinks     _node_links;
   private bool          _hide_callouts  = false;
   private Array<string> _braindump;
-  private bool          _modifiable     = true;
   private Tags          _tags;
 
   public Layouts        layouts         { set; get; default = new Layouts(); }
@@ -175,7 +173,7 @@ public class MapModel {
   public signal void theme_changed();
   public signal void loaded();
   public signal void queue_draw();
-  public signal void see( bool animate = true, double width_adjust = 0, double pad = 100.0 );
+  public signal void see( bool show_attach = false, bool animate = true, double width_adjust = 0, double pad = 100.0 );
 
   //-------------------------------------------------------------
   // Default constructor
@@ -225,12 +223,10 @@ public class MapModel {
   //-------------------------------------------------------------
   // Sets the theme to the given value.
   public void set_theme( Theme theme, bool save ) {
-    if( _theme.name == theme.name ) return;
-    if( _theme.index != -1 ) {
-      update_theme_colors( theme );
-    }
-    _theme.copy( theme );
-    FormattedText.set_theme( _theme );
+    if( _theme == theme ) return;
+    FormattedText.set_theme( theme );
+    update_theme_colors( theme );
+    _theme = theme;
     update_css();
     theme_changed();
     queue_draw();
@@ -314,14 +310,12 @@ public class MapModel {
   private void load_theme( Xml.Node* n ) {
 
     // Load the theme
-    var theme = new Theme.from_theme( _map.win.themes.get_theme( "default" ) );
-    theme.temporary = true;
-
-    var valid = theme.load( n );
+    var theme = new Theme();
+    theme.load( n );
 
     // If this theme does not currently exist, add the theme temporarily
     if( !_map.win.themes.exists( theme ) ) {
-      if( valid ) {
+      if( theme.custom ) {
         theme.name = _map.win.themes.uniquify_name( theme.name );
         _map.win.themes.add_theme( theme );
       } else {
@@ -330,8 +324,7 @@ public class MapModel {
     }
 
     // Get the theme
-    _theme.copy( _map.win.themes.get_theme( theme.name ) );
-    _theme.index = theme.index;
+    _theme = _map.win.themes.get_theme( theme.name );
 
     // If we are the current drawarea, update the CSS and indicate the theme change
     if( _map.win.get_current_map() == _map ) {
@@ -550,7 +543,7 @@ public class MapModel {
   //-------------------------------------------------------------
   // Populates the list of matches with any nodes that match the
   // given string pattern.
-  public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref GLib.ListStore matches ) {
     if( search_opts[SearchOptions.NODES] || search_opts[SearchOptions.CALLOUTS] ) {
       for( int i=0; i<_nodes.length; i++ ) {
         _nodes.index( i ).get_match_items( tabname, pattern, search_opts, ref matches );
@@ -1337,7 +1330,7 @@ public class MapModel {
   public void set_attach_node( Node? n, NodeMode mode = NodeMode.ATTACHABLE ) {
     var change = _attach_node != n;
     if( _attach_node != null ) {
-      set_node_mode( _attach_node, NodeMode.NONE );
+      set_node_mode( _attach_node, _attach_node.mode.get_attach_reset_mode() );
     }
     _attach_node = n;
     if( n != null ) {
@@ -1575,10 +1568,11 @@ public class MapModel {
   // parent.
   public void set_style_after_parent_attach( Node node ) {
     if( !node.is_root() ) {
-      var sibling = node.previous_sibling();
-      if( node.main_branch() ) {
+      var sibling     = node.previous_sibling();
+      var from_parent = _map.settings.get_boolean( "style-always-from-parent" ) || (sibling == null);
+      if( node.main_branch() && from_parent ) {
         node.style = _map.global_style;
-      } else if( _map.settings.get_boolean( "style-always-from-parent" ) || (sibling == null) ) {
+      } else if( from_parent ) {
         node.style = node.parent.style;
       } else {
         node.style = sibling.style;
@@ -1720,8 +1714,8 @@ public class MapModel {
   // adding it.
   public void position_root_node( Node node ) {
     if( _nodes.length == 0 ) {
-      var width  = (_map.canvas.get_allocated_width()  == 0) ? 600 : _map.canvas.get_allocated_width();
-      var height = (_map.canvas.get_allocated_height() == 0) ? 600 : _map.canvas.get_allocated_height();
+      var width  = (_map.canvas.get_width()  == 0) ? 600 : _map.canvas.get_width();
+      var height = (_map.canvas.get_height() == 0) ? 600 : _map.canvas.get_height();
       node.posx = (width  / 4) - 50;
       node.posy = (height / 2) - 30;
     } else {
@@ -2455,6 +2449,7 @@ public class MapModel {
       switch( current.mode ) {
         case NodeMode.CURRENT  :  MinderClipboard.copy_nodes( _map );  break;
         case NodeMode.EDITABLE :  copy_selected_text();  break;
+        default                :  break;
       }
     } else if( _map.selected.nodes().length > 1 ) {
       MinderClipboard.copy_nodes( _map );
@@ -2542,6 +2537,7 @@ public class MapModel {
       switch( current.mode ) {
         case NodeMode.CURRENT  :  cut_node_to_clipboard();  break;
         case NodeMode.EDITABLE :  cut_selected_text();      break;
+        default                :  break;
       }
     } else if( _map.selected.nodes().length > 1 ) {
       cut_selected_nodes_to_clipboard();

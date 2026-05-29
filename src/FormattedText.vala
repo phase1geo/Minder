@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2025 (https://github.com/phase1geo/Outliner)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Outliner)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -55,11 +55,12 @@ public enum FormatTag {
       case COLOR      :  return( "color" );
       case HILITE     :  return( "hilite" );
       case URL        :  return( "url" );
-      case TAG        :  return( "tag" );
       case SYNTAX     :  return( "syntax" );
+      case TAG        :  return( "tag" );
       case MATCH      :  return( "match" );
+      case SELECT     :  return( "select" );
+      default         :  return( "bold" );
     }
-    return( "bold" );
   }
 
   public static FormatTag from_string( string str ) {
@@ -78,8 +79,8 @@ public enum FormatTag {
       case "tag"         :  return( TAG );
       case "syntax"      :  return( SYNTAX );
       case "match"       :  return( MATCH );
+      default            :  return( LENGTH );
     }
-    return( LENGTH );
   }
 
 }
@@ -625,22 +626,27 @@ public class FormattedText {
   //-------------------------------------------------------------
   // Tag representing colorized background of text.
   private class HighlightInfo : TagAttr {
-    public HighlightInfo() {}
-    public override void add_attrs( ref AttrList list, int start, int end, string? extra ) {
-      var color = get_color( extra );
-      var bg    = attr_background_new( (uint16)(color.red * 65535), (uint16)(color.green * 65535), (uint16)(color.blue * 65535) );
-      var alpha = attr_background_alpha_new( (uint16)(65536 * 0.5) );
-      bg.start_index = start;
-      bg.end_index   = end;
-      list.change( (owned)bg );
-      alpha.start_index = start;
-      alpha.end_index   = end;
-      list.change( (owned)alpha );
+    private RGBA _color;
+    public HighlightInfo( RGBA color ) {
+      set_color( color );
+    }
+    private void set_color( RGBA bg ) {
+      var fg = Granite.contrasting_foreground_color( bg );
+      attrs.append_val( attr_background_new( (uint16)(bg.red * 65535), (uint16)(bg.green * 65535), (uint16)(bg.blue * 65535) ) );
+      attrs.append_val( attr_foreground_new( (uint16)(fg.red * 65535), (uint16)(fg.green * 65535), (uint16)(fg.blue * 65535) ) );
+      _color = bg.copy();
+    }
+    public void update_color( RGBA color ) {
+      attrs.remove_range( 0, 2 );
+      set_color( color );
     }
     public override TextTag text_tag( string? extra ) {
       var ttag = new TextTag( "hilite" + extra );
-      ttag.background_rgba = get_color( extra );
-      ttag.background_set  = true;
+      var fg   = Granite.contrasting_foreground_color( _color );
+      ttag.background = Utils.color_from_rgba( _color );
+      ttag.foreground = Utils.color_from_rgba( fg );
+      ttag.background_set = true;
+      ttag.foreground_set = true;
       return( ttag );
     }
   }
@@ -663,10 +669,10 @@ public class FormattedText {
     }
     public override TextTag text_tag( string? extra ) {
       var ttag = new TextTag( "url" );
-      ttag.foreground      = Utils.color_from_rgba( _color );
-      ttag.underline       = Underline.SINGLE;
-      ttag.foreground_set  = true;
-      ttag.underline_set   = true;
+      ttag.foreground = Utils.color_from_rgba( _color );
+      ttag.underline  = Underline.SINGLE;
+      ttag.foreground_set = true;
+      ttag.underline_set  = true;
       return( ttag );
     }
   }
@@ -827,7 +833,7 @@ public class FormattedText {
       _attr_tags[FormatTag.SUPER]      = new SuperInfo();
       _attr_tags[FormatTag.HEADER]     = new HeaderInfo();
       _attr_tags[FormatTag.COLOR]      = new ColorInfo();
-      _attr_tags[FormatTag.HILITE]     = new HighlightInfo();
+      _attr_tags[FormatTag.HILITE]     = new HighlightInfo( theme.get_color( "highlighter" ) );
       _attr_tags[FormatTag.URL]        = new UrlInfo( theme.get_color( "url_foreground" ) );
       _attr_tags[FormatTag.TAG]        = new TaggingInfo( theme.get_color( "tag" ) );
       _attr_tags[FormatTag.SYNTAX]     = new SyntaxInfo( theme.get_color( "syntax" ), false );
@@ -843,11 +849,30 @@ public class FormattedText {
   // Called whenever the theme changes.
   public static void set_theme( Theme theme ) {
     if( _attr_tags == null ) return;
-    (_attr_tags[FormatTag.URL] as UrlInfo).update_color( theme.get_color( "url_foreground" ) );
-    (_attr_tags[FormatTag.TAG] as TaggingInfo).update_color( theme.get_color( "tag" ) );
-    (_attr_tags[FormatTag.SYNTAX] as SyntaxInfo).update_color( theme.get_color( "syntax" ) );
-    (_attr_tags[FormatTag.MATCH] as MatchInfo).update_color( theme.get_color( "match_foreground" ), theme.get_color( "match_background" ) );
-    (_attr_tags[FormatTag.SELECT] as SelectInfo).update_color( theme.get_color( "textsel_foreground" ), theme.get_color( "textsel_background" ) );
+    var hilite = (_attr_tags[FormatTag.HILITE] as HighlightInfo);
+    var url    = (_attr_tags[FormatTag.URL]    as UrlInfo);
+    var tag    = (_attr_tags[FormatTag.TAG]    as TaggingInfo);
+    var syntax = (_attr_tags[FormatTag.SYNTAX] as SyntaxInfo);
+    var match  = (_attr_tags[FormatTag.MATCH]  as MatchInfo);
+    var select = (_attr_tags[FormatTag.SELECT] as SelectInfo);
+    if( hilite != null ) {
+      hilite.update_color( theme.get_color( "highlighter" ) );
+    }
+    if( url != null ) {
+      url.update_color( theme.get_color( "url_foreground" ) );
+    }
+    if( tag != null ) {
+      tag.update_color( theme.get_color( "tag" ) );
+    }
+    if( syntax != null ) {
+      syntax.update_color( theme.get_color( "syntax" ) );
+    }
+    if( match != null ) {
+      match.update_color( theme.get_color( "match_foreground" ), theme.get_color( "match_background" ) );
+    }
+    if( select != null ) {
+      select.update_color( theme.get_color( "textsel_foreground" ), theme.get_color( "textsel_background" ) );
+    }
   }
 
   //-------------------------------------------------------------
@@ -1078,13 +1103,18 @@ public class FormattedText {
   // colors to the returns tags immediately without updating the
   // main components.  This is useful for changing the theme for
   // a temporary context.
-  public AttrList get_attributes_from_theme( Theme theme ) {
+  public AttrList get_attributes_from_theme( Theme theme, bool use_sel_fg ) {
     var attrs = new AttrList();
     for( int i=0; i<(FormatTag.LENGTH-5); i++ ) {
       _formats[i].get_attributes( _attr_tags[i], ref attrs );
     }
-    _formats[FormatTag.URL].get_attributes( new UrlInfo( theme.get_color( "url_foreground" ) ), ref attrs );
-    _formats[FormatTag.SYNTAX].get_attributes( new SyntaxInfo( theme.get_color( "syntax" ), true ), ref attrs );
+    if( use_sel_fg ) {
+      _formats[FormatTag.URL].get_attributes( new UrlInfo( theme.get_color( "nodesel_foreground" ) ), ref attrs );
+      _formats[FormatTag.SYNTAX].get_attributes( new SyntaxInfo( theme.get_color( "nodesel_foreground" ), true ), ref attrs );
+    } else {
+      _formats[FormatTag.URL].get_attributes( new UrlInfo( theme.get_color( "url_foreground" ) ), ref attrs );
+      _formats[FormatTag.SYNTAX].get_attributes( new SyntaxInfo( theme.get_color( "syntax" ), true ), ref attrs );
+    }
     return( attrs );
   }
 
@@ -1188,7 +1218,7 @@ public class FormattedText {
     }
     string? pa = n->get_prop( "parse-as" );
     if( pa != null ) {
-      var str = _text;
+      // var str = _text;
       _text = "";  // Clear the text
       /* TBD
       switch( pa ) {

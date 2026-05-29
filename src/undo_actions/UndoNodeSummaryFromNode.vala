@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,14 +26,16 @@ public class UndoNodeSummaryFromNode : UndoItem {
   private Node        _n;
   private SummaryNode _sn;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoNodeSummaryFromNode( Node n, SummaryNode sn ) {
     base( _( "convert to summary node" ) );
     _n  = n;
     _sn = sn;
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data
   public override void undo( MindMap map ) {
     var parent = _sn.last_node().parent;
     var index  = _sn.last_node().index() + 1;
@@ -44,7 +46,8 @@ public class UndoNodeSummaryFromNode : UndoItem {
     map.auto_save();
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation
   public override void redo( MindMap map ) {
     _n.detach( _n.side );
     _sn.attach_all();

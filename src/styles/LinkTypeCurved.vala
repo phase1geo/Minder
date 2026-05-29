@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,30 +21,36 @@
 
 public class LinkTypeCurved : Object, LinkType {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public LinkTypeCurved() {}
 
-  /* Returns the search name */
+  //-------------------------------------------------------------
+  // Returns the search name
   public string name() {
     return( "curved" );
   }
 
-  /* Returns the name of the link type */
+  //-------------------------------------------------------------
+  // Returns the name of the link type
   public string display_name() {
     return( _( "Curved" ) );
   }
 
-  /* Returns the name of the light-mode icon */
+  //-------------------------------------------------------------
+  // Returns the name of the light-mode icon
   public string light_icon_name() {
     return( "minder-link-curved-light-symbolic" );
   }
 
-  /* Returns the name of the light-mode icon */
+  //-------------------------------------------------------------
+  // Returns the name of the light-mode icon
   public string dark_icon_name() {
     return( "minder-link-curved-dark-symbolic" );
   }
 
-  /* Draw method for the link */
+  //-------------------------------------------------------------
+  // Draw method for the link
   public void draw( Cairo.Context ctx, Node from_node, Node to_node,
                     double from_x, double from_y, double to_x, double to_y,
                     out double tailx, out double taily, out double tipx, out double tipy ) {

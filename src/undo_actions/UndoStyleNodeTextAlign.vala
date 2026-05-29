@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,7 +25,8 @@ public class UndoStyleNodeTextAlign : UndoStyleChange {
 
   GenericArray<Pango.Alignment> _values;
 
-  /* Constructor for a node text alignment change */
+  //-------------------------------------------------------------
+  // Constructor for a node text alignment change
   public UndoStyleNodeTextAlign( StyleAffects affects, Pango.Alignment node_text_align, MindMap map ) {
     base( affects, map );
     _values = new GenericArray<Pango.Alignment>();

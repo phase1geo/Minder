@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2025-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -222,6 +222,15 @@ public class Templates {
     }
 
     delete doc;
+
+    handle_version( version );
+
+  }
+
+  //-------------------------------------------------------------
+  // Allows us to handle any changes between the read in version and the
+  // current application version.
+  private void handle_version( string version ) {
 
   }
 

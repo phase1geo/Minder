@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -28,7 +28,8 @@ public class AnimatorFade : AnimatorAction {
   private AnimatorCallouts  _callouts;
   bool                      _fade_out;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public AnimatorFade( DrawArea da, Array<Node> n, bool fade_out, string name = "unnamed" ) {
     base( name, true );
     _num      = n.length;
@@ -37,18 +38,21 @@ public class AnimatorFade : AnimatorAction {
     _fade_out = fade_out;
   }
 
-  /* Returns the NODES types */
+  //-------------------------------------------------------------
+  // Returns the NODES types
   public override AnimationType type() {
     return( AnimationType.FADE );
   }
 
-  /* Captures the end state */
+  //-------------------------------------------------------------
+  // Captures the end state
   public override void capture( DrawArea da ) {
     _pos.gather_new_positions();
     _callouts.gather_new_callout_alphas( _fade_out );
   }
 
-  /* Adjusts all of the node positions for the given frame */
+  //-------------------------------------------------------------
+  // Adjusts all of the node positions for the given frame
   public override void adjust( DrawArea da ) {
     double divisor = index / frames;
     index++;
@@ -68,7 +72,9 @@ public class AnimatorFade : AnimatorAction {
     }
   }
 
-  /* When the animation has completed, set the mode of all callouts to hidden */
+  //-------------------------------------------------------------
+  // When the animation has completed, set the mode of all callouts
+  // to hidden
   public override void on_completion( DrawArea da ) {
     if( _fade_out ) {
       for( int i=0; i<_callouts.length(); i++ ) {

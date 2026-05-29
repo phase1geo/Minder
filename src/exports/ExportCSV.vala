@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -50,16 +50,11 @@ public class ExportCSV : Export {
   }
 
   private string export_levels( int levels ) {
-    var str = "";
-    try {
-      str += "level0,note0";
-      for( int i=1; i<levels; i++ ) {
-        str += ",level" + i.to_string() + ",note" + i.to_string();
-      }
-      str += "\n";
-    } catch( Error e ) {
-      // Do something with error
+    var str = "level0,note0";
+    for( int i=1; i<levels; i++ ) {
+      str += ",level" + i.to_string() + ",note" + i.to_string();
     }
+    str += "\n";
     return( str );
   }
 
@@ -108,25 +103,19 @@ public class ExportCSV : Export {
   private string export_top_nodes( MindMap map, int levels ) {
 
     var retval = "";
+    var nodes = map.get_nodes();
 
-    try {
-
-      var nodes = map.get_nodes();
-      for( int i=0; i<nodes.length; i++ ) {
-        string title = stringify( nodes.index( i ).name.text.text ) + "," + stringify( nodes.index( i ).note );
-        for( int j=0; j<(levels - 1); j++ ) {
-          title += ",,";
-        }
-        title  += "\n";
-        retval += title;
-        var children = nodes.index( i ).children();
-        for( int j=0; j<children.length; j++ ) {
-          retval += export_node( children.index( j ), ",,", levels );
-        }
+    for( int i=0; i<nodes.length; i++ ) {
+      string title = stringify( nodes.index( i ).name.text.text ) + "," + stringify( nodes.index( i ).note );
+      for( int j=0; j<(levels - 1); j++ ) {
+        title += ",,";
       }
-
-    } catch( Error e ) {
-      // Handle the error
+      title  += "\n";
+      retval += title;
+      var children = nodes.index( i ).children();
+      for( int j=0; j<children.length; j++ ) {
+        retval += export_node( children.index( j ), ",,", levels );
+      }
     }
 
     return( retval );
@@ -138,35 +127,28 @@ public class ExportCSV : Export {
   private string export_node( Node node, string prefix, int levels ) {
 
     var retval = "";
+    var title  = prefix;
 
-    try {
-
-      string title = prefix;
-
-      if( node.is_task() ) {
-        if( node.is_task_done() ) {
-          title += " - [x] ";
-        } else {
-          title += " - [ ] ";
-        }
+    if( node.is_task() ) {
+      if( node.is_task_done() ) {
+        title += " - [x] ";
+      } else {
+        title += " - [ ] ";
       }
+    }
 
-      title += stringify( node.name.text.text ) + "," + stringify( node.note );
+    title += stringify( node.name.text.text ) + "," + stringify( node.note );
 
-      for( int i=0; i<(levels - 1 - (prefix.length / 2)); i++ ) {
-        title += ",,";
-      }
+    for( int i=0; i<(levels - 1 - (prefix.length / 2)); i++ ) {
+      title += ",,";
+    }
 
-      title  += "\n";
-      retval += title;
+    title  += "\n";
+    retval += title;
 
-      var children = node.children();
-      for( int i=0; i<children.length; i++ ) {
-        retval += export_node( children.index( i ), prefix + ",,", levels );
-      }
-
-    } catch( Error e ) {
-      // Handle error
+    var children = node.children();
+    for( int i=0; i<children.length; i++ ) {
+      retval += export_node( children.index( i ), prefix + ",,", levels );
     }
 
     return( retval );

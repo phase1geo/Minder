@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,7 +27,6 @@ public class StickerInspector : Box {
   private string favorites = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "favorites.xml" );
 
   private MainWindow    _win;
-  private DrawArea?     _da = null;
   private GLib.Settings _settings;
   private SearchEntry   _search;
   private Stack         _stack;
@@ -56,7 +55,7 @@ public class StickerInspector : Box {
     _win      = win;
     _settings = settings;
 
-    /* Setup menus */
+    // Setup menus
     _favorite_menu = new GLib.Menu();
     _favorite_menu.append( _( "Remove From Favorites" ), "sticker.action_make_unfavorite" );
 
@@ -86,12 +85,27 @@ public class StickerInspector : Box {
     };
     _search.search_changed.connect( do_search );
 
+    var search_key = new EventControllerKey();
+    _search.add_controller( search_key );
+
+    search_key.key_pressed.connect((keyval, keycode, state) => {
+      if( keyval == Gdk.Key.Escape ) {
+        if( _search.text == "" ) {
+          _win.get_current_map().hide_properties();
+        } else {
+          _search.text = "";
+        }
+        return( true );
+      }
+      return( false );
+    });
+
     // Create main scrollable pane
     var box = new Box( Orientation.VERTICAL, 20 );
     var sw  = new ScrolledWindow() {
       child = box
     };
-    var vp = (Viewport)sw.child;
+    // var vp = (Viewport)sw.child;
     // vp.set_size_request( 200, 600 );
 
     // Create search result flowbox
@@ -165,10 +179,10 @@ public class StickerInspector : Box {
   // adds it to the sidebar
   private FlowBox create_category( Box box, string name ) {
 
-    /* Create the flowbox which will contain the stickers */
+    // Create the flowbox which will contain the stickers
     var fbox = create_icon_box( name );
 
-    /* Create expander */
+    // Create expander
     var exp = new Expander( name ) {
       expanded = true,
       child    = fbox
@@ -323,14 +337,16 @@ public class StickerInspector : Box {
     make_unfavorite();
   }
 
-  /* Called whenever the user selects the remove menu item */
+  //-------------------------------------------------------------
+  // Called whenever the user selects the remove menu item
   private void action_remove() {
     if( _sticker_set.remove_sticker( _clicked_sticker ) ) {
       make_unfavorite();
       var index = 0;
       var w     = Utils.get_child_at_index( _clicked_category, index++ );
       while( w != null ) {
-        if( (w as FlowBoxChild).get_child().name == _clicked_sticker ) {
+        var fbc = (w as FlowBoxChild);
+        if( (fbc != null) && (fbc.get_child().name == _clicked_sticker) ) {
           _clicked_category.remove( w );
           return;
         }
@@ -339,12 +355,14 @@ public class StickerInspector : Box {
     }
   }
 
-  /* Returns true if the given icon name is favorited */
+  //-------------------------------------------------------------
+  // Returns true if the given icon name is favorited
   private bool is_favorite( string name ) {
     var index = 0;
     var w     = Utils.get_child_at_index( _favorites, index++ );
     while( w != null ) {
-      if( (w as FlowBoxChild).get_child().name == name ) {
+      var fbc = (w as FlowBoxChild);
+      if( (fbc != null) && (fbc.get_child().name == name) ) {
         return( true );
       }
       w = Utils.get_child_at_index( _favorites, index++ );
@@ -352,33 +370,37 @@ public class StickerInspector : Box {
     return( false );
   }
 
-  /* Returns true if the given sticker is a custom sticker */
+  //-------------------------------------------------------------
+  // Returns true if the given sticker is a custom sticker
   private bool is_custom( string name ) {
     return( name.get_char( 0 ) == '/' );
   }
 
-  /* Make the current sticker a favorite */
+  //-------------------------------------------------------------
+  // Make the current sticker a favorite
   private void make_favorite() {
 
     string tooltip;
     if( _sticker_set.get_icon_info( _clicked_sticker, out tooltip ) ) {
 
-      /* Add the sticker to the favorites section */
+      // Add the sticker to the favorites section
       create_image( _favorites, _clicked_sticker, tooltip );
 
-      /* Save the favorited status */
+      // Save the favorited status
       save_favorites();
 
     }
 
   }
 
-  /* Remove the current sticker as a favorite */
+  //-------------------------------------------------------------
+  // Remove the current sticker as a favorite
   private void make_unfavorite() {
     var index = 0;
     var w     = Utils.get_child_at_index( _favorites, index++ );
     while( w != null ) {
-      if( (w as FlowBoxChild).get_child().name == _clicked_sticker ) {
+      var fbc = (w as FlowBoxChild);
+      if( (fbc != null) && (fbc.get_child().name == _clicked_sticker) ) {
         _favorites.remove( w );
         save_favorites();
         return;
@@ -387,7 +409,8 @@ public class StickerInspector : Box {
     }
   }
 
-  /* Save the favorited stickers to the save file */
+  //-------------------------------------------------------------
+  // Save the favorited stickers to the save file
   private void save_favorites() {
     Xml.Doc*  doc  = new Xml.Doc();
     Xml.Node* root = new Xml.Node( null, "favorites" );
@@ -395,17 +418,21 @@ public class StickerInspector : Box {
     var index = 0;
     var w     = Utils.get_child_at_index( _favorites, index++ );
     while( w != null ) {
-      var name = (w as FlowBoxChild).get_child().name;
-      Xml.Node* n = new Xml.Node( null, "sticker" );
-      n->set_prop( "name", name );
-      root->add_child( n );
+      var fbc = (w as FlowBoxChild);
+      if( fbc != null ) {
+        var name = fbc.get_child().name;
+        Xml.Node* n = new Xml.Node( null, "sticker" );
+        n->set_prop( "name", name );
+        root->add_child( n );
+      }
       w = Utils.get_child_at_index( _favorites, index++ );
     }
     doc->save_format_file( favorites, 1 );
     delete doc;
   }
 
-  /* Load the favorite stickers from the file */
+  //-------------------------------------------------------------
+  // Load the favorite stickers from the file
   private void load_favorites() {
     if( !FileUtils.test( favorites, FileTest.EXISTS ) ) return;
     Xml.Doc* doc = Xml.Parser.parse_file( favorites );
@@ -422,17 +449,18 @@ public class StickerInspector : Box {
     delete doc;
   }
 
-  /* Performs search */
+  //-------------------------------------------------------------
+  // Performs search
   private void do_search() {
 
     var search_text = _search.text;
 
-    /* If the search field is empty, show all of the icons by category again */
+    // If the search field is empty, show all of the icons by category again
     if( search_text == "" ) {
       _matched_box.invalidate_filter();
       _stack.set_visible_child_name( "all" );
 
-    /* Otherwise, show only the currently matching icons */
+    // Otherwise, show only the currently matching icons
     } else {
       _matched_box.set_filter_func((item) => {
         var search_keys = search_text.split(" ");
@@ -448,12 +476,15 @@ public class StickerInspector : Box {
 
   }
 
-  /* Grabbing input focus on the first UI element */
+  //-------------------------------------------------------------
+  // Grabbing input focus on the first UI element
   public void grab_first() {
     _search.grab_focus();
   }
 
-  /* Imports one or more stickers from the filesystem and imports them into the given category */
+  //-------------------------------------------------------------
+  // Imports one or more stickers from the filesystem and imports
+  // them into the given category
   private void import_stickers( FlowBox fbox, string category ) {
 
     var dialog = Utils.make_file_chooser( _( "Import Sticker(s)" ), _( "Import" ) );

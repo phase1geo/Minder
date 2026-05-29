@@ -1,5 +1,5 @@
-project('com.github.phase1geo.minder', ['vala', 'c'],
-    version : '2.0.3',
+project('io.github.phase1geo.minder', ['vala', 'c'],
+    version : '2.1.0',
     license: 'GPL-3.0'
 )
 
@@ -46,8 +46,8 @@ if libmarkdown.version().version_compare('>=3.0')
 endif
 
 add_project_arguments([
-        '--vapidir=' + join_paths(meson.project_source_root(), 'vapi'),
-        '--disable-warnings'
+        '--vapidir=' + join_paths(meson.project_source_root(), 'vapi')
+        # '--disable-warnings'
     ],
     language: 'vala',
 )
@@ -72,7 +72,7 @@ dependencies = [
 
 subdir('tests')
 
-e = executable('com.github.phase1geo.minder',
+e = executable('io.github.phase1geo.minder',
     sources,
     config_file,
     gresource,
@@ -87,5 +87,6 @@ e = executable('com.github.phase1geo.minder',
 gnome.post_install(
   glib_compile_schemas: true,
   gtk_update_icon_cache: true,
-  update_desktop_database: true
+  update_mime_database: true,
+  update_desktop_database: true,
 )

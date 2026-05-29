@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,7 +21,8 @@
 
 public class LayoutUp : Layout {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public LayoutUp() {
     name        = _( "Upwards" );
     light_icon  = "minder-layout-up-light-symbolic";
@@ -29,12 +30,14 @@ public class LayoutUp : Layout {
     balanceable = false;
   }
 
-  /* Maps the given side to the appropriate side for this layout */
+  //-------------------------------------------------------------
+  // Maps the given side to the appropriate side for this layout
   public override NodeSide side_mapping( NodeSide side ) {
     return( NodeSide.TOP );
   }
 
-  /* Provides the default position for a newly created node */
+  //-------------------------------------------------------------
+  // Provides the default position for a newly created node
   public override void set_side( Node current ) {
     current.side = NodeSide.TOP;
   }

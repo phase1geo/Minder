@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -116,7 +116,7 @@ public class NodesMenu : BaseMenu {
 
     var nodes        = map.get_selected_nodes();
     var node_num     = nodes.length;
-    var summarizable = map.model.nodes_summarizable();
+    // var summarizable = map.model.nodes_summarizable();
     var alignable    = map.model.nodes_alignable();
 
     bool foldable, unfoldable;

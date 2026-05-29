@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -37,8 +37,8 @@ public enum StyleAffects {
       case SELECTED_NODES       :  return( _( "Selected Nodes" ) );
       case SELECTED_CONNECTIONS :  return( _( "Selected Connections" ) );
       case SELECTED_CALLOUTS    :  return( _( "Selected Callouts" ) );
+      default                   :  return( _( "Unknown" ) );
     }
-    return( _( "Unknown" ) );
   }
 
 }
@@ -252,7 +252,7 @@ public class StyleInspector : Box {
     dialog.set_default_response( ResponseType.CLOSE );
 
     var close = new Button.with_label( _( "Close" ) );
-    close.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    close.add_css_class( Granite.CssClass.SUGGESTED );
     dialog.add_action_widget( close, ResponseType.CLOSE );
 
     dialog.response.connect((id) => {
@@ -1015,10 +1015,12 @@ public class StyleInspector : Box {
     });
     font_dialog.set_filter( font_filter );
     _node_font.notify["font-desc"].connect(() => {
-      var family = _node_font.font_desc.get_family();
-      var size   = _node_font.font_desc.get_size();
-      _curr_style.node_font = _node_font.font_desc.copy();
-      _map.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _map ) );
+      if( !_ignore ) {
+        var family = _node_font.font_desc.get_family();
+        var size   = _node_font.font_desc.get_size();
+        _curr_style.node_font = _node_font.font_desc.copy();
+        _map.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _map ) );
+      }
     });
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1445,10 +1447,12 @@ public class StyleInspector : Box {
     });
     font_dialog.set_filter( font_filter );
     _conn_font.notify["font-desc"].connect(() => {
-      var family = _conn_font.font_desc.get_family();
-      var size   = _conn_font.font_desc.get_size();
-      _curr_style.connection_font = _conn_font.font_desc.copy();
-      _map.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _map ) );
+      if( !_ignore ) {
+        var family = _conn_font.font_desc.get_family();
+        var size   = _conn_font.font_desc.get_size();
+        _curr_style.connection_font = _conn_font.font_desc.copy();
+        _map.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _map ) );
+      }
     });
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1608,10 +1612,12 @@ public class StyleInspector : Box {
     });
     font_dialog.set_filter( font_filter );
     _callout_font.notify["font-desc"].connect(() => {
-      var family = _callout_font.font_desc.get_family();
-      var size   = _callout_font.font_desc.get_size();
-      _curr_style.callout_font = _callout_font.font_desc.copy();
-      _map.add_undo( new UndoStyleCalloutFont( _affects, family, size, _map ) );
+      if( !_ignore ) {
+        var family = _callout_font.font_desc.get_family();
+        var size   = _callout_font.font_desc.get_size();
+        _curr_style.callout_font = _callout_font.font_desc.copy();
+        _map.add_undo( new UndoStyleCalloutFont( _affects, family, size, _map ) );
+      }
     });
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1836,6 +1842,7 @@ public class StyleInspector : Box {
           callouts.index( i ).style = style;
         }
         break;
+      default :  break;
     }
     update_ui_with_style( style );
     _map.queue_draw();
@@ -1896,6 +1903,7 @@ public class StyleInspector : Box {
         _callout_exp.expanded  = true;
         _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_CALLOUT );
         break;
+      default :  break;
     }
     update_ui_with_style( _curr_style );
   }
@@ -1903,6 +1911,8 @@ public class StyleInspector : Box {
   //-------------------------------------------------------------
   // Checks the nodes in the given tree at the specified level to
   // see if there are any non-leaf nodes.
+  /*
+   NOTE:  This function is not called by anything
   private bool check_level_for_branches( Node node, int levels, int level ) {
     if( (levels & (1 << level)) != 0 ) {
       return( !node.is_leaf() );
@@ -1915,6 +1925,7 @@ public class StyleInspector : Box {
       return( false );
     }
   }
+  */
 
   //-------------------------------------------------------------
   // We need to disable the link types widget if our affected
@@ -1938,6 +1949,7 @@ public class StyleInspector : Box {
           }
         }
         break;
+      default :  break;
     }
     _link_types.set_sensitive( sensitive && _map.editable );
   }
@@ -2116,14 +2128,14 @@ public class StyleInspector : Box {
       if( node_fill != null ) {
         _node_fill.set_active( (bool)node_fill );
       }
-      if( node_margin != null ) {
+      if( node_margin != 0 ) {
         _node_margin.set_value( (double)node_margin );
       }
-      if( node_padding != null ) {
+      if( node_padding != 0 ) {
         _node_padding.set_value( (double)node_padding );
       }
       if( style.node_font != null ) {
-        _node_font.set_font_features( style.node_font.to_string() );
+        _node_font.set_font_desc( style.node_font );
       }
       if( node_width != null ) {
         _node_width.set_value( (float)node_width );
@@ -2147,7 +2159,7 @@ public class StyleInspector : Box {
         _conn_lwidth.set_value( (double)conn_line_width );
       }
       if( style.connection_font != null ) {
-        _conn_font.set_font_features( style.connection_font.to_string() );
+        _conn_font.set_font_desc( style.connection_font );
       }
       if( style.connection_title_width != null ) {
         _conn_twidth.set_value( style.connection_title_width );
@@ -2161,7 +2173,7 @@ public class StyleInspector : Box {
     if( (_affects == StyleAffects.ALL) || (_affects == StyleAffects.SELECTED_CALLOUTS) ) {
       update_callout_text_align_with_style( style );
       if( style.callout_font != null ) {
-        _callout_font.set_font_features( style.callout_font.to_string() );
+        _callout_font.set_font_desc( style.callout_font );
       }
       if( callout_padding != null ) {
         _callout_padding.set_value( (double)callout_padding );

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -29,22 +29,24 @@ public class CanvasText : Object {
 
   // Member variables
   private MindMap       _map;
-  private double        _posx         = 0.0;
-  private double        _posy         = 0.0;
+  private double        _posx          = 0.0;
+  private double        _posy          = 0.0;
   private FormattedText _text;
-  private bool          _edit         = false;
-  private int           _cursor       = 0;   // Location of the cursor when editing
-  private int           _column       = 0;   // Character column to use when moving vertically
-  private Pango.Layout  _pango_layout = null;
-  private Pango.Layout  _line_layout  = null;
-  private int           _selstart     = 0;
-  private int           _selend       = 0;
-  private int           _selanchor    = 0;
-  private double        _max_width    = 200;
-  private double        _width        = 0;
-  private double        _height       = 0;
-  private bool          _debug        = false;
-  private int           _font_size    = 12;
+  private FormattedText _nomarkup_text;
+  private bool          _edit          = false;
+  private bool          _node_selected = false;
+  private int           _cursor        = 0;   // Location of the cursor when editing
+  private int           _column        = 0;   // Character column to use when moving vertically
+  private Pango.Layout  _pango_layout  = null;
+  private Pango.Layout  _line_layout   = null;
+  private int           _selstart      = 0;
+  private int           _selend        = 0;
+  private int           _selanchor     = 0;
+  private double        _max_width     = 200;
+  private double        _width         = 0;
+  private double        _height        = 0;
+  private bool          _debug         = false;
+  private int           _font_size     = 12;
 
   // Signals
   public signal void resized();
@@ -55,6 +57,11 @@ public class CanvasText : Object {
   public FormattedText text {
     get {
       return( _text );
+    }
+  }
+  public FormattedText stripped_text {
+    get {
+      return( _nomarkup_text );
     }
   }
   public double posx {
@@ -104,10 +111,19 @@ public class CanvasText : Object {
       if( _edit != value ) {
         _edit = value;
         if( !_edit ) {
+          _nomarkup_text = new FormattedText.copy_clean( _map, _text );
           clear_selection( "edit" );
         }
         update_size( true );
       }
+    }
+  }
+  public bool node_selected {
+    get {
+      return( _node_selected );
+    }
+    set {
+      _node_selected = value;
     }
   }
   public int cursor {
@@ -130,14 +146,16 @@ public class CanvasText : Object {
   // Default constructor
   public CanvasText( MindMap map ) {
     int int_max_width = (int)_max_width;
-    _map          = map;
-    _text         = new FormattedText( map );
+    _map           = map;
+    _text          = new FormattedText( map );
     _text.changed.connect( text_changed );
-    _line_layout  = map.canvas.create_pango_layout( "M" );
-    _pango_layout = map.canvas.create_pango_layout( null );
+    _nomarkup_text = new FormattedText( map );
+    _line_layout   = map.canvas.create_pango_layout( "M" );
+    _pango_layout  = map.canvas.create_pango_layout( null );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
+    set_parsers();
     update_size( false );
   }
 
@@ -145,14 +163,16 @@ public class CanvasText : Object {
   // Constructor initializing string
   public CanvasText.with_text( MindMap map, string txt ) {
     int int_max_width = (int)_max_width;
-    _map          = map;
-    _text         = new FormattedText.with_text( map, txt );
+    _map           = map;
+    _text          = new FormattedText.with_text( map, txt );
     _text.changed.connect( text_changed );
-    _line_layout  = map.canvas.create_pango_layout( "M" );
-    _pango_layout = map.canvas.create_pango_layout( txt );
+    _nomarkup_text = new FormattedText.copy_clean( map, _text );
+    _line_layout   = map.canvas.create_pango_layout( "M" );
+    _pango_layout  = map.canvas.create_pango_layout( txt );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
+    set_parsers();
     update_size( false );
   }
 
@@ -174,11 +194,26 @@ public class CanvasText : Object {
     _max_width = ct._max_width;
     _font_size = ct._font_size;
     _text.copy( ct.text );
+    _nomarkup_text.copy( ct._nomarkup_text );
     _line_layout.set_font_description( ct._pango_layout.get_font_description() );
     _pango_layout.set_font_description( ct._pango_layout.get_font_description() );
     _pango_layout.set_alignment( ct._pango_layout.get_alignment() );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     update_size( true );
+  }
+
+  //-------------------------------------------------------------
+  // Adds the valid parsers.
+  public void set_parsers() {
+    if( _map.markdown_parser != null ) {
+      _text.add_parser( _map.markdown_parser );
+    }
+    if( _map.url_parser != null ) {
+      _text.add_parser( _map.url_parser );
+    }
+    if( _map.unicode_parser != null ) {
+      _text.add_parser( _map.unicode_parser );
+    }
   }
 
   //-------------------------------------------------------------
@@ -306,6 +341,7 @@ public class CanvasText : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "text" ) )  {
         _text.load( it );
+        _nomarkup_text = new FormattedText.copy_clean( _map, _text );
         update_size( false );
       }
     }
@@ -338,6 +374,9 @@ public class CanvasText : Object {
   //-------------------------------------------------------------
   // Called whenever the text changes
   private void text_changed() {
+    if( !edit ) {
+      _nomarkup_text = new FormattedText.copy_clean( _map, _text );
+    }
     update_size( true );
   }
 
@@ -346,8 +385,8 @@ public class CanvasText : Object {
   public void update_size( bool call_resized = true ) {
     if( _pango_layout != null ) {
       int text_width, text_height;
-      _pango_layout.set_text( _text.text, -1 );
-      _pango_layout.set_attributes( _text.get_attributes() );
+      _pango_layout.set_text( (edit ? _text.text : _nomarkup_text.text), -1 );
+      _pango_layout.set_attributes( edit ? _text.get_attributes() : _nomarkup_text.get_attributes() );
       _pango_layout.get_size( out text_width, out text_height );
       _width  = (text_width  / Pango.SCALE);
       _height = (text_height / Pango.SCALE);
@@ -361,7 +400,7 @@ public class CanvasText : Object {
   // Updates the canvas item with the given theme
   public void update_attributes() {
     if( _pango_layout != null ) {
-      _pango_layout.set_attributes( _text.get_attributes() );
+      _pango_layout.set_attributes( edit ? _text.get_attributes() : _nomarkup_text.get_attributes() );
     }
   }
 
@@ -948,6 +987,38 @@ public class CanvasText : Object {
   }
 
   //-------------------------------------------------------------
+  // Inserts the Markdown formatting
+  public void insert_markdown( string pretext, string midtext, string posttext, UndoTextBuffer undo_buffer ) {
+    var cur = _cursor;
+    if( _selstart != _selend ) {
+      var spos = text.text.index_of_nth_char( _selstart );
+      var epos = text.text.index_of_nth_char( _selend );
+      var str  = text.text.slice( spos, epos );
+      var mstr = pretext + str + midtext;
+      var istr = mstr + posttext;
+      if( (midtext != "") && Utils.is_url( str ) ) {  // If the selected string is a URL and we are wrapping it in a link
+        mstr = pretext;
+        istr = mstr + midtext + str + posttext;
+      }
+      text.replace_text( spos, (epos - spos), istr );
+      set_cursor_only( _selstart + mstr.char_count() );
+      change_selection( _cursor, _cursor, "insert_formatting" );
+      undo_buffer.add_replace( spos, str, istr, null, cur );
+    } else if( posttext == "" ) {
+      var spos = find_line_extent( true );
+      text.insert_text( spos, pretext );
+      set_cursor_only( _cursor + pretext.char_count() );
+      undo_buffer.add_insert( spos, pretext, cur );
+    } else {
+      var spos = text.text.index_of_nth_char( _cursor );
+      var istr = pretext + midtext + posttext;
+      text.insert_text( spos, istr );
+      set_cursor_only( _cursor + pretext.char_count() );
+      undo_buffer.add_insert( spos, istr, cur );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Replaces the given range with the specified string
   public void replace( int start, int end, string s, UndoTextBuffer undo_buffer ) {
     var slen = s.char_count();
@@ -984,23 +1055,36 @@ public class CanvasText : Object {
   //-------------------------------------------------------------
   // Returns the current cursor position
   public void get_cursor_pos( out int x, out int ytop, out int ybot ) {
+
     var index = text.text.index_of_nth_char( _cursor );
     var rect  = _pango_layout.index_to_pos( index );
-    x    = (int)(posx + (rect.x / Pango.SCALE));
+
+    Pango.Rectangle ink_rect, log_rect;
+    _pango_layout.get_extents( out ink_rect, out log_rect );
+
+    x    = (int)((posx + (rect.x / Pango.SCALE)) - (log_rect.x / Pango.SCALE));
     ytop = (int)(posy + (rect.y / Pango.SCALE));
     ybot = ytop + (int)(rect.height / Pango.SCALE);
+
   }
 
   //-------------------------------------------------------------
   // Returns the x and y position of the given character position
   public void get_char_pos( int pos, out double left, out double top, out double bottom, out int line ) {
+
     var index = text.text.index_of_nth_char( pos );
     var rect  = _pango_layout.index_to_pos( index );
-    left   = posx + (rect.x / Pango.SCALE);
+
+    Pango.Rectangle ink_rect, log_rect;
+    _pango_layout.get_extents( out ink_rect, out log_rect );
+
+    left   = (posx + (rect.x / Pango.SCALE)) - (log_rect.x / Pango.SCALE);
     top    = posy + (rect.y / Pango.SCALE);
     bottom = top + (rect.height / Pango.SCALE);
+
     int x_pos;
     _pango_layout.index_to_line_x( index, false, out line, out x_pos );
+
   }
 
   //-------------------------------------------------------------
@@ -1088,9 +1172,10 @@ public class CanvasText : Object {
 
     var layout = _pango_layout;
 
-    if( copy_layout ) {
+    if( copy_layout || node_selected ) {
       layout = _pango_layout.copy();
-      layout.set_attributes( _text.get_attributes_from_theme( theme ) );
+      layout.set_attributes( edit ? _text.get_attributes_from_theme( theme, node_selected ) :
+                                    _nomarkup_text.get_attributes_from_theme( theme, node_selected ) );
     }
 
     if( alpha < 1.0 ) {

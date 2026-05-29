@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -160,7 +160,7 @@ public class Callout : Object {
   // Called whenever the text changes the size of the callout.
   public void position_text( bool call_resized ) {
 
-    var margin  = _node.style.node_margin ?? 0;
+    var margin  = _node.style.node_margin;
     var padding = style.callout_padding ?? 0;
     var plength = style.callout_ptr_length ?? 0;
 
@@ -181,7 +181,8 @@ public class Callout : Object {
 
   }
 
-  /* Returns the bounding box of this callout (minus the pointer) */
+  //-------------------------------------------------------------
+  // Returns the bounding box of this callout (minus the pointer)
   public void bbox( out double x, out double y, out double w, out double h ) {
     var padding = style.callout_padding ?? 0;
     x = _text.posx - padding;
@@ -190,7 +191,8 @@ public class Callout : Object {
     h = _text.height + (padding * 2);
   }
 
-  /* Returns the bounding box of the resizer */
+  //-------------------------------------------------------------
+  // Returns the bounding box of the resizer
   private void resizer_bbox( out double x, out double y, out double w, out double h ) {
 
     double cx, cy, cw, ch;
@@ -256,7 +258,7 @@ public class Callout : Object {
   // Loads the callback information from XML format.
   public void load( Xml.Node* node ) {
 
-    /* Make sure the style has a default value */
+    // Make sure the style has a default value
     _style.copy( StyleInspector.styles.get_style_for_level( (_node.is_root() ? 0 : 1), null ) );
 
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
@@ -293,11 +295,11 @@ public class Callout : Object {
     double x, y, w, h;
     bbox( out x, out y, out w, out h );
 
-    /* Draws a rounded rectangle on the given context */
+    // Draws a rounded rectangle on the given context
     Utils.draw_rounded_rectangle( ctx, x, y, w, h, padding );
     ctx.fill();
 
-    /* Draw the shape */
+    // Draw the shape
     if( is_below_node() ) {
       y++;
       ctx.move_to( (x + padding), y );
@@ -312,7 +314,7 @@ public class Callout : Object {
     ctx.close_path();
     ctx.fill();
 
-    /* Draw resizer, if necessary */
+    // Draw resizer, if necessary
     if( (mode == CalloutMode.SELECTED) && !exporting ) {
 
       resizer_bbox( out x, out y, out w, out h );
@@ -327,7 +329,7 @@ public class Callout : Object {
 
     }
 
-    /* Draw the text */
+    // Draw the text
     _text.draw( ctx, theme, foreground, alpha, exporting );
 
   }

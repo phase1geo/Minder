@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2024-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2024-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,7 +21,7 @@
 
 using Gtk;
 
-public class ModeButtons : Box {
+public class ModeButtons : Granite.Box {
 
   private int _selected = -1;
 
@@ -46,7 +46,7 @@ public class ModeButtons : Box {
   //-------------------------------------------------------------
   // Default constructor
   public ModeButtons() {
-    add_css_class( Granite.STYLE_CLASS_LINKED );
+    Object( orientation: Orientation.HORIZONTAL, child_spacing: Granite.Box.Spacing.LINKED );
   }
 
   //-------------------------------------------------------------

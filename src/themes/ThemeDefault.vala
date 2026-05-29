@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,14 +21,14 @@
 
 public class ThemeDefault : Theme {
 
-  /* Create the theme colors */
+  //-------------------------------------------------------------
+  // Create the theme colors
   public ThemeDefault() {
 
-    name   = "default";
-    label  = _( "Light" );
-    custom = false;
+    name  = "default";
+    label = _( "Light" );
 
-    /* Generate the non-link colors */
+    // Generate the non-link colors
     set_color( "background",            color_from_string( "#ffffff" ) );
     set_color( "foreground",            color_from_string( "Black" ) );
     set_color( "root_background",       color_from_string( "#d4d4d4" ) );
@@ -43,6 +43,7 @@ public class ThemeDefault : Theme {
     set_color( "connection_foreground", color_from_string( "#ffffff" ) );
     set_color( "url_background",        color_from_string( "Grey") );
     set_color( "url_foreground",        color_from_string( "Blue" ) );
+    set_color( "highlighter",           color_from_string( "Yellow" ) );
     set_color( "tag",                   color_from_string( "#c00000" ) );
     set_color( "syntax",                color_from_string( "Grey" ) );
     set_color( "match_background",      color_from_string( "Gold" ) );

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -69,7 +69,8 @@ public class Sticker : Object {
     }
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public Sticker( MindMap map, string n, double x, double y, int width = -1 ) {
     _map  = map;
     _name = n;
@@ -78,13 +79,15 @@ public class Sticker : Object {
     set_pixbuf( width );
   }
 
-  /* Constructor from XML */
+  //-------------------------------------------------------------
+  // Constructor from XML
   public Sticker.from_xml( MindMap map, Xml.Node* n ) {
     _map = map;
     load( n );
   }
 
-  /* Returns the area of the resizer box */
+  //-------------------------------------------------------------
+  // Returns the area of the resizer box
   public void resizer_bbox( out double x, out double y, out double w, out double h ) {
     x = (posx + _buf.width) - 8;
     y = posy;
@@ -92,14 +95,17 @@ public class Sticker : Object {
     h = 8;
   }
 
-  /* Returns true if the given coordinates are within the area of the resizer box */
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates are within the area of
+  // the resizer box
   public bool is_within_resizer( double x, double y ) {
     double rx, ry, rw, rh;
     resizer_bbox( out rx, out ry, out rw, out rh );
     return( Utils.is_within_bounds( x, y, rx, ry, rw, rh ) );
   }
 
-  /* Resizes the given image */
+  //-------------------------------------------------------------
+  // Resizes the given image
   public void resize( double diff ) {
     var width = (int)(_buf.width + diff);
     if( (width < 24) || (width > 256) ) return;
@@ -107,7 +113,8 @@ public class Sticker : Object {
     set_pixbuf( int_new_width );
   }
 
-  /* Saves the sticker to the XML tree */
+  //-------------------------------------------------------------
+  // Saves the sticker to the XML tree
   public Xml.Node* save() {
     Xml.Node* n = new Xml.Node( null, "sticker" );
     n->set_prop( "name",  _name );
@@ -117,7 +124,8 @@ public class Sticker : Object {
     return( n );
   }
 
-  /* Loads the sticker from the XML tree */
+  //-------------------------------------------------------------
+  // Loads the sticker from the XML tree
   public void load( Xml.Node* n ) {
     var width = -1;
     string? nm = n->get_prop( "name" );
@@ -139,22 +147,24 @@ public class Sticker : Object {
     set_pixbuf( width );
   }
 
-  /* Creates the pixbuf for the stored image */
+  //-------------------------------------------------------------
+  // Creates the pixbuf for the stored image
   public void set_pixbuf( int width = -1 ) {
     _buf = StickerSet.make_pixbuf( _name, width );
   }
 
-  /* Draw the sticker on the mind map */
+  //-------------------------------------------------------------
+  // Draw the sticker on the mind map
   public void draw( Cairo.Context ctx, Theme theme, double opacity, bool exporting ) {
 
     if( (mode == StickerMode.SELECTED) && !exporting ) {
 
-      /* Draw selection box */
+      // Draw selection box
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), ((opacity == 1.0) ? 0.5 : opacity) );
       ctx.rectangle( posx, posy, _buf.width, _buf.height );
       ctx.fill();
 
-      /* Draw resize handle */
+      // Draw resize handle
       double x, y, w, h;
 
       resizer_bbox( out x, out y, out w, out h );
@@ -169,11 +179,11 @@ public class Sticker : Object {
 
     }
 
-    /* Draw sticker image */
+    // Draw sticker image
     cairo_set_source_pixbuf( ctx, _buf, posx, posy );
     ctx.paint_with_alpha( opacity );
 
-    /* Draw droppable box, if necessary */
+    // Draw droppable box, if necessary
     if( mode == StickerMode.DROPPABLE ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), opacity );
       ctx.set_line_width( 4 );

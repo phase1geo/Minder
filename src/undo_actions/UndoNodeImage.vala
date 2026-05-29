@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,7 +27,8 @@ public class UndoNodeImage : UndoItem {
   NodeImage? _old_image;
   NodeImage? _new_image;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoNodeImage( Node n, NodeImage? old_image ) {
     base( _( "node image change" ) );
     _node      = n;
@@ -35,7 +36,8 @@ public class UndoNodeImage : UndoItem {
     _new_image = n.image;
   }
 
-  /* Changes the node image, adjusts the layout and updates the UI */
+  //-------------------------------------------------------------
+  // Changes the node image, adjusts the layout and updates the UI
   private void change( MindMap map, NodeImage? img ) {
     _node.set_image( map.image_manager, img );
     map.queue_draw();
@@ -43,12 +45,14 @@ public class UndoNodeImage : UndoItem {
     map.auto_save();
   }
 
-  /* Undoes a node image change */
+  //-------------------------------------------------------------
+  // Undoes a node image change
   public override void undo( MindMap map ) {
     change( map, _old_image );
   }
 
-  /* Redoes a node image change */
+  //-------------------------------------------------------------
+  // Redoes a node image change
   public override void redo( MindMap map ) {
     change( map, _new_image );
   }

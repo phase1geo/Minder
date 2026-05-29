@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,13 +25,15 @@ public class UndoGroupRemove : UndoItem {
 
   private NodeGroup _group;
 
-  /* Constructor for removing a group */
+  //-------------------------------------------------------------
+  // Constructor for removing a group
   public UndoGroupRemove( NodeGroup group ) {
     base( _( "remove group" ) );
     _group = group;
   }
 
-  /* Undoes a connection change */
+  //-------------------------------------------------------------
+  // Undoes a connection change
   public override void undo( MindMap map ) {
     map.model.groups.add_group( _group );
     map.selected.add_group( _group );
@@ -39,7 +41,8 @@ public class UndoGroupRemove : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a connection change */
+  //-------------------------------------------------------------
+  // Redoes a connection change
   public override void redo( MindMap map ) {
     map.model.groups.remove_group( _group );
     map.selected.remove_group( _group );

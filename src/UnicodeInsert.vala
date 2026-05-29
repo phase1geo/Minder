@@ -16,7 +16,8 @@ public class UnicodeInsert {
 
   private static HashMap<string, string>? _insert_map = null;
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public UnicodeInsert() {
     if( _insert_map == null ) {
       _insert_map = new HashMap<string, string>();
@@ -2925,7 +2926,8 @@ public class UnicodeInsert {
 
   }
 
-  /* Returns the replacement string with the substituted value */
+  //-------------------------------------------------------------
+  // Returns the replacement string with the substituted value
   public string replace_with_value( string str, string val ) {
 
     var word = get_last_word( str );
@@ -2938,7 +2940,9 @@ public class UnicodeInsert {
 
   }
 
-  /* Replaces the last word (if it is a key) with the associated value and returns this new string */
+  //-------------------------------------------------------------
+  // Replaces the last word (if it is a key) with the associated
+  // value and returns this new string
   public string do_replace( string str ) {
 
     var word = get_last_word( str );
@@ -2952,7 +2956,8 @@ public class UnicodeInsert {
 
   }
 
-  /* Returns an array of matching unicode strings and their values */
+  //-------------------------------------------------------------
+  // Returns an array of matching unicode strings and their values
   public GLib.List<TextCompletionItem> get_matches( string partial ) {
     var it      = _insert_map.map_iterator();
     var matches = new GLib.List<TextCompletionItem>();

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,7 +26,8 @@ public class UndoConnectionStickerChange : UndoItem {
   private Connection _conn;
   private string     _name;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoConnectionStickerChange( Connection conn, string orig_name ) {
     base( _( "change connection sticker" ) );
     _conn = conn;
@@ -41,12 +42,14 @@ public class UndoConnectionStickerChange : UndoItem {
     map.auto_save();
   }
 
-  /* Performs an undo operation for this data */
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data
   public override void undo( MindMap map ) {
     toggle( map );
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation
   public override void redo( MindMap map ) {
     toggle( map );
   }

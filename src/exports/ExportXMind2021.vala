@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -249,7 +249,6 @@ public class ExportXMind2021 : Export {
     var img_name  = map.image_manager.get_file( node.image.id );
     var mime_type = map.image_manager.get_mime_type( node.image.id );
     var src       = Path.build_filename( "resources", Filename.display_basename( img_name ) );
-    var parts     = src.split( "." );
 
     // Copy the image file to the XMind bundle
     DirUtils.create( Path.build_filename( dir, "resources" ), 0755 );
@@ -287,11 +286,14 @@ public class ExportXMind2021 : Export {
 
   }
 
+  /*
+   NOTE: This method is not used according to the valac compiler
   private Json.Object export_node_content_note( string str ) {
     var content = new Json.Object();
     content.set_string_member( "content", str );
     return( content );
   }
+  */
 
   private Json.Object export_theme( MindMap map ) {
 
@@ -345,7 +347,6 @@ public class ExportXMind2021 : Export {
 
   private Json.Object export_boundary_style( MindMap map ) {
 
-    var theme = map.get_theme();
     var node  = new Json.Object();
     var props = new Json.Object();
 
@@ -444,8 +445,6 @@ public class ExportXMind2021 : Export {
       var node    = new Json.Object();
       var conn    = conns.index( i );
       var conn_id = ids++;
-      var color   = (conn.color == null) ? map.get_theme().get_color( "connection_background" ) : conn.color;
-      var dash    = "dash";
 
       node.set_string_member( "id", conn_id.to_string() );
       node.set_string_member( "end1", conn.from_node.id().to_string() );
@@ -492,7 +491,7 @@ public class ExportXMind2021 : Export {
     top.set_object_member( "creator", creator );
 
     creator.set_string_member( "name", "Minder" );
-    creator.set_string_member( "version", Minder.version );
+    creator.set_string_member( "version", Minder.static_version );
 
     var generator = new Json.Generator();
     generator.root   = root;
@@ -614,7 +613,7 @@ public class ExportXMind2021 : Export {
 
   }
 
-  private string get_json_string( unowned Json.Object obj, string prop ) {
+  private string get_json_string( Json.Object obj, string prop ) {
     unowned var node = obj.get_member( prop );
     if( (node != null) && (node.get_node_type() == Json.NodeType.VALUE) ) {
       return( node.get_string() );
@@ -622,7 +621,7 @@ public class ExportXMind2021 : Export {
     return( "" );
   }
 
-  private unowned Json.Object? get_json_object( unowned Json.Object obj, string prop ) {
+  private unowned Json.Object? get_json_object( Json.Object obj, string prop ) {
     unowned var node = obj.get_member( prop );
     if( (node != null) && (node.get_node_type() == Json.NodeType.OBJECT) ) {
       return( node.get_object() );
@@ -630,7 +629,7 @@ public class ExportXMind2021 : Export {
     return( null );
   }
 
-  private unowned Json.Array? get_json_array( unowned Json.Object obj, string prop ) {
+  private unowned Json.Array? get_json_array( Json.Object obj, string prop ) {
     unowned var node = obj.get_member( prop );
     if( (node != null) && (node.get_node_type() == Json.NodeType.ARRAY) ) {
       return( node.get_array() );
@@ -735,14 +734,14 @@ public class ExportXMind2021 : Export {
 
   }
 
-  private void import_node_notes( Node node, unowned Json.Object obj ) {
+  private void import_node_notes( Node node, Json.Object obj ) {
     unowned var plain = get_json_object( obj, "plain" );
     if( plain != null ) {
       node.note = get_json_string( plain, "content" );
     }
   }
 
-  private void import_image( MindMap map, Node node, unowned Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_image( MindMap map, Node node, Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
 
     int height = 100;
     int width  = 100;
@@ -770,7 +769,7 @@ public class ExportXMind2021 : Export {
 
   }
 
-  private void import_children( MindMap map, Node node, unowned Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_children( MindMap map, Node node, Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
     unowned var attached = get_json_array( obj, "attached" );
     if( attached != null ) {
       foreach( unowned Json.Node n in attached.get_elements() ) {
@@ -780,7 +779,7 @@ public class ExportXMind2021 : Export {
     }
   }
 
-  private void import_boundaries( MindMap map, Node node, unowned Json.Array arr, HashMap<string,IdObject> id_map ) {
+  private void import_boundaries( MindMap map, Node node, Json.Array arr, HashMap<string,IdObject> id_map ) {
     foreach( unowned Json.Node n in arr.get_elements() ) {
       unowned var obj = n.get_object();
       var sid = get_json_string( obj, "styleId" );
@@ -804,7 +803,7 @@ public class ExportXMind2021 : Export {
     }
   }
 
-  private void import_relationships( MindMap map, unowned Json.Array arr, HashMap<string,IdObject> id_map ) {
+  private void import_relationships( MindMap map, Json.Array arr, HashMap<string,IdObject> id_map ) {
 
     foreach( unowned Json.Node node in arr.get_elements() ) {
 
@@ -846,7 +845,7 @@ public class ExportXMind2021 : Export {
 
   }
 
-  private void import_theme( MindMap map, unowned Json.Object obj, HashMap<string,IdObject> id_map ) {
+  private void import_theme( MindMap map, Json.Object obj, HashMap<string,IdObject> id_map ) {
 
     unowned var root     = get_json_object( obj, "centralTopic" );
     unowned var main     = get_json_object( obj, "mainTopic" );
@@ -876,7 +875,7 @@ public class ExportXMind2021 : Export {
 
   }
 
-  private void import_theme_node( MindMap map, unowned Json.Object obj, int level, HashMap<string,IdObject> id_map ) {
+  private void import_theme_node( MindMap map, Json.Object obj, int level, HashMap<string,IdObject> id_map ) {
 
     unowned var props = get_json_object( obj, "properties" );
 

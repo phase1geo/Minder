@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -137,7 +137,6 @@ public class ExportText : Export {
       File            file = File.new_for_path( fname );
       DataInputStream dis  = new DataInputStream( file.read() );
       size_t          len;
-      Array<Node>     nodes;
 
       // Read the entire file contents
       var str = dis.read_upto( "\0", 1, out len ) + "\0";

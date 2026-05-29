@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,7 +27,8 @@ public class UndoNodeSummaryDelete : UndoItem {
   Array<Connection> _conns;
   UndoNodeGroups?   _groups;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoNodeSummaryDelete( SummaryNode n, Array<Connection> conns, UndoNodeGroups? groups ) {
     base( _( "delete summary node" ) );
     _node   = n;
@@ -35,7 +36,8 @@ public class UndoNodeSummaryDelete : UndoItem {
     _groups = groups;
   }
 
-  /* Undoes a node deletion */
+  //-------------------------------------------------------------
+  // Undoes a node deletion
   public override void undo( MindMap map ) {
     _node.attach_all();
     map.set_current_node( _node );
@@ -47,7 +49,8 @@ public class UndoNodeSummaryDelete : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a node deletion */
+  //-------------------------------------------------------------
+  // Redoes a node deletion
   public override void redo( MindMap map ) {
     UndoNodeGroups? tmp_groups = null;
     _node.detach_all();

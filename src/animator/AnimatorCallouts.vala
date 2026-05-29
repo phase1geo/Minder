@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,17 +21,16 @@
 
 using GLib;
 
-/*
- Helper class to the Animator class. This class should not
- be accessed outside of this file.
-*/
+//-------------------------------------------------------------
+// Helper class to the Animator class. This class should not
+// be accessed outside of this file.
 public class AnimatorCallouts : Object {
 
   private Array<double?> _old_alpha;
   private Array<double?> _new_alpha;
   private Array<Node?>   _nodes;
 
-  /* Default constructor */
+  // Default constructor
   public AnimatorCallouts( DrawArea da, Array<Node> nodes, bool fade_out ) {
     _old_alpha = new Array<double?>();
     _new_alpha = new Array<double?>();
@@ -41,10 +40,9 @@ public class AnimatorCallouts : Object {
     }
   }
 
-  /*
-   Gathers the nodes and their current positions and stores
-   them into array structures.
-  */
+  //-------------------------------------------------------------
+  // Gathers the nodes and their current positions and stores
+  // them into array structures.
   private void gather_old_callout_alphas( Node n, bool fade_out ) {
     if( n.callout != null ) {
       n.callout.mode = fade_out ? CalloutMode.HIDING : CalloutMode.NONE;
@@ -56,31 +54,34 @@ public class AnimatorCallouts : Object {
     }
   }
 
-  /*
-   Gathers the new node positions for the stored nodes.
-  */
+  //-------------------------------------------------------------
+  // Gathers the new node positions for the stored nodes.
   public void gather_new_callout_alphas( bool fade_out ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _new_alpha.append_val( fade_out ? 0.0 : _nodes.index( i ).alpha );
     }
   }
 
-  /* Returns the number of callout nodes in this structure */
+  //-------------------------------------------------------------
+  // Returns the number of callout nodes in this structure
   public uint length() {
     return( _nodes.length );
   }
 
-  /* Returns the old alpha value at the given index */
+  //-------------------------------------------------------------
+  // Returns the old alpha value at the given index
   public double old_alpha( int index ) {
     return( _old_alpha.index( index ) );
   }
 
-  /* Returns the new alpha value at the given index */
+  //-------------------------------------------------------------
+  // Returns the new alpha value at the given index
   public double new_alpha( int index ) {
     return( _new_alpha.index( index ) );
   }
 
-  /* Returns the node at the given index */
+  //-------------------------------------------------------------
+  // Returns the node at the given index
   public Node node( int index ) {
     return( _nodes.index( index ) );
   }

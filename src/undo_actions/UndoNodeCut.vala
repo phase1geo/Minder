@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -29,7 +29,8 @@ public class UndoNodeCut : UndoItem {
   Array<Connection> _conns;
   UndoNodeGroups?   _groups;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoNodeCut( Node n, int index, Array<Connection> conns, UndoNodeGroups? groups ) {
     base( _( "cut node" ) );
     _node   = n;
@@ -39,7 +40,8 @@ public class UndoNodeCut : UndoItem {
     _groups = groups;
   }
 
-  /* Undoes a node deletion */
+  //-------------------------------------------------------------
+  // Undoes a node deletion
   public override void undo( MindMap map ) {
     map.animator.add_nodes( map.get_nodes(), false, "UndoNodeCut undo" );
     if( _parent == null ) {
@@ -57,7 +59,8 @@ public class UndoNodeCut : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a node deletion */
+  //-------------------------------------------------------------
+  // Redoes a node deletion
   public override void redo( MindMap map ) {
     UndoNodeGroups? tmp_groups = null;
     map.animator.add_nodes( map.get_nodes(), true, "undo node redo cut" );

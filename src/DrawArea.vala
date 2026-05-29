@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -89,7 +89,6 @@ public class DrawArea : Gtk.DrawingArea {
   private ImageEditor           _image_editor;
   private UrlEditor             _url_editor;
   private IMContext             _im_context;
-  private bool                  _debug        = true;
   private SelectBox             _select_box;
   private Tagger                _tagger;
   private TextCompletion        _completion;
@@ -105,7 +104,7 @@ public class DrawArea : Gtk.DrawingArea {
   public MainWindow win      { private set; get; }
   public Animator   animator { set; get; }
 
-  public MindMap map {
+  public MindMap mmap {
     get {
       return( _map );
     }
@@ -199,26 +198,27 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void size_ready( int width, int height );
   public signal void size_changed( int width, int height );
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public DrawArea( MindMap map, MainWindow w ) {
 
     _map = map;
     win  = w;
 
-    /* Allocate memory for the animator */
+    // Allocate memory for the animator
     animator = new Animator( this );
 
-    /* Allocate the image editor popover */
+    // Allocate the image editor popover
     _image_editor = new ImageEditor( this );
     _image_editor.changed.connect( _map.model.current_image_edited );
 
-    /* Allocate the URL editor popover */
+    // Allocate the URL editor popover
     _url_editor = new UrlEditor( this );
 
-    /* Initialize the selection box */
+    // Initialize the selection box
     _select_box = {0, 0, 0, 0, false};
 
-    /* Create the popup menus */
+    // Create the popup menus
     _node_menu    = new NodeMenu( win.application, this );
     _conn_menu    = new ConnectionMenu( win.application, this );
     _conns_menu   = new ConnectionsMenu( win.application, this );
@@ -228,13 +228,13 @@ public class DrawArea : Gtk.DrawingArea {
     _callout_menu = new CalloutMenu( win.application, this );
     _text_menu    = new TextMenu( win.application, this );
 
-    /* Create the node information array */
+    // Create the node information array
     _orig_info = new Array<NodeInfo?>();
 
-    /* Create text completion */
+    // Create text completion
     _completion = new TextCompletion( _map );
 
-    /* Add event listeners */
+    // Add event listeners
     this.set_draw_func( on_draw );
 
     var click = new GestureClick() {
@@ -305,17 +305,15 @@ public class DrawArea : Gtk.DrawingArea {
     tag_drop.drop.connect( handle_tag_drop );
     tag_drop.leave.connect( handle_cursor_leave );
 
-    /* Make sure the drawing area can receive keyboard focus */
+    // Make sure the drawing area can receive keyboard focus
     this.can_focus = true;
     this.focusable = true;
 
-    /*
-     Make sure that we add a CSS class name to ourselves so we can color
-     our background with the theme.
-    */
-    get_style_context().add_class( "canvas" );
+    // Make sure that we add a CSS class name to ourselves so we can color
+    // our background with the theme.
+    add_css_class( "canvas" );
 
-    /* Make sure that we us the ImContextSimple input method */
+    // Make sure that we us the ImContextSimple input method
     _im_context = new IMMulticontext();
     _im_context.set_client_widget( this );
     _im_context.set_use_preedit( false );
@@ -343,7 +341,7 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Gets the top and bottom y position of this draw area.
   public void get_window_ys( out int top, out int bottom ) {
-    var vh = get_allocated_height();
+    var vh = get_height();
     top    = (int)origin_y;
     bottom = top + vh;
   }
@@ -489,11 +487,10 @@ public class DrawArea : Gtk.DrawingArea {
     var tpress = _press_num == 3;
     var tag    = FormatTag.LENGTH;
     var url    = "";
-    var left   = 0.0;
 
     set_tooltip_markup( null );
 
-    /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
+    // Check to see if the user clicked anywhere within the node which is itself a clickable target
     switch( component ) {
       case MapItemComponent.TASK :
         if( _map.editable ) {
@@ -526,13 +523,14 @@ public class DrawArea : Gtk.DrawingArea {
       case MapItemComponent.TAGS :
         _map.show_properties( "tag", PropertyGrab.FIRST );
         break;
+      default :  break;
     }
 
     _orig_side = node.side;
     _orig_info.remove_range( 0, _orig_info.length );
     node.get_node_info( ref _orig_info );
 
-    /* If the node is being edited, go handle the click */
+    // If the node is being edited, go handle the click
     if( node.mode == NodeMode.EDITABLE ) {
       switch( _press_num ) {
         case 1 :
@@ -550,10 +548,8 @@ public class DrawArea : Gtk.DrawingArea {
       }
       return( true );
 
-    /*
-     If the user double-clicked a node.  If an image was clicked on, edit the image;
-     otherwise, set the node's mode to editable.
-    */
+    // If the user double-clicked a node.  If an image was clicked on, edit the image;
+    // otherwise, set the node's mode to editable.
     } else if( !_control && !_shift && (_press_num == 2) ) {
       if( _map.editable ) {
         if( component == MapItemComponent.IMAGE ) {
@@ -565,10 +561,10 @@ public class DrawArea : Gtk.DrawingArea {
       }
       return( true );
 
-    /* Otherwise, we need to adjust the selection */
+    // Otherwise, we need to adjust the selection
     } else {
 
-      /* The shift key has a toggling effect */
+      // The shift key has a toggling effect
       if( _shift ) {
         if( _control ) {
           if( tpress ) {
@@ -590,11 +586,9 @@ public class DrawArea : Gtk.DrawingArea {
           }
         }
 
-      /*
-       The Control key + single click will select the current node's children
-       The Control key + double click will select the current node tree.
-       The Control key + triple click will select all nodes at the same level.
-      */
+      // The Control key + single click will select the current node's children
+      // The Control key + double click will select the current node tree.
+      // The Control key + triple click will select all nodes at the same level.
       } else if( _control ) {
         _map.selected.clear_nodes();
         if( tpress ) {
@@ -626,7 +620,7 @@ public class DrawArea : Gtk.DrawingArea {
   // Handles a click on the specified sticker
   public bool set_current_sticker_from_position( Sticker sticker, double scaled_x, double scaled_y ) {
 
-    /* If the sticker is selected, check to see if the cursor is over other parts */
+    // If the sticker is selected, check to see if the cursor is over other parts
     if( sticker.mode == StickerMode.SELECTED ) {
       if( sticker.is_within_resizer( scaled_x, scaled_y ) ) {
         if( _map.editable ) {
@@ -636,12 +630,12 @@ public class DrawArea : Gtk.DrawingArea {
         return( true );
       }
 
-    /* Otherwise, add the sticker to the selection */
+    // Otherwise, add the sticker to the selection
     } else {
       _map.set_current_sticker( sticker );
     }
 
-    /* Save the location of the sticker */
+    // Save the location of the sticker
     _sticker_posx = sticker.posx;
     _sticker_posy = sticker.posy;
 
@@ -653,7 +647,7 @@ public class DrawArea : Gtk.DrawingArea {
   // Handles a click on the specified group
   public bool set_current_group_from_position( NodeGroup group, double scaled_x, double scaled_y ) {
 
-    /* Select the current group */
+    // Select the current group
     if( _shift ) {
       _map.selected.add_group( group );
     } else {
@@ -671,7 +665,7 @@ public class DrawArea : Gtk.DrawingArea {
     var tag = FormatTag.LENGTH;
     var url = "";
 
-    /* If the callout is being edited, go handle the click */
+    // If the callout is being edited, go handle the click
     switch( component ) {
       case MapItemComponent.RESIZER :
         if( _map.editable ) {
@@ -687,6 +681,7 @@ public class DrawArea : Gtk.DrawingArea {
           return( false );
         }
         break;
+      default :  break;
     }
 
     if( callout.mode == CalloutMode.EDITABLE ) {
@@ -706,12 +701,12 @@ public class DrawArea : Gtk.DrawingArea {
       }
       return( true );
 
-    /* If the user double-clicked a callout, set the callout mode to editable */
+    // If the user double-clicked a callout, set the callout mode to editable
     } else if( (_press_num == 2) && _map.editable ) {
       _map.model.set_callout_mode( callout, CalloutMode.EDITABLE );
       return( true );
 
-    /* Otherwise, just make the callout the selected callout */
+    // Otherwise, just make the callout the selected callout
     } else {
       _map.set_current_callout( callout );
     }
@@ -725,7 +720,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_right_click( double x, double y ) {
     if( _map.model.select_connection_if_unselected( x, y ) ||
         _map.model.select_node_if_unselected( x, y ) ) {
-      /* Nothing else to do */
+      // Nothing else to do
     }
   }
 
@@ -735,7 +730,7 @@ public class DrawArea : Gtk.DrawingArea {
   // current_node to a valid node and made it selected.
   private bool set_current_at_position( double scaled_x, double scaled_y ) {
 
-    /* If we are going to pan the canvas, do it and return */
+    // If we are going to pan the canvas, do it and return
     if( _press_middle || _alt ) {
       return( true );
     }
@@ -834,8 +829,8 @@ public class DrawArea : Gtk.DrawingArea {
   // center pixel to remain in the center and forces a redraw.
   public bool set_scaling_factor( double sf ) {
     if( sfactor != sf ) {
-      int    width  = get_allocated_width()  / 2;
-      int    height = get_allocated_height() / 2;
+      int    width  = get_width()  / 2;
+      int    height = get_height() / 2;
       double diff_x = (width  / sf) - (width / sfactor);
       double diff_y = (height / sf) - (height / sfactor );
       if( move_origin( diff_x, diff_y, sf ) ) {
@@ -870,8 +865,8 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Returns the scaling factor based on the given width and height.
   private double get_scaling_factor( double width, double height ) {
-    double w  = get_allocated_width() / width;
-    double h  = get_allocated_height() / height;
+    double w  = get_width() / width;
+    double h  = get_height() / height;
     double sf = (w < h) ? w : h;
     return( (sf > 4) ? 4 : sf );
   }
@@ -881,8 +876,8 @@ public class DrawArea : Gtk.DrawingArea {
   // zoom was successful; otherwise, returns false.
   public bool zoom_in() {
     // Zoom center of the screen
-    int s_x = get_allocated_width() / 2;
-    int s_y = get_allocated_height() / 2;
+    int s_x = get_width() / 2;
+    int s_y = get_height() / 2;
 
     return zoom_in_coords(s_x, s_y);
   }
@@ -893,7 +888,6 @@ public class DrawArea : Gtk.DrawingArea {
   public bool zoom_in_coords( double zoom_x, double zoom_y ) {
     double value = sfactor * 100;
     var    marks = get_scale_marks();
-    double last  = marks[0];
     if( value < marks[0] ) {
       value = marks[0];
     }
@@ -919,8 +913,8 @@ public class DrawArea : Gtk.DrawingArea {
   // the zoom was successful; otherwise, returns false.
   public bool zoom_out() {
     // Zoom center of the screen
-    int s_x = get_allocated_width() / 2;
-    int s_y = get_allocated_height() / 2;
+    int s_x = get_width() / 2;
+    int s_y = get_height() / 2;
 
     return zoom_out_coords(s_x, s_y);
   }
@@ -957,8 +951,8 @@ public class DrawArea : Gtk.DrawingArea {
   // Positions the given box in the canvas based on the provided
   // x and y positions (values between 0 and 1).
   private void position_box( double x, double y, double w, double h, double xpos, double ypos, string msg = "NONE" ) {
-    double ccx = scale_value( get_allocated_width()  * xpos );
-    double ccy = scale_value( get_allocated_height() * ypos );
+    double ccx = scale_value( get_width()  * xpos );
+    double ccy = scale_value( get_height() * ypos );
     double ncx = x + (w * xpos);
     double ncy = y + (h * ypos);
     move_origin( (ccx - ncx), (ccy - ncy) );
@@ -987,11 +981,11 @@ public class DrawArea : Gtk.DrawingArea {
 
     animator.add_pan_scale( "zoom to fit" );
 
-    /* Get the document rectangle */
+    // Get the document rectangle
     double x, y, w, h;
     _map.model.document_rectangle( out x, out y, out w, out h );
 
-    /* Center the map and scale it to fit */
+    // Center the map and scale it to fit
     position_box( x, y, w, h, 0.5, 0.5, "zoom_to_fit" );
     if( set_scaling_factor( get_scaling_factor( w, h ) ) ) {
       animator.animate();
@@ -1005,10 +999,10 @@ public class DrawArea : Gtk.DrawingArea {
   // Scale to actual size.
   public void zoom_actual() {
 
-    /* Start animation */
+    // Start animation
     animator.add_pan_scale( "action_zoom_actual" );
 
-    /* Scale to a full scale */
+    // Scale to a full scale
     if( set_scaling_factor( 1.0 ) ) {
       animator.animate();
     } else {
@@ -1040,12 +1034,12 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Brings the given node into view in its entirety including
   // the given amount of padding.
-  public void see( bool animate = true, double width_adjust = 0, double pad = 100.0 ) {
+  public void see( bool show_attach = false, bool animate = true, double width_adjust = 0, double pad = 100.0 ) {
 
     double x, y, w, h;
 
     var current_conn    = _map.selected.current_connection();
-    var current_node    = _map.selected.current_node();
+    var current_node    = (show_attach && (_map.model.attach_node != null)) ? _map.model.attach_node : _map.selected.current_node();
     var current_callout = _map.selected.current_callout();
     var current_group   = _map.selected.current_group();
 
@@ -1063,8 +1057,8 @@ public class DrawArea : Gtk.DrawingArea {
 
     double diff_x = 0;
     double diff_y = 0;
-    double sw     = scale_value( get_allocated_width() + width_adjust );
-    double sh     = scale_value( get_allocated_height() );
+    double sw     = scale_value( get_width() + width_adjust );
+    double sh     = scale_value( get_height() );
     double sf     = get_scaling_factor( (w + (pad * 2)), (h + (pad * 2)) );
 
     if( (x - pad) < 0 ) {
@@ -1121,8 +1115,8 @@ public class DrawArea : Gtk.DrawingArea {
   private bool out_of_bounds( double diff_x, double diff_y, double scale ) {
 
     double x, y, w, h;
-    double aw = get_allocated_width()  / scale;
-    double ah = get_allocated_height() / scale;
+    double aw = get_width()  / scale;
+    double ah = get_height() / scale;
     double s  = 40 / scale;
 
     _map.model.document_rectangle( out x, out y, out w, out h );
@@ -1151,7 +1145,7 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Draw the background from the stylesheet.
   public void draw_background( Context ctx ) {
-    get_style_context().render_background( ctx, 0, 0, (get_allocated_width() / _scale_factor), (get_allocated_height() / _scale_factor) );
+    get_style_context().render_background( ctx, 0, 0, (get_width() / _scale_factor), (get_height() / _scale_factor) );
   }
 
   //-------------------------------------------------------------
@@ -1265,8 +1259,8 @@ public class DrawArea : Gtk.DrawingArea {
 
     double diffx = 0.0;
     double diffy = 0.0;
-    var aw = get_allocated_width();
-    var ah = get_allocated_height();
+    var aw = get_width();
+    var ah = get_height();
     var inner_edge = autopan_inner_edge;
     var outer_edge = autopan_outer_edge;
     var max_speed  = autopan_max_speed;
@@ -1340,10 +1334,8 @@ public class DrawArea : Gtk.DrawingArea {
   
       // Pan the canvas if we are dragging something that is draggable
       if( _map.selected.is_any_draggable_selected() && !_select_box.valid ) {
-        double diff_x = _scaled_x - last_x;
-        double diff_y = _scaled_y - last_y;
         var edge = autopan_inner_edge;
-        if( !Utils.is_within_bounds( x, y, edge, edge, (get_allocated_width() - (edge * 2)), (get_allocated_height() - (edge * 2)) ) ) {
+        if( !Utils.is_within_bounds( x, y, edge, edge, (get_width() - (edge * 2)), (get_height() - (edge * 2)) ) ) {
           start_autopan();
         } else {
           stop_autopan();
@@ -1366,9 +1358,10 @@ public class DrawArea : Gtk.DrawingArea {
               _map.model.set_attach_node( match );
             }
             break;
+          default :  break;
         }
 
-      /* If we are dealing with a node, handle it based on its mode */
+      // If we are dealing with a node, handle it based on its mode
       } else if( (current_node != null) && !_select_box.valid ) {
         double diffx = _scaled_x - _press_x;
         double diffy = _scaled_y - _press_y;
@@ -1378,7 +1371,7 @@ public class DrawArea : Gtk.DrawingArea {
             current_node.resize( diffx );
             _map.auto_save();
           } else if( _map.editable ) {
-            var attach_summary = _map.model.attachable_summary_node( _scaled_x, _scaled_y );
+            // var attach_summary = _map.model.attachable_summary_node( _scaled_x, _scaled_y );
             if( _map.model.attach_summary != null ) {
               _map.model.set_attach_summary( _map.model.attach_summary );
             }
@@ -1714,12 +1707,12 @@ public class DrawArea : Gtk.DrawingArea {
       return;
     }
 
-    /* Return the cursor to the default cursor */
+    // Return the cursor to the default cursor
     if( _motion ) {
       reset_cursor();
     }
 
-    /* If we were resizing a node, end the resize */
+    // If we were resizing a node, end the resize
     if( _resize ) {
       _resize = false;
       if( current_sticker != null ) {
@@ -1734,10 +1727,10 @@ public class DrawArea : Gtk.DrawingArea {
       return;
     }
 
-    /* If a connection is selected, deal with the possibilities */
+    // If a connection is selected, deal with the possibilities
     if( current_conn != null ) {
 
-      /* If the connection end is released on an attachable node, attach the connection to the node */
+      // If the connection end is released on an attachable node, attach the connection to the node
       if( _map.model.attach_node != null ) {
         if( current_conn.mode == ConnMode.LINKING ) {
           _map.model.end_link( _map.model.attach_node );
@@ -1749,13 +1742,13 @@ public class DrawArea : Gtk.DrawingArea {
         }
         _last_connection = null;
 
-      /* If we were dragging the connection midpoint, change the connection mode to SELECTED */
+      // If we were dragging the connection midpoint, change the connection mode to SELECTED
       } else if( current_conn.mode == ConnMode.ADJUSTING ) {
         _map.add_undo( new UndoConnectionChange( _( "connection drag" ), _last_connection, current_conn ) );
         _map.selected.set_current_connection( current_conn );
         _map.auto_save();
 
-      /* If we were dragging a connection end and failed to attach it to a node, return the connection to where it was prior to the drag */
+      // If we were dragging a connection end and failed to attach it to a node, return the connection to where it was prior to the drag
       } else if( _last_connection != null ) {
         current_conn.copy( _map, _last_connection );
         _last_connection = null;
@@ -1768,47 +1761,52 @@ public class DrawArea : Gtk.DrawingArea {
 
       if( current_node.mode == NodeMode.CURRENT ) {
 
-        /* If we are hovering over an attach node, perform the attachment */
+        // If we are hovering over an attach node, perform the attachment
         if( _map.model.attach_node != null ) {
           _map.model.attach_current_node();
 
-        /* If we are not in motion, set the cursor */
-        } else if( !_motion ) {
-          current_node.name.set_cursor_all( false );
-          current_node.name.move_cursor_to_end();
+        } else if( _motion ) {
 
-        /* If we are not a root node or a summary node, move the node into the appropriate position */
-        } else if( (current_node.parent != null) && _map.editable ) {
-          var orig_index   = current_node.index();
-          var orig_summary = current_node.summary_node();
-          var moved        = false;
-          animator.add_nodes( _map.get_nodes(), false, "move to position" );
-          if( current_node.is_summary() ) {
-            (current_node as SummaryNode).nodes_changed( 1, 1 );
-          } else {
-            moved = current_node.parent.move_to_position( current_node, _orig_side, scale_value( x ), scale_value( y ) );
-            if( !moved ) {
-              animator.clear_last_save();
+          // If we are not a root node or a summary node, move the node into the appropriate position
+          if( (current_node.parent != null) && _map.editable ) {
+            var orig_index   = current_node.index();
+            var orig_summary = current_node.summary_node();
+            var moved        = false;
+            animator.add_nodes( _map.get_nodes(), false, "move to position" );
+            if( current_node.parent != null ) {
+              current_node.parent.clear_summary_extents();
             }
-          }
-          if( !current_node.is_summarized() && (_map.model.attach_summary != null) ) {
-            _map.model.attach_summary.add_node( current_node );
-          } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_map.model.attach_summary == null) ) {
-            // TBD - current_node.summary_node().remove_node( current_node );
-          } else if( current_node.is_summarized() ) {
-            current_node.summary_node().node_moved( current_node );
-          }
-          if( moved ) {
-            _map.add_undo( new UndoNodeMove( current_node, _orig_side, orig_index, orig_summary ) );
-          }
-          animator.animate();
+            if( current_node.is_summary() ) {
+              var sn = (current_node as SummaryNode);
+              if( sn != null ) {
+                sn.nodes_changed( 1, 1 );
+              }
+            } else {
+              moved = current_node.parent.move_to_position( current_node, _orig_side, scale_value( x ), scale_value( y ) );
+              if( !moved ) {
+                animator.clear_last_save();
+              }
+            }
+            if( !current_node.is_summarized() && (_map.model.attach_summary != null) ) {
+              _map.model.attach_summary.add_node( current_node );
+            } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_map.model.attach_summary == null) ) {
+              current_node.summary_node().remove_node( current_node );
+            } else if( current_node.is_summarized() ) {
+              current_node.summary_node().node_moved( current_node );
+            }
+            if( moved ) {
+              _map.add_undo( new UndoNodeMove( current_node, _orig_side, orig_index, orig_summary ) );
+            }
+            animator.animate();
 
-          /* Clear the attachable summary indicator */
-          _map.model.set_attach_summary( null );
+            // Clear the attachable summary indicator
+            _map.model.set_attach_summary( null );
 
-        /* Otherwise, redraw everything after the move */
-        } else {
-          queue_draw();
+          // Otherwise, redraw everything after the move
+          } else {
+            queue_draw();
+          }
+
         }
 
       }
@@ -1846,14 +1844,14 @@ public class DrawArea : Gtk.DrawingArea {
         nodes.index( i ).set_alpha_only( 1.0 );
       }
 
-    /* If a sticker is selected, deal with the possiblities */
+    // If a sticker is selected, deal with the possiblities
     } else if( (current_sticker != null) && _map.editable ) {
       if( current_sticker.mode == StickerMode.SELECTED ) {
         _map.add_undo( new UndoStickerMove( current_sticker, _sticker_posx, _sticker_posy ) );
       }
     }
 
-    /* If motion is set, clear it and clear the alpha */
+    // If motion is set, clear it and clear the alpha
     if( _motion ) {
       if( current_node != null ) {
         current_node.alpha = 1.0;
@@ -1907,7 +1905,7 @@ public class DrawArea : Gtk.DrawingArea {
     int    cursor, selstart, selend;
     string text = ct.text.text;
     ct.get_cursor_info( out cursor, out selstart, out selend );
-    _im_context.set_surrounding( text, text.length, text.index_of_nth_char( cursor ) );
+    _im_context.set_surrounding_with_selection( text, text.length, text.index_of_nth_char( cursor ), text.index_of_nth_char( selstart ) );
   }
 
   //-------------------------------------------------------------
@@ -1946,10 +1944,10 @@ public class DrawArea : Gtk.DrawingArea {
   // Handle a key event
   private bool on_keypress( uint keyval, uint keycode, ModifierType state ) {
 
-    /* If we have the mouse pressed, ignore keypresses */
+    // If we have the mouse pressed, ignore keypresses
     if( _pressed ) return( false );
 
-    /* Make sure that we flush all animations if the user starts a keypress */
+    // Make sure that we flush all animations if the user starts a keypress
     animator.flush();
 
     // Handle Control, Shift or Alt keyvals
@@ -1965,6 +1963,8 @@ public class DrawArea : Gtk.DrawingArea {
         break;
       case Gdk.Key.Alt_L :
       case Gdk.Key.Alt_R :
+      case Gdk.Key.Meta_L :
+      case Gdk.Key.Meta_R :
         _alt = true;
         break;
     }
@@ -1998,6 +1998,8 @@ public class DrawArea : Gtk.DrawingArea {
         break;
       case Gdk.Key.Alt_L :
       case Gdk.Key.Alt_R :
+      case Gdk.Key.Meta_L :
+      case Gdk.Key.Meta_R :
         _alt = false;
         break;
     }
@@ -2101,9 +2103,12 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // This function should be called when a drop target is deciding
   // whether to accept a drop action or not.
+  /*
+   NOTE:  This function is not called according to valac
   private bool handle_drop_accept( Drop drop ) {
     return( _map.editable );
   }
+  */
 
   //-------------------------------------------------------------
   // Handle any drag operations involving text.
@@ -2223,11 +2228,12 @@ public class DrawArea : Gtk.DrawingArea {
 
     if( !_map.editable ) return( false );
 
-    var node = _map.model.attach_node;
-    var tag  = (Tag)val;
+    var node  = _map.model.attach_node;
+    var tag   = (Tag)val;
+    var found = _map.model.tags.get_tag_from_name( tag.name );
 
-    if( (node != null) && (node.mode == NodeMode.DROPPABLE) ) {
-      node.add_tag( tag );
+    if( (node != null) && (node.mode == NodeMode.DROPPABLE) && (found != null) ) {
+      node.add_tag( found );
       if( _map.select_node( node ) ) {
         queue_draw();
         _map.auto_save();

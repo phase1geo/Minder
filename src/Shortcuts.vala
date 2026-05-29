@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2025-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -170,7 +170,7 @@ public class Shortcut {
   //-------------------------------------------------------------
   // Executes the stored function with the given map.
   public void execute( MindMap map ) {
-    _func( map );
+    _func( map, true );
   }
 
   //-------------------------------------------------------------
@@ -203,7 +203,6 @@ public class Shortcut {
   public string get_label() {
     string[] lbl = {};
     unichar  uc  = keyval_to_unicode( _keycode );
-    string   str = "";
     if( _control ) {
       lbl += "Ctrl";
     }
@@ -292,13 +291,14 @@ public class Shortcuts {
   // Removes the shortcut associated with the given command.  Returns
   // true if the shortcut is found and removed.
   private bool remove_shortcut( KeyCommand command ) {
+    var removed = false;
     for( int i=0; i<_shortcuts.length; i++ ) {
       if( _shortcuts.index( i ).matches_command( command ) ) {
         _shortcuts.remove_index( i );
-        return( true );
+        removed = true;
       }
     }
-    return( false );
+    return( removed );
   }
 
   //-------------------------------------------------------------
@@ -426,7 +426,7 @@ public class Shortcuts {
       }
     }
 
-    /* Save the file */
+    // Save the file
     doc->save_format_file( shortcuts_path(), 1 );
 
     delete doc;
@@ -480,7 +480,6 @@ public class Shortcuts {
   public void add_default_shortcuts() {
     for( int i=0; i<_defaults.length; i++ ) {
       _shortcuts.append_val( _defaults.index( i ) );
-      // FOOBAR
     }
   }
 
@@ -493,6 +492,7 @@ public class Shortcuts {
     for( int i=0; i<_shortcuts.length; i++ ) {
       shortcut_changed( _shortcuts.index( i ).command, _shortcuts.index( i ) );
     }
+    save();
   }
 
   //-------------------------------------------------------------
@@ -521,6 +521,7 @@ public class Shortcuts {
     add_shortcut( Key.Return,    false, false, false, KeyCommand.NODE_ADD_SIBLING_AFTER );
     add_shortcut( Key.Return,    false, true,  false, KeyCommand.EDIT_SHIFT_RETURN );
     add_shortcut( Key.Return,    false, true,  false, KeyCommand.NODE_ADD_SIBLING_BEFORE );
+    add_shortcut( Key.Return,    false, true,  true,  KeyCommand.NODE_ATTACH );
     add_shortcut( Key.Tab,       false, false, false, KeyCommand.EDIT_TAB );
     add_shortcut( Key.Tab,       false, false, false, KeyCommand.NODE_ADD_CHILD );
     add_shortcut( Key.Tab,       false, true,  false, KeyCommand.EDIT_SHIFT_TAB );
@@ -528,17 +529,21 @@ public class Shortcuts {
     add_shortcut( Key.Right,     false, false, false, KeyCommand.EDIT_CURSOR_CHAR_NEXT );
     add_shortcut( Key.Right,     false, false, false, KeyCommand.NODE_SELECT_RIGHT );
     add_shortcut( Key.Right,     false, true,  false, KeyCommand.EDIT_SELECT_CHAR_NEXT );
+    add_shortcut( Key.Right,     false, true,  true,  KeyCommand.NODE_ATTACH_RIGHT );
     add_shortcut( Key.Left,      false, false, false, KeyCommand.EDIT_CURSOR_CHAR_PREV );
     add_shortcut( Key.Left,      false, false, false, KeyCommand.NODE_SELECT_LEFT );
     add_shortcut( Key.Left,      false, true,  false, KeyCommand.EDIT_SELECT_CHAR_PREV );
+    add_shortcut( Key.Left,      false, true,  true,  KeyCommand.NODE_ATTACH_LEFT );
     add_shortcut( Key.Up,        false, false, false, KeyCommand.EDIT_CURSOR_UP );
     add_shortcut( Key.Up,        false, false, false, KeyCommand.NODE_SELECT_UP );
     add_shortcut( Key.Up,        false, false, true,  KeyCommand.NODE_SWAP_UP );
     add_shortcut( Key.Up,        false, true,  false, KeyCommand.EDIT_SELECT_UP );
+    add_shortcut( Key.Up,        false, true,  true,  KeyCommand.NODE_ATTACH_UP );
     add_shortcut( Key.Down,      false, false, false, KeyCommand.EDIT_CURSOR_DOWN );
     add_shortcut( Key.Down,      false, false, false, KeyCommand.NODE_SELECT_DOWN );
     add_shortcut( Key.Down,      false, false, true,  KeyCommand.NODE_SWAP_DOWN );
     add_shortcut( Key.Down,      false, true,  false, KeyCommand.EDIT_SELECT_DOWN );
+    add_shortcut( Key.Down,      false, true,  true,  KeyCommand.NODE_ATTACH_DOWN );
     add_shortcut( Key.Page_Up,   false, false, false, KeyCommand.NODE_SELECT_SIBLING_PREV );
     add_shortcut( Key.Page_Down, false, false, false, KeyCommand.NODE_SELECT_SIBLING_NEXT );
     add_shortcut( Key.Control_L, false, false, false, KeyCommand.CONTROL_PRESSED );
@@ -607,6 +612,11 @@ public class Shortcuts {
     add_default( Key.k,            true, true,  false, KeyCommand.EDIT_REMOVE_URL );
     add_default( Key.r,            true, true,  false, KeyCommand.NODE_QUICK_ENTRY_REPLACE );
     add_default( Key.y,            true, false, false, KeyCommand.NODE_PASTE_NODE_LINK );
+
+    add_default( Key.b,            true, false, false, KeyCommand.EDIT_BOLD );
+    add_default( Key.i,            true, false, false, KeyCommand.EDIT_ITALICS );
+    add_default( Key.x,            true, true,  false, KeyCommand.EDIT_STRIKE );
+    add_default( Key.grave,        true, false, false, KeyCommand.EDIT_CODE );
 
     add_default( Key.F10,          false, true,  false, KeyCommand.SHOW_CONTEXTUAL_MENU );
     add_default( Key.Menu,         false, false, false, KeyCommand.SHOW_CONTEXTUAL_MENU );
@@ -750,7 +760,7 @@ public class Shortcuts {
 
     doc->set_root_element( root );
 
-    root->set_prop( "domain", "com.github.phase1geo.minder" );
+    root->set_prop( "domain", "io.github.phase1geo.minder" );
 
     var window = make_object( "GtkShortcutsWindow", "shortcuts" );
     root->add_child( window );

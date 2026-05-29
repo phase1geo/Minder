@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2025 (https://github.com/phase1geo/Outliner)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Outliner)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -23,14 +23,8 @@ public class TextParser {
 
   public delegate void TextMatchCallback( FormattedText text, MatchInfo match_info );
 
-  private struct ReCallback {
-    Regex             re;
-    TextMatchCallback func;
-  }
-
-  private string             _name;
-  private Array<ReCallback?> _res;
-  private bool               _enable;
+  private string _name;
+  private bool   _enable;
 
   public string name {
     get {
@@ -49,23 +43,35 @@ public class TextParser {
     }
   }
 
+  public signal void parse( FormattedText text );
   public signal void enable_changed();
 
   //-------------------------------------------------------------
   // Default constructor
   public TextParser( string name ) {
     _name   = name;
-    _res    = new Array<ReCallback?>();
     _enable = true;
   }
 
   //-------------------------------------------------------------
   // Adds a regular expression to this parser
-  protected void add_regex( string re, TextMatchCallback func ) {
+  protected void add_regex( string pattern, TextMatchCallback func ) {
     try {
-      _res.append_val( { new Regex( re, RegexCompileFlags.MULTILINE ), func } );
+      var re = new Regex( pattern, RegexCompileFlags.MULTILINE );
+      parse.connect((text) => {
+        MatchInfo matches;
+        var       start = 0;
+        try {
+          while( re.match_full( text.text, -1, start, 0, out matches ) ) {
+            int start_pos, end_pos;
+            matches.fetch_pos( 0, out start_pos, out end_pos );
+            start = end_pos;
+            func( text, matches );
+          }
+        } catch( RegexError e ) {}
+      });
     } catch( RegexError e ) {
-      stdout.printf( _( "Parser regex error (re: %s, error: %s)\n" ), re, e.message );
+      stdout.printf( _( "Parser regex error (pattern: %s, error: %s)\n" ), pattern, e.message );
       return;
     }
   }
@@ -84,7 +90,6 @@ public class TextParser {
   protected void remove_tags( FormattedText text, MatchInfo matches, int paren ) {
     int start, end;
     matches.fetch_pos( paren, out start, out end );
-    stdout.printf( "Removing all tags from %d to %d\n", start, end );
     text.remove_all_tags( start, end );
   }
 
@@ -100,25 +105,6 @@ public class TextParser {
   // Helper function that returns the matched string.
   protected string get_text( MatchInfo matches, int paren ) {
     return( matches.fetch( paren ) );
-  }
-
-  //-------------------------------------------------------------
-  // Called to parse the text within the given FormattedText
-  // element.
-  public void parse( FormattedText text ) {
-    if( !_enable ) return;
-    for( int i=0; i<_res.length; i++ ) {
-      MatchInfo matches;
-      var       start = 0;
-      try {
-        while( _res.index( i ).re.match_full( text.text, -1, start, 0, out matches ) ) {
-          int start_pos, end_pos;
-          matches.fetch_pos( 0, out start_pos, out end_pos );
-          start = end_pos;
-          _res.index( i ).func( text, matches );
-        }
-      } catch( RegexError e ) {}
-    }
   }
 
   //-------------------------------------------------------------

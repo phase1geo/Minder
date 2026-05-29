@@ -1,5 +1,5 @@
  /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -320,7 +320,7 @@ public class Connections {
   //-------------------------------------------------------------
   // Searches the connections for ones that match the given
   // pattern and search options.
-  public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  public void get_match_items(string tabname, string pattern, bool[] search_opts, ref GLib.ListStore matches ) {
     for( int i=0; i<_connections.length; i++ ) {
       _connections.index( i ).get_match_items(tabname, pattern, search_opts, ref matches );
     }
@@ -355,7 +355,10 @@ public class Connections {
   public void draw_all( Cairo.Context ctx, Theme theme, bool exporting ) {
     if( hide ) return;
     for( int i=0; i<_connections.length; i++ ) {
-      _connections.index( i ).draw( ctx, theme, exporting );
+      _connections.index( i ).draw_line( ctx, theme, exporting );
+    }
+    for( int i=0; i<_connections.length; i++ ) {
+      _connections.index( i ).draw_title( ctx, theme, exporting );
     }
   }
 

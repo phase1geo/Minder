@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -55,7 +55,6 @@ public class Connection : Object {
   private Bezier      _curve;
   private CanvasText? _title     = null;
   private string      _note      = "";
-  private double      _max_width = 100;
   private RGBA?       _color;
   private string?     _sticker     = null;
   private Pixbuf?     _sticker_buf = null;
@@ -314,6 +313,12 @@ public class Connection : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns true if this connection has a drawable title box.
+  public bool has_title_box() {
+    return( (_sticker != null) || (title != null) || (note.length > 0) );
+  }
+
+  //-------------------------------------------------------------
   // Makes sure that the title is ready to be edited.
   public void edit_title_begin( MindMap map ) {
     if( _title != null ) return;
@@ -512,7 +517,7 @@ public class Connection : Object {
 
     node.node_bbox( out x, out y, out w, out h );
 
-    /* Remove the node's margin */
+    // Remove the node's margin
     x += margin;
     y += margin;
     w -= (margin * 2);
@@ -727,7 +732,7 @@ public class Connection : Object {
       sticker = sk;
     }
 
-    /* Update the stored curve */
+    // Update the stored curve
     double fx, fy, fw, fh;
     double tx, ty, tw, th;
     _from_node.node_bbox( out fx, out fy, out fw, out fh );
@@ -737,7 +742,7 @@ public class Connection : Object {
     set_connect_point( _from_node );
     set_connect_point( _to_node );
 
-    /* Load the connection information */
+    // Load the connection information
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
@@ -781,7 +786,7 @@ public class Connection : Object {
       n->set_prop( "sticker", _sticker );
     }
 
-    /* Save the style connection */
+    // Save the style connection
     style.save_connection( n );
 
     n->new_text_child( null, "title", ((title != null) ? title.text.text : "") );
@@ -794,31 +799,27 @@ public class Connection : Object {
   //-------------------------------------------------------------
   // Populates the given ListStore with all nodes that have names
   // that match the given string pattern.
-  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref GLib.ListStore matches ) {
     var tab = Utils.rootname( tabname );
     if( search_opts[SearchOptions.TITLES] && (title != null) ) {
-      string str = Utils.match_string( pattern, title.text.text);
+      string str = Utils.match_string( pattern, title.stripped_text.text);
       if(str.length > 0) {
-        TreeIter it;
-        matches.append( out it );
-        matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), 1, str, 2, null, 3, this, 4, null, 5, null, 6, tabname, 7, tab, -1 );
+        matches.append( new SearchItem.connection( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), str ) );
       }
     }
     if( search_opts[SearchOptions.NOTES] ) {
-      string str = Utils.match_string( pattern, note);
+      string str = Utils.match_string( pattern, Utils.remove_markdown( note ) );
       if(str.length > 0) {
-        TreeIter it;
-        matches.append( out it );
-        matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Connection Note" ) ), 1, str, 2, null, 3, this, 4, null, 5, null, 6, tabname, 7, tab, -1 );
+        matches.append( new SearchItem.connection( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Connection Note" ) ), str ) );
       }
     }
   }
 
   //-------------------------------------------------------------
   // Draws the connection to the given context.
-  public virtual void draw( Cairo.Context ctx, Theme theme, bool exporting ) {
+  public virtual void draw_line( Cairo.Context ctx, Theme theme, bool exporting ) {
 
-    /* If either the from or to node is hidden, don't bother to draw ourselves */
+    // If either the from or to node is hidden, don't bother to draw ourselves
     if( ((_from_node != null) && !_from_node.is_root() && (_from_node.folded_ancestor() != null)) ||
         ((_to_node   != null) && !_to_node.is_root()   && (_to_node.folded_ancestor() != null)) ) {
       return;
@@ -844,16 +845,16 @@ public class Connection : Object {
       _curve.get_to_point( out end_x, out end_y );
     }
 
-    /* The value of t is always 0.5 */
+    // The value of t is always 0.5
     double cx, cy;
     _curve.get_point( 1, out cx, out cy );
 
-    /* Draw the curve */
+    // Draw the curve
     ctx.save();
     style.draw_connection( ctx );
     Utils.set_context_color_with_alpha( ctx, ccolor, alpha );
 
-    /* Draw the curve as a quadratic curve (saves some additional calculations) */
+    // Draw the curve as a quadratic curve (saves some additional calculations)
     ctx.move_to( start_x, start_y );
     ctx.curve_to(
       (((2.0 / 3.0) * cx) + ((1.0 / 3.0) * start_x)),
@@ -874,7 +875,7 @@ public class Connection : Object {
 
     ctx.set_dash( {}, 0 );
 
-    /* Draw the arrow */
+    // Draw the arrow
     if( (mode != ConnMode.SELECTED) || exporting ) {
       if( (style.connection_arrow == "fromto") || (style.connection_arrow == "both") ) {
         draw_arrow( ctx, style.connection_line_width, end_x, end_y, cx, cy, style.connection_arrow_size );
@@ -884,7 +885,7 @@ public class Connection : Object {
       }
     }
 
-    /* If we are selected draw the endpoints */
+    // If we are selected draw the endpoints
     if( (mode == ConnMode.SELECTED) && !exporting ) {
 
       ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
@@ -901,13 +902,8 @@ public class Connection : Object {
 
     }
 
-    /* Draw the connection title if it exists */
-    if( (_sticker != null) || (title != null) || (note.length > 0) ) {
-
-      draw_title( ctx, theme, exporting );
-
-    /* Draw the drag handle */
-    } else if( (mode != ConnMode.NONE) && !exporting ) {
+    // Draw the drag handle, if necessary
+    if( !has_title_box() && (mode != ConnMode.NONE) && !exporting ) {
 
       double dragx, dragy;
       _curve.get_drag_point( out dragx, out dragy );
@@ -939,7 +935,7 @@ public class Connection : Object {
       double x, y, w, h;
       sticker_bbox( out x, out y, out w, out h );
 
-      /* Draw sticker */
+      // Draw sticker
       cairo_set_source_pixbuf( ctx, _sticker_buf, x, y );
       ctx.paint_with_alpha( alpha );
 
@@ -949,32 +945,34 @@ public class Connection : Object {
 
   //-------------------------------------------------------------
   // Draws the connection title if it has been enabled.
-  private void draw_title( Cairo.Context ctx, Theme theme, bool exporting ) {
+  public void draw_title( Cairo.Context ctx, Theme theme, bool exporting ) {
+
+    if( !has_title_box() ) return;
 
     var    ccolor  = (_color != null) ? _color : theme.get_color( "connection_background" );
     var    fg      = theme.get_color( "connection_foreground" ) ?? theme.get_color( "background" );
     var    padding = _style.connection_padding ?? 0;
     double x, y, w, h;
 
-    /* Get the bbox for the entire title box */
+    // Get the bbox for the entire title box
     title_bbox( out x, out y, out w, out h );
     x -= padding;
     y -= padding;
     w += (padding * 2);
     h += (padding * 2);
 
-    /* Calculate the extents */
+    // Calculate the extents
     extent_x1 = (x < extent_x1) ? x : extent_x1;
     extent_y1 = (y < extent_y1) ? y : extent_y1;
     extent_x2 = ((x + w) > extent_x2) ? (x + w) : extent_x2;
     extent_y2 = ((y + h) > extent_y2) ? (y + h) : extent_y2;
 
-    /* Draw the box */
+    // Draw the box
     ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
     Utils.draw_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
     ctx.fill();
 
-    /* Draw the droppable indicator, if necessary */
+    // Draw the droppable indicator, if necessary
     if( (mode == ConnMode.DROPPABLE) && !exporting ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
       ctx.set_line_width( 4 );
@@ -982,18 +980,18 @@ public class Connection : Object {
       ctx.stroke();
     }
 
-    /* Draw the sticker, if necessary */
+    // Draw the sticker, if necessary
     draw_sticker( ctx, theme );
 
-    /* Draw the text */
+    // Draw the text
     if( _title != null ) {
       _title.draw( ctx, theme, fg, alpha, exporting );
     }
 
-    /* Draw the note, if necessary */
+    // Draw the note, if necessary
     draw_note( ctx, fg );
 
-    /* Draw the drag handle */
+    // Draw the drag handle
     if( ((mode == ConnMode.SELECTED) || (mode == ConnMode.ADJUSTING)) && !exporting ) {
 
       double dragx, dragy;
@@ -1076,10 +1074,17 @@ public class Connection : Object {
   }
 
   //-------------------------------------------------------------
+  // Draws the line and title box (if necessary) for this connection.
+  public void draw( Cairo.Context ctx, Theme theme, bool exporting ) {
+    draw_line( ctx, theme, exporting );
+    draw_title( ctx, theme, exporting );
+  }
+
+  //-------------------------------------------------------------
   // Makes an icon for the given dash.
   public static Paintable make_arrow_icon( string type, bool dark ) {
 
-    var rect = Graphene.Rect.alloc();
+    var rect = Graphene.Rect();
     rect.init( (float)0.0, (float)0.0, (float)100, (float)20 );
 
     var snapshot = new Gtk.Snapshot();

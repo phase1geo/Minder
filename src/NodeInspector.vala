@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,30 +25,34 @@ using Granite.Widgets;
 
 public class NodeInspector : Box {
 
-  private ScrolledWindow _sw;
-  private Switch         _task;
-  private Switch         _fold;
-  private Switch         _sequence;
-  private Box            _link_box;
-  private ColorButton    _link_color;
-  private NoteView       _note;
-  private MindMap?       _map = null;
-  private Button         _detach_btn;
-  private string         _orig_note = "";
-  private Node?          _node = null;
-  private Stack          _image_stack;
-  private Picture        _image;
-  private Button         _image_btn;
-  private Label          _image_loc;
-  private Switch         _override;
-  private ColorButton    _root_color;
-  private Box            _root_color_box;
-  private Revealer       _color_reveal;
-  private ToggleButton   _resize;
-  private bool           _ignore = false;
+  private ScrolledWindow    _sw;
+  private Switch            _task;
+  private Switch            _fold;
+  private Switch            _sequence;
+  private Box               _link_box;
+  private ColorDialogButton _link_color;
+  private NoteView          _note;
+  private MindMap?          _map = null;
+  private Button            _detach_btn;
+  private string            _orig_note = "";
+  private Node?             _node = null;
+  private Stack             _image_stack;
+  private Picture           _image;
+  private Switch            _override;
+  private ColorDialogButton _root_color;
+  private Box               _root_color_box;
+  private Revealer          _color_reveal;
+  private ToggleButton      _resize;
+  private bool              _ignore = false;
 
   public signal void update_icons();
   public signal void editable_changed();
+
+  public NoteView note {
+    get {
+      return( _note );
+    }
+  }
 
   //-------------------------------------------------------------
   // Constructor.
@@ -56,7 +60,7 @@ public class NodeInspector : Box {
 
     Object( orientation: Orientation.VERTICAL, spacing: 10 );
 
-    /* Create the node widgets */
+    // Create the node widgets
     create_title();
     create_task();
     create_fold();
@@ -76,12 +80,10 @@ public class NodeInspector : Box {
   private void tab_changed( MindMap? map ) {
     if( _map != null ) {
       _map.current_changed.disconnect( node_changed );
-      _map.theme_changed.disconnect( theme_changed );
     }
     _map = map;
     if( map != null ) {
       map.current_changed.connect( node_changed );
-      map.theme_changed.connect( theme_changed );
       node_changed();
       editable_changed();
     }
@@ -203,11 +205,18 @@ public class NodeInspector : Box {
     };
     lbl.add_css_class( "titled" );
 
-    _link_color = new ColorButton() {
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Select Link Color" ),
+      with_alpha = false
+    };
+
+    _link_color = new ColorDialogButton( dialog ) {
       halign = Align.FILL
     };
-    _link_color.color_set.connect(() => {
-      _map.model.change_current_link_color( _link_color.rgba );
+
+    _link_color.notify["rgba"].connect(() => {
+      _map.model.change_current_link_color( _link_color.get_rgba() );
     });
 
     _link_box = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -249,11 +258,18 @@ public class NodeInspector : Box {
 
     var l = new Label( "" );
 
-    _root_color = new ColorButton() {
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Select Root Color" ),
+      with_alpha = false
+    };
+
+    _root_color = new ColorDialogButton( dialog ) {
       halign = Align.FILL
     };
-    _root_color.color_set.connect(() => {
-      _map.model.change_current_link_color( _root_color.rgba );
+
+    _root_color.notify["rgba"].connect(() => {
+      _map.model.change_current_link_color( _root_color.get_rgba() );
     });
 
     var cbox = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -286,7 +302,7 @@ public class NodeInspector : Box {
     };
     lbl.add_css_class( "titled" );
 
-    _note = new NoteView() {
+    _note = new NoteView( win ) {
       valign    = Align.FILL,
       vexpand   = true,
       wrap_mode = Gtk.WrapMode.WORD
@@ -426,7 +442,7 @@ public class NodeInspector : Box {
       btn_del.sensitive  = _map.editable;
     });
 
-    /* Set ourselves up to be a drag target */
+    // Set ourselves up to be a drag target
     var drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
     _image.add_controller( drop );
 
@@ -448,11 +464,13 @@ public class NodeInspector : Box {
 
   //-------------------------------------------------------------
   // Called if the user clicks on the image URI.
+  /*
+   NOTE:  This function is not called according to valac
   private bool image_link_clicked( string uri ) {
 
     File file = File.new_for_uri( uri );
 
-    /* If the URI is a file on the local filesystem, view it with the Files app */
+    // If the URI is a file on the local filesystem, view it with the Files app
     if( file.get_uri_scheme() == "file" ) {
       var files = AppInfo.get_default_for_type( "inode/directory", true );
       var list  = new List<File>();
@@ -468,6 +486,7 @@ public class NodeInspector : Box {
     return( false );
 
   }
+  */
 
   //-------------------------------------------------------------
   // Creates the node editing button grid and adds it to the popover.
@@ -488,7 +507,7 @@ public class NodeInspector : Box {
     };
     cut_btn.clicked.connect( node_cut );
 
-    /* Create the detach button */
+    // Create the detach button
     _detach_btn = new Button.from_icon_name( "minder-detach-light-symbolic" ) {
       tooltip_text = _( "Detach Node" )
     };
@@ -498,19 +517,19 @@ public class NodeInspector : Box {
       _detach_btn.icon_name = Utils.use_dark_mode( _detach_btn ) ? "minder-detach-dark-symbolic" : "minder-detach-light-symbolic";
     });
 
-    /* Create the node deletion button */
+    // Create the node deletion button
     var del_btn = new Button.from_icon_name( "edit-delete-symbolic" ) {
       tooltip_text = _( "Delete Node" )
     };
     del_btn.clicked.connect( node_delete );
 
-    /* Add the buttons to the button grid */
+    // Add the buttons to the button grid
     grid.attach( copy_btn,    0, 0 );
     grid.attach( cut_btn,     1, 0 );
     grid.attach( _detach_btn, 2, 0 );
     grid.attach( del_btn,     3, 0 );
 
-    /* Add the button grid to the popover */
+    // Add the button grid to the popover
     // pack_start( grid, false, true );
 
   }
@@ -562,7 +581,7 @@ public class NodeInspector : Box {
       }
     } else {
       _color_reveal.reveal_child = true;
-      if( (current != null) && (_root_color.rgba != _map.get_theme().get_color( "root_background" )) ) {
+      if( (current != null) && (_root_color.get_rgba() != _map.get_theme().get_color( "root_background" )) ) {
         _map.model.change_current_link_color( _root_color.get_rgba() );
       }
     }
@@ -581,6 +600,7 @@ public class NodeInspector : Box {
   private void note_focus_in() {
     _node      = _map.get_current_node();
     _orig_note = _note.buffer.text;
+    _map.unedit_text();
   }
 
   //-------------------------------------------------------------
@@ -647,6 +667,8 @@ public class NodeInspector : Box {
 
   //-------------------------------------------------------------
   // Called whenever the fold switch is changed within the inspector
+  /*
+   NOTE:  This function is not called according to valac
   private void resize_changed() {
     var current = _map.get_current_node();
     if( current != null ) {
@@ -654,26 +676,7 @@ public class NodeInspector : Box {
       _map.auto_save();
     }
   }
-
-  //-------------------------------------------------------------
-  // Called whenever the theme is changed.
-  private void theme_changed( MindMap map ) {
-
-    int    num_colors = Theme.num_link_colors();
-    RGBA[] colors     = new RGBA[num_colors];
-
-    /* Gather the theme colors into an RGBA array */
-    for( int i=0; i<num_colors; i++ ) {
-      colors[i] = _map.get_theme().link_color( i );
-    }
-
-    /* Clear the palette */
-    _link_color.add_palette( Orientation.HORIZONTAL, 10, null );
-
-    /* Set the palette with the new theme colors */
-    _link_color.add_palette( Orientation.HORIZONTAL, 10, colors );
-
-  }
+  */
 
   //-------------------------------------------------------------
   // Called whenever the user changes the current node in the canvas.
@@ -717,8 +720,8 @@ public class NodeInspector : Box {
       _note.buffer.text = note;
       _note.editable    = _map.editable;
       if( current.image != null ) {
-        var url = _map.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
-        var str = "<a href=\"" + url + "\">" + url + "</a>";
+        // var url = _map.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
+        // var str = "<a href=\"" + url + "\">" + url + "</a>";
         current.image.set_image( _image );
         _resize.set_active( current.image_resizable && _map.editable );
         _image_stack.visible_child_name = "edit";

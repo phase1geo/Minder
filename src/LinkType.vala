@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,16 +21,21 @@
 
 public interface LinkType : Object {
 
-  /* Returns the name of the link type */
+  //-------------------------------------------------------------
+  // Returns the name of the link type
   public abstract string name();
 
-  /* Returns the display name of the link type (should be a translatable string) */
+  //-------------------------------------------------------------
+  // Returns the display name of the link type (should be a
+  // translatable string)
   public abstract string display_name();
 
-  /* Returns the name of the light-mode link icon */
+  //-------------------------------------------------------------
+  // Returns the name of the light-mode link icon
   public abstract string light_icon_name();
 
-  /* Returns the name of the dark-mode link icon */
+  //-------------------------------------------------------------
+  // Returns the name of the dark-mode link icon
   public abstract string dark_icon_name();
 
   protected double adjust_a( Style style ) {
@@ -41,7 +46,8 @@ public interface LinkType : Object {
     return( (style.link_width / 2) + 1 );
   }
 
-  /* Provides the midx or midy adjust value */
+  //-------------------------------------------------------------
+  // Provides the midx or midy adjust value
   protected double adjust_mid_by( Node parent, NodeSide child_side ) {
     if( parent.is_root() ) {
       switch( child_side ) {
@@ -54,7 +60,8 @@ public interface LinkType : Object {
     return( 0 );
   }
 
-  /* Draw method for the link */
+  //-------------------------------------------------------------
+  // Draw method for the link
   public abstract void draw( Cairo.Context ctx, Node from_node, Node to_node,
                              double from_x, double from_y, double to_x, double to_y,
                              out double fx, out double fy, out double tx, out double ty );

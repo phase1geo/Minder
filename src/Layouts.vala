@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,13 +25,14 @@ public class Layouts : Object {
 
   private Array<Layout> _layouts;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public Layouts() {
 
-    /* Create the list of available layouts */
+    // Create the list of available layouts
     _layouts = new Array<Layout>();
 
-    /* Create the layouts */
+    // Create the layouts
     var manual     = new LayoutManual();
     var vertical   = new LayoutVertical();
     var horizontal = new LayoutHorizontal();
@@ -40,7 +41,7 @@ public class Layouts : Object {
     var up         = new LayoutUp();
     var down       = new LayoutDown();
 
-    /* Add the create layouts to the list */
+    // Add the create layouts to the list
     _layouts.append_val( manual );
     _layouts.append_val( vertical );
     _layouts.append_val( horizontal );
@@ -51,14 +52,16 @@ public class Layouts : Object {
 
   }
 
-  /* Populates the given array with a list of layout names */
+  //-------------------------------------------------------------
+  // Populates the given array with a list of layout names
   public void get_names( ref Array<string> names ) {
     for( int i=0; i<_layouts.length; i++ ) {
       names.append_val( _layouts.index( i ).name );
     }
   }
 
-  /* Populates the given array with a list of layout icon filenames */
+  //-------------------------------------------------------------
+  // Populates the given array with a list of layout icon filenames
   public void get_icons( ref Array<string> light_icons, ref Array<string> dark_icons ) {
     for( int i=0; i<_layouts.length; i++ ) {
       light_icons.append_val( _layouts.index( i ).light_icon );
@@ -66,7 +69,8 @@ public class Layouts : Object {
     }
   }
 
-  /* Display the available layouts */
+  //-------------------------------------------------------------
+  // Display the available layouts
   public Layout get_layout( string name ) {
     for( int i=0; i<_layouts.length; i++ ) {
       if( name == _layouts.index( i ).name ) {
@@ -76,7 +80,8 @@ public class Layouts : Object {
     return( _layouts.index( 2 ) );
   }
 
-  /* Returns the default layout (we are going to use 'horizontal') */
+  //-------------------------------------------------------------
+  // Returns the default layout (we are going to use 'horizontal')
   public Layout get_default() {
     return( _layouts.index( 2 ) );
   }

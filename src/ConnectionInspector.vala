@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,15 +25,21 @@ using Granite.Widgets;
 
 public class ConnectionInspector : Box {
 
-  private ScrolledWindow _sw;
-  private ColorButton    _color;
-  private Button         _reset;
-  private NoteView       _note;
-  private MindMap?       _map        = null;
-  private string         _orig_note  = "";
-  private Connection?    _connection = null;
+  private ScrolledWindow    _sw;
+  private ColorDialogButton _color;
+  private Button            _reset;
+  private NoteView          _note;
+  private MindMap?          _map        = null;
+  private string            _orig_note  = "";
+  private Connection?       _connection = null;
 
   public signal void editable_changed();
+
+  public NoteView note {
+    get {
+      return( _note );
+    }
+  }
 
   //-------------------------------------------------------------
   // Default constructor
@@ -53,7 +59,8 @@ public class ConnectionInspector : Box {
 
   }
 
-  /* Called whenever the tab in the main window changes */
+  //-------------------------------------------------------------
+  // Called whenever the tab in the main window changes
   private void tab_changed( MindMap? map ) {
     if( _map != null ) {
       _map.current_changed.disconnect( connection_changed );
@@ -93,11 +100,18 @@ public class ConnectionInspector : Box {
     };
     lbl.add_css_class( "titled" );
 
-    _color = new ColorButton() {
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Select Connection Color" ),
+      with_alpha = false
+    };
+
+    _color = new ColorDialogButton( dialog ) {
       hexpand = true
     };
-    _color.color_set.connect(() => {
-      _map.model.change_current_connection_color( _color.rgba );
+
+    _color.notify["rgba"].connect(() => {
+      _map.model.change_current_connection_color( _color.get_rgba() );
     });
 
     _reset = new Button.from_icon_name( "edit-undo-symbolic" ) {
@@ -133,7 +147,7 @@ public class ConnectionInspector : Box {
     };
     lbl.add_css_class( "titled" );
 
-    _note = new NoteView() {
+    _note = new NoteView( win ) {
       valign    = Align.FILL,
       vexpand   = true,
       wrap_mode = Gtk.WrapMode.WORD
@@ -181,16 +195,16 @@ public class ConnectionInspector : Box {
       column_spacing     = 5
     };
 
-    /* Create the node deletion button */
+    // Create the node deletion button
     var del_btn = new Button.from_icon_name( "edit-delete-symbolic" ) {
       tooltip_text = _( "Delete Connection" )
     };
     del_btn.clicked.connect( connection_delete );
 
-    /* Add the buttons to the button grid */
+    // Add the buttons to the button grid
     grid.attach( del_btn, 0, 0 );
 
-    /* Add the button grid to the popover */
+    // Add the button grid to the popover
     // pack_start( grid, false, true );
 
   }
@@ -207,6 +221,7 @@ public class ConnectionInspector : Box {
   private void note_focus_in() {
     _connection = _map.get_current_connection();
     _orig_note  = _note.buffer.text;
+    _map.unedit_text();
   }
 
   //-------------------------------------------------------------

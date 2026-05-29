@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,7 +21,7 @@
 
 public class Layout : Object {
 
-  protected double _rt_gap = 100;  /* Root node gaps */
+  protected double _rt_gap = 100;  // Root node gaps
 
   public string name        { protected set; get; default = ""; }
   public string light_icon  { protected set; get; default = ""; }
@@ -159,13 +159,13 @@ public class Layout : Object {
   // Updates the tree size
   public void update_tree_size( Node n ) {
 
-    /* Get the node's tree dimensions */
+    // Get the node's tree dimensions
     var nb = bbox( n, -1, "update_tree_size" );  // n.is_summarized() ? n.summary_node().tree_bbox : bbox( n, -1 );
 
-    /* Store the newly calculated node bounds back to the node */
+    // Store the newly calculated node bounds back to the node
     n.tree_bbox = nb;
 
-    /* Set the tree size in the node */
+    // Set the tree size in the node
     n.tree_size = n.side.horizontal() ? nb.height : nb.width;
 
   }
@@ -181,7 +181,9 @@ public class Layout : Object {
     if( parent.is_summary() ) {
 
       double xy1, xy2;
-      (parent as SummaryNode).get_extents( out xy1, out xy2 );
+      var sn = (parent as SummaryNode);
+      assert( sn != null );
+      sn.get_extents( out xy1, out xy2 );
 
       var extent_size    = xy2 - xy1;
       var orig_tree_size = (extent_size < parent.tree_size) ? parent.tree_size : extent_size;
@@ -431,11 +433,14 @@ public class Layout : Object {
     // If we are adding a summary node, get the summary node extent and place ourselves in the middle
     if( child.is_summary() ) {
       double xy1, xy2;
-      (child as SummaryNode).get_extents( out xy1, out xy2 );
-      if( child.side.horizontal() ) {
-        child.posy = xy1 + (((xy2 - xy1) / 2) - (oh / 2));
-      } else {
-        child.posx = xy1 + (((xy2 - xy1) / 2) - (ow / 2));
+      var sn = (child as SummaryNode);
+      if( sn != null ) {
+        sn.get_extents( out xy1, out xy2 );
+        if( child.side.horizontal() ) {
+          child.posy = xy1 + (((xy2 - xy1) / 2) - (oh / 2));
+        } else {
+          child.posx = xy1 + (((xy2 - xy1) / 2) - (ow / 2));
+        }
       }
 
     // If we are the only child on our side, place ourselves on the same plane as the

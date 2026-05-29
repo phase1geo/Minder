@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -94,7 +94,7 @@ public class Document : Object {
   private bool    _read_only    = false;
   private string  _load_version = "";  
 
-  /* Properties */
+  // Properties
   public string filename {
     set {
       if( _filename != value ) {
@@ -153,7 +153,7 @@ public class Document : Object {
     _etag = generate_etag();
 
     // Create the temporary file
-    var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
+    var dir = get_unsaved_dir();
     if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
       int i = 1;
       do {
@@ -165,9 +165,15 @@ public class Document : Object {
     // Create the temporary directory to store the mind map
     make_temp_dir();
 
-    /* Listen for any changes from the canvas */
+    // Listen for any changes from the canvas
     map.changed.connect( canvas_changed );
 
+  }
+
+  //-------------------------------------------------------------
+  // Returns the directory where unsaved minder files.
+  public static string get_unsaved_dir() {
+    return( GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "unsaved" ) );
   }
 
   //-------------------------------------------------------------
@@ -249,7 +255,7 @@ public class Document : Object {
     archive.support_filter_gzip();
     archive.support_format_all();
 
-    /* Open the portable Minder file for reading */
+    // Open the portable Minder file for reading
     if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
       Xml.Doc* doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
       if( doc != null ) {
@@ -318,7 +324,7 @@ public class Document : Object {
     // Delete the XML document contents
     delete doc;
 
-    /* If an etag was not found, generate one and save the updated map immediately */
+    // If an etag was not found, generate one and save the updated map immediately
     if( _etag == "" ) {
       _etag = generate_etag();
       save_xml_internal( filename, false );
@@ -331,7 +337,7 @@ public class Document : Object {
   //-------------------------------------------------------------
   // Converts the Minder file into the Minder document and moves
   // all stored images to the ImageManager on the local computer
-  public void load( bool force_v1_readonly, AfterLoadFunc? func = null ) {
+  public void load( UpgradeAction force_upgrade_action = UpgradeAction.NUM, AfterLoadFunc? func = null ) {
 
     var bak_file = get_bak_file();
     var fname    = (FileUtils.test( bak_file, FileTest.EXISTS ) && !_map.settings.get_boolean( "keep-backup-after-save" )) ? bak_file : filename;
@@ -352,10 +358,10 @@ public class Document : Object {
     extractor.set_options( flags );
     extractor.set_standard_lookup();
 
-    /* Open the portable Minder file for reading */
+    // Open the portable Minder file for reading
     if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
-      if( force_v1_readonly ) {
-        upgrade( UpgradeAction.READ_ONLY, func );
+      if( force_upgrade_action != UpgradeAction.NUM ) {
+        upgrade( force_upgrade_action, func );
       } else if( _map.settings.get_boolean( "ask-for-upgrade-action" ) ) {
         request_upgrade_action( func );
       } else {
@@ -429,7 +435,7 @@ public class Document : Object {
             var fname = filename.replace( ".mind", "-backup-%s-%s.mind".printf( now.to_string(), _etag ) );
             save_xml_internal( fname, false );
             _map.initialize_for_open();
-            load( false );
+            load();
           }
           delete doc;
         });
@@ -448,13 +454,13 @@ public class Document : Object {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
     var orig_etag  = _etag;
-    root->set_prop( "version", Minder.version );
+    root->set_prop( "version", Minder.static_version );
 
     if ( bump_etag ) {
-      /* Save previous Etag */
+      // Save previous Etag
       root->set_prop( "parent-etag", _etag );
 
-      /* Generate new unique Etag */
+      // Generate new unique Etag
       _etag = generate_etag();
     }
 
@@ -465,7 +471,7 @@ public class Document : Object {
     var res = doc->save_format_file( dest_filename, 1 );
     delete doc;
 
-    /* If the save failed, restore the original etag and return false */
+    // If the save failed, restore the original etag and return false
     if( res < 0 ) {
       _etag = orig_etag;
       return( false );
@@ -527,8 +533,6 @@ public class Document : Object {
       FileUtils.unlink( bak_file );
     }
 
-    var upgrade_ro = _upgrade_ro;
-
     // Indicate that a save is no longer needed
     _save_needed = false;
     _upgrade_ro = false;
@@ -550,7 +554,7 @@ public class Document : Object {
       var input_stream      = file.read();
       var data_input_stream = new DataInputStream( input_stream );
 
-      /* Add an entry to the archive */
+      // Add an entry to the archive
       var entry = new Archive.Entry();
       entry.set_pathname( file.get_basename() );
       entry.set_size( (Archive.int64_t)file_info.get_size() );
@@ -566,7 +570,7 @@ public class Document : Object {
         return( false );
       }
 
-      /* Add the actual content of the file */
+      // Add the actual content of the file
       size_t bytes_read;
       uint8[] buffer = new uint8[64];
       while( data_input_stream.read_all( buffer, out bytes_read ) ) {
@@ -600,6 +604,8 @@ public class Document : Object {
 
   //-------------------------------------------------------------
   // Copies a file from one location to another
+  /*
+   NOTE: This function is not called according to valac
   private bool move_file( string from, string to ) {
     var from_file = File.new_for_path( from );
     var to_file   = File.new_for_path( to );
@@ -611,6 +617,7 @@ public class Document : Object {
     }
     return( true );
   }
+  */
 
   //-------------------------------------------------------------
   // Copies a file from one location to another */
@@ -674,6 +681,7 @@ public class Document : Object {
       case UpgradeAction.OVERRIDE  :  save();  break;
       case UpgradeAction.SAVE_ORIG :  copy_as_orig();  save();  break;
       case UpgradeAction.READ_ONLY :  _upgrade_ro = true;  _map.editable_changed( _map );  break;
+      default                      :  break;
     }
 
     if( func != null ) {
@@ -799,8 +807,10 @@ public class Document : Object {
     }
 
     // Delete the temporary directory
-    var dir = File.new_for_path( _temp_dir );
-    delete_recursively( dir );
+    try {
+      var dir = File.new_for_path( _temp_dir );
+      delete_recursively( dir );
+    } catch( Error e ) {}
 
   }
 

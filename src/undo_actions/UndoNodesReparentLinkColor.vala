@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -28,7 +28,8 @@ public class UndoNodesReparentLinkColor : UndoItem {
   Array<RGBA?> _old_colors;
   Array<bool>  _old_values;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoNodesReparentLinkColor( Array<Node> nodes ) {
     base( _( "node link color reparent" ) );
     _nodes      = new Array<Node>();
@@ -41,7 +42,8 @@ public class UndoNodesReparentLinkColor : UndoItem {
     }
   }
 
-  /* Undoes a node link color change */
+  //-------------------------------------------------------------
+  // Undoes a node link color change
   public override void undo( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).link_color_root = _old_values.index( i );
@@ -53,7 +55,8 @@ public class UndoNodesReparentLinkColor : UndoItem {
     map.auto_save();
   }
 
-  /* Redoes a node link color change */
+  //-------------------------------------------------------------
+  // Redoes a node link color change
   public override void redo( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).link_color_root = false;

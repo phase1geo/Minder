@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -141,10 +141,13 @@ public class NodeMenu : BaseMenu {
   //-------------------------------------------------------------
   // Returns true if a note is associated with the currently
   // selected node.
+  /*
+   NOTE: This function is not called
   private bool node_has_note() {
     Node? current = map.get_current_node();
     return( (current != null) && (current.note != "") );
   }
+  */
 
   //-------------------------------------------------------------
   // Returns true if an image is associated with the currently
@@ -212,10 +215,13 @@ public class NodeMenu : BaseMenu {
   //-------------------------------------------------------------
   // Changes the menu item at the given position in the given Menu
   // to the new name.
+  /*
+   NOTE:  This function is not called
   private void change_menu( GLib.Menu menu, int pos, string new_name, string action ) {
     menu.remove( pos );
     menu.insert( pos, new_name, action );
   }
+  */
 
   //-------------------------------------------------------------
   // Called when the menu is popped up.

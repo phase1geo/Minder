@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -24,14 +24,14 @@ using Gtk;
 
 public class ThemeSolarizedLight : Theme {
 
-  /* Create the theme colors */
+  //-------------------------------------------------------------
+  // Create the theme colors
   public ThemeSolarizedLight() {
 
-    name   = "solarized_light";
-    label  = _( "Solarized Light" );
-    custom = false;
+    name  = "solarized_light";
+    label = _( "Solarized Light" );
 
-    /* Generate the non-link colors */
+    // Generate the non-link colors
     set_color( "background",            color_from_string( "#FDF6E3" ) );
     set_color( "foreground",            color_from_string( "#586E75" ) );
     set_color( "root_background",       color_from_string( "#839496" ) );
@@ -46,6 +46,7 @@ public class ThemeSolarizedLight : Theme {
     set_color( "connection_foreground", color_from_string( "#FDF6E3" ) );
     set_color( "url_background",        color_from_string( "Grey" ) );
     set_color( "url_foreground",        color_from_string( "#62a0ea" ) );
+    set_color( "highlighter",           color_from_string( "#cccc00" ) );
     set_color( "tag",                   color_from_string( "#c00000" ) );
     set_color( "syntax",                color_from_string( "Grey" ) );
     set_color( "match_background",      color_from_string( "Gold" ) );

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -28,9 +28,9 @@ public class SummaryNode : Node {
   private double?    _last_xy  = null;
 
   //-------------------------------------------------------------
-  // If this is set to true, the summary line will be drawn in the
-  // attachable color to indicate that releasing a node that is
-  // being moved will be a part of the summary node.
+  // If this is set to true, the summary line will be drawn in
+  // the attachable color to indicate that releasing a node that
+  // is being moved will be a part of the summary node.
   public bool attachable { set; get; default = false; }
 
   //-------------------------------------------------------------
@@ -152,7 +152,7 @@ public class SummaryNode : Node {
   // layout and first/last position
   public void set_extents() {
 
-    /* If we don't have any nodes, this is bad */
+    // If we don't have any nodes, this is bad
     assert( _nodes.length() > 0 );
 
     double xy1, xy2;
@@ -169,9 +169,12 @@ public class SummaryNode : Node {
 
   //-------------------------------------------------------------
   // Comparison function of two double types
+  /*
+   NOTE:  This function is not used according to valac
   private static int compare_pos( double pos1, double pos2 ) {
     return( (pos1 == pos2) ? 0 : (pos1 < pos2) ? -1 : 1 );
   }
+  */
 
   private void nodes_changed_moved( double fx, double fy ) {
     // nodes_changed( fx, fy, "moved" );

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -87,25 +87,19 @@ public class ExportOrgMode : Export {
   private string export_top_nodes( MindMap map ) {
 
     var retval = "";
+    var nodes = map.get_nodes();
 
-    try {
-
-      var nodes = map.get_nodes();
-      for( int i=0; i<nodes.length; i++ ) {
-        string title = "* " + nodes.index( i ).name.text.text + "\n\n";
-        retval += title;
-        if( nodes.index( i ).note != "" ) {
-          string note = "\n" + linestart( "" ) + nodes.index( i ).note.replace( "\n", "\n  " );
-          retval += note;
-        }
-        var children = nodes.index( i ).children();
-        for( int j=0; j<children.length; j++ ) {
-          retval += export_node( children.index( j ), sprefix() );
-        }
+    for( int i=0; i<nodes.length; i++ ) {
+      var title = "* " + nodes.index( i ).name.text.text + "\n\n";
+      retval += title;
+      if( nodes.index( i ).note != "" ) {
+        var note = "\n" + linestart( "" ) + nodes.index( i ).note.replace( "\n", "\n  " );
+        retval += note;
       }
-
-    } catch( Error e ) {
-      // Handle the error
+      var children = nodes.index( i ).children();
+      for( int j=0; j<children.length; j++ ) {
+        retval += export_node( children.index( j ), sprefix() );
+      }
     }
 
     return( retval );
@@ -117,36 +111,29 @@ public class ExportOrgMode : Export {
   private string export_node( Node node, string prefix ) {
 
     var retval = "";
+    var title = prefix + (node.is_in_sequence() ? "%d. ".printf( node.index() + 1 ) : "* ");
 
-    try {
-
-      string title = prefix + (node.is_in_sequence() ? "%d. ".printf( node.index() + 1 ) : "* ");
-
-      if( node.is_task() ) {
-        if( node.is_task_done() ) {
-          title += "[x] ";
-        } else {
-          title += "[ ] ";
-        }
+    if( node.is_task() ) {
+      if( node.is_task_done() ) {
+        title += "[x] ";
+      } else {
+        title += "[ ] ";
       }
+    }
 
-      title  += node.name.text.text.replace( "\n", wrap( prefix ) ) + "\n";
-      retval += title;
+    title  += node.name.text.text.replace( "\n", wrap( prefix ) ) + "\n";
+    retval += title;
 
-      if( node.note != "" ) {
-        string note = "\n" + linestart( prefix ) + node.note.replace( "\n", "\n" + linestart( prefix ) ) + "\n";
-        retval += note;
-      }
+    if( node.note != "" ) {
+      var note = "\n" + linestart( prefix ) + node.note.replace( "\n", "\n" + linestart( prefix ) ) + "\n";
+      retval += note;
+    }
 
-      retval += "\n";
+    retval += "\n";
 
-      var children = node.children();
-      for( int i=0; i<children.length; i++ ) {
-        retval += export_node( children.index( i ), prefix + sprefix() );
-      }
-
-    } catch( Error e ) {
-      // Handle error
+    var children = node.children();
+    for( int i=0; i<children.length; i++ ) {
+      retval += export_node( children.index( i ), prefix + sprefix() );
     }
 
     return( retval );

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2025 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,7 +27,8 @@ public class UndoGroupNote : UndoItem {
   string    _old_note;
   string    _new_note;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change
   public UndoGroupNote( NodeGroup g, string old_note ) {
     base( _( "node group note change" ) );
     _group    = g;
@@ -35,14 +36,16 @@ public class UndoGroupNote : UndoItem {
     _new_note = g.note;
   }
 
-  /* Undoes a node name change */
+  //-------------------------------------------------------------
+  // Undoes a node name change
   public override void undo( MindMap map ) {
     _group.note = _old_note;
     map.current_changed( map );
     map.auto_save();
   }
 
-  /* Redoes a node name change */
+  //-------------------------------------------------------------
+  // Redoes a node name change
   public override void redo( MindMap map ) {
     _group.note = _new_note;
     map.current_changed( map );
