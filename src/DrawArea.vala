@@ -608,10 +608,9 @@ public class DrawArea : Gtk.DrawingArea {
       if( node.parent != null ) {
         node.parent.last_selected_child = node;
       }
-      if( node.is_summarized() ) {
-        node.summary_node().last_selected_node = node;
-      }
+
       return( true );
+
     }
 
   }

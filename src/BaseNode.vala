@@ -341,6 +341,7 @@ public class BaseNode : Object {
   }
   public NodeSide  side      { get; set; default = NodeSide.RIGHT; }
   public double    tree_size { get; set; default = 0; }
+  public double    attached  { get; set; default = false; }
   public BaseNode? last_selected_child { get; set; default = null; }
   public Layout?   layout {
     get {
@@ -1212,8 +1213,8 @@ public class BaseNode : Object {
   // Moves this node into the proper position within the parent
   // node.  Returns true if the node is moved to a new position.
   public virtual bool move_to_position( BaseNode child, NodeSide side, double x, double y ) {
-    int   idx           = child.index();
-    Node? last_selected = last_selected_child;
+    int idx           = child.index();
+    var last_selected = last_selected_child;
     for( int i=0; i<_children.length; i++ ) {
       if( _children.index( i ).side == child.side ) {
         switch( child.side ) {

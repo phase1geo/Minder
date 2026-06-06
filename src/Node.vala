@@ -150,7 +150,6 @@ public class Node : BaseNode {
       return( _link_color_set );
     }
   }
-  public bool  attached { get; set; default = false; }
   public Connection? last_selected_connection { get; set; default = null; }
   public NodeImage? image {
     get {
@@ -1200,11 +1199,15 @@ public class Node : BaseNode {
     propagate_task_info_up( _task_count, _task_done );
     if( parent.sequence ) {
       for( int i=index; i<parent.children().length; i++ ) {
-        parent.children().index( i ).update_sequence_num();
+        var child = (parent.children().index( i ) as Node);
+        if( child != null ) {
+          child.update_sequence_num();
+        }
       }
     }
     if( theme != null ) {
-      link_color_child = main_branch() ? theme.next_color() : parent.link_color;
+      var pnode = (Node)parent;
+      link_color_child = main_branch() ? theme.next_color() : pnode.link_color;
     }
   }
 

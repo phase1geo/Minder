@@ -2142,10 +2142,12 @@ public class MapModel {
   public bool unfoldable() {
     var current = _map.selected.current_node();
     if( current != null ) {
-      return( current.get_root().unfoldable() );
+      var node = (current.get_root() as Node);
+      return( (node == null) || node.unfoldable() );
     } else {
       for( int i=0; i<_nodes.length; i++ ) {
-        if( _nodes.index( i ).unfoldable() ) {
+        var node = (_nodes.index( i ) as Node);
+        if( (node == null) || node.unfoldable() ) {
           return( true );
         }
       }
@@ -2176,14 +2178,14 @@ public class MapModel {
   //-------------------------------------------------------------
   // Returns the parent node of the given node that should be
   // selected.
-  public Node? get_select_parent( Node node ) {
+  public BaseNode? get_select_parent( Node node ) {
     var sn = node.summarized_node;
     return( (sn != null) ? sn.current_node() : node.parent );
   }
 
   //-------------------------------------------------------------
   // Returns the node to the right of the given node.
-  public Node? get_node_right( Node node ) {
+  public BaseNode? get_node_right( Node node ) {
     if( node.is_root() ) {
       if( node.side.horizontal() ) {
         if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.RIGHT) ) {
@@ -2237,7 +2239,7 @@ public class MapModel {
 
   //-------------------------------------------------------------
   // Returns the node above the given node
-  public Node? get_node_up( Node node ) {
+  public BaseNode? get_node_up( Node node ) {
     if( node.is_root() ) {
       if( node.side.vertical() ) {
         if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.TOP) ) {
@@ -2263,7 +2265,7 @@ public class MapModel {
 
   //-------------------------------------------------------------
   // Returns the node below the given node
-  public Node? get_node_down( Node node ) {
+  public BaseNode? get_node_down( Node node ) {
     if( node.is_root() ) {
       if( node.side.vertical() ) {
         if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.BOTTOM) ) {
