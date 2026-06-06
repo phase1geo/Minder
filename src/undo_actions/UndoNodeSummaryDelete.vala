@@ -39,8 +39,8 @@ public class UndoNodeSummaryDelete : UndoItem {
   //-------------------------------------------------------------
   // Undoes a node deletion
   public override void undo( MindMap map ) {
-    // _node.attach_all();
-    map.set_current_node( _node );
+    // TODO _node.attach_all();
+    map.set_current_node( (Node)_node.children().index( 0 ) );
     for( int i=0; i<_conns.length; i++ ) {
       map.connections.add_connection( _conns.index( i ) );
     }
@@ -53,12 +53,12 @@ public class UndoNodeSummaryDelete : UndoItem {
   // Redoes a node deletion
   public override void redo( MindMap map ) {
     UndoNodeGroups? tmp_groups = null;
-    // _node.detach_all();
+    // TODO _node.detach_all();
     map.set_current_node( null );
     for( int i=0; i<_conns.length; i++ ) {
       map.connections.remove_connection( _conns.index( i ), false );
     }
-    map.groups.remove_node( _node, ref tmp_groups );
+    map.groups.remove_node( (Node)_node.children().index( 0 ), ref tmp_groups );
     map.queue_draw();
     map.auto_save();
   }

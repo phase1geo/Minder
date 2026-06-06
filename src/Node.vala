@@ -689,7 +689,7 @@ public class Node : BaseNode {
   // Returns true if the given cursor coordinates lie within the
   // fold indicator area.
   public virtual bool is_within_fold( double x, double y ) {
-    if( (_children.length > 0) && !is_summarized() ) {
+    if( (_children.length > 0) && (summarized_node == null) ) {
       double fx, fy, fw, fh;
       fold_bbox( out fx, out fy, out fw, out fh );
       return( Utils.is_within_bounds( x, y, fx, fy, fw, fh ) );
@@ -701,7 +701,7 @@ public class Node : BaseNode {
   // Returns true if the given cursor coordinates lie within the
   // fold indicator surrounding area.
   public virtual bool is_within_fold_area( double x, double y ) {
-    if( (_children.length > 0) && !is_summarized() ) {
+    if( (_children.length > 0) && (summarized_node == null) ) {
       double fx, fy, fw, fh;
       var pad = 20;
       fold_bbox( out fx, out fy, out fw, out fh );
@@ -1373,12 +1373,24 @@ public class Node : BaseNode {
   //-------------------------------------------------------------
 
   //-------------------------------------------------------------
+  // Returns true if the given node is folded.
+  private bool is_folded( BaseNode node ) {
+    var n = (node as Node);
+    return( (n != null) && node.folded );
+  }
+
+  //-------------------------------------------------------------
   // Returns the ancestor node that is folded or returns null if
   // no ancestor nodes are folded.
   public Node? folded_ancestor() {
     var node = parent;
-    while( (node != null) && !node.folded ) node = node.parent;
-    return( node );
+    while( node != null ) {
+      if( is_folded( node ) ) {
+        return( (Node)node );
+      }
+      node = node.parent;
+    }
+    return( null );
   }
 
   //-------------------------------------------------------------
@@ -1389,8 +1401,8 @@ public class Node : BaseNode {
         (_alpha == 1.0) &&
         (((((_task_count == 0) || !is_leaf()) && search_opts[SearchOptions.NONTASKS]) ||
           ((_task_count != 0) && is_leaf()   && search_opts[SearchOptions.TASKS])) &&
-         (((parent != null) && parent.folded && search_opts[SearchOptions.FOLDED]) ||
-          (((parent == null) || !parent.folded) && search_opts[SearchOptions.UNFOLDED]))) ) {
+         (((parent != null) && is_folded( parent ) && search_opts[SearchOptions.FOLDED]) ||
+          (((parent == null) || !is_folded( parent )) && search_opts[SearchOptions.UNFOLDED]))) ) {
       var tab = "<i>" + Utils.rootname( tabname ) + "</i>";
       if( search_opts[SearchOptions.TITLES] ) {
         string str = Utils.match_string( pattern, name.stripped_text.text );
@@ -1492,7 +1504,7 @@ public class Node : BaseNode {
     }
 
     // If we have children and we need to extend our link point, let's draw the extended link link now
-    if( (_children.length > 0) && !is_summarized() ) {
+    if( (_children.length > 0) && (summarized_node == null) ) {
       var max_width = 0;
       for( int i=0; i<_children.length; i++ ) {
         if( max_width < _children.index( i ).style.link_width ) {
@@ -1763,7 +1775,7 @@ public class Node : BaseNode {
   // Draw the fold indicator.
   protected virtual void draw_common_fold( Context ctx, RGBA bg_color, RGBA fg_color ) {
 
-    if( (_children.length == 0) || is_summarized() ) return;
+    if( (_children.length == 0) || (summarized_node != null) ) return;
 
     double fx, fy, fw, fh;
     fold_bbox( out fx, out fy, out fw, out fh );

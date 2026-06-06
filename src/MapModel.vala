@@ -289,15 +289,15 @@ public class MapModel {
 
   //-------------------------------------------------------------
   // Returns the list of nodes.
-  public Array<Node> get_nodes() {
+  public Array<BaseNode> get_nodes() {
     return( _nodes );
   }
 
   //-------------------------------------------------------------
   // Searches for and returns the node with the specified ID.
-  public Node? get_node( Array<Node> nodes, int id ) {
+  public BaseNode? get_node( Array<BaseNode> nodes, int id ) {
     for( int i=0; i<nodes.length; i++ ) {
-      Node? node = nodes.index( i ).get_node( id );
+      var node = nodes.index( i ).get_node( id );
       if( node != null ) {
         return( node );
       }
@@ -468,7 +468,7 @@ public class MapModel {
 
     Xml.Node* nodes = new Xml.Node( null, "nodes" );
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).save( nodes );
+      nodes->add_child( _nodes.index( i ).save() );
     }
     parent->add_child( nodes );
     parent->add_child( groups.save() );
@@ -1949,7 +1949,7 @@ public class MapModel {
   public bool node_summarizable() {
     int first, last;
     var current = _map.selected.current_node();
-    return( (current != null) && get_summary_range_from_node( _map, out first, out last ) );
+    return( (current != null) && get_summary_range_from_node( current, out first, out last ) );
   }
 
   //-------------------------------------------------------------
