@@ -105,7 +105,10 @@ public class ExportOutliner : Export {
   private Xml.Node* export_nodes( Node node ) {
     Xml.Node* n = new Xml.Node( null, "nodes" );
     for( int i=0; i<node.children().length; i++ ) {
-      n->add_child( export_node( node.children().index( i ) ) );
+      var child = (node.children().index( i ) as Node);
+      if( child != null ) {
+        n->add_child( export_node( child ) );
+      }
     }
     return( n );
   }

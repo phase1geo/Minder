@@ -96,7 +96,10 @@ public class ExportFreemind : Export {
 
     // Add nodes
     for( int i=0; i<node.children().length; i++ ) {
-      n->add_child( export_node( node.children().index( i ), map ) );
+      var child = (node.children().index( i ) as Node);
+      if( child != null ) {
+        n->add_child( export_node( child, map ) );
+      }
     }
 
     return( n );

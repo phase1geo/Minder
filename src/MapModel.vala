@@ -52,24 +52,24 @@ public enum MapItemComponent {
 
 public class MapModel {
 
-  private MindMap       _map;
-  private Node?         _last_node      = null;
-  private Array<Node>   _nodes;
-  private Connections   _connections;
-  private Stickers      _stickers;
-  private Theme         _theme;
-  private Node?         _last_match     = null;
-  private Node?         _attach_node    = null;
-  private SummaryNode?  _attach_summary = null;
-  private Connection?   _attach_conn    = null;
-  private Sticker?      _attach_sticker = null;
-  private uint?         _auto_save_id   = null;
-  private NodeGroups    _groups;
-  private int           _next_node_id   = -1;
-  private NodeLinks     _node_links;
-  private bool          _hide_callouts  = false;
-  private Array<string> _braindump;
-  private Tags          _tags;
+  private MindMap         _map;
+  private Node?           _last_node      = null;
+  private Array<Node>     _nodes;
+  private Connections     _connections;
+  private Stickers        _stickers;
+  private Theme           _theme;
+  private Node?           _last_match     = null;
+  private Node?           _attach_node    = null;
+  private SummarizedNode? _attach_summary = null;
+  private Connection?     _attach_conn    = null;
+  private Sticker?        _attach_sticker = null;
+  private uint?           _auto_save_id   = null;
+  private NodeGroups      _groups;
+  private int             _next_node_id   = -1;
+  private NodeLinks       _node_links;
+  private bool            _hide_callouts  = false;
+  private Array<string>   _braindump;
+  private Tags            _tags;
 
   public Layouts        layouts         { set; get; default = new Layouts(); }
   public ImageManager   image_manager   { set; get; default = new ImageManager(); }
@@ -134,7 +134,7 @@ public class MapModel {
       return( _attach_node );
     }
   }
-  public SummaryNode? attach_summary {
+  public SummarizedNode? attach_summary {
     get {
       return( _attach_summary );
     }
@@ -1343,14 +1343,14 @@ public class MapModel {
 
   //-------------------------------------------------------------
   // Sets the given summary node to be the new attach summary node.
-  public void set_attach_summary( SummaryNode? n ) {
+  public void set_attach_summary( SummarizedNode? n ) {
     var change = (_attach_summary != n);
     if( _attach_summary != null ) {
-      _attach_summary.attachable = false;
+      _attach_summary.mode = NodeMode.NONE;
     }
     _attach_summary = n;
     if( n != null ) {
-      _attach_summary.attachable = true;
+      _attach_summary.mode = NodeMode.ATTACHABLE;
     }
     if( change ) {
       queue_draw();
@@ -1409,15 +1409,15 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
-  // Returns the summary node that the current node can be
+  // Returns the summarized node that the current node can be
   // attached to; otherwise, returns null.
-  public SummaryNode? attachable_summary_node( double x, double y ) {
+  public SummarizedNode? attachable_summary_node( double x, double y ) {
     var current = _map.selected.current_node();
-    if( (current.is_summarized() && (current.parent.children().length > 1) && (current.summary_node().summarized_count() > 1)) || current.is_leaf() ) {
+    if( current.is_leaf() ) {
       for( int i=0; i<current.parent.children().length; i++ ) {
-        var sibling = current.parent.children().index( i );
-        if( sibling.last_summarized() && sibling.summary_node().is_within_summarized( x, y ) ) {
-          return( sibling.summary_node() );
+        var sn = (current.parent.children().index( i ) as SummarizedNode);
+        if( (sn != null) && sn.is_within_summarized( x, y ) ) {
+          return( sn );
         }
       }
     }
@@ -1484,14 +1484,14 @@ public class MapModel {
   // Attaches the current node to the attach node.
   public void attach_current_node() {
 
-    Node?        orig_parent        = null;
-    var          orig_index         = -1;
-    SummaryNode? orig_summary       = null;
-    var          orig_summary_index = -1;
-    var          orig_style         = new Style();
-    var          current            = _map.selected.current_node();
-    var          isroot             = current.is_root();
-    var          isleaf             = current.is_leaf();
+    Node?           orig_parent        = null;
+    var             orig_index         = -1;
+    SummarizedNode? orig_summary       = null;
+    var             orig_summary_index = -1;
+    var             orig_style         = new Style();
+    var             current            = _map.selected.current_node();
+    var             isroot             = current.is_root();
+    var             isleaf             = current.is_leaf();
 
     _map.animator.add_nodes( _nodes, false, "attach_current_node" );
 
@@ -1507,28 +1507,24 @@ public class MapModel {
     } else {
       orig_parent        = current.parent;
       orig_index         = current.index();
-      orig_summary       = current.summary_node();
-      orig_summary_index = (orig_summary != null) ? orig_summary.node_index( current ) : -1;
+      orig_summary       = (current.parent as SummarizedNode);
+      orig_summary_index = (orig_summary != null) ? orig_summary.current : -1;
       current.detach( _map.canvas.get_orig_side() );
-      if( (orig_summary != null) && (orig_summary.summarized_count() > 1) ) {
+      if( (orig_summary != null) && (orig_summary.summarized_count() > 2) ) {
         orig_summary.remove_node( current );
       }
     }
 
     orig_style.copy( current.style );
 
-    var summary = _attach_node.summary_node();
-
-    if( isleaf && (orig_summary != summary) && _attach_node.first_summarized() ) {
-      current.attach( _attach_node.parent, _attach_node.index(), _theme );
-      summary.add_node( current );
-    } else if( isleaf && (orig_summary != summary) && _attach_node.last_summarized() ) {
-      current.attach( _attach_node.parent, (_attach_node.index() + 1), _theme );
-      summary.add_node( current );
+    if( isleaf && (orig_summary != _attach_summary) ) {
+      _attach_summary.add_node( current, -1 );
+      /* TODO - We may want to provide a way to place a dropped node into the proper position
     } else if( (orig_summary == summary) && _attach_node.first_summarized() ) {
       current.attach( _attach_node.parent, _attach_node.index(), _theme );
     } else if( (orig_summary == summary) && _attach_node.last_summarized() ) {
       current.attach( _attach_node.parent, (_attach_node.index() + 1), _theme );
+*/
     } else {
       current.attach( _attach_node, -1, _theme );
       set_style_after_parent_attach( current );
@@ -1638,7 +1634,7 @@ public class MapModel {
         }
       }
     } else if( current.is_summary() ) {
-      _map.add_undo( new UndoNodeSummaryDelete( (SummaryNode)current, conns, undo_groups ) );
+      // TODO _map.add_undo( new UndoNodeSummaryDelete( (SummaryNode)current, conns, undo_groups ) );
       current.delete();
     } else {
       _map.add_undo( new UndoNodeDelete( current, current.index(), conns, undo_groups ) );
@@ -1726,7 +1722,7 @@ public class MapModel {
   //-------------------------------------------------------------
   // Creates a root node with the given name, positions it and
   // appends it to the root node list.
-  public Node create_root_node( string name = "" ) {
+  public BaseNode create_root_node( string name = "" ) {
     var node = new Node.with_name( _map, name, ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
     var style = new Style();
     style.copy( _map.global_style );
@@ -1741,7 +1737,7 @@ public class MapModel {
   //-------------------------------------------------------------
   // Creates a sibling node, positions it and appends immediately
   // after the given sibling node.
-  public Node create_main_node( Node root, NodeSide side, string name = "" ) {
+  public BaseNode create_main_node( BaseNode root, NodeSide side, string name = "" ) {
     var node  = new Node.with_name( _map, name, layouts.get_default() );
     node.side = side;
     if( root.layout.balanceable && ((side == NodeSide.LEFT) || (side == NodeSide.TOP)) ) {
@@ -1756,7 +1752,7 @@ public class MapModel {
   //-------------------------------------------------------------
   // Creates a sibling node, positions it and appends immediately
   // after the given sibling node.
-  public Node create_sibling_node( Node sibling, bool below, string name = "" ) {
+  public BaseNode create_sibling_node( BaseNode sibling, bool below, string name = "" ) {
     var node   = new Node.with_name( _map, name, layouts.get_default() );
     node.side  = sibling.side;
     node.attach( sibling.parent, (sibling.index() + (below ? 1 : 0)), _theme );
@@ -1774,7 +1770,7 @@ public class MapModel {
   //-------------------------------------------------------------
   // Creates a parent node, positions it, and inserts it just
   // above the child node.
-  public Node create_parent_node( Node child, string name = "" ) {
+  public BaseNode create_parent_node( BaseNode child, string name = "" ) {
     var node  = new Node.with_name( _map, name, layouts.get_default() );
     var color = child.link_color;
     node.side  = child.side;
@@ -1789,43 +1785,66 @@ public class MapModel {
   //-------------------------------------------------------------
   // Creates a child node, positions it, and inserts it into the
   // parent node.
-  public Node create_child_node( Node parent, string name = "" ) {
-    var node = new Node.with_name( _map, name, layouts.get_default() );
+  public BaseNode create_child_node( BaseNode parent, string name = "" ) {
+    var pnode = (parent as Node);
+    var node  = new Node.with_name( _map, name, layouts.get_default() );
     if( !parent.is_root() ) {
       node.side = parent.side;
     }
-    if( parent.children().length > 0 ) {
+    if( (pnode != null) && (parent.children().length > 0) ) {
       parent.folded = false;
     }
     node.attach( parent, -1, _theme );
     set_style_after_parent_attach( node );
-    if( parent.task_enabled() ) {
+    if( (pnode != null) && pnode.task_enabled() ) {
       node.enable_task( true );
     }
-    parent.set_fold( false, true );
+    if( pnode != null ) {
+      parent.set_fold( false, true );
+    }
     return( node );
   }
 
   //-------------------------------------------------------------
   // Creates a summary node for the nodes in the range of first
   // to last, inclusive.
-  public Node create_summary_node( Node parent, NodeSide side, int first_index, int last_index ) {
-    var summary = new SummaryNode( _map, layouts.get_default() );
-    summary.side = side;
-    summary.attach_nodes( parent, first_index, last_index, _theme );
-    set_style_after_parent_attach( summary );
-    return( summary );
+  public BaseNode create_summary_node( BaseNode parent, int first_index, int last_index ) {
+
+    // Create summarized node and move parent nodes over
+    var sn = new SummarizedNode( _map, layouts.get_default() );
+    sn.side = parent.side;
+    sn.attach_parent_nodes( parent, first_index, last_index, _theme );
+
+    // Create summary node, attach it to the SummarizedNode and return it
+    return( create_child_node( sn ) );
+
+  }
+
+  //-------------------------------------------------------------
+  // Helper function for create_summary_node_from_node.  Gets the
+  // first and last indices of the nodes within the parent that
+  // are eligible to be summarized by the given node.  If no eligible
+  // nodes are found, we will return false; otherwise, we will return
+  // true.
+  private bool get_summary_range_from_node( BaseNode node, out int first_index, out int last_index ) {
+    var sibling = node.previous_sibling();
+    first_index = -1;
+    last_index  = sibling.index() + 1;
+    while( (sibling != null) && sibling.is_leaf() && (sibling.summarized_node == null) && (sibling.side == node.side) ) {
+      first_index = sibling.index();
+      sibling = sibling.previous_sibling();
+    }
+    return( first_index >= 0 );
   }
 
   //-------------------------------------------------------------
   // Creates a summary node from the given node.
-  public Node create_summary_node_from_node( Node node ) {
-    var prev_node = node.previous_sibling();
-    node.detach( node.side );
-    var summary = new SummaryNode.from_node( _map, node, image_manager );
-    summary.side = node.side;
-    summary.attach_siblings( prev_node, _theme );
-    return( summary );
+  public BaseNode? create_summary_node_from_node( Node node ) {
+    int first, last;
+    if( get_summary_range_from_node( node, out first, out last ) ) {
+      return( create_summary_node( node.parent, first, last ) );
+    }
+    return( null );
   }
 
   //-------------------------------------------------------------
@@ -1928,12 +1947,9 @@ public class MapModel {
   // sibling that is before this node which is not already
   // summarized and is on the same side.
   public bool node_summarizable() {
+    int first, last;
     var current = _map.selected.current_node();
-    if( (current != null) && !current.is_summary() && !current.is_summarized() ) {
-      var sibling = current.previous_sibling();
-      return( (sibling != null) && !sibling.is_summarized() && sibling.is_leaf() && (current.side == sibling.side) );
-    }
-    return( false );
+    return( (current != null) && get_summary_range_from_node( _map, out first, out last ) );
   }
 
   //-------------------------------------------------------------
@@ -1942,8 +1958,8 @@ public class MapModel {
   public void add_summary_node_from_selected() {
     if( !nodes_summarizable() ) return;
     var nodes = _map.selected.ordered_nodes();
-    var node  = create_summary_node( nodes.index( 0 ).parent, nodes.index( 0 ).side, nodes.index( 0 ).index(), (nodes.index( nodes.length - 1 ).index() + 1) );
-    _map.add_undo( new UndoNodeSummary( (SummaryNode)node ) );
+    var node  = (Node)create_summary_node( nodes.index( 0 ).parent, nodes.index( 0 ).index(), (nodes.index( nodes.length - 1 ).index() + 1) );
+    _map.add_undo( new UndoNodeSummary( (node.parent as SummarizedNode) ) );
     _map.set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );
     queue_draw();
@@ -1957,8 +1973,8 @@ public class MapModel {
   public void add_summary_node_from_current() {
     if( !node_summarizable() ) return;
     var current = _map.selected.current_node();
-    var node = create_summary_node_from_node( current );
-    _map.add_undo( new UndoNodeSummaryFromNode( current, (SummaryNode)node ) );
+    var node = (Node)create_summary_node_from_node( current );
+    _map.add_undo( new UndoNodeSummaryFromNode( current, (node.parent as SummarizedNode) ) );
     _map.set_current_node( node );
     set_node_mode( node, NodeMode.CURRENT, false );
     queue_draw();
@@ -2161,11 +2177,8 @@ public class MapModel {
   // Returns the parent node of the given node that should be
   // selected.
   public Node? get_select_parent( Node node ) {
-    if( node.is_summary() ) {
-      var summary = (SummaryNode)node;
-      return( summary.last_selected_node ?? summary.first_node() );
-    }
-    return( node.parent );
+    var sn = node.summarized_node;
+    return( (sn != null) ? sn.current_node() : node.parent );
   }
 
   //-------------------------------------------------------------
@@ -2276,7 +2289,7 @@ public class MapModel {
 
   //-------------------------------------------------------------
   // Returns the node at the top of the sibling list
-  public Node? get_node_pageup( Node node ) {
+  public BaseNode? get_node_pageup( BaseNode node ) {
     if( node.is_root() ) {
       return( (_nodes.length > 0) ? _nodes.index( 0 ) : null );
     } else {
@@ -2286,7 +2299,7 @@ public class MapModel {
 
   //-------------------------------------------------------------
   // Returns the node at the bottom of the sibling list
-  public Node? get_node_pagedn( Node node ) {
+  public BaseNode? get_node_pagedn( BaseNode node ) {
     if( node.is_root() ) {
       return( (_nodes.length > 0) ? _nodes.index( _nodes.length - 1 ) : null );
     } else {

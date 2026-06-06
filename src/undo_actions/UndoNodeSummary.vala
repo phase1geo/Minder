@@ -23,13 +23,11 @@ using Gtk;
 
 public class UndoNodeSummary : UndoItem {
 
-  private SummaryNode _n;
-  private Node        _first;
-  private Node        _last;
+  private SummarizedNode _n;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoNodeSummary( SummaryNode n ) {
+  public UndoNodeSummary( SummarizedNode n ) {
     base( _( "insert summary node" ) );
     _n     = n;
     _first = n.first_node();

@@ -98,7 +98,10 @@ public class ExportOrgMode : Export {
       }
       var children = nodes.index( i ).children();
       for( int j=0; j<children.length; j++ ) {
-        retval += export_node( children.index( j ), sprefix() );
+        var child = (children.index( j ) as Node);
+        if( child != null ) {
+          retval += export_node( child, sprefix() );
+        }
       }
     }
 
@@ -133,7 +136,10 @@ public class ExportOrgMode : Export {
 
     var children = node.children();
     for( int i=0; i<children.length; i++ ) {
-      retval += export_node( children.index( i ), prefix + sprefix() );
+      var child = (children.index( i ) as Node);
+      if( child != null ) {
+        retval += export_node( child, prefix + sprefix() );
+      }
     }
 
     return( retval );

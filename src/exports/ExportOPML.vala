@@ -101,7 +101,10 @@ public class ExportOPML : Export {
     }
     node_id++;
     for( int i=0; i<node.children().length; i++ ) {
-      export_node( node.children().index( i ), outline, ref node_id, ref expand_state );
+      var child = (node.children().index( i ) as Node);
+      if( child != null ) {
+        export_node( child, outline, ref node_id, ref expand_state );
+      }
     }
     parent->add_child( outline );
   }

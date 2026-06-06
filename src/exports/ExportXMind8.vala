@@ -201,14 +201,9 @@ public class ExportXMind8 : Export {
           Xml.Node* topics = new Xml.Node( null, "topics" );
           topics->set_prop( "type", "detached" );
           for( int i=1; i<nodes.length; i++ ) {
-            Xml.Node* topic = export_node( map, nodes.index( i ), timestamp, false, dir, file_list, styles );
-            Xml.Node* pos   = new Xml.Node( null, "position" );
-            var       x     = (int)(nodes.index( i ).posx - nodes.index( 0 ).posx);
-            var       y     = (int)(nodes.index( i ).posy - nodes.index( 0 ).posy);
-            pos->set_prop( "svg:x", x.to_string() );
-            pos->set_prop( "svg:y", y.to_string() );
-            topic->add_child( pos );
-            topics->add_child( topic );
+            if( (nodes.index( i ) as Node) != null ) {
+              topics->add_child( export_node( map, (Node)nodes.index( i ), timestamp, false, dir, file_list, styles ) );
+            }
           }
           it->add_child( topics );
         }
@@ -216,6 +211,14 @@ public class ExportXMind8 : Export {
     }
     sheet->add_child( top );
     export_connections( map, sheet, timestamp, styles );
+  }
+
+  //-------------------------------------------------------------
+  // Exports a summarized node.
+  private Xml.Node* export_summarized( MindMap map, SummarizedNode node, string timestamp, bool top, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
+
+    // TODO
+
   }
 
   //-------------------------------------------------------------
@@ -256,6 +259,17 @@ public class ExportXMind8 : Export {
       export_image( map, node, dir, file_list, topic );
     }
 
+    // Add position information if this is not the root node
+    var nodes = map.get_nodes();
+    if( !node.is_root() ) {
+      Xml.Node* pos   = new Xml.Node( null, "position" );
+      var       x     = (int)(node.posx - nodes.index( 0 ).posx);
+      var       y     = (int)(node.posy - nodes.index( 0 ).posy);
+      pos->set_prop( "svg:x", x.to_string() );
+      pos->set_prop( "svg:y", y.to_string() );
+      topic->add_child( pos );
+    }
+
     if( node.children().length > 0 ) {
 
       var groups = new Array<int>();
@@ -266,9 +280,12 @@ public class ExportXMind8 : Export {
 
       for( int i=0; i<node.children().length; i++ ) {
         var child = node.children().index( i );
-        topics->add_child( export_node( map, child, timestamp, false, dir, file_list, styles ) );
-        if( child.group ) {
-          groups.append_val( i );
+        if( (child as Node) != null ) {
+          var child_node = (Node)child;
+          topics->add_child( export_node( map, child_node, timestamp, false, dir, file_list, styles ) );
+          if( child_node.group ) {
+            groups.append_val( i );
+          }
         }
       }
 
@@ -285,6 +302,7 @@ public class ExportXMind8 : Export {
           Xml.Node* props    = new Xml.Node( null, "boundary-properties" );
           int       id       = ids++;
           int       stid     = ids++;
+          var       gnode    = (Node)node.children().index( groups.index( i ) );      
 
           // Create boundary
           boundary->set_prop( "id", id.to_string() );
@@ -296,7 +314,7 @@ public class ExportXMind8 : Export {
           // Create styling node
           style->set_prop( "id", stid.to_string() );
           style->set_prop( "type", "boundary" );
-          props->set_prop( "svg:fill", Utils.color_from_rgba( node.children().index( groups.index( i ) ).link_color ) );
+          props->set_prop( "svg:fill", Utils.color_from_rgba( gnode.link_color ) );
           style->add_child( props );
           styles.append_val( style );
 
@@ -688,16 +706,16 @@ public class ExportXMind8 : Export {
 
     string? sclass = n->get_prop( "structure-class" );
     if( sclass != null ) {
-      node = map.model.create_root_node();
+      node = (Node)map.model.create_root_node();
       if( sclass == "org.xmind.ui.map.unbalanced" ) {
         node.layout = map.layouts.get_layout( _( "Horizontal" ) );
       } else {
         node.layout = map.layouts.get_layout( _( "To right" ) );
       }
     } else if( !attached ) {
-      node = map.model.create_root_node();
+      node = (Node)map.model.create_root_node();
     } else {
-      node = map.model.create_child_node( parent );
+      node = (Node)map.model.create_child_node( parent );
     }
 
     // Handle the ID
@@ -821,7 +839,9 @@ public class ExportXMind8 : Export {
             var nodes = new Array<Node>();
             for( int i=start; i<=end; i++ ) {
               var child = node.children().index( i );
-              nodes.append_val( child );
+              if( (child as Node) != null ) {
+                nodes.append_val( (Node)child );
+              }
             }
             var group = new NodeGroup.array( map, nodes );
             map.groups.add_group( group );
@@ -851,7 +871,7 @@ public class ExportXMind8 : Export {
         if( sp != null ) {
           var obj = id_map.get( sp );
           if( obj.typ == IdObjectType.NODE ) {
-            from_node = obj.node;
+            from_node = (Node)obj.node;
           }
         }
 
@@ -859,7 +879,7 @@ public class ExportXMind8 : Export {
         if( ep != null ) {
           var obj = id_map.get( ep );
           if( obj.typ == IdObjectType.NODE ) {
-            to_node = obj.node;
+            to_node = (Node)obj.node;
           }
         }
 

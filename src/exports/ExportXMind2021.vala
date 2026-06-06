@@ -204,10 +204,12 @@ public class ExportXMind2021 : Export {
       var attached = new Json.Array();
 
       for( int i=0; i<node.children().length; i++ ) {
-        var child = node.children().index( i );
-        attached.add_object_element( export_node( map, child, false, dir, file_list ) );
-        if( child.group ) {
-          groups.append_val( i );
+        var child = (node.children().index( i ) as Node);
+        if( child != null ) {
+          attached.add_object_element( export_node( map, child, false, dir, file_list ) );
+          if( child.group ) {
+            groups.append_val( i );
+          }
         }
       }
 
@@ -676,16 +678,16 @@ public class ExportXMind2021 : Export {
 
     var sclass = get_json_string( obj, "structureClass" );
     if( sclass != "" ) {
-      node = map.model.create_root_node();
+      node = (Node)map.model.create_root_node();
       if( sclass == "org.xmind.ui.map.unbalanced" ) {
         node.layout = map.layouts.get_layout( _( "Horizontal" ) );
       } else {
         node.layout = map.layouts.get_layout( _( "To right" ) );
       }
     } else if( !attached ) {
-      node = map.model.create_root_node();
+      node = (Node)map.model.create_root_node();
     } else {
-      node = map.model.create_child_node( parent );
+      node = (Node)map.model.create_child_node( parent );
     }
 
     // Handle the ID
@@ -790,8 +792,10 @@ public class ExportXMind2021 : Export {
         if( r.scanf( "(%d,%d)", &start, &end ) == 2 ) {
           var nodes = new Array<Node>();
           for( int i=start; i<=end; i++ ) {
-            var child = node.children().index( i );
-            nodes.append_val( child );
+            var child = (node.children().index( i ) as Node);
+            if( child != null ) {
+              nodes.append_val( child );
+            }
           }
           var group = new NodeGroup.array( map, nodes );
           map.groups.add_group( group );

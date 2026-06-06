@@ -137,7 +137,10 @@ public class ExportMarkdown : Export {
 
     // Check the bullet type for a sequence
     if( Regex.match_simple( "\\d+\\.", bullet ) && (node.parent != null) ) {
-      node.parent.sequence = true;
+      var pnode = (node.parent as Node);
+      if( pnode != null ) {
+        pnode.sequence = true;
+      }
     }
 
     // Add the task information, if necessary
@@ -215,7 +218,7 @@ public class ExportMarkdown : Export {
 
           // Add sibling node
           } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
-            node = make_node( map, stack.index( stack.length - 1 ).node.parent, bullet, task, str, current_dir, true );
+            node = make_node( map, (Node)stack.index( stack.length - 1 ).node.parent, bullet, task, str, current_dir, true );
             stack.remove_index( stack.length - 1 );
             stack.append_val( {spaces, node} );
 
@@ -233,7 +236,7 @@ public class ExportMarkdown : Export {
               node = make_node( map, null, bullet, task, str, current_dir );
               stack.append_val( {spaces, node} );
             } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
-              node = make_node( map, stack.index( stack.length - 1 ).node.parent, bullet, task, str, current_dir );
+              node = make_node( map, (Node)stack.index( stack.length - 1 ).node.parent, bullet, task, str, current_dir );
               stack.remove_index( stack.length - 1 );
               stack.append_val( {spaces, node} );
             } else {
@@ -294,7 +297,10 @@ public class ExportMarkdown : Export {
       }
       var children = nodes.index( i ).children();
       for( int j=0; j<children.length; j++ ) {
-        retval += export_node( map.image_manager, children.index( j ), imgdir );
+        var child = (children.index( j ) as Node);
+        if( child != null ) {
+          retval += export_node( map.image_manager, child, imgdir );
+        }
       }
     }
 
@@ -354,7 +360,10 @@ public class ExportMarkdown : Export {
 
     var children = node.children();
     for( int i=0; i<children.length; i++ ) {
-      retval += export_node( im, children.index( i ), imgdir, prefix + "  " );
+      var child = (children.index( i ) as Node);
+      if( child != null ) {
+        retval += export_node( im, child, imgdir, prefix + "  " );
+      }
     }
 
     return( retval );

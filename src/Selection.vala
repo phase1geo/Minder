@@ -22,7 +22,7 @@
 public class Selection {
 
   private MindMap           _map;
-  private Array<Node>       _nodes;
+  private Array<BaseNode>   _nodes;
   private Array<Connection> _conns;
   private Array<Sticker>    _stickers;
   private Array<NodeGroup>  _groups;
@@ -49,7 +49,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Returns true if the given node is currently selected.
-  public bool is_node_selected( Node node ) {
+  public bool is_node_selected( BaseNode node ) {
     return( node.mode.is_selected() );
   }
 
@@ -79,7 +79,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Returns true if the given node is the only selected item.
-  public bool is_current_node( Node node ) {
+  public bool is_current_node( BaseNode node ) {
     return( (_nodes.length == 1) && (_nodes.index( 0 ) == node) );
   }
 
@@ -139,7 +139,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Sets the current node, clearing all other selected items.
-  public void set_current_node( Node node, double clear_alpha = 1.0 ) {
+  public void set_current_node( BaseNode node, double clear_alpha = 1.0 ) {
     clear( false, clear_alpha );
     add_node( node );
   }
@@ -176,7 +176,7 @@ public class Selection {
   //-------------------------------------------------------------
   // Adds a node to the current selection.  Returns true if the
   // node was added.
-  public bool add_node( Node node, bool force_selected = false, bool signal_change = true ) {
+  public bool add_node( BaseNode node, bool force_selected = false, bool signal_change = true ) {
     if( is_node_selected( node ) || ((node.parent != null) && node.parent.folded) ) return( false );
     _map.model.set_node_mode( node, (((_nodes.length == 0) && !force_selected) ? NodeMode.CURRENT : NodeMode.SELECTED) );
     if( _nodes.length == 1 ) {
@@ -220,7 +220,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Adds the children nodes of the current node.
-  public bool add_child_nodes( Node node, bool signal_change = true ) {
+  public bool add_child_nodes( BaseNode node, bool signal_change = true ) {
     var children = node.children();
     var changed  = false;
     for( int i=0; i<children.length; i++ ) {
@@ -234,7 +234,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Adds the entire node tree to the selection.
-  public bool add_node_tree( Node node, bool signal_change = true ) {
+  public bool add_node_tree( BaseNode node, bool signal_change = true ) {
     if( add_node_tree_helper( node ) ) {
       if( signal_change ) {
         selection_changed();
@@ -246,7 +246,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Helper method to add the entire node tree to the selection.
-  private bool add_node_tree_helper( Node node ) {
+  private bool add_node_tree_helper( BaseNode node ) {
     var children = node.children();
     var changed  = add_node( node, false, false );
     for( int i=0; i<children.length; i++ ) {
@@ -258,7 +258,7 @@ public class Selection {
   //-------------------------------------------------------------
   // Adds all of the nodes at the specified node's level to the
   // selection.
-  public bool add_nodes_at_level( Node node, bool signal_change = true ) {
+  public bool add_nodes_at_level( BaseNode node, bool signal_change = true ) {
     var level = node.get_level();
     var root  = node.get_root();
     if( add_nodes_at_level_helper( root, level, 0 ) && signal_change ) {
@@ -270,7 +270,7 @@ public class Selection {
     return( false );
   }
 
-  private bool add_nodes_at_level_helper( Node node, uint level, uint curr_level ) {
+  private bool add_nodes_at_level_helper( BaseNode node, uint level, uint curr_level ) {
     if( level == curr_level ) {
       return( add_node( node, false, false ) );
     } else {
@@ -334,7 +334,7 @@ public class Selection {
   //-------------------------------------------------------------
   // Removes the given node from the current selection.  Returns
   // true if the node is removed.
-  public bool remove_node( Node node, double alpha = 1.0, bool signal_change = true ) {
+  public bool remove_node( BaseNode node, double alpha = 1.0, bool signal_change = true ) {
     if( is_node_selected( node ) ) {
       _map.model.set_node_mode( node, NodeMode.NONE );
       node.alpha = alpha;
@@ -356,7 +356,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Removes child nodes of the given parent from the selection.
-  public bool remove_child_nodes( Node node, double alpha = 1.0 ) {
+  public bool remove_child_nodes( BaseNode node, double alpha = 1.0 ) {
     var children = node.children();
     var retval   = false;
     for( int i=0; i<children.length; i++ ) {
@@ -370,7 +370,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Removes an entire node tree from the selection.
-  public bool remove_node_tree( Node node, double alpha = 1.0 ) {
+  public bool remove_node_tree( BaseNode node, double alpha = 1.0 ) {
     if( remove_node_tree_helper( node, alpha ) ) {
       selection_changed();
       return( true );
@@ -380,7 +380,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Removes an entire node tree from the selection.
-  public bool remove_node_tree_helper( Node node, double alpha = 1.0 ) {
+  public bool remove_node_tree_helper( BaseNode node, double alpha = 1.0 ) {
     var children = node.children();
     var retval   = remove_node( node, alpha, false );
     for( int i=0; i<children.length; i++ ) {
@@ -392,7 +392,7 @@ public class Selection {
   //-------------------------------------------------------------
   // Adds all of the nodes at the specified node's level to the
   // selection.
-  public bool remove_nodes_at_level( Node node, double alpha = 1.0 ) {
+  public bool remove_nodes_at_level( BaseNode node, double alpha = 1.0 ) {
     var level = node.get_level();
     var root  = node.get_root();
     if( remove_nodes_at_level_helper( root, alpha, level, 0 ) ) {
@@ -404,7 +404,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Helper function for remove_nodes_at_level.
-  private bool remove_nodes_at_level_helper( Node node, double alpha, uint level, uint curr_level ) {
+  private bool remove_nodes_at_level_helper( BaseNode node, double alpha, uint level, uint curr_level ) {
     if( level == curr_level ) {
       return( remove_node( node, alpha, false ) );
     } else {
@@ -708,7 +708,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Helper function for the get_subtrees method.
-  private void get_subtrees_helper( Node old_parent, Node new_parent, ImageManager im ) {
+  private void get_subtrees_helper( BaseNode old_parent, BaseNode new_parent, ImageManager im ) {
 
     for( int i=0; i<old_parent.children().length; i++ ) {
       var old_child = old_parent.children().index( i );

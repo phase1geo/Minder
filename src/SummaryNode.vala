@@ -21,6 +21,19 @@
 
 using Cairo;
 
+//-------------------------------------------------------------
+// A summary node differs from other nodes in the following ways:
+//
+// - Its parent node is the parent of the summarized nodes.  When
+//   that parent moves, we will move; otherwise, we will remain
+//   unchanged in our location unless the summarized nodes change
+//   in size or the parent moves.
+// - It tracks the locations of the summarized nodes as two indices
+//   within the parent node child list.
+// - Its location will be automatically calculated such that its center
+//   will be lined up with the center of the summarized nodes.  It will
+//   also remain branch_margin pixels away from the farthest edge of
+//   the summarized nodes.
 public class SummaryNode : Node {
 
   private List<Node> _nodes;
@@ -243,8 +256,8 @@ public class SummaryNode : Node {
   // Used by attach_nodes and the layout initialization method to
   // connect to the given parent node
   public override void attach_init( Node parent, int index ) {
-    parent.moved.connect( parent_moved );
-    this.parent = last_node();
+    this.parent = last_node().parent;
+    this.parent.moved.connect( parent_moved );
     update_tree_bboxes();
     if( layout != null ) {
       layout.handle_update_by_insert( this.parent, this, -1 );
@@ -273,18 +286,18 @@ public class SummaryNode : Node {
       node.children().append_val( this );
       connect_node( node );
     }
-    first_node().parent.moved.connect( parent_moved );
-    parent = last_node();
+    parent = last_node().parent;
+    parent.moved.connect( parent_moved );
   }
 
   //-------------------------------------------------------------
   // We just detach ourselves from the node list
   public void detach_all() {
-    first_node().parent.moved.disconnect( parent_moved );
     foreach( var node in _nodes ) {
       node.children().remove_index( 0 );
       disconnect_node( node );
     }
+    parent.moved.disconnect( parent_moved );
     parent = null;
   }
 
@@ -335,7 +348,7 @@ public class SummaryNode : Node {
     connect_node( node );
     sort_nodes();
 
-    // nodes_changed( 1, 1, "add_nodes" );
+    nodes_changed( 1, 1, "add_nodes" );
 
   }
 
@@ -345,7 +358,7 @@ public class SummaryNode : Node {
 
     sort_nodes();
 
-    // nodes_changed( 1, 1, "node_moved" );
+    nodes_changed( 1, 1, "node_moved" );
 
   }
 
@@ -359,12 +372,13 @@ public class SummaryNode : Node {
     node.children().remove_range( 0, 1 );
     disconnect_node( node );
     sort_nodes();
+    set_extents();
 
     if( update_color ) {
       link_color_child = parent.link_color;
     }
 
-    // nodes_changed( 1, 1, "remove_node" );
+    nodes_changed( 1, 1, "remove_node" );
 
   }
 

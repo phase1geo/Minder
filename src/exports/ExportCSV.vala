@@ -74,9 +74,12 @@ public class ExportCSV : Export {
     var children   = node.children();
     int max_levels = 0;
     for( int i=0; i<children.length; i++ ) {
-      int levels = child_levels( children.index( i ) );
-      if( levels > max_levels ) {
-        max_levels = levels;
+      var child = (children.index( i ) as Node);
+      if( child != null ) {
+        int levels = child_levels( child );
+        if( levels > max_levels ) {
+          max_levels = levels;
+        }
       }
     }
     return( max_levels + 1 );
@@ -114,7 +117,10 @@ public class ExportCSV : Export {
       retval += title;
       var children = nodes.index( i ).children();
       for( int j=0; j<children.length; j++ ) {
-        retval += export_node( children.index( j ), ",,", levels );
+        var child = (children.index( j ) as Node);
+        if( child != null ) {
+          retval += export_node( child, ",,", levels );
+        }
       }
     }
 
@@ -148,7 +154,10 @@ public class ExportCSV : Export {
 
     var children = node.children();
     for( int i=0; i<children.length; i++ ) {
-      retval += export_node( children.index( i ), prefix + ",,", levels );
+      var child = (children.index( i ) as Node);
+      if( child != null ) {
+        retval += export_node( child, prefix + ",,", levels );
+      }
     }
 
     return( retval );

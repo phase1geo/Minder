@@ -25,17 +25,17 @@ using Gtk;
 // Undo/Redo when moving a node within the same parent.
 public class UndoNodeMove : UndoItem {
 
-  private Node         _n;
-  private NodeSide     _old_side;
-  private int          _old_index;
-  private SummaryNode? _old_summary;
-  private NodeSide     _new_side;
-  private int          _new_index;
-  private SummaryNode? _new_summary;
+  private BaseNode        _n;
+  private NodeSide        _old_side;
+  private int             _old_index;
+  private SummarizedNode? _old_summary;
+  private NodeSide        _new_side;
+  private int             _new_index;
+  private SummarizedNode? _new_summary;
 
   //-------------------------------------------------------------
   // Default constructor.
-  public UndoNodeMove( Node n, NodeSide old_side, int old_index, SummaryNode? old_summary ) {
+  public UndoNodeMove( BaseNode n, NodeSide old_side, int old_index, SummarizedNode? old_summary ) {
     base( _( "move node" ) );
     _n           = n;
     _old_side    = old_side;
@@ -43,12 +43,12 @@ public class UndoNodeMove : UndoItem {
     _old_summary = old_summary;
     _new_side    = n.side;
     _new_index   = n.index();
-    _new_summary = n.summary_node();
+    _new_summary = n.summarized_node;
   }
 
   //-------------------------------------------------------------
   // Perform the node move change.
-  public void change( MindMap map, NodeSide old_side, SummaryNode? old_summary, NodeSide new_side, int new_index, SummaryNode? new_summary ) {
+  public void change( MindMap map, NodeSide old_side, SummarizedNode? old_summary, NodeSide new_side, int new_index, SummarizedNode? new_summary ) {
     Node parent = _n.parent;
     map.animator.add_nodes( map.model.get_nodes(), false, "undo move" );
     _n.detach( old_side );

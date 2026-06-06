@@ -23,13 +23,13 @@ using Gtk;
 
 public class UndoNodeSummaryDelete : UndoItem {
 
-  SummaryNode       _node;
+  SummarizedNode    _node;
   Array<Connection> _conns;
   UndoNodeGroups?   _groups;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoNodeSummaryDelete( SummaryNode n, Array<Connection> conns, UndoNodeGroups? groups ) {
+  public UndoNodeSummaryDelete( SummarizedNode n, Array<Connection> conns, UndoNodeGroups? groups ) {
     base( _( "delete summary node" ) );
     _node   = n;
     _conns  = conns;
@@ -39,7 +39,7 @@ public class UndoNodeSummaryDelete : UndoItem {
   //-------------------------------------------------------------
   // Undoes a node deletion
   public override void undo( MindMap map ) {
-    _node.attach_all();
+    // _node.attach_all();
     map.set_current_node( _node );
     for( int i=0; i<_conns.length; i++ ) {
       map.connections.add_connection( _conns.index( i ) );
@@ -53,7 +53,7 @@ public class UndoNodeSummaryDelete : UndoItem {
   // Redoes a node deletion
   public override void redo( MindMap map ) {
     UndoNodeGroups? tmp_groups = null;
-    _node.detach_all();
+    // _node.detach_all();
     map.set_current_node( null );
     for( int i=0; i<_conns.length; i++ ) {
       map.connections.remove_connection( _conns.index( i ), false );

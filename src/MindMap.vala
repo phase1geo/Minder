@@ -641,7 +641,7 @@ public class MindMap {
   public void select_child_node() {
     var current = get_current_node();
     if( (current != null) && !current.is_leaf() && !current.folded ) {
-      if( select_node( current.last_selected_child ?? current.children().index( 0 ) ) ) {
+      if( select_node( (Node)(current.last_selected_child ?? current.children().index( 0 )) ) ) {
         queue_draw();
       }
     }
@@ -685,14 +685,13 @@ public class MindMap {
   // Selects the parent nodes of the selected nodes.
   public void select_parent_nodes() {
     var child_nodes  = _selected.nodes();
-    var parent_nodes = new Array<Node>();
+    var parent_nodes = new Array<BaseNode>();
     for( int i=0; i<child_nodes.length; i++ ) {
       var node = child_nodes.index( i );
       if( (node != null) && !node.is_root() ) {
-        if( node.is_summary() ) {
-          var sn = (node as SummaryNode);
-          assert( sn != null );
-          parent_nodes.append_val( sn.last_selected_node );
+        var sn = node.parent as SummarizedNode;
+        if( sn != null ) {
+          parent_nodes.append_val( sn.current_node() );
         } else {
           parent_nodes.append_val( node.parent );
         }

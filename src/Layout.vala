@@ -54,7 +54,6 @@ public class Layout : Object {
   //-------------------------------------------------------------
   // Initializes the given node based on this layout.
   public virtual void initialize( Node parent ) {
-    stdout.printf( "Layout initialize, parent: %s\n", parent.name.text.text );
     var list = new SList<Node>();
     parent.side = side_mapping( parent.side );
     if( parent.traversable() ) {
@@ -64,31 +63,10 @@ public class Layout : Object {
         list.append( n );
       }
       list.@foreach((item) => {
-        stdout.printf( "  detaching %s\n", item.name.text.text );
-        if( item.is_summary() ) {
-          var n = (SummaryNode)item;
-          n.detach_from_layout( item.side );
-        } else {
-          item.detach( item.side );
-        }
+        item.detach( item.side );
       });
       list.@foreach((item) => {
-        stdout.printf( "  attaching %s\n", item.name.text.text );
         item.attach_init( parent, -1 );
-        if( item.last_summarized() ) {
-          var child = item.children().index( 0 );
-          double xy1, xy2;
-          var sn = (child as SummaryNode);
-          if( sn != null ) {
-            sn.get_extents( out xy1, out xy2 );
-            if( child.side.horizontal() ) {
-              child.posy = xy1 + (((xy2 - xy1) / 2) - (child.total_height / 2));
-            } else {
-              child.posx = xy1 + (((xy2 - xy1) / 2) - (child.total_width / 2));
-            }
-            sn.update_tree_bboxes();
-          }
-        }
       });
     }
   }
@@ -107,7 +85,7 @@ public class Layout : Object {
     double x2 = nb.x + nb.width;
     double y2 = nb.y + nb.height;
 
-    if( (num_children != 0) && !parent.folded && !parent.is_summarized() ) {
+    if( (num_children != 0) && !parent.folded ) {
       for( int i=0; i<parent.children().length; i++ ) {
         var child = parent.children().index( i );
         if( (child.parent == parent) && ((child.side & side_mask) != 0) ) {
@@ -118,37 +96,6 @@ public class Layout : Object {
           y2 = (y2 < (cb.y + cb.height)) ? (cb.y + cb.height) : y2;
         }
       }
-    }
-
-    // If the node is a summarized node, we need to adjust the treebox to include the summary node and its tree.
-    if( parent.is_summarized() ) {
-
-      var summary = parent.summary_node();
-      var sb      = summary.tree_bbox;
-
-      if( parent.first_summarized() ) {
-        nb.x = (parent.side.vertical()   && (nb.x > sb.x)) ? sb.x : nb.x;
-        nb.y = (parent.side.horizontal() && (nb.y > sb.y)) ? sb.y : nb.y;
-        x2   = ((parent.side == NodeSide.RIGHT)  && (x2 < (sb.x + sb.width)))  ? (sb.x + sb.width)  : x2;
-        y2   = ((parent.side == NodeSide.BOTTOM) && (y2 < (sb.y + sb.height))) ? (sb.y + sb.height) : y2;
-      } else if( parent.last_summarized() ) {
-        // stdout.printf( "Updating treebox for last: %s, summary nb: %s\n", parent.name.text.text, sb.to_string() );
-        nb.x = ((parent.side == NodeSide.LEFT) && (nb.x > sb.x)) ? sb.x : nb.x;
-        nb.y = ((parent.side == NodeSide.TOP)  && (nb.y > sb.y)) ? sb.y : nb.y;
-        //x2   = (parent.side.horizontal() && (x2 < (sb.x + sb.width)))  ? (sb.x + sb.width)  : x2;
-        //y2   = (parent.side.vertical()   && (y2 < (sb.y + sb.height))) ? (sb.y + sb.height) : y2;
-        x2   = (x2 < (sb.x + sb.width))  ? (sb.x + sb.width)  : x2;
-        y2   = (y2 < (sb.y + sb.height)) ? (sb.y + sb.height) : y2;
-        // stdout.printf( "  x: %g, y: %g, w: %g, h: %g\n", nb.x, nb.y, (x2 - nb.x), (y2 - nb.y) );
-      } else if( parent.side.horizontal() ) {
-        nb.x = (nb.x < sb.x) ? nb.x : sb.x;
-        x2   = (x2 < (sb.x + sb.width)) ? (sb.x + sb.width) : x2;
-      } else {
-        nb.y = (nb.y < sb.y) ? nb.y : sb.y;
-        y2   = (y2 < (sb.y + sb.height)) ? (sb.y + sb.height) : y2;
-      }
-
-    } else if( parent.is_summary() ) {
     }
 
     nb.width  = (x2 - nb.x);
@@ -177,30 +124,9 @@ public class Layout : Object {
   // Calculate the adjustment difference of the given node's tree.
   // If the returned value is positive, it indicates a growth occurred.
   public double get_adjust( Node parent ) {
-
-    // If this is a summary node, if its tree size is less than or equal to its
-    // summarized node extents, return 0; otherwise, return the difference
-    // between our tree_size and the extent size.
-    if( parent.is_summary() ) {
-
-      double xy1, xy2;
-      var sn = (parent as SummaryNode);
-      assert( sn != null );
-      sn.get_extents( out xy1, out xy2 );
-
-      var extent_size    = xy2 - xy1;
-      var orig_tree_size = (extent_size < parent.tree_size) ? parent.tree_size : extent_size;
-      update_tree_size( parent );
-      return( (extent_size < parent.tree_size) ? (parent.tree_size - orig_tree_size) : 0 );
-
-    } else {
-
-      var orig_tree_size = parent.tree_size;
-      update_tree_size( parent );
-      return( (orig_tree_size == 0) ? 0 : (parent.tree_size - orig_tree_size) );
-
-    }
-
+    var orig_tree_size = parent.tree_size;
+    update_tree_size( parent );
+    return( (orig_tree_size == 0) ? 0 : (parent.tree_size - orig_tree_size) );
   }
 
   //-------------------------------------------------------------
@@ -328,9 +254,9 @@ public class Layout : Object {
   //-------------------------------------------------------------
   // Adjusts the gap between the parent and child nodes.
   public void apply_margin( Node n ) {
-    if( n.parent == null ) return;
+    if( (n.parent == null) || n.is_summary() ) return;
     double px, py, pw, ph;
-    var margin = n.parent.style.branch_margin + (n.is_summary() ? 20 : 0);
+    var margin = n.parent.style.branch_margin;
     n.parent.bbox( out px, out py, out pw, out ph );
     switch( n.side ) {
       case NodeSide.LEFT :
@@ -433,22 +359,9 @@ public class Layout : Object {
     apply_margin( child );
     adjust = get_insert_adjust( child );
 
-    // If we are adding a summary node, get the summary node extent and place ourselves in the middle
-    if( child.is_summary() ) {
-      double xy1, xy2;
-      var sn = (child as SummaryNode);
-      if( sn != null ) {
-        sn.get_extents( out xy1, out xy2 );
-        if( child.side.horizontal() ) {
-          child.posy = xy1 + (((xy2 - xy1) / 2) - (oh / 2));
-        } else {
-          child.posx = xy1 + (((xy2 - xy1) / 2) - (ow / 2));
-        }
-      }
-
     // If we are the only child on our side, place ourselves on the same plane as the
     // parent node
-    } else if( parent.side_count( child.side ) == 1 ) {
+    if( parent.side_count( child.side ) == 1 ) {
       double px, py, pw, ph;
       parent.bbox( out px, out py, out pw, out ph );
       if( child.side.horizontal() ) {

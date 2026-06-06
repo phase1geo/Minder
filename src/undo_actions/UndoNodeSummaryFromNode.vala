@@ -23,12 +23,12 @@ using Gtk;
 
 public class UndoNodeSummaryFromNode : UndoItem {
 
-  private Node        _n;
-  private SummaryNode _sn;
+  private BaseNode       _n;
+  private SummarizedNode _sn;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoNodeSummaryFromNode( Node n, SummaryNode sn ) {
+  public UndoNodeSummaryFromNode( BaseNode n, SummarizedNode sn ) {
     base( _( "convert to summary node" ) );
     _n  = n;
     _sn = sn;
@@ -39,7 +39,7 @@ public class UndoNodeSummaryFromNode : UndoItem {
   public override void undo( MindMap map ) {
     var parent = _sn.last_node().parent;
     var index  = _sn.last_node().index() + 1;
-    _sn.detach_all();
+    // _sn.detach_all();
     _n.attach( parent, index, null, false );
     map.set_current_node( _n );
     map.queue_draw();
@@ -50,7 +50,7 @@ public class UndoNodeSummaryFromNode : UndoItem {
   // Performs a redo operation
   public override void redo( MindMap map ) {
     _n.detach( _n.side );
-    _sn.attach_all();
+    // _sn.attach_all();
     map.set_current_node( _sn );
     map.queue_draw();
     map.auto_save();

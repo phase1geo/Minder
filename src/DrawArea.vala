@@ -1371,9 +1371,9 @@ public class DrawArea : Gtk.DrawingArea {
             current_node.resize( diffx );
             _map.auto_save();
           } else if( _map.editable ) {
-            // var attach_summary = _map.model.attachable_summary_node( _scaled_x, _scaled_y );
-            if( _map.model.attach_summary != null ) {
-              _map.model.set_attach_summary( _map.model.attach_summary );
+            var attach_summary = _map.model.attachable_summary_node( _scaled_x, _scaled_y );
+            if( attach_summary != null ) {
+              _map.model.set_attach_summary( attach_summary );
             }
             var attach_node = _map.model.attachable_node( _scaled_x, _scaled_y );
             if( attach_node != null ) {
@@ -1773,16 +1773,9 @@ public class DrawArea : Gtk.DrawingArea {
             var orig_summary = current_node.summary_node();
             var moved        = false;
             animator.add_nodes( _map.get_nodes(), false, "move to position" );
-            /*
-            if( current_node.parent != null ) {
-              current_node.parent.clear_summary_extents();
-            }
-            */
-            if( current_node.is_summary() ) {
-              var sn = (current_node as SummaryNode);
-              if( sn != null ) {
-                sn.nodes_changed( 1, 1 );
-              }
+            var sn = (current_node as SummarizedNode);
+            if( sn != null ) {
+              sn.nodes_changed( 1, 1 );
             } else {
               moved = current_node.parent.move_to_position( current_node, _orig_side, scale_value( x ), scale_value( y ) );
               if( !moved ) {

@@ -24,22 +24,23 @@ using Gdk;
 
 public class UndoNodeAttach : UndoItem {
 
-  private Node             _n;
-  private Node?            _old_parent;
+  private BaseNode         _n;
+  private BaseNode?        _old_parent;
   private NodeSide         _old_side;
   private int              _old_index;
   private Array<NodeInfo?> _old_info;
-  private SummaryNode?     _old_summary;
+  private SummarizedNode?  _old_summary;
+  private int              _old_summary_index;
   private Style?           _old_style;
-  private Node             _new_parent;
+  private BaseNode         _new_parent;
   private NodeSide         _new_side;
   private int              _new_index;
   private Array<NodeInfo?> _new_info;
-  private SummaryNode?     _new_summary;
+  private SummarizedNode?  _new_summary;
 
   //-------------------------------------------------------------
   // Default constructor.
-  public UndoNodeAttach( Node n, Node? old_parent, NodeSide old_side, int old_index, Array<NodeInfo?> old_info, SummaryNode? old_summary, int old_summary_index, Style old_style ) {
+  public UndoNodeAttach( BaseNode n, BaseNode? old_parent, NodeSide old_side, int old_index, Array<NodeInfo?> old_info, SummarizedNode? old_summary, int old_summary_index, Style old_style ) {
     base( _( "attach node" ) );
     _n           = n;
     _old_parent  = old_parent;
@@ -47,18 +48,19 @@ public class UndoNodeAttach : UndoItem {
     _old_index   = old_index;
     _old_info    = old_info;
     _old_summary = old_summary;
+    _old_summary_index = old_summary_index;
     _old_style   = old_style;
     _new_parent  = n.parent;
     _new_side    = n.side;
     _new_index   = n.index();
     _new_info    = new Array<NodeInfo?>();
     _n.get_node_info( ref _new_info );
-    _new_summary = n.summary_node();
+    _new_summary = n.summarized_node;
   }
 
   //-------------------------------------------------------------
   // Constructor for root nodes.
-  public UndoNodeAttach.for_root( Node n, int old_index, Array<NodeInfo?> old_info, Style old_style ) {
+  public UndoNodeAttach.for_root( BaseNode n, int old_index, Array<NodeInfo?> old_info, Style old_style ) {
     base( _( "attach node" ) );
     _n           = n;
     _old_parent  = null;
@@ -71,7 +73,7 @@ public class UndoNodeAttach : UndoItem {
     _new_index   = n.index();
     _new_info    = new Array<NodeInfo?>();
     _n.get_node_info( ref _new_info );
-    _new_summary = n.summary_node();
+    _new_summary = n.summarized_node;
   }
 
   //-------------------------------------------------------------
@@ -92,7 +94,7 @@ public class UndoNodeAttach : UndoItem {
       _n.layout.propagate_side( _n, _old_side );
       _n.attach_init( _old_parent, _old_index );
       if( _old_summary != null ) {
-        _old_summary.add_node( _n );
+        _old_summary.add_node( _n, _old_summary_index );
       }
     }
     _n.style = _old_style;

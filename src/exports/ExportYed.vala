@@ -263,7 +263,10 @@ public class ExportYed : Export {
       graph->add_child( export_link( node, yns ) );
     }
     for( int i=0; i<node.children().length; i++ ) {
-      export_node_edge( graph, yns, node.children().index( i ), theme );
+      var child = node.children().index( i );
+      if( (child as Node) != null ) {
+        export_node_edge( graph, yns, (Node)child, theme );
+      }
     }
   }
 

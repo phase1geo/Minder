@@ -125,7 +125,10 @@ public class ExportMermaid : Export {
     retval += title;
 
     for( int i=0; i<children.length; i++ ) {
-      retval += export_node_mindmap( children.index( i ), "  " );
+      var child = (children.index( i ) as Node);
+      if( child != null ) {
+        retval += export_node_mindmap( child, "  " );
+      }
     }
 
     return( retval );
@@ -246,13 +249,16 @@ public class ExportMermaid : Export {
       retval += line;
     } else {
       for( int i=0; i<children.length; i++ ) {
-        var link   = make_link( children.index( i ) );
-        var ctitle = make_title( children.index( i ), false );
-        var nstyle = make_node_style( children.index( i ) );
-        var lstyle = make_link_style( children.index( i ), ref link_id );
-        var line   = "  " + title + " " + link + " " + ctitle + ";  " + nstyle + ";  " + lstyle + ";\n";
-        retval += line;
-        retval += export_node_graph( children.index( i ), ref link_id );
+        var child = (children.index( i ) as Node);
+        if( child != null ) {
+          var link   = make_link( child );
+          var ctitle = make_title( child, false );
+          var nstyle = make_node_style( child );
+          var lstyle = make_link_style( child, ref link_id );
+          var line   = "  " + title + " " + link + " " + ctitle + ";  " + nstyle + ";  " + lstyle + ";\n";
+          retval += line;
+          retval += export_node_graph( child, ref link_id );
+        }
       }
     }
 
@@ -272,7 +278,10 @@ public class ExportMermaid : Export {
     retval += title;
 
     for( int i=0; i<children.length; i++ ) {
-      retval += export_node_mindmap( children.index( i ), prefix + "  " );
+      var child = (children.index( i ) as Node);
+      if( child != null ) {
+        retval += export_node_mindmap( child, prefix + "  " );
+      }
     }
 
     return( retval );
@@ -412,11 +421,11 @@ public class ExportMermaid : Export {
               Node node;
               title = title.chug().replace( "<br/>", "\n" );
               if( parent == null ) {
-                node = map.model.create_root_node( title );
+                node = (Node)map.model.create_root_node( title );
               } else if( parent.parent == null ) {
-                node = map.model.create_main_node( parent, NodeSide.RIGHT, title );
+                node = (Node)map.model.create_main_node( parent, NodeSide.RIGHT, title );
               } else {
-                node = map.model.create_child_node( parent, title );
+                node = (Node)map.model.create_child_node( parent, title );
               }
               node.style.node_border = StyleInspector.styles.get_node_border( border );
               node.style.node_markup = markdown;
