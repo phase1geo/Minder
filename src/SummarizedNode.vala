@@ -264,6 +264,18 @@ public class SummarizedNode : BaseNode {
   }
 
   //-------------------------------------------------------------
+  // Returns the first summarized node in the list.
+  public override BaseNode? first_child( NodeSide? side = null ) {
+    return( (_nodes.length == 0) ? null : _nodes.index( 0 ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the last summarized node in the list.
+  public override BaseNode? last_child( NodeSide? side = null ) {
+    return( (_nodes.length == 0) ? null : _nodes.index( _nodes.length - 1 ) );
+  }
+
+  //-------------------------------------------------------------
   // Returns the sibling node within the internal list relative
   // to the current node.
   public override BaseNode? get_sibling( int dir, bool wrap ) {

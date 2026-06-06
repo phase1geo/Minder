@@ -1062,7 +1062,7 @@ public class MindMap {
   //-------------------------------------------------------------
   // Convenience function that provides an array of all of the
   // root nodes in the mindmap.
-  public Array<Node> get_nodes() {
+  public Array<BaseNode> get_nodes() {
     return( _model.get_nodes() );
   }
 

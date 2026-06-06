@@ -1472,6 +1472,10 @@ public class BaseNode : Object {
   }
 
   //-------------------------------------------------------------
+  // CHILD SELECTION
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
   // Returns a reference to the first child of this node.
   public virtual BaseNode? first_child( NodeSide? side = null ) {
     for( int i=0; i<_children.length; i++ ) {
