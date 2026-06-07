@@ -319,7 +319,7 @@ public class BaseNode : Object {
   public BaseNode? parent {
     get {
 
-      return( (((_parent as SummarizedNode) != null) && (_parent.childen().index( 0 ) != this)) ? _parent.parent : _parent );
+      return( (((_parent as SummarizedNode) != null) && (_parent.children().index( 0 ) != this)) ? _parent.parent : _parent );
     }
     protected set {
       _parent = value;
@@ -478,7 +478,7 @@ public class BaseNode : Object {
   //-------------------------------------------------------------
   // Copies just the variables of the node, minus the children
   // nodes.
-  public void copy_variables( BaseNode n, ImageManager im ) {
+  public virtual void copy_variables( BaseNode n, ImageManager im ) {
     _width        = n._width;
     _height       = n._height;
     _total_width  = n._total_width;
@@ -807,6 +807,27 @@ public class BaseNode : Object {
   public virtual Callout? contains_callout( double x, double y ) {
     return( null );
   }
+
+  //-------------------------------------------------------------
+  // Returns true if there is at least one node that is foldable
+  // due to its tasks being completed.  The derived class must
+  // implement this functionality as it works recursively.
+  public virtual bool completed_tasks_foldable() {
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if any node is found to be unfoldable.  The derived
+  // class must implement this functionality.
+  public virtual bool unfoldable() {
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Recursively spans node tree folding any nodes which contain
+  // fully completed tasks.  The derived class must implement this
+  // functionality.
+  public virtual void fold_completed_tasks( Array<BaseNode> changed ) {}
 
   //-------------------------------------------------------------
   // Returns true if this node contains the given node.

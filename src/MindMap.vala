@@ -425,7 +425,7 @@ public class MindMap {
 
     // Create and add the first root node after idle to allow the window size to be known
     _canvas.size_ready.connect((w, h) => {
-      var n = _model.create_root_node( _( "Main Idea" ) );
+      var n = (Node)_model.create_root_node( _( "Main Idea" ) );
       set_current_node( n );
       _model.set_node_mode( n, NodeMode.EDITABLE, false );
 

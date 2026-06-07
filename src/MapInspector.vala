@@ -266,7 +266,7 @@ public class MapInspector : Box {
       var name   = names.index( index );
       var layout = _map.layouts.get_layout( name );
       var node   = _map.get_current_node();
-      _map.model.set_layout( name, ((node == null) ? null : node.get_root()) );
+      _map.model.set_layout( name, ((node == null) ? null : (Node)node.get_root()) );
       _balance.set_sensitive( layout.balanceable );
       _alignment_revealer.reveal_child = (name == _( "Manual" ));
     }

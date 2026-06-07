@@ -2184,14 +2184,28 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
+  // Resolves the BaseNode to a Node.
+  // TODO - We will probably want to add a second parameter to select
+  // either the current, first or last node if the basenode is a
+  // SummarizedNode.  Set the default value of this parameter to DEFAULT.
+  private Node? basenode_to_node( BaseNode? bn ) {
+    if( bn == null ) {
+      return( null );
+    } else {
+      var sn = (bn as SummarizedNode);
+      return( (sn != null) ? sn.current_node() : (Node)bn );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Returns the node to the right of the given node.
-  public BaseNode? get_node_right( Node node ) {
+  public Node? get_node_right( Node node ) {
     if( node.is_root() ) {
       if( node.side.horizontal() ) {
         if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.RIGHT) ) {
-          return( node.last_selected_child );
+          return( basenode_to_node( node.last_selected_child ) );
         }
-        return( node.first_child( NodeSide.RIGHT ) );
+        return( basenode_to_node( node.first_child( NodeSide.RIGHT ) ) );
       } else {
         for( int i=0; i<_nodes.length; i++ ) {
           if( _nodes.index( i ) == node ) {
@@ -2203,9 +2217,9 @@ public class MapModel {
     } else {
       switch( node.side ) {
         case NodeSide.TOP    :
-        case NodeSide.BOTTOM :  return( node.is_summary() ? null : node.parent.next_child( node ) );
-        case NodeSide.LEFT   :  return( get_select_parent( node ) );
-        default              :  return( node.last_selected_child ?? node.first_child( NodeSide.RIGHT ) );
+        case NodeSide.BOTTOM :  return( basenode_to_node( node.is_summary() ? null : node.parent.next_child( node ) ) );
+        case NodeSide.LEFT   :  return( basenode_to_node( get_select_parent( node ) ) );
+        default              :  return( basenode_to_node( node.last_selected_child ?? node.first_child( NodeSide.RIGHT ) ) );
       }
     }
   }
@@ -2216,9 +2230,9 @@ public class MapModel {
     if( node.is_root() ) {
       if( node.side.horizontal() ) {
         if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.LEFT) ) {
-          return( node.last_selected_child );
+          return( basenode_to_node( node.last_selected_child ) );
         }
-        return( node.first_child( NodeSide.LEFT ) );
+        return( basenode_to_node( node.first_child( NodeSide.LEFT ) ) );
       } else {
         for( int i=0; i<_nodes.length; i++ ) {
           if( _nodes.index( i ) == node ) {
@@ -2230,22 +2244,22 @@ public class MapModel {
     } else {
       switch( node.side ) {
         case NodeSide.TOP :
-        case NodeSide.BOTTOM :  return( node.is_summary() ? null : node.parent.prev_child( node ) );
-        case NodeSide.LEFT   :  return( node.last_selected_child ?? node.first_child( NodeSide.LEFT ) );
-        default              :  return( get_select_parent( node ) );
+        case NodeSide.BOTTOM :  return( basenode_to_node( node.is_summary() ? null : node.parent.prev_child( node ) ) );
+        case NodeSide.LEFT   :  return( basenode_to_node( node.last_selected_child ?? node.first_child( NodeSide.LEFT ) ) );
+        default              :  return( basenode_to_node( get_select_parent( node ) ) );
       }
     }
   }
 
   //-------------------------------------------------------------
   // Returns the node above the given node
-  public BaseNode? get_node_up( Node node ) {
+  public Node? get_node_up( Node node ) {
     if( node.is_root() ) {
       if( node.side.vertical() ) {
         if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.TOP) ) {
-          return( node.last_selected_child );
+          return( basenode_to_node( node.last_selected_child ) );
         }
-        return( node.first_child( NodeSide.TOP ) );
+        return( basenode_to_node( node.first_child( NodeSide.TOP ) ) );
       } else {
         for( int i=0; i<_nodes.length; i++ ) {
           if( _nodes.index( i ) == node ) {
@@ -2256,22 +2270,22 @@ public class MapModel {
       return( null );
     } else {
       switch( node.side ) {
-        case NodeSide.TOP    :  return( node.last_selected_child ?? node.first_child( NodeSide.TOP ) );
-        case NodeSide.BOTTOM :  return( get_select_parent( node ) );
-        default              :  return( node.is_summary() ? null : node.parent.prev_child( node ) );
+        case NodeSide.TOP    :  return( basenode_to_node( node.last_selected_child ?? node.first_child( NodeSide.TOP ) ) );
+        case NodeSide.BOTTOM :  return( basenode_to_node( get_select_parent( node ) ) );
+        default              :  return( basenode_to_node( node.is_summary() ? null : node.parent.prev_child( node ) ) );
       }
     }
   }
 
   //-------------------------------------------------------------
   // Returns the node below the given node
-  public BaseNode? get_node_down( Node node ) {
+  public Node? get_node_down( Node node ) {
     if( node.is_root() ) {
       if( node.side.vertical() ) {
         if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.BOTTOM) ) {
-          return( node.last_selected_child );
+          return( basenode_to_node( node.last_selected_child ) );
         }
-        return( node.first_child( NodeSide.BOTTOM ) );
+        return( basenode_to_node( node.first_child( NodeSide.BOTTOM ) ) );
       } else {
         for( int i=0; i<_nodes.length; i++ ) {
           if( _nodes.index( i ) == node ) {
@@ -2282,9 +2296,9 @@ public class MapModel {
       return( null );
     } else {
       switch( node.side ) {
-        case NodeSide.TOP    :  return( get_select_parent( node ) );
-        case NodeSide.BOTTOM :  return( node.last_selected_child ?? node.first_child( NodeSide.BOTTOM ) );
-        default              :  return( node.is_summary() ? null : node.parent.next_child( node ) );
+        case NodeSide.TOP    :  return( basenode_to_node( get_select_parent( node ) ) );
+        case NodeSide.BOTTOM :  return( basenode_to_node( node.last_selected_child ?? node.first_child( NodeSide.BOTTOM ) ) );
+        default              :  return( basenode_to_node( node.is_summary() ? null : node.parent.next_child( node ) ) );
       }
     }
   }
@@ -2295,7 +2309,7 @@ public class MapModel {
     if( node.is_root() ) {
       return( (_nodes.length > 0) ? _nodes.index( 0 ) : null );
     } else {
-      return( node.is_summary() ? null : node.parent.first_child() );
+      return( basenode_to_node( node.is_summary() ? null : node.parent.first_child() ) );
     }
   }
 

@@ -73,10 +73,14 @@ public class ExportText : Export {
     var nodes = map.get_nodes();
 
     for( int i=0; i<nodes.length; i++ ) {
-      value += "# " + nodes.index( i ).name.text.text + "\n";
-      var children = nodes.index( i ).children();
+      var node = (Node)nodes.index( i );
+      value += "# " + node.name.text.text + "\n";
+      var children = node.children();
       for( int j=0; j<children.length; j++ ) {
-        value += export_node( map, children.index( j ) );
+        var nchild = (children.index( j ) as Node);
+        if( nchild != null ) {
+          value += export_node( map, child );
+        }
       }
     }
 

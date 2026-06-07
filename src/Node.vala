@@ -1021,7 +1021,7 @@ public class Node : BaseNode {
   //-------------------------------------------------------------
   // Returns true if there is at least one node that is foldable
   // due to its tasks being completed.
-  public bool completed_tasks_foldable() {
+  public override bool completed_tasks_foldable() {
     if( !folded && (_task_count > 0) ) {
       if( _task_count == _task_done ) {
         for( int i=0; i<_children.length; i++ ) {
@@ -1041,7 +1041,7 @@ public class Node : BaseNode {
 
   //-------------------------------------------------------------
   // Returns true if any node is found to be unfoldable.
-  public bool unfoldable() {
+  public override bool unfoldable() {
     if( folded ) {
       return( true );
     } else {
@@ -1057,7 +1057,7 @@ public class Node : BaseNode {
   //-------------------------------------------------------------
   // Recursively spans node tree folding any nodes which contain
   // fully completed tasks.
-  public void fold_completed_tasks( Array<Node> changed ) {
+  public override void fold_completed_tasks( Array<Node> changed ) {
     if( !folded && (_task_count > 0) ) {
       if( _task_count == _task_done ) {
         for( int i=0; i<_children.length; i++ ) {

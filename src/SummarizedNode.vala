@@ -66,15 +66,15 @@ public class SummarizedNode : BaseNode {
 
   //-------------------------------------------------------------
   // Returns the summarized node at the given index.
-  public BaseNode? get_summarized_node( int index ) {
-    return( ((0 <= index) && (index < _nodes.length)) ? _nodes.index( index ) : null );
+  public Node? get_summarized_node( int index ) {
+    return( ((0 <= index) && (index < _nodes.length)) ? (Node)_nodes.index( index ) : null );
   }
 
   //-------------------------------------------------------------
   // Returns the current summarized node.  If no current node is
   // available, returns null.
-  public BaseNode? current_node() {
-    return( (_nodes.length == 0) ? null : _nodes.index( current ) );
+  public Node? current_node() {
+    return( (_nodes.length == 0) ? null : (Node)_nodes.index( current ) );
   }
 
   //-------------------------------------------------------------
@@ -183,7 +183,7 @@ public class SummarizedNode : BaseNode {
     height = 0.0;
     for( int i=0; i<_nodes.length; i++ ) {
       double w, h;
-      _nodes.index( i ).calculate_node_size( out w, out h, out ns ); 
+      _nodes.index( i ).calculate_node_size( out w, out h ); 
       if( side.horizontal() ) {
         height += h;
         if( width < w ) {
@@ -255,10 +255,57 @@ public class SummarizedNode : BaseNode {
   }
 
   //-------------------------------------------------------------
+  // Returns true if any of the summarized nodes have completed
+  // tasks that are foldable.  Recursively checks the summary node
+  // also.
+  public override bool completed_tasks_foldable() {
+    for( int i=0; i<_nodes.length; i++ ) {
+      if( _nodes.index( i ).completed_tasks_foldable() ) {
+        return( true );
+      }
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      if( _children.index( i ).completed_tasks_foldable() ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if any summarized nodes or descendants are unfoldable.
+  public override bool unfoldable() {
+    for( int i=0; i<_nodes.length; i++ ) {
+      if( _nodes.index( i ).unfoldable() ) {
+        return( true );
+      }
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      if( _children.index( i ).unfoldable() ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Recursively spans node tree folding any nodes which contain
+  // fully completed tasks.  The derived class must implement this
+  // functionality.
+  public override void fold_completed_tasks( Array<BaseNode> changed ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).fold_completed_tasks( changed );
+    }  
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).fold_completed_tasks( changed );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Returns true if the selection box intersects with any internal
   // node.
   public override bool intersects_with( Gdk.Rectangle box ) {
-    for( int i=0; i_nodes.length; i++ ) {
+    for( int i=0; i<_nodes.length; i++ ) {
       if( _nodes.index( i ).intersects_with( box ) ) {
         return( true );
       }
@@ -599,7 +646,8 @@ public class SummarizedNode : BaseNode {
       default :  assert_not_reached();
     }
 
-    var link_color = _children.index( 0 ).link_color;
+    var summary    = (Node)_children.index( 0 );
+    var link_color = summary.link_color;
 
     Utils.set_context_color_with_alpha( ctx, link_color, alpha );
     ctx.move_to( x1, y1 );

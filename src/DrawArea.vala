@@ -1781,12 +1781,12 @@ public class DrawArea : Gtk.DrawingArea {
                 animator.clear_last_save();
               }
             }
-            if( !current_node.is_summarized() && (_map.model.attach_summary != null) ) {
+            if( (current_node.summarized_node == null) && (_map.model.attach_summary != null) ) {
               _map.model.attach_summary.add_node( current_node );
-            } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_map.model.attach_summary == null) ) {
-              current_node.summary_node().remove_node( current_node );
-            } else if( current_node.is_summarized() ) {
-              current_node.summary_node().node_moved( current_node );
+            } else if( (current_node.summarized_node != null) && (_map.model.attach_summary == null) ) {
+              current_node.summarized_node.remove_node( current_node );
+            } else if( current_node.summarized_node != null ) {
+              current_node.summarized_node.node_moved( current_node );
             }
             if( moved ) {
               _map.add_undo( new UndoNodeMove( current_node, _orig_side, orig_index, orig_summary ) );

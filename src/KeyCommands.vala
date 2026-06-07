@@ -1969,7 +1969,7 @@ public enum KeyCommand {
         case "down"  :  other = map.model.get_node_down( start );   break;
         default      :  return;
       }
-      if( (other != null) && ((other == current) || !current.contains_node( other )) && !other.is_summarized() ) {
+      if( (other != null) && ((other == current) || !current.contains_node( other )) && (other.summarized_node == null) ) {
         map.model.set_attach_node( other, other.mode.get_attach_set_mode( (other == current) || (other == current.parent) ) );
         map.canvas.see( true );
       }
