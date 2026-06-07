@@ -194,7 +194,7 @@ public class ExportXMind8 : Export {
   // Exports the map contents.
   private void export_map( MindMap map, Xml.Node* sheet, string timestamp, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
     var nodes = map.get_nodes();
-    Xml.Node* top = export_node( map, nodes.index( 0 ), timestamp, true, dir, file_list, styles );
+    Xml.Node* top = export_node( map, (Node)nodes.index( 0 ), timestamp, true, dir, file_list, styles );
     if( nodes.length > 1 ) {
       for( Xml.Node* it=top->children; it!=null; it=it->next ) {
         if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "children") ) {

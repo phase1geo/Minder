@@ -65,7 +65,7 @@ public class ExportPlantUML : Export {
 
     for( int i=0; i<nodes.length; i++ ) {
       retval += export_header( map );
-      retval += export_node( nodes.index( i ), 1 );
+      retval += export_node( (Node)nodes.index( i ), 1 );
       retval += export_footer( map );
     }
 

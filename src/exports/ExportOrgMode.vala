@@ -90,13 +90,14 @@ public class ExportOrgMode : Export {
     var nodes = map.get_nodes();
 
     for( int i=0; i<nodes.length; i++ ) {
-      var title = "* " + nodes.index( i ).name.text.text + "\n\n";
+      var node  = (Node)nodes.index( i );
+      var title = "* " + node.name.text.text + "\n\n";
       retval += title;
-      if( nodes.index( i ).note != "" ) {
-        var note = "\n" + linestart( "" ) + nodes.index( i ).note.replace( "\n", "\n  " );
+      if( node.note != "" ) {
+        var note = "\n" + linestart( "" ) + node.note.replace( "\n", "\n  " );
         retval += note;
       }
-      var children = nodes.index( i ).children();
+      var children = node.children();
       for( int j=0; j<children.length; j++ ) {
         var child = (children.index( j ) as Node);
         if( child != null ) {

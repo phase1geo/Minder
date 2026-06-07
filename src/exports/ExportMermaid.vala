@@ -96,11 +96,12 @@ public class ExportMermaid : Export {
       return( retval );
     }
 
-    string title = "graph " + map_layout_to_direction( nodes.index( 0 ) ) + "\n";
+    var title = "graph " + map_layout_to_direction( (Node)nodes.index( 0 ) ) + "\n";
     retval += title;
 
     for( int i=0; i<nodes.length; i++ ) {
-      retval += export_node_graph( nodes.index( i ), ref link_id );
+      var node = (Node)nodes.index( i );
+      retval += export_node_graph( node, ref link_id );
     }
 
     return( retval );
@@ -118,7 +119,7 @@ public class ExportMermaid : Export {
       return( retval );
     }
 
-    var root     = nodes.index( 0 );
+    var root     = (Node)nodes.index( 0 );
     var children = root.children();
 
     string title = "mindmap\n%s\n".printf( make_title( root, true ) );

@@ -37,7 +37,7 @@ public class ExportFileSystem : Export {
       return( false );
     }
     for( int i=0; i<map.get_nodes().length; i++ ) {
-      if( !export_node( dname, map.get_nodes().index( i ) ) ) {
+      if( !export_node( dname, (Node)map.get_nodes().index( i ) ) ) {
         return( false );
       }
     }

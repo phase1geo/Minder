@@ -149,7 +149,7 @@ public class ExportXMind2021 : Export {
 
     sheet.set_string_member( "class", "sheet" );
     sheet.set_string_member( "title", "Map" );
-    sheet.set_object_member( "rootTopic", export_node( map, map.get_nodes().index( 0 ), true, dir, file_list ) );
+    sheet.set_object_member( "rootTopic", export_node( map, (Node)map.get_nodes().index( 0 ), true, dir, file_list ) );
     sheet.set_object_member( "theme", export_theme( map ) );
     sheet.set_array_member( "extensions", export_extensions( map ) );
     sheet.set_string_member( "topicPositioning", "fixed" );

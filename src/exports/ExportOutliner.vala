@@ -55,7 +55,8 @@ public class ExportOutliner : Export {
   private bool show_tasks( MindMap map ) {
     var nodes = map.get_nodes();
     for( int i=0; i<nodes.length; i++ ) {
-      if( nodes.index( i ).task_count > 0 ) {
+      var node = (Node)nodes.index( i );
+      if( node.task_count > 0 ) {
         return( true );
       }
     }
@@ -77,7 +78,7 @@ public class ExportOutliner : Export {
     Xml.Node* n = new Xml.Node( null, "nodes" );
     var nodes = map.get_nodes();
     for( int i=0; i<nodes.length; i++ ) {
-      n->add_child( export_node( nodes.index( i ) ) );
+      n->add_child( export_node( (Node)nodes.index( i ) ) );
     }
     return( n );
   }

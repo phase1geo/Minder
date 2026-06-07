@@ -98,7 +98,7 @@ public class ExportYed : Export {
 
     // Add nodes
     for( int i=0; i<map.get_nodes().length; i++ ) {
-      export_node_edge( graph, yns, map.get_nodes().index( i ), map.get_theme() );
+      export_node_edge( graph, yns, (Node)map.get_nodes().index( i ), map.get_theme() );
     }
 
     // Add connections

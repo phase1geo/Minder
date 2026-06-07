@@ -70,7 +70,8 @@ public class ExportOPML : Export {
     Array<int> estate  = new Array<int>();
     int        node_id = 1;
     for( int i=0; i<map.get_nodes().length; i++ ) {
-      export_node( map.get_nodes().index( i ), body, ref node_id, ref estate );
+      var node = (Node)map.get_nodes().index( i );
+      export_node( node, body, ref node_id, ref estate );
     }
     expand_state = "";
     for( int i=0; i<estate.length; i++ ) {

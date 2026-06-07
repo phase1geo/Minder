@@ -62,7 +62,7 @@ public class ExportCSV : Export {
     var nodes      = map.get_nodes();
     int max_levels = 0;
     for( int i=0; i<nodes.length; i++ ) {
-      int levels = child_levels( nodes.index( i ) );
+      int levels = child_levels( (Node)nodes.index( i ) );
       if( levels > max_levels ) {
         max_levels = levels;
       }
@@ -109,13 +109,14 @@ public class ExportCSV : Export {
     var nodes = map.get_nodes();
 
     for( int i=0; i<nodes.length; i++ ) {
-      string title = stringify( nodes.index( i ).name.text.text ) + "," + stringify( nodes.index( i ).note );
+      var node = (Node)nodes.index( i );
+      string title = stringify( node.name.text.text ) + "," + stringify( node.note );
       for( int j=0; j<(levels - 1); j++ ) {
         title += ",,";
       }
       title  += "\n";
       retval += title;
-      var children = nodes.index( i ).children();
+      var children = node.children();
       for( int j=0; j<children.length; j++ ) {
         var child = (children.index( j ) as Node);
         if( child != null ) {
