@@ -37,11 +37,11 @@ public class UndoNodeSummaryFromNode : UndoItem {
   //-------------------------------------------------------------
   // Performs an undo operation for this data
   public override void undo( MindMap map ) {
-    var parent = _sn.last_node().parent;
-    var index  = _sn.last_node().index() + 1;
+    var parent = _sn.parent;
+    var index  = _sn.index() + 1;
     // _sn.detach_all();
     _n.attach( parent, index, null, false );
-    map.set_current_node( _n );
+    map.set_current_node( (Node)_n );
     map.queue_draw();
     map.auto_save();
   }
@@ -51,7 +51,7 @@ public class UndoNodeSummaryFromNode : UndoItem {
   public override void redo( MindMap map ) {
     _n.detach( _n.side );
     // _sn.attach_all();
-    map.set_current_node( _sn );
+    // map.set_current_node( _n );
     map.queue_draw();
     map.auto_save();
   }

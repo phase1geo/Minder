@@ -28,7 +28,7 @@ public class AnimatorNodes : AnimatorAction {
 
   //-------------------------------------------------------------
   // Default constructor.
-  public AnimatorNodes( DrawArea da, Array<Node> n, bool exclude_selected, string name = "unnamed" ) {
+  public AnimatorNodes( DrawArea da, Array<BaseNode> n, bool exclude_selected, string name = "unnamed" ) {
     base( name, true );
     _pos = new AnimatorPositions( n, exclude_selected );
     _num = _pos.length();

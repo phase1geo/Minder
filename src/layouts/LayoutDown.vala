@@ -36,7 +36,7 @@ public class LayoutDown : Layout {
   }
 
   /* The side should always be set to bottom */
-  public override void set_side( Node current ) {
+  public override void set_side( BaseNode current ) {
     current.side = NodeSide.BOTTOM;
   }
 

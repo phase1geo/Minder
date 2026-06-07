@@ -359,14 +359,14 @@ public class Node : BaseNode {
 
   //-------------------------------------------------------------
   // Sets the posx value only, leaving the children positions alone.
-  public void adjust_posx_only( double value ) {
+  public override void adjust_posx_only( double value ) {
     base.adjust_posx_only( value );
     position_text();
   }
 
   //-------------------------------------------------------------
   // Sets the posy value only, leaving the children positions alone.
-  public void adjust_posy_only( double value ) {
+  public override void adjust_posy_only( double value ) {
     base.adjust_posy_only( value );
     position_text();
   }
@@ -375,13 +375,14 @@ public class Node : BaseNode {
   // Updates the sequence number pango layout.
   public void update_sequence_num() {
     if( parent == null ) return;
-    if( parent.sequence ) {
+    var pnode = (parent as Node);
+    if( (pnode != null) && pnode.sequence ) {
       if( _sequence_num == null ) {
         _sequence_num = new SequenceNum( _map );
         _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
       }
       var seq_type = SequenceNumType.NUM;
-      if( (parent._sequence_num != null) && (parent._sequence_num.seq_type == SequenceNumType.NUM) ) {
+      if( (pnode._sequence_num != null) && (pnode._sequence_num.seq_type == SequenceNumType.NUM) ) {
         seq_type = SequenceNumType.LETTER;
       }
       _sequence_num.set_num( index(), seq_type );
@@ -393,7 +394,7 @@ public class Node : BaseNode {
 
   //-------------------------------------------------------------
   // Updates the tree_bbox.
-  private override void update_tree_bbox( double diffx, double diffy ) {
+  protected override void update_tree_bbox( double diffx, double diffy ) {
     base.update_tree_bbox( diffx, diffy );
     position_text();
   }
@@ -430,7 +431,7 @@ public class Node : BaseNode {
 
   //-------------------------------------------------------------
   // Updates the total size which includes the callout.
-  private override void update_total_size() {
+  protected override void update_total_size() {
 
     if( (_callout == null) || _callout.mode.is_disconnected() ) {
       _total_width  = _width;
@@ -458,7 +459,10 @@ public class Node : BaseNode {
       _callout.mode = mode;
     }
     for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).set_callout_modes( mode );
+      var child = (_children.index( i ) as Node);
+      if( child != null ) {
+        child.set_callout_modes( mode );
+      }
     }
   }
 
@@ -759,7 +763,7 @@ public class Node : BaseNode {
 
   //-------------------------------------------------------------
   // Finds the callout which contains the given pixel coordinates.
-  public virtual Callout? contains_callout( double x, double y ) {
+  public override Callout? contains_callout( double x, double y ) {
     if( (_callout != null) && !_callout.mode.is_disconnected() && _callout.contains( x, y ) ) {
       return( _callout );
     } else if( !folded ) {
@@ -770,7 +774,6 @@ public class Node : BaseNode {
         }
       }
     }
-
     return( null );
   }
 
@@ -835,7 +838,7 @@ public class Node : BaseNode {
 
   //-------------------------------------------------------------
   // Loads the file contents into this instance.
-  public virtual void load( MindMap map, Xml.Node* n, bool isroot ) {
+  public override void load( MindMap map, Xml.Node* n, bool isroot ) {
 
     string? tc = n->get_prop( "task" );
     if( tc != null ) {
@@ -891,8 +894,8 @@ public class Node : BaseNode {
     // If a color was not specified and this node is a root node, colorize the children
     if( isroot ) {
       for( int j=0; j<_children.length; j++ ) {
-        var child = _children.index( j );
-        if( !child._link_color_set ) {
+        var child = (_children.index( j ) as Node);
+        if( (child != null) && !child._link_color_set ) {
           child.link_color_child = map.get_theme().next_color();
         }
       }
@@ -1194,10 +1197,11 @@ public class Node : BaseNode {
   //-------------------------------------------------------------
   // Common attachment code that is called by the higher-level attachment
   // methods.
-  protected virtual void attach_common( int index, Theme? theme ) {
+  protected override void attach_common( int index, Theme? theme ) {
     base.attach_common( index, theme );
     propagate_task_info_up( _task_count, _task_done );
-    if( parent.sequence ) {
+    var pnode = (parent as Node);
+    if( (pnode != null) && pnode.sequence ) {
       for( int i=index; i<parent.children().length; i++ ) {
         var child = (parent.children().index( i ) as Node);
         if( child != null ) {
@@ -1206,20 +1210,23 @@ public class Node : BaseNode {
       }
     }
     if( theme != null ) {
-      var pnode = (Node)parent;
-      link_color_child = main_branch() ? theme.next_color() : pnode.link_color;
+      if( main_branch() ) {
+        link_color_child = theme.next_color();
+      } else if( pnode != null ) {
+        link_color_child = pnode.link_color;
+      }
     }
   }
 
   //-------------------------------------------------------------
   // Returns a reference to the first child of this node.
-  public virtual Node? first_child( NodeSide? side = null ) {
+  public override BaseNode? first_child( NodeSide? side = null ) {
     return( !folded ? base.first_child( side ) : null );
   }
 
   //-------------------------------------------------------------
   // Returns a reference to the last child of this node.
-  public virtual Node? last_child( NodeSide? side = null ) {
+  public override BaseNode? last_child( NodeSide? side = null ) {
     return( !folded ? base.last_child( side ) : null );
   }
 
@@ -1437,7 +1444,7 @@ public class Node : BaseNode {
   // If the current color is not a theme link color, keep the
   // current color as it was custom set by the user.  Performs
   // this mapping recursively for all descendants.
-  public void update_theme_colors( Theme old_theme, Theme new_theme ) {
+  public override void update_theme_colors( Theme old_theme, Theme new_theme ) {
     int old_index = old_theme.get_color_index( _link_color );
     if( old_index != -1 ) {
       link_color_only = new_theme.link_color( old_index );
@@ -1450,7 +1457,7 @@ public class Node : BaseNode {
   // Gathers the information from all stored nodes for positional
   // and link color information.  This information is used by the
   // undo/redo functions.
-  public void get_node_info( ref Array<NodeInfo?> info ) {
+  public override void get_node_info( ref Array<NodeInfo?> info ) {
     info.append_val( NodeInfo( _posx, _posy, side, _link_color ) );
     base.get_node_info( ref info );
   }
@@ -1458,7 +1465,7 @@ public class Node : BaseNode {
   //-------------------------------------------------------------
   // Restores the give information in the node info array to the
   // node and subnodes.
-  public void set_node_info( Array<NodeInfo?> info, ref int index ) {
+  public override void set_node_info( Array<NodeInfo?> info, ref int index ) {
     link_color_only = info.index( index ).color;
     base.set_node_info( info, ref index );
   }
@@ -1979,7 +1986,7 @@ public class Node : BaseNode {
 
   //-------------------------------------------------------------
   // Draws the node on the screen.
-  public virtual void draw( Context ctx, Theme theme, bool motion, bool exporting ) {
+  public override void draw( Context ctx, Theme theme, bool motion, bool exporting ) {
 
     var nodesel_background = theme.get_color( "nodesel_background" );
     var nodesel_foreground = theme.get_color( "nodesel_foreground" );

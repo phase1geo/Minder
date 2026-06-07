@@ -21,19 +21,19 @@
 
 public class UndoNodesAttach : UndoItem {
 
-  private Array<Node>  _nodes;
-  private Array<int>   _indices;
-  private Array<Node?> _parents;
-  private Array<int>   _children;
-  private Node         _parent;
+  private Array<BaseNode>  _nodes;
+  private Array<int>       _indices;
+  private Array<BaseNode?> _parents;
+  private Array<int>       _children;
+  private BaseNode         _parent;
 
   //-------------------------------------------------------------
   // Constructor
-  public UndoNodesAttach( Array<Node> nodes, Node parent ) {
+  public UndoNodesAttach( Array<BaseNode> nodes, BaseNode parent ) {
     base( _( "nodes attach" ) );
-    _nodes    = new Array<Node>();
+    _nodes    = new Array<BaseNode>();
     _indices  = new Array<int>();
-    _parents  = new Array<Node?>();
+    _parents  = new Array<BaseNode?>();
     _children = new Array<int>();
     _parent = parent;
     for( int i=0; i<nodes.length; i++ ) {

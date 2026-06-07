@@ -34,12 +34,12 @@ public class AnimatorPositions : Object {
 
   //-------------------------------------------------------------
   // Default constructor
-  public AnimatorPositions( Array<Node> nodes, bool exclude_selected ) {
+  public AnimatorPositions( Array<BaseNode> nodes, bool exclude_selected ) {
     _old_x = new Array<double?>();
     _old_y = new Array<double?>();
     _new_x = new Array<double?>();
     _new_y = new Array<double?>();
-    _node  = new Array<Node?>();
+    _node  = new Array<BaseNode?>();
     for( int i=0; i<nodes.length; i++ ) {
       gather_old_positions( nodes.index( i ), exclude_selected );
     }
@@ -48,14 +48,14 @@ public class AnimatorPositions : Object {
   //-------------------------------------------------------------
   // Returns true if the given node exists within the exclusions
   // list.
-  private bool is_excluded( Node n, bool exclude_selected ) {
+  private bool is_excluded( BaseNode n, bool exclude_selected ) {
     return( exclude_selected && n.mode.is_selected() );
   }
 
   //-------------------------------------------------------------
   // Gathers the nodes and their current positions and stores
   // them into array structures.
-  private void gather_old_positions( Node n, bool exclude_selected ) {
+  private void gather_old_positions( BaseNode n, bool exclude_selected ) {
     var excluded = is_excluded( n, exclude_selected );
     if( !excluded ) {
       _old_x.append_val( n.posx );
@@ -110,7 +110,7 @@ public class AnimatorPositions : Object {
 
   //-------------------------------------------------------------
   // Returns the node at the given index
-  public Node node( int index ) {
+  public BaseNode node( int index ) {
     return( _node.index( index ) );
   }
 

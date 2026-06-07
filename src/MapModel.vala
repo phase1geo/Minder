@@ -1202,7 +1202,7 @@ public class MapModel {
   // previously selected.  If this is the case, select the node.
   public bool select_node_if_unselected( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      var node = _nodes.index( i ).contains( x, y, true );
+      var node = (_nodes.index( i ).contains( x, y, true ) as Node);
       if( node != null ) {
         if( !_map.selected.is_node_selected( node ) && (node.mode != NodeMode.EDITABLE) ) {
           _map.set_current_node( node );
@@ -1262,7 +1262,7 @@ public class MapModel {
   public Node? get_node_at_position( double x, double y, out MapItemComponent component ) {
     component = MapItemComponent.NONE;
     for( int i=0; i<_nodes.length; i++ ) {
-      var node = _nodes.index( i ).contains( x, y, true );
+      var node = (_nodes.index( i ).contains( x, y, true ) as Node);
       if( node != null ) {
         if( node.is_within_title( x, y ) ) {
           component = MapItemComponent.TITLE;
@@ -1394,11 +1394,11 @@ public class MapModel {
   public Node? attachable_node( double x, double y ) {
     var sel_nodes = _map.selected.nodes();
     for( int i=0; i<_nodes.length; i++ ) {
-      Node tmp = _nodes.index( i ).contains( x, y, false );
+      var tmp = (_nodes.index( i ).contains( x, y, false ) as Node);
       if( tmp != null ) {
         for( int j=0; j<sel_nodes.length; j++ ) {
           var current = sel_nodes.index( j );
-          if( (tmp == current.parent) || current.contains_node( tmp ) || tmp.is_summarized() ) {
+          if( (tmp == current.parent) || current.contains_node( tmp ) || (tmp.summarized_node != null) ) {
             return( null );
           }
         }
@@ -1549,7 +1549,7 @@ public class MapModel {
   //-------------------------------------------------------------
   // Attach all of the selected nodes.  If a selected node has
   // children, attach those children to the original parent node.
-  public void attach_nodes( Array<Node> nodes, Node parent ) {
+  public void attach_nodes( Array<BaseNode> nodes, BaseNode parent ) {
     for( int i=0; i<nodes.length; i++ ) {
       var node = nodes.index( i );
       node.return_to_position();
@@ -1562,7 +1562,7 @@ public class MapModel {
   //-------------------------------------------------------------
   // Sets the given node's styling after attaching this node to its
   // parent.
-  public void set_style_after_parent_attach( Node node ) {
+  public void set_style_after_parent_attach( BaseNode node ) {
     if( !node.is_root() ) {
       var sibling     = node.previous_sibling();
       var from_parent = _map.settings.get_boolean( "style-always-from-parent" ) || (sibling == null);
@@ -1578,7 +1578,7 @@ public class MapModel {
 
   //-------------------------------------------------------------
   // Returns true if there is a sibling available for selection.
-  public bool sibling_exists( Node? node ) {
+  public bool sibling_exists( BaseNode? node ) {
     return( (node != null) && (node.is_root() ? (_nodes.length > 1) : (node.parent.children().length > 1)) );
   }
 
@@ -2039,7 +2039,7 @@ public class MapModel {
 
   //-------------------------------------------------------------
   // Removes the given root node from the node array.
-  public void remove_root_node( Node node ) {
+  public void remove_root_node( BaseNode node ) {
     for( int i=0; i<_nodes.length; i++ ) {
       if( _nodes.index( i ) == node ) {
         _nodes.remove_index( i );
@@ -3005,7 +3005,7 @@ public class MapModel {
   // null.
   public Node? get_droppable_node( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      var node = _nodes.index( i ).contains( x, y, true );
+      var node = (_nodes.index( i ).contains( x, y, true ) as Node);
       if( node != null ) {
         return( node );
       }

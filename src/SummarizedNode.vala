@@ -59,6 +59,18 @@ public class SummarizedNode : BaseNode {
   }
 
   //-------------------------------------------------------------
+  // Returns the number of summarized nodes stored.
+  public int summarized_count() {
+    return( (int)_nodes.length );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the summarized node at the given index.
+  public BaseNode? get_summarized_node( int index ) {
+    return( ((0 <= index) && (index < _nodes.length)) ? _nodes.index( index ) : null );
+  }
+
+  //-------------------------------------------------------------
   // Returns the current summarized node.  If no current node is
   // available, returns null.
   public BaseNode? current_node() {
@@ -207,11 +219,36 @@ public class SummarizedNode : BaseNode {
 
   //-------------------------------------------------------------
   // Searches this node for one that contains the given coordinates.
-  public override BaseNode? contains( double x, double y ) {
+  public override BaseNode? contains( double x, double y, bool allow_selected ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      var node = _nodes.index( i ).contains( x, y );
+      var node = _nodes.index( i ).contains( x, y, allow_selected );
       if( node != null ) {
         return( node );
+      }
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      var node = _children.index( i ).contains( x, y, allow_selected );
+      if( node != null ) {
+        return( node );
+      }
+    }
+    return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Searches the summarized nodes for any that contain a callout
+  // containing the given coordinates.
+  public override Callout? contains_callout( double x, double y ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      var callout = _nodes.index( i ).contains_callout( x, y );
+      if( callout != null ) {
+        return( callout );
+      }
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      var callout = _children.index( i ).contains_callout( x, y );
+      if( callout != null ) {
+        return( callout );
       }
     }
     return( null );

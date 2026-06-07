@@ -1378,7 +1378,7 @@ public class DrawArea : Gtk.DrawingArea {
             if( attach_node != null ) {
               _map.model.set_attach_node( attach_node );
             }
-            var summarized_moved = current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1);
+            var summarized_moved = (current_node.summarized_node != null);
             if( summarized_moved && current_node.side.vertical() ) {
               current_node.set_posx_only( (current_node.posx - origin_x) + diffx );
             } else {
@@ -1449,7 +1449,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
 
       if( _motion && !_resize && !_select_box.valid && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within_node( _scaled_x, _scaled_y ) && _map.editable ) {
-        if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) ) {
+        if( current_node.summarized_node != null ) {
           current_node.set_alpha_only( 0.3 );
         } else {
           current_node.alpha = 0.3;
@@ -1769,7 +1769,7 @@ public class DrawArea : Gtk.DrawingArea {
           // If we are not a root node or a summary node, move the node into the appropriate position
           if( (current_node.parent != null) && _map.editable ) {
             var orig_index   = current_node.index();
-            var orig_summary = current_node.summary_node();
+            var orig_summary = current_node.summarized_node;
             var moved        = false;
             animator.add_nodes( _map.get_nodes(), false, "move to position" );
             var sn = (current_node as SummarizedNode);
@@ -2140,7 +2140,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     // Otherwise, add the text as a child of the current node
     if( (_map.model.attach_node != null) && (_map.model.attach_node.mode == NodeMode.DROPPABLE) ) {
-      node = _map.model.create_child_node( _map.model.attach_node, text );
+      node = (Node)_map.model.create_child_node( _map.model.attach_node, text );
       _map.add_undo( new UndoNodeInsert( node, node.index() ) );
       if( _map.select_node( node ) ) {
         queue_draw();
@@ -2180,10 +2180,10 @@ public class DrawArea : Gtk.DrawingArea {
     var  idea = (Idea)val;
 
     if( (_map.model.attach_node != null) && (_map.model.attach_node.mode == NodeMode.DROPPABLE) ) {
-      node  = _map.model.create_child_node( _map.model.attach_node, idea.text );
+      node  = (Node)_map.model.create_child_node( _map.model.attach_node, idea.text );
       index = node.index();
     } else {
-      node  = _map.model.create_root_node( idea.text );
+      node  = (Node)_map.model.create_root_node( idea.text );
       node.posx = scale_value( x );
       node.posy = scale_value( y );
       index = (int)(_map.get_nodes().length - 1);
@@ -2273,7 +2273,7 @@ public class DrawArea : Gtk.DrawingArea {
 
       var image = new NodeImage.from_uri( _map.image_manager, uri, 200 );
       if( image.valid ) {
-        var node = _map.model.create_root_node( _( "Another Idea" ) );
+        var node = (Node)_map.model.create_root_node( _( "Another Idea" ) );
         node.set_image( _map.model.image_manager, image );
         if( _map.select_node( node ) ) {
           _map.model.set_node_mode( node, NodeMode.EDITABLE, false );

@@ -313,15 +313,6 @@ public class BaseNode : Object {
       if( _mode != value ) {
         _mode = value;
         mode_callback();
-        if( _mode == NodeMode.EDITABLE ) {
-          name.edit = true;
-          name.node_selected = false;
-          name.set_cursor_all( false );
-        } else {
-          name.edit = false;
-          name.node_selected = _mode.is_selected();
-          name.clear_selection();
-        }
       }
     }
   }
@@ -624,7 +615,7 @@ public class BaseNode : Object {
 
   //-------------------------------------------------------------
   // Updates the total size which includes the callout.
-  private virtual void update_total_size() {
+  protected virtual void update_total_size() {
     _total_width  = _width;
     _total_height = _height;
   }
@@ -807,6 +798,13 @@ public class BaseNode : Object {
   // Finds the node which contains the given pixel coordinates.
   // The derived class must implement this function.
   public virtual BaseNode? contains( double x, double y, bool allow_selected ) {
+    return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the callout that is within the given coordinates.  The
+  // derived class must implement this function.
+  public virtual Callout? contains_callout( double x, double y ) {
     return( null );
   }
 

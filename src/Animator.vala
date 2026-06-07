@@ -48,7 +48,7 @@ public class Animator : Object {
 
   //-------------------------------------------------------------
   // Animates all of the specified nodes
-  public void add_nodes( Array<Node> n, bool exclude_selected, string name ) {
+  public void add_nodes( Array<BaseNode> n, bool exclude_selected, string name ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.NODES) ) {
       _actions.push_tail( new AnimatorNodes( _da, n, exclude_selected, name ) );
     }

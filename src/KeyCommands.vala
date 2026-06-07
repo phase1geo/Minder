@@ -1892,7 +1892,7 @@ public enum KeyCommand {
     if( map.selected.num_nodes() > 1 ) {
       map.model.delete_nodes();
     } else {
-      Node? next;
+      BaseNode? next;
       var   current = map.get_current_node();
       if( ((next = map.sibling_node( 1 )) == null) && ((next = map.sibling_node( -1 )) == null) && current.is_root() ) {
         map.model.delete_node();
