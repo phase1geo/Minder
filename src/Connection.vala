@@ -450,7 +450,7 @@ public class Connection : Object {
   //-------------------------------------------------------------
   // Returns true if the currently selected node is a common
   // parent to both the from and to nodes.
-  private bool common_parent_moved( Node node ) {
+  private bool common_parent_moved( BaseNode node ) {
     var parents = new Array<Node>();
     _map.selected.get_parents( ref parents );
     for( int i=0; i<parents.length; i++ ) {
@@ -463,7 +463,7 @@ public class Connection : Object {
 
   //-------------------------------------------------------------
   // Handles any position changes of either the to or from node.
-  private void end_moved( Node node, double diffx, double diffy ) {
+  private void end_moved( BaseNode node, double diffx, double diffy ) {
     double x, y, w, h, dragx, dragy;
     node.node_bbox( out x, out y, out w, out h );
     var from = (_from_node == node);
@@ -486,7 +486,7 @@ public class Connection : Object {
 
   //-------------------------------------------------------------
   // Handles any resizing changes of either the to or from node.
-  private void end_resized( Node node, double diffw, double diffh ) {
+  private void end_resized( BaseNode node, double diffw, double diffh ) {
     double x, y, w, h, dragx, dragy;
     node.node_bbox( out x, out y, out w, out h );
     _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
@@ -696,13 +696,13 @@ public class Connection : Object {
 
     string? f = node->get_prop( "from_id" );
     if( f != null ) {
-      _from_node = map.model.get_node( nodes, int.parse( f ) );
+      _from_node = (Node)map.model.get_node( nodes, int.parse( f ) );
       connect_node( _from_node );
     }
 
     string? t = node->get_prop( "to_id" );
     if( t != null ) {
-      _to_node = map.model.get_node( nodes, int.parse( t ) );
+      _to_node = (Node)map.model.get_node( nodes, int.parse( t ) );
       connect_node( _to_node );
     }
 

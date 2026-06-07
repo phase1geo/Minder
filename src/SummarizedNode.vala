@@ -84,6 +84,16 @@ public class SummarizedNode : BaseNode {
   }
 
   //-------------------------------------------------------------
+  // Sets the current node index to the node that matches.
+  public void set_current_node( BaseNode node ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      if( _nodes.index( i ) == node ) {
+        _current = i;
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
   // Creates a new SummarizedNode and returns it.
   public override BaseNode make_node( MindMap map ) {
     var node = new SummarizedNode( map, null );
@@ -184,9 +194,10 @@ public class SummarizedNode : BaseNode {
 
   //-------------------------------------------------------------
   // Calculates the space required for all internal nodes.
-  public override void calculate_node_size( out double width, out double height ) {
-    width  = 0.0;
-    height = 0.0;
+  public override void calculate_node_size( out double width, out double height, out double name_space ) {
+    width      = 0.0;
+    height     = 0.0;
+    name_space = 0.0;
     for( int i=0; i<_nodes.length; i++ ) {
       double w, h;
       _nodes.index( i ).calculate_node_size( out w, out h ); 
@@ -298,7 +309,7 @@ public class SummarizedNode : BaseNode {
   // Recursively spans node tree folding any nodes which contain
   // fully completed tasks.  The derived class must implement this
   // functionality.
-  public override void fold_completed_tasks( Array<BaseNode> changed ) {
+  public override void fold_completed_tasks( Array<Node> changed ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).fold_completed_tasks( changed );
     }  
@@ -322,6 +333,17 @@ public class SummarizedNode : BaseNode {
       }
     }
     return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Highlights all of the nodes that match the given tags.
+  public override void highlight_tags( Tags tags, TagComboType combo_type ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).highlight_tags( tags, combo_type );
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).highlight_tags( tags, combo_type );
+    }
   }
 
   //-------------------------------------------------------------
@@ -571,7 +593,7 @@ public class SummarizedNode : BaseNode {
     if( index == -1 ) {
       _nodes.append_val( node );
     } else {
-      _nodes.insert_val( node, index );
+      _nodes.insert_val( index, node );
     }
 
     // Force the node to be positioned

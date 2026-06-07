@@ -1910,7 +1910,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     } else {
       dialog.set_initial_name( map.doc.label );
       if( map.get_nodes().length > 0 ) {
-        var root_str = map.get_nodes().index( 0 ).name.text.text.strip();
+        var root     = (Node)map.get_nodes().index( 0 );
+        var root_str = root.name.text.text.strip();
         if( root_str != "" ) {
           dialog.set_initial_name( convert_name_to_filename( root_str ) );
         }

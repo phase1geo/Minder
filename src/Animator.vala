@@ -66,7 +66,7 @@ public class Animator : Object {
 
   //-------------------------------------------------------------
   // Animates a fold of the given set of nodes
-  public void add_nodes_fold( Array<Node> n, Array<Node> nodes, string name ) {
+  public void add_nodes_fold( Array<BaseNode> n, Array<Node> nodes, string name ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.FOLD) ) {
       _actions.push_tail( new AnimatorFold( _da, n, nodes, name ) );
     }

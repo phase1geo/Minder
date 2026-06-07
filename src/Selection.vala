@@ -22,7 +22,7 @@
 public class Selection {
 
   private MindMap           _map;
-  private Array<BaseNode>   _nodes;
+  private Array<Node>       _nodes;
   private Array<Connection> _conns;
   private Array<Sticker>    _stickers;
   private Array<NodeGroup>  _groups;
@@ -49,7 +49,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Returns true if the given node is currently selected.
-  public bool is_node_selected( BaseNode node ) {
+  public bool is_node_selected( Node node ) {
     return( node.mode.is_selected() );
   }
 
@@ -139,7 +139,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Sets the current node, clearing all other selected items.
-  public void set_current_node( BaseNode node, double clear_alpha = 1.0 ) {
+  public void set_current_node( Node node, double clear_alpha = 1.0 ) {
     clear( false, clear_alpha );
     add_node( node );
   }
@@ -176,8 +176,9 @@ public class Selection {
   //-------------------------------------------------------------
   // Adds a node to the current selection.  Returns true if the
   // node was added.
-  public bool add_node( BaseNode node, bool force_selected = false, bool signal_change = true ) {
-    if( is_node_selected( node ) || ((node.parent != null) && node.parent.folded) ) return( false );
+  public bool add_node( Node node, bool force_selected = false, bool signal_change = true ) {
+    var pnode = (node.parent as Node);
+    if( is_node_selected( node ) || ((pnode != null) && pnode.folded) ) return( false );
     _map.model.set_node_mode( node, (((_nodes.length == 0) && !force_selected) ? NodeMode.CURRENT : NodeMode.SELECTED) );
     if( _nodes.length == 1 ) {
       _map.model.set_node_mode( _nodes.index( 0 ), NodeMode.SELECTED );
@@ -220,11 +221,15 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Adds the children nodes of the current node.
-  public bool add_child_nodes( BaseNode node, bool signal_change = true ) {
+  public bool add_child_nodes( Node node, bool signal_change = true ) {
     var children = node.children();
     var changed  = false;
     for( int i=0; i<children.length; i++ ) {
-      changed |= add_node( children.index( i ), false, false );
+      var child = (children.index( i ) as Node);
+      if( child != null ) {
+        changed |= add_node( child, false, false );
+      }
+      // TODO - We need to handle SummarizedNodes
     }
     if( changed && signal_change ) {
       selection_changed();
@@ -234,7 +239,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Adds the entire node tree to the selection.
-  public bool add_node_tree( BaseNode node, bool signal_change = true ) {
+  public bool add_node_tree( Node node, bool signal_change = true ) {
     if( add_node_tree_helper( node ) ) {
       if( signal_change ) {
         selection_changed();
@@ -248,7 +253,12 @@ public class Selection {
   // Helper method to add the entire node tree to the selection.
   private bool add_node_tree_helper( BaseNode node ) {
     var children = node.children();
-    var changed  = add_node( node, false, false );
+    var n        = (node as Node);
+    var changed  = false;
+    if( n != null ) {
+      changed = add_node( n, false, false );
+    }
+    // TODO - Handle SummarizedNode
     for( int i=0; i<children.length; i++ ) {
       changed |= add_node_tree_helper( children.index( i ) );
     }
@@ -258,7 +268,7 @@ public class Selection {
   //-------------------------------------------------------------
   // Adds all of the nodes at the specified node's level to the
   // selection.
-  public bool add_nodes_at_level( BaseNode node, bool signal_change = true ) {
+  public bool add_nodes_at_level( Node node, bool signal_change = true ) {
     var level = node.get_level();
     var root  = node.get_root();
     if( add_nodes_at_level_helper( root, level, 0 ) && signal_change ) {
@@ -270,9 +280,11 @@ public class Selection {
     return( false );
   }
 
+  //-------------------------------------------------------------
+  // Helper function for the add_nodes_at_level method
   private bool add_nodes_at_level_helper( BaseNode node, uint level, uint curr_level ) {
     if( level == curr_level ) {
-      return( add_node( node, false, false ) );
+      return( add_node( MapModel.basenode_to_node( node ), false, false ) );
     } else {
       var children = node.children();
       var changed  = false;
@@ -334,7 +346,7 @@ public class Selection {
   //-------------------------------------------------------------
   // Removes the given node from the current selection.  Returns
   // true if the node is removed.
-  public bool remove_node( BaseNode node, double alpha = 1.0, bool signal_change = true ) {
+  public bool remove_node( Node node, double alpha = 1.0, bool signal_change = true ) {
     if( is_node_selected( node ) ) {
       _map.model.set_node_mode( node, NodeMode.NONE );
       node.alpha = alpha;
@@ -356,11 +368,15 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Removes child nodes of the given parent from the selection.
-  public bool remove_child_nodes( BaseNode node, double alpha = 1.0 ) {
+  public bool remove_child_nodes( Node node, double alpha = 1.0 ) {
     var children = node.children();
     var retval   = false;
     for( int i=0; i<children.length; i++ ) {
-      retval |= remove_node( children.index( i ), alpha, false );
+      var child = (children.index( i ) as Node);
+      if( child != null ) {
+        retval |= remove_node( child, alpha, false );
+      }
+      // TODO - Handle removing node from SummarizedNode
     }
     if( retval ) {
       selection_changed();
@@ -370,7 +386,7 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Removes an entire node tree from the selection.
-  public bool remove_node_tree( BaseNode node, double alpha = 1.0 ) {
+  public bool remove_node_tree( Node node, double alpha = 1.0 ) {
     if( remove_node_tree_helper( node, alpha ) ) {
       selection_changed();
       return( true );
@@ -382,7 +398,12 @@ public class Selection {
   // Removes an entire node tree from the selection.
   public bool remove_node_tree_helper( BaseNode node, double alpha = 1.0 ) {
     var children = node.children();
-    var retval   = remove_node( node, alpha, false );
+    var retval   = false;
+    var n        = (node as Node);
+    if( n != null ) {
+      retval = remove_node( n, alpha, false );
+    }
+    // TODO - Need to handle SummarizedNode
     for( int i=0; i<children.length; i++ ) {
       retval |= remove_node_tree_helper( children.index( i ), alpha );
     }
@@ -392,7 +413,7 @@ public class Selection {
   //-------------------------------------------------------------
   // Adds all of the nodes at the specified node's level to the
   // selection.
-  public bool remove_nodes_at_level( BaseNode node, double alpha = 1.0 ) {
+  public bool remove_nodes_at_level( Node node, double alpha = 1.0 ) {
     var level = node.get_level();
     var root  = node.get_root();
     if( remove_nodes_at_level_helper( root, alpha, level, 0 ) ) {
@@ -406,7 +427,9 @@ public class Selection {
   // Helper function for remove_nodes_at_level.
   private bool remove_nodes_at_level_helper( BaseNode node, double alpha, uint level, uint curr_level ) {
     if( level == curr_level ) {
-      return( remove_node( node, alpha, false ) );
+      var n = (node as Node);
+      return( (n != null) && remove_node( n, alpha, false ) );
+      // TODO - Need to handle SummarizedNode
     } else {
       var children = node.children();
       var retval   = false;
@@ -630,15 +653,18 @@ public class Selection {
 
   //-------------------------------------------------------------
   // Helper method for the ordered_nodes method.
-  private void ordered_nodes_helper( Array<Node> children, ref Array<Node> nodes ) {
+  private void ordered_nodes_helper( Array<BaseNode> children, ref Array<Node> nodes ) {
     for( int i=0; i<children.length; i++ ) {
-      var node = children.index( i );
-      if( is_node_selected( node ) ) {
-        nodes.append_val( node );
+      var node = (children.index( i ) as Node);
+      if( node != null ) {
+        if( is_node_selected( node ) ) {
+          nodes.append_val( node );
+        }
+        if( node.traversable() ) {
+          ordered_nodes_helper( node.children(), ref nodes );
+        }
       }
-      if( node.traversable() ) {
-        ordered_nodes_helper( node.children(), ref nodes );
-      }
+      // TODO - Handle SummarizedNode
     }
   }
 
@@ -677,7 +703,7 @@ public class Selection {
         parents.append_val( node );
       } else {
         var parent = node.parent;
-        while( (parent != null) && !is_node_selected( parent ) ) {
+        while( (parent != null) && !is_node_selected( MapModel.basenode_to_node( parent ) ) ) {
           parent = parent.parent;
         }
         if( parent == null ) {

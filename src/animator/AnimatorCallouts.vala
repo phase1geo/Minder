@@ -30,6 +30,7 @@ public class AnimatorCallouts : Object {
   private Array<double?> _new_alpha;
   private Array<Node?>   _nodes;
 
+  //-------------------------------------------------------------
   // Default constructor
   public AnimatorCallouts( DrawArea da, Array<Node> nodes, bool fade_out ) {
     _old_alpha = new Array<double?>();
@@ -43,11 +44,12 @@ public class AnimatorCallouts : Object {
   //-------------------------------------------------------------
   // Gathers the nodes and their current positions and stores
   // them into array structures.
-  private void gather_old_callout_alphas( Node n, bool fade_out ) {
-    if( n.callout != null ) {
-      n.callout.mode = fade_out ? CalloutMode.HIDING : CalloutMode.NONE;
-      _old_alpha.append_val( fade_out ? n.callout.alpha : 0.0 );
-      _nodes.append_val( n );
+  private void gather_old_callout_alphas( BaseNode n, bool fade_out ) {
+    var node = (n as Node);
+    if( (node != null) && (node.callout != null) ) {
+      node.callout.mode = fade_out ? CalloutMode.HIDING : CalloutMode.NONE;
+      _old_alpha.append_val( fade_out ? node.callout.alpha : 0.0 );
+      _nodes.append_val( node );
     }
     for( int i=0; i<n.children().length; i++ ) {
       gather_old_callout_alphas( n.children().index( i ), fade_out );

@@ -587,7 +587,7 @@ public class Style {
   //-------------------------------------------------------------
   // Draws the link with the given information, applying the
   // stored styling.
-  public void draw_link( Cairo.Context ctx, Node from_node, Node to_node, bool force_straight_link_type,
+  public void draw_link( Cairo.Context ctx, BaseNode from_node, BaseNode to_node, bool force_straight_link_type,
                          double from_x, double from_y, double to_x1, double to_y1, double to_x2, double to_y2,
                          out double tailx, out double taily, out double tipx, out double tipy ) {
 

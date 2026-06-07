@@ -30,7 +30,7 @@ public class AnimatorFold : AnimatorAction {
 
   //-------------------------------------------------------------
   // Default constructor
-  public AnimatorFold( DrawArea da, Array<Node> n, Array<Node> nodes, string name = "unnamed" ) {
+  public AnimatorFold( DrawArea da, Array<BaseNode> n, Array<Node> nodes, string name = "unnamed" ) {
     base( name, true );
     _num   = n.length;
     _pos   = new AnimatorPositions( n, false );

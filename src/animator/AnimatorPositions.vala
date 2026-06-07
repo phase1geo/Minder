@@ -26,11 +26,11 @@ using GLib;
 // be accessed outside of this file.
 public class AnimatorPositions : Object {
 
-  private Array<double?> _old_x;
-  private Array<double?> _old_y;
-  private Array<double?> _new_x;
-  private Array<double?> _new_y;
-  private Array<Node?>   _node;
+  private Array<double?>   _old_x;
+  private Array<double?>   _old_y;
+  private Array<double?>   _new_x;
+  private Array<double?>   _new_y;
+  private Array<BaseNode?> _node;
 
   //-------------------------------------------------------------
   // Default constructor

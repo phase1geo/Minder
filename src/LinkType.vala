@@ -48,7 +48,7 @@ public interface LinkType : Object {
 
   //-------------------------------------------------------------
   // Provides the midx or midy adjust value
-  protected double adjust_mid_by( Node parent, NodeSide child_side ) {
+  protected double adjust_mid_by( BaseNode parent, NodeSide child_side ) {
     if( parent.is_root() ) {
       switch( child_side ) {
         case LEFT   :  return( 0 - (parent.width / 4) );
@@ -62,7 +62,7 @@ public interface LinkType : Object {
 
   //-------------------------------------------------------------
   // Draw method for the link
-  public abstract void draw( Cairo.Context ctx, Node from_node, Node to_node,
+  public abstract void draw( Cairo.Context ctx, BaseNode from_node, BaseNode to_node,
                              double from_x, double from_y, double to_x, double to_y,
                              out double fx, out double fy, out double tx, out double ty );
 

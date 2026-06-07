@@ -206,7 +206,7 @@ public class NodeGroup : Object {
     string? i = n->get_prop( "id" );
     if( i != null ) {
       var id   = int.parse( i );
-      var node = map.model.get_node( nodes, id );
+      var node = (map.model.get_node( nodes, id ) as Node);
       if( node != null ) {
         node.group = true;
         _nodes.append_val( node );
@@ -229,7 +229,7 @@ public class NodeGroup : Object {
     var selected = (mode == GroupMode.SELECTED) && !exporting;
     var alpha    = 0.0;
     for( int i=0; i<_nodes.length; i++ ) {
-      get_tree_points( _nodes.index( i ), _nodes.index( i ), points );
+      get_tree_points( (Node)_nodes.index( i ), (Node)_nodes.index( i ), points );
       alpha = (_nodes.index( i ).alpha > alpha) ? _nodes.index( i ).alpha : alpha;
     }
     draw_cloud( ctx, (selected ? theme.get_color( "nodesel_background" ) : color), selected, alpha, points );

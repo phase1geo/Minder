@@ -79,7 +79,7 @@ public class ExportText : Export {
       for( int j=0; j<children.length; j++ ) {
         var nchild = (children.index( j ) as Node);
         if( nchild != null ) {
-          value += export_node( map, child );
+          value += export_node( map, nchild );
         }
       }
     }
@@ -121,7 +121,11 @@ public class ExportText : Export {
     // Add the children
     var children = node.children();
     for( int i=0; i<children.length; i++ ) {
-      value += export_node( map, children.index( i ), prefix + "\t" );
+      var child = (children.index( i ) as Node);
+      if( child != null ) {
+        value += export_node( map, child, prefix + "\t" );
+      }
+      // TODO - Handle SummarizedNode
     }
 
     return( value );
@@ -298,7 +302,7 @@ public class ExportText : Export {
 
       // Add sibling node
       if( spaces == stack.index( i - 1 ).spaces ) {
-        parent_node( map, node, in_seq, stack.index( i - 1 ).node.parent );
+        parent_node( map, node, in_seq, (Node)stack.index( i - 1 ).node.parent );
 
       // Add child node
       } else if( spaces > stack.index( i - 1 ).spaces ) {
@@ -312,7 +316,7 @@ public class ExportText : Export {
         }
         if( parent != -1 ) {
           if( spaces == stack.index( parent ).spaces ) {
-            parent_node( map, node, in_seq, stack.index( parent ).node.parent );
+            parent_node( map, node, in_seq, (Node)stack.index( parent ).node.parent );
           } else {
             parent_node( map, node, in_seq, stack.index( parent ).node );
           }

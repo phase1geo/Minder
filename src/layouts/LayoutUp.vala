@@ -38,7 +38,7 @@ public class LayoutUp : Layout {
 
   //-------------------------------------------------------------
   // Provides the default position for a newly created node
-  public override void set_side( Node current ) {
+  public override void set_side( BaseNode current ) {
     current.side = NodeSide.TOP;
   }
 

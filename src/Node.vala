@@ -107,7 +107,10 @@ public class Node : BaseNode {
         _link_color_root = true;
         if( traversable() ) {
           for( int i=0; i<_children.length; i++ ) {
-            _children.index( i ).link_color_child = value;
+            var child = (_children.index( i ) as Node);
+            if( child != null ) {
+              child.link_color_child = value;
+            }
           }
         }
       }
@@ -126,7 +129,10 @@ public class Node : BaseNode {
         _link_color_set = true;
         if( traversable() ) {
           for( int i=0; i<_children.length; i++ ) {
-            _children.index( i ).link_color_child = value;
+            var child = (_children.index( i ) as Node);
+            if( child != null ) {
+              child.link_color_child = value;
+            }
           }
         }
       }
@@ -140,7 +146,8 @@ public class Node : BaseNode {
       if( (_link_color_root != value) && !is_root() ) {
         _link_color_root = value;
         if( !_link_color_root ) {
-          link_color_child = parent.link_color;
+          var pnode = (Node)parent;
+          link_color_child = pnode.link_color;
         }
       }
     }
@@ -229,7 +236,10 @@ public class Node : BaseNode {
       if( _sequence != value ) {
         _sequence = value;
         for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).update_sequence_num();
+          var child = (_children.index( i ) as Node);
+          if( child != null ) {
+            child.update_sequence_num();
+          }
         }
       }
     }
@@ -331,6 +341,9 @@ public class Node : BaseNode {
       name.node_selected = _mode.is_selected();
       name.clear_selection();
     }
+    if( (summarized_node != null) && _mode.is_selected() ) {
+      summarized_node.set_current_node( this );
+    }
   }
 
   //-------------------------------------------------------------
@@ -410,7 +423,7 @@ public class Node : BaseNode {
   // Calculates the node size based on the width and height of
   // all of the node elements.  Also returns whether the node
   // width was dictated by the embedded image or not.
-  public override void calculate_node_size( out double width, out double height ) {
+  public override void calculate_node_size( out double width, out double height, out double name_space ) {
 
     int margin       = style.node_margin;
     int padding      = style.node_padding;
@@ -426,6 +439,7 @@ public class Node : BaseNode {
 
     width      = (margin * 2) + (padding * 2) + all_width;
     height     = (margin * 2) + (padding * 2) + image_height + name_height + tg_height;
+    name_space = all_width - name_width;
 
   }
 
@@ -818,7 +832,7 @@ public class Node : BaseNode {
 
   //-------------------------------------------------------------
   // Loads the style information from the given XML node.
-  private void load_style( Xml.Node* n ) {
+  protected void load_style( Xml.Node* n ) {
     base.load_style( n );
     _name.set_text_alignment( _style.node_text_align );
     _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
@@ -998,7 +1012,10 @@ public class Node : BaseNode {
   public void set_fold( bool value, bool deep, Array<Node>? changed = null ) {
     if( deep ) {
       for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).set_fold( value, deep, changed );
+        var child = (_children.index( i ) as Node);
+        if( child != null ) {
+          child.set_fold( value, deep, changed );
+        }
       }
     }
     if( folded != value ) {
@@ -1025,7 +1042,8 @@ public class Node : BaseNode {
     if( !folded && (_task_count > 0) ) {
       if( _task_count == _task_done ) {
         for( int i=0; i<_children.length; i++ ) {
-          if( _children.index( i ).is_leaf() && (_children.index( i )._task_done == 1) ) {
+          var child = (_children.index( i ) as Node);
+          if( (child != null) && child.is_leaf() && (child._task_done == 1) ) {
             return( true );
           }
         }
@@ -1061,7 +1079,8 @@ public class Node : BaseNode {
     if( !folded && (_task_count > 0) ) {
       if( _task_count == _task_done ) {
         for( int i=0; i<_children.length; i++ ) {
-          if( _children.index( i ).is_leaf() && (_children.index( i )._task_done == 1) ) {
+          var child = (_children.index( i ) as Node);
+          if( (child != null) && child.is_leaf() && (child._task_done == 1) ) {
             set_fold( true, true, changed );
             return;
           }
@@ -1183,12 +1202,20 @@ public class Node : BaseNode {
   public override void delete_only() {
     if( parent == null ) {
       for( int i=0; i<_children.length; i++ ) {
-        _children.index( i )._sequence_num = null;
+        var child = (_children.index( i ) as Node);
+        if( child != null ) {
+          child._sequence_num = null;
+        }
+        // TODO - Handle SummarizedNode
       }
     } else {
       propagate_task_info_up( (0 - _task_count), (0 - _task_done) );
       for( int i=(int)(_children.length - 1); i>=0; i-- ) {
-        _children.index( i )._sequence_num = null;
+        var child = (_children.index( i ) as Node);
+        if( child != null ) {
+          child._sequence_num = null;
+        }
+        // TODO - Handle SummarizedNode
       }
     }
     base.delete_only();
@@ -1254,9 +1281,12 @@ public class Node : BaseNode {
       _task_count = 0;
       _task_done  = 0;
       for( int i=0; i<children().length; i++ ) {
-        children().index( i ).propagate_task_info_down( enable, done );
-        _task_count += children().index( i )._task_count;
-        _task_done  += children().index( i )._task_done;
+        var child = (children().index( i ) as Node);
+        if( child != null ) {
+          child.propagate_task_info_down( enable, done );
+          _task_count += child._task_count;
+          _task_done  += child._task_done;
+        }
       }
     }
     if( enable != null ) {
@@ -1269,11 +1299,14 @@ public class Node : BaseNode {
   // Propagates a change in the task_done for this node to all
   // parent nodes.
   private void propagate_task_info_up( int count_adjust, int done_adjust ) {
-    Node p = parent;
+    var p = parent;
     while( p != null ) {
-      p._task_count += count_adjust;
-      p._task_done  += done_adjust;
-      p.position_text();
+      var pnode = (p as Node);
+      if( p != null ) {
+        pnode._task_count += count_adjust;
+        pnode._task_done  += done_adjust;
+        pnode.position_text();
+      }
       p.update_size();
       p = p.parent;
     }
@@ -1369,7 +1402,7 @@ public class Node : BaseNode {
   // Checks to see if the current node contains the given tag.
   // If it exists, causes this node to be highlighted.  Performs
   // this procedure recursively.
-  public void highlight_tags( Tags tags, TagComboType combo_type ) {
+  public override void highlight_tags( Tags tags, TagComboType combo_type ) {
     if( combo_type.highlightable( _tags, tags ) ) {
       set_alpha_only( 1.0 );
     }
@@ -1386,7 +1419,7 @@ public class Node : BaseNode {
   // Returns true if the given node is folded.
   private bool is_folded( BaseNode node ) {
     var n = (node as Node);
-    return( (n != null) && node.folded );
+    return( (n != null) && n.folded );
   }
 
   //-------------------------------------------------------------
@@ -1840,8 +1873,9 @@ public class Node : BaseNode {
     var padding = style.node_padding;
 
     // Get the parent's link point
-    var prev = previous_sibling();
-    var link_sibling = parent.sequence && (prev != null);
+    var prev  = previous_sibling();
+    var pnode = (parent as Node);
+    var link_sibling = (pnode != null) && pnode.sequence && (prev != null);
     if( link_sibling ) {
       prev.link_point( out parent_x, out parent_y, true );
     } else {
@@ -2073,6 +2107,24 @@ public class Node : BaseNode {
   }
 
   //-------------------------------------------------------------
+  // Wrapper around the draw_links function so that nodes within
+  // SummarizedNodes can be handled properly.
+  private void draw_links_wrapper( Context ctx, Theme theme, BaseNode node ) {
+    var n  = (node as Node);
+    var sn = (node as SummarizedNode);
+    if( n != null ) {
+      n.draw_links( ctx, theme );
+    } else if( sn != null ) {
+      for( int i=0; i<sn.summarized_count(); i++ ) {
+        draw_links_wrapper( ctx, theme, sn.get_summarized_node( i ) );
+      }
+      for( int i=0; i<sn.children().length; i++ ) {
+        draw_links_wrapper( ctx, theme, sn.children().index( i ) );
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
   // Draws all of the nodes on the same side of the parent.  Draws
   // the nodes such that overlapping links are drawn in a more
   // meaningful way.
@@ -2081,10 +2133,10 @@ public class Node : BaseNode {
     var mid         = first + 1;
     while( (mid < last) && (_children.index( mid ).relative_side() == first_rside) ) mid++;
     for( int i=first; i<mid; i++ ) {
-      _children.index( i ).draw_links( ctx, theme );
+      draw_links_wrapper( ctx, theme, _children.index( i ) );
     }
     for( int i=(last - 1); i>=mid; i-- ) {
-      _children.index( i ).draw_links( ctx, theme );
+      draw_links_wrapper( ctx, theme, _children.index( i ) );
     }
   }
 

@@ -59,7 +59,7 @@ public class LinkTypeStraight : Object, LinkType {
     return( 0 );
   }
 
-  private double calc_to_x( Node to_node, bool from_lt_to, double adjusted, double adjustA, ref bool force ) {
+  private double calc_to_x( BaseNode to_node, bool from_lt_to, double adjusted, double adjustA, ref bool force ) {
     var left  = to_node.posx - adjustA;
     var right = to_node.posx + to_node.width + adjustA;
     if( (adjusted < left) || (adjusted > right) || force ) {
@@ -69,7 +69,7 @@ public class LinkTypeStraight : Object, LinkType {
     return( adjusted );
   }
 
-  private double calc_to_y( Node to_node, bool from_lt_to, double adjusted, double adjustA, ref bool force ) {
+  private double calc_to_y( BaseNode to_node, bool from_lt_to, double adjusted, double adjustA, ref bool force ) {
     var top    = to_node.posy - adjustA;
     var bottom = to_node.posy + to_node.height + adjustA;
     if( (adjusted < top) || (adjusted > bottom) || force ) {
@@ -81,7 +81,7 @@ public class LinkTypeStraight : Object, LinkType {
 
   //-------------------------------------------------------------
   // Draw method for the link
-  public void draw( Cairo.Context ctx, Node from_node, Node to_node,
+  public void draw( Cairo.Context ctx, BaseNode from_node, BaseNode to_node,
                     double from_x, double from_y, double to_x, double to_y,
                     out double tailx, out double taily, out double tipx, out double tipy ) {
 

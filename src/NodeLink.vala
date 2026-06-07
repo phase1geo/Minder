@@ -93,7 +93,7 @@ public class NodeLink {
   public void select( MindMap map ) {
     if( (_fname == "") || map.win.open_file( _fname, false ) ) {
       var other_map = map.win.get_current_map();
-      var node      = other_map.model.get_node( other_map.model.get_nodes(), _node_id );
+      var node      = (Node)other_map.model.get_node( other_map.model.get_nodes(), _node_id );
       Idle.add(() => {
         if( other_map.select_node( node, false ) ) {
           other_map.queue_draw();
@@ -109,7 +109,7 @@ public class NodeLink {
   // Returns the node link string to display in a tooltip.
   public string get_tooltip( MindMap map ) {
     if( _fname == "" ) {
-      var linked_node = map.model.get_node( map.model.get_nodes(), _node_id );
+      var linked_node = (map.model.get_node( map.model.get_nodes(), _node_id ) as Node);
       if( linked_node != null ) {
         return( linked_node.name.text.text );
       } else {
@@ -126,8 +126,12 @@ public class NodeLink {
   // Returns the text to display in a Markdown link.
   public string get_markdown_text( MindMap map ) {
     if( _fname == "" ) {
-      var linked_node = map.model.get_node( map.model.get_nodes(), _node_id );
-      return( linked_node.name.text.text );
+      var linked_node = (map.model.get_node( map.model.get_nodes(), _node_id ) as Node);
+      if( linked_node != null ) {
+        return( linked_node.name.text.text );
+      } else {
+        return( _( "No node found" ) );
+      }
     } else {
       string title = "";
       Document.xml_find( _fname, _node_id, ref title );

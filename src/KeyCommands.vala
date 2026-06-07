@@ -1901,7 +1901,7 @@ public enum KeyCommand {
           next = current.parent;
         }
         map.model.delete_node();
-        if( map.select_node( next ) ) {
+        if( map.select_node( MapModel.basenode_to_node( next ) ) ) {
           map.queue_draw();
         }
       }

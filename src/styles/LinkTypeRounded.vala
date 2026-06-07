@@ -49,7 +49,7 @@ public class LinkTypeRounded : Object, LinkType {
     return( "minder-link-rounded-dark-symbolic" );
   }
 
-  private void adjust_mid( Node parent, NodeSide child_side, double from_a, double to_a, double from_b, double to_b, double radius, out double mid, out double rnd_a, out double rnd_b ) {
+  private void adjust_mid( BaseNode parent, NodeSide child_side, double from_a, double to_a, double from_b, double to_b, double radius, out double mid, out double rnd_a, out double rnd_b ) {
     mid   = ((from_a + to_a) / 2) + adjust_mid_by( parent, child_side );
     rnd_a = (from_a < to_a) ? (mid + radius) : (mid - radius);
     rnd_b = (from_b < to_b) ? (((to_b - radius) < from_b) ? from_b : (to_b - radius)) :
@@ -58,13 +58,12 @@ public class LinkTypeRounded : Object, LinkType {
 
   //-------------------------------------------------------------
   // Draw method for the link
-  public void draw( Cairo.Context ctx, Node from_node, Node to_node,
+  public void draw( Cairo.Context ctx, BaseNode from_node, BaseNode to_node,
                     double from_x, double from_y, double to_x, double to_y,
                     out double tailx, out double taily, out double tipx, out double tipy ) {
 
     var side       = to_node.side;
     var horizontal = side.horizontal();
-    // var fstyle     = from_node.style;
     var tstyle     = to_node.style;
     var adj_a      = adjust_a( tstyle );
     var adj_t      = adjust_tip( tstyle );

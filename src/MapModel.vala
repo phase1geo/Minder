@@ -362,7 +362,7 @@ public class MapModel {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "nodes") ) {
         for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
           if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-            if( Node.xml_find( it2, id, ref name ) ) {
+            if( BaseNode.xml_find( it2, id, ref name ) ) {
               return( true );
             }
           }
@@ -405,8 +405,7 @@ public class MapModel {
           case "nodes"        :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var first_summary = false;
-                var node = new Node.from_xml( _map, null, it2, true, ref first_summary );
+                var node = new Node.from_xml( _map, null, it2, true );
                 if( use_layout != null ) {
                   node.layout = use_layout;
                 }
@@ -1757,12 +1756,16 @@ public class MapModel {
     node.side  = sibling.side;
     node.attach( sibling.parent, (sibling.index() + (below ? 1 : 0)), _theme );
     set_style_after_parent_attach( node );
-    if( sibling.task_enabled() ) {
+    var snode = (sibling as Node);
+    if( (snode != null) && snode.task_enabled() ) {
       node.enable_task( true );
     }
-    node.parent.set_fold( false, true );
-    if( sibling.is_summarized() ) {
-      sibling.summary_node().add_node( node );
+    var parent = (node.parent as Node);
+    if( parent != null ) {
+      parent.set_fold( false, true );
+    }
+    if( sibling.summarized_node != null ) {
+      sibling.summarized_node.add_node( node );
     }
     return( node );
   }
@@ -1771,11 +1774,18 @@ public class MapModel {
   // Creates a parent node, positions it, and inserts it just
   // above the child node.
   public BaseNode create_parent_node( BaseNode child, string name = "" ) {
+    RGBA? color = null;
     var node  = new Node.with_name( _map, name, layouts.get_default() );
-    var color = child.link_color;
+    var cnode = (child as Node);
+    if( cnode != null ) {
+      color = cnode.link_color;
+    }
+    // TODO - Handle SummarizedNode
     node.side  = child.side;
     node.attach( child.parent, child.index(), null );
-    node.link_color = color;
+    if( color != null ) {
+      node.link_color = color;
+    }
     set_style_after_parent_attach( node );
     child.detach( node.side );
     child.attach( node, -1, null );
@@ -1792,7 +1802,7 @@ public class MapModel {
       node.side = parent.side;
     }
     if( (pnode != null) && (parent.children().length > 0) ) {
-      parent.folded = false;
+      pnode.folded = false;
     }
     node.attach( parent, -1, _theme );
     set_style_after_parent_attach( node );
@@ -1800,7 +1810,7 @@ public class MapModel {
       node.enable_task( true );
     }
     if( pnode != null ) {
-      parent.set_fold( false, true );
+      pnode.set_fold( false, true );
     }
     return( node );
   }
@@ -1850,7 +1860,7 @@ public class MapModel {
   //-------------------------------------------------------------
   // Adds a new root node to the canvas.
   public void add_root_node() {
-    var node         = create_root_node( _( "Another Idea" ) );
+    var node         = (Node)create_root_node( _( "Another Idea" ) );
     var int_node_len = (int)(_nodes.length - 1);
     _map.add_undo( new UndoNodeInsert( node, int_node_len ) );
     if( _map.select_node( node ) ) {
@@ -1865,7 +1875,7 @@ public class MapModel {
   // Adds a connected node to the currently selected node.
   public void add_connected_node() {
     var index = (int)_nodes.length;
-    var node  = create_root_node( _( "Another Idea" ) );
+    var node  = (Node)create_root_node( _( "Another Idea" ) );
     var conn  = new Connection( _map, _map.selected.current_node() );
     conn.connect_to( _map.selected.current_node() );
     conn.connect_to( node );
@@ -1884,7 +1894,7 @@ public class MapModel {
   public void add_sibling_node( bool shift ) {
     var current = _map.selected.current_node();
     if( current.is_summary() ) return;
-    var node = create_sibling_node( current, !shift );
+    var node = (Node)create_sibling_node( current, !shift );
     _map.add_undo( new UndoNodeInsert( node, node.index() ) );
     _map.set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );
@@ -1899,9 +1909,9 @@ public class MapModel {
   // node's parent match the new node.
   public void add_parent_node() {
     var current = _map.selected.current_node();
-    if( current.is_root() || current.is_summarized() ) return;
+    if( current.is_root() || (current.summarized_node != null) ) return;
     _map.animator.add_nodes( _nodes, false, "add_parent_node" );
-    var node = create_parent_node( current );
+    var node = (Node)create_parent_node( current );
     _map.add_undo( new UndoNodeAddParent( node, current ) );
     _map.set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );
@@ -1914,8 +1924,8 @@ public class MapModel {
   // Adds a child node to the current node.
   public void add_child_node() {
     var current = _map.selected.current_node();
-    if( current.is_summarized() ) return;
-    var node    = create_child_node( current );
+    if( current.summarized_node != null ) return;
+    var node = (Node)create_child_node( current );
     _map.add_undo( new UndoNodeInsert( node, node.index() ) );
     _map.set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );
@@ -1932,11 +1942,11 @@ public class MapModel {
     var nodes = _map.selected.ordered_nodes();
     if( nodes.length < 2 ) return( false );
     var first = nodes.index( 0 );
-    if( first.is_leaf() && !first.is_summarized() ) {
+    if( first.is_leaf() && (first.summarized_node == null) ) {
       for( int i=1; i<nodes.length; i++ ) {
         var prev = nodes.index( i - 1 );
         var node = nodes.index( i );
-        if( (prev.parent != node.parent) || (prev.side != node.side) || ((prev.index() + 1) != node.index()) || !node.is_leaf() || node.is_summarized() ) return( false );
+        if( (prev.parent != node.parent) || (prev.side != node.side) || ((prev.index() + 1) != node.index()) || !node.is_leaf() || (node.summarized_node != null) ) return( false );
       }
     }
     return( true );
@@ -2076,7 +2086,7 @@ public class MapModel {
   // Balances the existing nodes based on the current layout.
   public void balance_nodes( bool undoable, bool animate ) {
     var current   = _map.selected.current_node();
-    var root_node = (current == null) ? null : current.get_root();
+    var root_node = (current == null) ? null : (Node)current.get_root();
     if( undoable ) {
       _map.add_undo( new UndoNodeBalance( _map, root_node ) );
     }
@@ -2161,10 +2171,12 @@ public class MapModel {
     var changes = new Array<Node>();
     var current = _map.selected.current_node();
     if( current != null ) {
-      current.get_root().set_fold( false, true, changes );
+      var root = (Node)current.get_root();
+      root.set_fold( false, true, changes );
     } else {
       for( int i=0; i<_nodes.length; i++ ) {
-        _nodes.index( i ).set_fold( false, true, changes );
+        var root = (Node)_nodes.index( i );
+        root.set_fold( false, true, changes );
       }
     }
     if( changes.length > 0 ) {
@@ -2365,7 +2377,7 @@ public class MapModel {
     doc->set_root_element( root );
     Xml.Node* ns = new Xml.Node( null, "nodes" );
     for( int i=0; i<nodes.length; i++ ) {
-      nodes.index( i ).save( ns );
+      ns->add_child( nodes.index( i ).save() );
       nodelinks.get_links_from_node( nodes.index( i ), _node_links );
     }
     root->add_child( ns );
@@ -2407,8 +2419,7 @@ public class MapModel {
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var first_summary = false;
-                var node = new Node.from_xml( _map, null, it2, true, ref first_summary );
+                var node = new Node.from_xml( _map, null, it2, true );
                 nodes.append_val( node );
               }
             }
@@ -2675,7 +2686,7 @@ public class MapModel {
   // Creates a node for the given image and inserts the new node
   // into the mindmap.
   private void paste_image_as_node( Node? node, Pixbuf image ) {
-    var new_node = (node == null) ? create_root_node() : create_child_node( node );
+    var new_node = (node == null) ? (Node)create_root_node() : (Node)create_child_node( node );
     var ni = new NodeImage.from_pixbuf( image_manager, image, 200 );
     if( ni.valid ) {
       new_node.set_image( image_manager, ni );

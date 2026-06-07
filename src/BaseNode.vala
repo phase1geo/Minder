@@ -332,7 +332,7 @@ public class BaseNode : Object {
   }
   public NodeSide  side      { get; set; default = NodeSide.RIGHT; }
   public double    tree_size { get; set; default = 0; }
-  public double    attached  { get; set; default = false; }
+  public bool      attached  { get; set; default = false; }
   public BaseNode? last_selected_child { get; set; default = null; }
   public Layout?   layout {
     get {
@@ -395,12 +395,6 @@ public class BaseNode : Object {
     }
     set {
       if( _style.copy( value ) ) {
-        name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
-        name.set_text_alignment( _style.node_text_align );
-        if( _sequence_num != null ) {
-          _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
-        }
-        name.max_width = style.node_width;
         if( traversable() ) {
           for( int i=0; i<_children.length; i++ ) {
             _layout.apply_margin( _children.index( i ) );
@@ -584,9 +578,10 @@ public class BaseNode : Object {
   // all of the node elements.  Also returns whether the node
   // width was dictated by the embedded image or not.  This method
   // needs to be implemented by the derived class.
-  public virtual void calculate_node_size( out double width, out double height ) {
+  public virtual void calculate_node_size( out double width, out double height, out double name_space ) {
     width  = 0;
     height = 0;
+    name_space = 0;
   }
 
   //-------------------------------------------------------------
@@ -595,10 +590,11 @@ public class BaseNode : Object {
 
     if( !_loaded ) return;
 
+    double name_space;
     var orig_width  = _total_width;
     var orig_height = _total_height;
 
-    calculate_node_size( out _width, out _height );
+    calculate_node_size( out _width, out _height, out name_space );
     update_total_size();
 
     var diffw = _total_width - orig_width;
@@ -827,7 +823,7 @@ public class BaseNode : Object {
   // Recursively spans node tree folding any nodes which contain
   // fully completed tasks.  The derived class must implement this
   // functionality.
-  public virtual void fold_completed_tasks( Array<BaseNode> changed ) {}
+  public virtual void fold_completed_tasks( Array<Node> changed ) {}
 
   //-------------------------------------------------------------
   // Recursively removes the specified tag from all nodes.  This method
@@ -835,6 +831,11 @@ public class BaseNode : Object {
   public virtual bool remove_tag( Tag tag, Array<Node>? nodes = null ) {
     return( false );
   }
+
+  //-------------------------------------------------------------
+  // Highlights all of the nodes that match the given tags.  The
+  // derived class must implement this functionality.
+  public virtual void highlight_tags( Tags tags, TagComboType combo_type ) {}
 
   //-------------------------------------------------------------
   // Returns true if this node contains the given node.
@@ -976,7 +977,7 @@ public class BaseNode : Object {
 
   //-------------------------------------------------------------
   // Loads the style information from the given XML node.
-  private virtual void load_style( Xml.Node* n ) {
+  protected virtual void load_style( Xml.Node* n ) {
     _style.load_node( n );
   }
 
@@ -1441,8 +1442,8 @@ public class BaseNode : Object {
     children().remove_range( 0, children().length );
     if( index() == -1 ) {
       if( prev_parent == null ) {
-        _map.model.position_root_node( this );
-        _map.model.add_root( this, prev_index );
+        _map.model.position_root_node( (Node)this );
+        _map.model.add_root( (Node)this, prev_index );
       } else {
         attach_init( prev_parent, prev_index );
       }

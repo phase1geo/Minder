@@ -23,15 +23,15 @@ using Gtk;
 
 public class UndoNodeDetach : UndoItem {
 
-  private Node     _n;
-  private Node     _old_parent;
+  private BaseNode _n;
+  private BaseNode _old_parent;
   private NodeSide _old_side;
   private int      _old_index;
   private int      _root_index;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoNodeDetach( Node n, int root_index, Node old_parent, NodeSide old_side, int old_index ) {
+  public UndoNodeDetach( BaseNode n, int root_index, BaseNode old_parent, NodeSide old_side, int old_index ) {
     base( _( "detach node" ) );
     _n          = n;
     _root_index = root_index;

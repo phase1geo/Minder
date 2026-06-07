@@ -543,9 +543,6 @@ public class MindMap {
         if( n.parent != null ) {
           n.parent.last_selected_child = n;
         }
-        if( n.is_summarized() ) {
-          n.summary_node().last_selected_node = n;
-        }
         _canvas.see( animate );
       }
       _canvas.grab_focus();
@@ -574,7 +571,7 @@ public class MindMap {
           queue_draw();
         }
       }
-    } else if( select_node( current.get_root() ) ) {
+    } else if( select_node( (Node)current.get_root() ) ) {
       queue_draw();
     }
   }
@@ -591,23 +588,23 @@ public class MindMap {
           for( int i=0; i<nodes.length; i++ ) {
             if( nodes.index( i ) == current ) {
               if( i == 0 ) {
-                return( nodes.index( 1 ) );
+                return( (Node)nodes.index( 1 ) );
               } else if( (i + 1) == nodes.length ) {
-                return( nodes.index( i - 1 ) );
+                return( (Node)nodes.index( i - 1 ) );
               }
               break;
             }
           }
         }
       } else {
-        Node? next = current.parent.next_child( current );
+        var next = current.parent.next_child( current );
         if( next == null ) {
           next = current.parent.prev_child( current );
           if( next == null ) {
             next = current.parent;
           }
         }
-        return( next );
+        return( MapModel.basenode_to_node( next ) );
       }
     }
     return( null );
@@ -685,7 +682,7 @@ public class MindMap {
   // Selects the parent nodes of the selected nodes.
   public void select_parent_nodes() {
     var child_nodes  = _selected.nodes();
-    var parent_nodes = new Array<BaseNode>();
+    var parent_nodes = new Array<Node>();
     for( int i=0; i<child_nodes.length; i++ ) {
       var node = child_nodes.index( i );
       if( (node != null) && !node.is_root() ) {
@@ -693,7 +690,7 @@ public class MindMap {
         if( sn != null ) {
           parent_nodes.append_val( sn.current_node() );
         } else {
-          parent_nodes.append_val( node.parent );
+          parent_nodes.append_val( (Node)node.parent );
         }
       }
     }

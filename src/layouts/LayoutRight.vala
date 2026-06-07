@@ -38,7 +38,7 @@ public class LayoutRight : Layout {
 
   //-------------------------------------------------------------
   // The side should always be set to the right
-  public override void set_side( Node current ) {
+  public override void set_side( BaseNode current ) {
     current.side = NodeSide.RIGHT;
   }
 

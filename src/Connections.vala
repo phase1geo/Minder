@@ -236,7 +236,10 @@ public class Connections {
   // attached connections also need to be removed.
   public void node_deleted( Node node, Array<Connection> conns ) {
     for( int i=0; i<node.children().length; i++ ) {
-      node_deleted( node.children().index( i ), conns );
+      var child = (node.children().index( i ) as Node);
+      if( child != null ) {
+        node_deleted( child, conns );
+      }
     }
     for( int i=((int)_connections.length - 1); i>=0; i-- ) {
       if( _connections.index( i ).attached_to_node( node ) ) {

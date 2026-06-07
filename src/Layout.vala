@@ -85,7 +85,8 @@ public class Layout : Object {
     double x2 = nb.x + nb.width;
     double y2 = nb.y + nb.height;
 
-    if( (num_children != 0) && (((parent as Node) == null) || !parent.folded) ) {
+    var pnode = (parent as Node);
+    if( (num_children != 0) && ((pnode == null) || !pnode.folded) ) {
       for( int i=0; i<parent.children().length; i++ ) {
         var child = parent.children().index( i );
         if( (child.parent == parent) && ((child.side & side_mask) != 0) ) {
