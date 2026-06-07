@@ -1605,9 +1605,9 @@ public enum KeyCommand {
   // direction.
   private static Node? get_node_by_direction( MindMap map, Node current, string dir ) {
     switch( dir ) {
-      case "root"          :  return( current.get_root() );
-      case "parent"        :  return( current.parent ?? current );
-      case "child"         :  return( current.last_selected_child ?? current.children().index( 0 ) );
+      case "root"          :  return( (Node)current.get_root() );
+      case "parent"        :  return( MapModel.basenode_to_node( current.parent ?? current ) );
+      case "child"         :  return( (Node)(current.last_selected_child ?? current.first_child()) );
       case "sibling-next"  :  return( map.model.sibling_node( current, "next",  true ) );
       case "sibling-prev"  :  return( map.model.sibling_node( current, "prev",  true ) );
       case "sibling-first" :  return( map.model.sibling_node( current, "first", true ) );

@@ -43,6 +43,12 @@ public class SummarizedNode : BaseNode {
   private double?         _last_xy  = null;
   private int             _current  = 0;
 
+  public int current {
+    get {
+      return( _current );
+    }
+  }
+
   //-------------------------------------------------------------
   // Default constructor
   public SummarizedNode( MindMap map, Layout? layout ) {
@@ -299,6 +305,23 @@ public class SummarizedNode : BaseNode {
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).fold_completed_tasks( changed );
     }
+  }
+
+  //-------------------------------------------------------------
+  // Removes the given tag from all summarized nodes.  If the nodes
+  // array
+  public override bool remove_tag( Tag tag, Array<Node>? nodes = null ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      if( _nodes.index( i ).remove_tag( tag, nodes ) ) {
+        return( true );
+      }
+    }
+    if( nodes != null ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).remove_tag( tag, nodes );
+      }
+    }
+    return( false );
   }
 
   //-------------------------------------------------------------
@@ -573,10 +596,10 @@ public class SummarizedNode : BaseNode {
 
       node.parent = null;
       disconnect_node( node );
-      _nodes.remove_index( i );
+      _nodes.remove_index( index );
 
       if( _nodes.length == 1 ) {
-        delete();
+        this.delete();
       } else {
         nodes_changed( 1, 1, "remove_node" );
       }

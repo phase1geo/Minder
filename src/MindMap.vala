@@ -570,7 +570,7 @@ public class MindMap {
     var current = get_current_node();
     if( current == null ) {
       if( _model.get_nodes().length > 0 ) {
-        if( select_node( _model.get_nodes().index( 0 ) ) ) {
+        if( select_node( (Node)_model.get_nodes().index( 0 ) ) ) {
           queue_draw();
         }
       }
@@ -1101,8 +1101,9 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Swaps the position of the two nodes in the mindmap.
-  public void swap_nodes( Node node, Node other ) {
+  public void swap_nodes( BaseNode node, BaseNode other ) {
 
+    /* TODO
     var complete = false;
 
     if( node.previous_sibling() == other ) {
@@ -1141,6 +1142,7 @@ public class MindMap {
       queue_draw();
       auto_save();
     }
+    */
 
   }
 

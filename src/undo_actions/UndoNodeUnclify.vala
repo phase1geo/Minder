@@ -23,13 +23,13 @@ using Gtk;
 
 public class UndoNodeUnclify : UndoItem {
 
-  private Node _node;
-  private Node _parent;
-  private int  _index;
+  private BaseNode _node;
+  private BaseNode _parent;
+  private int      _index;
 
   //-------------------------------------------------------------
   // Default constructor.
-  public UndoNodeUnclify( Node node ) {
+  public UndoNodeUnclify( BaseNode node ) {
     base( _( "reparent node" ) );
     _node   = node;
     _parent = node.parent;

@@ -830,6 +830,13 @@ public class BaseNode : Object {
   public virtual void fold_completed_tasks( Array<BaseNode> changed ) {}
 
   //-------------------------------------------------------------
+  // Recursively removes the specified tag from all nodes.  This method
+  // must be implemented by the derived class.
+  public virtual bool remove_tag( Tag tag, Array<Node>? nodes = null ) {
+    return( false );
+  }
+
+  //-------------------------------------------------------------
   // Returns true if this node contains the given node.
   public virtual bool contains_node( BaseNode node ) {
     if( node == this ) {
@@ -1292,18 +1299,24 @@ public class BaseNode : Object {
     var other = previous_sibling();
     if( other == null ) return;
 
+    /* TODO
     var other_summary = other.summary_node();
     var our_summary   = summary_node();
+    */
 
     detach( side );
+    /* TODO
     if( our_summary != null ) {
       our_summary.remove_node( this );
     }
+    */
     attached = true;
     attach( other.parent, other.index(), null, false );
+    /* TODO
     if( other_summary != null ) {
       other_summary.add_node( this );
     }
+    */
 
     parent.last_selected_child = this;
 

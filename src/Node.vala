@@ -1338,7 +1338,7 @@ public class Node : BaseNode {
 
   //-------------------------------------------------------------
   // Removes the specified tag from the list of tags.
-  public bool remove_tag( Tag tag, Array<Node>? nodes = null ) {
+  public override bool remove_tag( Tag tag, Array<Node>? nodes = null ) {
     var index = tags.get_tag_index( tag );
     if( index != -1 ) {
       tags.remove_tag( index );

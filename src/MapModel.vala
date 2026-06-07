@@ -1243,13 +1243,13 @@ public class MapModel {
           }
         }
       } else if( dir == "first" ) {
-        return( node.parent.first_child() );
+        return( basenode_to_node( node.parent.first_child() ) );
       } else if( dir == "last" ) {
-        return( node.parent.last_child() );
+        return( basenode_to_node( node.parent.last_child() ) );
       } else if( dir == "next" ) {
-        return( node.parent.next_child( node, wrap ) );
+        return( basenode_to_node( node.parent.next_child( node, wrap ) ) );
       } else {
-        return( node.parent.prev_child( node, wrap ) );
+        return( basenode_to_node( node.parent.prev_child( node, wrap ) ) );
       }
     }
     return( null );
@@ -1484,7 +1484,7 @@ public class MapModel {
   // Attaches the current node to the attach node.
   public void attach_current_node() {
 
-    Node?           orig_parent        = null;
+    BaseNode?       orig_parent        = null;
     var             orig_index         = -1;
     SummarizedNode? orig_summary       = null;
     var             orig_summary_index = -1;
@@ -2188,7 +2188,7 @@ public class MapModel {
   // TODO - We will probably want to add a second parameter to select
   // either the current, first or last node if the basenode is a
   // SummarizedNode.  Set the default value of this parameter to DEFAULT.
-  private Node? basenode_to_node( BaseNode? bn ) {
+  public static Node? basenode_to_node( BaseNode? bn ) {
     if( bn == null ) {
       return( null );
     } else {
@@ -2943,8 +2943,8 @@ public class MapModel {
   //-------------------------------------------------------------
   // Sorts and re-arranges the children of the given parent using
   // the given array.
-  private void sort_children( Node parent, CompareFunc<Node> sort_fn ) {
-    var children = new SList<Node>();
+  private void sort_children( BaseNode parent, CompareFunc<Node> sort_fn ) {
+    var children = new SList<BaseNode>();
     _map.add_undo( new UndoNodeSort( parent ) );
     _map.animator.add_nodes( _nodes, false, "sort nodes" );
     for( int i=0; i<parent.children().length; i++ ) {
@@ -2985,7 +2985,7 @@ public class MapModel {
     var current = _map.selected.current_node();
     var visited = new GLib.List<Node>();
     if( current == null ) return;
-    handle_tree_overlap_helper( current.get_root(), prev, visited );
+    handle_tree_overlap_helper( (Node)current.get_root(), prev, visited );
   }
 
   //-------------------------------------------------------------

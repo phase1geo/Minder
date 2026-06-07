@@ -23,12 +23,12 @@ public class UndoNodeSort : UndoItem {
 
   private class SortNodes {
 
-    private Array<Node> _nodes;
+    private Array<BaseNode> _nodes;
 
     //-------------------------------------------------------------
     // Stores the given node into this class
-    public SortNodes( Node n ) {
-      _nodes = new Array<Node>();
+    public SortNodes( BaseNode n ) {
+      _nodes = new Array<BaseNode>();
       for( int i=0; i<n.children().length; i++ ) {
         _nodes.append_val( n.children().index( i ) );
       }
@@ -36,13 +36,13 @@ public class UndoNodeSort : UndoItem {
 
     //-------------------------------------------------------------
     // Performs an undo operation for the stored nodes
-    public void change( Node parent ) {
+    public void change( BaseNode parent ) {
       for( int i=0; i<_nodes.length; i++ ) {
-        Node n = _nodes.index( i );
+        var n = _nodes.index( i );
         n.detach( n.side );
       }
       for( int i=0; i<_nodes.length; i++ ) {
-        Node n = _nodes.index( i );
+        var n = _nodes.index( i );
         n.attach( parent, -1, null );
       }
     }
@@ -50,12 +50,12 @@ public class UndoNodeSort : UndoItem {
   }
 
   private SortNodes  _old;
-  private SortNodes? _new    = null;
-  private Node       _parent;
+  private SortNodes? _new = null;
+  private BaseNode   _parent;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoNodeSort( Node parent ) {
+  public UndoNodeSort( BaseNode parent ) {
     base( _( "sort nodes" ) );
     _parent = parent;
     _old    = new SortNodes( parent );
