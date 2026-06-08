@@ -539,13 +539,19 @@ public class SummarizedNode : BaseNode {
     // Make sure that we didn't mess up the index order
     assert( (first_index >= 0) && (first_index < last_index) );
 
+    stdout.printf( "BEFORE---------------\n" );
+    display( true );
     for( int i=first_index; i<last_index; i++ ) {
       var node = p.children().index( first_index );
       node.detach( side );
       add_node( node );
+      stdout.printf( "  ADDING NODE--------------\n" );
+      display( true );
     }
 
     attach( p, first_index, theme );
+    stdout.printf( "  AFTER ATTACHING TO PARENT----------\n" );
+    display( true );
 
   }
 
@@ -649,6 +655,35 @@ public class SummarizedNode : BaseNode {
   }
 
   //-------------------------------------------------------------
+  // DRAWING
+  //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
+  // Returns the link point for this node.
+  protected override void link_point( out double x, out double y, bool seq = false ) {
+    int    margin = style.node_margin;
+    double height = (_height / 2);
+    switch( side ) {
+      case NodeSide.LEFT :
+        x = posx + margin - 20;
+        y = posy + height;
+        break;
+      case NodeSide.TOP :
+        x = posx + (_width / 2);
+        y = posy + margin - 20;
+        break;
+      case NodeSide.RIGHT :
+        x = posx + _total_width + 20;
+        y = posy + height;
+        break;
+      default :
+        x = posx + (_width / 2);
+        y = posy + _total_height - margin + 20;
+        break;
+    }
+  }
+
+  //-------------------------------------------------------------
   // Draws the link to the left of the summarized nodes
   private void draw_bracket( Context ctx ) {
 
@@ -664,9 +699,9 @@ public class SummarizedNode : BaseNode {
         y2 = y + h;
         break;
       case NodeSide.RIGHT :
-        x1 = x + 10;
+        x1 = x + w + 10;
         y1 = y;
-        x2 = x + 20;
+        x2 = x + w + 20;
         y2 = y + h;
         break;
       case NodeSide.TOP :
@@ -677,9 +712,9 @@ public class SummarizedNode : BaseNode {
         break;
       case NodeSide.BOTTOM :
         x1 = x;
-        y1 = y + 10;
+        y1 = y + h + 10;
         x2 = x + w;
-        y2 = y + 20;
+        y2 = y + h + 20;
         break;
       default :  assert_not_reached();
     }
