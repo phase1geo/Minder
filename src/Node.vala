@@ -916,6 +916,8 @@ public class Node : BaseNode {
       }
     }
 
+    stdout.printf( "Loading %s\n", _name.text.text );
+
     base.load( map, n, isroot );
 
     // Make sure that the name is positioned properly
@@ -1303,7 +1305,7 @@ public class Node : BaseNode {
     var p = parent;
     while( p != null ) {
       var pnode = (p as Node);
-      if( p != null ) {
+      if( pnode != null ) {
         pnode._task_count += count_adjust;
         pnode._task_done  += done_adjust;
         pnode.position_text();
@@ -2162,7 +2164,7 @@ public class Node : BaseNode {
   //-------------------------------------------------------------
   // Outputs the node's information to standard output.
   public override void display( bool recursive = false, string prefix = "" ) {
-    stdout.printf( "%sNode, name: %s, posx: %g, posy: %g, side: %s, layout: %s\n", prefix, name.text.text, posx, posy, side.to_string(), ((layout == null) ? "Unknown" : layout.name) );
+    stdout.printf( "%sNode (%p), _parent: %p, parent: %p, name: %s, posx: %g, posy: %g, side: %s, layout: %s\n", prefix, this, _parent, parent, name.text.text, posx, posy, side.to_string(), ((layout == null) ? "Unknown" : layout.name) );
     if( recursive ) {
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).display( recursive, prefix + "  " );

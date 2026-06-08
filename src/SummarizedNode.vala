@@ -705,4 +705,19 @@ public class SummarizedNode : BaseNode {
     draw_bracket( ctx );
   }
 
+  //-------------------------------------------------------------
+  // Displays this node to standard output for debugging purposes.
+  public override void display( bool recursive = false, string prefix = "" ) {
+    stdout.printf( "%sSummarizedNode (%p), _parent: %p, parent: %p, summary: %p, posx: %g, posy: %g, side: %s, layout: %s\n", prefix, this, _parent, parent, children().index( 0 ), posx, posy, side.to_string(), ((layout == null) ? "Unknown" : layout.name) );
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).display( recursive, prefix + "  " );
+    }
+    stdout.printf( "%sEndSummarized\n", prefix );
+    if( recursive ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).display( recursive, prefix + "  " );
+      }
+    }
+  }
+
 }

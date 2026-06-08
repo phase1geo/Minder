@@ -318,7 +318,6 @@ public class BaseNode : Object {
   }
   public BaseNode? parent {
     get {
-      stdout.printf( "  _parent: %p, parent.first_child: %p, this: %p\n", (_parent as SummarizedNode), ((_parent.children() != null) ? _parent.children().index( 0 ) : null), this );
       return( (((_parent as SummarizedNode) != null) && (_parent.children().index( 0 ) != this)) ? _parent.parent : _parent );
     }
     protected set {
@@ -411,7 +410,7 @@ public class BaseNode : Object {
   public BaseNode( MindMap map, Layout? layout ) {
     _map       = map;
     _id        = map.next_node_id;
-    _children  = new Array<Node>();
+    _children  = new Array<BaseNode>();
     _tree_bbox = new NodeBounds( map );
     _layout    = layout;
   }
@@ -420,7 +419,7 @@ public class BaseNode : Object {
   // Constructor from an XML node.
   public BaseNode.from_xml( MindMap map, Layout? layout, Xml.Node* n, bool isroot ) {
     _map       = map;
-    _children  = new Array<Node>();
+    _children  = new Array<BaseNode>();
     _tree_bbox = new NodeBounds( map );
     _layout    = layout;
     load( map, n, isroot );
@@ -1458,25 +1457,23 @@ public class BaseNode : Object {
   // Attaches this node as a child of the given node.
   public virtual void attach( BaseNode parent, int idx, Theme? theme, bool set_side = true ) {
     this.parent = parent;
-    stdout.printf( "A In attach, parent as sn: %p\n", (this.parent as SummarizedNode) );
-    layout = parent.layout;
+    layout = _parent.layout;
     if( layout != null ) {
       if( set_side ) {
-        if( parent.is_root() ) {
-          if( parent.children().length == 0 ) {
+        if( _parent.is_root() ) {
+          if( _parent.children().length == 0 ) {
             side = layout.side_mapping( side );
           } else {
-            side = parent.children().index( parent.children().length - 1 ).side;
+            side = _parent.children().index( _parent.children().length - 1 ).side;
           }
         } else {
-          side = parent.side;
+          side = _parent.side;
         }
         layout.propagate_side( this, side );
       }
       layout.initialize( this );
     }
     attach_common( idx, theme );
-    stdout.printf( "B In attach, parent as sn: %p\n", (this.parent as SummarizedNode) );
   }
 
   //-------------------------------------------------------------
@@ -1484,7 +1481,7 @@ public class BaseNode : Object {
   // need to be calculated.
   public virtual void attach_init( BaseNode parent, int index ) {
     this.parent = parent;
-    layout = parent.layout;
+    layout = _parent.layout;
     attach_common( index, null );
   }
 
@@ -1493,14 +1490,14 @@ public class BaseNode : Object {
   // methods.
   protected virtual void attach_common( int index, Theme? theme ) {
     if( index == -1 ) {
-      index = (int)this.parent.children().length;
-      parent.children().append_val( this );
+      index = (int)_parent.children().length;
+      _parent.children().append_val( this );
     } else {
-      parent.children().insert_val( index, this );
+      _parent.children().insert_val( index, this );
     }
-    parent.moved.connect( this.parent_moved );
+    _parent.moved.connect( this.parent_moved );
     if( layout != null ) {
-      layout.handle_update_by_insert( parent, this, index );
+      layout.handle_update_by_insert( _parent, this, index );
     }
     attached = true;
   }

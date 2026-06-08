@@ -255,7 +255,7 @@ public class Layout : Object {
   //-------------------------------------------------------------
   // Adjusts the gap between the parent and child nodes.
   public void apply_margin( BaseNode n ) {
-    if( (n.parent == null) || n.is_summary() ) return;
+    if( n.parent == null ) return;
     double px, py, pw, ph;
     var margin = n.parent.style.branch_margin;
     n.parent.bbox( out px, out py, out pw, out ph );
