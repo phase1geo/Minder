@@ -832,7 +832,7 @@ public class Node : BaseNode {
 
   //-------------------------------------------------------------
   // Loads the style information from the given XML node.
-  protected void load_style( Xml.Node* n ) {
+  protected override void load_style( Xml.Node* n ) {
     base.load_style( n );
     _name.set_text_alignment( _style.node_text_align );
     _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );

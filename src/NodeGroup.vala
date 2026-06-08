@@ -307,7 +307,18 @@ public class NodeGroup : Object {
       var pad = node.groups_between( origin ) * 5;
       add_node_points( points, node, pad );
       for( int i=0; i<node.children().length; i++ ) {
-        get_tree_points( origin, node.children().index( i ), points );
+        var child = (node.children().index( i ) as Node);
+        if( child != null ) {
+          get_tree_points( origin, child, points );
+        } else {
+          var sn = (node.children().index( i ) as SummarizedNode);
+          for( int j=0; j<sn.summarized_count(); j++ ) {
+            get_tree_points( origin, sn.get_summarized_node( j ), points );
+          }
+          for( int j=0; j<sn.children().length; j++ ) {
+            get_tree_points( origin, (Node)sn.children().index( j ), points );
+          }
+        }
       }
     }
   }

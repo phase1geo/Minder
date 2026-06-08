@@ -129,7 +129,7 @@ public class UndoNodeAttach : UndoItem {
       }
     }
     map.model.set_style_after_parent_attach( _n );
-    map.set_current_node( _n );
+    map.set_current_node( MapModel.basenode_to_node( _n ) );
     map.animator.animate();
     map.auto_save();
   }

@@ -24,15 +24,15 @@ using Gee;
 
 public class UndoNodePaste : UndoItem {
 
-  private Array<Node?>      _parents;
-  private Array<Node>       _nodes;
+  private Array<BaseNode?>  _parents;
+  private Array<BaseNode>   _nodes;
   private Array<int>        _indices;
   private Array<Connection> _conns;
   private Array<NodeGroup>  _groups;
 
   //-------------------------------------------------------------
   // Default constructor.
-  public UndoNodePaste( Array<Node> nodes, Array<Connection> conns, Array<NodeGroup> groups ) {
+  public UndoNodePaste( Array<BaseNode> nodes, Array<Connection> conns, Array<NodeGroup> groups ) {
     base( _( "paste node" ) );
     _nodes   = nodes;
     _conns   = conns;
@@ -77,7 +77,7 @@ public class UndoNodePaste : UndoItem {
     for( int i=0; i<_groups.length; i++ ) {
       map.groups.add_group( _groups.index( i ) );
     }
-    map.set_current_node( _nodes.index( 0 ) );
+    map.set_current_node( MapModel.basenode_to_node( _nodes.index( 0 ) ) );
     map.animator.animate();
     map.auto_save();
   }

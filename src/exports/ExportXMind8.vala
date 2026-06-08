@@ -215,11 +215,13 @@ public class ExportXMind8 : Export {
 
   //-------------------------------------------------------------
   // Exports a summarized node.
+  /*
   private Xml.Node* export_summarized( MindMap map, SummarizedNode node, string timestamp, bool top, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
 
     // TODO
 
   }
+  */
 
   //-------------------------------------------------------------
   // Exports the node

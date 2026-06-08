@@ -23,19 +23,22 @@ using Gtk;
 
 public class UndoNodeInsert : UndoItem {
 
-  private Node? _parent;
-  private Node  _n;
-  private int   _index;
-  private bool  _parent_folded;
+  private BaseNode? _parent;
+  private BaseNode  _n;
+  private int       _index;
+  private bool      _parent_folded;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoNodeInsert( Node n, int index ) {
+  public UndoNodeInsert( BaseNode n, int index ) {
     base( _( "insert node" ) );
-    _n             = n;
-    _index         = index;
-    _parent        = n.parent;
-    _parent_folded = (_parent == null) ? false : _parent.folded;
+    _n      = n;
+    _index  = index;
+    _parent = n.parent;
+
+    var pnode = (_parent as Node);
+    _parent_folded = (pnode == null) ? false : pnode.folded;
+
   }
 
   //-------------------------------------------------------------
@@ -45,7 +48,8 @@ public class UndoNodeInsert : UndoItem {
       map.model.remove_root( _index );
     } else {
       if( _parent_folded ) {
-        _parent.folded = true;
+        var pnode = (Node)_parent;
+        pnode.folded = true;
       }
       _n.detach( _n.side );
     }
@@ -60,12 +64,15 @@ public class UndoNodeInsert : UndoItem {
   // Performs a redo operation
   public override void redo( MindMap map ) {
     if( _parent == null ) {
-      map.model.add_root( _n, _index );
+      map.model.add_root( (Node)_n, _index );
     } else {
-      _parent.folded = _parent_folded;
+      var pnode = (_parent as Node);
+      if( pnode != null ) {
+        pnode.folded = _parent_folded;
+      }
       _n.attach( _parent, _index, null );
     }
-    map.set_current_node( _n );
+    map.set_current_node( (Node)_n );
     map.queue_draw();
     map.auto_save();
   }

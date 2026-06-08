@@ -79,7 +79,7 @@ public class Partitioner : Object {
     if( root.children().length > 1 ) {
       var data = new SList<PartNode>();
       for( int i=0; i<root.children().length; i++ ) {
-        var node = root.children().index( i );
+        var node = (Node)root.children().index( i );
         var pn   = new PartNode( node );
         data.append( pn );
       }
@@ -114,7 +114,7 @@ public class Partitioner : Object {
     // Attach the nodes according to the side
     var last_side = -1;
     data.@foreach((item) => {
-      var place_node = !item.node().is_summarized() || item.node().first_summarized();
+      var place_node = (item.node().summarized_node == null);  // TODO || item.node().first_summarized();
       if( place_node ? (sum0 < sum1) : (last_side == 0) ) {
         sum0 += item.size();
         item.update_node( root, size0, 0 );

@@ -24,25 +24,26 @@ using Gtk;
 public class UndoNodesInsert : UndoItem {
 
   struct InsertedNode {
-    Node? parent;
-    Node  n;
-    int   index;
-    bool  parent_folded;
+    BaseNode? parent;
+    BaseNode  n;
+    int       index;
+    bool      parent_folded;
   }
 
   private Array<InsertedNode?> _nodes;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoNodesInsert( MindMap map, Array<Node> nodes ) {
+  public UndoNodesInsert( MindMap map, Array<BaseNode> nodes ) {
     base( _( "insert nodes" ) );
     _nodes = new Array<InsertedNode?>();
     for( int i=0; i<nodes.length; i++ ) {
       var node = nodes.index( i );
       if( node.parent == null ) {
-        _nodes.append_val( { null, node, map.model.root_index( node ), false } );
+        _nodes.append_val( { null, node, map.model.root_index( (Node)node ), false } );
       } else {
-        _nodes.append_val( { node.parent, node, node.index(), node.parent.folded } );
+        var pnode = (node.parent as Node);
+        _nodes.append_val( { node.parent, node, node.index(), ((pnode != null) && pnode.folded) } );
       }
     }
   }
@@ -56,7 +57,8 @@ public class UndoNodesInsert : UndoItem {
         map.model.remove_root( node.index );
       } else {
         if( node.parent_folded ) {
-          node.parent.folded = true;
+          var pnode = (Node)node.parent;
+          pnode.folded = true;
         }
         node.n.detach( node.n.side );
       }
@@ -72,13 +74,16 @@ public class UndoNodesInsert : UndoItem {
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
       if( node.parent == null ) {
-        map.model.add_root( node.n, node.index );
+        map.model.add_root( (Node)node.n, node.index );
       } else {
-        node.parent.folded = node.parent_folded;
+        var pnode = (node.parent as Node);
+        if( pnode != null ) {
+          pnode.folded = node.parent_folded;
+        }
         node.n.attach( node.parent, node.index, null );
       }
     }
-    map.set_current_node( _nodes.index( 0 ).n );
+    map.set_current_node( MapModel.basenode_to_node( _nodes.index( 0 ).n ) );
     map.queue_draw();
     map.auto_save();
   }

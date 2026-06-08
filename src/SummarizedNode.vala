@@ -39,8 +39,6 @@ using Cairo;
 public class SummarizedNode : BaseNode {
 
   private Array<BaseNode> _nodes;
-  private double?         _first_xy = null;
-  private double?         _last_xy  = null;
   private int             _current  = 0;
 
   public int current {
@@ -136,12 +134,6 @@ public class SummarizedNode : BaseNode {
   }
 
   //-------------------------------------------------------------
-  // Returns the offset 
-  private double get_nodes_offset() {
-
-  }
-
-  //-------------------------------------------------------------
   // Sets the posx value of this node and adjusts the internal
   // node posx values only.
   public override void set_posx_only( double value ) {
@@ -199,8 +191,8 @@ public class SummarizedNode : BaseNode {
     height     = 0.0;
     name_space = 0.0;
     for( int i=0; i<_nodes.length; i++ ) {
-      double w, h;
-      _nodes.index( i ).calculate_node_size( out w, out h ); 
+      double w, h, ns;
+      _nodes.index( i ).calculate_node_size( out w, out h, out ns ); 
       if( side.horizontal() ) {
         height += h;
         if( width < w ) {
@@ -462,6 +454,7 @@ public class SummarizedNode : BaseNode {
       summarized->add_child( _nodes.index( i ).save() );
     }
     node->add_child( summarized );
+    return( node );
   }
 
   //-------------------------------------------------------------

@@ -23,13 +23,13 @@ public class UndoNodeBalance : UndoItem {
 
   private class BalanceNodes {
 
-    private Array<Node>     _nodes;
+    private Array<BaseNode> _nodes;
     private Array<NodeSide> _sides;
 
     //-------------------------------------------------------------
     // Stores the given node into this class.
-    public BalanceNodes( Node n ) {
-      _nodes = new Array<Node>();
+    public BalanceNodes( BaseNode n ) {
+      _nodes = new Array<BaseNode>();
       _sides = new Array<NodeSide>();
       for( int i=0; i<n.children().length; i++ ) {
         _nodes.append_val( n.children().index( i ) );
@@ -39,13 +39,13 @@ public class UndoNodeBalance : UndoItem {
 
     //-------------------------------------------------------------
     // Performs an undo operation for the stored nodes.
-    public void change( Node parent ) {
+    public void change( BaseNode parent ) {
       for( int i=0; i<_nodes.length; i++ ) {
-        Node n = _nodes.index( i );
+        var n = _nodes.index( i );
         n.detach( n.side );
       }
       for( int i=0; i<_nodes.length; i++ ) {
-        Node n = _nodes.index( i );
+        var n = _nodes.index( i );
         n.side = _sides.index( i );
         n.layout.propagate_side( n, n.side );
         n.attach_init( parent, -1 );
@@ -56,11 +56,11 @@ public class UndoNodeBalance : UndoItem {
 
   private Array<BalanceNodes>  _old;
   private Array<BalanceNodes>? _new  = null;
-  private Node?                _root = null;
+  private BaseNode?            _root = null;
 
   //-------------------------------------------------------------
   // Default constructor.
-  public UndoNodeBalance( MindMap map, Node? root_node ) {
+  public UndoNodeBalance( MindMap map, BaseNode? root_node ) {
     base( _( "balance nodes" ) );
     _root = root_node;
     _old  = new Array<BalanceNodes>();

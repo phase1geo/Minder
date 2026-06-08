@@ -45,12 +45,12 @@ public class UndoNodeCut : UndoItem {
   public override void undo( MindMap map ) {
     map.animator.add_nodes( map.get_nodes(), false, "UndoNodeCut undo" );
     if( _parent == null ) {
-      map.model.add_root( _node, _index );
+      map.model.add_root( (Node)_node, _index );
     } else {
       _node.attached = true;
       _node.attach_init( _parent, _index );
     }
-    map.set_current_node( _node );
+    map.set_current_node( MapModel.basenode_to_node( _node ) );
     for( int i=0; i<_conns.length; i++ ) {
       map.model.connections.add_connection( _conns.index( i ) );
     }
@@ -74,7 +74,7 @@ public class UndoNodeCut : UndoItem {
     for( int i=0; i<_conns.length; i++ ) {
       map.connections.remove_connection( _conns.index( i ), false );
     }
-    map.groups.remove_node( _node, ref tmp_groups );
+    map.groups.remove_node( MapModel.basenode_to_node( _node ), ref tmp_groups );
     map.animator.animate();
     map.auto_save();
   }

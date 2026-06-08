@@ -23,15 +23,15 @@ using Gtk;
 
 public class UndoNodeDelete : UndoItem {
 
-  Node              _node;
-  Node?             _parent;
+  BaseNode          _node;
+  BaseNode?         _parent;
   int               _index;
   Array<Connection> _conns;
   UndoNodeGroups?   _groups;
 
   //-------------------------------------------------------------
   // Default constructor.
-  public UndoNodeDelete( Node n, int index, Array<Connection> conns, UndoNodeGroups? groups ) {
+  public UndoNodeDelete( BaseNode n, int index, Array<Connection> conns, UndoNodeGroups? groups ) {
     base( _( "delete node" ) );
     _node   = n;
     _parent = n.parent;
@@ -45,12 +45,12 @@ public class UndoNodeDelete : UndoItem {
   public override void undo( MindMap map ) {
     map.animator.add_nodes( map.get_nodes(), false, "UndoNodeDelete.undo" );
     if( _parent == null ) {
-      map.model.add_root( _node, _index );
+      map.model.add_root( (Node)_node, _index );
     } else {
       _node.attached = true;
       _node.attach_init( _parent, _index );
     }
-    map.set_current_node( _node );
+    map.set_current_node( MapModel.basenode_to_node( _node ) );
     for( int i=0; i<_conns.length; i++ ) {
       map.connections.add_connection( _conns.index( i ) );
     }
@@ -73,7 +73,7 @@ public class UndoNodeDelete : UndoItem {
     for( int i=0; i<_conns.length; i++ ) {
       map.connections.remove_connection( _conns.index( i ), false );
     }
-    map.groups.remove_node( _node, ref tmp_groups );
+    map.groups.remove_node( MapModel.basenode_to_node( _node ), ref tmp_groups );
     map.animator.animate();
     map.auto_save();
   }

@@ -984,7 +984,6 @@ public class BaseNode : Object {
   //-------------------------------------------------------------
   // Loads the child nodes.
   private void load_nodes( Xml.Node* n ) {
-    var first_summary_index = -1;
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {

@@ -133,7 +133,7 @@ public class UndoStyleChange : UndoItem {
     }
   }
 
-  private void set_node_style( Node node, StyleChangeType change_type, ref int index ) {
+  private void set_node_style( BaseNode node, StyleChangeType change_type, ref int index ) {
     Style new_style = new Style.templated();
     set_style( node.style, new_style, change_type, ref index );
     node.style = new_style;
@@ -151,10 +151,11 @@ public class UndoStyleChange : UndoItem {
     callout.style = new_style;
   }
 
-  private void set_style_for_tree( Node node, StyleChangeType change_type, ref int index ) {
+  private void set_style_for_tree( BaseNode node, StyleChangeType change_type, ref int index ) {
     set_node_style( node, change_type, ref index );
-    if( node.callout != null ) {
-      set_callout_style( node.callout, change_type, ref index );
+    var n = (node as Node);
+    if( (n != null) && n.callout != null ) {
+      set_callout_style( n.callout, change_type, ref index );
     }
     for( int i=0; i<node.children().length; i++ ) {
       set_style_for_tree( node.children().index( i ), change_type, ref index );

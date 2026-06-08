@@ -24,10 +24,10 @@ using Gtk;
 public class UndoNodesDelete : UndoItem {
 
   private class NodeInfo {
-    public Node  node;
-    public Node? parent;
-    public int   index;
-    public NodeInfo( Node n ) {
+    public BaseNode  node;
+    public BaseNode? parent;
+    public int       index;
+    public NodeInfo( BaseNode n ) {
       node   = n;
       parent = n.parent;
       index  = n.index();
@@ -40,7 +40,7 @@ public class UndoNodesDelete : UndoItem {
 
   //-------------------------------------------------------------
   // Default constructor.
-  public UndoNodesDelete( Array<Node> nodes, Array<Connection> conns, Array<UndoNodeGroups?> groups, string label = _( "delete nodes" ) ) {
+  public UndoNodesDelete( Array<BaseNode> nodes, Array<Connection> conns, Array<UndoNodeGroups?> groups, string label = _( "delete nodes" ) ) {
     base( label );
     _nodes = new Array<NodeInfo>();
     for( int i=0; i<nodes.length; i++ ) {
@@ -58,7 +58,7 @@ public class UndoNodesDelete : UndoItem {
     for( int i=0; i<_nodes.length; i++ ) {
       var ni = _nodes.index( i );
       ni.node.attach_only( ni.parent, ni.index );
-      map.selected.add_node( ni.node );
+      map.selected.add_node( MapModel.basenode_to_node( ni.node ) );
     }
     map.connections.add_connections( _conns );
     map.groups.apply_undos( _groups );
@@ -71,14 +71,14 @@ public class UndoNodesDelete : UndoItem {
   public override void redo( MindMap map ) {
     map.selected.clear();
     for( int i=0; i<_nodes.length; i++ ) {
-      map.selected.add_node( _nodes.index( i ).node, true, false );
+      map.selected.add_node( MapModel.basenode_to_node( _nodes.index( i ).node ), true, false );
     }
     map.animator.add_nodes( map.get_nodes(), true, "UndoNodesDelete.redo" );
     map.selected.clear_nodes( false );
     for( int i=0; i<_nodes.length; i++ ) {
       UndoNodeGroups? tmp_group = null;
       _nodes.index( i ).node.delete_only();
-      map.groups.remove_node( _nodes.index( i ).node, ref tmp_group );
+      map.groups.remove_node( MapModel.basenode_to_node( _nodes.index( i ).node ), ref tmp_group );
     }
     map.connections.remove_connections( _conns, false );
     map.animator.animate();
