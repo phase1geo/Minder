@@ -271,10 +271,11 @@ public class Node : BaseNode {
   //-------------------------------------------------------------
   // Constructor from an XML node.
   public Node.from_xml( MindMap map, Layout? layout, Xml.Node* n, bool isroot ) {
+    base( map, layout );
     _name = new CanvasText.with_text( map, "" );
     _tags = new Tags();
-    base.from_xml( map, layout, n, isroot );
     _name.resized.connect( position_text_and_update_size );
+    load( map, n, isroot );
   }
 
   //-------------------------------------------------------------

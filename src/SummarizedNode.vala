@@ -540,7 +540,7 @@ public class SummarizedNode : BaseNode {
     assert( (first_index >= 0) && (first_index < last_index) );
 
     for( int i=first_index; i<last_index; i++ ) {
-      var node = p.children().index( i );
+      var node = p.children().index( first_index );
       node.detach( side );
       add_node( node );
     }

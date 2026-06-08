@@ -318,7 +318,7 @@ public class BaseNode : Object {
   }
   public BaseNode? parent {
     get {
-
+      stdout.printf( "  _parent: %p, parent.first_child: %p, this: %p\n", (_parent as SummarizedNode), ((_parent.children() != null) ? _parent.children().index( 0 ) : null), this );
       return( (((_parent as SummarizedNode) != null) && (_parent.children().index( 0 ) != this)) ? _parent.parent : _parent );
     }
     protected set {
@@ -1458,6 +1458,7 @@ public class BaseNode : Object {
   // Attaches this node as a child of the given node.
   public virtual void attach( BaseNode parent, int idx, Theme? theme, bool set_side = true ) {
     this.parent = parent;
+    stdout.printf( "A In attach, parent as sn: %p\n", (this.parent as SummarizedNode) );
     layout = parent.layout;
     if( layout != null ) {
       if( set_side ) {
@@ -1475,6 +1476,7 @@ public class BaseNode : Object {
       layout.initialize( this );
     }
     attach_common( idx, theme );
+    stdout.printf( "B In attach, parent as sn: %p\n", (this.parent as SummarizedNode) );
   }
 
   //-------------------------------------------------------------
