@@ -584,6 +584,15 @@ public class BaseNode : Object {
   }
 
   //-------------------------------------------------------------
+  // Initializes this node size.  This should be called at the end
+  // of a node constructor.
+  protected void initialize_size() {
+    double name_space;
+    calculate_node_size( out _width, out _height, out name_space );
+    update_total_size();
+  }
+
+  //-------------------------------------------------------------
   // Called whenever the node size is changed.
   protected void update_size() {
 

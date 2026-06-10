@@ -444,6 +444,10 @@ public class MapModel {
     // Reset the animator enable
     _map.animator.enable = animate;
 
+    stdout.printf( "AFTER LOADING\n--------------------\n" );
+    _nodes.index( 0 ).display( true );
+    stdout.printf( "--------------------\n" );
+
   }
 
   //-------------------------------------------------------------

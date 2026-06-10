@@ -257,6 +257,7 @@ public class Node : BaseNode {
     _name = new CanvasText( map );
     _tags = new Tags();
     _name.resized.connect( position_text_and_update_size );
+    initialize_size();
   }
 
   //-------------------------------------------------------------
@@ -266,6 +267,7 @@ public class Node : BaseNode {
     _name = new CanvasText.with_text( map, n );
     _tags = new Tags();
     _name.resized.connect( position_text_and_update_size );
+    initialize_size();
   }
 
   //-------------------------------------------------------------
@@ -915,8 +917,6 @@ public class Node : BaseNode {
         }
       }
     }
-
-    stdout.printf( "Loading %s\n", _name.text.text );
 
     base.load( map, n, isroot );
 

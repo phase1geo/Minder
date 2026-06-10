@@ -52,6 +52,7 @@ public class SummarizedNode : BaseNode {
   public SummarizedNode( MindMap map, Layout? layout ) {
     base( map, layout );
     _nodes = new Array<BaseNode>();
+    initialize_size();
   }
 
   //-------------------------------------------------------------
@@ -120,17 +121,21 @@ public class SummarizedNode : BaseNode {
   //-------------------------------------------------------------
   // Sets the style of all internal nodes to the current style.
   protected override void style_callback() {
+    /*
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).style = _style;
     }
+    */
   }
 
   //-------------------------------------------------------------
   // Sets the mode of all internal nodes to the current mode value.
   protected override void mode_callback() {
+    /*
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).mode = _mode;
     }
+    */
   }
 
   //-------------------------------------------------------------
@@ -149,11 +154,12 @@ public class SummarizedNode : BaseNode {
   // Sets the posy value of this node and adjusts the internal
   // node posy values only.
   public override void set_posy_only( double value ) {
+    stdout.printf( "SummarizedNode, set_posy_only, value: %g\n", value );
     var diff = value - posy;
     base.set_posy_only( value );
     for( int i=0; i<_nodes.length; i++ ) {
       var n = _nodes.index( i );
-      n.set_posx_only( n.posx + diff );
+      n.set_posy_only( n.posy + diff );
     }
   }
 
@@ -169,10 +175,20 @@ public class SummarizedNode : BaseNode {
   //-------------------------------------------------------------
   // Adjusts posy value by the given amount for all internal nodes.
   public override void adjust_posy_only( double diff ) {
+    stdout.printf( "SummarizedNode, adjust_posy_only, diff: %g\n", diff );
     base.adjust_posy_only( diff );
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).adjust_posy_only( diff );
     }
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever the parent node is moved.
+  protected override void parent_moved( BaseNode parent, double diffx, double diffy ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).parent_moved( this, diffx, diffy );
+    }
+    base.parent_moved( parent, diffx, diffy );
   }
 
   //-------------------------------------------------------------
@@ -187,24 +203,25 @@ public class SummarizedNode : BaseNode {
   //-------------------------------------------------------------
   // Calculates the space required for all internal nodes.
   public override void calculate_node_size( out double width, out double height, out double name_space ) {
+    stdout.printf( "IN CALCULATE_NODE_SIZE\n" );
     width      = 0.0;
     height     = 0.0;
     name_space = 0.0;
     for( int i=0; i<_nodes.length; i++ ) {
-      double w, h, ns;
-      _nodes.index( i ).calculate_node_size( out w, out h, out ns ); 
+      var node = _nodes.index( i );
       if( side.horizontal() ) {
-        height += h;
-        if( width < w ) {
-          width = w;
+        height += node.total_height;
+        if( width < node.total_width ) {
+          width = node.total_width;
         }
       } else {
-        width += w;
-        if( height < h ) {
-          height = h;
+        width += node.total_width;
+        if( height < node.total_height ) {
+          height = node.total_height;
         }
       }
     }
+    stdout.printf( "IN CALCULATE_SUMMARIZED_SIZE, width: %g, height: %g\n", width, height );
   }
 
   //-------------------------------------------------------------
@@ -464,14 +481,14 @@ public class SummarizedNode : BaseNode {
   //-------------------------------------------------------------
   // Connects the node to signals
   private void connect_node( BaseNode node ) {
-    node.moved.connect( nodes_changed_moved );
+    // node.moved.connect( nodes_changed_moved );
     node.resized.connect( nodes_changed_resized );
   }
 
   //-------------------------------------------------------------
   // Disconnects the node from signals
   private void disconnect_node( BaseNode node ) {
-    node.moved.disconnect( nodes_changed_moved );
+    // node.moved.disconnect( nodes_changed_moved );
     node.resized.disconnect( nodes_changed_resized );
   }
 
@@ -541,6 +558,7 @@ public class SummarizedNode : BaseNode {
 
     stdout.printf( "BEFORE---------------\n" );
     display( true );
+
     for( int i=first_index; i<last_index; i++ ) {
       var node = p.children().index( first_index );
       node.detach( side );
@@ -548,6 +566,10 @@ public class SummarizedNode : BaseNode {
       stdout.printf( "  ADDING NODE--------------\n" );
       display( true );
     }
+
+    double name_space;
+    calculate_node_size( out _width, out _height, out name_space );
+    update_total_size();
 
     attach( p, first_index, theme );
     stdout.printf( "  AFTER ATTACHING TO PARENT----------\n" );
@@ -594,6 +616,8 @@ public class SummarizedNode : BaseNode {
     } else {
       _nodes.insert_val( index, node );
     }
+
+    // FOOBAR
 
     // Force the node to be positioned
     nodes_changed( 1, 1, "add_nodes" );
@@ -738,6 +762,15 @@ public class SummarizedNode : BaseNode {
       _nodes.index( i ).draw( ctx, theme, motion, exporting );
     }
     draw_bracket( ctx );
+
+    Utils.set_context_color_with_alpha( ctx, theme.get_color( "foreground" ), 0.2 );
+    ctx.rectangle( _posx, _posy, _width, _height );
+    ctx.fill();
+
+    Utils.set_context_color_with_alpha( ctx, theme.get_color( "foreground" ), 0.2 );
+    ctx.rectangle( tree_bbox.x, tree_bbox.y, tree_bbox.width, tree_bbox.height );
+    ctx.fill();
+
   }
 
   //-------------------------------------------------------------
