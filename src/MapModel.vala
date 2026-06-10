@@ -444,10 +444,6 @@ public class MapModel {
     // Reset the animator enable
     _map.animator.enable = animate;
 
-    stdout.printf( "AFTER LOADING\n--------------------\n" );
-    _nodes.index( 0 ).display( true );
-    stdout.printf( "--------------------\n" );
-
   }
 
   //-------------------------------------------------------------
@@ -1831,8 +1827,6 @@ public class MapModel {
     set_style_after_parent_attach( sn );
 
     // Create summary node, attach it to the SummarizedNode and return it
-    sn.display( true );
-    stdout.printf( "-------- ADDING SUMMARY NODE TO SUMMARIZED NODE\n" );
     return( create_child_node( sn, "TEST" ) );
 
   }
@@ -1976,7 +1970,6 @@ public class MapModel {
     if( !nodes_summarizable() ) return;
     var nodes = _map.selected.ordered_nodes();
     var node  = (Node)create_summary_node( nodes.index( 0 ).parent, nodes.index( 0 ).index(), (nodes.index( nodes.length - 1 ).index() + 1) );
-    _nodes.index( 0 ).display( true );
     _map.add_undo( new UndoNodeSummary( (node.parent as SummarizedNode) ) );
     _map.set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );

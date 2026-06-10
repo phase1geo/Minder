@@ -154,7 +154,6 @@ public class SummarizedNode : BaseNode {
   // Sets the posy value of this node and adjusts the internal
   // node posy values only.
   public override void set_posy_only( double value ) {
-    stdout.printf( "SummarizedNode, set_posy_only, value: %g\n", value );
     var diff = value - posy;
     base.set_posy_only( value );
     for( int i=0; i<_nodes.length; i++ ) {
@@ -175,7 +174,6 @@ public class SummarizedNode : BaseNode {
   //-------------------------------------------------------------
   // Adjusts posy value by the given amount for all internal nodes.
   public override void adjust_posy_only( double diff ) {
-    stdout.printf( "SummarizedNode, adjust_posy_only, diff: %g\n", diff );
     base.adjust_posy_only( diff );
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).adjust_posy_only( diff );
@@ -203,7 +201,6 @@ public class SummarizedNode : BaseNode {
   //-------------------------------------------------------------
   // Calculates the space required for all internal nodes.
   public override void calculate_node_size( out double width, out double height, out double name_space ) {
-    stdout.printf( "IN CALCULATE_NODE_SIZE\n" );
     width      = 0.0;
     height     = 0.0;
     name_space = 0.0;
@@ -221,7 +218,6 @@ public class SummarizedNode : BaseNode {
         }
       }
     }
-    stdout.printf( "IN CALCULATE_SUMMARIZED_SIZE, width: %g, height: %g\n", width, height );
   }
 
   //-------------------------------------------------------------
@@ -556,15 +552,10 @@ public class SummarizedNode : BaseNode {
     // Make sure that we didn't mess up the index order
     assert( (first_index >= 0) && (first_index < last_index) );
 
-    stdout.printf( "BEFORE---------------\n" );
-    display( true );
-
     for( int i=first_index; i<last_index; i++ ) {
       var node = p.children().index( first_index );
       node.detach( side );
       add_node( node );
-      stdout.printf( "  ADDING NODE--------------\n" );
-      display( true );
     }
 
     double name_space;
@@ -572,8 +563,6 @@ public class SummarizedNode : BaseNode {
     update_total_size();
 
     attach( p, first_index, theme );
-    stdout.printf( "  AFTER ATTACHING TO PARENT----------\n" );
-    display( true );
 
   }
 
@@ -764,7 +753,7 @@ public class SummarizedNode : BaseNode {
     draw_bracket( ctx );
 
     Utils.set_context_color_with_alpha( ctx, theme.get_color( "foreground" ), 0.2 );
-    ctx.rectangle( _posx, _posy, _width, _height );
+    ctx.rectangle( posx, posy, _width, _height );
     ctx.fill();
 
     Utils.set_context_color_with_alpha( ctx, theme.get_color( "foreground" ), 0.2 );

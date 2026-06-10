@@ -61,18 +61,12 @@ public class Layout : Object {
         var n = parent.children().index( i );
         initialize( n );
         list.append( n );
-        stdout.printf( "AFTER INITIALIZE %d\n", i );
-        n.display( true );
       }
       list.@foreach((item) => {
         item.detach( item.side );
-        stdout.printf( "AFTER DETACH\n" );
-        item.display( true );
       });
       list.@foreach((item) => {
         item.attach_init( parent, -1 );
-        stdout.printf( "AFTER ATTACH\n" );
-        item.display( true );
       });
     }
   }
@@ -125,9 +119,6 @@ public class Layout : Object {
     // Set the tree size in the node
     n.tree_size = n.side.horizontal() ? nb.height : nb.width;
 
-    stdout.printf( "In update_tree_size, tree_size: %g\n", n.tree_size );
-    n.display( false, "  " );
-
   }
 
   //-------------------------------------------------------------
@@ -142,9 +133,6 @@ public class Layout : Object {
   //-------------------------------------------------------------
   // Adjusts the given tree by the given amount.
   public virtual void adjust_tree( BaseNode parent, int child_index, int side_mask, double amount ) {
-
-    stdout.printf( "In adjust_tree, child_index: %d, amount: %g, children: %u\n", child_index, amount, parent.children().length );
-    parent.display( true, "  " );
 
     for( int i=0; i<parent.children().length; i++ ) {
 
@@ -170,9 +158,6 @@ public class Layout : Object {
   //-------------------------------------------------------------
   // Adjust the entire tree by traversing the tree towards the root.
   public virtual void adjust_tree_all( BaseNode n, NodeBounds p, double amount, string msg ) {
-
-    stdout.printf( "In adjust_tree_all, amount: %g\n", amount );
-    n.display( true, "  " );
 
     var parent = n.parent;
     var last   = n;
@@ -372,7 +357,6 @@ public class Layout : Object {
     var cb = child.tree_bbox;
 
     child.bbox( out ox, out oy, out ow, out oh );
-    stdout.printf( "child.bbox, x: %g, y: %g, w: %g, h: %g\n", ox, oy, ow, oh );
     apply_margin( child );
     adjust = get_insert_adjust( child );
 
@@ -390,9 +374,7 @@ public class Layout : Object {
     // If we are at the end of the list of children with the matching side as ours,
     // place ourselves just below the next to last sibling.
     } else if( ((pos + 1) == parent.children().length) || (parent.children().index( pos + 1 ).side != child.side) ) {
-      stdout.printf( "HERE!\n" );
       var sb = bbox( parent.children().index( pos - 1 ), child.side, "insert a" );
-      stdout.printf( "  sb, x: %g, y: %g, w: %g, h: %g\n", sb.x, sb.y, sb.width, sb.height );
       if( child.side.horizontal() ) {
         child.posy = (sb.y + sb.height + (oy - cb.y)) - adjust;
       } else {
