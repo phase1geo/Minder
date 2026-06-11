@@ -659,11 +659,21 @@ public class SummarizedNode : BaseNode {
 
     // Connect all summarized nodes back into the parent tree
     while( _nodes.length > 0 ) {
+
       var node = _nodes.index( _nodes.length - 1 ); 
+
+      // Remove the node from the summarized list
       node.parent = null;
+      disconnect_node( node );
+      _nodes.remove_index( _nodes.length - 1 );
+
+      // Add the node to the parent
       node.attach( _parent, sn_index, null );
-      remove_node( node );
+
     }
+
+    // Finally, detach ourselves
+    detach( side );
 
   }
 

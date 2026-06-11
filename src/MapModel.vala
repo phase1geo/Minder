@@ -1614,8 +1614,9 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
-  // Deletes the given node.
+  // Deletes the current node.
   public void delete_node() {
+    stdout.printf( "In delete_node\n" );
     var current = _map.selected.current_node();
     if( current == null ) return;
     Node? next_node = _map.next_node_to_select();
@@ -1632,12 +1633,13 @@ public class MapModel {
           break;
         }
       }
-    } else if( current.is_summary() ) {
+    } else if( (current as SummarizedNode) != null ) {
       // TODO _map.add_undo( new UndoNodeSummaryDelete( (SummaryNode)current, conns, undo_groups ) );
       current.delete();
     } else {
       _map.add_undo( new UndoNodeDelete( current, current.index(), conns, undo_groups ) );
       current.delete();
+      _nodes.index( 0 ).display( true );
     }
     _map.selected.remove_node( current );
     if( !current.is_root() ) {

@@ -297,7 +297,6 @@ public class BaseNode : Object {
       return( _posy + _map.origin_y );
     }
     set {
-      display( false );
       double diff = (value - posy);
       _posy = value - _map.origin_y;
       update_tree_bbox( 0, diff );
@@ -1398,6 +1397,9 @@ public class BaseNode : Object {
   // Removes this node from the node tree along with all
   // descendents.
   public virtual void delete() {
+    if( (_parent as SummarizedNode) != null ) {
+      _parent.delete();
+    }
     detach( side );
   }
 
