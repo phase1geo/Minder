@@ -182,11 +182,11 @@ public class SummarizedNode : BaseNode {
 
   //-------------------------------------------------------------
   // Called whenever the parent node is moved.
-  protected override void parent_moved( BaseNode parent, double diffx, double diffy ) {
+  protected override void parent_moved( BaseNode parent, double diffx, double diffy, string? msg = null ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).parent_moved( this, diffx, diffy );
+      _nodes.index( i ).parent_moved( this, diffx, diffy, "sn.parent_moved.a" );
     }
-    base.parent_moved( parent, diffx, diffy );
+    base.parent_moved( parent, diffx, diffy, "sn.parent_moved.b" );
   }
 
   //-------------------------------------------------------------
@@ -734,8 +734,11 @@ public class SummarizedNode : BaseNode {
 
     var summary    = (Node)_children.index( 0 );
     var link_color = summary.link_color;
+    var max_width  = summary.style.link_width;
 
     Utils.set_context_color_with_alpha( ctx, link_color, alpha );
+    ctx.set_line_cap( LineCap.ROUND );
+    ctx.set_line_width( max_width );
     ctx.move_to( x1, y1 );
     ctx.line_to( x2, y1 );
     ctx.line_to( x2, y2 );
@@ -760,6 +763,12 @@ public class SummarizedNode : BaseNode {
     ctx.rectangle( tree_bbox.x, tree_bbox.y, tree_bbox.width, tree_bbox.height );
     ctx.fill();
 
+  }
+
+  //-------------------------------------------------------------
+  // Outputs this object as a printable string.
+  public override string to_string() {
+    return( "sn" );
   }
 
   //-------------------------------------------------------------

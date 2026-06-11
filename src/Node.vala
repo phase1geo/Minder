@@ -2162,6 +2162,12 @@ public class Node : BaseNode {
   }
 
   //-------------------------------------------------------------
+  // Outputs this object as a printable string.
+  public override string to_string() {
+    return( "node (%s)".printf( name.text.text ) );
+  }
+
+  //-------------------------------------------------------------
   // Outputs the node's information to standard output.
   public override void display( bool recursive = false, string prefix = "" ) {
     stdout.printf( "%sNode (%p), _parent: %p, parent: %p, name: %s, posx: %g, posy: %g, side: %s, layout: %s\n", prefix, this, _parent, parent, name.text.text, posx, posy, side.to_string(), ((layout == null) ? "Unknown" : layout.name) );

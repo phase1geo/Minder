@@ -270,7 +270,7 @@ public class BaseNode : Object {
   protected Style           _style        = new Style();
 
   // Node signals
-  public signal void moved( double diffx, double diffy );
+  public signal void moved( double diffx, double diffy, string? msg = null );
   public signal void resized( double diffw, double diffh );
 
   // Properties
@@ -288,7 +288,7 @@ public class BaseNode : Object {
       _posx = value - _map.origin_x;
       update_tree_bbox( diff, 0 );
       if( diff != 0 ) {
-        moved( diff, 0 );
+        moved( diff, 0, "%s posx".printf( to_string() ) );
       }
     }
   }
@@ -297,11 +297,12 @@ public class BaseNode : Object {
       return( _posy + _map.origin_y );
     }
     set {
+      display( false );
       double diff = (value - posy);
       _posy = value - _map.origin_y;
       update_tree_bbox( 0, diff );
       if( diff != 0 ) {
-        moved( 0, diff );
+        moved( 0, diff, "%s posy".printf( to_string() ) );
       }
     }
   }
@@ -1363,13 +1364,13 @@ public class BaseNode : Object {
   //-------------------------------------------------------------
   // If the parent node is moved, we will move ourselves the same
   // amount.
-  protected virtual void parent_moved( BaseNode parent, double diffx, double diffy ) {
+  protected virtual void parent_moved( BaseNode parent, double diffx, double diffy, string? msg = null ) {
 
     _posx += diffx;
     _posy += diffy;
 
     update_tree_bbox( diffx, diffy );
-    moved( diffx, diffy );
+    moved( diffx, diffy, "%s parent_moved".printf( to_string() ) );
 
   }
 
@@ -1377,17 +1378,17 @@ public class BaseNode : Object {
   // Detaches this node from its parent node.
   public virtual void detach( NodeSide side ) {
 
-    if( parent != null ) {
+    if( _parent != null ) {
       int idx = index();
-      parent.children().remove_index( idx );
-      parent.moved.disconnect( this.parent_moved );
-      if( parent.last_selected_child == this ) {
-        parent.last_selected_child = null;
+      _parent.children().remove_index( idx );
+      _parent.moved.disconnect( this.parent_moved );
+      if( _parent.last_selected_child == this ) {
+        _parent.last_selected_child = null;
       }
       if( layout != null ) {
-        layout.handle_update_by_delete( parent, idx, side, tree_size );
+        layout.handle_update_by_delete( _parent, idx, side, tree_size );
       }
-      parent   = null;
+      _parent  = null;
       attached = false;
     }
 
@@ -1740,6 +1741,13 @@ public class BaseNode : Object {
       }
       draw( ctx, theme, motion, exporting );
     }
+  }
+
+  //-------------------------------------------------------------
+  // Displays this node as a printable string.  The derived class
+  // must implement this functionality.
+  public virtual string to_string() {
+    return( "" );
   }
 
   //-------------------------------------------------------------

@@ -463,7 +463,7 @@ public class Connection : Object {
 
   //-------------------------------------------------------------
   // Handles any position changes of either the to or from node.
-  private void end_moved( BaseNode node, double diffx, double diffy ) {
+  private void end_moved( BaseNode node, double diffx, double diffy, string? msg = null ) {
     double x, y, w, h, dragx, dragy;
     node.node_bbox( out x, out y, out w, out h );
     var from = (_from_node == node);
