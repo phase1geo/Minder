@@ -1189,11 +1189,11 @@ public class Node : BaseNode {
 
   //-------------------------------------------------------------
   // Detaches this node from its parent node.
-  public override void detach( NodeSide side ) {
+  public override void detach( NodeSide side, bool re_layout = true ) {
     if( parent != null ) {
       propagate_task_info_up( (0 - _task_count), (0 - _task_done) );
       _sequence_num = null;
-      base.detach( side );
+      base.detach( side, re_layout );
     }
   }
 

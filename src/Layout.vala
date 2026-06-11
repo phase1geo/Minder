@@ -134,11 +134,29 @@ public class Layout : Object {
   // Adjusts the given tree by the given amount.
   public virtual void adjust_tree( BaseNode parent, int child_index, int side_mask, double amount ) {
 
+    // Traverse summarized nodes, if the parent is a SummarizedNode
+    /*
+    var sn = (parent as SummarizedNode);
+    if( sn != null ) {
+      for( int i=0; i<sn.summarized_count(); i++ ) {
+        var n = sn.get_summarized_node( i );
+        if( (i != child_index) && ((n.side & side_mask) != 0) ) {
+          if( n.side.horizontal() ) {
+            n.posy += amount;
+          } else {
+            n.posx += amount;
+          }
+        }
+        if( i == child_index ) {
+          amount = 0 - amount;
+        }
+      }
+    }
+    */
+
+    // Traverse child nodes
     for( int i=0; i<parent.children().length; i++ ) {
-
       var n = parent.children().index( i );
-
-      // if( ((i != child_index) || n.last_summarized()) && ((n.side & side_mask) != 0) ) {
       if( (i != child_index) && ((n.side & side_mask) != 0) ) {
         if( n.side.horizontal() ) {
           n.posy += amount;
@@ -146,11 +164,9 @@ public class Layout : Object {
           n.posx += amount;
         }
       }
-
       if( i == child_index ) {
         amount = 0 - amount;
       }
-
     }
 
   }

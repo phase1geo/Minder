@@ -1639,7 +1639,6 @@ public class MapModel {
     } else {
       _map.add_undo( new UndoNodeDelete( current, current.index(), conns, undo_groups ) );
       current.delete();
-      _nodes.index( 0 ).display( true );
     }
     _map.selected.remove_node( current );
     if( !current.is_root() ) {
@@ -3053,6 +3052,14 @@ public class MapModel {
     conn = _connections.on_curve( x, y );
     if( conn != null ) return;
     sticker = _stickers.is_within( x, y );
+  }
+
+  //-------------------------------------------------------------
+  // Recursively displays the model tree to standard output.
+  public void display() {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).display( true );
+    }
   }
 
 }

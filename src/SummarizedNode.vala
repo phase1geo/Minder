@@ -477,6 +477,7 @@ public class SummarizedNode : BaseNode {
   //-------------------------------------------------------------
   // Connects the node to signals
   private void connect_node( BaseNode node ) {
+    moved.connect( node.parent_moved );
     // node.moved.connect( nodes_changed_moved );
     node.resized.connect( nodes_changed_resized );
   }
@@ -484,6 +485,7 @@ public class SummarizedNode : BaseNode {
   //-------------------------------------------------------------
   // Disconnects the node from signals
   private void disconnect_node( BaseNode node ) {
+    moved.disconnect( node.parent_moved );
     // node.moved.disconnect( nodes_changed_moved );
     node.resized.disconnect( nodes_changed_resized );
   }
@@ -554,7 +556,7 @@ public class SummarizedNode : BaseNode {
 
     for( int i=first_index; i<last_index; i++ ) {
       var node = p.children().index( first_index );
-      node.detach( side );
+      node.detach( side, false );
       add_node( node );
     }
 
@@ -652,7 +654,7 @@ public class SummarizedNode : BaseNode {
     // If we have exactly one summarized node, attach the summary node (the child of this node)
     // to the last remaining item (otherwise, it will be deleted entirely).
     if( _nodes.length == 1 ) {
-      var summary  = _children.index( 0 );
+      var summary = _children.index( 0 );
       summary.detach( summary.side );
       summary.attach( _nodes.index( 0 ), -1, null );
     }

@@ -1375,7 +1375,7 @@ public class BaseNode : Object {
 
   //-------------------------------------------------------------
   // Detaches this node from its parent node.
-  public virtual void detach( NodeSide side ) {
+  public virtual void detach( NodeSide side, bool re_layout = true ) {
 
     if( _parent != null ) {
       int idx = index();
@@ -1384,7 +1384,7 @@ public class BaseNode : Object {
       if( _parent.last_selected_child == this ) {
         _parent.last_selected_child = null;
       }
-      if( layout != null ) {
+      if( (layout != null) && re_layout ) {
         layout.handle_update_by_delete( _parent, idx, side, tree_size );
       }
       _parent  = null;
@@ -1397,7 +1397,7 @@ public class BaseNode : Object {
   // Removes this node from the node tree along with all
   // descendents.
   public virtual void delete() {
-    if( (_parent as SummarizedNode) != null ) {
+    if( is_summary() ) {
       _parent.delete();
     }
     detach( side );
