@@ -182,12 +182,15 @@ public class SummarizedNode : BaseNode {
 
   //-------------------------------------------------------------
   // Called whenever the parent node is moved.
+  /*
   protected override void parent_moved( BaseNode parent, double diffx, double diffy, string? msg = null ) {
+
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).parent_moved( this, diffx, diffy, "sn.parent_moved.a" );
     }
     base.parent_moved( parent, diffx, diffy, "sn.parent_moved.b" );
   }
+  */
 
   //-------------------------------------------------------------
   // Sets the alpha value of all internal nodes to the given value.
@@ -407,6 +410,42 @@ public class SummarizedNode : BaseNode {
   // Returns the last summarized node in the list.
   public override BaseNode? last_child( NodeSide? side = null ) {
     return( (_nodes.length == 0) ? null : _nodes.index( _nodes.length - 1 ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns a reference to the next child after the specified
+  // child of this node.
+  public override BaseNode? next_child( BaseNode n, bool wrap = false ) {
+    int idx = node_index( n );
+    if( idx == -1 ) {
+      return( null );
+    } else if( (idx + 1) < _nodes.length ) {
+      return( _nodes.index( idx + 1 ) );
+    } else {
+      var parent_next = parent.next_child( this, wrap );
+      if( parent_next != null ) {
+        return( parent_next );
+      }
+      return( wrap ? _nodes.index( 0 ) : null );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns a reference to the next child after the specified
+  // child of this node.
+  public override BaseNode? prev_child( BaseNode n, bool wrap = false ) {
+    int idx = node_index( n );
+    if( idx == -1 ) {
+      return( null );
+    } else if( idx > 0 ) {
+      return( _nodes.index( idx - 1 ) );
+    } else {
+      var parent_prev = parent.prev_child( this, wrap );
+      if( parent_prev != null ) {
+        return( parent_prev );
+      }
+      return( wrap ? _nodes.index( _children.length - 1 ) : null );
+    }
   }
 
   //-------------------------------------------------------------
@@ -690,12 +729,12 @@ public class SummarizedNode : BaseNode {
     double height = (_height / 2);
     switch( side ) {
       case NodeSide.LEFT :
-        x = posx + margin - 20;
+        x = posx - 20;
         y = posy + height;
         break;
       case NodeSide.TOP :
         x = posx + (_width / 2);
-        y = posy + margin - 20;
+        y = posy - 20;
         break;
       case NodeSide.RIGHT :
         x = posx + _total_width + 20;
@@ -703,7 +742,7 @@ public class SummarizedNode : BaseNode {
         break;
       default :
         x = posx + (_width / 2);
-        y = posy + _total_height - margin + 20;
+        y = posy + _total_height + 20;
         break;
     }
   }
@@ -731,15 +770,15 @@ public class SummarizedNode : BaseNode {
         break;
       case NodeSide.TOP :
         x1 = x;
-        y1 = y - 10;
+        y1 = y - 20;
         x2 = x + w;
-        y2 = y - 20;
+        y2 = y - 10;
         break;
       case NodeSide.BOTTOM :
         x1 = x;
-        y1 = y + h + 10;
+        y1 = y + h + 20;
         x2 = x + w;
-        y2 = y + h + 20;
+        y2 = y + h + 10;
         break;
       default :  assert_not_reached();
     }
@@ -751,10 +790,17 @@ public class SummarizedNode : BaseNode {
     Utils.set_context_color_with_alpha( ctx, link_color, alpha );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.set_line_width( max_width );
-    ctx.move_to( x1, y1 );
-    ctx.line_to( x2, y1 );
-    ctx.line_to( x2, y2 );
-    ctx.line_to( x1, y2 );
+    if( side.horizontal() ) {
+      ctx.move_to( x1, y1 );
+      ctx.line_to( x2, y1 );
+      ctx.line_to( x2, y2 );
+      ctx.line_to( x1, y2 );
+    } else {
+      ctx.move_to( x1, y2 );
+      ctx.line_to( x1, y1 );
+      ctx.line_to( x2, y1 );
+      ctx.line_to( x2, y2 );
+    }
     ctx.stroke();
 
   }

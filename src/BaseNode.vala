@@ -261,6 +261,7 @@ public class BaseNode : Object {
   protected double          _alpha        = 1.0;
   protected BaseNode        _parent       = null;
   protected Array<BaseNode> _children;
+  protected BaseNode?       _last_selected_child = null;
   protected NodeMode        _mode         = NodeMode.NONE;
   protected NodeBounds      _tree_bbox;
   protected double          _posx         = 0;
@@ -318,10 +319,15 @@ public class BaseNode : Object {
   }
   public BaseNode? parent {
     get {
-      return( (((_parent as SummarizedNode) != null) && (_parent.children().index( 0 ) != this)) ? _parent.parent : _parent );
+      return( _parent );
     }
     protected set {
       _parent = value;
+    }
+  }
+  public BaseNode? parent_node {
+    get {
+      return( (((_parent as SummarizedNode) != null) && (_parent.children().index( 0 ) != this)) ? _parent.parent : _parent );
     }
   }
   public SummarizedNode? summarized_node {
@@ -332,8 +338,15 @@ public class BaseNode : Object {
   public NodeSide  side      { get; set; default = NodeSide.RIGHT; }
   public double    tree_size { get; set; default = 0; }
   public bool      attached  { get; set; default = false; }
-  public BaseNode? last_selected_child { get; set; default = null; }
-  public Layout?   layout {
+  public BaseNode? last_selected_child {
+    get {
+      return( (summarized_node != null) ? summarized_node.children().index( 0 ) : _last_selected_child );
+    }
+    set {
+      _last_selected_child = value;
+    }
+  }
+  public Layout? layout {
     get {
       return( _layout );
     }

@@ -540,8 +540,11 @@ public class MindMap {
           folded.set_fold_only( false );
         }
         _selected.set_current_node( n, (_focus_mode ? _focus_alpha : 1.0) );
-        if( n.parent != null ) {
-          n.parent.last_selected_child = n;
+        if( n.parent_node != null ) {
+          n.parent_node.last_selected_child = n;
+        }
+        if( n.summarized_node != null ) {
+          n.summarized_node.set_current_node( n );
         }
         _canvas.see( animate );
       }

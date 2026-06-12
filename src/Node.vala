@@ -1882,7 +1882,7 @@ public class Node : BaseNode {
     if( link_sibling ) {
       prev.link_point( out parent_x, out parent_y, true );
     } else {
-      parent.link_point( out parent_x, out parent_y );
+      parent_node.link_point( out parent_x, out parent_y );
     }
 
     Utils.set_context_color_with_alpha( ctx, _link_color, ((_parent.alpha != 1.0) ? _parent.alpha : _alpha) );

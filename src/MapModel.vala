@@ -1616,7 +1616,6 @@ public class MapModel {
   //-------------------------------------------------------------
   // Deletes the current node.
   public void delete_node() {
-    stdout.printf( "In delete_node\n" );
     var current = _map.selected.current_node();
     if( current == null ) return;
     Node? next_node = _map.next_node_to_select();
@@ -2193,8 +2192,9 @@ public class MapModel {
   // Returns the parent node of the given node that should be
   // selected.
   public BaseNode? get_select_parent( Node node ) {
-    var sn = node.summarized_node;
-    return( (sn != null) ? sn.current_node() : node.parent );
+    var parent = node.parent;
+    var sn     = (parent as SummarizedNode);
+    return( node.is_summary() ? sn.current_node() : node.parent_node );
   }
 
   //-------------------------------------------------------------
