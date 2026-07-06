@@ -73,6 +73,7 @@ public class Minder : Gtk.Application {
     // Add the application-specific icons
     weak IconTheme default_theme = IconTheme.get_for_display( Gdk.Display.get_default() );
     default_theme.add_resource_path( "/io/github/phase1geo/minder" );
+    default_theme.add_resource_path( "/io/github/phase1geo/minder/icons/hicolor" );
 
     // Create the main window
     appwin = new MainWindow( this, settings );

@@ -25,8 +25,7 @@ public class LayoutRight : Layout {
   // Default constructor
   public LayoutRight() {
     name        = _( "To right" );
-    light_icon  = "minder-layout-right-light-symbolic";
-    dark_icon   = "minder-layout-right-dark-symbolic";
+    icon        = "minder-layout-right-symbolic";
     balanceable = false;
   }
 

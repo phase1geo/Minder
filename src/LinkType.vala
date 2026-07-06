@@ -31,12 +31,8 @@ public interface LinkType : Object {
   public abstract string display_name();
 
   //-------------------------------------------------------------
-  // Returns the name of the light-mode link icon
-  public abstract string light_icon_name();
-
-  //-------------------------------------------------------------
-  // Returns the name of the dark-mode link icon
-  public abstract string dark_icon_name();
+  // Returns the name of the link icon
+  public abstract string icon_name();
 
   protected double adjust_a( Style style ) {
     return( style.link_arrow ? ((style.link_width / 2) + ((style.node_borderwidth / 2) + 2)) : 0 );

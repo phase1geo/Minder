@@ -371,14 +371,10 @@ public class StyleInspector : Box {
     };
     _link_types.changed.connect( action_set_link_type );
 
-    update_icons.connect(() => {
-      _link_types.update_icons();
-    });
-
     var link_types = styles.get_link_types();
     for( int i=0; i<link_types.length; i++ ) {
       var link_type = link_types.index( i );
-      _link_types.add_button( link_type.light_icon_name(), link_type.dark_icon_name(), link_type.display_name() );
+      _link_types.add_button( link_type.icon_name(), null, link_type.display_name() );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 10 ) {
@@ -783,14 +779,10 @@ public class StyleInspector : Box {
     };
     _node_borders.changed.connect( set_node_border );
 
-    update_icons.connect(() => {
-      _node_borders.update_icons();
-    });
-
     var node_borders = styles.get_node_borders();
     for( int i=0; i<node_borders.length; i++ ) {
       var node_border = node_borders.index( i );
-      _node_borders.add_button( node_border.light_icon_name(), node_border.dark_icon_name(), node_border.display_name() );
+      _node_borders.add_button( node_border.icon_name(), null, node_border.display_name() );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
