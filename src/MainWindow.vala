@@ -1807,21 +1807,13 @@ public class MainWindow : Gtk.ApplicationWindow {
       if( !on_elementary ) {
         _prop_btn.icon_name = Utils.use_dark_mode( _header ) ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
       }
-      var current_tab = (_stack.get_child_by_name( "current" ) as CurrentInspector);
       var style_tab   = (_stack.get_child_by_name( "style" )   as StyleInspector);
       var tag_tab     = (_stack.get_child_by_name( "tag" )     as TagInspector);
-      var map_tab     = (_stack.get_child_by_name( "map" )     as MapInspector);
-      if( current_tab != null ) {
-        current_tab.update_icons();
-      }
       if( style_tab != null ) {
         style_tab.update_icons();
       }
       if( tag_tab != null ) {
         tag_tab.update_icons();
-      }
-      if( map_tab != null ) {
-        map_tab.update_icons();
       }
     }
   }

@@ -30,12 +30,8 @@ public interface NodeBorder : Object {
   public abstract string display_name();
 
   //-------------------------------------------------------------
-  // Returns the name of the node border light-mode icon
-  public abstract string light_icon_name();
-
-  //-------------------------------------------------------------
-  // Returns the name of the node border dark-mode icon
-  public abstract string? dark_icon_name();
+  // Returns the name of the node border icon
+  public abstract string icon_name();
 
   //-------------------------------------------------------------
   // Returns true if this node border is fillable

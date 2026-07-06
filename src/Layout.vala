@@ -24,8 +24,7 @@ public class Layout : Object {
   protected double _rt_gap = 100;  // Root node gaps
 
   public string name        { protected set; get; default = ""; }
-  public string light_icon  { protected set; get; default = ""; }
-  public string dark_icon   { protected set; get; default = ""; }
+  public string icon        { protected set; get; default = ""; }
   public bool   balanceable { protected set; get; default = false; }
 
   //-------------------------------------------------------------
