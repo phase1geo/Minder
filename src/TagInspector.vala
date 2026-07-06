@@ -30,7 +30,6 @@ public class TagInspector : Box {
   private Box       _highlight_box;
 
   public signal void editable_changed();
-  public signal void update_icons();
 
   //-------------------------------------------------------------
   // Constructor
@@ -101,10 +100,6 @@ public class TagInspector : Box {
     append( note );
     append( _editor );
     append( _highlight_box );
-
-    update_icons.connect(() => {
-      _editor.update_icons();
-    });
 
   }
 

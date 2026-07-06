@@ -25,8 +25,7 @@ public class LayoutDown : Layout {
   // Default constructor
   public LayoutDown() {
     name        = _( "Downwards" );
-    light_icon  = "minder-layout-down-light-symbolic";
-    dark_icon   = "minder-layout-down-dark-symbolic";
+    icon        = "minder-layout-down-symbolic";
     balanceable = false;
   }
 

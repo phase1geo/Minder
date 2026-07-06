@@ -39,15 +39,9 @@ public class NodeBorderPill : Object, NodeBorder {
   }
 
   //-------------------------------------------------------------
-  // Returns the name of the light-mode icon
-  public string light_icon_name() {
-    return( "minder-node-border-pill-light-symbolic" );
-  }
-
-  //-------------------------------------------------------------
-  // Returns the name of the dark-mode icon
-  public string? dark_icon_name() {
-    return( "minder-node-border-pill-dark-symbolic" );
+  // Returns the name of the icon
+  public string icon_name() {
+    return( "minder-node-border-pill-symbolic" );
   }
 
   //-------------------------------------------------------------
