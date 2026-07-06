@@ -1248,7 +1248,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void add_braindump_button() {
 
     _brain_btn = new ToggleButton() {
-      icon_name = "minder-braindump-light-symbolic",
+      icon_name = "minder-braindump-symbolic",
     };
     register_widget_for_shortcut( _brain_btn, KeyCommand.TOGGLE_BRAINDUMP, _( "Brain Dump" ) );
 
@@ -1422,8 +1422,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void add_property_button() {
 
     // Keep the show/hide sidebar icon names
-    _prop_show = (on_elementary ? "minder-sidebar-open"  : "minder-sidebar-light-symbolic");
-    _prop_hide = (on_elementary ? "minder-sidebar-close" : "minder-sidebar-light-symbolic");
+    _prop_show = (on_elementary ? "minder-sidebar-open"  : "minder-sidebar-symbolic");
+    _prop_hide = (on_elementary ? "minder-sidebar-close" : "minder-sidebar-symbolic");
 
     // Add the menubutton
     _prop_btn  = new ToggleButton() {
@@ -1803,17 +1803,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     var gtk_settings = Gtk.Settings.get_default();
     if( gtk_settings != null ) {
       gtk_settings.gtk_application_prefer_dark_theme = dark_mode;
-      _brain_btn.icon_name = Utils.use_dark_mode( _header ) ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
-      if( !on_elementary ) {
-        _prop_btn.icon_name = Utils.use_dark_mode( _header ) ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
-      }
-      var style_tab   = (_stack.get_child_by_name( "style" )   as StyleInspector);
-      var tag_tab     = (_stack.get_child_by_name( "tag" )     as TagInspector);
+      var style_tab = (_stack.get_child_by_name( "style" )   as StyleInspector);
       if( style_tab != null ) {
         style_tab.update_icons();
-      }
-      if( tag_tab != null ) {
-        tag_tab.update_icons();
       }
     }
   }

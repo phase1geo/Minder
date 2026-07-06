@@ -151,7 +151,7 @@ public class TagBox : Box {
       }
     });
 
-    var visible_btn = new Button.from_icon_name( "minder-eye-light-symbolic" ) {
+    var visible_btn = new Button.from_icon_name( "minder-eye-symbolic" ) {
       halign       = Align.END,
       visible      = false,
       tooltip_text = _( "Click to add tag to highlight list" )
@@ -219,10 +219,6 @@ public class TagBox : Box {
 
     append( color );
     append( box );
-
-    editor.update_icons.connect(() => {
-      visible_btn.icon_name = Utils.use_dark_mode( visible_btn ) ? "minder-eye-dark-symbolic" : "minder-eye-light-symbolic";
-    });
 
   }
 
@@ -295,7 +291,6 @@ public class TagEditor : Box {
   public signal void tag_removed( Tag tag, int index );
   public signal void select_changed( Tag tag, bool select );
   public signal void visible_changed( Tag tag, bool visible );
-  public signal void update_icons();
   public signal void escaped();
 
   //-------------------------------------------------------------
