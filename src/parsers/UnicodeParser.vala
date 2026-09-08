@@ -40,6 +40,9 @@ public class UnicodeParser : TextParser {
   // Highlights the given tag.
   private void handle_code( FormattedText text, MatchInfo match ) {
 
+    // LaTeX commands must remain intact while a formula is edited.
+    if( LatexRenderer.is_latex_candidate( text.text ) ) return;
+
     var tag = get_text( match, 0 );
 
     // Highlight the tag
