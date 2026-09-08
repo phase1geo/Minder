@@ -41,7 +41,9 @@ public class UnicodeParser : TextParser {
   private void handle_code( FormattedText text, MatchInfo match ) {
 
     // LaTeX commands must remain intact while a formula is edited.
-    if( LatexRenderer.is_latex_candidate( text.text ) ) return;
+    int match_start, match_end;
+    match.fetch_pos( 0, out match_start, out match_end );
+    if( LatexRenderer.is_latex_at( text.text, match_start ) ) return;
 
     var tag = get_text( match, 0 );
 

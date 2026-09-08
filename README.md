@@ -14,7 +14,7 @@ Use the power of mind-mapping to make your ideas come to life.
 - Choose from many tree layout choices.
 - Support for Markdown formatting.
 - Support for insertion of Unicode characters.
-- Typeset full-node LaTeX expressions to scalable SVG using `$$...$$` delimiters.
+- Typeset inline LaTeX expressions to scalable SVG using `$$...$$` delimiters.
 - Add notes, tasks, and images to your nodes.
 - Add node-to-node connections with optional text and notes.
 - Stylize nodes, callouts, links and connections to add more meaning and improve readability.
@@ -58,16 +58,17 @@ You will need the following dependencies to build Minder:
 * webp-pixbuf-loader
 * A LaTeX installation providing `latex`, `amsmath`, `amssymb` and `dvisvgm`
 
-To typeset a formula in a node, connection title, or callout, make the entire
-text value a display LaTeX expression. For example:
+To typeset a formula in a node, connection title, or callout, surround it with
+`$$` delimiters. Formulas can be mixed with ordinary text and more than one can
+be used in a text value. For example:
 
 ```latex
-$$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
+This is a formula $$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
 ```
 
-Minder displays the source while it is being edited and renders it as a
-scalable SVG when editing finishes. If the LaTeX tools are unavailable or the
-expression is invalid, Minder leaves the source visible.
+Minder displays the source while it is being edited and renders the combined
+text and formulas as a scalable SVG when editing finishes. If the LaTeX tools
+are unavailable or an expression is invalid, Minder leaves the source visible.
 
 To install, run `sudo ./app install` and then run the application from your application launcher or from
 the command-line with `./app run`.  If you want to debug with gdb using this build, run `./app debug`.

@@ -25,7 +25,7 @@ using Gee;
 using GLib;
 
 //-------------------------------------------------------------
-// Converts display LaTeX to SVG and renders the result to Cairo.
+// Converts text containing LaTeX spans to SVG and renders it to Cairo.
 public class LatexRenderer : Object {
 
   private class LatexImage : Object {
@@ -81,45 +81,108 @@ public class LatexRenderer : Object {
   public signal void changed();
 
   //-------------------------------------------------------------
-  // Returns true and extracts the expression when the entire value
-  // is enclosed by display-math delimiters.
-  public static bool parse_source( string source, out string expression ) {
-    var stripped = source.strip();
-    expression = "";
-    if( (stripped.length < 5) || !stripped.has_prefix( "$$" ) || !stripped.has_suffix( "$$" ) ) {
-      return( false );
+  // Escapes ordinary node text before it is included in the small
+  // TeX document surrounding the formula spans.
+  private static void append_text( StringBuilder output, string text ) {
+    int index = 0;
+    unichar c;
+    while( text.get_next_char( ref index, out c ) ) {
+      switch( c ) {
+        case '\\' :  output.append( "\\textbackslash{}" );     break;
+        case '{'  :  output.append( "\\{" );                  break;
+        case '}'  :  output.append( "\\}" );                  break;
+        case '$'  :  output.append( "\\$" );                  break;
+        case '&'  :  output.append( "\\&" );                  break;
+        case '#'  :  output.append( "\\#" );                  break;
+        case '%'  :  output.append( "\\%" );                  break;
+        case '_'  :  output.append( "\\_" );                  break;
+        case '^'  :  output.append( "\\textasciicircum{}" );  break;
+        case '~'  :  output.append( "\\textasciitilde{}" );   break;
+        case '\n' :  output.append( "\\strut\\\\\n" );      break;
+        case '\r' :                                            break;
+        default   :  output.append_unichar( c );                break;
+      }
     }
-    expression = stripped.substring( 2, (stripped.length - 4) ).strip();
-    return( expression != "" );
+  }
+
+  //-------------------------------------------------------------
+  // Converts one or more $$...$$ spans into a safe TeX document body.
+  // Text outside the spans is treated as literal text, not TeX source.
+  public static bool parse_source( string source, out string document_body ) {
+    var output       = new StringBuilder( "\\noindent\\strut " );
+    var offset       = 0;
+    var formula_seen = false;
+
+    while( offset < source.length ) {
+      var start = source.index_of( "$$", offset );
+      if( start == -1 ) {
+        append_text( output, source.substring( offset ) );
+        break;
+      }
+
+      append_text( output, source.substring( offset, (start - offset) ) );
+      var end = source.index_of( "$$", (start + 2) );
+      if( end == -1 ) {
+        document_body = "";
+        return( false );
+      }
+
+      var expression = source.substring( (start + 2), (end - start - 2) ).strip();
+      if( expression == "" ) {
+        document_body = "";
+        return( false );
+      }
+
+      output.append( "\\(\\displaystyle\n" );
+      output.append( expression );
+      output.append( "\n\\)" );
+      formula_seen = true;
+      offset = end + 2;
+    }
+
+    document_body = output.str;
+    return( formula_seen );
   }
 
   //-------------------------------------------------------------
   // Returns true if the supplied text is a display LaTeX expression.
   public static bool is_latex_source( string source ) {
-    string expression;
-    return( parse_source( source, out expression ) );
+    string document_body;
+    return( parse_source( source, out document_body ) );
   }
 
   //-------------------------------------------------------------
-  // Returns true while the user is entering a display expression.
-  // This keeps other backslash-based input helpers from consuming
-  // LaTeX commands before the closing delimiter has been entered.
-  public static bool is_latex_candidate( string source ) {
-    return( source.strip().has_prefix( "$$" ) );
+  // Returns true when a byte position is inside an opened $$ span.
+  // This also handles the span while its closing delimiter is pending.
+  public static bool is_latex_at( string source, int position ) {
+    var offset  = 0;
+    var in_math = false;
+    while( offset < source.length ) {
+      var delimiter = source.index_of( "$$", offset );
+      if( delimiter == -1 ) {
+        return( in_math );
+      }
+      if( position < delimiter ) {
+        return( in_math );
+      }
+      in_math = !in_math;
+      offset = delimiter + 2;
+    }
+    return( in_math );
   }
 
   //-------------------------------------------------------------
   // Updates the rendered image. Rendering runs asynchronously so a
   // complex expression cannot block canvas interaction.
   public void update( string source, int font_size ) {
-    string expression;
-    if( !parse_source( source, out expression ) ) {
+    string document_body;
+    if( !parse_source( source, out document_body ) ) {
       clear();
       return;
     }
 
     var size = int.max( 6, font_size );
-    var key  = "%d\x1f%s".printf( size, expression );
+    var key  = "%d\x1f%s".printf( size, source );
     if( key == _key ) {
       return;
     }
@@ -137,7 +200,7 @@ public class LatexRenderer : Object {
       return;
     }
 
-    if( expression.length > MAX_SOURCE_LENGTH ) {
+    if( source.length > MAX_SOURCE_LENGTH ) {
       fail( key, _generation, _( "LaTeX expression is too long" ) );
       return;
     }
@@ -150,7 +213,7 @@ public class LatexRenderer : Object {
     }
 
     _rendering = true;
-    render.begin( expression, size, key, _generation, latex, dvisvgm );
+    render.begin( document_body, size, key, _generation, latex, dvisvgm );
   }
 
   //-------------------------------------------------------------
@@ -180,7 +243,7 @@ public class LatexRenderer : Object {
 
   //-------------------------------------------------------------
   // Creates the small standalone TeX document used by latex.
-  private static string make_document( string expression, int font_size ) {
+  private static string make_document( string document_body, int font_size ) {
     var line_height = font_size * 1.2;
     return( """\documentclass{article}
 \usepackage{amsmath}
@@ -188,22 +251,20 @@ public class LatexRenderer : Object {
 \pagestyle{empty}
 \begin{document}
 \fontsize{%dpt}{%.2fpt}\selectfont
-\(\displaystyle
 %s
-\)
 \end{document}
-""".printf( font_size, line_height, expression ) );
+""".printf( font_size, line_height, document_body ) );
   }
 
   //-------------------------------------------------------------
   // Runs latex followed by dvisvgm and loads the resulting SVG.
-  private async void render( string expression, int font_size, string key, int generation,
+  private async void render( string document_body, int font_size, string key, int generation,
                              string latex, string dvisvgm ) {
     string? temp_dir = null;
     try {
       temp_dir = DirUtils.make_tmp( "minder-latex-XXXXXX" );
       var tex_file = GLib.Path.build_filename( temp_dir, "formula.tex" );
-      FileUtils.set_contents( tex_file, make_document( expression, font_size ) );
+      FileUtils.set_contents( tex_file, make_document( document_body, font_size ) );
 
       string command_error;
       string[] latex_argv = {
