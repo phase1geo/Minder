@@ -33,7 +33,7 @@ msgstr "Minder i AppCenter"
 #: src/About.vala:60
 #, c-format
 msgid "Flatpak Runtime: %s"
-msgstr ""
+msgstr "Flatpak-körmiljö: %s"
 
 #: src/Application.vala:133
 #, c-format
@@ -79,16 +79,16 @@ msgstr "Aktiverar bildlänkar i exporterad Markdown"
 #: src/Application.vala:152
 #, fuzzy
 msgid "Import Example:\n"
-msgstr "Importera fil"
+msgstr "Importexempel:\n"
 
 #: src/Application.vala:153
 #, c-format
 msgid "  %scom.github.phase1geo.minder --import=markdown file.markdown\n"
-msgstr ""
+msgstr "  %scom.github.phase1geo.minder --import=markdown fil.markdown\n"
 
 #: src/Application.vala:155
 msgid "Export Example:\n"
-msgstr ""
+msgstr "Exportexempel:\n"
 
 #: src/Application.vala:156
 #, c-format
@@ -1083,63 +1083,63 @@ msgstr "Ta bort föregående ord"
 #: src/KeyCommands.vala:744
 #, fuzzy
 msgid "Markdown Syntax"
-msgstr "Markdown-syntaxtecken"
+msgstr "Markdown-syntax"
 
 #: src/KeyCommands.vala:745
 msgid "Insert Markdown header-1 syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för rubrik 1"
 
 #: src/KeyCommands.vala:746
 msgid "Insert Markdown header-2 syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för rubrik 2"
 
 #: src/KeyCommands.vala:747
 msgid "Insert Markdown header-3 syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för rubrik 3"
 
 #: src/KeyCommands.vala:748
 msgid "Insert Markdown header-4 syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för rubrik 4"
 
 #: src/KeyCommands.vala:749
 msgid "Insert Markdown header-5 syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för rubrik 5"
 
 #: src/KeyCommands.vala:750
 msgid "Insert Markdown header-6 syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för rubrik 6"
 
 #: src/KeyCommands.vala:751
 msgid "Insert Markdown bold syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för fetstil"
 
 #: src/KeyCommands.vala:752
 msgid "Insert Markdown italics syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för kursiv stil"
 
 #: src/KeyCommands.vala:753
 msgid "Insert Markdown strikethrough syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för genomstrykning"
 
 #: src/KeyCommands.vala:754
 msgid "Insert Markdown code syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för kod"
 
 #: src/KeyCommands.vala:755
 msgid "Insert Markdown highlighting syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för markering"
 
 #: src/KeyCommands.vala:756
 msgid "Insert Markdown superscript syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för upphöjd text"
 
 #: src/KeyCommands.vala:757
 msgid "Insert Markdown subscript syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för nedsänkt text"
 
 #: src/KeyCommands.vala:758
 msgid "Insert Markdown URL link syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för URL-länk"
 
 #: src/KeyCommands.vala:760
 msgid "Copy selected nodes or text"
