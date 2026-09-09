@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
 # Daniel Nylander <po@danielnylander.se>, 2025.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
@@ -33,7 +32,7 @@ msgstr "Minder i AppCenter"
 #: src/About.vala:60
 #, c-format
 msgid "Flatpak Runtime: %s"
-msgstr ""
+msgstr "Flatpak-körmiljö: %s"
 
 #: src/Application.vala:133
 #, c-format
@@ -77,18 +76,17 @@ msgid "Enables image links in exported Markdown"
 msgstr "Aktiverar bildlänkar i exporterad Markdown"
 
 #: src/Application.vala:152
-#, fuzzy
 msgid "Import Example:\n"
-msgstr "Importera fil"
+msgstr "Importexempel:\n"
 
 #: src/Application.vala:153
 #, c-format
 msgid "  %scom.github.phase1geo.minder --import=markdown file.markdown\n"
-msgstr ""
+msgstr "  %scom.github.phase1geo.minder --import=markdown fil.markdown\n"
 
 #: src/Application.vala:155
 msgid "Export Example:\n"
-msgstr ""
+msgstr "Exportexempel:\n"
 
 #: src/Application.vala:156
 #, c-format
@@ -96,6 +94,8 @@ msgid ""
 "  %scom.github.phase1geo.minder --export=png --png-transparent file.minder "
 "file.png\n"
 msgstr ""
+"  %scom.github.phase1geo.minder --export=png --png-transparent fil.minder "
+"fil.png\n"
 
 #: src/Application.vala:165
 #, c-format
@@ -1081,65 +1081,64 @@ msgid "Remove previous word"
 msgstr "Ta bort föregående ord"
 
 #: src/KeyCommands.vala:744
-#, fuzzy
 msgid "Markdown Syntax"
-msgstr "Markdown-syntaxtecken"
+msgstr "Markdown-syntax"
 
 #: src/KeyCommands.vala:745
 msgid "Insert Markdown header-1 syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för rubrik 1"
 
 #: src/KeyCommands.vala:746
 msgid "Insert Markdown header-2 syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för rubrik 2"
 
 #: src/KeyCommands.vala:747
 msgid "Insert Markdown header-3 syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för rubrik 3"
 
 #: src/KeyCommands.vala:748
 msgid "Insert Markdown header-4 syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för rubrik 4"
 
 #: src/KeyCommands.vala:749
 msgid "Insert Markdown header-5 syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för rubrik 5"
 
 #: src/KeyCommands.vala:750
 msgid "Insert Markdown header-6 syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för rubrik 6"
 
 #: src/KeyCommands.vala:751
 msgid "Insert Markdown bold syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för fetstil"
 
 #: src/KeyCommands.vala:752
 msgid "Insert Markdown italics syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för kursiv stil"
 
 #: src/KeyCommands.vala:753
 msgid "Insert Markdown strikethrough syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för genomstrykning"
 
 #: src/KeyCommands.vala:754
 msgid "Insert Markdown code syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för kod"
 
 #: src/KeyCommands.vala:755
 msgid "Insert Markdown highlighting syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för markering"
 
 #: src/KeyCommands.vala:756
 msgid "Insert Markdown superscript syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för upphöjd text"
 
 #: src/KeyCommands.vala:757
 msgid "Insert Markdown subscript syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för nedsänkt text"
 
 #: src/KeyCommands.vala:758
 msgid "Insert Markdown URL link syntax"
-msgstr ""
+msgstr "Infoga Markdown-syntax för URL-länk"
 
 #: src/KeyCommands.vala:760
 msgid "Copy selected nodes or text"
@@ -1428,62 +1427,60 @@ msgid "About Minder"
 msgstr "Om Minder"
 
 #: src/MainWindow.vala:1187 src/TextMenu.vala:52
-#, fuzzy
 msgid "# Header1"
-msgstr "Headset"
+msgstr "# Rubrik 1"
 
 #: src/MainWindow.vala:1188 src/TextMenu.vala:53
 msgid "## Header2"
-msgstr ""
+msgstr "## Rubrik 2"
 
 #: src/MainWindow.vala:1189 src/TextMenu.vala:54
 msgid "### Header3"
-msgstr ""
+msgstr "### Rubrik 3"
 
 #: src/MainWindow.vala:1190 src/TextMenu.vala:55
 msgid "#### Header4"
-msgstr ""
+msgstr "#### Rubrik 4"
 
 #: src/MainWindow.vala:1191 src/TextMenu.vala:56
 msgid "##### Header5"
-msgstr ""
+msgstr "##### Rubrik 5"
 
 #: src/MainWindow.vala:1192 src/TextMenu.vala:57
 msgid "###### Header6"
-msgstr ""
+msgstr "###### Rubrik 6"
 
 #: src/MainWindow.vala:1193 src/TextMenu.vala:58
 msgid "**Bold**"
-msgstr ""
+msgstr "**Fetstil**"
 
 #: src/MainWindow.vala:1194 src/TextMenu.vala:59
 msgid "__Italicize_"
-msgstr ""
+msgstr "__Kursiv stil_"
 
 #: src/MainWindow.vala:1195 src/TextMenu.vala:60
 msgid "~~Strikeout~~"
-msgstr ""
+msgstr "~~Genomstruken~~"
 
 #: src/MainWindow.vala:1196 src/TextMenu.vala:61
 msgid "`Code`"
-msgstr ""
+msgstr "`Kod`"
 
 #: src/MainWindow.vala:1197 src/TextMenu.vala:62
-#, fuzzy
 msgid "==Highlight=="
-msgstr "Markeringsläge"
+msgstr "==Markering=="
 
 #: src/MainWindow.vala:1198 src/TextMenu.vala:63
 msgid "<sup>Superscript</sup>"
-msgstr ""
+msgstr "<sup>Upphöjd text</sup>"
 
 #: src/MainWindow.vala:1199 src/TextMenu.vala:64
 msgid "<sub>Subscript</sub>"
-msgstr ""
+msgstr "<sub>Nedsänkt text</sub>"
 
 #: src/MainWindow.vala:1200 src/TextMenu.vala:65
 msgid "[Link text](URL)"
-msgstr ""
+msgstr "[Länktext](URL)"
 
 #: src/MainWindow.vala:1218 src/MainWindow.vala:1831
 msgid "Show Property Sidebar"
@@ -1805,11 +1802,11 @@ msgstr "Använd överordnad färg"
 
 #: src/NodeMenu.vala:49
 msgid "One Level"
-msgstr ""
+msgstr "En nivå"
 
 #: src/NodeMenu.vala:50
 msgid "All Levels"
-msgstr ""
+msgstr "Alla nivåer"
 
 #: src/NodeMenu.vala:53
 msgid "Edit Text…"
@@ -1848,7 +1845,6 @@ msgid "Link Color"
 msgstr "Länkfärg"
 
 #: src/NodeMenu.vala:64
-#, fuzzy
 msgid "Toggle Folding"
 msgstr "Växla infällning"
 
@@ -2197,12 +2193,10 @@ msgstr ""
 "kartans sidofält för att göra omedelbara ändringar)."
 
 #: src/Preferences.vala:192
-#, fuzzy
 msgid "Enable mindmap animations"
 msgstr "Aktivera animeringar"
 
 #: src/Preferences.vala:196
-#, fuzzy
 msgid "Enable window animations"
 msgstr "Aktivera animeringar"
 
@@ -4255,9 +4249,8 @@ msgid "URL Link Foreground"
 msgstr "URL-länk Förgrund"
 
 #: src/ThemeEditor.vala:119
-#, fuzzy
 msgid "Highlighter"
-msgstr "Markeringsläge"
+msgstr "Överstrykningspenna"
 
 #: src/ThemeEditor.vala:121
 msgid "Markdown Syntax Chars"
@@ -4670,7 +4663,6 @@ msgstr "Zooma till faktisk"
 #~ msgid "Prefer Dark Mode"
 #~ msgstr "Föredrar mörkt läge"
 
-#, fuzzy
 #~ msgid "No Commands Listed"
 #~ msgstr "Nodkommandon"
 
