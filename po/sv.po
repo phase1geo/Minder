@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
 # Daniel Nylander <po@danielnylander.se>, 2025.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
@@ -77,7 +76,6 @@ msgid "Enables image links in exported Markdown"
 msgstr "Aktiverar bildlänkar i exporterad Markdown"
 
 #: src/Application.vala:152
-#, fuzzy
 msgid "Import Example:\n"
 msgstr "Importexempel:\n"
 
@@ -96,6 +94,8 @@ msgid ""
 "  %scom.github.phase1geo.minder --export=png --png-transparent file.minder "
 "file.png\n"
 msgstr ""
+"  %scom.github.phase1geo.minder --export=png --png-transparent fil.minder "
+"fil.png\n"
 
 #: src/Application.vala:165
 #, c-format
@@ -1081,7 +1081,6 @@ msgid "Remove previous word"
 msgstr "Ta bort föregående ord"
 
 #: src/KeyCommands.vala:744
-#, fuzzy
 msgid "Markdown Syntax"
 msgstr "Markdown-syntax"
 
@@ -1428,62 +1427,60 @@ msgid "About Minder"
 msgstr "Om Minder"
 
 #: src/MainWindow.vala:1187 src/TextMenu.vala:52
-#, fuzzy
 msgid "# Header1"
-msgstr "Headset"
+msgstr "# Rubrik 1"
 
 #: src/MainWindow.vala:1188 src/TextMenu.vala:53
 msgid "## Header2"
-msgstr ""
+msgstr "## Rubrik 2"
 
 #: src/MainWindow.vala:1189 src/TextMenu.vala:54
 msgid "### Header3"
-msgstr ""
+msgstr "### Rubrik 3"
 
 #: src/MainWindow.vala:1190 src/TextMenu.vala:55
 msgid "#### Header4"
-msgstr ""
+msgstr "#### Rubrik 4"
 
 #: src/MainWindow.vala:1191 src/TextMenu.vala:56
 msgid "##### Header5"
-msgstr ""
+msgstr "##### Rubrik 5"
 
 #: src/MainWindow.vala:1192 src/TextMenu.vala:57
 msgid "###### Header6"
-msgstr ""
+msgstr "###### Rubrik 6"
 
 #: src/MainWindow.vala:1193 src/TextMenu.vala:58
 msgid "**Bold**"
-msgstr ""
+msgstr "**Fetstil**"
 
 #: src/MainWindow.vala:1194 src/TextMenu.vala:59
 msgid "__Italicize_"
-msgstr ""
+msgstr "__Kursiv stil_"
 
 #: src/MainWindow.vala:1195 src/TextMenu.vala:60
 msgid "~~Strikeout~~"
-msgstr ""
+msgstr "~~Genomstruken~~"
 
 #: src/MainWindow.vala:1196 src/TextMenu.vala:61
 msgid "`Code`"
-msgstr ""
+msgstr "`Kod`"
 
 #: src/MainWindow.vala:1197 src/TextMenu.vala:62
-#, fuzzy
 msgid "==Highlight=="
-msgstr "Markeringsläge"
+msgstr "==Markering=="
 
 #: src/MainWindow.vala:1198 src/TextMenu.vala:63
 msgid "<sup>Superscript</sup>"
-msgstr ""
+msgstr "<sup>Upphöjd text</sup>"
 
 #: src/MainWindow.vala:1199 src/TextMenu.vala:64
 msgid "<sub>Subscript</sub>"
-msgstr ""
+msgstr "<sub>Nedsänkt text</sub>"
 
 #: src/MainWindow.vala:1200 src/TextMenu.vala:65
 msgid "[Link text](URL)"
-msgstr ""
+msgstr "[Länktext](URL)"
 
 #: src/MainWindow.vala:1218 src/MainWindow.vala:1831
 msgid "Show Property Sidebar"
@@ -1805,11 +1802,11 @@ msgstr "Använd överordnad färg"
 
 #: src/NodeMenu.vala:49
 msgid "One Level"
-msgstr ""
+msgstr "En nivå"
 
 #: src/NodeMenu.vala:50
 msgid "All Levels"
-msgstr ""
+msgstr "Alla nivåer"
 
 #: src/NodeMenu.vala:53
 msgid "Edit Text…"
@@ -1848,7 +1845,6 @@ msgid "Link Color"
 msgstr "Länkfärg"
 
 #: src/NodeMenu.vala:64
-#, fuzzy
 msgid "Toggle Folding"
 msgstr "Växla infällning"
 
@@ -2197,12 +2193,10 @@ msgstr ""
 "kartans sidofält för att göra omedelbara ändringar)."
 
 #: src/Preferences.vala:192
-#, fuzzy
 msgid "Enable mindmap animations"
 msgstr "Aktivera animeringar"
 
 #: src/Preferences.vala:196
-#, fuzzy
 msgid "Enable window animations"
 msgstr "Aktivera animeringar"
 
@@ -4255,9 +4249,8 @@ msgid "URL Link Foreground"
 msgstr "URL-länk Förgrund"
 
 #: src/ThemeEditor.vala:119
-#, fuzzy
 msgid "Highlighter"
-msgstr "Markeringsläge"
+msgstr "Överstrykningspenna"
 
 #: src/ThemeEditor.vala:121
 msgid "Markdown Syntax Chars"
@@ -4670,7 +4663,6 @@ msgstr "Zooma till faktisk"
 #~ msgid "Prefer Dark Mode"
 #~ msgstr "Föredrar mörkt läge"
 
-#, fuzzy
 #~ msgid "No Commands Listed"
 #~ msgstr "Nodkommandon"
 
