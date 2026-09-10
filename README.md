@@ -70,6 +70,12 @@ Minder displays the source while it is being edited and renders the combined
 text and formulas as a scalable SVG when editing finishes. If the LaTeX tools
 are unavailable or an expression is invalid, Minder leaves the source visible.
 
+If the optional `formulaocr-offline` command is installed, pasting a formula
+image converts it locally to editable `$$...$$` source and then renders it as
+SVG. Recognition is asynchronous and does not require an internet connection.
+Use **Paste and Replace** when you want to keep clipboard content as an image;
+set `MINDER_FORMULA_OCR` to select a different local recognizer executable.
+
 To install, run `sudo ./app install` and then run the application from your application launcher or from
 the command-line with `./app run`.  If you want to debug with gdb using this build, run `./app debug`.
 

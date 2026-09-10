@@ -115,7 +115,31 @@ public class MinderClipboard {
           var texture = clipboard.read_texture_async.end( res );
           if( texture != null ) {
             var pixbuf = Utils.texture_to_pixbuf( texture );
-            map.model.paste_image( pixbuf, true );
+            if( !shift && FormulaRecognizer.available() ) {
+              map.win.notification(
+                _( "Recognizing formula" ),
+                _( "Converting the pasted image to editable LaTeX locally" )
+              );
+              FormulaRecognizer.recognize.begin( pixbuf, (obj, result) => {
+                try {
+                  var formula = FormulaRecognizer.recognize.end( result );
+                  map.model.paste_text( "$$%s$$".printf( formula ), false );
+                  map.win.notification(
+                    _( "Formula recognized" ),
+                    _( "The pasted image was converted to editable LaTeX" )
+                  );
+                } catch( Error e ) {
+                  warning( "Unable to recognize pasted formula: %s", e.message );
+                  map.model.paste_image( pixbuf, false );
+                  map.win.notification(
+                    _( "Pasted as an image" ),
+                    _( "Formula recognition was skipped: %s" ).printf( e.message )
+                  );
+                }
+              });
+            } else {
+              map.model.paste_image( pixbuf, shift );
+            }
           }
         } catch( Error e ) {}
       });

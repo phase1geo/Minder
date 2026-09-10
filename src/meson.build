@@ -23,6 +23,7 @@ sources += files(
     'Exporter.vala',
     'Exports.vala',
     'FormattedText.vala',
+    'FormulaRecognizer.vala',
     'GroupInspector.vala',
     'GroupsMenu.vala',
     'HtmlToMarkdown.vala',
