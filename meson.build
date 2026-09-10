@@ -74,6 +74,18 @@ dependencies = [
 
 subdir('tests')
 
+test_executable = executable(
+  'minder-regress',
+  test_vala_sources,
+  files('src/LatexSpanParser.vala'),
+  dependencies: dependencies,
+)
+
+test(
+  'minder-regress',
+  test_executable,
+)
+
 e = executable('com.github.phase1geo.minder',
     sources,
     config_file,

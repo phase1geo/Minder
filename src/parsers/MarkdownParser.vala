@@ -35,14 +35,18 @@ public class MarkdownParser : TextParser {
 
     // Lists
     add_regex( "^\\s*(\\*|\\+|\\-|[0-9]+\\.)\\s", (text, match) => {
-      add_tag( text, match, 1, FormatTag.COLOR, _map.get_theme().get_color( "markdown_listitem" ).to_string() );
+      if( !within_latex( text, match, 1 ) ) {
+        add_tag( text, match, 1, FormatTag.COLOR, _map.get_theme().get_color( "markdown_listitem" ).to_string() );
+      }
     });
 
     // Code
     add_regex( "(`)([^`]+)(`)", (text, match) => {
-      make_grey( text, match, 1 );
-      add_tag( text, match, 2, FormatTag.CODE );
-      make_grey( text, match, 3 );
+      if( !within_latex( text, match, 1 ) ) {
+        make_grey( text, match, 1 );
+        add_tag( text, match, 2, FormatTag.CODE );
+        make_grey( text, match, 3 );
+      }
     });
 
     // Bold
@@ -74,13 +78,19 @@ public class MarkdownParser : TextParser {
     add_tag( text, match, paren, FormatTag.SYNTAX );
   }
 
+  private bool within_latex( FormattedText text, MatchInfo match, int paren ) {
+    int start, end;
+    match.fetch_pos( paren, out start, out end );
+    return( LatexSpanParser.is_latex_at( text.text, start ) );
+  }
+
   private void highlight_header( FormattedText text, MatchInfo match ) {
     make_grey( text, match, 1 );
     add_tag( text, match, 0, FormatTag.HEADER, get_text( match, 1 ).length.to_string() );
   }
 
   private void highlight_bold( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
       add_tag( text, match, 2, FormatTag.BOLD );
       make_grey( text, match, 3 );
@@ -88,7 +98,7 @@ public class MarkdownParser : TextParser {
   }
 
   private void highlight_italics( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
       add_tag( text, match, 2, FormatTag.ITALICS );
       make_grey( text, match, 3 );
@@ -96,7 +106,7 @@ public class MarkdownParser : TextParser {
   }
 
   private void highlight_strikethrough( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
       add_tag( text, match, 2, FormatTag.STRIKETHRU );
       make_grey( text, match, 3 );
@@ -104,7 +114,7 @@ public class MarkdownParser : TextParser {
   }
 
   private void highlight_highlight( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
       add_tag( text, match, 2, FormatTag.HILITE, "#A98400" );
       make_grey( text, match, 3 );
@@ -112,7 +122,7 @@ public class MarkdownParser : TextParser {
   }
 
   private void highlight_url1( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
       add_tag( text, match, 2, FormatTag.URL, get_text( match, 4 ) );
       make_grey( text, match, 3 );
@@ -120,7 +130,7 @@ public class MarkdownParser : TextParser {
   }
 
   private void highlight_url2( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
       add_tag( text, match, 2, FormatTag.URL, get_text( match, 2 ) );
       make_grey( text, match, 5 );
@@ -128,7 +138,7 @@ public class MarkdownParser : TextParser {
   }
 
   private void highlight_url3( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
       add_tag( text, match, 2, FormatTag.URL, get_text( match, 2 ) );
       make_grey( text, match, 4 );
@@ -136,7 +146,7 @@ public class MarkdownParser : TextParser {
   }
 
   private void highlight_subscript( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
       add_tag( text, match, 2, FormatTag.SUB, get_text( match, 2 ) );
       make_grey( text, match, 3 );
@@ -144,7 +154,7 @@ public class MarkdownParser : TextParser {
   }
 
   private void highlight_superscript( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
       add_tag( text, match, 2, FormatTag.SUPER, get_text( match, 2 ) );
       make_grey( text, match, 3 );

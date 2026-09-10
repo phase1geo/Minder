@@ -25,246 +25,374 @@ using Gee;
 using GLib;
 
 //-------------------------------------------------------------
-// Converts text containing LaTeX spans to SVG and renders it to Cairo.
+// Renders $$...$$ spans as inline Pango shapes while leaving all
+// ordinary and Markdown-formatted text in the normal Pango layout.
 public class LatexRenderer : Object {
 
   private class LatexImage : Object {
-    public Rsvg.Handle handle { get; private set; }
-    public double      width  { get; private set; }
-    public double      height { get; private set; }
-    public LatexImage( Rsvg.Handle handle, double width, double height ) {
-      this.handle = handle;
-      this.width  = width;
-      this.height = height;
+    public Rsvg.Handle handle        { get; private set; }
+    public double      width         { get; private set; }
+    public double      ascent        { get; private set; }
+    public double      descent       { get; private set; }
+    public double      render_width  { get; private set; }
+    public double      render_height { get; private set; }
+    public LatexImage( Rsvg.Handle handle, double width, double ascent, double descent,
+                       double render_width, double render_height ) {
+      this.handle        = handle;
+      this.width         = width;
+      this.ascent        = ascent;
+      this.descent       = descent;
+      this.render_width  = render_width;
+      this.render_height = render_height;
+    }
+  }
+
+  private class LatexSpan : Object {
+    public int         start      { get; private set; }
+    public int         end        { get; private set; }
+    public string      expression { get; private set; }
+    public string      key        { get; private set; }
+    public double      font_size  { get; private set; }
+    public LatexImage? image      { get; set; default = null; }
+    public Subprocess? process    { get; set; default = null; }
+    public LatexSpan( int start, int end, string expression, string key, double font_size ) {
+      this.start      = start;
+      this.end        = end;
+      this.expression = expression;
+      this.key        = key;
+      this.font_size  = font_size;
+    }
+  }
+
+  private class ShapeData : Object {
+    public LatexRenderer owner { get; private set; }
+    public LatexImage?   image { get; private set; }
+    public bool          draw  { get; private set; }
+    public ShapeData( LatexRenderer owner, LatexImage? image, bool draw ) {
+      this.owner = owner;
+      this.image = image;
+      this.draw  = draw;
+    }
+  }
+
+  private class RenderJob : Object {
+    public LatexRenderer owner      { get; private set; }
+    public LatexSpan     span       { get; private set; }
+    public int           generation { get; private set; }
+    public string        latex      { get; private set; }
+    public string        dvisvgm    { get; private set; }
+    public RenderJob( LatexRenderer owner, LatexSpan span, int generation,
+                      string latex, string dvisvgm ) {
+      this.owner      = owner;
+      this.span       = span;
+      this.generation = generation;
+      this.latex      = latex;
+      this.dvisvgm    = dvisvgm;
     }
   }
 
   private const int MAX_SOURCE_LENGTH = 16384;
   private const int MAX_CACHE_ITEMS   = 128;
   private const int COMMAND_TIMEOUT   = 10;
+  private const int MAX_ACTIVE_JOBS   = 2;
 
   private static HashMap<string,LatexImage>? _cache = null;
+  private static GLib.Queue<RenderJob>?       _render_queue = null;
+  private static int                          _active_jobs  = 0;
 
-  private LatexImage? _image      = null;
-  private Subprocess? _process    = null;
-  private string      _key        = "";
-  private int         _generation = 0;
-  private bool        _rendering  = false;
-  private string?     _error      = null;
-
-  public bool valid {
-    get {
-      return( _image != null );
-    }
-  }
-  public bool rendering {
-    get {
-      return( _rendering );
-    }
-  }
-  public double width {
-    get {
-      return( (_image == null) ? 0.0 : _image.width );
-    }
-  }
-  public double height {
-    get {
-      return( (_image == null) ? 0.0 : _image.height );
-    }
-  }
-  public string? error {
-    get {
-      return( _error );
-    }
-  }
+  private Array<LatexSpan> _spans;
+  private string           _source       = "";
+  private int              _font_size    = 12;
+  private int              _generation   = 0;
+  private double           _draw_red     = 0.0;
+  private double           _draw_green   = 0.0;
+  private double           _draw_blue    = 0.0;
+  private double           _draw_alpha   = 1.0;
 
   public signal void changed();
 
   //-------------------------------------------------------------
-  // Escapes ordinary node text before it is included in the small
-  // TeX document surrounding the formula spans.
-  private static void append_text( StringBuilder output, string text ) {
-    int index = 0;
-    unichar c;
-    while( text.get_next_char( ref index, out c ) ) {
-      switch( c ) {
-        case '\\' :  output.append( "\\textbackslash{}" );     break;
-        case '{'  :  output.append( "\\{" );                  break;
-        case '}'  :  output.append( "\\}" );                  break;
-        case '$'  :  output.append( "\\$" );                  break;
-        case '&'  :  output.append( "\\&" );                  break;
-        case '#'  :  output.append( "\\#" );                  break;
-        case '%'  :  output.append( "\\%" );                  break;
-        case '_'  :  output.append( "\\_" );                  break;
-        case '^'  :  output.append( "\\textasciicircum{}" );  break;
-        case '~'  :  output.append( "\\textasciitilde{}" );   break;
-        case '\n' :  output.append( "\\strut\\\\\n" );      break;
-        case '\r' :                                            break;
-        default   :  output.append_unichar( c );                break;
-      }
+  // Default constructor.
+  public LatexRenderer() {
+    _spans = new Array<LatexSpan>();
+    if( _cache == null ) {
+      _cache = new HashMap<string,LatexImage>();
+    }
+    if( _render_queue == null ) {
+      _render_queue = new GLib.Queue<RenderJob>();
     }
   }
 
   //-------------------------------------------------------------
-  // Converts one or more $$...$$ spans into a safe TeX document body.
-  // Text outside the spans is treated as literal text, not TeX source.
-  public static bool parse_source( string source, out string document_body ) {
-    var output       = new StringBuilder( "\\noindent\\strut " );
-    var offset       = 0;
-    var formula_seen = false;
-
-    while( offset < source.length ) {
-      var start = source.index_of( "$$", offset );
-      if( start == -1 ) {
-        append_text( output, source.substring( offset ) );
-        break;
-      }
-
-      append_text( output, source.substring( offset, (start - offset) ) );
-      var end = source.index_of( "$$", (start + 2) );
-      if( end == -1 ) {
-        document_body = "";
-        return( false );
-      }
-
-      var expression = source.substring( (start + 2), (end - start - 2) ).strip();
-      if( expression == "" ) {
-        document_body = "";
-        return( false );
-      }
-
-      output.append( "\\(\\displaystyle\n" );
-      output.append( expression );
-      output.append( "\n\\)" );
-      formula_seen = true;
-      offset = end + 2;
-    }
-
-    document_body = output.str;
-    return( formula_seen );
+  // Installs the one shape callback used by this Pango context.
+  public void attach( Pango.Context context ) {
+    Pango.cairo_context_set_shape_renderer( context, draw_shape );
   }
 
   //-------------------------------------------------------------
-  // Returns true if the supplied text is a display LaTeX expression.
-  public static bool is_latex_source( string source ) {
-    string document_body;
-    return( parse_source( source, out document_body ) );
-  }
-
-  //-------------------------------------------------------------
-  // Returns true when a byte position is inside an opened $$ span.
-  // This also handles the span while its closing delimiter is pending.
-  public static bool is_latex_at( string source, int position ) {
-    var offset  = 0;
-    var in_math = false;
-    while( offset < source.length ) {
-      var delimiter = source.index_of( "$$", offset );
-      if( delimiter == -1 ) {
-        return( in_math );
-      }
-      if( position < delimiter ) {
-        return( in_math );
-      }
-      in_math = !in_math;
-      offset = delimiter + 2;
-    }
-    return( in_math );
-  }
-
-  //-------------------------------------------------------------
-  // Updates the rendered image. Rendering runs asynchronously so a
-  // complex expression cannot block canvas interaction.
-  public void update( string source, int font_size ) {
-    string document_body;
-    if( !parse_source( source, out document_body ) ) {
-      clear();
-      return;
-    }
-
-    var size = int.max( 6, font_size );
-    var key  = "%d\x1f%s".printf( size, source );
-    if( key == _key ) {
+  // Updates the list of inline formulas and starts missing renders.
+  public void update( FormattedText formatted, int font_size ) {
+    var source = formatted.text;
+    var size   = int.max( 6, font_size );
+    if( (source == _source) && (size == _font_size) ) {
       return;
     }
 
     cancel();
-    _key   = key;
-    _error = null;
-
-    if( _cache == null ) {
-      _cache = new HashMap<string,LatexImage>();
-    }
-    if( _cache.has_key( key ) ) {
-      _image = _cache.get( key );
-      changed();
-      return;
-    }
+    _source    = source;
+    _font_size = size;
 
     if( source.length > MAX_SOURCE_LENGTH ) {
-      fail( key, _generation, _( "LaTeX expression is too long" ) );
       return;
+    }
+
+    var offset = 0;
+    while( offset < source.length ) {
+      var start = LatexSpanParser.find_delimiter( source, offset );
+      if( start == -1 ) {
+        break;
+      }
+      var close = LatexSpanParser.find_delimiter( source, start + 2 );
+      if( close == -1 ) {
+        break;
+      }
+      var end        = close + 2;
+      var expression = source.substring( start + 2, close - start - 2 ).strip();
+      if( expression == "" ) {
+        offset = end;
+        continue;
+      }
+
+      // Markdown code spans remain ordinary text, including any dollar signs.
+      if( !formatted.is_tag_applied_at_index( FormatTag.CODE, start ) ) {
+        var span_size = Math.fmax( 6.0, size * formatted.get_font_scale_at_index( start ) );
+        var key       = "%.2f\x1f%s".printf( span_size, expression );
+        var span      = new LatexSpan( start, end, expression, key, span_size );
+        if( _cache.has_key( key ) ) {
+          span.image = _cache.get( key );
+        }
+        _spans.append_val( span );
+      }
+      offset = end;
     }
 
     var latex   = Environment.find_program_in_path( "latex" );
     var dvisvgm = Environment.find_program_in_path( "dvisvgm" );
     if( (latex == null) || (dvisvgm == null) ) {
-      fail( key, _generation, _( "LaTeX rendering requires the latex and dvisvgm commands" ) );
       return;
     }
 
-    _rendering = true;
-    render.begin( document_body, size, key, _generation, latex, dvisvgm );
+    for( int i=0; i<_spans.length; i++ ) {
+      var span = _spans.index( i );
+      if( span.image == null ) {
+        _render_queue.push_tail( new RenderJob( this, span, _generation, latex, dvisvgm ) );
+      }
+    }
+    dispatch_jobs();
   }
 
   //-------------------------------------------------------------
-  // Clears any current or pending render.
-  private void clear() {
-    if( (_key == "") && (_image == null) && !_rendering && (_error == null) ) {
+  // Starts queued jobs without allowing a large document to launch
+  // an unbounded number of TeX processes at once.
+  private static void dispatch_jobs() {
+    while( (_active_jobs < MAX_ACTIVE_JOBS) && !_render_queue.is_empty() ) {
+      var job = _render_queue.pop_head();
+      if( (job.generation == job.owner._generation) && (job.span.image == null) ) {
+        start_job( job );
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Runs one queued job and releases its slot on completion.
+  private static void start_job( RenderJob job ) {
+    _active_jobs++;
+    job.owner.render.begin(
+      job.span, job.generation, job.latex, job.dvisvgm,
+      (obj, result) => {
+        job.owner.render.end( result );
+        _active_jobs--;
+        dispatch_jobs();
+      }
+    );
+  }
+
+  //-------------------------------------------------------------
+  // Adds inline formula shapes to a normal Pango attribute list.
+  public void apply_attributes( string source, ref Pango.AttrList attrs ) {
+    for( int i=0; i<_spans.length; i++ ) {
+      var span = _spans.index( i );
+      if( span.image == null ) {
+        continue;
+      }
+
+      var first_end = span.start;
+      unichar first_character;
+      if( !source.get_next_char( ref first_end, out first_character ) || (first_end > span.end) ) {
+        continue;
+      }
+
+      var width   = (int)Math.ceil( span.image.width * Pango.SCALE );
+      var ascent  = (int)Math.ceil( span.image.ascent * Pango.SCALE );
+      var descent = (int)Math.ceil( span.image.descent * Pango.SCALE );
+      Pango.Rectangle rectangle = {0, -ascent, width, ascent + descent};
+      var visible_data = new ShapeData( this, span.image, true );
+      var visible = new Pango.AttrShape<ShapeData>.with_data(
+        rectangle, rectangle, visible_data, copy_shape_data
+      );
+      visible.start_index = (uint)span.start;
+      visible.end_index   = (uint)first_end;
+      attrs.insert( (owned)visible );
+
+      // The first character owns the formula width and drawing.  The rest of
+      // the source is replaced by zero-width shapes, preserving byte offsets.
+      if( first_end < span.end ) {
+        Pango.Rectangle hidden_rectangle = {0, 0, 0, 0};
+        var hidden_data = new ShapeData( this, null, false );
+        var hidden = new Pango.AttrShape<ShapeData>.with_data(
+          hidden_rectangle, hidden_rectangle, hidden_data, copy_shape_data
+        );
+        hidden.start_index = (uint)first_end;
+        hidden.end_index   = (uint)span.end;
+        attrs.insert( (owned)hidden );
+      }
+
+      var no_breaks = Pango.attr_allow_breaks_new( false );
+      no_breaks.start_index = (uint)span.start;
+      no_breaks.end_index   = (uint)span.end;
+      attrs.insert( (owned)no_breaks );
+
+      var no_hyphens = Pango.attr_insert_hyphens_new( false );
+      no_hyphens.start_index = (uint)span.start;
+      no_hyphens.end_index   = (uint)span.end;
+      attrs.insert( (owned)no_hyphens );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Stores the color used by the next Pango draw operation.
+  public void prepare_draw( RGBA color, double alpha ) {
+    _draw_red   = color.red;
+    _draw_green = color.green;
+    _draw_blue  = color.blue;
+    _draw_alpha = alpha;
+  }
+
+  //-------------------------------------------------------------
+  // Copies the data attached to a shape when Pango copies a layout.
+  private static ShapeData copy_shape_data( ShapeData data ) {
+    return( new ShapeData( data.owner, data.image, data.draw ) );
+  }
+
+  //-------------------------------------------------------------
+  // Draws an inline SVG at the current Pango baseline.
+  private static void draw_shape( Cairo.Context ctx, Pango.AttrShape attribute, bool do_path ) {
+    unowned Pango.AttrShape<ShapeData> shape = (Pango.AttrShape<ShapeData>)attribute;
+    var data = shape.data;
+    if( do_path || !data.draw || (data.image == null) ) {
       return;
     }
-    cancel();
-    _key   = "";
-    _image = null;
-    _error = null;
-    changed();
+    data.owner.draw_image( ctx, data.image );
   }
 
   //-------------------------------------------------------------
-  // Cancels the current subprocess and invalidates its callbacks.
+  // Draws the image represented by a shape callback.
+  private void draw_image( Cairo.Context ctx, LatexImage image ) {
+    double x, baseline;
+    ctx.get_current_point( out x, out baseline );
+    var y     = baseline - image.render_height + image.descent;
+    var red   = (int)(_draw_red   * 255.0);
+    var green = (int)(_draw_green * 255.0);
+    var blue  = (int)(_draw_blue  * 255.0);
+    var css   = "* { fill: rgb(%d, %d, %d) !important; }".printf( red, green, blue );
+
+    try {
+      image.handle.set_stylesheet( css.data );
+      Rsvg.Rectangle viewport = {x, y, image.render_width, image.render_height};
+      ctx.save();
+      if( _draw_alpha < 1.0 ) {
+        ctx.push_group();
+      }
+      image.handle.render_document( ctx, viewport );
+      if( _draw_alpha < 1.0 ) {
+        ctx.pop_group_to_source();
+        ctx.paint_with_alpha( _draw_alpha );
+      }
+      ctx.restore();
+    } catch( Error e ) {
+      warning( "Unable to draw inline LaTeX: %s", e.message );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Cancels active renders and invalidates their callbacks.
   private void cancel() {
     _generation++;
-    if( _process != null ) {
-      _process.force_exit();
-      _process = null;
+    for( int i=0; i<_spans.length; i++ ) {
+      var process = _spans.index( i ).process;
+      if( process != null ) {
+        process.force_exit();
+      }
     }
-    _rendering = false;
-    _image     = null;
+    _spans.remove_range( 0, _spans.length );
   }
 
   //-------------------------------------------------------------
-  // Creates the small standalone TeX document used by latex.
-  private static string make_document( string document_body, int font_size ) {
+  // Creates a small document containing exactly one math expression.
+  private static string make_document( string expression, double font_size ) {
     var line_height = font_size * 1.2;
     return( """\documentclass{article}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \pagestyle{empty}
 \begin{document}
-\fontsize{%dpt}{%.2fpt}\selectfont
+\fontsize{%.2fpt}{%.2fpt}\selectfont
+\setbox0=\hbox{\(\displaystyle
 %s
+\)}
+\typeout{MINDER-METRICS:\number\wd0,\number\ht0,\number\dp0}
+\noindent\box0
 \end{document}
-""".printf( font_size, line_height, document_body ) );
+""".printf( font_size, line_height, expression ) );
   }
 
   //-------------------------------------------------------------
-  // Runs latex followed by dvisvgm and loads the resulting SVG.
-  private async void render( string document_body, int font_size, string key, int generation,
-                             string latex, string dvisvgm ) {
+  // Reads TeX box dimensions from the renderer log and converts
+  // scaled points to the CSS pixels used by librsvg at 96 DPI.
+  private static bool parse_metrics( string log, out double width,
+                                     out double ascent, out double descent ) {
+    const string prefix = "MINDER-METRICS:";
+    width = ascent = descent = 0.0;
+    var start = log.index_of( prefix );
+    if( start == -1 ) {
+      return( false );
+    }
+    start += prefix.length;
+    var end = log.index_of( "\n", start );
+    var line = ((end == -1) ? log.substring( start ) : log.substring( start, end - start )).strip();
+    var values = line.split( "," );
+    if( (values.length != 3) ||
+        !Regex.match_simple( "^[0-9]+$", values[0] ) ||
+        !Regex.match_simple( "^[0-9]+$", values[1] ) ||
+        !Regex.match_simple( "^[0-9]+$", values[2] ) ) {
+      return( false );
+    }
+
+    const double SP_TO_CSS_PIXEL = 96.0 / (72.27 * 65536.0);
+    width   = int64.parse( values[0] ) * SP_TO_CSS_PIXEL;
+    ascent  = int64.parse( values[1] ) * SP_TO_CSS_PIXEL;
+    descent = int64.parse( values[2] ) * SP_TO_CSS_PIXEL;
+    return( (width > 0.0) && ((ascent + descent) > 0.0) );
+  }
+
+  //-------------------------------------------------------------
+  // Runs LaTeX and dvisvgm for one formula span.
+  private async void render( LatexSpan span, int generation, string latex, string dvisvgm ) {
     string? temp_dir = null;
     try {
       temp_dir = DirUtils.make_tmp( "minder-latex-XXXXXX" );
       var tex_file = GLib.Path.build_filename( temp_dir, "formula.tex" );
-      FileUtils.set_contents( tex_file, make_document( document_body, font_size ) );
+      FileUtils.set_contents( tex_file, make_document( span.expression, span.font_size ) );
 
       string command_error;
       string[] latex_argv = {
@@ -274,11 +402,22 @@ public class LatexRenderer : Object {
         "-no-shell-escape",
         "formula.tex"
       };
-      if( !(yield run_command( temp_dir, latex_argv, generation, out command_error )) ) {
-        fail( key, generation, command_error );
+      if( !(yield run_command( span, temp_dir, latex_argv, generation, out command_error )) ) {
+        fail( generation, command_error );
         return;
       }
       if( generation != _generation ) {
+        return;
+      }
+
+      string log;
+      double tex_width   = 0.0;
+      double tex_ascent  = 0.0;
+      double tex_descent = 0.0;
+      var log_file = GLib.Path.build_filename( temp_dir, "formula.log" );
+      if( !FileUtils.get_contents( log_file, out log ) ||
+          !parse_metrics( log, out tex_width, out tex_ascent, out tex_descent ) ) {
+        fail( generation, _( "Unable to read LaTeX formula dimensions" ) );
         return;
       }
 
@@ -292,8 +431,8 @@ public class LatexRenderer : Object {
         "--output=formula.svg",
         "formula.dvi"
       };
-      if( !(yield run_command( temp_dir, svg_argv, generation, out command_error )) ) {
-        fail( key, generation, command_error );
+      if( !(yield run_command( span, temp_dir, svg_argv, generation, out command_error )) ) {
+        fail( generation, command_error );
         return;
       }
       if( generation != _generation ) {
@@ -302,25 +441,33 @@ public class LatexRenderer : Object {
 
       var handle = new Rsvg.Handle.from_file( GLib.Path.build_filename( temp_dir, "formula.svg" ) );
       handle.set_dpi( 96.0 );
-      double width, height;
-      if( !handle.get_intrinsic_size_in_pixels( out width, out height ) || (width <= 0) || (height <= 0) ) {
-        fail( key, generation, _( "The generated LaTeX SVG has no usable size" ) );
+      double render_width, render_height;
+      if( !handle.get_intrinsic_size_in_pixels( out render_width, out render_height ) ||
+          (render_width <= 0) || (render_height <= 0) ) {
+        fail( generation, _( "The generated LaTeX SVG has no usable size" ) );
         return;
       }
 
-      var image = new LatexImage( handle, width, height );
+      // The SVG is tightly cropped to painted glyphs, while Pango needs the
+      // logical TeX box for spacing and line height.  Keep both measurements:
+      // the former for drawing and the latter for layout and its true baseline.
+      var width   = Math.fmax( tex_width, render_width );
+      var descent = Math.fmin( tex_descent, render_height );
+      var ascent  = Math.fmax( tex_ascent, render_height - descent );
+      var image   = new LatexImage(
+        handle, width, ascent, descent, render_width, render_height
+      );
       if( _cache.size >= MAX_CACHE_ITEMS ) {
         _cache.clear();
       }
-      _cache.set( key, image );
-      if( (generation == _generation) && (key == _key) ) {
-        _image     = image;
-        _rendering = false;
-        _error     = null;
+      _cache.set( span.key, image );
+      if( generation == _generation ) {
+        span.image   = image;
+        span.process = null;
         changed();
       }
     } catch( Error e ) {
-      fail( key, generation, e.message );
+      fail( generation, e.message );
     } finally {
       if( temp_dir != null ) {
         remove_temp_dir( temp_dir );
@@ -330,7 +477,8 @@ public class LatexRenderer : Object {
 
   //-------------------------------------------------------------
   // Runs one renderer command with a timeout and restricted TeX IO.
-  private async bool run_command( string working_dir, string[] argv, int generation, out string command_error ) {
+  private async bool run_command( LatexSpan span, string working_dir, string[] argv,
+                                  int generation, out string command_error ) {
     command_error = "";
     string? stdout_buf = null;
     string? stderr_buf = null;
@@ -344,7 +492,7 @@ public class LatexRenderer : Object {
       launcher.setenv( "openout_any", "p", true );
       launcher.setenv( "TEXMFOUTPUT", working_dir, true );
       var process = launcher.spawnv( argv );
-      _process = process;
+      span.process = process;
 
       uint timeout_id = Timeout.add_seconds( COMMAND_TIMEOUT, () => {
         timed_out = true;
@@ -360,8 +508,8 @@ public class LatexRenderer : Object {
         }
       }
 
-      if( _process == process ) {
-        _process = null;
+      if( span.process == process ) {
+        span.process = null;
       }
       if( generation != _generation ) {
         command_error = _( "LaTeX rendering was cancelled" );
@@ -394,12 +542,9 @@ public class LatexRenderer : Object {
   }
 
   //-------------------------------------------------------------
-  // Records a render failure if it still belongs to the active source.
-  private void fail( string key, int generation, string message ) {
-    if( (generation == _generation) && (key == _key) ) {
-      _image     = null;
-      _rendering = false;
-      _error     = message;
+  // Reports a render failure only if it belongs to current source.
+  private void fail( int generation, string message ) {
+    if( generation == _generation ) {
       warning( "Unable to render LaTeX: %s", message );
       changed();
     }
@@ -416,36 +561,6 @@ public class LatexRenderer : Object {
       }
     } catch( FileError e ) {}
     DirUtils.remove( path );
-  }
-
-  //-------------------------------------------------------------
-  // Renders the cached SVG at the requested canvas location and color.
-  public void draw( Context ctx, double x, double y, double draw_width, double draw_height,
-                    RGBA color, double alpha ) {
-    if( _image == null ) return;
-
-    var red   = (int)(color.red   * 255.0);
-    var green = (int)(color.green * 255.0);
-    var blue  = (int)(color.blue  * 255.0);
-    var css   = "* { fill: rgb(%d, %d, %d) !important; }".printf( red, green, blue );
-
-    try {
-      _image.handle.set_stylesheet( css.data );
-      Rsvg.Rectangle viewport = {x, y, draw_width, draw_height};
-      ctx.save();
-      if( alpha < 1.0 ) {
-        ctx.push_group();
-      }
-      _image.handle.render_document( ctx, viewport );
-      if( alpha < 1.0 ) {
-        ctx.pop_group_to_source();
-        ctx.paint_with_alpha( alpha );
-      }
-      ctx.restore();
-      ctx.new_path();
-    } catch( Error e ) {
-      warning( "Unable to draw LaTeX SVG: %s", e.message );
-    }
   }
 
 }

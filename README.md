@@ -66,9 +66,10 @@ be used in a text value. For example:
 This is a formula $$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
 ```
 
-Minder displays the source while it is being edited and renders the combined
-text and formulas as a scalable SVG when editing finishes. If the LaTeX tools
-are unavailable or an expression is invalid, Minder leaves the source visible.
+Minder displays the source while it is being edited. When editing finishes,
+ordinary and Markdown-formatted text remains native Pango text and each formula
+is drawn as an inline scalable SVG. If the LaTeX tools are unavailable or an
+expression is invalid, Minder leaves that source visible.
 
 If the optional `formulaocr-offline` command is installed, pasting a formula
 image converts it locally to editable `$$...$$` source and then renders it as

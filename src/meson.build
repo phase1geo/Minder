@@ -32,6 +32,7 @@ sources += files(
     'ImageMenu.vala',
     'KeyCommands.vala',
     'LatexRenderer.vala',
+    'LatexSpanParser.vala',
     'Layout.vala',
     'Layouts.vala',
     'LinkDash.vala',
