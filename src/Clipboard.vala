@@ -95,7 +95,7 @@ public class MinderClipboard {
 
   //-------------------------------------------------------------
   // Called to paste current item in clipboard to the given DrawArea
-  public static void paste( MindMap map, bool shift ) {
+  public static void paste( MindMap map, bool replace, bool recognize_formula = false ) {
 
     var clipboard   = Display.get_default().get_clipboard();
     var text_needed = map.is_node_editable() || map.is_connection_editable();
@@ -106,7 +106,7 @@ public class MinderClipboard {
           string str;
           var stream = clipboard.read_async.end( res, out str );
           var contents = Utils.read_stream( stream );
-          map.model.paste_nodes( contents, shift );
+          map.model.paste_nodes( contents, replace );
         } catch( Error e ) {}
       });
     } else if( clipboard.get_formats().contain_mime_type( "image/png" ) || !text_needed ) {
@@ -115,7 +115,7 @@ public class MinderClipboard {
           var texture = clipboard.read_texture_async.end( res );
           if( texture != null ) {
             var pixbuf = Utils.texture_to_pixbuf( texture );
-            if( !shift && FormulaRecognizer.available() ) {
+            if( recognize_formula && FormulaRecognizer.available() ) {
               map.win.notification(
                 _( "Recognizing formula" ),
                 _( "Converting the pasted image to editable LaTeX locally" )
@@ -138,7 +138,7 @@ public class MinderClipboard {
                 }
               });
             } else {
-              map.model.paste_image( pixbuf, shift );
+              map.model.paste_image( pixbuf, replace );
             }
           }
         } catch( Error e ) {}
@@ -147,7 +147,7 @@ public class MinderClipboard {
       clipboard.read_text_async.begin( null, (obj, res) => {
         try {
           var text = clipboard.read_text_async.end( res );
-          map.model.paste_text( text, shift );
+          map.model.paste_text( text, replace );
         } catch( Error e ) {}
       });
     }

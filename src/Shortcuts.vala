@@ -594,7 +594,7 @@ public class Shortcuts {
     add_default( Key.c,            true, false, false, KeyCommand.EDIT_COPY );
     add_default( Key.x,            true, false, false, KeyCommand.EDIT_CUT );
     add_default( Key.v,            true, false, false, KeyCommand.EDIT_PASTE );
-    add_default( Key.v,            true, true,  false, KeyCommand.NODE_PASTE_REPLACE );
+    add_default( Key.v,            true, true,  false, KeyCommand.EDIT_PASTE_LATEX );
     add_default( Key.Return,       true, false, false, KeyCommand.EDIT_INSERT_NEWLINE );
     add_default( Key.BackSpace,    true, false, false, KeyCommand.EDIT_REMOVE_WORD_PREV );
     add_default( Key.Delete,       true, false, false, KeyCommand.EDIT_REMOVE_WORD_NEXT );
