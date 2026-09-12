@@ -40,6 +40,7 @@ math_dep = cc.find_library('m', required: false)
 
 # Check libmarkdown2 dependency
 libmarkdown = dependency('libmarkdown', required: true)
+librsvg = dependency('librsvg-2.0', version: '>=2.52', required: true)
 markdown_vapi = '/vapi/libmarkdown.vapi'
 if libmarkdown.version().version_compare('>=3.0')
   add_project_arguments(['--define=MD30'], language: 'vala')
@@ -67,10 +68,23 @@ dependencies = [
     dependency('json-glib-1.0'),
     dependency('libwebp'),
     libmarkdown,
+    librsvg,
     math_dep
 ]
 
 subdir('tests')
+
+test_executable = executable(
+  'minder-regress',
+  test_vala_sources,
+  files('src/LatexSpanParser.vala'),
+  dependencies: dependencies,
+)
+
+test(
+  'minder-regress',
+  test_executable,
+)
 
 e = executable('com.github.phase1geo.minder',
     sources,

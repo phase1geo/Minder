@@ -39,6 +39,7 @@ public class CanvasText : Object {
   private int           _column        = 0;   // Character column to use when moving vertically
   private Pango.Layout  _pango_layout  = null;
   private Pango.Layout  _line_layout   = null;
+  private LatexRenderer _latex         = null;
   private int           _selstart      = 0;
   private int           _selend        = 0;
   private int           _selanchor     = 0;
@@ -107,6 +108,7 @@ public class CanvasText : Object {
         _edit = value;
         if( !_edit ) {
           _nomarkup_text = new FormattedText.copy_clean( _map, _text );
+          _latex.update( _nomarkup_text, _font_size );
           clear_selection( "edit" );
         }
         update_size( true );
@@ -142,11 +144,13 @@ public class CanvasText : Object {
   public CanvasText( MindMap map ) {
     int int_max_width = (int)_max_width;
     _map           = map;
+    initialize_latex();
     _text          = new FormattedText( map );
     _text.changed.connect( text_changed );
     _nomarkup_text = new FormattedText( map );
     _line_layout   = map.canvas.create_pango_layout( "M" );
     _pango_layout  = map.canvas.create_pango_layout( null );
+    _latex.attach( _pango_layout.get_context() );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
@@ -158,15 +162,27 @@ public class CanvasText : Object {
   public CanvasText.with_text( MindMap map, string txt ) {
     int int_max_width = (int)_max_width;
     _map           = map;
+    initialize_latex();
     _text          = new FormattedText.with_text( map, txt );
     _text.changed.connect( text_changed );
     _nomarkup_text = new FormattedText.copy_clean( map, _text );
     _line_layout   = map.canvas.create_pango_layout( "M" );
     _pango_layout  = map.canvas.create_pango_layout( txt );
+    _latex.attach( _pango_layout.get_context() );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
+    _latex.update( _nomarkup_text, _font_size );
     update_size( false );
+  }
+
+  //-------------------------------------------------------------
+  // Creates the SVG-backed LaTeX renderer.
+  private void initialize_latex() {
+    _latex = new LatexRenderer();
+    _latex.changed.connect(() => {
+      update_size( true );
+    });
   }
 
   //-------------------------------------------------------------
@@ -192,6 +208,7 @@ public class CanvasText : Object {
     _pango_layout.set_font_description( ct._pango_layout.get_font_description() );
     _pango_layout.set_alignment( ct._pango_layout.get_alignment() );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
+    _latex.update( _nomarkup_text, _font_size );
     update_size( true );
   }
 
@@ -215,6 +232,9 @@ public class CanvasText : Object {
     fd.set_size( int_fsize );
     _line_layout.set_font_description( fd );
     _pango_layout.set_font_description( fd );
+    if( !edit ) {
+      _latex.update( _nomarkup_text, _font_size );
+    }
     update_size( true );
   }
 
@@ -321,6 +341,7 @@ public class CanvasText : Object {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "text" ) )  {
         _text.load( it );
         _nomarkup_text = new FormattedText.copy_clean( _map, _text );
+        _latex.update( _nomarkup_text, _font_size );
         update_size( false );
       }
     }
@@ -355,6 +376,7 @@ public class CanvasText : Object {
   private void text_changed() {
     if( !edit ) {
       _nomarkup_text = new FormattedText.copy_clean( _map, _text );
+      _latex.update( _nomarkup_text, _font_size );
     }
     update_size( true );
   }
@@ -364,8 +386,13 @@ public class CanvasText : Object {
   public void update_size( bool call_resized = true ) {
     if( _pango_layout != null ) {
       int text_width, text_height;
-      _pango_layout.set_text( (edit ? _text.text : _nomarkup_text.text), -1 );
-      _pango_layout.set_attributes( edit ? _text.get_attributes() : _nomarkup_text.get_attributes() );
+      var layout_text = edit ? _text : _nomarkup_text;
+      var attrs       = layout_text.get_attributes();
+      if( !edit ) {
+        _latex.apply_attributes( layout_text.text, ref attrs );
+      }
+      _pango_layout.set_text( layout_text.text, -1 );
+      _pango_layout.set_attributes( attrs );
       _pango_layout.get_size( out text_width, out text_height );
       _width  = (text_width  / Pango.SCALE);
       _height = (text_height / Pango.SCALE);
@@ -379,7 +406,12 @@ public class CanvasText : Object {
   // Updates the canvas item with the given theme
   public void update_attributes() {
     if( _pango_layout != null ) {
-      _pango_layout.set_attributes( edit ? _text.get_attributes() : _nomarkup_text.get_attributes() );
+      var layout_text = edit ? _text : _nomarkup_text;
+      var attrs       = layout_text.get_attributes();
+      if( !edit ) {
+        _latex.apply_attributes( layout_text.text, ref attrs );
+      }
+      _pango_layout.set_attributes( attrs );
     }
   }
 
@@ -1153,13 +1185,18 @@ public class CanvasText : Object {
 
     if( copy_layout || node_selected ) {
       layout = _pango_layout.copy();
-      layout.set_attributes( edit ? _text.get_attributes_from_theme( theme, node_selected ) :
-                                    _nomarkup_text.get_attributes_from_theme( theme, node_selected ) );
+      var layout_text = edit ? _text : _nomarkup_text;
+      var attrs       = layout_text.get_attributes_from_theme( theme, node_selected );
+      if( !edit ) {
+        _latex.apply_attributes( layout_text.text, ref attrs );
+      }
+      layout.set_attributes( attrs );
     }
 
     if( alpha < 1.0 ) {
-      layout = _pango_layout.copy();
-      var attrs      = layout.get_attributes();
+      layout = layout.copy();
+      var current_attrs = layout.get_attributes();
+      var attrs      = (current_attrs == null) ? new Pango.AttrList() : current_attrs.copy();
       var alpha_val  = (uint16)(65536 * alpha);
       var alpha_attr = Pango.attr_foreground_alpha_new( alpha_val );
       alpha_attr.start_index = 0;
@@ -1174,6 +1211,7 @@ public class CanvasText : Object {
     // Output the text
     ctx.move_to( (posx - (log_rect.x / Pango.SCALE)), posy );
     Utils.set_context_color_with_alpha( ctx, fg, alpha );
+    _latex.prepare_draw( fg, alpha );
     Pango.cairo_show_layout( ctx, layout );
     ctx.new_path();
 

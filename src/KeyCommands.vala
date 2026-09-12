@@ -212,6 +212,7 @@ public enum KeyCommand {
       EDIT_COPY,
       EDIT_CUT,
       EDIT_PASTE,
+      EDIT_PASTE_LATEX,
     EDIT_CLIPBOARD_END,
     EDIT_URL_START,
       EDIT_OPEN_URL,  // 170
@@ -399,6 +400,7 @@ public enum KeyCommand {
       case EDIT_COPY                 :  return( "edit-copy" );
       case EDIT_CUT                  :  return( "edit-cut" );
       case EDIT_PASTE                :  return( "edit-paste" );
+      case EDIT_PASTE_LATEX          :  return( "edit-paste-latex" );
       case EDIT_OPEN_URL             :  return( "edit-open-url" );
       case EDIT_ADD_URL              :  return( "edit-add-url" );
       case EDIT_EDIT_URL             :  return( "edit-edit-url" );
@@ -571,6 +573,7 @@ public enum KeyCommand {
       case "edit-copy"                 :  return( EDIT_COPY );
       case "edit-cut"                  :  return( EDIT_CUT );
       case "edit-paste"                :  return( EDIT_PASTE );
+      case "edit-paste-latex"          :  return( EDIT_PASTE_LATEX );
       case "edit-open-url"             :  return( EDIT_OPEN_URL );
       case "edit-add-url"              :  return( EDIT_ADD_URL );
       case "edit-edit-url"             :  return( EDIT_EDIT_URL );
@@ -760,6 +763,7 @@ public enum KeyCommand {
       case EDIT_COPY                 :  return( _( "Copy selected nodes or text" ) );
       case EDIT_CUT                  :  return( _( "Cut selected nodes or text" ) );
       case EDIT_PASTE                :  return( _( "Paste nodes or text from clipboard" ) );
+      case EDIT_PASTE_LATEX          :  return( _( "Convert a clipboard image to LaTeX" ) );
       case EDIT_URL_START            :  return( _( "URL Commands" ) );
       case EDIT_OPEN_URL             :  return( _( "Open URL link at current cursor position" ) );
       case EDIT_ADD_URL              :  return( _( "Add URL link at current cursor position" ) );
@@ -931,6 +935,7 @@ public enum KeyCommand {
       case EDIT_COPY                 :  return( edit_copy );
       case EDIT_CUT                  :  return( edit_cut );
       case EDIT_PASTE                :  return( edit_paste );
+      case EDIT_PASTE_LATEX          :  return( edit_paste_latex );
       case EDIT_OPEN_URL             :  return( edit_open_url );
       case EDIT_ADD_URL              :  return( edit_add_url );
       case EDIT_EDIT_URL             :  return( edit_edit_url );
@@ -981,6 +986,7 @@ public enum KeyCommand {
       (this == EDIT_COPY) ||
       (this == EDIT_CUT)  ||
       (this == EDIT_PASTE) ||
+      (this == EDIT_PASTE_LATEX) ||
       (this == ESCAPE)
     );
   }
@@ -1043,6 +1049,7 @@ public enum KeyCommand {
       case NODE_ADD_SIBLING_BEFORE :
       case NODE_SELECT_ROOT        :
       case EDIT_PASTE              :
+      case EDIT_PASTE_LATEX        :
       case ESCAPE                  :
         return( true );
       default :
@@ -2364,6 +2371,11 @@ public enum KeyCommand {
   public static void edit_paste( MindMap map ) {
     if( !map.editable ) return;
     map.do_paste( false );
+  }
+
+  public static void edit_paste_latex( MindMap map ) {
+    if( !map.editable ) return;
+    map.do_paste_latex();
   }
 
   private static void edit_return_helper( MindMap map, bool shift ) {
