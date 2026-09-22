@@ -169,6 +169,16 @@ public class ExportMarkdown : Export {
   }
 
   //-------------------------------------------------------------
+  // Converts collected Markdown table rows into a node table.
+  private void apply_table_rows( MindMap map, Node? node, Array<string> rows ) {
+    if( (node != null) && (rows.length > 0) ) {
+      var table = NodeTable.from_markdown( map, rows );
+      if( table != null ) node.set_table( table );
+    }
+    rows.remove_range( 0, rows.length );
+  }
+
+  //-------------------------------------------------------------
   // Imports a mindmap from the given text
   private void import_text( string txt, MindMap map, string current_dir ) {
 
@@ -178,6 +188,8 @@ public class ExportMarkdown : Export {
       var lines   = txt.split( "\n" );
       var re      = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>|\\d+\\.)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
       var current = map.get_current_node();
+      var table_rows = new Array<string>();
+      Node? table_node = null;
 
       // Populate the stack with the current node, if one exists.  Set the spaces
       // count to -1 so that everything but a new header is added to this node.
@@ -197,9 +209,21 @@ public class ExportMarkdown : Export {
           var bullet = match_info.fetch( 3 );
           var task   = match_info.fetch( 5 );
           var str    = match_info.fetch( 6 );
+          var stripped = str.strip();
+
+          // Collect table rows for the current node.
+          if( (stack.length > 0) && (bullet == "") &&
+              NodeTableTextParser.is_markdown_row( stripped ) ) {
+            table_node = stack.index( stack.length - 1 ).node;
+            table_rows.append_val( stripped );
+            continue;
+          }
+
+          apply_table_rows( map, table_node, table_rows );
+          table_node = null;
 
           // Add note
-          if( str.strip() == "" ) continue;
+          if( stripped == "" ) continue;
           if( bullet == ">" ) {
             if( stack.length > 0 ) {
               append_note( stack.index( stack.length - 1 ).node, str );
@@ -246,6 +270,8 @@ public class ExportMarkdown : Export {
         }
 
       }
+
+      apply_table_rows( map, table_node, table_rows );
 
     } catch( GLib.RegexError err ) {
       // TBD
@@ -294,6 +320,9 @@ public class ExportMarkdown : Export {
         if( nodes.index( i ).note != "" ) {
           var note = "  > " + nodes.index( i ).note.replace( "\n", "\n  > " ) + "\n\n";
           retval += note;
+        }
+        if( nodes.index( i ).table != null ) {
+          retval += nodes.index( i ).table.to_markdown() + "\n\n";
         }
         var children = nodes.index( i ).children();
         for( int j=0; j<children.length; j++ ) {
@@ -358,6 +387,10 @@ public class ExportMarkdown : Export {
       if( node.note != "" ) {
         string note = prefix + "  > " + node.note.replace( "\n", "\n" + prefix + "  > " ) + "\n";
         retval += note;
+      }
+
+      if( node.table != null ) {
+        retval += prefix + "  " + node.table.to_markdown().replace( "\n", "\n" + prefix + "  " ) + "\n";
       }
 
       retval += "\n";

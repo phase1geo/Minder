@@ -62,6 +62,7 @@
     <file alias="minder-align-vertical-top-symbolic.svg">icons/scalable/minder-align-vertical-top-symbolic.svg</file>
     <file alias="minder-align-vertical-center-symbolic.svg">icons/scalable/minder-align-vertical-center-symbolic.svg</file>
     <file alias="minder-align-vertical-bottom-symbolic.svg">icons/scalable/minder-align-vertical-bottom-symbolic.svg</file>
+    <file alias="minder-table-highlight-symbolic.svg">icons/scalable/minder-table-highlight-symbolic.svg</file>
 
     <file alias="data_encryption">icons/flat-color-icons/svg/data_encryption.svg</file>
     <file alias="factory_breakdown">icons/flat-color-icons/svg/factory_breakdown.svg</file>

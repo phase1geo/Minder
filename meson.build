@@ -77,7 +77,10 @@ subdir('tests')
 test_executable = executable(
   'minder-regress',
   test_vala_sources,
-  files('src/LatexSpanParser.vala'),
+  files(
+    'src/LatexSpanParser.vala',
+    'src/NodeTableModel.vala',
+  ),
   dependencies: dependencies,
 )
 

@@ -229,6 +229,7 @@ public static int main (string[] args) {
   var tests = new MinderTest.TestRunner ();
   tests.add( new MinderTest.ExampleTest() );
   tests.add( new MinderTest.LatexSpanParserTest() );
+  tests.add( new MinderTest.NodeTableModelTest() );
 
   exit_status = tests.run();
 

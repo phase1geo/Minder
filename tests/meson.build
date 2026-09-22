@@ -3,4 +3,5 @@ test_vala_sources = files(
   'tests.vala',
   'test-example.vala',
   'test-latex-span-parser.vala',
+  'test-node-table-model.vala',
 )

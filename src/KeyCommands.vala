@@ -105,8 +105,9 @@ public enum KeyCommand {
       NODE_CHANGE_TASK,
       NODE_CHANGE_IMAGE,
       NODE_REMOVE_IMAGE,
-      NODE_CHANGE_LINK_COLOR,
-      NODE_RANDOMIZE_LINK_COLOR,  // 80
+      NODE_CHANGE_TABLE,
+      NODE_CHANGE_LINK_COLOR,  // 80
+      NODE_RANDOMIZE_LINK_COLOR,
       NODE_REPARENT_LINK_COLOR,
       NODE_TOGGLE_FOLDS_SHALLOW,
       NODE_TOGGLE_FOLDS_DEEP,
@@ -115,8 +116,8 @@ public enum KeyCommand {
       NODE_ADD_CONNECTION,
       NODE_TOGGLE_CALLOUT,
       NODE_TOGGLE_SEQUENCE,
-    NODE_CHANGE_END,
-    NODE_SELECT_START,  // 90
+    NODE_CHANGE_END,  // 90
+    NODE_SELECT_START,
       NODE_SELECT_ROOT,
       NODE_SELECT_PARENT,
       NODE_SELECT_SIBLING_NEXT,
@@ -125,8 +126,8 @@ public enum KeyCommand {
       NODE_SELECT_CHILDREN,
       NODE_SELECT_TREE,
       NODE_SELECT_DOWN,
-      NODE_SELECT_UP,
-      NODE_SELECT_RIGHT,  // 100
+      NODE_SELECT_UP,  // 100
+      NODE_SELECT_RIGHT,
       NODE_SELECT_LEFT,
       NODE_SELECT_LINKED,
       NODE_SELECT_CALLOUT,
@@ -135,8 +136,8 @@ public enum KeyCommand {
     NODE_MOVE_START,
       NODE_SWAP_RIGHT,
       NODE_SWAP_LEFT,
-      NODE_SWAP_UP,
-      NODE_SWAP_DOWN,  // 110
+      NODE_SWAP_UP,  // 110
+      NODE_SWAP_DOWN,
       NODE_SORT_ALPHABETICALLY,
       NODE_SORT_RANDOMLY,
       NODE_DETACH,
@@ -145,8 +146,8 @@ public enum KeyCommand {
       NODE_ALIGN_TOP,
       NODE_ALIGN_VCENTER,
       NODE_ALIGN_BOTTOM,
-      NODE_ALIGN_LEFT,
-      NODE_ALIGN_HCENTER,  // 120
+      NODE_ALIGN_LEFT,  // 120
+      NODE_ALIGN_HCENTER,
       NODE_ALIGN_RIGHT,
     NODE_ALIGN_END,
   NODE_END,
@@ -157,8 +158,8 @@ public enum KeyCommand {
     CALLOUT_REMOVE,
   CALLOUT_END,
   CONNECTION_START,
-    CONNECTION_EXIST_START,
-      CONNECTION_REMOVE,  // 130
+    CONNECTION_EXIST_START,  // 130
+      CONNECTION_REMOVE,
     CONNECTION_EXIST_END,
     CONNECTION_SELECT_START,
       CONNECTION_SELECT_FROM,
@@ -167,8 +168,8 @@ public enum KeyCommand {
       CONNECTION_SELECT_PREV,
     CONNECTION_SELECT_END,
   CONNECTION_END,
-  STICKER_START,
-    STICKER_REMOVE,  // 140
+  STICKER_START,  // 140
+    STICKER_REMOVE,
   STICKER_END,
   GROUP_START,
     GROUP_CHANGE_START,
@@ -177,8 +178,8 @@ public enum KeyCommand {
       GROUP_REMOVE,
     GROUP_CHANGE_END,
     GROUP_SELECT_START,
-      GROUP_SELECT_MAIN,
-      GROUP_SELECT_ALL,  // 150
+      GROUP_SELECT_MAIN,  // 150
+      GROUP_SELECT_ALL,
     GROUP_SELECT_END,
   GROUP_END,
   EDIT_START,
@@ -187,8 +188,8 @@ public enum KeyCommand {
       EDIT_INSERT_TAB,
       EDIT_INSERT_EMOJI,
       EDIT_ESCAPE,
-      EDIT_BACKSPACE,
-      EDIT_DELETE,  // 160
+      EDIT_BACKSPACE,  // 160
+      EDIT_DELETE,
       EDIT_REMOVE_WORD_NEXT,
       EDIT_REMOVE_WORD_PREV,
     EDIT_TEXT_END,
@@ -214,8 +215,8 @@ public enum KeyCommand {
       EDIT_PASTE,
       EDIT_PASTE_LATEX,
     EDIT_CLIPBOARD_END,
-    EDIT_URL_START,
-      EDIT_OPEN_URL,  // 170
+    EDIT_URL_START,  // 170
+      EDIT_OPEN_URL,
       EDIT_ADD_URL,
       EDIT_EDIT_URL,
       EDIT_REMOVE_URL,
@@ -223,8 +224,8 @@ public enum KeyCommand {
     EDIT_CURSOR_START,
       EDIT_CURSOR_CHAR_NEXT,
       EDIT_CURSOR_CHAR_PREV,
-      EDIT_CURSOR_UP,
-      EDIT_CURSOR_DOWN,  // 150
+      EDIT_CURSOR_UP,  // 150
+      EDIT_CURSOR_DOWN,
       EDIT_CURSOR_WORD_NEXT,
       EDIT_CURSOR_WORD_PREV,
       EDIT_CURSOR_FIRST,
@@ -233,8 +234,8 @@ public enum KeyCommand {
       EDIT_CURSOR_LINEEND,
     EDIT_CURSOR_END,
     EDIT_SELECT_START,
-      EDIT_SELECT_CHAR_NEXT,
-      EDIT_SELECT_CHAR_PREV,  // 160
+      EDIT_SELECT_CHAR_NEXT,  // 160
+      EDIT_SELECT_CHAR_PREV,
       EDIT_SELECT_UP,
       EDIT_SELECT_DOWN,
       EDIT_SELECT_WORD_NEXT,
@@ -243,8 +244,8 @@ public enum KeyCommand {
       EDIT_SELECT_START_HOME,
       EDIT_SELECT_END_DOWN,
       EDIT_SELECT_END_END,
-      EDIT_SELECT_LINESTART,
-      EDIT_SELECT_LINEEND,  // 170
+      EDIT_SELECT_LINESTART,  // 170
+      EDIT_SELECT_LINEEND,
       EDIT_SELECT_ALL,
       EDIT_SELECT_NONE,
     EDIT_SELECT_END,
@@ -253,8 +254,8 @@ public enum KeyCommand {
       EDIT_SHIFT_RETURN,
       EDIT_TAB,
       EDIT_SHIFT_TAB,
-    EDIT_MISC_END,
-  EDIT_END,  // 180
+    EDIT_MISC_END,  // 180
+  EDIT_END,
   NUM;
 
   //-------------------------------------------------------------
@@ -320,6 +321,7 @@ public enum KeyCommand {
       case NODE_CHANGE_TASK          :  return( "node-change-task" );
       case NODE_CHANGE_IMAGE         :  return( "node-change-image" );
       case NODE_REMOVE_IMAGE         :  return( "node-remove-image" );
+      case NODE_CHANGE_TABLE         :  return( "node-change-table" );
       case NODE_CHANGE_LINK_COLOR    :  return( "node-change-link-color" );
       case NODE_RANDOMIZE_LINK_COLOR :  return( "node-randomize-link-color" );
       case NODE_REPARENT_LINK_COLOR  :  return( "node-reparent-link-color" );
@@ -498,6 +500,7 @@ public enum KeyCommand {
       case "node-change-task"          :  return( NODE_CHANGE_TASK );
       case "node-change-image"         :  return( NODE_CHANGE_IMAGE );
       case "node-remove-image"         :  return( NODE_REMOVE_IMAGE );
+      case "node-change-table"         :  return( NODE_CHANGE_TABLE );
       case "node-change-link-color"    :  return( NODE_CHANGE_LINK_COLOR );
       case "node-randomize-link-color" :  return( NODE_RANDOMIZE_LINK_COLOR );
       case "node-reparent-link-color"  :  return( NODE_REPARENT_LINK_COLOR );
@@ -681,6 +684,7 @@ public enum KeyCommand {
       case NODE_CHANGE_TASK          :  return( _( "Change task status of current node" ) );
       case NODE_CHANGE_IMAGE         :  return( _( "Add/Edit image of current node" ) );
       case NODE_REMOVE_IMAGE         :  return( _( "Remove image from current node" ) );
+      case NODE_CHANGE_TABLE         :  return( _( "Add/Edit table of current node" ) );
       case NODE_CHANGE_LINK_COLOR    :  return( _( "Change link color of current node" ) );
       case NODE_RANDOMIZE_LINK_COLOR :  return( _( "Randomize the current node link color" ) );
       case NODE_REPARENT_LINK_COLOR  :  return( _( "Set current node link color to match parent node" ) );
@@ -860,6 +864,7 @@ public enum KeyCommand {
       case NODE_CHANGE_TASK          :  return( node_change_task );
       case NODE_CHANGE_IMAGE         :  return( node_change_image );
       case NODE_REMOVE_IMAGE         :  return( node_remove_image );
+      case NODE_CHANGE_TABLE         :  return( node_change_table );
       case NODE_CHANGE_LINK_COLOR    :  return( node_change_link_color );
       case NODE_RANDOMIZE_LINK_COLOR :  return( node_randomize_link_color );
       case NODE_REPARENT_LINK_COLOR  :  return( node_reparent_link_color );
@@ -1758,6 +1763,11 @@ public enum KeyCommand {
   public static void node_remove_image( MindMap map ) {
     if( !map.editable ) return;
     map.model.delete_current_image();
+  }
+
+  public static void node_change_table( MindMap map ) {
+    if( !map.editable ) return;
+    map.model.edit_current_table();
   }
 
   public static void node_toggle_callout( MindMap map ) {

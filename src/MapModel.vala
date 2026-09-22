@@ -37,6 +37,7 @@ public enum MapItemComponent {
   STICKER,
   NODE_LINK,
   IMAGE,
+  TABLE,
   LINK,
   TASK,
   FOLD,
@@ -1014,6 +1015,25 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
+  // Opens the table editor for the current node.
+  public void edit_current_table() {
+    var nodes = _map.selected.nodes();
+    if( nodes.length == 1 ) {
+      var current = nodes.index( 0 );
+      _map.canvas.table_editor.edit_table( current, current.posx, current.posy );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever the current node's table is changed.
+  public void current_table_edited( Node node, NodeTable? original_table ) {
+    _map.add_undo( new UndoNodeTable( _map, node, original_table ) );
+    queue_draw();
+    current_changed();
+    auto_save();
+  }
+
+  //-------------------------------------------------------------
   // Called when the linking process has successfully completed
   public void end_link( Node node ) {
     var connection = _map.get_current_connection();
@@ -1278,6 +1298,8 @@ public class MapModel {
           component = MapItemComponent.FOLD;
         } else if( node.is_within_image( x, y ) ) {
           component = MapItemComponent.IMAGE;
+        } else if( node.is_within_table( x, y ) ) {
+          component = MapItemComponent.TABLE;
         } else if( node.is_within_resizer( x, y ) ) {
           component = MapItemComponent.RESIZER;
         } else if( node.is_within_tags( x, y ) ) {

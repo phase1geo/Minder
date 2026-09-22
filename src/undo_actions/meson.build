@@ -53,6 +53,7 @@ sources += files(
     'UndoNodeSummaryFromNode.vala',
     'UndoNodeSummaryDelete.vala',
     'UndoNodeTasks.vala',
+    'UndoNodeTable.vala',
     'UndoNodeUnclify.vala',
 
     'UndoNodesAlign.vala',

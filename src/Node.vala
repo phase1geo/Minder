@@ -239,6 +239,7 @@ public class Node : Object {
   private   bool         _link_color_root = false;
   private   double       _min_width      = 50;
   private   NodeImage?   _image          = null;
+  private   NodeTable?   _table          = null;
   private   Layout?      _layout         = null;
   private   Style        _style          = new Style();
   private   bool         _loaded         = true;
@@ -411,6 +412,9 @@ public class Node : Object {
         if( _sequence_num != null ) {
           _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
         }
+        if( _table != null ) {
+          _table.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+        }
         name.max_width = style.node_width;
         if( traversable() ) {
           for( int i=0; i<_children.length; i++ ) {
@@ -452,6 +456,11 @@ public class Node : Object {
   public NodeImage? image {
     get {
       return( _image );
+    }
+  }
+  public NodeTable? table {
+    get {
+      return( _table );
     }
   }
   public double total_width {
@@ -689,6 +698,7 @@ public class Node : Object {
     _posx           = n._posx;
     _posy           = n._posy;
     _image          = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, n.style.node_width );
+    set_table_reference( (n._table == null) ? null : new NodeTable.copy( _map, n._table ) );
     _name.copy( n._name );
     _link_color      = n._link_color;
     _link_color_set  = n._link_color_set;
@@ -863,12 +873,14 @@ public class Node : Object {
     var name_height  = (_name.height < stk_height) ? stk_height : _name.height;
     var image_width  = (_image != null) ? _image.width : 0;
     var image_height = (_image != null) ? (_image.height + padding) : 0;
+    var table_width  = (_table != null) ? _table.width : 0;
+    var table_height = (_table != null) ? (_table.height + padding) : 0;
     var tg_width     = noname_width + tags_width();
     var tg_height    = tags_height();
-    var all_width    = Math.fmax( name_width, Math.fmax( image_width, tg_width ) );
+    var all_width    = Math.fmax( table_width, Math.fmax( name_width, Math.fmax( image_width, tg_width ) ) );
 
     width      = (margin * 2) + (padding * 2) + all_width;
-    height     = (margin * 2) + (padding * 2) + image_height + name_height + tg_height;
+    height     = (margin * 2) + (padding * 2) + image_height + name_height + table_height + tg_height;
     name_space = all_width - name_width;
 
   }
@@ -937,6 +949,9 @@ public class Node : Object {
   // Updates the size of all nodes within this tree.
   public void update_tree() {
     _name.update_size();
+    if( _table != null ) {
+      _table.update_layout();
+    }
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).update_tree();
     }
@@ -954,6 +969,31 @@ public class Node : Object {
     }
     _image = ni;
     update_size();
+  }
+
+  //-------------------------------------------------------------
+  // Sets the table displayed by this node.
+  public void set_table( NodeTable? table ) {
+    set_table_reference( table );
+    if( _table != null ) {
+      _table.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+    }
+    position_text_and_update_size();
+  }
+
+  private void set_table_reference( NodeTable? table ) {
+    if( _table != null ) {
+      _table.resized.disconnect( table_resized );
+    }
+    _table = table;
+    if( _table != null ) {
+      _table.resized.connect( table_resized );
+    }
+  }
+
+  private void table_resized() {
+    position_text_and_update_size();
+    _map.queue_draw();
   }
 
   //-------------------------------------------------------------
@@ -1173,14 +1213,28 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns the top edge of the title row below any node image.
+  private double title_row_top() {
+    var margin = style.node_margin;
+    var padding = style.node_padding;
+    var image_height = (_image == null) ? 0 : (_image.height + padding);
+    return( posy + margin + padding + image_height );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the height occupied by the title and its sticker.
+  private double title_row_height() {
+    return( Math.fmax( name.height, sticker_height() ) );
+  }
+
+  //-------------------------------------------------------------
   // Returns the positional information for where the task item
   // is located (if it exists).
   protected virtual void task_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin;
     int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
     x = posx + margin + padding;
-    y = posy + margin + padding + img_height + (((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - _task_radius);
+    y = title_row_top() + (title_row_height() / 2) - _task_radius;
     w = _task_radius * 2;
     h = _task_radius * 2;
   }
@@ -1191,10 +1245,9 @@ public class Node : Object {
   protected virtual void sticker_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin;
     int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
     double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
     x = posx + margin + padding + task_width();
-    y = posy + margin + padding + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - (stk_height / 2);
+    y = title_row_top() + ((title_row_height() - stk_height) / 2);
     w = (_sticker_buf == null) ? 0 : _sticker_buf.width;
     h = (_sticker_buf == null) ? 0 : _sticker_buf.height;
   }
@@ -1220,9 +1273,8 @@ public class Node : Object {
   protected virtual void linked_node_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin;
     int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
     x = posx + (_width - (linked_node_width() + padding + margin)) + _ipadx;
-    y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
+    y = title_row_top() + (title_row_height() / 2) - 5;
     w = 11;
     h = 11;
   }
@@ -1233,9 +1285,8 @@ public class Node : Object {
   protected virtual void note_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin;
     int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
     x = posx + (_width - (note_width() + linked_node_width() + padding + margin)) + _ipadx;
-    y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
+    y = title_row_top() + (title_row_height() / 2) - 5;
     w = 11;
     h = 11;
   }
@@ -1250,6 +1301,16 @@ public class Node : Object {
     y = posy + padding + margin;
     w = (_image == null) ? 0 : _image.width;
     h = (_image == null) ? 0 : _image.height;
+  }
+
+  //-------------------------------------------------------------
+  // Returns the positional information of the stored table.
+  protected virtual void table_bbox( out double x, out double y, out double w, out double h ) {
+    int padding = style.node_padding;
+    x = (posx + (_width / 2)) - ((_table == null) ? 0 : (_table.width / 2));
+    y = title_row_top() + title_row_height() + padding;
+    w = (_table == null) ? 0 : _table.width;
+    h = (_table == null) ? 0 : _table.height;
   }
 
   //-------------------------------------------------------------
@@ -1355,6 +1416,17 @@ public class Node : Object {
       double ix, iy, iw, ih;
       image_bbox( out ix, out iy, out iw, out ih );
       return( Utils.is_within_bounds( x, y, ix, iy, iw, ih ) );
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lie within the table area.
+  public virtual bool is_within_table( double x, double y ) {
+    if( _table != null ) {
+      double table_x, table_y, table_width, table_height;
+      table_bbox( out table_x, out table_y, out table_width, out table_height );
+      return( Utils.is_within_bounds( x, y, table_x, table_y, table_width, table_height ) );
     }
     return( false );
   }
@@ -1592,6 +1664,13 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // Loads the table information from the given XML node.
+  private void load_table( Xml.Node* n ) {
+    set_table_reference( new NodeTable.from_xml( _map, n ) );
+    _table.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+  }
+
+  //-------------------------------------------------------------
   // Loads the node link from the given XML node.
   private void load_node_link( Xml.Node* n ) {
     _linked_node = new NodeLink.from_xml( n );
@@ -1605,6 +1684,9 @@ public class Node : Object {
     _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
     if( _sequence_num != null ) {
       _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+    }
+    if( _table != null ) {
+      _table.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
     }
   }
 
@@ -1740,6 +1822,7 @@ public class Node : Object {
           case "nodename"   :  load_name( it );  break;
           case "nodenote"   :  load_note( it );  break;
           case "nodeimage"  :  load_image( map.image_manager, it );  break;
+          case "nodetable"  :  load_table( it );  break;
           case "nodelink"   :  load_node_link( it );  break;
           case "taglist"    :  tags.load_indices( it, _map.model.tags );  break;
           case "style"      :  load_style( it );  break;
@@ -1836,6 +1919,9 @@ public class Node : Object {
 
     if( _image != null ) {
       _image.save( node );
+    }
+    if( _table != null ) {
+      _table.save( node );
     }
 
     node->add_child( name.save( "nodename" ) );
@@ -2899,6 +2985,25 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // Draws the node table below the node title.
+  protected virtual void draw_table( Cairo.Context ctx, Theme theme, bool exporting ) {
+    if( _table != null ) {
+      double x, y, width, height;
+      table_bbox( out x, out y, out width, out height );
+      var color = theme.get_color( "foreground" );
+      if( mode.is_selected() && !exporting ) {
+        color = theme.get_color( "nodesel_foreground" );
+      } else if( parent == null ) {
+        color = _link_color_set ? Granite.contrasting_foreground_color( link_color ) :
+                                  theme.get_color( "root_foreground" );
+      } else if( style.is_fillable() ) {
+        color = Granite.contrasting_foreground_color( link_color );
+      }
+      _table.draw( ctx, x, y, color, _alpha );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Draws the node font to the screen.
   protected virtual void draw_name( Cairo.Context ctx, Theme theme, bool exporting ) {
 
@@ -3413,6 +3518,7 @@ public class Node : Object {
       draw_shape( ctx, theme, background, exporting );
       draw_name( ctx, theme, exporting );
       draw_image( ctx, theme );
+      draw_table( ctx, theme, exporting );
       if( is_leaf() ) {
         draw_leaf_task( ctx, foreground, null );
       } else {
@@ -3435,6 +3541,7 @@ public class Node : Object {
       draw_shape( ctx, theme, _link_color, exporting );
       draw_name( ctx, theme, exporting );
       draw_image( ctx, theme );
+      draw_table( ctx, theme, exporting );
       if( is_leaf() ) {
         draw_leaf_task( ctx, _link_color, background );
       } else {
