@@ -249,14 +249,21 @@ public class ExportXMind2021 : Export {
     var img_name  = map.image_manager.get_file( node.image.id );
     var mime_type = map.image_manager.get_mime_type( node.image.id );
     var src       = Path.build_filename( "resources", Filename.display_basename( img_name ) );
-    var parts     = src.split( "." );
 
-    // Copy the image file to the XMind bundle
+    // Copy or rasterize the image into the XMind bundle
     DirUtils.create( Path.build_filename( dir, "resources" ), 0755 );
-    var lfile = File.new_for_path( Path.build_filename( dir, src ) );
-    var rfile = File.new_for_path( img_name );
     try {
-      rfile.copy( lfile, FileCopyFlags.OVERWRITE );
+      if( node.image.vector ) {
+        src       = Path.build_filename( "resources", "%d.png".printf( node.image.id ) );
+        mime_type = "image/png";
+        var pixbuf = node.image.get_pixbuf( map.get_theme().is_dark() );
+        if( pixbuf == null ) return( null );
+        pixbuf.save( Path.build_filename( dir, src ), "png" );
+      } else {
+        var lfile = File.new_for_path( Path.build_filename( dir, src ) );
+        var rfile = File.new_for_path( img_name );
+        rfile.copy( lfile, FileCopyFlags.OVERWRITE );
+      }
     } catch( GLib.Error e ) {
       return( null );
     }

@@ -31,6 +31,7 @@ public class ImageEditor {
   private const int    EDIT_HEIGHT = 600;
 
   private Popover         _popover;
+  private DrawArea        _canvas;
   private ImageManager    _im;
   private DrawingArea     _da;
   private Node            _node;
@@ -55,7 +56,8 @@ public class ImageEditor {
   // Default constructor
   public ImageEditor( DrawArea da ) {
 
-    _im = da.map.image_manager;
+    _canvas = da;
+    _im     = da.map.image_manager;
 
     // Allocate crop points
     _crop_points  = new Gdk.Rectangle[9];
@@ -235,11 +237,11 @@ public class ImageEditor {
         case 7 :                            w += diffx;  h += diffy;  break;
         case 8 :  x += diffx;  y += diffy;                            break;
       }
-      if( (x >= 0) && ((x + w) <= _da.width_request) && (w >= MIN_WIDTH) ) {
+      if( (x >= 0) && ((x + w) <= _image.orig_width) && (w >= MIN_WIDTH) ) {
         _crop_x = x;
         _crop_w = w;
       }
-      if( (y >= 0) && ((y + h) <= _da.height_request) && (h >= MIN_WIDTH) ) {
+      if( (y >= 0) && ((y + h) <= _image.orig_height) && (h >= MIN_WIDTH) ) {
         _crop_y = y;
         _crop_h = h;
       }
@@ -485,8 +487,7 @@ public class ImageEditor {
     ctx.scale( _scale, _scale );
 
     // Draw the cropped portion of the image
-    cairo_set_source_pixbuf( ctx, _image.get_orig_pixbuf(), 0, 0 );
-    ctx.paint();
+    _image.draw_original( ctx, 1.0, _canvas.map.get_theme().is_dark() );
 
     // On top of that, draw the crop transparency
     ctx.set_source_rgba( 0, 0, 0, 0.8 );
@@ -500,9 +501,11 @@ public class ImageEditor {
 
     // Finally, draw the portion of the image this not cropped
     ctx.set_operator( Operator.OVER );
-    cairo_set_source_pixbuf( ctx, _image.get_orig_pixbuf(), 0, 0 );
+    ctx.save();
     ctx.rectangle( (int)_crop_x, (int)_crop_y, (int)_crop_w, (int)_crop_h );
-    ctx.fill();
+    ctx.clip();
+    _image.draw_original( ctx, 1.0, _canvas.map.get_theme().is_dark() );
+    ctx.restore();
 
     // Draw the crop points
     ctx.set_line_width( 1 );
@@ -587,13 +590,10 @@ public class ImageEditor {
   //-------------------------------------------------------------
   // Copies the current image to the clipboard
   private void action_copy() {
-    var fname = _im.get_file( _node.image.id );
-    if( fname != null ) {
-      try {
-        var buf = new Gdk.Pixbuf.from_file( fname );
-        MinderClipboard.copy_image( buf );
-        update_ui();
-      } catch( Error e ) {}
+    var buf = _node.image.get_orig_pixbuf( _canvas.map.get_theme().is_dark() );
+    if( buf != null ) {
+      MinderClipboard.copy_image( buf );
+      update_ui();
     }
   }
 
@@ -644,4 +644,3 @@ public class ImageEditor {
   }
 
 }
-

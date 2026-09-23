@@ -726,7 +726,7 @@ public class NodeInspector : Box {
       if( current.image != null ) {
         var url = _map.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
         var str = "<a href=\"" + url + "\">" + url + "</a>";
-        current.image.set_image( _image );
+        current.image.set_image( _image, _map.get_theme().is_dark() );
         _resize.set_active( current.image_resizable && _map.editable );
         _image_stack.visible_child_name = "edit";
       } else {

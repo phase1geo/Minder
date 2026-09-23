@@ -15,7 +15,7 @@ Use the power of mind-mapping to make your ideas come to life.
 - Support for Markdown formatting.
 - Support for insertion of Unicode characters.
 - Typeset inline LaTeX expressions to scalable SVG using `$$...$$` delimiters.
-- Add notes, tasks, and images to your nodes.
+- Add notes, tasks, and images, including resolution-independent SVGs, to your nodes.
 - Add node-to-node connections with optional text and notes.
 - Stylize nodes, callouts, links and connections to add more meaning and improve readability.
 - Save and reuse style settings within and across open mindmaps.

@@ -1918,7 +1918,7 @@ public class Node : Object {
   public virtual void resize( double diff ) {
     diff = resizer_on_left() ? (0 - diff) : diff;
     var int_diff  = (int)diff;
-    if( (_name.width + diff) < tags_width() ) return;
+    if( (_image == null) && ((_name.width + diff) < tags_width()) ) return;
     if( _image == null ) {
       if( (diff < 0) ? ((style.node_width + diff) <= _min_width) : !_name.is_wrapped() ) return;
       style.node_width += int_diff;
@@ -2893,7 +2893,7 @@ public class Node : Object {
     if( _image != null ) {
       double x, y, w, h;
       image_bbox( out x, out y, out w, out h );
-      _image.draw( ctx, x, y, _alpha );
+      _image.draw( ctx, x, y, _alpha, theme.is_dark() );
     }
 
   }

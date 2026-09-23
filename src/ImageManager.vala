@@ -42,11 +42,10 @@ public class ImageManager {
     // Default constructor
     public ImageItem( ImageManager manager, string uri ) {
       _manager   = manager;
-      this.id    = Minder.settings.get_int( "image-id" );
+      this.id    = manager.allocate_id();
       this.uri   = uri;
       this.ext   = get_extension();
       this.valid = true;
-      Minder.settings.set_int( "image-id", (this.id + 1) );
     }
 
     //-------------------------------------------------------------
@@ -89,8 +88,9 @@ public class ImageManager {
     public string get_extension() {
       if( uri != "" ) {
         var parts = uri.split( "." );
-        var ext   = parts[parts.length - 1].split( "?" )[0];
-        if( (ext == "bmp") || (ext == "png") || (ext == "jpg") || (ext == "jpeg") || (ext == "svg") ) {
+        var ext   = parts[parts.length - 1].split( "?" )[0].down();
+        if( (ext == "bmp") || (ext == "png") || (ext == "jpg") || (ext == "jpeg") ||
+            (ext == "svg") || (ext == "svgz") ) {
           return( "." + ext );
         }
       } else {
@@ -174,7 +174,8 @@ public class ImageManager {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "image" ) {
           var ii = new ImageItem.from_xml( this, it );
-          if( !_id_map.has_key( ii.id ) ) {
+          reserve_id( ii.id );
+          if( !_id_map.has_key( ii.id ) && (find_match( ii.id ) == null) ) {
             _images.append_val( ii );
           }
         }
@@ -203,6 +204,29 @@ public class ImageManager {
       }
     }
     return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Allocates an image ID that is not already used by this map.
+  private int allocate_id() {
+
+    var id = int.max( 1, Minder.settings.get_int( "image-id" ) );
+    while( find_match( id ) != null ) {
+      id++;
+    }
+    Minder.settings.set_int( "image-id", (id + 1) );
+    return( id );
+
+  }
+
+  //-------------------------------------------------------------
+  // Ensures newly allocated IDs follow IDs loaded from a map.
+  private void reserve_id( int id ) {
+
+    if( id >= Minder.settings.get_int( "image-id" ) ) {
+      Minder.settings.set_int( "image-id", (id + 1) );
+    }
+
   }
 
   //-------------------------------------------------------------
@@ -251,6 +275,9 @@ public class ImageManager {
     } catch( Error e ) {
       return( -1 );
     }
+    if( orig_id != null ) {
+      _id_map.set( orig_id, item.id );
+    }
     return( item.id );
   }
 
@@ -270,6 +297,9 @@ public class ImageManager {
   public string? get_mime_type( int id ) {
     var item = find_match( id );
     if( item != null ) {
+      if( (item.ext.down() == ".svg") || (item.ext.down() == ".svgz") ) {
+        return( "image/svg+xml" );
+      }
       return( "image/%s".printf( item.get_extension().substring( 1 ) ) );
     }
     return( null );
@@ -344,6 +374,8 @@ public class ImageManager {
     filter.add_pattern( "*.jpg" );
     filter.add_pattern( "*.jpeg" );
     filter.add_pattern( "*.svg" );
+    filter.add_pattern( "*.svgz" );
+    filter.add_mime_type( "image/svg+xml" );
 
     var filters = new GLib.ListStore( typeof(FileFilter) );
     filters.append( filter );
@@ -362,4 +394,3 @@ public class ImageManager {
   }
 
 }
-

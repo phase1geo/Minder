@@ -318,18 +318,22 @@ public class ExportXMind8 : Export {
     var img_name  = map.image_manager.get_file( node.image.id );
     var mime_type = map.image_manager.get_mime_type( node.image.id );
     var src       = Path.build_filename( "attachments", Filename.display_basename( img_name ) );
-    var parts     = src.split( "." );
     Xml.Node* img = new Xml.Node( null, "xhtml:img" );
 
-    // XMind doesn't support SVG images so cut short if we have this type of image
-    if( mime_type == "image/svg" ) return;
-
-    // Copy the image file to the XMind bundle
+    // Copy or rasterize the image into the XMind bundle
     DirUtils.create( Path.build_filename( dir, "attachments" ), 0755 );
-    var lfile = File.new_for_path( Path.build_filename( dir, src ) );
-    var rfile = File.new_for_path( img_name );
     try {
-      rfile.copy( lfile, FileCopyFlags.OVERWRITE );
+      if( node.image.vector ) {
+        src       = Path.build_filename( "attachments", "%d.png".printf( node.image.id ) );
+        mime_type = "image/png";
+        var pixbuf = node.image.get_pixbuf( map.get_theme().is_dark() );
+        if( pixbuf == null ) return;
+        pixbuf.save( Path.build_filename( dir, src ), "png" );
+      } else {
+        var lfile = File.new_for_path( Path.build_filename( dir, src ) );
+        var rfile = File.new_for_path( img_name );
+        rfile.copy( lfile, FileCopyFlags.OVERWRITE );
+      }
     } catch( GLib.Error e ) {
       return;
     }
