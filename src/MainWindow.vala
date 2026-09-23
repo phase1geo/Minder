@@ -2439,7 +2439,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Appends a command with the given command to the specified menu.
-  private void append_menu_item( GLib.Menu menu, KeyCommand command, string label ) {
+  public void append_menu_item( GLib.Menu menu, KeyCommand command, string label ) {
     menu.append( label, "win.%s".printf( command.to_string() ) );
     set_action_for_command( command, false );
   }

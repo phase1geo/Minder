@@ -182,6 +182,14 @@ public enum KeyCommand {
       GROUP_SELECT_ALL,
     GROUP_SELECT_END,
   GROUP_END,
+  TABLE_START,
+    TABLE_ADD_ROW_ABOVE,
+    TABLE_ADD_ROW_BELOW,
+    TABLE_DELETE_ROWS,
+    TABLE_ADD_COL_LEFT,
+    TABLE_ADD_COL_RIGHT,
+    TABLE_DELETE_COLS,
+  TABLE_END,
   EDIT_START,
     EDIT_TEXT_START,
       EDIT_INSERT_NEWLINE,
@@ -376,6 +384,13 @@ public enum KeyCommand {
       case GROUP_REMOVE              :  return( "group-remove" );
       case GROUP_SELECT_MAIN         :  return( "group-select-main" );
       case GROUP_SELECT_ALL          :  return( "group-select-all" );
+      case TABLE_START               :  return( "table-editor" );
+      case TABLE_ADD_ROW_ABOVE       :  return( "table-add-row-above" );
+      case TABLE_ADD_ROW_BELOW       :  return( "table-add-row-below" );
+      case TABLE_DELETE_ROWS         :  return( "table-delete-rows" );
+      case TABLE_ADD_COL_LEFT        :  return( "table-add-col-left" );  
+      case TABLE_ADD_COL_RIGHT       :  return( "table-add-col-right" );
+      case TABLE_DELETE_COLS         :  return( "table-delete-cols" );
       case EDIT_START                :  return( "editing" );
       case EDIT_INSERT_NEWLINE       :  return( "edit-insert-newline" );
       case EDIT_INSERT_TAB           :  return( "edit-insert-tab" );
@@ -551,6 +566,12 @@ public enum KeyCommand {
       case "group-remove"              :  return( GROUP_REMOVE );
       case "group-select-main"         :  return( GROUP_SELECT_MAIN );
       case "group-select-all"          :  return( GROUP_SELECT_ALL );
+      case "table-add-row-above"       :  return( TABLE_ADD_ROW_ABOVE );
+      case "table-add-row-below"       :  return( TABLE_ADD_ROW_BELOW );
+      case "table-delete-rows"         :  return( TABLE_DELETE_ROWS );
+      case "table-add-col-left"        :  return( TABLE_ADD_COL_LEFT );
+      case "table-add-col-right"       :  return( TABLE_ADD_COL_RIGHT );
+      case "table-delete-cols"         :  return( TABLE_DELETE_COLS );
       case "edit-insert-newline"       :  return( EDIT_INSERT_NEWLINE );
       case "edit-insert-tab"           :  return( EDIT_INSERT_TAB );
       case "edit-insert-emoji"         :  return( EDIT_INSERT_EMOJI );
@@ -741,6 +762,13 @@ public enum KeyCommand {
       case GROUP_SELECT_START        :  return( _( "Selection Commands" ) );
       case GROUP_SELECT_MAIN         :  return( _( "Select main node(s) of current group(s)" ) );
       case GROUP_SELECT_ALL          :  return( _( "Selects all nodes within current group(s)" ) );
+      case TABLE_START               :  return( _( "Table Editor" ) );
+      case TABLE_ADD_ROW_ABOVE       :  return( _( "Adds a row above the currently selected row" ) );
+      case TABLE_ADD_ROW_BELOW       :  return( _( "Adds a row below the currently selected row" ) );
+      case TABLE_DELETE_ROWS         :  return( _( "Deletes the currently selected row(s)" ) );
+      case TABLE_ADD_COL_LEFT        :  return( _( "Adds a column to the left of the currently selected row" ) );
+      case TABLE_ADD_COL_RIGHT       :  return( _( "Adds a column to the right of the currently selected row" ) );
+      case TABLE_DELETE_COLS         :  return( _( "Deletes the currently selected columns(s)" ) );
       case EDIT_START                :  return( _( "Text Editing" ) );
       case EDIT_TEXT_START           :  return( _( "Insertion/Deletion Commands" ) );
       case EDIT_INSERT_NEWLINE       :  return( _( "Insert newline character" ) );
@@ -915,6 +943,12 @@ public enum KeyCommand {
       case GROUP_REMOVE              :  return( group_remove );
       case GROUP_SELECT_MAIN         :  return( group_select_main );
       case GROUP_SELECT_ALL          :  return( group_select_all );
+      case TABLE_ADD_ROW_ABOVE       :  return( table_add_row_above );
+      case TABLE_ADD_ROW_BELOW       :  return( table_add_row_below );
+      case TABLE_DELETE_ROWS         :  return( table_delete_rows );
+      case TABLE_ADD_COL_LEFT        :  return( table_add_col_left );
+      case TABLE_ADD_COL_RIGHT       :  return( table_add_col_right );
+      case TABLE_DELETE_COLS         :  return( table_delete_cols );
       case EDIT_INSERT_NEWLINE       :  return( edit_insert_newline );
       case EDIT_INSERT_TAB           :  return( edit_insert_tab );
       case EDIT_INSERT_EMOJI         :  return( edit_insert_emoji );
@@ -1045,6 +1079,14 @@ public enum KeyCommand {
   }
 
   //-------------------------------------------------------------
+  // Returns true if this command is valid for table editing.
+  public bool for_table() {
+    return(
+      ((TABLE_START < this) && (this < TABLE_END))
+    );
+  }
+
+  //-------------------------------------------------------------
   // Returns true if this command is valid when nothing is selected
   // in the map.
   public bool for_none() {
@@ -1082,12 +1124,14 @@ public enum KeyCommand {
       return( "3" );
     } else if( for_sticker() ) {
       return( "4" );
-    } else if( for_editing() ) {
+    } else if( for_table() ) {
       return( "5" );
-    } else if( for_none() ) {
+    } else if( for_editing() ) {
       return( "6" );
+    } else if( for_none() ) {
+      return( "7" );
     } else {
-      return( "0123456" );
+      return( "01234567" );
     }
   }
 
@@ -1177,6 +1221,7 @@ public enum KeyCommand {
       case CALLOUT_START    :
       case STICKER_START    :
       case GROUP_START      :
+      case TABLE_START      :
       case EDIT_START       :  return( true );
       default               :  return( false );
     }
@@ -1192,6 +1237,7 @@ public enum KeyCommand {
       case CALLOUT_END    :
       case STICKER_END    :
       case GROUP_END      :
+      case TABLE_END      :
       case EDIT_END       :  return( true );
       default             :  return( false );
     }
@@ -2097,6 +2143,30 @@ public enum KeyCommand {
         }
       }
     }
+  }
+
+  public static void table_add_row_above( MindMap map ) {
+    map.canvas.table_editor.add_row_above();
+  }
+
+  public static void table_add_row_below( MindMap map ) {
+    map.canvas.table_editor.add_row_below();
+  }
+
+  public static void table_delete_rows( MindMap map ) {
+    map.canvas.table_editor.delete_rows();
+  }
+
+  public static void table_add_col_left( MindMap map ) {
+    map.canvas.table_editor.add_column_left();
+  }
+
+  public static void table_add_col_right( MindMap map ) {
+    map.canvas.table_editor.add_column_right();
+  }
+
+  public static void table_delete_cols( MindMap map ) {
+    map.canvas.table_editor.delete_columns();
   }
 
   public static void edit_insert_newline( MindMap map ) {

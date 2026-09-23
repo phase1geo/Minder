@@ -189,6 +189,12 @@ public class TableEditor {
   }
 
   //-------------------------------------------------------------
+  // Returns true if the table editor is currently displayed.
+  public bool is_shown() {
+    return( _popover.visible );
+  }
+
+  //-------------------------------------------------------------
   // Creates an icon-only action button with a tooltip.
   private Button make_icon_button( string icon, string tooltip, owned TableEditorAction callback ) {
     var button = new Button.from_icon_name( icon ) {
@@ -233,42 +239,38 @@ public class TableEditor {
   //-------------------------------------------------------------
   // Creates the row-editing menu.
   private MenuButton make_rows_menu() {
-    var popover = new Popover();
-    var buttons = new Box( Orientation.VERTICAL, 4 ) {
-      margin_start = 6,
-      margin_end = 6,
-      margin_top = 6,
-      margin_bottom = 6
-    };
-    buttons.append( make_popover_button( _( "Add Row Above" ), popover, add_row_above ) );
-    buttons.append( make_popover_button( _( "Add Row Below" ), popover, add_row_below ) );
-    buttons.append( make_popover_button( _( "Delete Selected Rows" ), popover, delete_rows ) );
-    popover.child = buttons;
+    var win = _draw_area.win;
+    var add_menu = new GLib.Menu();
+    win.append_menu_item( add_menu, KeyCommand.TABLE_ADD_ROW_ABOVE, _( "Add Row Above" ) );
+    win.append_menu_item( add_menu, KeyCommand.TABLE_ADD_ROW_BELOW, _( "Add Row Below" ) );
+    var del_menu = new GLib.Menu();
+    win.append_menu_item( del_menu, KeyCommand.TABLE_DELETE_ROWS, _( "Delete Selected Rows" ) );
+    var menu = new GLib.Menu();
+    menu.append_section( null, add_menu );
+    menu.append_section( null, del_menu );
     return( new MenuButton() {
       label = _( "Rows" ),
       tooltip_text = _( "Row Actions" ),
-      popover = popover
+      menu_model = menu
     });
   }
 
   //-------------------------------------------------------------
   // Creates the column-editing menu.
   private MenuButton make_columns_menu() {
-    var popover = new Popover();
-    var buttons = new Box( Orientation.VERTICAL, 4 ) {
-      margin_start = 6,
-      margin_end = 6,
-      margin_top = 6,
-      margin_bottom = 6
-    };
-    buttons.append( make_popover_button( _( "Add Column Left" ), popover, add_column_left ) );
-    buttons.append( make_popover_button( _( "Add Column Right" ), popover, add_column_right ) );
-    buttons.append( make_popover_button( _( "Delete Selected Columns" ), popover, delete_columns ) );
-    popover.child = buttons;
+    var win = _draw_area.win;
+    var add_menu = new GLib.Menu();
+    win.append_menu_item( add_menu, KeyCommand.TABLE_ADD_COL_LEFT,  _( "Add Column Left" ) );
+    win.append_menu_item( add_menu, KeyCommand.TABLE_ADD_COL_RIGHT, _( "Add Column Right" ) );
+    var del_menu = new GLib.Menu();
+    win.append_menu_item( add_menu, KeyCommand.TABLE_DELETE_COLS, _( "Delete Selected Columns" ) );
+    var menu = new GLib.Menu();
+    menu.append_section( null, add_menu );
+    menu.append_section( null, del_menu );
     return( new MenuButton() {
       label = _( "Columns" ),
       tooltip_text = _( "Column Actions" ),
-      popover = popover
+      menu_model = menu
     });
   }
 
@@ -747,7 +749,7 @@ public class TableEditor {
 
   //-------------------------------------------------------------
   // Inserts a row above the current selection.
-  private void add_row_above() {
+  public void add_row_above() {
     if( _table == null ) return;
     int first_row, first_column, last_row, last_column;
     selection_bounds( out first_row, out first_column, out last_row, out last_column );
@@ -763,7 +765,7 @@ public class TableEditor {
 
   //-------------------------------------------------------------
   // Inserts a row below the current selection.
-  private void add_row_below() {
+  public void add_row_below() {
     if( _table == null ) return;
     int first_row, first_column, last_row, last_column;
     selection_bounds( out first_row, out first_column, out last_row, out last_column );
@@ -780,7 +782,7 @@ public class TableEditor {
 
   //-------------------------------------------------------------
   // Deletes all rows touched by the current selection.
-  private void delete_rows() {
+  public void delete_rows() {
     if( _table == null ) return;
     int first_row, first_column, last_row, last_column;
     selection_bounds( out first_row, out first_column, out last_row, out last_column );
@@ -795,7 +797,7 @@ public class TableEditor {
 
   //-------------------------------------------------------------
   // Inserts a column to the left of the current selection.
-  private void add_column_left() {
+  public void add_column_left() {
     if( _table == null ) return;
     int first_row, first_column, last_row, last_column;
     selection_bounds( out first_row, out first_column, out last_row, out last_column );
@@ -811,7 +813,7 @@ public class TableEditor {
 
   //-------------------------------------------------------------
   // Inserts a column to the right of the current selection.
-  private void add_column_right() {
+  public void add_column_right() {
     if( _table == null ) return;
     int first_row, first_column, last_row, last_column;
     selection_bounds( out first_row, out first_column, out last_row, out last_column );
@@ -828,7 +830,7 @@ public class TableEditor {
 
   //-------------------------------------------------------------
   // Deletes all columns touched by the current selection.
-  private void delete_columns() {
+  public void delete_columns() {
     if( _table == null ) return;
     int first_row, first_column, last_row, last_column;
     selection_bounds( out first_row, out first_column, out last_row, out last_column );
