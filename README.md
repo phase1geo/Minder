@@ -93,10 +93,9 @@ applying the table. Cell text also
 supports Unicode, emoji insertion and completion, and inline LaTeX using the
 same `$$...$$` delimiters as node titles. Use the table formatting toolbar to
 align selected cells left, center, or right and to apply bold, italic,
-underline, or strikethrough formatting. Cells can also align text vertically
-at the top, middle, or bottom. Use **Highlight Cells** to mark any selected
-cells as headers; highlights are stored per cell and remain under direct user
-control after cells are merged or split. The **Rows** and **Columns** menus
+underline, or strikethrough formatting. Use **Highlight Cells** to mark any
+selected cells as headers; highlights are stored per cell and remain under
+direct user control after cells are merged or split. The **Rows** and **Columns** menus
 insert above, below, left, or right of the selection and can delete every
 selected row or column. **Clear Cells** removes selected cell contents and
 formatting while preserving the rectangular table structure. Plain-text table

@@ -79,7 +79,8 @@ private class TableCellEntry : Grid {
       top_margin = 4,
       bottom_margin = 4,
       hexpand = true,
-      vexpand = false
+      vexpand = true,
+      valign = Align.FILL
     };
     _editor.add_css_class( "table-cell-text" );
     _editor.buffer.text = cell.text;
@@ -129,11 +130,6 @@ private class TableCellEntry : Grid {
       case Pango.Alignment.RIGHT  :  _editor.justification = Gtk.Justification.RIGHT;   break;
       default                     :  _editor.justification = Gtk.Justification.LEFT;    break;
     }
-    switch( table_cell.vertical_alignment ) {
-      case NodeTableVerticalAlignment.MIDDLE :  _editor.valign = Align.CENTER;  break;
-      case NodeTableVerticalAlignment.BOTTOM :  _editor.valign = Align.END;     break;
-      default                                :  _editor.valign = Align.START;   break;
-    }
     _format_tag.weight = table_cell.format_enabled( NodeTableFormat.BOLD ) ?
       (int)Pango.Weight.BOLD : (int)Pango.Weight.NORMAL;
     _format_tag.style = table_cell.format_enabled( NodeTableFormat.ITALIC ) ?
@@ -163,7 +159,6 @@ public class TableEditor {
   private Grid _grid;
   private Button _undo_button;
   private ModeButtons _alignment_buttons;
-  private ModeButtons _vertical_alignment_buttons;
   private ToggleButton _highlight_button;
   private ToggleButton _bold_button;
   private ToggleButton _italic_button;
@@ -204,6 +199,14 @@ public class TableEditor {
   }
 
   //-------------------------------------------------------------
+  // Creates a worded action button.
+  private Button make_button( string label, owned TableEditorAction callback ) {
+    var button = new Button.with_label( label );
+    button.clicked.connect( () => callback() );
+    return( button );
+  }
+
+  //-------------------------------------------------------------
   // Creates an icon-only toggle button with a tooltip.
   private ToggleButton make_toggle_button( string icon, string tooltip, owned TableEditorToggleAction callback ) {
     var button = new ToggleButton() {
@@ -215,10 +218,10 @@ public class TableEditor {
   }
 
   //-------------------------------------------------------------
-  // Creates an action button that also closes its menu popover.
-  private Button make_popover_icon_button( string icon, string tooltip, Popover popover, owned TableEditorAction callback ) {
-    var button = new Button.from_icon_name( icon ) {
-      tooltip_text = tooltip
+  // Creates a worded action button that also closes its menu popover.
+  private Button make_popover_button( string label, Popover popover, owned TableEditorAction callback ) {
+    var button = new Button.with_label( label ) {
+      hexpand = true
     };
     button.clicked.connect(() => {
       callback();
@@ -237,12 +240,12 @@ public class TableEditor {
       margin_top = 6,
       margin_bottom = 6
     };
-    buttons.append( make_popover_icon_button( "go-up-symbolic", _( "Add Row Above" ), popover, add_row_above ) );
-    buttons.append( make_popover_icon_button( "go-down-symbolic", _( "Add Row Below" ), popover, add_row_below ) );
-    buttons.append( make_popover_icon_button( "edit-delete-symbolic", _( "Delete Selected Rows" ), popover, delete_rows ) );
+    buttons.append( make_popover_button( _( "Add Row Above" ), popover, add_row_above ) );
+    buttons.append( make_popover_button( _( "Add Row Below" ), popover, add_row_below ) );
+    buttons.append( make_popover_button( _( "Delete Selected Rows" ), popover, delete_rows ) );
     popover.child = buttons;
     return( new MenuButton() {
-      icon_name = "view-list-symbolic",
+      label = _( "Rows" ),
       tooltip_text = _( "Row Actions" ),
       popover = popover
     });
@@ -258,12 +261,12 @@ public class TableEditor {
       margin_top = 6,
       margin_bottom = 6
     };
-    buttons.append( make_popover_icon_button( "go-previous-symbolic", _( "Add Column Left" ), popover, add_column_left ) );
-    buttons.append( make_popover_icon_button( "go-next-symbolic", _( "Add Column Right" ), popover, add_column_right ) );
-    buttons.append( make_popover_icon_button( "edit-delete-symbolic", _( "Delete Selected Columns" ), popover, delete_columns ) );
+    buttons.append( make_popover_button( _( "Add Column Left" ), popover, add_column_left ) );
+    buttons.append( make_popover_button( _( "Add Column Right" ), popover, add_column_right ) );
+    buttons.append( make_popover_button( _( "Delete Selected Columns" ), popover, delete_columns ) );
     popover.child = buttons;
     return( new MenuButton() {
-      icon_name = "view-grid-symbolic",
+      label = _( "Columns" ),
       tooltip_text = _( "Column Actions" ),
       popover = popover
     });
@@ -327,12 +330,6 @@ public class TableEditor {
     _alignment_buttons.add_button( "format-justify-right-symbolic", null, _( "Align Right" ) );
     _alignment_buttons.changed.connect( set_selected_alignment );
 
-    _vertical_alignment_buttons = new ModeButtons();
-    _vertical_alignment_buttons.add_button( "minder-align-vertical-top-symbolic", null, _( "Align Top" ) );
-    _vertical_alignment_buttons.add_button( "minder-align-vertical-center-symbolic", null, _( "Align Middle" ) );
-    _vertical_alignment_buttons.add_button( "minder-align-vertical-bottom-symbolic", null, _( "Align Bottom" ) );
-    _vertical_alignment_buttons.changed.connect( set_selected_vertical_alignment );
-
     _highlight_button = make_toggle_button(
       "minder-table-highlight-symbolic", _( "Highlight Cells" ),
       set_selected_highlight
@@ -365,16 +362,16 @@ public class TableEditor {
     var format_row = new Box( Orientation.HORIZONTAL, 8 );
     format_row.append( new Label( _( "Selected cells:" ) ) );
     format_row.append( _alignment_buttons );
-    format_row.append( _vertical_alignment_buttons );
     format_row.append( new Separator( Orientation.VERTICAL ) );
     format_row.append( format_buttons );
 
-    var action_buttons = new Box( Orientation.HORIZONTAL, 5 ) {
-      halign = Align.END
-    };
-    action_buttons.append( make_icon_button( "edit-delete-symbolic", _( "Remove Table" ), remove_table ) );
-    action_buttons.append( make_icon_button( "process-stop-symbolic", _( "Cancel" ), cancel ) );
-    var apply = make_icon_button( "emblem-ok-symbolic", _( "Apply" ), apply_changes );
+    var action_buttons = new Box( Orientation.HORIZONTAL, 5 );
+    var delete_table = make_button( _( "Delete Table" ), remove_table );
+    delete_table.add_css_class( "destructive-action" );
+    action_buttons.append( delete_table );
+    action_buttons.append( new Box( Orientation.HORIZONTAL, 0 ) { hexpand = true } );
+    action_buttons.append( make_button( _( "Cancel" ), cancel ) );
+    var apply = make_button( _( "Apply" ), apply_changes );
     apply.add_css_class( "suggested-action" );
     action_buttons.append( apply );
 
@@ -391,7 +388,8 @@ public class TableEditor {
 
     _popover = new Popover() {
       child = content,
-      autohide = false
+      autohide = false,
+      position = PositionType.RIGHT
     };
     _popover.set_parent( _draw_area );
 
@@ -432,7 +430,7 @@ public class TableEditor {
 
   //-------------------------------------------------------------
   // Opens an editable copy of the given node's table.
-  public void edit_table( Node node, double x, double y ) {
+  public void edit_table( Node node ) {
     _node = node;
     _table = (node.table == null) ?
       new NodeTable( _draw_area.map, 2, 2 ) :
@@ -449,11 +447,14 @@ public class TableEditor {
     _undo_states.remove_range( 0, _undo_states.length );
     _undo_button.sensitive = false;
     rebuild_grid();
+    double node_x, node_y, node_width, node_height;
+    node.node_bbox( out node_x, out node_y, out node_width, out node_height );
+    var scale = _draw_area.sfactor;
     var rectangle = Gdk.Rectangle() {
-      x = (int)x,
-      y = (int)y,
-      width = 1,
-      height = 1
+      x = (int)Math.floor( node_x * scale ),
+      y = (int)Math.floor( node_y * scale ),
+      width = int.max( 1, (int)Math.ceil( node_width * scale ) ),
+      height = int.max( 1, (int)Math.ceil( node_height * scale ) )
     };
     _popover.pointing_to = rectangle;
     _popover.popup();
@@ -653,11 +654,6 @@ public class TableEditor {
       case Pango.Alignment.RIGHT  :  _alignment_buttons.selected = 2;  break;
       default                     :  _alignment_buttons.selected = 0;  break;
     }
-    switch( cell.vertical_alignment ) {
-      case NodeTableVerticalAlignment.MIDDLE :  _vertical_alignment_buttons.selected = 1;  break;
-      case NodeTableVerticalAlignment.BOTTOM :  _vertical_alignment_buttons.selected = 2;  break;
-      default                                :  _vertical_alignment_buttons.selected = 0;  break;
-    }
     _highlight_button.active = cell.highlighted;
     _bold_button.active = cell.format_enabled( NodeTableFormat.BOLD );
     _italic_button.active = cell.format_enabled( NodeTableFormat.ITALIC );
@@ -687,22 +683,6 @@ public class TableEditor {
       if( cell_is_selected( cell ) ) cell.set_text_alignment( alignment );
     }
     _table.update_layout();
-    refresh_entry_formats();
-  }
-
-  //-------------------------------------------------------------
-  // Applies vertical text alignment to the selected cells.
-  private void set_selected_vertical_alignment( int index ) {
-    if( _table == null ) return;
-    save_table_undo_state();
-    var alignment = NodeTableVerticalAlignment.TOP;
-    if( index == 1 ) alignment = NodeTableVerticalAlignment.MIDDLE;
-    if( index == 2 ) alignment = NodeTableVerticalAlignment.BOTTOM;
-    var cells = _table.cells();
-    for( int cell_index=0; cell_index<cells.length; cell_index++ ) {
-      var cell = cells.index( cell_index );
-      if( cell_is_selected( cell ) ) cell.set_vertical_alignment( alignment );
-    }
     refresh_entry_formats();
   }
 

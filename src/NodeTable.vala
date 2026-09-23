@@ -77,9 +77,8 @@ public class NodeTableCell : NodeTableRegion {
   //-------------------------------------------------------------
   // Copies the visual style from another cell.
   public void copy_style( NodeTableCell cell ) {
-    alignment         = cell.alignment;
-    vertical_alignment = cell.vertical_alignment;
-    highlighted       = cell.highlighted;
+    alignment    = cell.alignment;
+    highlighted  = cell.highlighted;
     _bold         = cell._bold;
     _italic       = cell._italic;
     _underline    = cell._underline;
@@ -92,12 +91,6 @@ public class NodeTableCell : NodeTableRegion {
   public void set_text_alignment( Pango.Alignment value ) {
     alignment = value;
     layout.set_alignment( alignment );
-  }
-
-  //-------------------------------------------------------------
-  // Sets the vertical alignment of this cell's text.
-  public void set_vertical_alignment( NodeTableVerticalAlignment value ) {
-    vertical_alignment = value;
   }
 
   //-------------------------------------------------------------
@@ -129,7 +122,6 @@ public class NodeTableCell : NodeTableRegion {
   public void clear() {
     text = "";
     alignment = Pango.Alignment.LEFT;
-    vertical_alignment = NodeTableVerticalAlignment.TOP;
     highlighted = false;
     _bold = false;
     _italic = false;
@@ -211,15 +203,11 @@ public class NodeTableCell : NodeTableRegion {
     Cairo.Context context,
     double x,
     double y,
-    double available_height,
     RGBA foreground,
     double opacity
   ) {
-    int text_width, text_height;
-    layout.get_pixel_size( out text_width, out text_height );
-    var offset = vertical_alignment.offset( available_height, text_height );
     Utils.set_context_color_with_alpha( context, foreground, opacity );
-    context.move_to( x, y + offset );
+    context.move_to( x, y );
     _latex.prepare_draw( foreground, opacity );
     Pango.cairo_update_layout( context, layout );
     Pango.cairo_show_layout( context, layout );
@@ -319,7 +307,6 @@ public class NodeTable : Object {
         case "right"  :  cell.set_text_alignment( Pango.Alignment.RIGHT );   break;
         default       :  cell.set_text_alignment( Pango.Alignment.LEFT );    break;
       }
-      cell.set_vertical_alignment( NodeTableVerticalAlignment.parse( item->get_prop( "valign" ) ) );
       string? highlighted = item->get_prop( "highlighted" );
       cell.highlighted = (highlighted == null) ? (row == 0) : (highlighted == "true");
       cell.set_format( NodeTableFormat.BOLD,          item->get_prop( "bold" ) == "true" );
@@ -718,7 +705,6 @@ public class NodeTable : Object {
         context,
         cell_x + CELL_PADDING,
         cell_y + CELL_PADDING,
-        Math.fmax( 0.0, cell_height - (CELL_PADDING * 2) ),
         foreground,
         opacity
       );
@@ -745,7 +731,6 @@ public class NodeTable : Object {
         case Pango.Alignment.RIGHT  :  item->new_prop( "align", "right" );   break;
         default                     :  item->new_prop( "align", "left" );    break;
       }
-      item->new_prop( "valign", cell.vertical_alignment.to_string() );
       item->new_prop( "highlighted", cell.highlighted.to_string() );
       if( cell.format_enabled( NodeTableFormat.BOLD ) ) {
         item->new_prop( "bold", "true" );

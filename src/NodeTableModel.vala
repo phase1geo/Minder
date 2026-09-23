@@ -21,42 +21,6 @@
 
 using GLib;
 
-public enum NodeTableVerticalAlignment {
-  TOP,
-  MIDDLE,
-  BOTTOM;
-
-  //-------------------------------------------------------------
-  // Returns the XML value for this alignment.
-  public string to_string() {
-    switch( this ) {
-      case MIDDLE :  return( "middle" );
-      case BOTTOM :  return( "bottom" );
-      default     :  return( "top" );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Parses an XML alignment value, defaulting to top.
-  public static NodeTableVerticalAlignment parse( string? value ) {
-    switch( value ) {
-      case "middle" :  return( MIDDLE );
-      case "bottom" :  return( BOTTOM );
-      default       :  return( TOP );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Returns the text offset within the available cell height.
-  public double offset( double available_height, double content_height ) {
-    switch( this ) {
-      case MIDDLE :  return( Math.fmax( 0.0, (available_height - content_height) / 2.0 ) );
-      case BOTTOM :  return( Math.fmax( 0.0, available_height - content_height ) );
-      default     :  return( 0.0 );
-    }
-  }
-}
-
 public class NodeTableRegion : Object {
 
   private string _text = "";
@@ -66,7 +30,6 @@ public class NodeTableRegion : Object {
   public int row_span { get; set; default = 1; }
   public int col_span { get; set; default = 1; }
   public bool highlighted { get; set; default = false; }
-  public NodeTableVerticalAlignment vertical_alignment { get; set; default = NodeTableVerticalAlignment.TOP; }
   public string text {
     get {
       return( _text );

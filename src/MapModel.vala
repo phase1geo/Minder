@@ -1020,7 +1020,7 @@ public class MapModel {
     var nodes = _map.selected.nodes();
     if( nodes.length == 1 ) {
       var current = nodes.index( 0 );
-      _map.canvas.table_editor.edit_table( current, current.posx, current.posy );
+      _map.canvas.table_editor.edit_table( current );
     }
   }
 

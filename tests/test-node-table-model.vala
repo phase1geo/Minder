@@ -18,7 +18,6 @@ namespace MinderTest {
       this.add_test( "markdown", test_markdown );
       this.add_test( "tsv-trailing-cells", test_tsv_trailing_cells );
       this.add_test( "paste-limits", test_paste_limits );
-      this.add_test( "vertical-alignment", test_vertical_alignment );
       this.add_test( "cell-highlight", test_cell_highlight );
       this.add_test( "markdown-row", test_markdown_row );
     }
@@ -98,21 +97,6 @@ namespace MinderTest {
       Assert.int_compare( 50, grid.row_count );
       Assert.int_compare( 20, grid.column_count );
       Assert.true( grid.truncated );
-    }
-
-    private void test_vertical_alignment() {
-      var region = new NodeTableRegion( 0, 0 );
-      Assert.string_compare( "top", region.vertical_alignment.to_string() );
-      region.vertical_alignment = NodeTableVerticalAlignment.parse( "middle" );
-      Assert.string_compare( "middle", region.vertical_alignment.to_string() );
-      region.vertical_alignment = NodeTableVerticalAlignment.parse( "bottom" );
-      Assert.string_compare( "bottom", region.vertical_alignment.to_string() );
-      region.vertical_alignment = NodeTableVerticalAlignment.parse( "invalid" );
-      Assert.string_compare( "top", region.vertical_alignment.to_string() );
-      Assert.double_compare( 0.0, NodeTableVerticalAlignment.TOP.offset( 60.0, 20.0 ) );
-      Assert.double_compare( 20.0, NodeTableVerticalAlignment.MIDDLE.offset( 60.0, 20.0 ) );
-      Assert.double_compare( 40.0, NodeTableVerticalAlignment.BOTTOM.offset( 60.0, 20.0 ) );
-      Assert.double_compare( 0.0, NodeTableVerticalAlignment.BOTTOM.offset( 20.0, 60.0 ) );
     }
 
     private void test_cell_highlight() {
