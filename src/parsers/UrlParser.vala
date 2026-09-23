@@ -36,7 +36,9 @@ public class UrlParser : TextParser {
   //-------------------------------------------------------------
   // Add the URL link
   private void highlight_url( FormattedText text, MatchInfo match ) {
-    add_tag( text, match, 0, FormatTag.URL, get_text( match, 0 ) );
+    if( !within_tag( text, match, 0, FormatTag.SYNTAX ) ) {
+      add_tag( text, match, 0, FormatTag.URL, get_text( match, 0 ) );
+    }
   }
 
   //-------------------------------------------------------------

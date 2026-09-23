@@ -281,10 +281,11 @@ public class CanvasText : Object {
     tag   = FormatTag.URL;
     extra = "";
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
-      var cindex = text.text.char_count( cursor + trailing );
+      var cindex      = text.text.char_count( cursor + trailing );
+      var layout_text = edit ? _text : _nomarkup_text;
       FormatTag[] tags = { FormatTag.URL };
       foreach( FormatTag t in tags ) {
-        var e = text.get_extra( t, cindex );
+        var e = layout_text.get_extra( t, cindex );
         if( e != null ) {
           tag   = t;
           extra = e;
