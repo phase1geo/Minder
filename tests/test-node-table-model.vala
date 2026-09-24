@@ -70,18 +70,18 @@ namespace MinderTest {
       Assert.true( grid != null );
       Assert.int_compare( 2, grid.row_count );
       Assert.int_compare( 3, grid.column_count );
-      Assert.string_compare( "B|pipe", grid.get( 0, 1 ) );
-      Assert.string_compare( "", grid.get( 0, 2 ) );
-      Assert.string_compare( "C\nline", grid.get( 1, 0 ) );
+      Assert.string_compare( "B|pipe", grid.get_value( 0, 1 ) );
+      Assert.string_compare( "", grid.get_value( 0, 2 ) );
+      Assert.string_compare( "C\nline", grid.get_value( 1, 0 ) );
     }
 
     private void test_tsv_trailing_cells() {
       var grid = NodeTableTextParser.from_tsv( "a\t\t\nb\tc\t\n" );
       Assert.int_compare( 2, grid.row_count );
       Assert.int_compare( 3, grid.column_count );
-      Assert.string_compare( "a", grid.get( 0, 0 ) );
-      Assert.string_compare( "", grid.get( 0, 2 ) );
-      Assert.string_compare( "", grid.get( 1, 2 ) );
+      Assert.string_compare( "a", grid.get_value( 0, 0 ) );
+      Assert.string_compare( "", grid.get_value( 0, 2 ) );
+      Assert.string_compare( "", grid.get_value( 1, 2 ) );
     }
 
     private void test_paste_limits() {

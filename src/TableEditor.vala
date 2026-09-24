@@ -224,19 +224,6 @@ public class TableEditor {
   }
 
   //-------------------------------------------------------------
-  // Creates a worded action button that also closes its menu popover.
-  private Button make_popover_button( string label, Popover popover, owned TableEditorAction callback ) {
-    var button = new Button.with_label( label ) {
-      hexpand = true
-    };
-    button.clicked.connect(() => {
-      callback();
-      popover.popdown();
-    });
-    return( button );
-  }
-
-  //-------------------------------------------------------------
   // Creates the row-editing menu.
   private MenuButton make_rows_menu() {
     var win = _draw_area.win;
@@ -435,8 +422,8 @@ public class TableEditor {
   public void edit_table( Node node ) {
     _node = node;
     _table = (node.table == null) ?
-      new NodeTable( _draw_area.map, 2, 2 ) :
-      new NodeTable.copy( _draw_area.map, node.table );
+      new NodeTable( _draw_area.mmap, 2, 2 ) :
+      new NodeTable.copy( _draw_area.mmap, node.table );
     _table.set_font(
       node.style.node_font.get_family(),
       node.style.node_font.get_size() / Pango.SCALE
@@ -528,7 +515,7 @@ public class TableEditor {
   private void save_table_undo_state() {
     if( _table == null ) return;
     append_undo_state( new TableEditorUndoState.for_table(
-      new NodeTable.copy( _draw_area.map, _table )
+      new NodeTable.copy( _draw_area.mmap, _table )
     ) );
   }
 
@@ -559,7 +546,7 @@ public class TableEditor {
     var index = _undo_states.length - 1;
     var state = _undo_states.index( index );
     if( state.table != null ) {
-      _table = new NodeTable.copy( _draw_area.map, state.table );
+      _table = new NodeTable.copy( _draw_area.mmap, state.table );
     } else {
       var cell = _table.cell_at( state.row, state.column );
       if( cell != null ) cell.text = state.text;
@@ -881,7 +868,7 @@ public class TableEditor {
         var text = clipboard.read_text_async.end( result );
         if( (text != null) && (text.strip() != "") ) {
           save_table_undo_state();
-          _table = NodeTable.from_tsv( _draw_area.map, text );
+          _table = NodeTable.from_tsv( _draw_area.mmap, text );
           if( _node != null ) {
             _table.set_font(
               _node.style.node_font.get_family(),
@@ -903,7 +890,7 @@ public class TableEditor {
   private void apply_changes() {
     if( (_node == null) || (_table == null) ) return;
     var original = _node.table;
-    _node.set_table( new NodeTable.copy( _draw_area.map, _table ) );
+    _node.set_table( new NodeTable.copy( _draw_area.mmap, _table ) );
     changed( _node, original );
     close_editor();
   }

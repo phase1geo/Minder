@@ -219,7 +219,7 @@ public class NodeTableTextGrid : Object {
 
   //-------------------------------------------------------------
   // Returns a cell value or an empty string if it is absent.
-  public string get( int row, int column ) {
+  public string get_value( int row, int column ) {
     if( (row < 0) || (row >= _rows.length) ) return( "" );
     var values = _rows.index( row );
     return( ((column < 0) || (column >= values.length)) ? "" : values.index( column ) );

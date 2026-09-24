@@ -311,23 +311,15 @@ public class ExportMarkdown : Export {
     var retval = "";
     var nodes  = map.get_nodes();
 
-    try {
-
-      var nodes  = map.get_nodes();
-      for( int i=0; i<nodes.length; i++ ) {
-        var title = "# " + nodes.index( i ).name.text.text + "\n\n";
-        retval += title;
-        if( nodes.index( i ).note != "" ) {
-          var note = "  > " + nodes.index( i ).note.replace( "\n", "\n  > " ) + "\n\n";
-          retval += note;
-        }
-        if( nodes.index( i ).table != null ) {
-          retval += nodes.index( i ).table.to_markdown() + "\n\n";
-        }
-        var children = nodes.index( i ).children();
-        for( int j=0; j<children.length; j++ ) {
-          retval += export_node( map.image_manager, children.index( j ), imgdir );
-        }
+    for( int i=0; i<nodes.length; i++ ) {
+      var title = "# " + nodes.index( i ).name.text.text + "\n\n";
+      retval += title;
+      if( nodes.index( i ).note != "" ) {
+        var note = "  > " + nodes.index( i ).note.replace( "\n", "\n  > " ) + "\n\n";
+        retval += note;
+      }
+      if( nodes.index( i ).table != null ) {
+        retval += nodes.index( i ).table.to_markdown() + "\n\n";
       }
       var children = nodes.index( i ).children();
       for( int j=0; j<children.length; j++ ) {

@@ -89,7 +89,7 @@ test(
   test_executable,
 )
 
-e = executable('com.github.phase1geo.minder',
+e = executable('io.github.phase1geo.minder',
     sources,
     config_file,
     gresource,

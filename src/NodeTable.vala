@@ -327,7 +327,7 @@ public class NodeTable : Object {
     var table = new NodeTable( map, grid.row_count, grid.column_count );
     for( int row=0; row<table.rows; row++ ) {
       for( int column=0; column<table.columns; column++ ) {
-        table.set_text( row, column, grid.get( row, column ) );
+        table.set_text( row, column, grid.get_value( row, column ) );
       }
     }
     table.update_layout();
@@ -343,7 +343,7 @@ public class NodeTable : Object {
     var table = new NodeTable( map, grid.row_count, grid.column_count );
     for( int row=0; row<table.rows; row++ ) {
       for( int column=0; column<table.columns; column++ ) {
-        table.set_text( row, column, grid.get( row, column ) );
+        table.set_text( row, column, grid.get_value( row, column ) );
       }
     }
     table.update_layout();
