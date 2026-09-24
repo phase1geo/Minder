@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 08:01-0500\n"
+"POT-Creation-Date: 2026-09-23 22:18-0500\n"
 "PO-Revision-Date: 2025-12-02 09:55+0100\n"
 "Last-Translator: Daniel Nylander <github@danielnylander.se>\n"
 "Language-Team: sv\n"
@@ -34,61 +34,65 @@ msgstr "Minder i AppCenter"
 msgid "Flatpak Runtime: %s"
 msgstr "Flatpak-körmiljö: %s"
 
-#: src/Application.vala:139
+#: src/Application.vala:55 src/MainWindow.vala:236 src/MainWindow.vala:1888
+msgid "Minder"
+msgstr "Minder"
+
+#: src/Application.vala:145
 #, c-format
 msgid "Import file from format (%s)"
 msgstr "Importera fil från format (%s)"
 
-#: src/Application.vala:140
+#: src/Application.vala:146
 #, c-format
 msgid "Export mindmap as format (%s)"
 msgstr "Exportera tankekarta som format (%s)"
 
-#: src/Application.vala:145
+#: src/Application.vala:151
 msgid "Display version number"
 msgstr "Visa versionsnummer"
 
-#: src/Application.vala:146
+#: src/Application.vala:152
 msgid "Display help"
 msgstr "Visa hjälp"
 
-#: src/Application.vala:147
+#: src/Application.vala:153
 msgid "Starts Minder with a new file"
 msgstr "Startar Minder med en ny fil"
 
-#: src/Application.vala:150
+#: src/Application.vala:156
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
 msgstr ""
 "Aktiverar en transparent bakgrund för PNG-bilder. Standardinställningen är "
 "ingen transparens."
 
-#: src/Application.vala:151
+#: src/Application.vala:157
 msgid "PNG compression value (0-9). Default is 0."
 msgstr "PNG-komprimeringsvärde (0-9). Standardvärdet är 0."
 
-#: src/Application.vala:152
+#: src/Application.vala:158
 msgid "JPEG quality (0-100). Default is 90."
 msgstr "JPEG-kvalitet (0-100). Standardvärdet är 90."
 
-#: src/Application.vala:153
+#: src/Application.vala:159
 msgid "Enables image links in exported Markdown"
 msgstr "Aktiverar bildlänkar i exporterad Markdown"
 
-#: src/Application.vala:152
+#: src/Application.vala:164
 msgid "Import Example:\n"
 msgstr "Importexempel:\n"
 
-#: src/Application.vala:159
-#, c-format
-msgid "  %scom.github.phase1geo.minder --import=markdown file.markdown\n"
+#: src/Application.vala:165
+#, fuzzy, c-format
+msgid "  %sio.github.phase1geo.minder --import=markdown file.markdown\n"
 msgstr "  %scom.github.phase1geo.minder --import=markdown fil.markdown\n"
 
-#: src/Application.vala:161
+#: src/Application.vala:167
 msgid "Export Example:\n"
 msgstr "Exportexempel:\n"
 
-#: src/Application.vala:162
+#: src/Application.vala:168
 #, c-format
 msgid ""
 "  %sio.github.phase1geo.minder --export=png --png-transparent file.minder "
@@ -97,34 +101,34 @@ msgstr ""
 "  %scom.github.phase1geo.minder --export=png --png-transparent fil.minder "
 "fil.png\n"
 
-#: src/Application.vala:171
+#: src/Application.vala:177
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "FEL: %s\n"
 
-#: src/Application.vala:172
+#: src/Application.vala:178
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "Kör '%s --help' för att se giltiga flaggor\n"
 
-#: src/Application.vala:195
+#: src/Application.vala:201
 msgid "ERROR: Unable to import file"
 msgstr "FEL: Det går inte att importera filen"
 
-#: src/Application.vala:199
+#: src/Application.vala:205
 msgid "ERROR: Import is missing filename to import"
 msgstr "FEL: Importen saknar filnamn att importera"
 
-#: src/Application.vala:222
+#: src/Application.vala:228
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr "FEL: Exporten saknar inmatningsfil och/eller exportutmatningsfil"
 
-#: src/Application.vala:232
+#: src/Application.vala:238
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "FEL: Det går inte att öppna filen '%s'\n"
 
-#: src/Application.vala:268
+#: src/Application.vala:274
 #, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "FEL:  Det går inte att läsa in Minder-inmatningsfilen %s"
@@ -147,20 +151,46 @@ msgstr "Ta bort"
 msgid "Select Node"
 msgstr "Välj nod"
 
-#: src/Callout.vala:131 src/KeyCommands.vala:729 src/NodeMenu.vala:97
+#: src/Callout.vala:131 src/KeyCommands.vala:780 src/NodeMenu.vala:98
 msgid "Callout"
 msgstr "Callout"
 
-#: src/CanvasText.vala:326 src/FormattedText.vala:1209
+#: src/CanvasText.vala:346 src/FormattedText.vala:1218
 msgid "No text found"
 msgstr "Ingen text hittades"
 
-#: src/ConnectionInspector.vala:84 src/KeyCommands.vala:732
-#: src/NodeMenu.vala:96
+#: src/Clipboard.vala:122
+msgid "Recognizing formula"
+msgstr ""
+
+#: src/Clipboard.vala:123
+msgid "Converting the pasted image to editable LaTeX locally"
+msgstr ""
+
+#: src/Clipboard.vala:130
+msgid "Formula recognized"
+msgstr ""
+
+#: src/Clipboard.vala:131
+msgid "The pasted image was converted to editable LaTeX"
+msgstr ""
+
+#: src/Clipboard.vala:137
+#, fuzzy
+msgid "Pasted as an image"
+msgstr "Klistra in och ersätt nodbild"
+
+#: src/Clipboard.vala:138
+#, c-format
+msgid "Formula recognition was skipped: %s"
+msgstr ""
+
+#: src/ConnectionInspector.vala:84 src/KeyCommands.vala:783
+#: src/NodeMenu.vala:97
 msgid "Connection"
 msgstr "Anslutning"
 
-#: src/ConnectionInspector.vala:97 src/NodeInspector.vala:201
+#: src/ConnectionInspector.vala:97 src/NodeInspector.vala:200
 msgid "Color"
 msgstr "Färg"
 
@@ -174,7 +204,7 @@ msgid "Use Theme Default Color"
 msgstr "Använd temats standardfärg"
 
 #: src/ConnectionInspector.vala:144 src/GroupInspector.vala:92
-#: src/NodeInspector.vala:300
+#: src/NodeInspector.vala:299
 msgid "Note"
 msgstr "Anteckning"
 
@@ -190,7 +220,7 @@ msgstr "Redigera titel…"
 msgid "Edit Note"
 msgstr "Redigera anteckning"
 
-#: src/ConnectionMenu.vala:39 src/NodeMenu.vala:58
+#: src/ConnectionMenu.vala:39 src/NodeMenu.vala:59
 msgid "Remove Sticker"
 msgstr "Ta bort klistermärke"
 
@@ -210,8 +240,8 @@ msgstr "Nästa anslutning"
 msgid "Previous Connection"
 msgstr "Tidigare anslutning"
 
-#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:336
-#: src/NodeMenu.vala:104 src/NodesMenu.vala:59
+#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:366
+#: src/NodeMenu.vala:105 src/NodesMenu.vala:59
 msgid "Select"
 msgstr "Välj"
 
@@ -256,11 +286,11 @@ msgstr "Uppgradera inte Minder-filer utan visa dem som skrivskyddade"
 msgid "unnamed"
 msgstr "namnlös"
 
-#: src/Document.vala:693
+#: src/Document.vala:699
 msgid "Upgrade?"
 msgstr "Uppgradera?"
 
-#: src/Document.vala:694
+#: src/Document.vala:700
 msgid ""
 "This file is from an older version Minder and needs to be upgraded to edit.\n"
 "\n"
@@ -272,39 +302,39 @@ msgstr ""
 "Observera: Uppgraderade filer kan inte visas/redigeras med äldre versioner "
 "av Minder."
 
-#: src/Document.vala:699 src/ImageEditor.vala:428 src/MainWindow.vala:1587
-#: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
-#: src/ThemeEditor.vala:154 src/UrlEditor.vala:63
+#: src/Document.vala:705 src/ImageEditor.vala:430 src/MainWindow.vala:1587
+#: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TableEditor.vala:362
+#: src/TemplateEditor.vala:100 src/ThemeEditor.vala:154 src/UrlEditor.vala:63
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: src/Document.vala:702 src/ImageEditor.vala:431 src/MainWindow.vala:2317
-#: src/UrlEditor.vala:53
+#: src/Document.vala:708 src/ImageEditor.vala:433 src/MainWindow.vala:2302
+#: src/TableEditor.vala:363 src/UrlEditor.vala:53
 msgid "Apply"
 msgstr "Tillämpa"
 
-#: src/Document.vala:713
+#: src/Document.vala:719
 msgid "Don't show this dialog again"
 msgstr "Visa inte denna dialogruta igen"
 
-#: src/Document.vala:716 src/MainWindow.vala:2354
+#: src/Document.vala:722 src/MainWindow.vala:2339
 msgid "<small>This can be changed in preferences</small>"
 msgstr "<small>Detta kan ändras i inställningarna</small>"
 
-#: src/Document.vala:737
+#: src/Document.vala:743
 msgid "Upgrade Needed"
 msgstr "Uppgradering krävs"
 
-#: src/DrawArea.vala:1526
+#: src/DrawArea.vala:1547
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% färdig"
 
-#: src/DrawArea.vala:1544
+#: src/DrawArea.vala:1565
 msgid "Drag to resize node"
 msgstr "Dra för att ändra storlek på nod"
 
-#: src/DrawArea.vala:1546
+#: src/DrawArea.vala:1567
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -312,25 +342,25 @@ msgstr ""
 "Dra för att ändra storlek på nod och bild. Kontroll-dra för att endast ändra "
 "storlek på nod."
 
-#: src/DrawArea.vala:1688
+#: src/DrawArea.vala:1709
 #, c-format
 msgid "Children: %u\n"
 msgstr "Underordnade: %u\n"
 
-#: src/DrawArea.vala:1689
+#: src/DrawArea.vala:1710
 #, c-format
 msgid "Total: %d"
 msgstr "Totalt: %d"
 
-#: src/DrawArea.vala:1743
+#: src/DrawArea.vala:1764
 msgid "connection endpoint change"
 msgstr "ändring av anslutningsändpunkt"
 
-#: src/DrawArea.vala:1750
+#: src/DrawArea.vala:1771
 msgid "connection drag"
 msgstr "anslutningsdrag"
 
-#: src/DrawArea.vala:2281 src/MapModel.vala:1833 src/MapModel.vala:1848
+#: src/DrawArea.vala:2320 src/MapModel.vala:1855 src/MapModel.vala:1870
 msgid "Another Idea"
 msgstr "En annan idé"
 
@@ -340,12 +370,12 @@ msgid ""
 "to view/edit information"
 msgstr "Välj en nod, anslutning eller grupp för att visa/redigera information"
 
-#: src/EmptyMenu.vala:33 src/NodeMenu.vala:38 src/NodeMenu.vala:259
+#: src/EmptyMenu.vala:33 src/NodeMenu.vala:38 src/NodeMenu.vala:269
 #: src/TextMenu.vala:38
 msgid "Paste"
 msgstr "Klistra in"
 
-#: src/EmptyMenu.vala:36 src/NodeMenu.vala:71
+#: src/EmptyMenu.vala:36 src/NodeMenu.vala:72
 msgid "Add Root Node"
 msgstr "Lägg till rotnod"
 
@@ -420,11 +450,11 @@ msgstr "Kvalitet"
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/exports/ExportMarkdown.vala:368
+#: src/exports/ExportMarkdown.vala:401
 msgid "Include image links"
 msgstr "Inkludera bildlänkar"
 
-#: src/exports/ExportMarkdown.vala:369
+#: src/exports/ExportMarkdown.vala:402
 msgid "Creates a directory containing the Markdown and embedded images"
 msgstr "Skapar en katalog som innehåller Markdown och inbäddade bilder"
 
@@ -432,19 +462,19 @@ msgstr "Skapar en katalog som innehåller Markdown och inbäddade bilder"
 msgid "Mermaid"
 msgstr "Sjöjungfru"
 
-#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutVertical.vala:26
+#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutVertical.vala:27
 msgid "Vertical"
 msgstr "Vertikal"
 
-#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutDown.vala:26
+#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutDown.vala:27
 msgid "Downwards"
 msgstr "Nedåt"
 
-#: src/exports/ExportMermaid.vala:77 src/layouts/LayoutLeft.vala:26
+#: src/exports/ExportMermaid.vala:77 src/layouts/LayoutLeft.vala:27
 msgid "To left"
 msgstr "Till vänster"
 
-#: src/exports/ExportMermaid.vala:79 src/layouts/LayoutUp.vala:26
+#: src/exports/ExportMermaid.vala:79 src/layouts/LayoutUp.vala:27
 msgid "Upwards"
 msgstr "Uppåt"
 
@@ -512,13 +542,13 @@ msgstr "WebP"
 msgid "XMind 2021"
 msgstr "XMind 2021"
 
-#: src/exports/ExportXMind2021.vala:681 src/exports/ExportXMind8.vala:693
-#: src/layouts/LayoutHorizontal.vala:26
+#: src/exports/ExportXMind2021.vala:689 src/exports/ExportXMind8.vala:698
+#: src/layouts/LayoutHorizontal.vala:27
 msgid "Horizontal"
 msgstr "Horisontell"
 
-#: src/exports/ExportXMind2021.vala:683 src/exports/ExportXMind8.vala:695
-#: src/layouts/LayoutRight.vala:26
+#: src/exports/ExportXMind2021.vala:691 src/exports/ExportXMind8.vala:700
+#: src/layouts/LayoutRight.vala:27
 msgid "To right"
 msgstr "Till höger"
 
@@ -538,7 +568,31 @@ msgstr "JPEG"
 msgid "Export to clipboard"
 msgstr "Exportera till urklipp"
 
-#: src/GroupInspector.vala:79 src/KeyCommands.vala:738
+#: src/FormulaRecognizer.vala:55
+msgid "The offline formula recognizer is not installed"
+msgstr ""
+
+#: src/FormulaRecognizer.vala:58
+msgid "Another formula is already being recognized"
+msgstr ""
+
+#: src/FormulaRecognizer.vala:92
+msgid "Offline formula recognition timed out"
+msgstr ""
+
+#: src/FormulaRecognizer.vala:96
+msgid "Offline formula recognition failed"
+msgstr ""
+
+#: src/FormulaRecognizer.vala:102
+msgid "The formula recognizer returned no LaTeX"
+msgstr ""
+
+#: src/FormulaRecognizer.vala:105
+msgid "The recognized formula is too long"
+msgstr ""
+
+#: src/GroupInspector.vala:79 src/KeyCommands.vala:789
 msgid "Group"
 msgstr "Grupp"
 
@@ -558,747 +612,837 @@ msgstr "Toppnoder"
 msgid "All Grouped Nodes"
 msgstr "Alla grupperade noder"
 
-#: src/ImageEditor.vala:197
+#: src/ImageEditor.vala:199
 #, c-format
 msgid "Crop Area: %d,%d %3dx%3d"
 msgstr "Odlingsareal: %d,%d %3dx%3d"
 
-#: src/ImageEditor.vala:399
+#: src/ImageEditor.vala:401
 #, c-format
 msgid "Cursor: %3d,%3d"
 msgstr "Markör: %3d,%3d"
 
-#: src/ImageEditor.vala:408
+#: src/ImageEditor.vala:410
 msgid "Change Image"
 msgstr "Ändra bild"
 
-#: src/ImageEditor.vala:412
+#: src/ImageEditor.vala:414
 msgid "Paste Image from Clipboard"
 msgstr "Klistra in bild från urklipp"
 
-#: src/ImageEditor.vala:416 src/NodeInspector.vala:402 src/NodeMenu.vala:240
+#: src/ImageEditor.vala:418 src/NodeInspector.vala:401 src/NodeMenu.vala:248
 msgid "Remove Image"
 msgstr "Ta bort bild"
 
-#: src/ImageEditor.vala:420
+#: src/ImageEditor.vala:422
 msgid "Copy Image to Clipboard"
 msgstr "Kopiera bild till urklipp"
 
-#: src/ImageEditor.vala:425
+#: src/ImageEditor.vala:427
 msgid "Cut Image to Clipboard"
 msgstr "Klipp ut bild till urklipp"
 
-#: src/ImageManager.vala:336
+#: src/ImageManager.vala:366
 msgid "Select Image"
 msgstr "Välj bild"
 
-#: src/ImageManager.vala:341
+#: src/ImageManager.vala:371
 msgid "Images"
 msgstr "Bilder"
 
-#: src/KeyCommands.vala:621 src/Shortcuts.vala:801
+#: src/KeyCommands.vala:665 src/Shortcuts.vala:822
 msgid "General"
 msgstr "Allmänt"
 
-#: src/KeyCommands.vala:622
+#: src/KeyCommands.vala:666
 msgid "File Commands"
 msgstr "Filkommandon"
 
-#: src/KeyCommands.vala:623
+#: src/KeyCommands.vala:667
 msgid "Create new mindmap"
 msgstr "Skapa ny tankekarta"
 
-#: src/KeyCommands.vala:624
+#: src/KeyCommands.vala:668
 msgid "Open saved mindmap"
 msgstr "Öppna sparad tankekarta"
 
-#: src/KeyCommands.vala:625
+#: src/KeyCommands.vala:669
 msgid "Create mindmap from directory structure"
 msgstr "Skapa tankekarta från katalogstruktur"
 
-#: src/KeyCommands.vala:626
+#: src/KeyCommands.vala:670
 msgid "Save mindmap to current file"
 msgstr "Spara tankekarta till aktuell fil"
 
-#: src/KeyCommands.vala:627
+#: src/KeyCommands.vala:671
 msgid "Save mindmap to new file"
 msgstr "Spara tankekarta i ny fil"
 
-#: src/KeyCommands.vala:628
+#: src/KeyCommands.vala:672
 msgid "Show print dialog for current mindmap"
 msgstr "Visa utskriftsdialog för aktuell tankekarta"
 
-#: src/KeyCommands.vala:629
+#: src/KeyCommands.vala:673
 msgid "Tab Commands"
 msgstr "Flikkommandon"
 
-#: src/KeyCommands.vala:630
+#: src/KeyCommands.vala:674
 msgid "Select next tab"
 msgstr "Välj nästa flik"
 
-#: src/KeyCommands.vala:631
+#: src/KeyCommands.vala:675
 msgid "Select previous tab"
 msgstr "Välj föregående flik"
 
-#: src/KeyCommands.vala:632
+#: src/KeyCommands.vala:676
 msgid "Close the current mindmap"
 msgstr "Stäng den aktuella tankekartan"
 
-#: src/KeyCommands.vala:633
+#: src/KeyCommands.vala:677
 msgid "Undo/Redo Commands"
 msgstr "Kommandon för ångra/gör om"
 
-#: src/KeyCommands.vala:634
+#: src/KeyCommands.vala:678
 msgid "Undo last action"
 msgstr "Ångra senaste åtgärden"
 
-#: src/KeyCommands.vala:635
+#: src/KeyCommands.vala:679
 msgid "Redo last undone action"
 msgstr "Gör om senaste ångrade åtgärd"
 
-#: src/KeyCommands.vala:636
+#: src/KeyCommands.vala:680
 msgid "Zoom Commands"
 msgstr "Zoomkommandon"
 
-#: src/KeyCommands.vala:637
+#: src/KeyCommands.vala:681
 msgid "Zoom in"
 msgstr "Zooma in"
 
-#: src/KeyCommands.vala:638
+#: src/KeyCommands.vala:682
 msgid "Zoom out"
 msgstr "Zooma ut"
 
-#: src/KeyCommands.vala:639
+#: src/KeyCommands.vala:683
 msgid "Zoom to fit entire mindmap in viewer"
 msgstr "Zooma för att passa hela tankekartan i visningsprogrammet"
 
-#: src/KeyCommands.vala:640
+#: src/KeyCommands.vala:684
 msgid "Zoom selected node subtree in viewer"
 msgstr "Zooma in vald nodunderstruktur i visningsprogrammet"
 
-#: src/KeyCommands.vala:641
+#: src/KeyCommands.vala:685
 msgid "Zoom to 100%"
 msgstr "Zooma till 100 %"
 
-#: src/KeyCommands.vala:642
+#: src/KeyCommands.vala:686
 msgid "Sidebar Commands"
 msgstr "Kommandon för sidofält"
 
-#: src/KeyCommands.vala:643
+#: src/KeyCommands.vala:687
 msgid "Show current tab in sidebar"
 msgstr "Visa aktuell flik i sidofältet"
 
-#: src/KeyCommands.vala:644
+#: src/KeyCommands.vala:688
 msgid "Show style tab in sidebar"
 msgstr "Visa stilflik i sidofält"
 
-#: src/KeyCommands.vala:645
+#: src/KeyCommands.vala:689
 msgid "Show tag tab in sidebar"
 msgstr "Visa taggflik i sidofält"
 
-#: src/KeyCommands.vala:646
+#: src/KeyCommands.vala:690
 msgid "Show sticker tab in sidebar"
 msgstr "Visa klistermärkesflik i sidofält"
 
-#: src/KeyCommands.vala:647
+#: src/KeyCommands.vala:691
 msgid "Show map tab in sidebar"
 msgstr "Visa kartflik i sidofält"
 
-#: src/KeyCommands.vala:648
+#: src/KeyCommands.vala:692
 msgid "Show currently select node/connection/group information in sidebar"
 msgstr "Visa aktuell information om vald nod/anslutning/grupp i sidofält"
 
-#: src/KeyCommands.vala:649
+#: src/KeyCommands.vala:693
 msgid "Map Commands"
 msgstr "Kartkommandon"
 
-#: src/KeyCommands.vala:650
+#: src/KeyCommands.vala:694
 msgid "Show/Hide Connections"
 msgstr "Visa/dölj anslutningar"
 
-#: src/KeyCommands.vala:651
+#: src/KeyCommands.vala:695
 msgid "Show/Hide Callouts"
 msgstr "Visa/dölj kommentarer"
 
-#: src/KeyCommands.vala:652
+#: src/KeyCommands.vala:696
 msgid "Balance nodes in vertical/horizontal layouts"
 msgstr "Balansera noder i vertikala/horisontella layouter"
 
-#: src/KeyCommands.vala:653
+#: src/KeyCommands.vala:697
 msgid "Fold all completed tasks"
 msgstr "Fäll in alla slutförda uppgifter"
 
-#: src/KeyCommands.vala:654
+#: src/KeyCommands.vala:698
 msgid "Unfold all folded nodes"
 msgstr "Fäll ut alla infällda noder"
 
-#: src/KeyCommands.vala:655
+#: src/KeyCommands.vala:699
 msgid "Miscellaneous Commands"
 msgstr "Övriga kommandon"
 
-#: src/KeyCommands.vala:656
+#: src/KeyCommands.vala:700
 msgid "Show preferences window"
 msgstr "Visa inställningsfönster"
 
-#: src/KeyCommands.vala:657
+#: src/KeyCommands.vala:701
 msgid "Show shortcuts cheatsheet"
 msgstr "Visa fusklapp för genvägar"
 
-#: src/KeyCommands.vala:658
+#: src/KeyCommands.vala:702
 msgid "Show contextual menu"
 msgstr "Visa kontextmeny"
 
-#: src/KeyCommands.vala:659
+#: src/KeyCommands.vala:703
 msgid "Show find popup"
 msgstr "Visa sök-popup"
 
-#: src/KeyCommands.vala:660
+#: src/KeyCommands.vala:704
 msgid "Show About window"
 msgstr "Visa Om-fönstret"
 
-#: src/KeyCommands.vala:661
+#: src/KeyCommands.vala:705
 msgid "Toggle braindump input mode"
 msgstr "Växla hjärndumpsinmatningsläge"
 
-#: src/KeyCommands.vala:662
+#: src/KeyCommands.vala:706
 msgid "Toggle focus mode"
 msgstr "Växla fokusläge"
 
-#: src/KeyCommands.vala:663
+#: src/KeyCommands.vala:707
 msgid "Edit note of current item"
 msgstr "Redigera anteckning för aktuellt objekt"
 
-#: src/KeyCommands.vala:664
+#: src/KeyCommands.vala:708
 msgid "Edit currently selected item"
 msgstr "Redigera aktuellt valt objekt"
 
-#: src/KeyCommands.vala:665
+#: src/KeyCommands.vala:709
 msgid "Show currently selected item"
 msgstr "Visa aktuellt valt objekt"
 
-#: src/KeyCommands.vala:666
+#: src/KeyCommands.vala:710
 msgid "Remove sticker from current node or connection"
 msgstr "Ta bort klistermärke från aktuell nod eller anslutning"
 
-#: src/KeyCommands.vala:667
+#: src/KeyCommands.vala:711
 msgid "Quit the application"
 msgstr "Avsluta programmet"
 
-#: src/KeyCommands.vala:668 src/NodeInspector.vala:102
+#: src/KeyCommands.vala:712 src/NodeInspector.vala:101
 msgid "Node"
 msgstr "Nod"
 
-#: src/KeyCommands.vala:669
+#: src/KeyCommands.vala:713
 msgid "Creation/Deletion Commands"
 msgstr "Kommandon för skapande/borttagning"
 
-#: src/KeyCommands.vala:670
+#: src/KeyCommands.vala:714
 msgid "Add root node"
 msgstr "Lägg till rotnod"
 
-#: src/KeyCommands.vala:671
+#: src/KeyCommands.vala:715
 msgid "Add sibling node after current node"
 msgstr "Lägg till syskonnod efter aktuell nod"
 
-#: src/KeyCommands.vala:672
+#: src/KeyCommands.vala:716
 msgid "Add sibling node before current node"
 msgstr "Lägg till syskonnod före aktuell nod"
 
-#: src/KeyCommands.vala:673
+#: src/KeyCommands.vala:717
 msgid "Add child node to current node"
 msgstr "Lägg till underordnad nod till aktuell nod"
 
-#: src/KeyCommands.vala:674
+#: src/KeyCommands.vala:718
 msgid "Add parent node to current node"
 msgstr "Lägg till överordnad nod till aktuell nod"
 
-#: src/KeyCommands.vala:675
+#: src/KeyCommands.vala:719
 msgid "Use quick entry to insert nodes"
 msgstr "Använd snabbinmatning för att infoga noder"
 
-#: src/KeyCommands.vala:676
+#: src/KeyCommands.vala:720
 msgid "Use quick entry to replace current node"
 msgstr "Använd snabbinmatning för att ersätta aktuell nod"
 
-#: src/KeyCommands.vala:677
+#: src/KeyCommands.vala:721
 msgid "Remove selected node only (leave subtree)"
 msgstr "Ta endast bort vald nod (lämna underträd)"
 
-#: src/KeyCommands.vala:678 src/KeyCommands.vala:767
+#: src/KeyCommands.vala:722 src/KeyCommands.vala:825
 msgid "Clipboard Commands"
 msgstr "Urklippskommandon"
 
-#: src/KeyCommands.vala:679
+#: src/KeyCommands.vala:723
 msgid "Paste node link from clipboard into current node"
 msgstr "Klistra in nodlänk från urklipp i aktuell nod"
 
-#: src/KeyCommands.vala:680
+#: src/KeyCommands.vala:724
 msgid "Replace current node with clipboard content"
 msgstr "Ersätt aktuell nod med innehållet i urklipp"
 
-#: src/KeyCommands.vala:681
+#: src/KeyCommands.vala:725
 msgid "View Commands"
 msgstr "Visa kommandon"
 
-#: src/KeyCommands.vala:682
+#: src/KeyCommands.vala:726
 msgid "Center current node in map canvas"
 msgstr "Centrera aktuell nod i kartan"
 
-#: src/KeyCommands.vala:683 src/KeyCommands.vala:739
+#: src/KeyCommands.vala:727 src/KeyCommands.vala:790
 msgid "Change Commands"
 msgstr "Ändra kommandon"
 
-#: src/KeyCommands.vala:684
+#: src/KeyCommands.vala:728
 msgid "Change task status of current node"
 msgstr "Ändra uppgiftsstatus för aktuell nod"
 
-#: src/KeyCommands.vala:685
+#: src/KeyCommands.vala:729
 msgid "Add/Edit image of current node"
 msgstr "Lägg till/redigera bild för aktuell nod"
 
-#: src/KeyCommands.vala:686
+#: src/KeyCommands.vala:730
 msgid "Remove image from current node"
 msgstr "Ta bort bild från aktuell nod"
 
-#: src/KeyCommands.vala:687
+#: src/KeyCommands.vala:731
+#, fuzzy
+msgid "Add/Edit table of current node"
+msgstr "Lägg till/redigera bild för aktuell nod"
+
+#: src/KeyCommands.vala:732
 msgid "Change link color of current node"
 msgstr "Ändra länkfärgen för aktuell nod"
 
-#: src/KeyCommands.vala:688
+#: src/KeyCommands.vala:733
 msgid "Randomize the current node link color"
 msgstr "Slumpmässigt val av färg på aktuell nodlänk"
 
-#: src/KeyCommands.vala:689
+#: src/KeyCommands.vala:734
 msgid "Set current node link color to match parent node"
 msgstr "Ställ in aktuell nodlänksfärg för att matcha överordnad nod"
 
-#: src/KeyCommands.vala:690
+#: src/KeyCommands.vala:735
 msgid "Toggle folding of current node"
 msgstr "Växla infällning av aktuell nod"
 
-#: src/KeyCommands.vala:691
+#: src/KeyCommands.vala:736
 msgid "Toggle folding of current node subtree"
 msgstr "Växla infällning av aktuella nodens underträd"
 
-#: src/KeyCommands.vala:692
+#: src/KeyCommands.vala:737
 msgid "Toggle the node link state"
 msgstr "Växla nodlänkens tillstånd"
 
-#: src/KeyCommands.vala:693
+#: src/KeyCommands.vala:738
 msgid "Add group for current node and its subtree"
 msgstr "Lägg till grupp för aktuell nod och dess underträd"
 
-#: src/KeyCommands.vala:694
+#: src/KeyCommands.vala:739
 msgid "Start creation of connection from current node"
 msgstr "Börja skapa anslutning från aktuell nod"
 
-#: src/KeyCommands.vala:695
+#: src/KeyCommands.vala:740
 msgid "Add/Remove callout for current node"
 msgstr "Lägg till/ta bort kommentar för aktuell nod"
 
-#: src/KeyCommands.vala:696
+#: src/KeyCommands.vala:741
 msgid "Toggle sequence state of children of current node"
 msgstr "Växla sekvenstillstånd för underordnade element till aktuell nod"
 
-#: src/KeyCommands.vala:697 src/KeyCommands.vala:730 src/KeyCommands.vala:733
-#: src/KeyCommands.vala:742 src/KeyCommands.vala:787
+#: src/KeyCommands.vala:742 src/KeyCommands.vala:781 src/KeyCommands.vala:784
+#: src/KeyCommands.vala:793 src/KeyCommands.vala:846
 msgid "Selection Commands"
 msgstr "Markeringskommandon"
 
-#: src/KeyCommands.vala:698
+#: src/KeyCommands.vala:743
 msgid "Select root node of current node"
 msgstr "Välj rotnod för aktuell nod"
 
-#: src/KeyCommands.vala:699
+#: src/KeyCommands.vala:744
 msgid "Select parent node of current node"
 msgstr "Välj överordnad nod för aktuell nod"
 
-#: src/KeyCommands.vala:700
+#: src/KeyCommands.vala:745
 msgid "Select all child nodes of current node"
 msgstr "Välj alla underordnade noder till aktuell nod"
 
-#: src/KeyCommands.vala:701
+#: src/KeyCommands.vala:746
 msgid "Select single child node of current node"
 msgstr "Välj en enskild underordnad nod till aktuell nod"
 
-#: src/KeyCommands.vala:702
+#: src/KeyCommands.vala:747
 msgid "Select all nodes in subtree of current node"
 msgstr "Markera alla noder i underträdet för aktuell nod"
 
-#: src/KeyCommands.vala:703
+#: src/KeyCommands.vala:748
 msgid "Select next sibling node of current node"
 msgstr "Välj nästa syskonnod till aktuell nod"
 
-#: src/KeyCommands.vala:704
+#: src/KeyCommands.vala:749
 msgid "Select previous sibling node of current node"
 msgstr "Välj föregående syskonnod för aktuell nod"
 
-#: src/KeyCommands.vala:705
+#: src/KeyCommands.vala:750
 #, fuzzy
 msgid "Select first sibling node of current node"
 msgstr "Välj nästa syskonnod till aktuell nod"
 
-#: src/KeyCommands.vala:706
+#: src/KeyCommands.vala:751
 #, fuzzy
 msgid "Select last sibling node of current node"
 msgstr "Välj nästa syskonnod till aktuell nod"
 
-#: src/KeyCommands.vala:707
+#: src/KeyCommands.vala:752
 msgid "Select node to the left of current node"
 msgstr "Välj nod till vänster om aktuell nod"
 
-#: src/KeyCommands.vala:708
+#: src/KeyCommands.vala:753
 msgid "Select node to the right of current node"
 msgstr "Välj nod till höger om aktuell nod"
 
-#: src/KeyCommands.vala:709
+#: src/KeyCommands.vala:754
 msgid "Select node above current node"
 msgstr "Välj nod ovanför aktuell nod"
 
-#: src/KeyCommands.vala:710
+#: src/KeyCommands.vala:755
 msgid "Select node below current node"
 msgstr "Välj nod nedanför aktuell nod"
 
-#: src/KeyCommands.vala:711
+#: src/KeyCommands.vala:756
 msgid "Select linked node of current node"
 msgstr "Välj länkad nod för aktuell nod"
 
-#: src/KeyCommands.vala:712
+#: src/KeyCommands.vala:757
 msgid "Select connection of current node"
 msgstr "Välj anslutning för aktuell nod"
 
-#: src/KeyCommands.vala:713
+#: src/KeyCommands.vala:758
 msgid "Select callout of current node"
 msgstr "Välj kommentar för aktuell nod"
 
-#: src/KeyCommands.vala:714
+#: src/KeyCommands.vala:759
 msgid "Move Commands"
 msgstr "Flyttningskommandon"
 
-#: src/KeyCommands.vala:715
+#: src/KeyCommands.vala:760
 msgid "Swap current node with right node"
 msgstr "Byt ut aktuell nod med höger nod"
 
-#: src/KeyCommands.vala:716
+#: src/KeyCommands.vala:761
 msgid "Swap current node with left node"
 msgstr "Byt ut aktuell nod med vänster nod"
 
-#: src/KeyCommands.vala:717
+#: src/KeyCommands.vala:762
 msgid "Swap current node with above node"
 msgstr "Byt ut aktuell nod med noden ovanför"
 
-#: src/KeyCommands.vala:718
+#: src/KeyCommands.vala:763
 msgid "Swap current node with below node"
 msgstr "Byt ut aktuell nod med noden nedanför"
 
-#: src/KeyCommands.vala:719
+#: src/KeyCommands.vala:764
 msgid "Sort child nodes of current node alphabetically"
 msgstr "Sortera underordnade noder till aktuell nod alfabetiskt"
 
-#: src/KeyCommands.vala:720
+#: src/KeyCommands.vala:765
 msgid "Sort child nodes of current node randomly"
 msgstr "Sortera underordnade noder till aktuell nod slumpmässigt"
 
-#: src/KeyCommands.vala:721
+#: src/KeyCommands.vala:766
 msgid "Detaches current node and its subtree"
 msgstr "Kopplar loss aktuell nod och dess underträd"
 
-#: src/KeyCommands.vala:722
+#: src/KeyCommands.vala:767
+#, fuzzy
+msgid "Attach current node to the current attach node"
+msgstr "Lägg till överordnad nod till aktuell nod"
+
+#: src/KeyCommands.vala:768
+#, fuzzy
+msgid "Attach Node Commands"
+msgstr "Flyttningskommandon"
+
+#: src/KeyCommands.vala:769
+#, fuzzy
+msgid "Change the attach node to node to left of current"
+msgstr "Välj nod till vänster om aktuell nod"
+
+#: src/KeyCommands.vala:770
+#, fuzzy
+msgid "Change the attach node to node to right of current"
+msgstr "Välj nod till höger om aktuell nod"
+
+#: src/KeyCommands.vala:771
+#, fuzzy
+msgid "Change the attach node to node above current"
+msgstr "Ändra färgen på den aktuella gruppen"
+
+#: src/KeyCommands.vala:772
+#, fuzzy
+msgid "Change the attach node to node below current"
+msgstr "Ändra färgen på den aktuella gruppen"
+
+#: src/KeyCommands.vala:773
 msgid "Alignment Commands"
 msgstr "Justeringskommandon"
 
-#: src/KeyCommands.vala:723
+#: src/KeyCommands.vala:774
 msgid "Align selected node top edges"
 msgstr "Justera valda noders överkanter"
 
-#: src/KeyCommands.vala:724
+#: src/KeyCommands.vala:775
 msgid "Align selected node vertical centers"
 msgstr "Justera valda noders vertikala centrum"
 
-#: src/KeyCommands.vala:725
+#: src/KeyCommands.vala:776
 msgid "Align selected node bottom edges"
 msgstr "Justera valda noders nederkanter"
 
-#: src/KeyCommands.vala:726
+#: src/KeyCommands.vala:777
 msgid "Align selected node left edges"
 msgstr "Justera valda noders vänsterkanter"
 
-#: src/KeyCommands.vala:727
+#: src/KeyCommands.vala:778
 msgid "Align selected node horizontal centers"
 msgstr "Justera valda noders horisontella centrum"
 
-#: src/KeyCommands.vala:728
+#: src/KeyCommands.vala:779
 msgid "Align selected node right edges"
 msgstr "Justera valda noders högerkanter"
 
-#: src/KeyCommands.vala:731
+#: src/KeyCommands.vala:782
 msgid "Select callout node"
 msgstr "Välj kommentarsnod"
 
-#: src/KeyCommands.vala:734
+#: src/KeyCommands.vala:785
 msgid "Select connection source node"
 msgstr "Välj källnod för anslutning"
 
-#: src/KeyCommands.vala:735
+#: src/KeyCommands.vala:786
 msgid "Select connection target node"
 msgstr "Välj målnod för anslutning"
 
-#: src/KeyCommands.vala:736
+#: src/KeyCommands.vala:787
 msgid "Select next connection in map"
 msgstr "Välj nästa anslutning i karta"
 
-#: src/KeyCommands.vala:737
+#: src/KeyCommands.vala:788
 msgid "Select previous connection in map"
 msgstr "Välj föregående anslutning i karta"
 
-#: src/KeyCommands.vala:740
+#: src/KeyCommands.vala:791
 msgid "Change the color of the current group"
 msgstr "Ändra färgen på den aktuella gruppen"
 
-#: src/KeyCommands.vala:741
+#: src/KeyCommands.vala:792
 msgid "Merge current groups into single group"
 msgstr "Slå samman aktuella grupper till en enda grupp"
 
-#: src/KeyCommands.vala:743
+#: src/KeyCommands.vala:794
 msgid "Select main node(s) of current group(s)"
 msgstr "Välj huvudnod(er) för aktuell grupp(er)"
 
-#: src/KeyCommands.vala:744
+#: src/KeyCommands.vala:795
 msgid "Selects all nodes within current group(s)"
 msgstr "Väljer alla noder inom aktuella grupp(er)"
 
-#: src/KeyCommands.vala:745
+#: src/KeyCommands.vala:796
+#, fuzzy
+msgid "Table Editor"
+msgstr "Android-surfplatta"
+
+#: src/KeyCommands.vala:797
+#, fuzzy
+msgid "Adds a row above the currently selected row"
+msgstr "Lägg till rad nedanför aktuell markering"
+
+#: src/KeyCommands.vala:798
+#, fuzzy
+msgid "Adds a row below the currently selected row"
+msgstr "Lägg till rad nedanför aktuell markering"
+
+#: src/KeyCommands.vala:799
+#, fuzzy
+msgid "Deletes the currently selected row(s)"
+msgstr "Redigera aktuellt valt objekt"
+
+#: src/KeyCommands.vala:800
+#, fuzzy
+msgid "Adds a column to the left of the currently selected row"
+msgstr "Lägg till början av aktuell rad till aktuell markering"
+
+#: src/KeyCommands.vala:801
+#, fuzzy
+msgid "Adds a column to the right of the currently selected row"
+msgstr "Lägg till början av aktuell rad till aktuell markering"
+
+#: src/KeyCommands.vala:802
+#, fuzzy
+msgid "Deletes the currently selected columns(s)"
+msgstr "Redigera aktuellt valt objekt"
+
+#: src/KeyCommands.vala:803
 msgid "Text Editing"
 msgstr "Textredigering"
 
-#: src/KeyCommands.vala:746
+#: src/KeyCommands.vala:804
 msgid "Insertion/Deletion Commands"
 msgstr "Kommandon för infogning/borttagning"
 
-#: src/KeyCommands.vala:747
+#: src/KeyCommands.vala:805
 msgid "Insert newline character"
 msgstr "Infoga radbrytningstecken"
 
-#: src/KeyCommands.vala:748
+#: src/KeyCommands.vala:806
 msgid "Insert TAB character"
 msgstr "Infoga TAB-tecken"
 
-#: src/KeyCommands.vala:749
+#: src/KeyCommands.vala:807
 msgid "Insert emoji"
 msgstr "Infoga känsloikon"
 
-#: src/KeyCommands.vala:750
+#: src/KeyCommands.vala:808
 msgid "Remove next word"
 msgstr "Ta bort nästa ord"
 
-#: src/KeyCommands.vala:751
+#: src/KeyCommands.vala:809
 msgid "Remove previous word"
 msgstr "Ta bort föregående ord"
 
-#: src/KeyCommands.vala:744
+#: src/KeyCommands.vala:810
 msgid "Markdown Syntax"
 msgstr "Markdown-syntax"
 
-#: src/KeyCommands.vala:753
+#: src/KeyCommands.vala:811
 msgid "Insert Markdown header-1 syntax"
 msgstr "Infoga Markdown-syntax för rubrik 1"
 
-#: src/KeyCommands.vala:754
+#: src/KeyCommands.vala:812
 msgid "Insert Markdown header-2 syntax"
 msgstr "Infoga Markdown-syntax för rubrik 2"
 
-#: src/KeyCommands.vala:755
+#: src/KeyCommands.vala:813
 msgid "Insert Markdown header-3 syntax"
 msgstr "Infoga Markdown-syntax för rubrik 3"
 
-#: src/KeyCommands.vala:756
+#: src/KeyCommands.vala:814
 msgid "Insert Markdown header-4 syntax"
 msgstr "Infoga Markdown-syntax för rubrik 4"
 
-#: src/KeyCommands.vala:757
+#: src/KeyCommands.vala:815
 msgid "Insert Markdown header-5 syntax"
 msgstr "Infoga Markdown-syntax för rubrik 5"
 
-#: src/KeyCommands.vala:758
+#: src/KeyCommands.vala:816
 msgid "Insert Markdown header-6 syntax"
 msgstr "Infoga Markdown-syntax för rubrik 6"
 
-#: src/KeyCommands.vala:759
+#: src/KeyCommands.vala:817
 msgid "Insert Markdown bold syntax"
 msgstr "Infoga Markdown-syntax för fetstil"
 
-#: src/KeyCommands.vala:760
+#: src/KeyCommands.vala:818
 msgid "Insert Markdown italics syntax"
 msgstr "Infoga Markdown-syntax för kursiv stil"
 
-#: src/KeyCommands.vala:761
+#: src/KeyCommands.vala:819
 msgid "Insert Markdown strikethrough syntax"
 msgstr "Infoga Markdown-syntax för genomstrykning"
 
-#: src/KeyCommands.vala:762
+#: src/KeyCommands.vala:820
 msgid "Insert Markdown code syntax"
 msgstr "Infoga Markdown-syntax för kod"
 
-#: src/KeyCommands.vala:763
+#: src/KeyCommands.vala:821
 msgid "Insert Markdown highlighting syntax"
 msgstr "Infoga Markdown-syntax för markering"
 
-#: src/KeyCommands.vala:764
+#: src/KeyCommands.vala:822
 msgid "Insert Markdown superscript syntax"
 msgstr "Infoga Markdown-syntax för upphöjd text"
 
-#: src/KeyCommands.vala:765
+#: src/KeyCommands.vala:823
 msgid "Insert Markdown subscript syntax"
 msgstr "Infoga Markdown-syntax för nedsänkt text"
 
-#: src/KeyCommands.vala:766
+#: src/KeyCommands.vala:824
 msgid "Insert Markdown URL link syntax"
 msgstr "Infoga Markdown-syntax för URL-länk"
 
-#: src/KeyCommands.vala:768
+#: src/KeyCommands.vala:826
 msgid "Copy selected nodes or text"
 msgstr "Kopiera valda noder eller text"
 
-#: src/KeyCommands.vala:769
+#: src/KeyCommands.vala:827
 msgid "Cut selected nodes or text"
 msgstr "Klipp ut valda noder eller text"
 
-#: src/KeyCommands.vala:770
+#: src/KeyCommands.vala:828
 msgid "Paste nodes or text from clipboard"
 msgstr "Klistra in noder eller text från urklipp"
 
-#: src/KeyCommands.vala:771
+#: src/KeyCommands.vala:829
+msgid "Convert a clipboard image to LaTeX"
+msgstr ""
+
+#: src/KeyCommands.vala:830
 msgid "URL Commands"
 msgstr "URL-kommandon"
 
-#: src/KeyCommands.vala:772
+#: src/KeyCommands.vala:831
 msgid "Open URL link at current cursor position"
 msgstr "Öppna URL-länk vid aktuell markörposition"
 
-#: src/KeyCommands.vala:773
+#: src/KeyCommands.vala:832
 msgid "Add URL link at current cursor position"
 msgstr "Lägg till URL-länk vid aktuell markörposition"
 
-#: src/KeyCommands.vala:774
+#: src/KeyCommands.vala:833
 msgid "Change URL link at current cursor position"
 msgstr "Ändra URL-länk vid aktuell markörposition"
 
-#: src/KeyCommands.vala:775
+#: src/KeyCommands.vala:834
 msgid "Remove URL link at current cursor position"
 msgstr "Ta bort URL-länk vid aktuell markörposition"
 
-#: src/KeyCommands.vala:776
+#: src/KeyCommands.vala:835
 msgid "Cursor Commands"
 msgstr "Markörkommandon"
 
-#: src/KeyCommands.vala:777
+#: src/KeyCommands.vala:836
 msgid "Move cursor to next character"
 msgstr "Flytta markören till nästa tecken"
 
-#: src/KeyCommands.vala:778
+#: src/KeyCommands.vala:837
 msgid "Move cursor to previous character"
 msgstr "Flytta markören till föregående tecken"
 
-#: src/KeyCommands.vala:779
+#: src/KeyCommands.vala:838
 msgid "Move cursor up one line"
 msgstr "Flytta markören en rad uppåt"
 
-#: src/KeyCommands.vala:780
+#: src/KeyCommands.vala:839
 msgid "Move cursor down one line"
 msgstr "Flytta markören en rad nedåt"
 
-#: src/KeyCommands.vala:781
+#: src/KeyCommands.vala:840
 msgid "Move cursor to beginning of next word"
 msgstr "Flytta markören till början av nästa ord"
 
-#: src/KeyCommands.vala:782
+#: src/KeyCommands.vala:841
 msgid "Move cursor to beginning of previous word"
 msgstr "Flytta markören till början av föregående ord"
 
-#: src/KeyCommands.vala:783
+#: src/KeyCommands.vala:842
 msgid "Move cursor to start of text"
 msgstr "Flytta markören till början av texten"
 
-#: src/KeyCommands.vala:784
+#: src/KeyCommands.vala:843
 msgid "Move cursor to end of text"
 msgstr "Flytta markören till slutet av texten"
 
-#: src/KeyCommands.vala:785
+#: src/KeyCommands.vala:844
 msgid "Move cursor to start of current line"
 msgstr "Flytta markören till början av aktuell rad"
 
-#: src/KeyCommands.vala:786
+#: src/KeyCommands.vala:845
 msgid "Move cursor to end of current line"
 msgstr "Flytta markören till slutet av aktuell rad"
 
-#: src/KeyCommands.vala:788
+#: src/KeyCommands.vala:847
 msgid "Add next character to current selection"
 msgstr "Lägg till nästa tecken till aktuell markering"
 
-#: src/KeyCommands.vala:789
+#: src/KeyCommands.vala:848
 msgid "Add previous character to current selection"
 msgstr "Lägg till föregående tecken till aktuell markering"
 
-#: src/KeyCommands.vala:790
+#: src/KeyCommands.vala:849
 msgid "Add line up to current selection"
 msgstr "Lägg till rad ovanför till aktuell markering"
 
-#: src/KeyCommands.vala:791
+#: src/KeyCommands.vala:850
 msgid "Add line down to current selection"
 msgstr "Lägg till rad nedanför aktuell markering"
 
-#: src/KeyCommands.vala:792
+#: src/KeyCommands.vala:851
 msgid "Add next word to current selection"
 msgstr "Lägg till nästa ord till aktuell markering"
 
-#: src/KeyCommands.vala:793
+#: src/KeyCommands.vala:852
 msgid "Add previous word to current selection"
 msgstr "Lägg till föregående ord till aktuell markering"
 
-#: src/KeyCommands.vala:794
+#: src/KeyCommands.vala:853
 msgid "Add start of text to current selection (Control-Up)"
 msgstr "Lägg till textens början till aktuell markering (Control-Upp)"
 
-#: src/KeyCommands.vala:795
+#: src/KeyCommands.vala:854
 msgid "Add start of text to current selection (Control-Home)"
 msgstr "Lägg till textens början till aktuell markering (Control-Home)"
 
-#: src/KeyCommands.vala:796
+#: src/KeyCommands.vala:855
 msgid "Add end of text to current selection (Control-Down)"
 msgstr "Lägg till slutet av texten till aktuell markering (Control-ner)"
 
-#: src/KeyCommands.vala:797
+#: src/KeyCommands.vala:856
 msgid "Add end of text to current selection (Control-End)"
 msgstr "Lägg till slutet av texten till aktuell markering (Control-End)"
 
-#: src/KeyCommands.vala:798
+#: src/KeyCommands.vala:857
 msgid "Add start of current line to current selection"
 msgstr "Lägg till början av aktuell rad till aktuell markering"
 
-#: src/KeyCommands.vala:799
+#: src/KeyCommands.vala:858
 msgid "Add end of current line to current selection"
 msgstr "Lägg till slutet av aktuell rad till aktuell markering"
 
-#: src/KeyCommands.vala:800 src/Shortcuts.vala:826
+#: src/KeyCommands.vala:859 src/Shortcuts.vala:847
 msgid "Select all text"
 msgstr "Markera all text"
 
-#: src/KeyCommands.vala:801
+#: src/KeyCommands.vala:860
 msgid "Deselect all text"
 msgstr "Avmarkera all text"
 
-#: src/KeyCommands.vala:1973
+#: src/KeyCommands.vala:2115
 msgid "Select a group color"
 msgstr "Välj en gruppfärg"
 
-#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:271
-#: src/MapInspector.vala:524 src/MapModel.vala:2321
+#: src/LatexRenderer.vala:420
+msgid "Unable to read LaTeX formula dimensions"
+msgstr ""
+
+#: src/LatexRenderer.vala:447
+msgid "The generated LaTeX SVG has no usable size"
+msgstr ""
+
+#: src/LatexRenderer.vala:515
+msgid "LaTeX rendering was cancelled"
+msgstr ""
+
+#: src/LatexRenderer.vala:519
+msgid "LaTeX rendering timed out"
+msgstr ""
+
+#: src/LatexRenderer.vala:523
+msgid "LaTeX rendering failed"
+msgstr ""
+
+#: src/layouts/LayoutManual.vala:27 src/MapInspector.vala:265
+#: src/MapInspector.vala:511 src/MapModel.vala:2343
 msgid "Manual"
 msgstr "Manuell"
-
-#: src/MainWindow.vala:236 src/MainWindow.vala:1904
-msgid "Minder"
-msgstr "Minder"
 
 #: src/MainWindow.vala:295
 msgid "New File"
@@ -1360,7 +1504,7 @@ msgstr "Zooma in"
 msgid "Zoom Out"
 msgstr "Zooma ut"
 
-#: src/MainWindow.vala:855 src/MainWindow.vala:1970
+#: src/MainWindow.vala:855 src/MainWindow.vala:1954
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zooma (%d%%)"
@@ -1453,7 +1597,7 @@ msgstr "Genvägslathund"
 msgid "About Minder"
 msgstr "Om Minder"
 
-#: src/MainWindow.vala:1187 src/TextMenu.vala:52
+#: src/MainWindow.vala:1356 src/TextMenu.vala:52
 msgid "# Header1"
 msgstr "# Rubrik 1"
 
@@ -1493,7 +1637,7 @@ msgstr "~~Genomstruken~~"
 msgid "`Code`"
 msgstr "`Kod`"
 
-#: src/MainWindow.vala:1197 src/TextMenu.vala:62
+#: src/MainWindow.vala:1366 src/TextMenu.vala:62
 msgid "==Highlight=="
 msgstr "==Markering=="
 
@@ -1509,7 +1653,7 @@ msgstr "<sub>Nedsänkt text</sub>"
 msgid "[Link text](URL)"
 msgstr "[Länktext](URL)"
 
-#: src/MainWindow.vala:1432 src/MainWindow.vala:2071
+#: src/MainWindow.vala:1432 src/MainWindow.vala:2055
 msgid "Show Property Sidebar"
 msgstr "Visa sidofält för egenskaper"
 
@@ -1546,7 +1690,7 @@ msgstr "Ändringar kommer att gå förlorade permanent om de inte sparas."
 msgid "Discard Changes"
 msgstr "Kassera ändringar"
 
-#: src/MainWindow.vala:1590 src/MainWindow.vala:1900 src/ThemeEditor.vala:159
+#: src/MainWindow.vala:1590 src/MainWindow.vala:1884 src/ThemeEditor.vala:159
 msgid "Save"
 msgstr "Spara"
 
@@ -1575,19 +1719,19 @@ msgstr "Öppen katalog"
 msgid "Open"
 msgstr "Öppen"
 
-#: src/MainWindow.vala:1900
+#: src/MainWindow.vala:1884
 msgid "Save File"
 msgstr "Spara fil"
 
-#: src/MainWindow.vala:2000
+#: src/MainWindow.vala:1984
 msgid "Hide Property Sidebar"
 msgstr "Dölj sidofält för egenskaper"
 
-#: src/MainWindow.vala:2308
+#: src/MainWindow.vala:2293
 msgid "File upgrades needed"
 msgstr "Filuppgraderingar behövs"
 
-#: src/MainWindow.vala:2309
+#: src/MainWindow.vala:2294
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1599,15 +1743,15 @@ msgstr ""
 "\n"
 "Välj ett uppgraderingsalternativ nedan."
 
-#: src/MainWindow.vala:2314
+#: src/MainWindow.vala:2299
 msgid "Quit Minder"
 msgstr "Avsluta Minder"
 
-#: src/MainWindow.vala:2334
+#: src/MainWindow.vala:2319
 msgid "Detail"
 msgstr "Detalj"
 
-#: src/MainWindow.vala:2342
+#: src/MainWindow.vala:2327
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
@@ -1617,7 +1761,7 @@ msgstr ""
 "senaste Minder-sessionen.  Denna åtgärd är oåterkallelig eftersom äldre "
 "versioner av Minder inte kan läsa det uppgraderade formatet.</small>"
 
-#: src/MainWindow.vala:2343
+#: src/MainWindow.vala:2328
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
@@ -1627,7 +1771,7 @@ msgstr ""
 "senaste Minder-sessionen, men sparar en kopia av den äldre ursprungliga "
 "filen i dess ursprungliga katalog.</small>"
 
-#: src/MainWindow.vala:2344
+#: src/MainWindow.vala:2329
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1639,92 +1783,92 @@ msgstr ""
 "ändra en skrivskyddad tankekarta kan du använda knappen \"Spara som\" i "
 "rubrikfältet för att skriva den till det nyare formatet.</small>"
 
-#: src/MainWindow.vala:2351
+#: src/MainWindow.vala:2336
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 "Använd det valda alternativet när äldre Minder-filer öppnas i framtiden"
 
-#: src/MainWindow.vala:2376
+#: src/MainWindow.vala:2361
 msgid "Upgrades Needed"
 msgstr "Uppgraderingar behövs"
 
-#: src/MapInspector.vala:113
+#: src/MapInspector.vala:112
 msgid "Read-only"
 msgstr "Skrivskyddad"
 
-#: src/MapInspector.vala:148
+#: src/MapInspector.vala:147
 msgid "Hide connections"
 msgstr "Dölj anslutningar"
 
-#: src/MapInspector.vala:184
+#: src/MapInspector.vala:183
 msgid "Hide callouts"
 msgstr "Dölj kommentarer"
 
-#: src/MapInspector.vala:228
+#: src/MapInspector.vala:226
 msgid "Node Layouts"
 msgstr "Nodlayouter"
 
-#: src/MapInspector.vala:282
+#: src/MapInspector.vala:276
 msgid "Node Alignment"
 msgstr "Nodjustering"
 
-#: src/MapInspector.vala:289
+#: src/MapInspector.vala:283
 msgid "Align left edges"
 msgstr "Justera vänsterkanter"
 
-#: src/MapInspector.vala:293
+#: src/MapInspector.vala:287
 msgid "Align horizontal centers"
 msgstr "Justera horisontella centrum"
 
-#: src/MapInspector.vala:297
+#: src/MapInspector.vala:291
 msgid "Align right edges"
 msgstr "Justera högerkanter"
 
-#: src/MapInspector.vala:301
+#: src/MapInspector.vala:295
 msgid "Align top edges"
 msgstr "Justera överkanter"
 
-#: src/MapInspector.vala:305
+#: src/MapInspector.vala:299
 msgid "Align vertical centers"
 msgstr "Justera vertikala centrum"
 
-#: src/MapInspector.vala:309
+#: src/MapInspector.vala:303
 msgid "Align bottom edges"
 msgstr "Justera nedre kanter"
 
-#: src/MapInspector.vala:351
+#: src/MapInspector.vala:345
 msgid "Themes"
 msgstr "Teman"
 
-#: src/MapInspector.vala:378
+#: src/MapInspector.vala:372
 msgid "Add Custom Theme"
 msgstr "Lägg till anpassat tema"
 
-#: src/MapInspector.vala:396
+#: src/MapInspector.vala:390
 msgid "Copy location of temporary directory"
 msgstr "Kopiera platsen för den tillfälliga katalogen"
 
-#: src/MapInspector.vala:421
+#: src/MapInspector.vala:415
 msgid "Balance nodes"
 msgstr "Balansnoder"
 
-#: src/MapInspector.vala:423
+#: src/MapInspector.vala:417
 msgid "Balance Nodes"
 msgstr "Balansnoder"
 
-#: src/MapInspector.vala:427
+#: src/MapInspector.vala:421
 msgid "Fold nodes with completed tasks"
 msgstr "Fäll in noder med slutförda uppgifter"
 
-#: src/MapInspector.vala:429
+#: src/MapInspector.vala:423
 msgid "Fold Completed Tasks"
 msgstr "Vik färdiga uppgifter"
 
-#: src/MapInspector.vala:433
+#: src/MapInspector.vala:427
 msgid "Unfold all nodes"
 msgstr "Fäll ut alla noder"
 
-#: src/MapInspector.vala:435
+#: src/MapInspector.vala:429
 msgid "Unfold All Nodes"
 msgstr "Visa alla noder"
 
@@ -1732,7 +1876,7 @@ msgstr "Visa alla noder"
 msgid "Main Idea"
 msgstr "Huvudidé"
 
-#: src/MindMap.vala:1083
+#: src/MindMap.vala:1089
 msgid "Select a link color"
 msgstr "Välj en länkfärg"
 
@@ -1740,68 +1884,68 @@ msgstr "Välj en länkfärg"
 msgid "Group Note"
 msgstr "Gruppanteckning"
 
-#: src/NodeInspector.vala:116
+#: src/NodeInspector.vala:115
 msgid "Task"
 msgstr "Uppgift"
 
-#: src/NodeInspector.vala:142
+#: src/NodeInspector.vala:141
 msgid "Fold"
 msgstr "Vik samman"
 
-#: src/NodeInspector.vala:168
+#: src/NodeInspector.vala:167
 msgid "Sequence"
 msgstr "Sekvens"
 
-#: src/NodeInspector.vala:177
+#: src/NodeInspector.vala:176
 msgid ""
 "When set, automatically numbers child nodes and displays them as a sequence."
 msgstr ""
 "När denna inställning är aktiverad numreras underordnade noder automatiskt "
 "och visas i sekvens."
 
-#: src/NodeInspector.vala:210
+#: src/NodeInspector.vala:209
 #, fuzzy
 msgid "Select Link Color"
 msgstr "Välj en länkfärg"
 
-#: src/NodeInspector.vala:239
+#: src/NodeInspector.vala:238
 msgid "Override Color"
 msgstr "Åsidosätt färg"
 
-#: src/NodeInspector.vala:263
+#: src/NodeInspector.vala:262
 #, fuzzy
 msgid "Select Root Color"
 msgstr "Välj rot"
 
-#: src/NodeInspector.vala:361 src/NodeInspector.vala:385
+#: src/NodeInspector.vala:360 src/NodeInspector.vala:384
 msgid "Image"
 msgstr "Bild"
 
-#: src/NodeInspector.vala:367
+#: src/NodeInspector.vala:366
 msgid "Add Image…"
 msgstr "Lägg till bild…"
 
-#: src/NodeInspector.vala:394 src/Shortcuts.vala:803
+#: src/NodeInspector.vala:393 src/Shortcuts.vala:824
 msgid "Edit Image"
 msgstr "Redigera bild"
 
-#: src/NodeInspector.vala:411
+#: src/NodeInspector.vala:410
 msgid "Resizable"
 msgstr "Kan ändra storlek"
 
-#: src/NodeInspector.vala:501
+#: src/NodeInspector.vala:500
 msgid "Copy Node To Clipboard"
 msgstr "Kopiera nod till urklipp"
 
-#: src/NodeInspector.vala:506
+#: src/NodeInspector.vala:505
 msgid "Cut Node To Clipboard"
 msgstr "Klipp ut nod till urklipp"
 
-#: src/NodeInspector.vala:512
+#: src/NodeInspector.vala:511
 msgid "Detach Node"
 msgstr "Koppla bort nod"
 
-#: src/NodeInspector.vala:522
+#: src/NodeInspector.vala:517
 msgid "Delete Node"
 msgstr "Ta bort nod"
 
@@ -1817,7 +1961,7 @@ msgstr "Kopiera"
 msgid "Cut"
 msgstr "Klipp ut"
 
-#: src/NodeMenu.vala:39 src/NodeMenu.vala:251 src/NodeMenu.vala:260
+#: src/NodeMenu.vala:39 src/NodeMenu.vala:261 src/NodeMenu.vala:270
 msgid "Paste and Replace Node"
 msgstr "Klistra in och ersätt nod"
 
@@ -1853,167 +1997,177 @@ msgstr "Redigera text…"
 msgid "Edit Tags"
 msgstr "Redigera taggar"
 
-#: src/NodeMenu.vala:56 src/NodeMenu.vala:236
+#: src/NodeMenu.vala:56 src/NodeMenu.vala:244
 msgid "Add Task"
 msgstr "Lägg till uppgift"
 
-#: src/NodeMenu.vala:57 src/NodeMenu.vala:240
+#: src/NodeMenu.vala:57 src/NodeMenu.vala:248
 msgid "Add Image"
 msgstr "Lägg till bild"
 
-#: src/NodeMenu.vala:59 src/NodeMenu.vala:237
+#: src/NodeMenu.vala:58 src/NodeMenu.vala:249
+#, fuzzy
+msgid "Add Table…"
+msgstr "Lägg till bild…"
+
+#: src/NodeMenu.vala:60 src/NodeMenu.vala:245
 msgid "Add Node Link"
 msgstr "Lägg till nodlänk"
 
-#: src/NodeMenu.vala:60
+#: src/NodeMenu.vala:61
 msgid "Add Connection"
 msgstr "Lägg till anslutning"
 
-#: src/NodeMenu.vala:61
+#: src/NodeMenu.vala:62
 msgid "Add Group"
 msgstr "Lägg till grupp"
 
-#: src/NodeMenu.vala:62 src/NodeMenu.vala:239
+#: src/NodeMenu.vala:63 src/NodeMenu.vala:247
 msgid "Add Callout"
 msgstr "Lägg till kommentar"
 
-#: src/NodeMenu.vala:63 src/ThemeEditor.vala:138
+#: src/NodeMenu.vala:64 src/ThemeEditor.vala:138
 msgid "Link Color"
 msgstr "Länkfärg"
 
-#: src/NodeMenu.vala:64
+#: src/NodeMenu.vala:65
 msgid "Toggle Folding"
 msgstr "Växla infällning"
 
-#: src/NodeMenu.vala:65
+#: src/NodeMenu.vala:66
 msgid "Toggle Sequence"
 msgstr "Växla sekvens"
 
-#: src/NodeMenu.vala:68
+#: src/NodeMenu.vala:69
 msgid "Change Node"
 msgstr "Ändra nod"
 
-#: src/NodeMenu.vala:72
+#: src/NodeMenu.vala:73
 msgid "Add Parent Node"
 msgstr "Lägg till överordnad nod"
 
-#: src/NodeMenu.vala:73
+#: src/NodeMenu.vala:74
 msgid "Add Child Node"
 msgstr "Lägg till underordnad nod"
 
-#: src/NodeMenu.vala:74
+#: src/NodeMenu.vala:75
 msgid "Add Sibling Node"
 msgstr "Lägg till syskonnod"
 
-#: src/NodeMenu.vala:77
+#: src/NodeMenu.vala:78
 msgid "Insert Nodes"
 msgstr "Infoga noder"
 
-#: src/NodeMenu.vala:78
+#: src/NodeMenu.vala:79
 msgid "Replace Nodes"
 msgstr "Ersätt noder"
 
-#: src/NodeMenu.vala:81
+#: src/NodeMenu.vala:82
 msgid "Add Node"
 msgstr "Lägg till nod"
 
-#: src/NodeMenu.vala:83 src/QuickEntry.vala:40
+#: src/NodeMenu.vala:84 src/QuickEntry.vala:40
 msgid "Quick Entry"
 msgstr "Snabb inmatning"
 
-#: src/NodeMenu.vala:86
+#: src/NodeMenu.vala:87
 msgid "Root Node"
 msgstr "Rotnod"
 
-#: src/NodeMenu.vala:87
+#: src/NodeMenu.vala:88
 msgid "Next Sibling Node"
 msgstr "Nästa syskonnod"
 
-#: src/NodeMenu.vala:88
+#: src/NodeMenu.vala:89
 msgid "Previous Sibling Node"
 msgstr "Föregående syskonnod"
 
-#: src/NodeMenu.vala:89
+#: src/NodeMenu.vala:90
 msgid "Child Node"
 msgstr "Underordnad nod"
 
-#: src/NodeMenu.vala:90 src/NodesMenu.vala:56
+#: src/NodeMenu.vala:91 src/NodesMenu.vala:56
 msgid "Child Nodes"
 msgstr "Underordnade noder"
 
-#: src/NodeMenu.vala:91
+#: src/NodeMenu.vala:92
 msgid "Subtree"
 msgstr "Underträd"
 
-#: src/NodeMenu.vala:92
+#: src/NodeMenu.vala:93
 msgid "Parent Node"
 msgstr "Övergripande nod"
 
-#: src/NodeMenu.vala:93
+#: src/NodeMenu.vala:94
 msgid "Linked Node"
 msgstr "Länkad nod"
 
-#: src/NodeMenu.vala:105
+#: src/NodeMenu.vala:106
 msgid "Center Current Node"
 msgstr "Centrera aktuell nod"
 
-#: src/NodeMenu.vala:108
+#: src/NodeMenu.vala:109
 msgid "Alphabetically"
 msgstr "Alfabetisk ordning"
 
-#: src/NodeMenu.vala:109
+#: src/NodeMenu.vala:110
 msgid "Randomly"
 msgstr "Slumpmässigt"
 
-#: src/NodeMenu.vala:112
+#: src/NodeMenu.vala:113
 msgid "Sort Children"
 msgstr "Sortera underordnade"
 
-#: src/NodeMenu.vala:115
+#: src/NodeMenu.vala:116
 msgid "Detach"
 msgstr "Avskilj"
 
-#: src/NodeMenu.vala:234
+#: src/NodeMenu.vala:242
 msgid "Remove Task"
 msgstr "Ta bort uppgift"
 
-#: src/NodeMenu.vala:235
+#: src/NodeMenu.vala:243
 msgid "Mark Task As Done"
 msgstr "Markera uppgift som klar"
 
-#: src/NodeMenu.vala:237
+#: src/NodeMenu.vala:245
 msgid "Remove Node Link"
 msgstr "Ta bort nodlänk"
 
-#: src/NodeMenu.vala:238
+#: src/NodeMenu.vala:246
 msgid "Unfold Children"
 msgstr "Vik ut underordnade"
 
-#: src/NodeMenu.vala:238
+#: src/NodeMenu.vala:246
 msgid "Fold Children"
 msgstr "Vik underordnade"
 
-#: src/NodeMenu.vala:239
+#: src/NodeMenu.vala:247
 msgid "Remove Callout"
 msgstr "Ta bort kommentar"
 
-#: src/NodeMenu.vala:250
+#: src/NodeMenu.vala:249
+#, fuzzy
+msgid "Edit Table…"
+msgstr "Redigera titel…"
+
+#: src/NodeMenu.vala:260
 msgid "Paste Node As Child"
 msgstr "Klistra in nod som underordnad"
 
-#: src/NodeMenu.vala:253
+#: src/NodeMenu.vala:263
 msgid "Paste Image As Child Node"
 msgstr "Klistra in bild som underordnad nod"
 
-#: src/NodeMenu.vala:254
+#: src/NodeMenu.vala:264
 msgid "Paste and Replace Node Image"
 msgstr "Klistra in och ersätt nodbild"
 
-#: src/NodeMenu.vala:256
+#: src/NodeMenu.vala:266
 msgid "Paste Text As Child Node"
 msgstr "Klistra in text som underordnad nod"
 
-#: src/NodeMenu.vala:257
+#: src/NodeMenu.vala:267
 msgid "Paste and Replace Node Text"
 msgstr "Klistra in och ersätt nodtext"
 
@@ -2069,7 +2223,7 @@ msgstr "Justera centrum horisontellt"
 msgid "Align Bottom"
 msgstr "Justera botten"
 
-#: src/NodesMenu.vala:67
+#: src/NodesMenu.vala:67 src/TableEditor.vala:317
 msgid "Align Left"
 msgstr "Vänsterjusterad"
 
@@ -2077,7 +2231,7 @@ msgstr "Vänsterjusterad"
 msgid "Align Center Vertically"
 msgstr "Justera centrum vertikalt"
 
-#: src/NodesMenu.vala:69
+#: src/NodesMenu.vala:69 src/TableEditor.vala:319
 msgid "Align Right"
 msgstr "Högerjusterad"
 
@@ -2085,15 +2239,24 @@ msgstr "Högerjusterad"
 msgid "Align"
 msgstr "Justera"
 
-#: src/Node.vala:2671
+#: src/NodeTable.vala:358
+msgid "Table Truncated"
+msgstr ""
+
+#: src/NodeTable.vala:359
+#, c-format
+msgid "Tables are limited to %d rows, %d columns, and %d cells."
+msgstr ""
+
+#: src/Node.vala:2812
 msgid "Node Title"
 msgstr "Nodens titel"
 
-#: src/Node.vala:2677
+#: src/Node.vala:2818
 msgid "Node Note"
 msgstr "Nodnotering"
 
-#: src/Node.vala:2685
+#: src/Node.vala:2826
 msgid "Callout Text"
 msgstr "Callout-text"
 
@@ -2267,82 +2430,82 @@ msgstr ""
 "Taggar i denna lista kommer att utgöra startlistan med taggar för nya "
 "tankekartor."
 
-#: src/Preferences.vala:335
+#: src/Preferences.vala:336
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
 msgstr ""
 "Dubbelklicka för att redigera genväg.  Välj + Ta bort för att ta bort genväg."
 
-#: src/Preferences.vala:336
+#: src/Preferences.vala:337
 msgid "Escape to cancel.  Press key combination to set."
 msgstr "Escape för att avbryta.  Tryck tangentkombination att ställa in."
 
-#: src/Preferences.vala:344
+#: src/Preferences.vala:345
 msgid "Set Minder Defaults"
 msgstr "Ställ in Minder-standardvärden"
 
-#: src/Preferences.vala:347
+#: src/Preferences.vala:348
 msgid "Clear All Shortcuts"
 msgstr "Rensa alla genvägar"
 
-#: src/Preferences.vala:356
+#: src/Preferences.vala:357
 msgid "Search commands"
 msgstr "Sökkommandon"
 
-#: src/Preferences.vala:358
+#: src/Preferences.vala:359
 msgid "Search shortcuts"
 msgstr "Sök efter genvägar"
 
-#: src/Preferences.vala:466
+#: src/Preferences.vala:467
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr "Visa dialogruta för uppgradering när filuppgradering behövs"
 
-#: src/Preferences.vala:470
+#: src/Preferences.vala:471
 msgid "Show temporary directory containing current mindmap in map sidebar"
 msgstr ""
 "Visa tillfällig katalog som innehåller aktuell tankekarta i kartans sidofält"
 
-#: src/Preferences.vala:480
+#: src/Preferences.vala:481
 msgid "Default file upgrade action"
 msgstr "Standardåtgärd vid filuppgradering"
 
-#: src/Preferences.vala:554 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
+#: src/Preferences.vala:555 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
 msgid "None"
 msgstr "Ingen"
 
-#: src/Preferences.vala:555
+#: src/Preferences.vala:556
 msgid "Enter shortcut"
 msgstr "Ange genväg"
 
-#: src/Preferences.vala:723
+#: src/Preferences.vala:724
 msgid "Unable to set new shortcut due to conflicts"
 msgstr "Det går inte att skapa en ny genväg på grund av konflikter"
 
-#: src/Preferences.vala:724
+#: src/Preferences.vala:725
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr "%s är i konflikt med '%s'"
 
-#: src/Preferences.vala:789
+#: src/Preferences.vala:790
 msgid "Clear all shortcuts?"
 msgstr "Rensa alla genvägar?"
 
-#: src/Preferences.vala:789 src/Preferences.vala:800
+#: src/Preferences.vala:790 src/Preferences.vala:801
 msgid "Current shortcut settings will be lost"
 msgstr "Aktuella genvägsinställningar kommer att gå förlorade"
 
-#: src/Preferences.vala:800
+#: src/Preferences.vala:801
 msgid "Use Minder Default Shortcuts?"
 msgstr "Använd Minders standardgenvägar?"
 
-#: src/Preferences.vala:832 src/Preferences.vala:850
+#: src/Preferences.vala:833 src/Preferences.vala:851
 msgid "Minder Default"
 msgstr "Minder-standard"
 
-#: src/Preferences.vala:835 src/Preferences.vala:851
+#: src/Preferences.vala:836 src/Preferences.vala:852
 msgid "Last Used"
 msgstr "Senast använd"
 
-#: src/Preferences.vala:837 src/Preferences.vala:855
+#: src/Preferences.vala:838 src/Preferences.vala:856
 #, c-format
 msgid "Named Style: %s"
 msgstr "Namngiven stil: %s"
@@ -2415,156 +2578,156 @@ msgstr "Ersätt"
 msgid "Insert"
 msgstr "Infoga"
 
-#: src/Shortcuts.vala:778 src/Shortcuts.vala:784
+#: src/Shortcuts.vala:799 src/Shortcuts.vala:805
 msgid "No Shortcuts Set"
 msgstr "Inga genvägar inställda"
 
-#: src/Shortcuts.vala:799
+#: src/Shortcuts.vala:820
 msgid "Mouse Events"
 msgstr "Mus-händelser"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:823
 msgid "Show Contextual Menu"
 msgstr "Visa kontextmeny"
 
-#: src/Shortcuts.vala:802
+#: src/Shortcuts.vala:823
 msgid "[Right-click when item is selected]"
 msgstr "[Högerklicka när objektet är markerat]"
 
-#: src/Shortcuts.vala:803
+#: src/Shortcuts.vala:824
 msgid "[Double left-click image]"
 msgstr "[Dubbelklicka med vänster musknapp på bilden]"
 
-#: src/Shortcuts.vala:805
+#: src/Shortcuts.vala:826
 msgid "Canvas Movement"
 msgstr "Dukförflyttning"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:827
 msgid "Pan Canvas"
 msgstr "Pan Canvas"
 
-#: src/Shortcuts.vala:806
+#: src/Shortcuts.vala:827
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr "[Mittenklicka + dra / Alt + rörelse]"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:828
 msgid "Scroll Vertically"
 msgstr "Rulla vertikalt"
 
-#: src/Shortcuts.vala:807
+#: src/Shortcuts.vala:828
 msgid "[Scrollwheel up/down]"
 msgstr "[Rullhjul upp/ner]"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:829
 msgid "Scroll Horizontally"
 msgstr "Rulla horisontellt"
 
-#: src/Shortcuts.vala:808
+#: src/Shortcuts.vala:829
 msgid "[Scrollwhile left/right]"
 msgstr "[Bläddra åt vänster/höger]"
 
-#: src/Shortcuts.vala:810
+#: src/Shortcuts.vala:831
 msgid "Item Selection"
 msgstr "Val av artikel"
 
-#: src/Shortcuts.vala:811
+#: src/Shortcuts.vala:832
 msgid "Select Single Item"
 msgstr "Välj enstaka artikel"
 
-#: src/Shortcuts.vala:811
+#: src/Shortcuts.vala:832
 msgid "[Left-click on item]"
 msgstr "[Vänsterklicka på objektet]"
 
-#: src/Shortcuts.vala:812
+#: src/Shortcuts.vala:833
 msgid "Select Child Nodes"
 msgstr "Välj underordnade noder"
 
-#: src/Shortcuts.vala:812
+#: src/Shortcuts.vala:833
 msgid "[Control + Left-click on parent node]"
 msgstr "[Control + vänsterklicka på överordnad nod]"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:834
 msgid "Select Node Tree/Subtree"
 msgstr "Välj nodträd/underträd"
 
-#: src/Shortcuts.vala:813
+#: src/Shortcuts.vala:834
 msgid "[Control + Double left-click on parent node"
 msgstr "[Control + Dubbelklicka med vänster musknapp på överordnad nod"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:835
 msgid "Select All Nodes at Same Depth Level"
 msgstr "Välj alla noder på samma djupnivå"
 
-#: src/Shortcuts.vala:814
+#: src/Shortcuts.vala:835
 msgid "[Control + Triple left-click on node]"
 msgstr "[Control + Trippelklicka med vänster musknapp på noden]"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:836
 msgid "Block Selection"
 msgstr "Blockmarkering"
 
-#: src/Shortcuts.vala:815
+#: src/Shortcuts.vala:836
 msgid "[Left-click + Drag]"
 msgstr "[Vänsterklicka + dra]"
 
-#: src/Shortcuts.vala:817
+#: src/Shortcuts.vala:838
 msgid "Item Selection Toggle"
 msgstr "Objektval växla"
 
-#: src/Shortcuts.vala:818
+#: src/Shortcuts.vala:839
 msgid "Toggle Selection of Item"
 msgstr "Växla val av objekt"
 
-#: src/Shortcuts.vala:818
+#: src/Shortcuts.vala:839
 msgid "[Shift + Left-click on item]"
 msgstr "[Skift + vänsterklicka på objektet]"
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:840
 msgid "Toggle Selection of Child Nodes"
 msgstr "Växla val av underordnade noder"
 
-#: src/Shortcuts.vala:819
+#: src/Shortcuts.vala:840
 msgid "[Shift + Control + Left-click on item]"
 msgstr "[Skift + Control + Vänsterklicka på objektet]"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:841
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "Växla mellan val av nodträd/underträd"
 
-#: src/Shortcuts.vala:820
+#: src/Shortcuts.vala:841
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr ""
 "[Skift + Control + Dubbelklicka med vänster musknapp på överordnad nod]"
 
-#: src/Shortcuts.vala:821
+#: src/Shortcuts.vala:842
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr "Växla mellan val av alla noder på samma djupnivå"
 
-#: src/Shortcuts.vala:821
+#: src/Shortcuts.vala:842
 msgid "Shift + Control + Triple-click on node]"
 msgstr "Skift + Control + trippelklicka på nod]"
 
-#: src/Shortcuts.vala:823
+#: src/Shortcuts.vala:844
 msgid "Text Selection"
 msgstr "Vald text"
 
-#: src/Shortcuts.vala:824
+#: src/Shortcuts.vala:845
 msgid "Set Cursor Insert Point"
 msgstr "Ställ in markörens infogningspunkt"
 
-#: src/Shortcuts.vala:824
+#: src/Shortcuts.vala:845
 msgid "[Left-click in text]"
 msgstr "[Vänsterklicka i texten]"
 
-#: src/Shortcuts.vala:825
+#: src/Shortcuts.vala:846
 msgid "Select Current Word"
 msgstr "Välj aktuellt ord"
 
-#: src/Shortcuts.vala:825
+#: src/Shortcuts.vala:846
 msgid "[Double left-click on word]"
 msgstr "[Dubbelklicka med vänster musknapp på ordet]"
 
-#: src/Shortcuts.vala:826
+#: src/Shortcuts.vala:847
 msgid "[Triple left-click text]"
 msgstr "[Trippel vänsterklick på text]"
 
@@ -2632,7 +2795,7 @@ msgstr "Bransch"
 msgid "Mobile"
 msgstr "Mobil"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1240
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1232
 msgid "Arrows"
 msgstr "Pilar"
 
@@ -3612,13 +3775,13 @@ msgstr "Upp"
 msgid "Right up"
 msgstr "Högre upp"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1051
-#: src/StyleInspector.vala:1483 src/StyleInspector.vala:1648
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1043
+#: src/StyleInspector.vala:1475 src/StyleInspector.vala:1640
 msgid "Left"
 msgstr "Vänster"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1053
-#: src/StyleInspector.vala:1485 src/StyleInspector.vala:1650
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1045
+#: src/StyleInspector.vala:1477 src/StyleInspector.vala:1642
 msgid "Right"
 msgstr "Höger"
 
@@ -3912,113 +4075,113 @@ msgstr "Stilmallar"
 msgid "Branch Options"
 msgstr "Förgreningsalternativ"
 
-#: src/StyleInspector.vala:419
+#: src/StyleInspector.vala:415
 msgid "Corner Radius"
 msgstr "Hörnradie"
 
-#: src/StyleInspector.vala:464 src/StyleInspector.vala:904
+#: src/StyleInspector.vala:460 src/StyleInspector.vala:896
 msgid "Margin"
 msgstr "Marginal"
 
-#: src/StyleInspector.vala:527
+#: src/StyleInspector.vala:523
 msgid "Link Options"
 msgstr "Länkalternativ"
 
-#: src/StyleInspector.vala:550 src/StyleInspector.vala:1199
+#: src/StyleInspector.vala:546 src/StyleInspector.vala:1191
 msgid "Line Dash"
 msgstr "Linje Streck"
 
-#: src/StyleInspector.vala:591 src/StyleInspector.vala:1327
+#: src/StyleInspector.vala:587 src/StyleInspector.vala:1319
 msgid "Line Width"
 msgstr "Linjetjocklek"
 
-#: src/StyleInspector.vala:643
+#: src/StyleInspector.vala:639
 msgid "Link Arrow"
 msgstr "Länkpil"
 
-#: src/StyleInspector.vala:677
+#: src/StyleInspector.vala:673
 msgid "Link Arrow Size"
 msgstr "Länkpilens storlek"
 
-#: src/StyleInspector.vala:752 src/Templates.vala:59 src/Templates.vala:64
+#: src/StyleInspector.vala:748 src/Templates.vala:59 src/Templates.vala:64
 msgid "Node Options"
 msgstr "Nodalternativ"
 
-#: src/StyleInspector.vala:775
+#: src/StyleInspector.vala:771
 msgid "Border Style"
 msgstr "Ramstil"
 
-#: src/StyleInspector.vala:818
+#: src/StyleInspector.vala:810
 msgid "Border Width"
 msgstr "Bredd på ram"
 
-#: src/StyleInspector.vala:869
+#: src/StyleInspector.vala:861
 msgid "Color Fill"
 msgstr "Färgfyllning"
 
-#: src/StyleInspector.vala:878
+#: src/StyleInspector.vala:870
 msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
 msgstr ""
 "Fyller noden med färg när nodens kant är fyrkantig, rundad eller pillerformad"
 
-#: src/StyleInspector.vala:949 src/StyleInspector.vala:1380
-#: src/StyleInspector.vala:1679
+#: src/StyleInspector.vala:941 src/StyleInspector.vala:1372
+#: src/StyleInspector.vala:1671
 msgid "Padding"
 msgstr "Mellanrum"
 
-#: src/StyleInspector.vala:994
+#: src/StyleInspector.vala:986
 msgid "Font"
 msgstr "Typsnitt"
 
-#: src/StyleInspector.vala:1040 src/StyleInspector.vala:1472
-#: src/StyleInspector.vala:1637
+#: src/StyleInspector.vala:1032 src/StyleInspector.vala:1464
+#: src/StyleInspector.vala:1629
 msgid "Text Alignment"
 msgstr "Textjustering"
 
-#: src/StyleInspector.vala:1052 src/StyleInspector.vala:1484
-#: src/StyleInspector.vala:1649
+#: src/StyleInspector.vala:1044 src/StyleInspector.vala:1476
+#: src/StyleInspector.vala:1641
 msgid "Center"
 msgstr "Centrera"
 
-#: src/StyleInspector.vala:1082
+#: src/StyleInspector.vala:1074
 msgid "Width"
 msgstr "Bredd"
 
-#: src/StyleInspector.vala:1115
+#: src/StyleInspector.vala:1107
 msgid "Enable Markup"
 msgstr "Aktivera markering"
 
-#: src/StyleInspector.vala:1176 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1168 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "Anslutningsalternativ"
 
-#: src/StyleInspector.vala:1280
+#: src/StyleInspector.vala:1272
 msgid "Arrow Size"
 msgstr "Pilstorlek"
 
-#: src/StyleInspector.vala:1426
+#: src/StyleInspector.vala:1418
 msgid "Title Font"
 msgstr "Rubrikens typsnitt"
 
-#: src/StyleInspector.vala:1514
+#: src/StyleInspector.vala:1506
 msgid "Title Width"
 msgstr "Titelbredd"
 
-#: src/StyleInspector.vala:1567 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1559 src/Templates.vala:61 src/Templates.vala:66
 msgid "Callout Options"
 msgstr "Alternativ för utrop"
 
-#: src/StyleInspector.vala:1591
+#: src/StyleInspector.vala:1583
 msgid "Text Font"
 msgstr "Typsnitt"
 
-#: src/StyleInspector.vala:1725
+#: src/StyleInspector.vala:1717
 msgid "Pointer Width"
 msgstr "Pekarens bredd"
 
-#: src/StyleInspector.vala:1771
+#: src/StyleInspector.vala:1763
 msgid "Pointer Length"
 msgstr "Pekarlängd"
 
@@ -4074,6 +4237,121 @@ msgstr "Kort streck"
 msgid "Long Dash"
 msgstr "Lång streck"
 
+#: src/TableEditor.vala:231
+#, fuzzy
+msgid "Add Row Above"
+msgstr "Lägg till rotnod"
+
+#: src/TableEditor.vala:232
+#, fuzzy
+msgid "Add Row Below"
+msgstr "Lägg till rotnod"
+
+#: src/TableEditor.vala:234
+#, fuzzy
+msgid "Delete Selected Rows"
+msgstr "Valda noder"
+
+#: src/TableEditor.vala:239
+msgid "Rows"
+msgstr ""
+
+#: src/TableEditor.vala:240
+#, fuzzy
+msgid "Row Actions"
+msgstr "Vänner"
+
+#: src/TableEditor.vala:250
+#, fuzzy
+msgid "Add Column Left"
+msgstr "Lägg till kolumn"
+
+#: src/TableEditor.vala:251
+#, fuzzy
+msgid "Add Column Right"
+msgstr "Lägg till kolumn"
+
+#: src/TableEditor.vala:253
+#, fuzzy
+msgid "Delete Selected Columns"
+msgstr "Radera kolumn"
+
+#: src/TableEditor.vala:258
+msgid "Columns"
+msgstr ""
+
+#: src/TableEditor.vala:259
+#, fuzzy
+msgid "Column Actions"
+msgstr "Vänner"
+
+#: src/TableEditor.vala:305
+msgid "Undo Table Edit (Ctrl+Z)"
+msgstr ""
+
+#: src/TableEditor.vala:308
+#, fuzzy
+msgid "Merge Selection"
+msgstr "Töm markeringen"
+
+#: src/TableEditor.vala:309
+msgid "Split Cell"
+msgstr ""
+
+#: src/TableEditor.vala:312
+#, fuzzy
+msgid "Clear Cells"
+msgstr "Rensa alla"
+
+#: src/TableEditor.vala:313 src/TextMenu.vala:41
+msgid "Insert Emoji"
+msgstr "Infoga Emoji"
+
+#: src/TableEditor.vala:314
+#, fuzzy
+msgid "Paste Table"
+msgstr "Klistra in text"
+
+#: src/TableEditor.vala:318
+#, fuzzy
+msgid "Align Center"
+msgstr "Vänsterjusterad"
+
+#: src/TableEditor.vala:323
+#, fuzzy
+msgid "Highlight Cells"
+msgstr "Överstrykningspenna"
+
+#: src/TableEditor.vala:327
+#, fuzzy
+msgid "Bold"
+msgstr "**Fetstil**"
+
+#: src/TableEditor.vala:331
+#, fuzzy
+msgid "Italic"
+msgstr "__Kursiv stil_"
+
+#: src/TableEditor.vala:335
+#, fuzzy
+msgid "Underline"
+msgstr "Understruken"
+
+#: src/TableEditor.vala:339
+#, fuzzy
+msgid "Strikethrough"
+msgstr "~~Genomstruken~~"
+
+#: src/TableEditor.vala:352
+#, fuzzy
+msgid "Selected cells:"
+msgstr "Valda noder"
+
+#: src/TableEditor.vala:358
+#, fuzzy
+msgid "Delete Table"
+msgstr "Ta bort databas"
+
 #: src/TagEditor.vala:60
 msgid "Click to change tag color"
 msgstr "Klicka för att ändra taggfärg"
@@ -4098,19 +4376,19 @@ msgstr ""
 msgid "Enter tag name"
 msgstr "Ange taggnamn"
 
-#: src/TagEditor.vala:157 src/TagEditor.vala:252
+#: src/TagEditor.vala:157 src/TagEditor.vala:248
 msgid "Click to add tag to highlight list"
 msgstr "Klicka för att lägga till tagg till markeringslista"
 
-#: src/TagEditor.vala:251
+#: src/TagEditor.vala:247
 msgid "Click to remove tag from highlight"
 msgstr "Klicka för att ta bort tagg från markering"
 
-#: src/TagEditor.vala:312
+#: src/TagEditor.vala:307
 msgid "Enter name of tag to find or create"
 msgstr "Ange namn på tagg att hitta eller skapa"
 
-#: src/TagEditor.vala:429
+#: src/TagEditor.vala:424
 #, c-format
 msgid "Create '%s' tag"
 msgstr "Skapa '%s'-tagg"
@@ -4119,7 +4397,7 @@ msgstr "Skapa '%s'-tagg"
 msgid "Add Tag"
 msgstr "Lägg till tagg"
 
-#: src/TagInspector.vala:41
+#: src/TagInspector.vala:40
 msgid ""
 "Create, delete, edit mindmap tags.  Add or remove tags in selected node(s).  "
 "Highlight tagged nodes in map."
@@ -4127,11 +4405,11 @@ msgstr ""
 "Skapa, ta bort och redigera taggar i tankekartor.  Lägg till eller ta bort "
 "taggar i valda nod(er).  Markera taggade noder i kartan."
 
-#: src/TagInspector.vala:70
+#: src/TagInspector.vala:69
 msgid "Highlight Mode"
 msgstr "Markeringsläge"
 
-#: src/TagInspector.vala:80
+#: src/TagInspector.vala:79
 msgid "End Tag Highlighting"
 msgstr "Markering av sluttagg"
 
@@ -4183,10 +4461,6 @@ msgstr "Alternativ för nodgrenar"
 #: src/Templates.vala:63
 msgid "Node Link Options"
 msgstr "Alternativ för nodlänkar"
-
-#: src/TextMenu.vala:41
-msgid "Insert Emoji"
-msgstr "Infoga Emoji"
 
 #: src/TextMenu.vala:44
 msgid "Open Link"
@@ -4350,7 +4624,7 @@ msgstr "Solariserat ljus"
 msgid "Error parsing regular expression"
 msgstr "Fel vid tolkning av reguljärt uttryck"
 
-#: src/Theme.vala:306
+#: src/Theme.vala:314
 msgid "Root"
 msgstr "Rot"
 
@@ -4597,6 +4871,11 @@ msgstr "konvertera till sammanfattningsnod"
 msgid "insert summary node"
 msgstr "infoga sammanfattningsnod"
 
+#: src/undo_actions/UndoNodeTable.vala:31
+#, fuzzy
+msgid "node table change"
+msgstr "ändring av nodnamn"
+
 #: src/undo_actions/UndoNodeTasks.vala:31
 msgid "node task changes"
 msgstr "noduppgiftsändringar"
@@ -4717,9 +4996,6 @@ msgstr "Zooma till faktisk"
 
 #~ msgid "Close Other Tabs"
 #~ msgstr "Stäng andra flikar"
-
-#~ msgid "Clear All"
-#~ msgstr "Rensa alla"
 
 #~ msgid "New Tab"
 #~ msgstr "Ny flik"
@@ -4946,9 +5222,6 @@ msgstr "Zooma till faktisk"
 #~ msgid "End Of Text"
 #~ msgstr "Slut på texten"
 
-#~ msgid "Paste Text"
-#~ msgstr "Klistra in text"
-
 #~ msgid "Add Next Character"
 #~ msgstr "Lägg till nästa tecken"
 
@@ -4972,9 +5245,6 @@ msgstr "Zooma till faktisk"
 
 #~ msgid "Select All Text"
 #~ msgstr "Markera all text"
-
-#~ msgid "Clear Selection"
-#~ msgstr "Töm markeringen"
 
 #~ msgid "Edit Image in Canvas"
 #~ msgstr "Redigera bild på duk"

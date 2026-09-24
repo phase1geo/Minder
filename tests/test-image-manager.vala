@@ -30,7 +30,7 @@ namespace MinderTest {
     }
 
     public override void setup() {
-      Minder.settings = new Settings( "com.github.phase1geo.minder" );
+      Minder.settings = new Settings( "io.github.phase1geo.minder" );
       Minder.settings.set_int( "image-id", 11 );
       try {
         _temp_dir = DirUtils.make_tmp( "minder-image-manager-test-XXXXXX" );
