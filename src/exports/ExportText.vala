@@ -73,8 +73,12 @@ public class ExportText : Export {
     var nodes = map.get_nodes();
 
     for( int i=0; i<nodes.length; i++ ) {
-      value += "# " + nodes.index( i ).name.text.text + "\n";
-      var children = nodes.index( i ).children();
+      var node = nodes.index( i );
+      value += "# " + node.name.text.text + "\n";
+      if( node.table != null ) {
+        value += node.table.to_markdown() + "\n";
+      }
+      var children = node.children();
       for( int j=0; j<children.length; j++ ) {
         value += export_node( map, children.index( j ) );
       }
@@ -112,6 +116,10 @@ public class ExportText : Export {
     // Add the node note, if specified
     if( node.note != "" ) {
       value += prefix + "  > " + node.note.chomp().replace( "\n", "\n%s  > ".printf( prefix ) ) + "\n";
+    }
+
+    if( node.table != null ) {
+      value += prefix + "  " + node.table.to_markdown().replace( "\n", "\n%s  ".printf( prefix ) ) + "\n";
     }
 
     // Add the children
@@ -201,6 +209,16 @@ public class ExportText : Export {
     node.name.text.append_text( "\n" + str );
   }
 
+  //-------------------------------------------------------------
+  // Converts collected Markdown table rows into a node table.
+  private void apply_table_rows( MindMap map, Node? node, Array<string> rows ) {
+    if( (node != null) && (rows.length > 0) ) {
+      var table = NodeTable.from_markdown( map, rows );
+      if( table != null ) node.set_table( table );
+    }
+    rows.remove_range( 0, rows.length );
+  }
+
   public bool parse_text( MindMap map, string txt, int tab_spaces, Array<NodeHier?> stack ) {
 
     try {
@@ -210,6 +228,8 @@ public class ExportText : Export {
       var re     = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>|\\d+\\.|!)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
       var tspace = string.nfill( ((tab_spaces <= 0) ? 1 : tab_spaces), ' ' );
       var lnum   = 0;
+      var table_rows = new Array<string>();
+      Node? table_node = null;
 
       foreach( string line in lines ) {
 
@@ -222,9 +242,22 @@ public class ExportText : Export {
           var bullet = match_info.fetch( 3 );
           var task   = match_info.fetch( 5 );
           var str    = match_info.fetch( 6 );
+          var stripped = str.strip();
+
+          // Collect table rows for the current node.
+          if( (node != null) && (bullet == "") && NodeTableTextParser.is_markdown_row( stripped ) ) {
+            table_node = node;
+            table_rows.append_val( stripped );
+            stack.index( stack.length - 1 ).last_line = lnum;
+            lnum++;
+            continue;
+          }
+
+          apply_table_rows( map, table_node, table_rows );
+          table_node = null;
 
           // Add note
-          if( str.strip() == "" ) continue;
+          if( stripped == "" ) continue;
           if( bullet == ">" ) {
             if( node != null ) {
               append_note( node, str );
@@ -255,6 +288,8 @@ public class ExportText : Export {
         lnum++;
 
       }
+
+      apply_table_rows( map, table_node, table_rows );
 
     } catch( GLib.RegexError err ) {
       return( false );

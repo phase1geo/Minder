@@ -327,10 +327,11 @@ public class Preferences : Granite.Dialog {
       hscrollbar_policy = PolicyType.NEVER,
       overlay_scrolling = false,
       hexpand           = true,
+      vexpand           = true,
       margin_top        = 20,
       child             = grid
     };
-    sw.set_size_request( -1, 500 );
+    sw.set_size_request( -1, 400 );
 
     _shortcut_inst_start_str = _( "Double-click to edit shortcut.  Select + Delete to remove shortcut." );
     _shortcut_inst_edit_str  = _( "Escape to cancel.  Press key combination to set." );

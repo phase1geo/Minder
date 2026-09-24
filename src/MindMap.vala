@@ -1044,8 +1044,14 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Pastes the contents of the clipboard into the current node.
-  public void do_paste( bool shift ) {
-    MinderClipboard.paste( this, shift );
+  public void do_paste( bool replace ) {
+    MinderClipboard.paste( this, replace );
+  }
+
+  //-------------------------------------------------------------
+  // Recognizes a clipboard image as LaTeX and pastes the formula.
+  public void do_paste_latex() {
+    MinderClipboard.paste( this, false, true );
   }
 
   //-------------------------------------------------------------

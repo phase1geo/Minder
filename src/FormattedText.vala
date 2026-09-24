@@ -575,7 +575,7 @@ public class FormattedText {
   // Tag representing header text.
   private class HeaderInfo : TagAttr {
     public HeaderInfo() {}
-    private double get_scale_factor( string? extra ) {
+    public static double get_scale_factor( string? extra ) {
       switch( extra ) {
         case "1" :  return( 2.1 );
         case "2" :  return( 1.8 );
@@ -1021,6 +1021,15 @@ public class FormattedText {
   // Returns true if the given tag is applied at the given index.
   public bool is_tag_applied_at_index( FormatTag tag, int index ) {
     return( _formats[tag].is_applied_at_index( index ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the relative font scale applied at the given index.
+  public double get_font_scale_at_index( int index ) {
+    if( !_formats[FormatTag.HEADER].is_applied_at_index( index ) ) {
+      return( 1.0 );
+    }
+    return( HeaderInfo.get_scale_factor( _formats[FormatTag.HEADER].get_extra( index ) ) );
   }
 
   //-------------------------------------------------------------

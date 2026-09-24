@@ -55,6 +55,7 @@ public class NodeMenu : BaseMenu {
     append_menu_item( _change_submenu, KeyCommand.SHOW_TAG_SIDEBAR,    _( "Edit Tags" ), false );
     append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_TASK,    _( "Add Task" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_IMAGE,   _( "Add Image" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_TABLE,   _( "Add Table…" ) );
     append_menu_item( _change_submenu, KeyCommand.REMOVE_STICKER_SELECTED, _( "Remove Sticker" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_LINKS,   _( "Add Node Link" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_ADD_CONNECTION, _( "Add Connection" ) );
@@ -158,6 +159,13 @@ public class NodeMenu : BaseMenu {
   }
 
   //-------------------------------------------------------------
+  // Returns true if a table is associated with the currently selected node.
+  private bool node_has_table() {
+    Node? current = map.get_current_node();
+    return( (current != null) && (current.table != null) );
+  }
+
+  //-------------------------------------------------------------
   // Returns true if an node link is associated with the currently
   // selected node.
   private bool node_has_link() {
@@ -238,9 +246,11 @@ public class NodeMenu : BaseMenu {
     var fold_lbl    = node_is_folded()   ? _( "Unfold Children" )  : _( "Fold Children" );
     var callout_lbl = node_has_callout() ? _( "Remove Callout" ) : _( "Add Callout" );
     var img_lbl     = node_has_image()   ? _( "Remove Image" )   : _( "Add Image" );
+    var table_lbl   = node_has_table()   ? _( "Edit Table…" )    : _( "Add Table…" );
 
     change_menu_item_label( _change_submenu, KeyCommand.NODE_CHANGE_TASK,          task_lbl );
     change_menu_item_label( _change_submenu, KeyCommand.NODE_CHANGE_IMAGE,         img_lbl );
+    change_menu_item_label( _change_submenu, KeyCommand.NODE_CHANGE_TABLE,         table_lbl );
     change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_LINKS,         link_lbl );
     change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_CALLOUT,       callout_lbl );
     change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, fold_lbl );
@@ -274,6 +284,7 @@ public class NodeMenu : BaseMenu {
     set_enabled( KeyCommand.EDIT_NOTE,                 map.editable );
     set_enabled( KeyCommand.NODE_CHANGE_TASK,          map.editable );
     set_enabled( KeyCommand.NODE_CHANGE_IMAGE,         map.editable );
+    set_enabled( KeyCommand.NODE_CHANGE_TABLE,         map.editable );
     set_enabled( KeyCommand.NODE_ADD_CONNECTION,       (!map.model.connections.hide && map.editable) );
     set_enabled( KeyCommand.NODE_ADD_PARENT,           (node_parentable() && map.editable) );
     set_enabled( KeyCommand.NODE_ADD_GROUP,            map.editable );

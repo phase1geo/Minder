@@ -1,16 +1,7 @@
-test_vala_sources = [
+test_vala_sources = files(
   'assert.vala',
   'tests.vala',
   'test-example.vala',
-]
-
-test_executable = executable(
-  'minder-regress',
-  test_vala_sources,
-  dependencies: dependencies,
-)
-
-test(
-  'minder-regress',
-  test_executable,
+  'test-latex-span-parser.vala',
+  'test-node-table-model.vala',
 )
