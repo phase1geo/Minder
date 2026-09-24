@@ -340,8 +340,9 @@ public class TableEditor {
       (active) => set_selected_format( NodeTableFormat.STRIKETHROUGH, active )
     );
 
-    var format_buttons = new Box( Orientation.HORIZONTAL, 0 );
-    format_buttons.add_css_class( Granite.STYLE_CLASS_LINKED );
+    var format_buttons = new Granite.Box( Orientation.HORIZONTAL, 0 ) {
+      child_spacing = Granite.Box.Spacing.LINKED
+    };
     format_buttons.append( _highlight_button );
     format_buttons.append( _bold_button );
     format_buttons.append( _italic_button );
