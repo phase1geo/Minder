@@ -5,7 +5,7 @@ app-id: io.github.phase1geo.minder
 # we can use a convenient pre-made runtime and SDK. For this example, we'll be
 # using the runtime and SDK provided by elementary.
 runtime: io.elementary.Platform
-runtime-version: '8.3'
+runtime-version: '8.2'
 sdk: io.elementary.Sdk
 
 # This should match the exec line in your .desktop file and usually is the same
@@ -43,6 +43,42 @@ modules:
       - type: git
         url: https://github.com/GNOME/gtksourceview.git
         tag: '5.12.0'
+
+  - name: sassc
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://github.com/sass/sassc/archive/3.6.2.tar.gz
+        sha256: 608dc9002b45a91d11ed59e352469ecc05e4f58fc1259fc9a9f5b8f0f8348a03
+      - type: script
+        dest-filename: autogen.sh
+        commands:
+          - autoreconf -si
+    modules:
+      - name: libsass
+        buildsystem: autotools
+        sources:
+          - type: archive
+            url: https://github.com/sass/libsass/archive/3.6.5.tar.gz
+            sha256: 89d8f2c46ae2b1b826b58ce7dde966a176bac41975b82e84ad46b01a55080582
+          - type: script
+            dest-filename: autogen.sh
+            commands:
+              - autoreconf -si
+
+  - name: granite-7
+    buildsystem: meson
+    config-opts:
+      - -Ddocumentation=false
+      - -Ddemo=false
+      -  --libdir=lib
+    cleanup:
+      - /share/icons
+      - /share/metainfo
+    sources:
+      - type: archive
+        url: https://github.com/elementary/granite/archive/refs/tags/7.8.1.tar.gz
+        sha256: bc8e7946ca091fdeeeebeb64db4e95d33a3ffb879048137f8d8a41ecd76caa3f
 
   - name: minder
     buildsystem: meson
