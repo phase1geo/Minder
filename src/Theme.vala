@@ -141,6 +141,14 @@ public class Theme : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns true if this theme uses a dark canvas background.
+  public bool is_dark() {
+    var foreground = Granite.contrasting_foreground_color( get_color( "background" ) );
+    return( (foreground.red > 0.5) && (foreground.green > 0.5) &&
+            (foreground.blue > 0.5) );
+  }
+
+  //-------------------------------------------------------------
   // Returns the next available link color index.
   public RGBA? next_color() {
     if( index == -1 ) {
