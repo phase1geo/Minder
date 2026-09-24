@@ -198,6 +198,9 @@ public enum KeyCommand {
     TABLE_ADD_COL_LEFT,
     TABLE_ADD_COL_RIGHT,
     TABLE_DELETE_COLS,
+    TABLE_MERGE_CELLS,
+    TABLE_SPLIT_CELL,
+    TABLE_CLEAR_CELLS,
   TABLE_END,
   EDIT_START,
     EDIT_TEXT_START,
@@ -407,6 +410,9 @@ public enum KeyCommand {
       case TABLE_ADD_COL_LEFT        :  return( "table-add-col-left" );  
       case TABLE_ADD_COL_RIGHT       :  return( "table-add-col-right" );
       case TABLE_DELETE_COLS         :  return( "table-delete-cols" );
+      case TABLE_MERGE_CELLS         :  return( "table-merge-cells" );
+      case TABLE_SPLIT_CELL          :  return( "table-split-cell" );
+      case TABLE_CLEAR_CELLS         :  return( "table-clear-cells" );
       case EDIT_START                :  return( "editing" );
       case EDIT_INSERT_NEWLINE       :  return( "edit-insert-newline" );
       case EDIT_INSERT_TAB           :  return( "edit-insert-tab" );
@@ -595,6 +601,9 @@ public enum KeyCommand {
       case "table-add-col-left"        :  return( TABLE_ADD_COL_LEFT );
       case "table-add-col-right"       :  return( TABLE_ADD_COL_RIGHT );
       case "table-delete-cols"         :  return( TABLE_DELETE_COLS );
+      case "table-merge-cells"         :  return( TABLE_MERGE_CELLS );
+      case "table-split-cell"          :  return( TABLE_SPLIT_CELL );
+      case "table-clear-cells"         :  return( TABLE_CLEAR_CELLS );
       case "edit-insert-newline"       :  return( EDIT_INSERT_NEWLINE );
       case "edit-insert-tab"           :  return( EDIT_INSERT_TAB );
       case "edit-insert-emoji"         :  return( EDIT_INSERT_EMOJI );
@@ -800,6 +809,9 @@ public enum KeyCommand {
       case TABLE_ADD_COL_LEFT        :  return( _( "Adds a column to the left of the currently selected row" ) );
       case TABLE_ADD_COL_RIGHT       :  return( _( "Adds a column to the right of the currently selected row" ) );
       case TABLE_DELETE_COLS         :  return( _( "Deletes the currently selected columns(s)" ) );
+      case TABLE_MERGE_CELLS         :  return( _( "Merges selected cells into one" ) );
+      case TABLE_SPLIT_CELL          :  return( _( "Splits merged cell" ) );
+      case TABLE_CLEAR_CELLS         :  return( _( "Clears selected cell contents" ) );
       case EDIT_START                :  return( _( "Text Editing" ) );
       case EDIT_TEXT_START           :  return( _( "Insertion/Deletion Commands" ) );
       case EDIT_INSERT_NEWLINE       :  return( _( "Insert newline character" ) );
@@ -987,6 +999,9 @@ public enum KeyCommand {
       case TABLE_ADD_COL_LEFT        :  return( table_add_col_left );
       case TABLE_ADD_COL_RIGHT       :  return( table_add_col_right );
       case TABLE_DELETE_COLS         :  return( table_delete_cols );
+      case TABLE_MERGE_CELLS         :  return( table_merge_cells );
+      case TABLE_SPLIT_CELL          :  return( table_split_cell );
+      case TABLE_CLEAR_CELLS         :  return( table_clear_cells );
       case EDIT_INSERT_NEWLINE       :  return( edit_insert_newline );
       case EDIT_INSERT_TAB           :  return( edit_insert_tab );
       case EDIT_INSERT_EMOJI         :  return( edit_insert_emoji );
@@ -2266,6 +2281,18 @@ public enum KeyCommand {
 
   public static void table_delete_cols( MindMap map ) {
     map.canvas.table_editor.delete_columns();
+  }
+
+  public static void table_merge_cells( MindMap map ) {
+    map.canvas.table_editor.merge_selection();
+  }
+
+  public static void table_split_cell( MindMap map ) {
+    map.canvas.table_editor.split_cell();
+  }
+
+  public static void table_clear_cells( MindMap map ) {
+    map.canvas.table_editor.clear_cells();
   }
 
   public static void edit_insert_newline( MindMap map ) {

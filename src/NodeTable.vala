@@ -763,7 +763,15 @@ public class NodeTable : Object {
       output += "\n";
       if( row == 0 ) {
         output += "|";
-        for( int column=0; column<columns; column++ ) output += " --- |";
+        for( int column=0; column<columns; column++ ) {
+          var cell = cell_at( row, column );
+          switch( cell.alignment ) {
+            case Pango.Alignment.LEFT   :  output += " :-- |";  break;
+            case Pango.Alignment.CENTER :  output += " :-: |";  break;
+            case Pango.Alignment.RIGHT  :  output += " --: |";  break;
+            default                     :  assert_not_reached();
+          }
+        }
         output += "\n";
       }
     }

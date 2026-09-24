@@ -196,10 +196,13 @@ public class TableEditor {
 
   //-------------------------------------------------------------
   // Creates an icon-only action button with a tooltip.
-  private Button make_icon_button( string icon, string tooltip, owned TableEditorAction callback ) {
+  private Button make_icon_button( string icon, KeyCommand? key_command, string tooltip, owned TableEditorAction callback ) {
     var button = new Button.from_icon_name( icon ) {
-      tooltip_text = tooltip
+      tooltip_markup = tooltip
     };
+    if( key_command != null ) {
+      _draw_area.win.register_widget_for_tooltip( button, key_command, tooltip );
+    }
     button.clicked.connect( () => callback() );
     return( button );
   }
@@ -302,16 +305,16 @@ public class TableEditor {
     };
 
     var edit_buttons = new Box( Orientation.HORIZONTAL, 5 );
-    _undo_button = make_icon_button( "edit-undo-symbolic", _( "Undo Table Edit (Ctrl+Z)" ), undo_edit );
+    _undo_button = make_icon_button( "edit-undo-symbolic", null, _( "Undo Table Edit (Ctrl+Z)" ), undo_edit );
     _undo_button.sensitive = false;
     edit_buttons.append( _undo_button );
-    edit_buttons.append( make_icon_button( "object-group-symbolic", _( "Merge Selection" ), merge_selection ) );
-    edit_buttons.append( make_icon_button( "object-ungroup-symbolic", _( "Split Cell" ), split_cell ) );
+    edit_buttons.append( make_icon_button( "edit-paste-symbolic", null, _( "Paste Table" ), paste_table ) );
     edit_buttons.append( make_rows_menu() );
     edit_buttons.append( make_columns_menu() );
-    edit_buttons.append( make_icon_button( "edit-clear-symbolic", _( "Clear Cells" ), clear_cells ) );
-    edit_buttons.append( make_icon_button( "face-smile-symbolic", _( "Insert Emoji" ), insert_emoji ) );
-    edit_buttons.append( make_icon_button( "edit-paste-symbolic", _( "Paste Table" ), paste_table ) );
+    edit_buttons.append( make_icon_button( "object-group-symbolic", KeyCommand.TABLE_MERGE_CELLS, _( "Merge Selection" ), merge_selection ) );
+    edit_buttons.append( make_icon_button( "object-ungroup-symbolic", KeyCommand.TABLE_SPLIT_CELL, _( "Split Cell" ), split_cell ) );
+    edit_buttons.append( make_icon_button( "edit-clear-symbolic", KeyCommand.TABLE_CLEAR_CELLS, _( "Clear Cells" ), clear_cells ) );
+    edit_buttons.append( make_icon_button( "face-smile-symbolic", null, _( "Insert Emoji" ), insert_emoji ) );
 
     _alignment_buttons = new ModeButtons();
     _alignment_buttons.add_button( "format-justify-left-symbolic", null, _( "Align Left" ) );
@@ -390,6 +393,9 @@ public class TableEditor {
     key.key_pressed.connect( (keyval, keycode, state) => {
       if( (keyval == Gdk.Key.Shift_L) || (keyval == Gdk.Key.Shift_R) ) {
         _extend_selection = true;
+      }
+      if( _draw_area.win.shortcuts.execute( _draw_area.mmap, keyval, keycode, state ) ) {
+        return( true );
       }
       if( ((state & ModifierType.CONTROL_MASK) != 0) &&
           ((state & ModifierType.SHIFT_MASK) == 0) &&
@@ -634,6 +640,22 @@ public class TableEditor {
   }
 
   //-------------------------------------------------------------
+  // Returns true if the given cell is located any of the selected rows.
+  private bool cell_in_selected_rows( NodeTableCell cell ) {
+    int first_row, first_column, last_row, last_column;
+    selection_bounds( out first_row, out first_column, out last_row, out last_column );
+    return( cell.intersects( first_row, 0, last_row, (_table.columns - 1) ) ); 
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given cell is located any of the selected columns.
+  private bool cell_in_selected_cols( NodeTableCell cell ) {
+    int first_row, first_column, last_row, last_column;
+    selection_bounds( out first_row, out first_column, out last_row, out last_column );
+    return( cell.intersects( 0, first_column, (_table.rows - 1), last_column ) ); 
+  }
+
+  //-------------------------------------------------------------
   // Reflects the active cell's style in the toolbar controls.
   private void update_format_controls() {
     if( _table == null ) return;
@@ -668,9 +690,11 @@ public class TableEditor {
     if( index == 1 ) alignment = Pango.Alignment.CENTER;
     if( index == 2 ) alignment = Pango.Alignment.RIGHT;
     var cells = _table.cells();
+    int first_row, first_column, last_row, last_column;
+    selection_bounds( out first_row, out first_column, out last_row, out last_column );
     for( int cell_index=0; cell_index<cells.length; cell_index++ ) {
       var cell = cells.index( cell_index );
-      if( cell_is_selected( cell ) ) cell.set_text_alignment( alignment );
+      if( cell_in_selected_cols( cell ) ) cell.set_text_alignment( alignment );
     }
     _table.update_layout();
     refresh_entry_formats();
@@ -705,7 +729,7 @@ public class TableEditor {
 
   //-------------------------------------------------------------
   // Merges the current selection.
-  private void merge_selection() {
+  public void merge_selection() {
     if( _table == null ) return;
     int first_row, first_column, last_row, last_column;
     selection_bounds( out first_row, out first_column, out last_row, out last_column );
@@ -723,7 +747,7 @@ public class TableEditor {
 
   //-------------------------------------------------------------
   // Splits the merged cell at the selection anchor.
-  private void split_cell() {
+  public void split_cell() {
     if( _table == null ) return;
     save_table_undo_state();
     if( _table.split( _anchor_row, _anchor_column ) ) {
@@ -833,7 +857,7 @@ public class TableEditor {
 
   //-------------------------------------------------------------
   // Clears all cells touched by the current selection.
-  private void clear_cells() {
+  public void clear_cells() {
     if( _table == null ) return;
     int first_row, first_column, last_row, last_column;
     selection_bounds( out first_row, out first_column, out last_row, out last_column );
