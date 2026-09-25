@@ -766,9 +766,9 @@ public class NodeTable : Object {
         for( int column=0; column<columns; column++ ) {
           var cell = cell_at( row, column );
           switch( cell.alignment ) {
-            case Pango.Alignment.LEFT   :  output += " :-- |";  break;
-            case Pango.Alignment.CENTER :  output += " :-: |";  break;
-            case Pango.Alignment.RIGHT  :  output += " --: |";  break;
+            case Pango.Alignment.LEFT   :  output += " :--- |";  break;
+            case Pango.Alignment.CENTER :  output += " :---: |";  break;
+            case Pango.Alignment.RIGHT  :  output += " ---: |";  break;
             default                     :  assert_not_reached();
           }
         }

@@ -893,7 +893,16 @@ public class TableEditor {
         var text = clipboard.read_text_async.end( result );
         if( (text != null) && (text.strip() != "") ) {
           save_table_undo_state();
-          _table = NodeTable.from_tsv( _draw_area.mmap, text );
+          if( NodeTableTextParser.is_markdown_row( text ) ) {
+            var lines = new Array<string>();
+            foreach( var line in text.split( "\n" ) ) {
+              lines.append_val( line );
+            }
+            _table = NodeTable.from_markdown( _draw_area.mmap, lines );
+          }
+          if( _table == null ) {
+            _table = NodeTable.from_tsv( _draw_area.mmap, text );
+          }
           if( _node != null ) {
             _table.set_font(
               _node.style.node_font.get_family(),
