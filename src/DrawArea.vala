@@ -297,31 +297,31 @@ public class DrawArea : Gtk.DrawingArea {
     this.add_controller( file_drop );
     file_drop.motion.connect( handle_file_drag_motion );
     file_drop.drop.connect( handle_file_drop );
-    file_drop.leave.connect( handle_cursor_leave );
+    // file_drop.leave.connect( handle_cursor_leave );
 
     var sticker_drop = new DropTarget( typeof(Picture), Gdk.DragAction.COPY );
     this.add_controller( sticker_drop );
     sticker_drop.motion.connect( handle_sticker_drag_motion );
     sticker_drop.drop.connect( handle_sticker_drop );
-    sticker_drop.leave.connect( handle_cursor_leave );
+    // sticker_drop.leave.connect( handle_cursor_leave );
 
     var text_drop = new DropTarget( typeof(string), Gdk.DragAction.COPY );
     this.add_controller( text_drop );
     text_drop.motion.connect( handle_text_drag_motion );
     text_drop.drop.connect( handle_text_drop );
-    text_drop.leave.connect( handle_cursor_leave );
+    // text_drop.leave.connect( handle_cursor_leave );
 
     var idea_drop = new DropTarget( typeof(Idea), Gdk.DragAction.MOVE );
     this.add_controller( idea_drop );
     idea_drop.motion.connect( handle_idea_drag_motion );
     idea_drop.drop.connect( handle_idea_drop );
-    idea_drop.leave.connect( handle_cursor_leave );
+    // idea_drop.leave.connect( handle_cursor_leave );
 
     var tag_drop = new DropTarget( typeof(Tag), Gdk.DragAction.COPY );
     this.add_controller( tag_drop );
     tag_drop.motion.connect( handle_tag_drag_motion );
     tag_drop.drop.connect( handle_tag_drop );
-    tag_drop.leave.connect( handle_cursor_leave );
+    // tag_drop.leave.connect( handle_cursor_leave );
 
     // Make sure the drawing area can receive keyboard focus
     this.can_focus = true;
@@ -1331,7 +1331,9 @@ public class DrawArea : Gtk.DrawingArea {
     _map.model.set_attach_summary( null );
 
     // If the node is attached, clear it
-    _map.model.set_attach_node( null );
+    if( (_map.model.attach_node != null) && (_map.model.attach_node.mode != NodeMode.DROPPABLE) ) {
+      _map.model.set_attach_node( null );
+    }
 
     var last_x = _scaled_x;
     var last_y = _scaled_y;
