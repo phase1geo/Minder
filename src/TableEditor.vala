@@ -239,7 +239,7 @@ public class TableEditor {
     menu.append_section( null, add_menu );
     menu.append_section( null, del_menu );
     return( new MenuButton() {
-      label = _( "Rows" ),
+      icon_name = "minder-table-row-symbolic",
       tooltip_text = _( "Row Actions" ),
       menu_model = menu
     });
@@ -258,7 +258,7 @@ public class TableEditor {
     menu.append_section( null, add_menu );
     menu.append_section( null, del_menu );
     return( new MenuButton() {
-      label = _( "Columns" ),
+      icon_name = "minder-table-column-symbolic",
       tooltip_text = _( "Column Actions" ),
       menu_model = menu
     });

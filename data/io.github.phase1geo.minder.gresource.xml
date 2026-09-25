@@ -29,6 +29,8 @@
     <file preprocess="xml-stripblanks">icons/hicolor/scalable/actions/minder-braindump-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/hicolor/scalable/actions/minder-eye-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/hicolor/scalable/actions/minder-sidebar-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/hicolor/scalable/actions/minder-table-row-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/hicolor/scalable/actions/minder-table-column-symbolic.svg</file>
     <file alias="minder-focus.svg">icons/scalable/minder-focus.svg</file>
     <file alias="minder-sidebar-open.svg">icons/scalable/mindi-sidebar-open.svg</file>
     <file alias="minder-sidebar-close.svg">icons/scalable/mindi-sidebar-close.svg</file>
