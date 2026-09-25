@@ -2335,6 +2335,13 @@ public class MapModel {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
     doc->set_root_element( root );
+    var image_ids = new HashSet<int>();
+    for( int i=0; i<nodes.length; i++ ) {
+      get_image_ids_for_copy( nodes.index( i ), image_ids );
+    }
+    Xml.Node* images = new Xml.Node( null, "images" );
+    image_manager.save_for_copy( images, image_ids );
+    root->add_child( images );
     Xml.Node* ns = new Xml.Node( null, "nodes" );
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).save( ns );
@@ -2362,6 +2369,17 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
+  // Collects image IDs from the copied node and all of its children.
+  private void get_image_ids_for_copy( Node node, HashSet<int> ids ) {
+    if( node.image != null ) {
+      ids.add( node.image.id );
+    }
+    for( int i=0; i<node.children().length; i++ ) {
+      get_image_ids_for_copy( node.children().index( i ), ids );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Deserializes the paste string and returns the list of nodes
   public void deserialize_for_paste( string str, Array<Node> nodes, Array<Connection> conns, Array<NodeGroup> groups ) {
     Xml.Doc* doc = Xml.Parser.parse_doc( str );
@@ -2369,7 +2387,9 @@ public class MapModel {
     for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          // case "images"      :  image_manager.load( it );  break;
+          case "images"      :
+            image_manager.load_for_paste( it );
+            break;
           case "connections" :
             _connections.load( _map, it, conns, nodes );
             break;

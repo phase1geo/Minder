@@ -79,6 +79,23 @@ public class ImageManager {
     }
 
     //-------------------------------------------------------------
+    // Saves the image and its contents for clipboard transfer.
+    public void save_for_copy( Xml.Node* parent ) {
+      uint8[] contents;
+      try {
+        FileUtils.get_data( get_path(), out contents );
+      } catch( FileError e ) {
+        warning( "Unable to copy image data: %s", e.message );
+        return;
+      }
+      Xml.Node* n = new Xml.Node( null, "image" );
+      n->new_prop( "id", id.to_string() );
+      n->new_prop( "ext", ext );
+      n->new_text_child( null, "data", Base64.encode( contents ) );
+      parent->add_child( n );
+    }
+
+    //-------------------------------------------------------------
     // Returns true if the file exists
     public bool exists() {
       return( FileUtils.test( get_path(), FileTest.EXISTS ) );
@@ -188,6 +205,54 @@ public class ImageManager {
     for( int i=0; i<_images.length; i++ ) {
       if( _images.index( i ).valid ) {
         _images.index( i ).save( n );
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Saves the requested images and their contents for clipboard transfer.
+  public void save_for_copy( Xml.Node* n, HashSet<int> ids ) {
+    for( int i=0; i<_images.length; i++ ) {
+      var item = _images.index( i );
+      if( item.valid && ids.contains( item.id ) ) {
+        item.save_for_copy( n );
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Loads clipboard images and maps their source IDs to new local IDs.
+  public void load_for_paste( Xml.Node* n ) {
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( (it->type != Xml.ElementType.ELEMENT_NODE) || (it->name != "image") ) {
+        continue;
+      }
+      var id_value = it->get_prop( "id" );
+      var ext_value = it->get_prop( "ext" );
+      Xml.Node* data_node = null;
+      for( Xml.Node* child = it->children; child != null; child = child->next ) {
+        if( (child->type == Xml.ElementType.ELEMENT_NODE) && (child->name == "data") ) {
+          data_node = child;
+          break;
+        }
+      }
+      if( (id_value == null) || (data_node == null) ) {
+        continue;
+      }
+      var ext = (ext_value == null) ? ".png" : ext_value.down();
+      if( (ext != ".bmp") && (ext != ".png") && (ext != ".jpg") &&
+          (ext != ".jpeg") && (ext != ".svg") && (ext != ".svgz") ) {
+        ext = ".png";
+      }
+      var item = new ImageItem( this, "" );
+      item.ext = ext;
+      try {
+        var contents = Base64.decode( data_node->get_content() );
+        FileUtils.set_data( item.get_path(), contents );
+        _images.append_val( item );
+        _id_map.set( int.parse( id_value ), item.id );
+      } catch( FileError e ) {
+        warning( "Unable to paste image data: %s", e.message );
       }
     }
   }
