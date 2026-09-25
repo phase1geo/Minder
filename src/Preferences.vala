@@ -414,36 +414,45 @@ public class Preferences : Granite.Dialog {
   private void update_search_results( Grid grid, string text ) {
     Widget? current_section = null;
     Widget? current_group   = null;
+    bool section_matched    = false;
+    bool group_matched      = false;
     var row = 0;
     for( int i=0; i<KeyCommand.NUM; i++ ) {
       var command = (KeyCommand)i;
       if( command.viewable() ) {
         if( command.is_section_start() ) {
+          section_matched = (text == "") || command.shortcut_label().down().contains( text.down() );
           current_section = grid.get_child_at( 0, row );
           assert( current_section != null );
-          if( current_section != null ) {
-            current_section.visible = false;
-          }
+          current_section.visible = section_matched;
+        } else if( command.is_section_end() ) {
+          current_section = null;
+          section_matched = false;
         } else if( command.is_group_start() ) {
+          group_matched = (text == "") || command.shortcut_label().down().contains( text.down() );
           current_group = grid.get_child_at( 1, row );
           assert( current_group != null );
-          if( current_group != null ) {
-            current_group.visible = false;
+          current_group.visible = section_matched || group_matched;
+          if( group_matched && (current_section != null) ) {
+            current_section.visible = true;
           }
-        } else if( !command.is_section_end() && !command.is_group_end() ) {
+        } else if( command.is_group_end() ) {
+          current_group = null;
+          group_matched = false;
+        } else {
           var matched = (text == "") || command.shortcut_label().down().contains( text.down() );
           if( matched ) {
             if( current_section != null ) {
-              current_section.visible = matched;
+              current_section.visible = true;
             }
             if( current_group != null ) {
-              current_group.visible = matched;
+              current_group.visible = true;
             }
           }
           for( int j=1; j<4; j++ ) {
             var w = grid.get_child_at( j, row );
             if( w != null ) {
-              w.visible = matched;
+              w.visible = section_matched || group_matched || matched;
             }
           }
         }
