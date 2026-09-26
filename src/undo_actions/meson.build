@@ -64,6 +64,7 @@ sources += files(
     'UndoNodesInsert.vala',
     'UndoNodesLink.vala',
     'UndoNodesLinkColor.vala',
+    'UndoNodesPriority.vala',
     'UndoNodesRandLinkColor.vala',
     'UndoNodesReparentLinkColor.vala',
     'UndoNodesReplace.vala',

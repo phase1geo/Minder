@@ -22,13 +22,15 @@
 using Gdk;
 
 public enum SequenceNumType {
+  INT,
   NUM,
   LETTER;
 
   public string to_string( int index ) {
     switch( this ) {
-      case NUM    :  return( "%d".printf( index + 1 ) );
-      case LETTER :  return( "%c".printf( 'a' + index ) );
+      case INT    :  return( "%d".printf( index ) );
+      case NUM    :  return( "%d. ".printf( index + 1 ) );
+      case LETTER :  return( "%c. ".printf( 'a' + index ) );
       default     :  return( "" );
     }
   }
@@ -90,7 +92,7 @@ public class SequenceNum {
 
     seq_type = type;
 
-    var numstr    = "%s. ".printf( type.to_string( index ) );
+    var numstr    = type.to_string( index );
     var attr_list = new Pango.AttrList();
     var bold      = Pango.attr_weight_new( Pango.Weight.ULTRABOLD );
     bold.start_index = 0;
