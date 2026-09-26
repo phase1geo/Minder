@@ -21,6 +21,8 @@ namespace MinderTest {
     private void test_valid_source() {
       Assert.true( LatexSpanParser.is_latex_source( "before $$x_1$$ after" ) );
       Assert.true( LatexSpanParser.is_latex_source( "$$x$$ and $$\\frac{1}{2}$$" ) );
+      Assert.true( LatexSpanParser.is_latex_source( "before $x_1$ after" ) );
+      Assert.true( LatexSpanParser.is_latex_source( "$x$ and $$\\frac{1}{2}$$" ) );
     }
 
     private void test_invalid_source() {
@@ -28,6 +30,9 @@ namespace MinderTest {
       Assert.false( LatexSpanParser.is_latex_source( "before $$x" ) );
       Assert.false( LatexSpanParser.is_latex_source( "before $$$$ after" ) );
       Assert.false( LatexSpanParser.is_latex_source( "$$x$$ and $$" ) );
+      Assert.false( LatexSpanParser.is_latex_source( "before $x" ) );
+      Assert.false( LatexSpanParser.is_latex_source( "before $ x $ after" ) );
+      Assert.false( LatexSpanParser.is_latex_source( "the price is $5" ) );
     }
 
     private void test_escaped_delimiters() {
@@ -35,6 +40,10 @@ namespace MinderTest {
       Assert.true( LatexSpanParser.is_latex_source( "escaped \\$$ then $$x$$" ) );
       Assert.true( LatexSpanParser.is_latex_source( "two slashes \\\\$$x$$" ) );
       Assert.true( LatexSpanParser.is_latex_source( "$$x \\$$ y$$" ) );
+      Assert.false( LatexSpanParser.is_latex_source( "escaped \\$x$ only" ) );
+      Assert.true( LatexSpanParser.is_latex_source( "escaped \\$5 then $x$" ) );
+      Assert.true( LatexSpanParser.is_escaped_dollar( "\\$5", 1 ) );
+      Assert.false( LatexSpanParser.is_escaped_dollar( "\\\\$5", 2 ) );
     }
 
     private void test_position() {
@@ -44,6 +53,12 @@ namespace MinderTest {
       Assert.true( LatexSpanParser.is_latex_at( source, source.index_of( "x_1" ) ) );
       Assert.false( LatexSpanParser.is_latex_at( source, source.last_index_of( "$$" ) ) );
       Assert.true( LatexSpanParser.is_latex_at( "pending $$x", 11 ) );
+
+      var inline_source = "price $5 and formula $x_1$ after";
+      Assert.false( LatexSpanParser.is_latex_at( inline_source, inline_source.index_of( "5" ) ) );
+      Assert.true( LatexSpanParser.is_latex_at( inline_source, inline_source.index_of( "x_1" ) ) );
+      Assert.false( LatexSpanParser.is_latex_at( inline_source, inline_source.index_of( "after" ) ) );
+      Assert.true( LatexSpanParser.is_latex_at( "pending $x", 9 ) );
     }
 
   }

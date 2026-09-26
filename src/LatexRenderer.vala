@@ -25,7 +25,7 @@ using Gee;
 using GLib;
 
 //-------------------------------------------------------------
-// Renders $$...$$ spans as inline Pango shapes while leaving all
+// Renders $...$ and $$...$$ spans as inline Pango shapes while leaving all
 // ordinary and Markdown-formatted text in the normal Pango layout.
 public class LatexRenderer : Object {
 
@@ -101,6 +101,7 @@ public class LatexRenderer : Object {
   private static int                          _active_jobs  = 0;
 
   private Array<LatexSpan> _spans;
+  private Array<int>       _escaped_dollars;
   private string           _source       = "";
   private int              _font_size    = 12;
   private int              _generation   = 0;
@@ -114,7 +115,8 @@ public class LatexRenderer : Object {
   //-------------------------------------------------------------
   // Default constructor.
   public LatexRenderer() {
-    _spans = new Array<LatexSpan>();
+    _spans           = new Array<LatexSpan>();
+    _escaped_dollars = new Array<int>();
     if( _cache == null ) {
       _cache = new HashMap<string,LatexImage>();
     }
@@ -148,16 +150,17 @@ public class LatexRenderer : Object {
 
     var offset = 0;
     while( offset < source.length ) {
-      var start = LatexSpanParser.find_delimiter( source, offset );
-      if( start == -1 ) {
+      int start, close, delimiter_length;
+      if( !LatexSpanParser.find_span(
+            source, offset, out start, out close, out delimiter_length
+          ) ) {
         break;
       }
-      var close = LatexSpanParser.find_delimiter( source, start + 2 );
-      if( close == -1 ) {
-        break;
-      }
-      var end        = close + 2;
-      var expression = source.substring( start + 2, close - start - 2 ).strip();
+      var end        = close + delimiter_length;
+      var expression = source.substring(
+        start + delimiter_length,
+        close - start - delimiter_length
+      ).strip();
       if( expression == "" ) {
         offset = end;
         continue;
@@ -174,6 +177,16 @@ public class LatexRenderer : Object {
         _spans.append_val( span );
       }
       offset = end;
+    }
+
+    offset = source.index_of( "$" );
+    while( offset != -1 ) {
+      if( LatexSpanParser.is_escaped_dollar( source, offset ) &&
+          !LatexSpanParser.is_latex_at( source, offset ) ) {
+        var escape = offset - 1;
+        _escaped_dollars.append_val( escape );
+      }
+      offset = source.index_of( "$", offset + 1 );
     }
 
     var latex   = Environment.find_program_in_path( "latex" );
@@ -267,6 +280,18 @@ public class LatexRenderer : Object {
       no_hyphens.end_index   = (uint)span.end;
       attrs.insert( (owned)no_hyphens );
     }
+
+    for( int i=0; i<_escaped_dollars.length; i++ ) {
+      var start = _escaped_dollars.index( i );
+      Pango.Rectangle hidden_rectangle = {0, 0, 0, 0};
+      var hidden_data = new ShapeData( this, null, false );
+      var hidden = new Pango.AttrShape<ShapeData>.with_data(
+        hidden_rectangle, hidden_rectangle, hidden_data, copy_shape_data
+      );
+      hidden.start_index = (uint)start;
+      hidden.end_index   = (uint)(start + 1);
+      attrs.insert( (owned)hidden );
+    }
   }
 
   //-------------------------------------------------------------
@@ -335,6 +360,7 @@ public class LatexRenderer : Object {
       }
     }
     _spans.remove_range( 0, _spans.length );
+    _escaped_dollars.remove_range( 0, _escaped_dollars.length );
   }
 
   //-------------------------------------------------------------

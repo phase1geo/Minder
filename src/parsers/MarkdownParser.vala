@@ -33,6 +33,13 @@ public class MarkdownParser : TextParser {
     // Header
     add_regex( "^(#{1,6})[^#].*$", highlight_header );
 
+    // Escaped LaTeX delimiters
+    add_regex( "(\\\\)(\\$)", (text, match) => {
+      if( !within_latex( text, match, 1 ) ) {
+        make_grey( text, match, 1 );
+      }
+    });
+
     // Lists
     add_regex( "^\\s*(\\*|\\+|\\-|[0-9]+\\.)\\s", (text, match) => {
       if( !within_latex( text, match, 1 ) ) {

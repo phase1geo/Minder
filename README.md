@@ -14,7 +14,7 @@ Use the power of mind-mapping to make your ideas come to life.
 - Choose from many tree layout choices.
 - Support for Markdown formatting.
 - Support for insertion of Unicode characters.
-- Typeset inline LaTeX expressions to scalable SVG using `$$...$$` delimiters.
+- Typeset inline LaTeX expressions to scalable SVG using `$...$` or `$$...$$` delimiters.
 - Add notes, tasks, images, and editable tables to your nodes.
 - Add node-to-node connections with optional text and notes.
 - Stylize nodes, callouts, links and connections to add more meaning and improve readability.
@@ -59,7 +59,8 @@ You will need the following dependencies to build Minder:
 * A LaTeX installation providing `latex`, `amsmath`, `amssymb` and `dvisvgm`
 
 To typeset a formula in a node, connection title, or callout, surround it with
-`$$` delimiters. Formulas can be mixed with ordinary text and more than one can
+standard `$...$` inline delimiters or `$$...$$` delimiters. Formulas can be
+mixed with ordinary text and more than one can
 be used in a text value. For example:
 
 ```latex
@@ -69,7 +70,8 @@ This is a formula $$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
 Minder displays the source while it is being edited. When editing finishes,
 ordinary and Markdown-formatted text remains native Pango text and each formula
 is drawn as an inline scalable SVG. If the LaTeX tools are unavailable or an
-expression is invalid, Minder leaves that source visible.
+expression is invalid, Minder leaves that source visible. Use `\$` for a
+literal dollar sign when needed; the escape is hidden when editing finishes.
 
 If the optional `formulaocr-offline` command is installed, pasting a formula
 image with **Ctrl+Shift+V** converts it locally to editable `$$...$$` source
