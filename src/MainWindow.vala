@@ -42,10 +42,17 @@ public enum SearchOptions {
   GROUPS,
   TITLES,
   NOTES,
+  TABLES,
   FOLDED,
   UNFOLDED,
   TASKS,
   NONTASKS,
+  NO_PRIORITY,
+  PRIORITY1,
+  PRIORITY2,
+  PRIORITY3,
+  PRIORITY4,
+  PRIORITY5,
   NUM
 }
 
@@ -139,10 +146,17 @@ public class MainWindow : Gtk.ApplicationWindow {
   private CheckButton       _search_groups;
   private CheckButton       _search_titles;
   private CheckButton       _search_notes;
+  private CheckButton       _search_tables;
   private CheckButton       _search_folded;
   private CheckButton       _search_unfolded;
   private CheckButton       _search_tasks;
   private CheckButton       _search_nontasks;
+  private CheckButton       _search_priority0;
+  private CheckButton       _search_priority1;
+  private CheckButton       _search_priority2;
+  private CheckButton       _search_priority3;
+  private CheckButton       _search_priority4;
+  private CheckButton       _search_priority5;
   private Switch            _search_all_tabs;
   private Exporter          _exporter;
   private MenuButton        _zoom_btn;
@@ -1086,10 +1100,17 @@ public class MainWindow : Gtk.ApplicationWindow {
     _search_groups      = new CheckButton.with_label( _( "Groups" ) );
     _search_titles      = new CheckButton.with_label( _( "Titles" ) );
     _search_notes       = new CheckButton.with_label( _( "Notes" ) );
+    _search_tables      = new CheckButton.with_label( _( "Tables" ) );
     _search_folded      = new CheckButton.with_label( _( "Folded" ) );
     _search_unfolded    = new CheckButton.with_label( _( "Unfolded" ) );
     _search_tasks       = new CheckButton.with_label( _( "Tasks" ) );
     _search_nontasks    = new CheckButton.with_label( _( "Non-tasks" ) );
+    _search_priority0   = new CheckButton.with_label( _( "No priority" ) );
+    _search_priority1   = new CheckButton.with_label( _( "Priority 1" ) );
+    _search_priority2   = new CheckButton.with_label( _( "Priority 2" ) );
+    _search_priority3   = new CheckButton.with_label( _( "Priority 3" ) );
+    _search_priority4   = new CheckButton.with_label( _( "Priority 4" ) );
+    _search_priority5   = new CheckButton.with_label( _( "Priority 5" ) );
 
     // Set the active values from the settings
     _search_nodes.active       = _settings.get_boolean( "search-opt-nodes" );
@@ -1098,10 +1119,17 @@ public class MainWindow : Gtk.ApplicationWindow {
     _search_groups.active      = _settings.get_boolean( "search-opt-groups" );
     _search_titles.active      = _settings.get_boolean( "search-opt-titles" );
     _search_notes.active       = _settings.get_boolean( "search-opt-notes" );
+    _search_tables.active      = _settings.get_boolean( "search-opt-tables" );
     _search_folded.active      = _settings.get_boolean( "search-opt-folded" );
     _search_unfolded.active    = _settings.get_boolean( "search-opt-unfolded" );
     _search_tasks.active       = _settings.get_boolean( "search-opt-tasks" );
     _search_nontasks.active    = _settings.get_boolean( "search-opt-nontasks" );
+    _search_priority0.active   = _settings.get_boolean( "search-opt-no-priority" );
+    _search_priority1.active   = _settings.get_boolean( "search-opt-priority1" );
+    _search_priority2.active   = _settings.get_boolean( "search-opt-priority2" );
+    _search_priority3.active   = _settings.get_boolean( "search-opt-priority3" );
+    _search_priority4.active   = _settings.get_boolean( "search-opt-priority4" );
+    _search_priority5.active   = _settings.get_boolean( "search-opt-priority5" );
 
     // Set the checkbutton sensitivity
     _search_nodes.set_sensitive( _search_callouts.active || _search_connections.active || _search_groups.active );
@@ -1110,10 +1138,17 @@ public class MainWindow : Gtk.ApplicationWindow {
     _search_groups.set_sensitive( _search_nodes.active || _search_connections.active || _search_callouts.active );
     _search_titles.set_sensitive( _search_notes.active );
     _search_notes.set_sensitive( _search_titles.active );
+    _search_tables.set_sensitive( _search_nodes.active && _search_tables.active );
     _search_folded.set_sensitive( _search_nodes.active && _search_unfolded.active );
     _search_unfolded.set_sensitive( _search_nodes.active && _search_folded.active );
     _search_tasks.set_sensitive( _search_nodes.active && _search_nontasks.active );
     _search_nontasks.set_sensitive( _search_nodes.active && _search_tasks.active );
+    _search_priority0.set_sensitive( _search_nodes.active && _search_priority0.active );
+    _search_priority1.set_sensitive( _search_nodes.active && _search_priority1.active );
+    _search_priority2.set_sensitive( _search_nodes.active && _search_priority2.active );
+    _search_priority3.set_sensitive( _search_nodes.active && _search_priority3.active );
+    _search_priority4.set_sensitive( _search_nodes.active && _search_priority4.active );
+    _search_priority5.set_sensitive( _search_nodes.active && _search_priority5.active );
 
     _search_nodes.toggled.connect(() => {
       bool nodes = _search_nodes.active;
@@ -1158,6 +1193,10 @@ public class MainWindow : Gtk.ApplicationWindow {
       _search_titles.set_sensitive( _search_notes.active );
       on_search_change();
     });
+    _search_tables.toggled.connect(() => {
+      _settings.set_boolean( "search-opt-tables", _search_tables.active );
+      on_search_change();
+    });
     _search_folded.toggled.connect(() => {
       _settings.set_boolean( "search-opt-folded", _search_folded.active );
       _search_unfolded.set_sensitive( _search_folded.active );
@@ -1178,6 +1217,30 @@ public class MainWindow : Gtk.ApplicationWindow {
       _search_tasks.set_sensitive( _search_nontasks.active );
       on_search_change();
     });
+    _search_priority0.toggled.connect(() => {
+      _settings.set_boolean( "search-opt-no-priority", _search_priority0.active );
+      on_search_change();
+    });
+    _search_priority1.toggled.connect(() => {
+      _settings.set_boolean( "search-opt-priority1", _search_priority1.active );
+      on_search_change();
+    });
+    _search_priority2.toggled.connect(() => {
+      _settings.set_boolean( "search-opt-priority2", _search_priority2.active );
+      on_search_change();
+    });
+    _search_priority3.toggled.connect(() => {
+      _settings.set_boolean( "search-opt-priority3", _search_priority3.active );
+      on_search_change();
+    });
+    _search_priority4.toggled.connect(() => {
+      _settings.set_boolean( "search-opt-priority4", _search_priority4.active );
+      on_search_change();
+    });
+    _search_priority5.toggled.connect(() => {
+      _settings.set_boolean( "search-opt-priority5", _search_priority5.active );
+      on_search_change();
+    });
 
     var grid = new Grid() {
       margin_top         = 10,
@@ -1191,10 +1254,17 @@ public class MainWindow : Gtk.ApplicationWindow {
     grid.attach( _search_groups,      0, 3 );
     grid.attach( _search_titles,      1, 0 );
     grid.attach( _search_notes,       1, 1 );
+    grid.attach( _search_tables,      1, 2 );
     grid.attach( _search_folded,      2, 0 );
     grid.attach( _search_unfolded,    2, 1 );
     grid.attach( _search_tasks,       3, 0 );
     grid.attach( _search_nontasks,    3, 1 );
+    grid.attach( _search_priority0,   4, 0 );
+    grid.attach( _search_priority1,   4, 1 );
+    grid.attach( _search_priority2,   4, 2 );
+    grid.attach( _search_priority3,   4, 3 );
+    grid.attach( _search_priority4,   4, 4 );
+    grid.attach( _search_priority5,   4, 5 );
 
     return( grid );
 
@@ -2114,10 +2184,17 @@ public class MainWindow : Gtk.ApplicationWindow {
     search_opts[SearchOptions.GROUPS]      = _search_groups.active;
     search_opts[SearchOptions.TITLES]      = _search_titles.active;
     search_opts[SearchOptions.NOTES]       = _search_notes.active;
+    search_opts[SearchOptions.TABLES]      = _search_tables.active;
     search_opts[SearchOptions.FOLDED]      = _search_folded.active;
     search_opts[SearchOptions.UNFOLDED]    = _search_unfolded.active;
     search_opts[SearchOptions.TASKS]       = _search_tasks.active;
     search_opts[SearchOptions.NONTASKS]    = _search_nontasks.active;
+    search_opts[SearchOptions.NO_PRIORITY] = _search_priority0.active;
+    search_opts[SearchOptions.PRIORITY1]   = _search_priority1.active;
+    search_opts[SearchOptions.PRIORITY2]   = _search_priority2.active;
+    search_opts[SearchOptions.PRIORITY3]   = _search_priority3.active;
+    search_opts[SearchOptions.PRIORITY4]   = _search_priority4.active;
+    search_opts[SearchOptions.PRIORITY5]   = _search_priority5.active;
     _search_items.remove_all();
     var all_tabs = _settings.get_boolean( "search-opt-all-tabs" );
     var current  = get_current_map( "on_search_change" );

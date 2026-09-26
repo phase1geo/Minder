@@ -2869,7 +2869,13 @@ public class Node : Object {
         (((((_task_count == 0) || !is_leaf()) && search_opts[SearchOptions.NONTASKS]) ||
           ((_task_count != 0) && is_leaf()   && search_opts[SearchOptions.TASKS])) &&
          (((parent != null) && parent.folded && search_opts[SearchOptions.FOLDED]) ||
-          (((parent == null) || !parent.folded) && search_opts[SearchOptions.UNFOLDED]))) ) {
+          (((parent == null) || !parent.folded) && search_opts[SearchOptions.UNFOLDED])) &&
+         (((_priority == 0) && search_opts[SearchOptions.NO_PRIORITY]) ||
+          ((_priority == 1) && search_opts[SearchOptions.PRIORITY1]) ||
+          ((_priority == 2) && search_opts[SearchOptions.PRIORITY2]) ||
+          ((_priority == 3) && search_opts[SearchOptions.PRIORITY3]) ||
+          ((_priority == 4) && search_opts[SearchOptions.PRIORITY4]) ||
+          ((_priority >= 5) && search_opts[SearchOptions.PRIORITY5]))) ) {
       var tab = "<i>" + Utils.rootname( tabname ) + "</i>";
       if( search_opts[SearchOptions.TITLES] ) {
         string str = Utils.match_string( pattern, name.stripped_text.text );
@@ -2881,6 +2887,12 @@ public class Node : Object {
         string str = Utils.match_string( pattern, Utils.remove_markdown( note ) );
         if( str.length > 0 ) {
           matches.append( new SearchItem.node( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), str ) );
+        }
+      }
+      if( search_opts[SearchOptions.TABLES] && (_table != null) ) {
+        var str = _table.get_match_string( pattern );
+        if( str != null ) {
+          matches.append( new SearchItem.node( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Node Table" ) ), str ) );
         }
       }
     }

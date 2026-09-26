@@ -321,6 +321,20 @@ public class NodeTable : Object {
   }
 
   //-------------------------------------------------------------
+  // Performs search of the table for a cell that matches the given pattern.
+  // If a match occurs, return the string; otherwise, returns null.
+  public string? get_match_string( string pattern ) {
+    for( int i=0; i<_cells.length; i++ ) {
+      var cell = _cells.index( i );
+      var str  = Utils.match_string( pattern, cell.text );
+      if( str.length > 0 ) {
+        return( str );
+      }
+    }
+    return( null );
+  }
+
+  //-------------------------------------------------------------
   // Creates a table from tab-separated text.
   public static NodeTable from_tsv( MindMap map, string source ) {
     var grid = NodeTableTextParser.from_tsv( source );

@@ -85,6 +85,11 @@
       <summary>Search option for node/connection notes</summary>
       <description>Specifies whether node/connection notes should be searched or not</description>
     </key>
+    <key name="search-opt-tables" type="b">
+      <default>true</default>
+      <summary>Search option for node tables</summary>
+      <description>Specifies whether node tables should be searched or not</description>
+    </key>
     <key name="search-opt-folded" type="b">
       <default>true</default>
       <summary>Search option for folded nodes</summary>
@@ -104,6 +109,36 @@
       <default>true</default>
       <summary>Search option for non-task nodes</summary>
       <description>Specifies whether non-task nodes should be searched or not</description>
+    </key>
+    <key name="search-opt-no-priority" type="b">
+      <default>true</default>
+      <summary>Search option for nodes without priority</summary>
+      <description>Specifies whether non-priority nodes should be searched or not</description>
+    </key>
+    <key name="search-opt-priority1" type="b">
+      <default>true</default>
+      <summary>Search option for priority1 nodes</summary>
+      <description>Specifies whether priority1 nodes should be searched or not</description>
+    </key>
+    <key name="search-opt-priority2" type="b">
+      <default>true</default>
+      <summary>Search option for priority2 nodes</summary>
+      <description>Specifies whether priority2 nodes should be searched or not</description>
+    </key>
+    <key name="search-opt-priority3" type="b">
+      <default>true</default>
+      <summary>Search option for priority3 nodes</summary>
+      <description>Specifies whether priority3 nodes should be searched or not</description>
+    </key>
+    <key name="search-opt-priority4" type="b">
+      <default>true</default>
+      <summary>Search option for priority4 nodes</summary>
+      <description>Specifies whether priority4 nodes should be searched or not</description>
+    </key>
+    <key name="search-opt-priority5" type="b">
+      <default>true</default>
+      <summary>Search option for priority5 nodes</summary>
+      <description>Specifies whether priority5 nodes should be searched or not</description>
     </key>
     <key name="search-opt-all-tabs" type="b">
       <default>false</default>
