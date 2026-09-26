@@ -40,6 +40,20 @@ public class NodeMenu : BaseMenu {
     append_menu_item( _edit_menu, KeyCommand.NODE_REMOVE,        _( "Delete" ) );
     append_menu_item( _edit_menu, KeyCommand.NODE_REMOVE_ONLY,   _( "Delete Single Node" ) );
 
+    var set_pri_menu = new GLib.Menu();
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY1,  _( "Priority 1" ) );
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY2,  _( "Priority 2" ) );
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY3,  _( "Priority 3" ) );
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY4,  _( "Priority 4" ) );
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY5,  _( "Priority 5" ) );
+
+    var clr_pri_menu = new GLib.Menu();
+    append_menu_item( clr_pri_menu, KeyCommand.NODE_CLEAR_PRIORITY, _( "Clear Priority" ) );
+
+    var priority_menu = new GLib.Menu();
+    priority_menu.append_section( null, set_pri_menu );
+    priority_menu.append_section( null, clr_pri_menu );
+
     var color_menu = new GLib.Menu();
     append_menu_item( color_menu, KeyCommand.NODE_CHANGE_LINK_COLOR,    _( "Set to color…" ) );
     append_menu_item( color_menu, KeyCommand.NODE_RANDOMIZE_LINK_COLOR, _( "Randomize color" ) );
@@ -54,13 +68,14 @@ public class NodeMenu : BaseMenu {
     append_menu_item( _change_submenu, KeyCommand.EDIT_NOTE,           _( "Edit Note" ), false );
     append_menu_item( _change_submenu, KeyCommand.SHOW_TAG_SIDEBAR,    _( "Edit Tags" ), false );
     append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_TASK,    _( "Add Task" ) );
-    append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_IMAGE,   _( "Add Image" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_IMAGE,   _( "Add Image…" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_TABLE,   _( "Add Table…" ) );
     append_menu_item( _change_submenu, KeyCommand.REMOVE_STICKER_SELECTED, _( "Remove Sticker" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_LINKS,   _( "Add Node Link" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_ADD_CONNECTION, _( "Add Connection" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_ADD_GROUP,      _( "Add Group" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_CALLOUT, _( "Add Callout" ) );
+    _change_submenu.append_submenu( _( "Priority" ), priority_menu );
     _change_submenu.append_submenu( _( "Link Color" ), color_menu );
     _change_submenu.append_submenu( _( "Toggle Folding" ), fold_menu );
     append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_SEQUENCE,      _( "Toggle Sequence" ) );

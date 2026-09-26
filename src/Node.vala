@@ -3156,11 +3156,11 @@ public class Node : Object {
       var outline_color = Granite.contrasting_foreground_color( color );
 
       Utils.set_context_color_with_alpha( ctx, color, _alpha );
-      ctx.rectangle( x, y, w, h );
+      Utils.draw_rounded_rectangle( ctx, x, y, w, h, 5 );
       ctx.fill_preserve();
 
       Utils.set_context_color_with_alpha( ctx, outline_color, _alpha );
-      ctx.set_line_width( 2 );
+      ctx.set_line_width( 1 );
       ctx.stroke();
 
       // Output the text
