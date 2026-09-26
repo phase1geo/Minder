@@ -27,6 +27,7 @@ namespace MinderTest {
 
     public ImageManagerTest() {
       this.add_test( "unique-image-ids", test_unique_image_ids );
+      this.add_test( "clipboard-image-round-trip", test_clipboard_image_round_trip );
     }
 
     public override void setup() {
@@ -90,6 +91,35 @@ namespace MinderTest {
       Assert.true( manager.get_file( second_id ).has_suffix( ".svg" ) );
     }
 
+    private void test_clipboard_image_round_trip() {
+      var svg_data = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\"/>";
+      var svg_file = GLib.Path.build_filename( _temp_dir, "clipboard.svg" );
+      FileUtils.set_contents( svg_file, svg_data );
+
+      var source = new ImageManager();
+      source.set_image_dir( _temp_dir );
+      var source_id = source.add_image( File.new_for_path( svg_file ).get_uri() );
+      var ids = new Gee.HashSet<int>();
+      ids.add( source_id );
+
+      Xml.Doc* clipboard_doc = new Xml.Doc( "1.0" );
+      Xml.Node* images = new Xml.Node( null, "images" );
+      clipboard_doc->set_root_element( images );
+      source.save_for_copy( images, ids );
+
+      var target = new ImageManager();
+      target.set_image_dir( _temp_dir );
+      target.load_for_paste( images );
+      var target_id = target.get_id( source_id );
+      var target_file = target.get_file( target_id );
+      string copied_data;
+      FileUtils.get_contents( target_file, out copied_data );
+
+      Assert.int_compare( source_id, target_id, "!=" );
+      Assert.true( target_file.has_suffix( ".svg" ) );
+      Assert.string_compare( svg_data, copied_data );
+      delete clipboard_doc;
+    }
   }
 
 }

@@ -27,7 +27,7 @@ function test {
     initialize
 
     export DISPLAY=:0
-    tests/minder-regress
+    ./minder-regress
     result=$?
 
     export DISPLAY=":0.0"

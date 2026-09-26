@@ -64,7 +64,7 @@ public class MarkdownParser : TextParser {
     add_regex( "(==)([^= \t].*?(?<!\\\\|=| |\\t))(==)", highlight_highlight );
 
     // Links
-    add_regex( "(\\[)(.+?)(\\]\\s*\\((\\S+).*\\))", highlight_url1 );
+    add_regex( "(\\[)(.+?)(\\]\\s*\\((\\S+?)\\))", highlight_url1 );
     add_regex( "(<)((mailto:)?[a-z0-9.-]+@[-a-z0-9]+(\\.[-a-z0-9]+)*\\.[a-z]+)(>)", highlight_url2 );
     add_regex( "(<)((https?|ftp):[^'\">\\s]+)(>)", highlight_url3 );
 
