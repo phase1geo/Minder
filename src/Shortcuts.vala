@@ -686,6 +686,13 @@ public class Shortcuts {
     add_default( Key.Up,           false, false, true,  KeyCommand.NODE_SWAP_UP );
     add_default( Key.Down,         false, false, true,  KeyCommand.NODE_SWAP_DOWN );
 
+    add_default( Key.@1,           false, false, false, KeyCommand.NODE_SET_PRIORITY1 );
+    add_default( Key.@2,           false, false, false, KeyCommand.NODE_SET_PRIORITY2 );
+    add_default( Key.@3,           false, false, false, KeyCommand.NODE_SET_PRIORITY3 );
+    add_default( Key.@4,           false, false, false, KeyCommand.NODE_SET_PRIORITY4 );
+    add_default( Key.@5,           false, false, false, KeyCommand.NODE_SET_PRIORITY5 );
+    add_default( Key.@0,           false, false, false, KeyCommand.NODE_CLEAR_PRIORITY );
+
   }
 
   private Xml.Node* make_property( string name, string value, string? translatable = null ) {

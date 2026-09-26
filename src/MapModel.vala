@@ -1641,6 +1641,25 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
+  // Sets the node priority of all selected nodes to the given value.
+  public void set_node_priority( int priority ) {
+    var changed      = new Array<Node>();
+    var old_priority = new Array<int>();
+    for( int i=0; i<_map.selected.nodes().length; i++ ) {
+      var node = _map.selected.nodes().index( i );
+      old_priority.append_val( node.priority );
+      changed.append_val( node );
+      node.priority = priority;
+    }
+    if( changed.length > 0 ) {
+      _map.add_undo( new UndoNodesPriority( changed, old_priority, priority ) );
+      current_changed();
+      auto_save();
+      queue_draw();
+    }
+  }
+
+  //-------------------------------------------------------------
   // Deletes the given node.
   public void delete_node() {
     var current = _map.selected.current_node();

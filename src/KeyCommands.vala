@@ -116,6 +116,12 @@ public enum KeyCommand {
       NODE_ADD_CONNECTION,
       NODE_TOGGLE_CALLOUT, // 90
       NODE_TOGGLE_SEQUENCE,
+      NODE_SET_PRIORITY1,
+      NODE_SET_PRIORITY2,
+      NODE_SET_PRIORITY3,
+      NODE_SET_PRIORITY4,
+      NODE_SET_PRIORITY5,
+      NODE_CLEAR_PRIORITY,
     NODE_CHANGE_END,
     NODE_SELECT_START,
       NODE_SELECT_ROOT,
@@ -352,6 +358,12 @@ public enum KeyCommand {
       case NODE_ADD_CONNECTION       :  return( "node-add-connection" );
       case NODE_TOGGLE_CALLOUT       :  return( "node-toggle-callout" );
       case NODE_TOGGLE_SEQUENCE      :  return( "node-toggle-sequence" );
+      case NODE_SET_PRIORITY1        :  return( "node-set-priority1" );
+      case NODE_SET_PRIORITY2        :  return( "node-set-priority2" );
+      case NODE_SET_PRIORITY3        :  return( "node-set-priority3" );
+      case NODE_SET_PRIORITY4        :  return( "node-set-priority4" );
+      case NODE_SET_PRIORITY5        :  return( "node-set-priority5" );
+      case NODE_CLEAR_PRIORITY       :  return( "node-clear-priority" );
       case NODE_SELECT_ROOT          :  return( "node-select-root" );
       case NODE_SELECT_PARENT        :  return( "node-select-parent" );
       case NODE_SELECT_SIBLING_NEXT  :  return( "node-select-sibling-next" );
@@ -548,6 +560,12 @@ public enum KeyCommand {
       case "node-add-connection"       :  return( NODE_ADD_CONNECTION );
       case "node-toggle-callout"       :  return( NODE_TOGGLE_CALLOUT );
       case "node-toggle-sequence"      :  return( NODE_TOGGLE_SEQUENCE );
+      case "node-set-priority1"        :  return( NODE_SET_PRIORITY1 );
+      case "node-set-priority2"        :  return( NODE_SET_PRIORITY2 );
+      case "node-set-priority3"        :  return( NODE_SET_PRIORITY3 );
+      case "node-set-priority4"        :  return( NODE_SET_PRIORITY4 );
+      case "node-set-priority5"        :  return( NODE_SET_PRIORITY5 );
+      case "node-clear-priority"       :  return( NODE_CLEAR_PRIORITY );
       case "node-select-root"          :  return( NODE_SELECT_ROOT );
       case "node-select-parent"        :  return( NODE_SELECT_PARENT );
       case "node-select-sibling-next"  :  return( NODE_SELECT_SIBLING_NEXT );
@@ -748,6 +766,12 @@ public enum KeyCommand {
       case NODE_ADD_CONNECTION       :  return( _( "Start creation of connection from current node" ) );
       case NODE_TOGGLE_CALLOUT       :  return( _( "Add/Remove callout for current node" ) );
       case NODE_TOGGLE_SEQUENCE      :  return( _( "Toggle sequence state of children of current node" ) );
+      case NODE_SET_PRIORITY1        :  return( _( "Set node priority to 1" ) );
+      case NODE_SET_PRIORITY2        :  return( _( "Set node priority to 2" ) );
+      case NODE_SET_PRIORITY3        :  return( _( "Set node priority to 3" ) );
+      case NODE_SET_PRIORITY4        :  return( _( "Set node priority to 4" ) );
+      case NODE_SET_PRIORITY5        :  return( _( "Set node priority to 5" ) );
+      case NODE_CLEAR_PRIORITY       :  return( _( "Clear node priority" ) );
       case NODE_SELECT_START         :  return( _( "Selection Commands" ) );
       case NODE_SELECT_ROOT          :  return( _( "Select root node of current node" ) );
       case NODE_SELECT_PARENT        :  return( _( "Select parent node of current node" ) );
@@ -946,6 +970,12 @@ public enum KeyCommand {
       case NODE_ADD_CONNECTION       :  return( node_add_connection );
       case NODE_TOGGLE_CALLOUT       :  return( node_toggle_callout );
       case NODE_TOGGLE_SEQUENCE      :  return( node_toggle_sequence );
+      case NODE_SET_PRIORITY1        :  return( node_set_priority1 );
+      case NODE_SET_PRIORITY2        :  return( node_set_priority2 );
+      case NODE_SET_PRIORITY3        :  return( node_set_priority3 );
+      case NODE_SET_PRIORITY4        :  return( node_set_priority4 );
+      case NODE_SET_PRIORITY5        :  return( node_set_priority5 );
+      case NODE_CLEAR_PRIORITY       :  return( node_clear_priority );
       case NODE_SELECT_ROOT          :  return( node_select_root );
       case NODE_SELECT_PARENT        :  return( node_select_parent );
       case NODE_SELECT_SIBLING_NEXT  :  return( node_select_sibling_next );
@@ -1911,6 +1941,35 @@ public enum KeyCommand {
   public static void node_toggle_sequence( MindMap map ) {
     if( !map.editable ) return;
     map.model.toggle_sequence();
+  }
+
+  private static void node_set_priority( MindMap map, int priority ) {
+    if( !map.editable ) return;
+    map.model.set_node_priority( priority );
+  }
+
+  public static void node_set_priority1( MindMap map ) {
+    node_set_priority( map, 1 );
+  }
+
+  public static void node_set_priority2( MindMap map ) {
+    node_set_priority( map, 2 );
+  }
+
+  public static void node_set_priority3( MindMap map ) {
+    node_set_priority( map, 3 );
+  }
+
+  public static void node_set_priority4( MindMap map ) {
+    node_set_priority( map, 4 );
+  }
+
+  public static void node_set_priority5( MindMap map ) {
+    node_set_priority( map, 5 );
+  }
+
+  public static void node_clear_priority( MindMap map ) {
+    node_set_priority( map, 0 );
   }
 
   public static void node_toggle_links( MindMap map ) {

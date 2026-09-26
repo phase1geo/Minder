@@ -305,6 +305,7 @@ public class Node : Object {
   private   Callout?     _callout        = null;
   private   bool         _sequence       = false;
   private   Tags         _tags;
+  private   int          _priority       = 0;
 
   // Node signals
   public signal void moved( double diffx, double diffy );
@@ -634,6 +635,17 @@ public class Node : Object {
       return( _tags );
     }
   }
+  public int priority {
+    get {
+      return( _priority );
+    }
+    set {
+      if( _priority != value ) {
+        _priority = (value < 0) ? 0 : value;
+        position_text_and_update_size();
+      }
+    }
+  }
 
   //-------------------------------------------------------------
   // Default constructor.
@@ -692,6 +704,8 @@ public class Node : Object {
     }
   }
 
+  //-------------------------------------------------------------
+  // Copies only this node (not the descendants)
   public Node.copy_only( MindMap map, Node n, ImageManager im ) {
     _map       = map;
     _id        = map.next_node_id;
@@ -907,9 +921,13 @@ public class Node : Object {
 
     int margin       = style.node_margin;
     int padding      = style.node_padding;
+    var pri_height   = priority_height();
     var stk_height   = sticker_height();
-    var noname_width = task_width() + sticker_width() + sequence_width() + note_width() + linked_node_width();
+    var noname_width = priority_width() + task_width() + sticker_width() + sequence_width() + note_width() + linked_node_width();
     var name_width   = noname_width + _name.width;
+    if( stk_height < pri_height ) {
+      stk_height = pri_height;
+    }
     var name_height  = (_name.height < stk_height) ? stk_height : _name.height;
     var image_width  = (_image != null) ? _image.width : 0;
     var image_height = (_image != null) ? (_image.height + padding) : 0;
@@ -1266,16 +1284,29 @@ public class Node : Object {
   //-------------------------------------------------------------
   // Returns the height occupied by the title and its sticker.
   private double title_row_height() {
-    return( Math.fmax( name.height, sticker_height() ) );
+    var max = Math.fmax( name.height, sticker_height() );
+    return( Math.fmax( max, priority_height() ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the positional information for where the priority item
+  // is located (if it exists).
+  protected virtual void priority_bbox( out double x, out double y, out double w, out double h ) {
+    int margin  = style.node_margin;
+    int padding = style.node_padding;
+    x = posx + margin + padding;
+    y = title_row_top() + (title_row_height() / 2) - 5;
+    w = 10;
+    h = 10;
   }
 
   //-------------------------------------------------------------
   // Returns the positional information for where the task item
   // is located (if it exists).
   protected virtual void task_bbox( out double x, out double y, out double w, out double h ) {
-    int    margin     = style.node_margin;
-    int    padding    = style.node_padding;
-    x = posx + margin + padding;
+    int margin  = style.node_margin;
+    int padding = style.node_padding;
+    x = posx + margin + padding + priority_width();
     y = title_row_top() + (title_row_height() / 2) - _task_radius;
     w = _task_radius * 2;
     h = _task_radius * 2;
@@ -1288,7 +1319,7 @@ public class Node : Object {
     int    margin     = style.node_margin;
     int    padding    = style.node_padding;
     double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
-    x = posx + margin + padding + task_width();
+    x = posx + margin + padding + priority_width() + task_width();
     y = title_row_top() + ((title_row_height() - stk_height) / 2);
     w = (_sticker_buf == null) ? 0 : _sticker_buf.width;
     h = (_sticker_buf == null) ? 0 : _sticker_buf.height;
@@ -1300,7 +1331,7 @@ public class Node : Object {
   protected virtual void sequence_bbox( out double x, out double y, out double w, out double h ) {
     int margin  = style.node_margin;
     int padding = style.node_padding;
-    x = posx + margin + padding + task_width() + sticker_width();
+    x = posx + margin + padding + priority_width() + task_width() + sticker_width();
     y = name.posy;
     w = sequence_width();
     h = sequence_height();
@@ -1812,6 +1843,11 @@ public class Node : Object {
       folded = bool.parse( f );
     }
 
+    string? pri = n->get_prop( "priority" );
+    if( pri != null ) {
+      _priority = int.parse( pri );
+    }
+
     string? ts = n->get_prop( "treesize" );
     if( ts != null ) {
       tree_size = double.parse( ts );
@@ -1938,6 +1974,7 @@ public class Node : Object {
     node->new_prop( "side", side.to_string() );
     node->new_prop( "fold", folded.to_string() );
     node->new_prop( "sequence", sequence.to_string() );
+    node->new_prop( "priority", priority.to_string() );
     node->new_prop( "treesize", tree_size.to_string() );
     if( is_root() ) {
       if( _link_color_set ) {
@@ -2227,6 +2264,19 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns the amount of internal width to draw the priority
+  // indicator.
+  public double priority_width() {
+    return( (_priority > 0) ? (10 + _ipadx) : 0 );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the height of the priority area
+  public double priority_height() {
+    return( (_priority > 0) ? 10 : 0 );
+  }
+
+  //-------------------------------------------------------------
   // Returns the amount of internal width to draw the task
   // checkbutton.
   public double task_width() {
@@ -2379,12 +2429,17 @@ public class Node : Object {
 
     var margin     = style.node_margin;
     var padding    = style.node_padding;
+    var pri_height = priority_height();
     var stk_height = sticker_height();
     var img_height = (_image != null) ? (_image.height + padding) : 0;
     var orig_posx  = name.posx;
     var orig_posy  = name.posy;
 
-    name.posx = posx + margin + padding + task_width() + sticker_width() + sequence_width();
+    if( stk_height < pri_height ) {
+      stk_height = pri_height;
+    }
+
+    name.posx = posx + margin + padding + priority_width() + task_width() + sticker_width() + sequence_width();
     name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0);
 
     if( style.node_text_align != null ) {
@@ -3071,6 +3126,37 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // Draws the priority to the screen.
+  protected virtual void draw_priority( Cairo.Context ctx, Theme theme ) {
+
+    if( _priority > 0 ) {
+
+      double x, y, w, h;
+      priority_bbox( out x, out y, out w, out h );
+
+      RGBA color = theme.get_color( "priority5" );
+      switch( _priority ) {
+        case 1  :  color = theme.get_color( "priority1" );  break;
+        case 2  :  color = theme.get_color( "priority2" );  break;
+        case 3  :  color = theme.get_color( "priority3" );  break;
+        case 4  :  color = theme.get_color( "priority4" );  break;
+        default :  break;
+      }
+
+      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      ctx.rectangle( x, y, w, h );
+      ctx.fill_preserve();
+
+      var outline_color = Granite.contrasting_foreground_color( color );
+      Utils.set_context_color_with_alpha( ctx, outline_color, _alpha );
+      ctx.set_line_width( 2 );
+      ctx.stroke();
+
+    }
+
+  }
+
+  //-------------------------------------------------------------
   // Draws the task checkbutton for leaf nodes.
   protected virtual void draw_leaf_task( Context ctx, RGBA color, RGBA? background ) {
 
@@ -3556,6 +3642,7 @@ public class Node : Object {
       draw_name( ctx, theme, exporting );
       draw_image( ctx, theme );
       draw_table( ctx, theme, exporting );
+      draw_priority( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, foreground, null );
       } else {
@@ -3579,6 +3666,7 @@ public class Node : Object {
       draw_name( ctx, theme, exporting );
       draw_image( ctx, theme );
       draw_table( ctx, theme, exporting );
+      draw_priority( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, _link_color, background );
       } else {
