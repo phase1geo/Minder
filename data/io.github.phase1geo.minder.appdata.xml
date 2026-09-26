@@ -131,24 +131,35 @@
   </custom>
   <content_rating type="oars-1.1"/>
   <releases>
-    <release version="2.1.0" date="2026-05-17">
+    <release version="2.1.0" date="2026-09-26">
       <description>
         <p>New</p>
         <p xml:lang="pt">Novo</p>
         <p xml:lang="fr">Nouveau</p>
         <ul>
+          <li>Added keyboard support for moving up and down search results in search entry field.</li>
           <li>Added support for showing Markdown text styling in callouts and connections.</li>
           <li>Added support for removing Markdown markup in callouts and connections.</li>
           <li>Added support for displaying highlighted text in note tooltips.</li>
+          <li>Added new default keyboard shortcuts for attaching nodes.</li>
+          <li>Added support for embedding LaTeX formulas in node text (thanks to @dragonleopardpig).</li>
+          <li>Added support for formula OCR on image paste (thanks to @dragonleopardpig).</li>
+          <li>Added support for editable tables in nodes (thanks to @dragonleopardpig).</li>
+          <li>Added support for embedding LaTeX into node text (thanks to @dragonleopardpig).</li>
+          <li>Added support for adding priority flags to nodes.</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
+          <li>Updated Swedish translation (thanks to Daniel Nylander).</li>
           <li>Changed application ID from com.github.phase1geo.minder to io.github.phase1geo.minder.</li>
           <li>Updated codebase to eliminate using obsoleted library functions.</li>
           <li>Improved search results to eliminate displaying Markdown markup characters.</li>
+          <li>Cleaned up Minder local data directory contents.</li>
+          <li>Improvements to symbolic icons to improve memory footprint of application.</li>
+          <li>Improved shortcut searching in preferences to include section and group text.</li>
         </ul>
         <p>Bug Fixes</p>
         <p xml:lang="ru">Исправления ошибок</p>
@@ -157,6 +168,12 @@
         <ul>
           <li>Fixed Vala compiler warnings.</li>
           <li>Fixed issue displaying note tooltips that contain strikethrough text formatting.</li>
+          <li>Fixed issue with keyboard shortcut when pressed key is a symbol or movement key (thanks to Antoine Goulin).</li>
+          <li>Fixed displayed application name in system (thanks to Ballo Gyorgy).</li>
+          <li>Fixed display issues with preferences window (thanks to Ballo Gyorgy).</li>
+          <li>Fixed handling of SVG images in Minder (thanks to @dragonleopardpig).</li>
+          <li>Fixed issue with dragging/dropping image onto nodes.</li>
+          <li>Fixed issues with image handling when nodes containing images are copy-pasted.</li>
         </ul>
       </description>
     </release>

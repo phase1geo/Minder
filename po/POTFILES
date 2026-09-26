@@ -147,6 +147,7 @@ src/undo_actions/UndoNodesInsert.vala
 src/undo_actions/UndoNodesLinkColor.vala
 src/undo_actions/UndoNodesLink.vala
 src/undo_actions/UndoNodeSort.vala
+src/undo_actions/UndoNodesPriority.vala
 src/undo_actions/UndoNodesRandLinkColor.vala
 src/undo_actions/UndoNodesReparentLinkColor.vala
 src/undo_actions/UndoNodesReplace.vala
