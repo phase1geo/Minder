@@ -61,10 +61,10 @@ public class Theme : Object {
     _colors.set( "callout_background",    color_from_string( "#f9c440" ) );
 
     _colors.set( "priority1", color_from_string( "Red" ) );
-    _colors.set( "priority2", color_from_string( "Orange" ) );
-    _colors.set( "priority3", color_from_string( "Yellow" ) );
-    _colors.set( "priority4", color_from_string( "Green" ) );
-    _colors.set( "priority5", color_from_string( "Blue" ) );
+    _colors.set( "priority2", color_from_string( "DarkOrange" ) );
+    _colors.set( "priority3", color_from_string( "Green" ) );
+    _colors.set( "priority4", color_from_string( "Blue" ) );
+    _colors.set( "priority5", color_from_string( "Purple" ) );
 
     _colors.set( "link_color0", color_from_string( "#c6262e" ) );
     _colors.set( "link_color1", color_from_string( "#f37329" ) );

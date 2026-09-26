@@ -306,6 +306,7 @@ public class Node : Object {
   private   bool         _sequence       = false;
   private   Tags         _tags;
   private   int          _priority       = 0;
+  private   SequenceNum? _priority_text  = null;
 
   // Node signals
   public signal void moved( double diffx, double diffy );
@@ -642,6 +643,15 @@ public class Node : Object {
     set {
       if( _priority != value ) {
         _priority = (value < 0) ? 0 : value;
+        if( _priority == 0 ) {
+          _priority_text = null; 
+        } else {
+          if( _priority_text == null ) {
+            _priority_text = new SequenceNum( _map );
+            _priority_text.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+          }
+          _priority_text.set_num( _priority, SequenceNumType.INT );
+        }
         position_text_and_update_size();
       }
     }
@@ -1295,9 +1305,9 @@ public class Node : Object {
     int margin  = style.node_margin;
     int padding = style.node_padding;
     x = posx + margin + padding;
-    y = title_row_top() + (title_row_height() / 2) - 5;
-    w = 10;
-    h = 10;
+    y = title_row_top() + (title_row_height() / 2) - (priority_height() / 2);
+    w = priority_width() - _ipadx;
+    h = priority_height();
   }
 
   //-------------------------------------------------------------
@@ -1843,11 +1853,6 @@ public class Node : Object {
       folded = bool.parse( f );
     }
 
-    string? pri = n->get_prop( "priority" );
-    if( pri != null ) {
-      _priority = int.parse( pri );
-    }
-
     string? ts = n->get_prop( "treesize" );
     if( ts != null ) {
       tree_size = double.parse( ts );
@@ -1877,6 +1882,11 @@ public class Node : Object {
     string? su = n->get_prop( "summarized" );
     if( (su != null) && bool.parse( su ) ) {
       siblings.append_val( this );
+    }
+
+    string? pri = n->get_prop( "priority" );
+    if( pri != null ) {
+      priority = int.parse( pri );
     }
 
     // If the posx and posy values are not set, set the layout now
@@ -2267,13 +2277,13 @@ public class Node : Object {
   // Returns the amount of internal width to draw the priority
   // indicator.
   public double priority_width() {
-    return( (_priority > 0) ? (10 + _ipadx) : 0 );
+    return( (_priority_text != null) ? (_priority_text.width + 10 + _ipadx) : 0 );
   }
 
   //-------------------------------------------------------------
   // Returns the height of the priority area
   public double priority_height() {
-    return( (_priority > 0) ? 10 : 0 );
+    return( (_priority_text != null) ? (_priority_text.height + 10) : 0 );
   }
 
   //-------------------------------------------------------------
@@ -3143,14 +3153,20 @@ public class Node : Object {
         default :  break;
       }
 
+      var outline_color = Granite.contrasting_foreground_color( color );
+
       Utils.set_context_color_with_alpha( ctx, color, _alpha );
       ctx.rectangle( x, y, w, h );
       ctx.fill_preserve();
 
-      var outline_color = Granite.contrasting_foreground_color( color );
       Utils.set_context_color_with_alpha( ctx, outline_color, _alpha );
       ctx.set_line_width( 2 );
       ctx.stroke();
+
+      // Output the text
+      ctx.move_to( (x + 5), (y + 5) );
+      Pango.cairo_show_layout( ctx, _priority_text.layout );
+      ctx.new_path();
 
     }
 
