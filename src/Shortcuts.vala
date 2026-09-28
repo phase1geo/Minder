@@ -817,7 +817,7 @@ public class Shortcuts {
     section->add_child( make_base_group( _( "Canvas Movement" ), out group ) );
     group->add_child( make_mouse_shortcut( _( "Pan Canvas" ), _( "[Middle-click + Drag / Alt + Motion]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Scroll Vertically" ), _( "[Scrollwheel up/down]" ) ) );
-    group->add_child( make_mouse_shortcut( _( "Scroll Horizontally" ), _( "[Scrollwhile left/right]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Scroll Horizontally" ), _( "[Scrollwheel left/right]" ) ) );
 
     section->add_child( make_base_group( _( "Item Selection" ), out group ) );
     group->add_child( make_mouse_shortcut( _( "Select Single Item" ), _( "[Left-click on item]" ) ) );
