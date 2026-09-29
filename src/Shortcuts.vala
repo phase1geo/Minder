@@ -833,12 +833,12 @@ public class Shortcuts {
     section->add_child( make_base_group( _( "Canvas Movement" ), out group ) );
     group->add_child( make_mouse_shortcut( _( "Pan Canvas" ), _( "[Middle-click + Drag / Alt + Motion]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Scroll Vertically" ), _( "[Scrollwheel up/down]" ) ) );
-    group->add_child( make_mouse_shortcut( _( "Scroll Horizontally" ), _( "[Scrollwhile left/right]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Scroll Horizontally" ), _( "[Scrollwheel left/right]" ) ) );
 
     section->add_child( make_base_group( _( "Item Selection" ), out group ) );
     group->add_child( make_mouse_shortcut( _( "Select Single Item" ), _( "[Left-click on item]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Select Child Nodes" ), _( "[Control + Left-click on parent node]" ) ) );
-    group->add_child( make_mouse_shortcut( _( "Select Node Tree/Subtree" ), _( "[Control + Double left-click on parent node" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Select Node Tree/Subtree" ), _( "[Control + Double left-click on parent node]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Select All Nodes at Same Depth Level" ), _( "[Control + Triple left-click on node]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Block Selection" ), _( "[Left-click + Drag]" ) ) );
 
@@ -846,7 +846,7 @@ public class Shortcuts {
     group->add_child( make_mouse_shortcut( _( "Toggle Selection of Item" ), _( "[Shift + Left-click on item]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Toggle Selection of Child Nodes" ), _( "[Shift + Control + Left-click on item]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Toggle Selection of Node Tree/Subtree" ), _( "[Shift + Control + Double left-click on parent node]" ) ) );
-    group->add_child( make_mouse_shortcut( _( "Toggle Selection of All Nodes at Same Depth Level" ), _( "Shift + Control + Triple-click on node]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Toggle Selection of All Nodes at Same Depth Level" ), _( "[Shift + Control + Triple-click on node]" ) ) );
 
     section->add_child( make_base_group( _( "Text Selection" ), out group ) );
     group->add_child( make_mouse_shortcut( _( "Set Cursor Insert Point" ), _( "[Left-click in text]" ) ) );
