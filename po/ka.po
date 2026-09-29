@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:12-0500\n"
+"POT-Creation-Date: 2026-09-28 21:24-0500\n"
 "PO-Revision-Date: 2026-03-31 12:29+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -2719,7 +2719,8 @@ msgid "Scroll Horizontally"
 msgstr "ჰორიზონტალური გადახვევა"
 
 #: src/Shortcuts.vala:836
-msgid "[Scrollwhile left/right]"
+#, fuzzy
+msgid "[Scrollwheel left/right]"
 msgstr "[გადახვევა მარცხნივ/მარჯვნივ]"
 
 #: src/Shortcuts.vala:838
@@ -2747,7 +2748,8 @@ msgid "Select Node Tree/Subtree"
 msgstr "კვანძების ხის/ქვეხის მონიშვნა"
 
 #: src/Shortcuts.vala:841
-msgid "[Control + Double left-click on parent node"
+#, fuzzy
+msgid "[Control + Double left-click on parent node]"
 msgstr "[Control + ორმაგი მარცხენა წკაპი მშობელ კვანძზე"
 
 #: src/Shortcuts.vala:842
@@ -2799,7 +2801,8 @@ msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr "იგივე სიღრმეზე არსებული ყველა კვანძის მონიშვნის გადართვა"
 
 #: src/Shortcuts.vala:849
-msgid "Shift + Control + Triple-click on node]"
+#, fuzzy
+msgid "[Shift + Control + Triple-click on node]"
 msgstr "Shift + Control + სამმაგი წკაპი კვანძზე]"
 
 #: src/Shortcuts.vala:851

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:12-0500\n"
+"POT-Creation-Date: 2026-09-28 21:24-0500\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -2814,8 +2814,9 @@ msgid "Scroll Horizontally"
 msgstr "Scrolovat vodorovně"
 
 #: src/Shortcuts.vala:836
-msgid "[Scrollwhile left/right]"
-msgstr ""
+#, fuzzy
+msgid "[Scrollwheel left/right]"
+msgstr "[Scroll tlačítko nahoru/dolú]"
 
 #: src/Shortcuts.vala:838
 msgid "Item Selection"
@@ -2842,8 +2843,7 @@ msgid "Select Node Tree/Subtree"
 msgstr "Vybrat strom/podřadný strom uzlů"
 
 #: src/Shortcuts.vala:841
-#, fuzzy
-msgid "[Control + Double left-click on parent node"
+msgid "[Control + Double left-click on parent node]"
 msgstr "[Control + dvojité pravé kliknutí na nadřazený uzel"
 
 #: src/Shortcuts.vala:842
@@ -2897,7 +2897,7 @@ msgstr "Přepnout výběr všech uzlů na stejné úrovni"
 
 #: src/Shortcuts.vala:849
 #, fuzzy
-msgid "Shift + Control + Triple-click on node]"
+msgid "[Shift + Control + Triple-click on node]"
 msgstr "[Shift + control + trojité kliknutí na uzel]"
 
 #: src/Shortcuts.vala:851
@@ -5187,6 +5187,10 @@ msgstr "error: %s\n"
 msgid "Zoom Actual"
 msgstr "Aktuální zoom"
 
+#, fuzzy
+#~ msgid "[Control + Double left-click on parent node"
+#~ msgstr "[Control + dvojité pravé kliknutí na nadřazený uzel"
+
 #, c-format
 #~ msgid "Unable to load background color: %s"
 #~ msgstr "Nebylo možné načíst barvu pozadí: %s"
@@ -5552,9 +5556,6 @@ msgstr "Aktuální zoom"
 
 #~ msgid "[Shift + Scrollwheel up/down]"
 #~ msgstr "[Shift + scrolovací tlačítko nahoru/dolů]"
-
-#~ msgid "[Control + Double left-click on parent node]"
-#~ msgstr "[Control + dvojité pravé kliknutí na nadřazený uzel"
 
 #~ msgid "Item Selection Toggle (Add to/Remove from Selection)"
 #~ msgstr "Přepínač vybírání položek (přidat/odebrat z výběru)"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:12-0500\n"
+"POT-Creation-Date: 2026-09-28 21:24-0500\n"
 "PO-Revision-Date: 2024-04-27 15:12+0200\n"
 "Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
 "Language-Team: \n"
@@ -2818,8 +2818,9 @@ msgid "Scroll Horizontally"
 msgstr "Horizontaler Bildlauf"
 
 #: src/Shortcuts.vala:836
-msgid "[Scrollwhile left/right]"
-msgstr ""
+#, fuzzy
+msgid "[Scrollwheel left/right]"
+msgstr "[Mausrad auf/ab]"
 
 #: src/Shortcuts.vala:838
 msgid "Item Selection"
@@ -2846,8 +2847,7 @@ msgid "Select Node Tree/Subtree"
 msgstr "Knotenbaum/Teilbaum auswählen"
 
 #: src/Shortcuts.vala:841
-#, fuzzy
-msgid "[Control + Double left-click on parent node"
+msgid "[Control + Double left-click on parent node]"
 msgstr "[Steuerung + Doppelter Linksklick auf übergeordneten Knoten]"
 
 #: src/Shortcuts.vala:842
@@ -2902,7 +2902,7 @@ msgstr "Auswahl aller Knoten auf derselben Tiefenebene umkehren"
 
 #: src/Shortcuts.vala:849
 #, fuzzy
-msgid "Shift + Control + Triple-click on node]"
+msgid "[Shift + Control + Triple-click on node]"
 msgstr "[Umschalt + Steuerung + Dreifach-Linksklick auf Knoten]"
 
 #: src/Shortcuts.vala:851
@@ -5176,6 +5176,10 @@ msgstr "Fehler: %s\n"
 msgid "Zoom Actual"
 msgstr "Zoom zurücksetzen"
 
+#, fuzzy
+#~ msgid "[Control + Double left-click on parent node"
+#~ msgstr "[Steuerung + Doppelter Linksklick auf übergeordneten Knoten]"
+
 #, c-format
 #~ msgid "Unable to load background color: %s"
 #~ msgstr "Hintergrundfarbe kann nicht geladen werden: %s"
@@ -5530,9 +5534,6 @@ msgstr "Zoom zurücksetzen"
 
 #~ msgid "[Shift + Scrollwheel up/down]"
 #~ msgstr "[Umschalt + Mausrad auf/ab]"
-
-#~ msgid "[Control + Double left-click on parent node]"
-#~ msgstr "[Steuerung + Doppelter Linksklick auf übergeordneten Knoten]"
 
 #~ msgid "Item Selection Toggle (Add to/Remove from Selection)"
 #~ msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:12-0500\n"
+"POT-Creation-Date: 2026-09-28 21:24-0500\n"
 "PO-Revision-Date: 2020-08-30 14:45+0100\n"
 "Last-Translator: André Barata <andretiagob@protonmail.com>\n"
 "Language-Team: none\n"
@@ -2819,8 +2819,9 @@ msgid "Scroll Horizontally"
 msgstr "Deslizar na Horizontal"
 
 #: src/Shortcuts.vala:836
-msgid "[Scrollwhile left/right]"
-msgstr ""
+#, fuzzy
+msgid "[Scrollwheel left/right]"
+msgstr "[Roda do Rato para cima/para baixo]"
 
 #: src/Shortcuts.vala:838
 msgid "Item Selection"
@@ -2847,8 +2848,7 @@ msgid "Select Node Tree/Subtree"
 msgstr "Selecionar Nó Árvore/Sub-árvore"
 
 #: src/Shortcuts.vala:841
-#, fuzzy
-msgid "[Control + Double left-click on parent node"
+msgid "[Control + Double left-click on parent node]"
 msgstr "[Control + Clique duplo no botão esquerdo do rato no nó pai]"
 
 #: src/Shortcuts.vala:842
@@ -2902,7 +2902,7 @@ msgstr "Alternar Seleção de Todos os Nós ao Mesmo Nível de Profundidade"
 
 #: src/Shortcuts.vala:849
 #, fuzzy
-msgid "Shift + Control + Triple-click on node]"
+msgid "[Shift + Control + Triple-click on node]"
 msgstr "[Shift + Control + Clique triplo no botão esquerdo do rato num nó]"
 
 #: src/Shortcuts.vala:851
@@ -5263,6 +5263,10 @@ msgstr ""
 msgid "Zoom Actual"
 msgstr "Ampliar até ao Tamanho Atual"
 
+#, fuzzy
+#~ msgid "[Control + Double left-click on parent node"
+#~ msgstr "[Control + Clique duplo no botão esquerdo do rato no nó pai]"
+
 #~ msgid "Unsaved"
 #~ msgstr "Não Gravado"
 
@@ -5627,9 +5631,6 @@ msgstr "Ampliar até ao Tamanho Atual"
 
 #~ msgid "[Shift + Scrollwheel up/down]"
 #~ msgstr "[Shift + Roda do Rato para cima/para baixo]"
-
-#~ msgid "[Control + Double left-click on parent node]"
-#~ msgstr "[Control + Clique duplo no botão esquerdo do rato no nó pai]"
 
 #~ msgid "Item Selection Toggle (Add to/Remove from Selection)"
 #~ msgstr "Alternar entre Seleção de Itens (Adicionar a/Remover da Seleção)"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:12-0500\n"
+"POT-Creation-Date: 2026-09-28 21:24-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Nathan Bonnemains (@NathanBnm)\n"
 "Language-Team: Français\n"
@@ -2826,7 +2826,7 @@ msgid "Scroll Horizontally"
 msgstr "Horizontal"
 
 #: src/Shortcuts.vala:836
-msgid "[Scrollwhile left/right]"
+msgid "[Scrollwheel left/right]"
 msgstr ""
 
 #: src/Shortcuts.vala:838
@@ -2858,7 +2858,7 @@ msgid "Select Node Tree/Subtree"
 msgstr "Sélectionner le nœud de départ"
 
 #: src/Shortcuts.vala:841
-msgid "[Control + Double left-click on parent node"
+msgid "[Control + Double left-click on parent node]"
 msgstr ""
 
 #: src/Shortcuts.vala:842
@@ -2915,7 +2915,7 @@ msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr ""
 
 #: src/Shortcuts.vala:849
-msgid "Shift + Control + Triple-click on node]"
+msgid "[Shift + Control + Triple-click on node]"
 msgstr ""
 
 #: src/Shortcuts.vala:851

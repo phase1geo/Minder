@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:12-0500\n"
+"POT-Creation-Date: 2026-09-28 21:24-0500\n"
 "PO-Revision-Date: 2025-11-14 08:53+0100\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -2775,8 +2775,9 @@ msgid "Scroll Horizontally"
 msgstr "Прокрутить по горизонтали"
 
 #: src/Shortcuts.vala:836
-msgid "[Scrollwhile left/right]"
-msgstr ""
+#, fuzzy
+msgid "[Scrollwheel left/right]"
+msgstr "[Прокрутка колесом вверх/вниз]"
 
 #: src/Shortcuts.vala:838
 msgid "Item Selection"
@@ -2803,8 +2804,7 @@ msgid "Select Node Tree/Subtree"
 msgstr "Выбрать (под)дерево узлов"
 
 #: src/Shortcuts.vala:841
-#, fuzzy
-msgid "[Control + Double left-click on parent node"
+msgid "[Control + Double left-click on parent node]"
 msgstr "[Control + двойной щелчок ЛКМ по родительскому узлу]"
 
 #: src/Shortcuts.vala:842
@@ -2858,7 +2858,7 @@ msgstr "Переключить выбор всех узлов на одном у
 
 #: src/Shortcuts.vala:849
 #, fuzzy
-msgid "Shift + Control + Triple-click on node]"
+msgid "[Shift + Control + Triple-click on node]"
 msgstr "[Shift + Control + тройной щелчок ЛКМ по узлу]"
 
 #: src/Shortcuts.vala:851
@@ -5126,6 +5126,10 @@ msgstr "ошибка: %s\n"
 msgid "Zoom Actual"
 msgstr "Настоящий размер"
 
+#, fuzzy
+#~ msgid "[Control + Double left-click on parent node"
+#~ msgstr "[Control + двойной щелчок ЛКМ по родительскому узлу]"
+
 #, c-format
 #~ msgid "Unable to load background color: %s"
 #~ msgstr "Не удалось загрузить цвет фона: %s"
@@ -5481,9 +5485,6 @@ msgstr "Настоящий размер"
 
 #~ msgid "[Shift + Scrollwheel up/down]"
 #~ msgstr "[Shift + прокрутка колесом вверх/вниз]"
-
-#~ msgid "[Control + Double left-click on parent node]"
-#~ msgstr "[Control + двойной щелчок ЛКМ по родительскому узлу]"
 
 #~ msgid "Item Selection Toggle (Add to/Remove from Selection)"
 #~ msgstr ""

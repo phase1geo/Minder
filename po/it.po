@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:12-0500\n"
+"POT-Creation-Date: 2026-09-28 21:24-0500\n"
 "PO-Revision-Date: 2025-04-06 09:37+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -2735,7 +2735,8 @@ msgid "Scroll Horizontally"
 msgstr "Scorri Orizzontalmente"
 
 #: src/Shortcuts.vala:836
-msgid "[Scrollwhile left/right]"
+#, fuzzy
+msgid "[Scrollwheel left/right]"
 msgstr "[Scorrimento a sinistra/destra]"
 
 #: src/Shortcuts.vala:838
@@ -2763,8 +2764,8 @@ msgid "Select Node Tree/Subtree"
 msgstr "Selezionare la sottostruttura dell'albero dei nodi"
 
 #: src/Shortcuts.vala:841
-msgid "[Control + Double left-click on parent node"
-msgstr "[Ctrl + doppio clic sinistro sul nodo padre]"
+msgid "[Control + Double left-click on parent node]"
+msgstr "[Ctrl + Doppio clic sinistro sul nodo principale]"
 
 #: src/Shortcuts.vala:842
 msgid "Select All Nodes at Same Depth Level"
@@ -2817,7 +2818,8 @@ msgstr ""
 "profondità"
 
 #: src/Shortcuts.vala:849
-msgid "Shift + Control + Triple-click on node]"
+#, fuzzy
+msgid "[Shift + Control + Triple-click on node]"
 msgstr "[Maiusc + Ctrl + Triplo clic sul nodo]"
 
 #: src/Shortcuts.vala:851
@@ -5077,6 +5079,9 @@ msgstr "errore: %s\n"
 msgid "Zoom Actual"
 msgstr "Zoom Effettivo"
 
+#~ msgid "[Control + Double left-click on parent node"
+#~ msgstr "[Ctrl + doppio clic sinistro sul nodo padre]"
+
 #, c-format
 #~ msgid "Unable to load background color: %s"
 #~ msgstr "Impossibile caricare il colore di sfondo: %s"
@@ -5434,9 +5439,6 @@ msgstr "Zoom Effettivo"
 
 #~ msgid "[Shift + Scrollwheel up/down]"
 #~ msgstr "[Maiusc + rotellina di scorrimento su/giù]"
-
-#~ msgid "[Control + Double left-click on parent node]"
-#~ msgstr "[Ctrl + Doppio clic sinistro sul nodo principale]"
 
 #~ msgid "Item Selection Toggle (Add to/Remove from Selection)"
 #~ msgstr "Commuta selezione elemento (Aggiungi/Rimuovi dalla selezione)"

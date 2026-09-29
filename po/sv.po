@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:12-0500\n"
+"POT-Creation-Date: 2026-09-28 21:24-0500\n"
 "PO-Revision-Date: 2025-12-02 09:55+0100\n"
 "Last-Translator: Daniel Nylander <github@danielnylander.se>\n"
 "Language-Team: sv\n"
@@ -2712,7 +2712,8 @@ msgid "Scroll Horizontally"
 msgstr "Rulla horisontellt"
 
 #: src/Shortcuts.vala:836
-msgid "[Scrollwhile left/right]"
+#, fuzzy
+msgid "[Scrollwheel left/right]"
 msgstr "[Bläddra åt vänster/höger]"
 
 #: src/Shortcuts.vala:838
@@ -2740,7 +2741,8 @@ msgid "Select Node Tree/Subtree"
 msgstr "Välj nodträd/underträd"
 
 #: src/Shortcuts.vala:841
-msgid "[Control + Double left-click on parent node"
+#, fuzzy
+msgid "[Control + Double left-click on parent node]"
 msgstr "[Control + Dubbelklicka med vänster musknapp på överordnad nod"
 
 #: src/Shortcuts.vala:842
@@ -2793,7 +2795,8 @@ msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr "Växla mellan val av alla noder på samma djupnivå"
 
 #: src/Shortcuts.vala:849
-msgid "Shift + Control + Triple-click on node]"
+#, fuzzy
+msgid "[Shift + Control + Triple-click on node]"
 msgstr "Skift + Control + trippelklicka på nod]"
 
 #: src/Shortcuts.vala:851

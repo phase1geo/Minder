@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:12-0500\n"
+"POT-Creation-Date: 2026-09-28 21:24-0500\n"
 "PO-Revision-Date: 2023-10-10 17:50+0800\n"
 "Last-Translator: Aerowolf <aerowolf@tom.com>\n"
 "Language-Team: 简体中文\n"
@@ -2793,8 +2793,9 @@ msgid "Scroll Horizontally"
 msgstr "水平滚动"
 
 #: src/Shortcuts.vala:836
-msgid "[Scrollwhile left/right]"
-msgstr ""
+#, fuzzy
+msgid "[Scrollwheel left/right]"
+msgstr "[滚轮上/下]"
 
 #: src/Shortcuts.vala:838
 msgid "Item Selection"
@@ -2821,8 +2822,7 @@ msgid "Select Node Tree/Subtree"
 msgstr "选择节点树/子树"
 
 #: src/Shortcuts.vala:841
-#, fuzzy
-msgid "[Control + Double left-click on parent node"
+msgid "[Control + Double left-click on parent node]"
 msgstr "[Ctrl键 + 双击父节点]"
 
 #: src/Shortcuts.vala:842
@@ -2876,7 +2876,7 @@ msgstr "切换相同层级的所有节点的选择"
 
 #: src/Shortcuts.vala:849
 #, fuzzy
-msgid "Shift + Control + Triple-click on node]"
+msgid "[Shift + Control + Triple-click on node]"
 msgstr "[Shift键 + Ctrl键 + 三次左键点击节点]"
 
 #: src/Shortcuts.vala:851
@@ -5151,6 +5151,10 @@ msgstr "错误： %s\n"
 msgid "Zoom Actual"
 msgstr "缩放到实际大小"
 
+#, fuzzy
+#~ msgid "[Control + Double left-click on parent node"
+#~ msgstr "[Ctrl键 + 双击父节点]"
+
 #, c-format
 #~ msgid "Unable to load background color: %s"
 #~ msgstr "无法加载背景色： %s"
@@ -5511,9 +5515,6 @@ msgstr "缩放到实际大小"
 
 #~ msgid "[Shift + Scrollwheel up/down]"
 #~ msgstr "[Shift键 + 滚轮向上/向下]"
-
-#~ msgid "[Control + Double left-click on parent node]"
-#~ msgstr "[Ctrl键 + 双击父节点]"
 
 #~ msgid "Item Selection Toggle (Add to/Remove from Selection)"
 #~ msgstr "项目选择切换（添加到所选内容/从所选内容中删除）"
