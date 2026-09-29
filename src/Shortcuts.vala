@@ -822,7 +822,7 @@ public class Shortcuts {
     section->add_child( make_base_group( _( "Item Selection" ), out group ) );
     group->add_child( make_mouse_shortcut( _( "Select Single Item" ), _( "[Left-click on item]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Select Child Nodes" ), _( "[Control + Left-click on parent node]" ) ) );
-    group->add_child( make_mouse_shortcut( _( "Select Node Tree/Subtree" ), _( "[Control + Double left-click on parent node" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Select Node Tree/Subtree" ), _( "[Control + Double left-click on parent node]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Select All Nodes at Same Depth Level" ), _( "[Control + Triple left-click on node]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Block Selection" ), _( "[Left-click + Drag]" ) ) );
 
