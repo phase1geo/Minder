@@ -668,6 +668,7 @@ public class Node : Object {
     _name      = new CanvasText( map );
     _name.resized.connect( position_text_and_update_size );
     _tags      = new Tags();
+    update_size();
   }
 
   //-------------------------------------------------------------
@@ -681,6 +682,7 @@ public class Node : Object {
     _name      = new CanvasText.with_text( map, n );
     _name.resized.connect( position_text_and_update_size );
     _tags      = new Tags();
+    update_size();
   }
 
   //-------------------------------------------------------------
@@ -712,6 +714,7 @@ public class Node : Object {
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).parent = this;
     }
+    update_size();
   }
 
   //-------------------------------------------------------------
@@ -724,6 +727,7 @@ public class Node : Object {
     _name      = new CanvasText( map );
     _tags      = new Tags();
     copy_variables( n, im );
+    update_size();
   }
 
   //-------------------------------------------------------------
@@ -744,6 +748,7 @@ public class Node : Object {
       child.parent = this;
       _children.append_val( child );
     }
+    update_size();
   }
 
   //-------------------------------------------------------------
