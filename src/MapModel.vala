@@ -960,6 +960,7 @@ public class MapModel {
     var current = _map.selected.current_node();
     if( (current != null) && (current.image == null) ) {
       image_manager.choose_image( _map.win, (id) => {
+        if( id == -1 ) return;
         var curr = _map.selected.current_node();
         curr.set_image( image_manager, new NodeImage( image_manager, id, curr.style.node_width ) );
         if( curr.image != null ) {

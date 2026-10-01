@@ -52,6 +52,10 @@ public class ImageEditor {
   private double          _crop_w;
   private double          _crop_h;
   private int             _edit_size = EDIT_WIDTH;
+  private EventControllerLegacy? _blocker        = null;
+  private Gtk.Window?            _win            = null;
+  private ulong                  _active_id      = 0;
+  private bool                   _choosing_image = false;
 
   public signal void changed( NodeImage? orig_image );
 
@@ -121,10 +125,80 @@ public class ImageEditor {
       _da.queue_draw();
 
       // Display ourselves
+      block_window_input();
       _popover.popup();
+      watch_focus();
+      _paste.grab_focus();
 
     }
 
+  }
+
+  //-------------------------------------------------------------
+  // Blocks window from losing keyboard input.
+  private void block_window_input() {
+    var win = (Widget)_canvas.get_root();
+    _blocker = new EventControllerLegacy() {
+      propagation_phase = PropagationPhase.CAPTURE
+    };
+    _blocker.event.connect((ev) => {
+      switch( ev.get_event_type() ) {
+        case Gdk.EventType.BUTTON_PRESS   :
+        case Gdk.EventType.BUTTON_RELEASE :
+        case Gdk.EventType.SCROLL         :
+        case Gdk.EventType.KEY_PRESS      :
+        case Gdk.EventType.KEY_RELEASE    :
+        case Gdk.EventType.TOUCH_BEGIN    :
+        case Gdk.EventType.TOUCH_END      :  return( true );   // swallow
+        default                           :  return( false );
+      }
+    });
+    win.add_controller( _blocker );
+  }
+
+  //-------------------------------------------------------------
+  // Undoes block_window_input.
+  private void unblock_window_input() {
+    if( _blocker != null ) {
+      ((Widget)_canvas.get_root()).remove_controller( _blocker );
+      _blocker = null;
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Watches to see if the main window ever loses focus.
+  private void watch_focus() {
+    _win = _canvas.get_root() as Gtk.Window;
+    if( _win == null ) return;
+    _active_id = _win.notify["is-active"].connect(() => {
+      if( _win.is_active ) {
+        _choosing_image = false;
+      } else if( !_choosing_image ) {
+        action_cancel();
+      }
+    });
+  }
+
+  //-------------------------------------------------------------
+  // Undoes the affects of watch_focus.
+  private void unwatch_focus() {
+    if( (_win != null) && (_active_id != 0) ) {
+      _win.disconnect( _active_id );
+    }
+    _active_id = 0;
+    _win       = null;
+  }
+
+  //-------------------------------------------------------------
+  // Displays the popover after a new image has been chosen with the
+  // file selector.
+  private void reshow_popover() {
+    if( !_choosing_image ) return;   // makes this safe to call more than once
+    _choosing_image = false;
+    block_window_input();
+    _popover.popup();
+    _paste.grab_focus();
+    watch_focus();
   }
 
   //-------------------------------------------------------------
@@ -332,9 +406,15 @@ public class ImageEditor {
 
     // Add the box to the popover
     _popover = new Popover() {
+      autohide = false,
       child = box
     };
     _popover.set_parent( da );
+    _popover.closed.connect(() => {
+      unblock_window_input();
+      unwatch_focus();
+      _crop_target = -1;
+    });
 
     // Set the stage for keyboard shortcuts
     var key = new EventControllerKey();
@@ -499,11 +579,16 @@ public class ImageEditor {
     _paste = paste;
 
     open.clicked.connect(() => {
+      _choosing_image = true;
+      _popover.popdown();
       im.choose_image( da.win, (id) => {
-        var ni = new NodeImage( im, id, _node.style.node_width );
-        if( ni != null ) {
-          initialize( ni );
+        if( id != -1 ) {
+          var ni = new NodeImage( im, id, _node.style.node_width );
+          if( ni != null ) {
+            initialize( ni );
+          }
         }
+        reshow_popover();
       });
     });
 

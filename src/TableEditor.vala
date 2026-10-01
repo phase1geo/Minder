@@ -176,6 +176,9 @@ public class TableEditor {
   private bool _extend_selection = false;
   private double _drag_start_x = 0.0;
   private double _drag_start_y = 0.0;
+  private EventControllerLegacy? _blocker = null;
+  private Gtk.Window? _win = null;
+  private ulong _active_id = 0;
 
   public signal void changed( Node node, NodeTable? original_table );
 
@@ -192,6 +195,59 @@ public class TableEditor {
   // Returns true if the table editor is currently displayed.
   public bool is_shown() {
     return( _popover.visible );
+  }
+
+  //-------------------------------------------------------------
+  // Blocks window from losing keyboard input.
+  private void block_window_input() {
+    var win = (Widget)_draw_area.get_root();
+    _blocker = new EventControllerLegacy() {
+      propagation_phase = PropagationPhase.CAPTURE
+    };
+    _blocker.event.connect((ev) => {
+      switch( ev.get_event_type() ) {
+        case Gdk.EventType.BUTTON_PRESS   :
+        case Gdk.EventType.BUTTON_RELEASE :
+        case Gdk.EventType.SCROLL         :
+        case Gdk.EventType.KEY_PRESS      :
+        case Gdk.EventType.KEY_RELEASE    :
+        case Gdk.EventType.TOUCH_BEGIN    :
+        case Gdk.EventType.TOUCH_END      :  return( true );   // swallow
+        default                           :  return( false );
+      }
+    });
+    win.add_controller( _blocker );
+  }
+
+  //-------------------------------------------------------------
+  // Undoes block_window_input.
+  private void unblock_window_input() {
+    if( _blocker != null ) {
+      ((Widget)_draw_area.get_root()).remove_controller( _blocker );
+      _blocker = null;
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Watches to see if the main window ever loses focus.
+  private void watch_focus() {
+    _win = _draw_area.get_root() as Gtk.Window;
+    if( _win == null ) return;
+    _active_id = _win.notify["is-active"].connect(() => {
+      if( !_win.is_active ) {
+        close_editor();
+      }
+    });
+  }
+
+  //-------------------------------------------------------------
+  // Undoes the affects of watch_focus.
+  private void unwatch_focus() {
+    if( (_win != null) && (_active_id != 0) ) {
+      _win.disconnect( _active_id );
+    }
+    _active_id = 0;
+    _win       = null;
   }
 
   //-------------------------------------------------------------
@@ -453,7 +509,9 @@ public class TableEditor {
       height = int.max( 1, (int)Math.ceil( node_height * scale ) )
     };
     _popover.pointing_to = rectangle;
+    block_window_input();
     _popover.popup();
+    watch_focus();
   }
 
   //-------------------------------------------------------------
@@ -953,6 +1011,8 @@ public class TableEditor {
     _extend_selection = false;
     _draw_area.reset_modifier_keys();
     _popover.popdown();
+    unblock_window_input();
+    unwatch_focus();
     _draw_area.grab_focus();
   }
 

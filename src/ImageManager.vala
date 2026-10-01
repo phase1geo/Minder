@@ -452,8 +452,12 @@ public class ImageManager {
         if( file != null ) {
           id = add_image( file.get_uri() );
           func( id );
+        } else {
+          func( -1 );
         }
-      } catch( Error e ) {}
+      } catch( Error e ) {
+        func( -1 );
+      }
     });
 
   }
