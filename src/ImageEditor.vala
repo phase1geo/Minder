@@ -40,8 +40,8 @@ public class ImageEditor {
   private NodeImage       _image;
   private Button          _paste;
   private int             _crop_target = -1;
-  private double          _press_x;
-  private double          _press_y;
+  private double          _last_x;
+  private double          _last_y;
   private Gdk.Rectangle[] _crop_points;
   private string[]        _crop_cursors;
   private Label           _status_cursor;
@@ -397,8 +397,6 @@ public class ImageEditor {
       if( _crop_target == 8 ) {
         da.set_cursor( new Gdk.Cursor.from_name( "grabbing", null ) );
       }
-      _press_x = scaled_x;
-      _press_y = scaled_y;
     });
 
     click.released.connect((n_press, x, y) => {
@@ -420,10 +418,12 @@ public class ImageEditor {
         }
         _crop_target = -1;
       } else {
-        adjust_crop_points( (scaled_x - _press_x), (scaled_y - _press_y) );
+        adjust_crop_points( (scaled_x - _last_x), (scaled_y - _last_y) );
         da.queue_draw();
       }
       set_cursor_location( (int)scaled_x, (int)scaled_y );
+      _last_x = scaled_x;
+      _last_y = scaled_y;
     });
 
     // Set ourselves up to be a drag target
@@ -553,7 +553,7 @@ public class ImageEditor {
 
     // On top of that, draw the crop transparency
     ctx.set_source_rgba( 0, 0, 0, 0.8 );
-    ctx.rectangle( 0, 0, _da.width_request, _da.height_request );
+    ctx.rectangle( 0, 0, (_da.width_request / _scale), (_da.height_request / _scale) );
     ctx.fill();
 
     // Cut out the area for the image
