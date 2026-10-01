@@ -58,22 +58,6 @@ case $1 in
     initialize
     sudo ninja install
     ;;
-"install-deps")
-    output=$((dpkg-checkbuilddeps ) 2>&1)
-    result=$?
-
-    if [ $result -eq 0 ]; then
-        echo "All dependencies are installed"
-        exit 0
-    fi
-
-    replace="sudo apt install"
-    pattern="(\([>=<0-9. ]+\))+"
-    sudo_replace=${output/dpkg-checkbuilddeps: error: Unmet build dependencies:/$replace}
-    command=$(sed -r -e "s/$pattern//g" <<< "$sudo_replace")
-    
-    $command
-    ;;
 "run")
     initialize
     ./io.github.phase1geo.minder "${@:2}"
@@ -125,10 +109,11 @@ case $1 in
     echo "  clean             Removes build directories (can require sudo)"
     echo "  generate-i18n     Generates .pot and .po files for i18n (multi-language support)"
     echo "  install           Builds and installs application to the system (requires sudo)"
-    echo "  install-deps      Installs missing build dependencies"
     echo "  run               Builds and runs the application (must run install once before successive calls to this command)"
     echo "  test              Builds and runs testing for the application"
     echo "  uninstall         Removes the application from the system (requires sudo)"
-    echo "  flatpak           Builds and installs the Flatpak version of the application"
+    echo "  elementary        Builds and installs the elementary flatpak"
+    echo "  flathub           Builds and installs the Flathub flatpak"
+    echo "  run-flatpak       Runs currently installed Flatpak of the application"
     ;;
 esac
