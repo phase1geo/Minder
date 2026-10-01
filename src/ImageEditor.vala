@@ -27,8 +27,10 @@ public class ImageEditor {
 
   private const double MIN_WIDTH   = 50;
   private const int    CROP_WIDTH  = 8;
-  private const int    EDIT_WIDTH  = 600;
-  private const int    EDIT_HEIGHT = 600;
+  private const int    EDIT_WIDTH  = 500;
+  private const int    EDIT_HEIGHT = 500;
+  private const int    MIN_EDIT    = 150;
+  private const int    POPOVER_PAD = 20;   // Room for the popover arrow and shadow
 
   private Popover         _popover;
   private DrawArea        _canvas;
@@ -49,6 +51,7 @@ public class ImageEditor {
   private double          _crop_y;
   private double          _crop_w;
   private double          _crop_h;
+  private int             _edit_size = EDIT_WIDTH;
 
   public signal void changed( NodeImage? orig_image );
 
@@ -95,10 +98,8 @@ public class ImageEditor {
   // specified node
   public void edit_image( ImageManager im, Node node, double x, double y ) {
 
-    var int_x = (int)x;
-    var int_y = (int)y;
-    Gdk.Rectangle rect = {int_x, int_y, 1, 1};
-    _popover.pointing_to = rect;
+    // Size and position the popover so that it fits within the window
+    place_popover( x, y );
 
     // Set the defaults
     _node  = node;
@@ -106,7 +107,7 @@ public class ImageEditor {
 
     if( _image.valid ) {
 
-      _scale = (double)EDIT_WIDTH / _image.orig_width;
+      _scale = (double)_edit_size / _image.orig_width;
 
       _crop_x = (double)node.image.crop_x;
       _crop_y = (double)node.image.crop_y;
@@ -127,6 +128,67 @@ public class ImageEditor {
   }
 
   //-------------------------------------------------------------
+  // Sizes and positions the popover so that it always fits within
+  // the window.  (x, y) is the anchor point in the canvas's
+  // coordinates.
+  private void place_popover( double x, double y ) {
+
+    var win = (Widget)_canvas.get_root();
+
+    // Convert the anchor point into window coordinates
+    Graphene.Point pt  = {(float)x, (float)y};
+    Graphene.Point wpt;
+    if( !_canvas.compute_point( win, pt, out wpt ) ) {
+      wpt = pt;
+    }
+
+    var win_w = win.get_width();
+    var win_h = win.get_height();
+
+    // Figure out how much of the popover is not the editing area
+    int cw, ch;
+    _popover.child.measure( Orientation.HORIZONTAL, -1, null, out cw, null, null );
+    _popover.child.measure( Orientation.VERTICAL,   cw, null, out ch, null, null );
+    var chrome_w = cw - _da.width_request;
+    var chrome_h = ch - _da.height_request;
+
+    // Shrink the editing area if the window is too small to hold it
+    var avail  = int.min( win_w - chrome_w, win_h - chrome_h ) - (2 * POPOVER_PAD);
+    _edit_size = int.max( MIN_EDIT, int.min( EDIT_WIDTH, avail ) );
+    _da.width_request  = _edit_size;
+    _da.height_request = _edit_size;
+
+    var pw = chrome_w + _edit_size;
+    var ph = chrome_h + _edit_size;
+
+    // Keep the popover horizontally within the window
+    var cx = double.max( (pw / 2.0), double.min( (win_w - (pw / 2.0)), wpt.x ) );
+    var dx = cx - wpt.x;
+    var dy = 0.0;
+
+    var pos       = PositionType.BOTTOM;
+    var has_arrow = true;
+
+    if( (win_h - wpt.y) >= (ph + POPOVER_PAD) ) {
+      pos = PositionType.BOTTOM;
+    } else if( wpt.y >= (ph + POPOVER_PAD) ) {
+      pos = PositionType.TOP;
+    } else {
+      // There is room neither above nor below the anchor point, so
+      // center the popover vertically in the window without an arrow
+      has_arrow = false;
+      dy = ((win_h - ph) / 2.0) - wpt.y;
+    }
+
+    Gdk.Rectangle rect = {(int)(x + dx), (int)(y + dy), 1, 1};
+
+    _popover.position     = pos;
+    _popover.has_arrow    = has_arrow;
+    _popover.pointing_to  = rect;
+
+  }
+
+  //-------------------------------------------------------------
   // Initializes the image editor with the give image filename
   private bool initialize( NodeImage ni ) {
 
@@ -136,7 +198,7 @@ public class ImageEditor {
     // Load the image and draw it
     if( _image.valid ) {
 
-      _scale = (double)EDIT_WIDTH / _image.orig_width;
+      _scale = (double)_edit_size / _image.orig_width;
 
       _crop_x = (double)_image.crop_x;
       _crop_y = (double)_image.crop_y;
