@@ -280,6 +280,7 @@ public class TagEditor : Box {
     set {
       if( _editable != value ) {
         _editable = value;
+        _win.set_focus( null );
         _entry.sensitive = _editable;
         _taglist.sensitive = _editable;
       }
