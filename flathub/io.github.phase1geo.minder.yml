@@ -8,6 +8,13 @@ runtime: org.gnome.Platform
 runtime-version: '50'
 sdk: org.gnome.Sdk
 
+# We will add the textlive Sdk extension to support LaTeX formulas in nodes
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.texlive
+
+build-options:
+  append-path: /usr/lib/sdk/texlive/bin
+
 # This should match the exec line in your .desktop file and usually is the same
 # as your app ID
 command: io.github.phase1geo.minder
@@ -21,6 +28,7 @@ finish-args:
   - '--socket=wayland'
   - '--filesystem=home'
   - '--device=dri'
+  - '--env=PATH=/app/bin:/app/bin/x86_64-linux:/app/bin/aarch64-linux:/usr/bin'
 
 # This section is where you list all the source code required to build your app.
 # If we had external dependencies that weren't included in our SDK, we would list
@@ -123,6 +131,11 @@ modules:
             x-checker-data:
               type: git
               tag-pattern: ^xcursorgen-([\d.]+)$
+
+  - name: texlive
+    buildsystem: simple
+    build-commands:
+      - /usr/lib/sdk/texlive/install.sh
 
   - name: minder
     buildsystem: meson

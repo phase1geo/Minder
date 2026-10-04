@@ -8,6 +8,13 @@ runtime: io.elementary.Platform
 runtime-version: '8.2'
 sdk: io.elementary.Sdk
 
+# We will add the textlive Sdk extension to support LaTeX formulas in nodes
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.texlive
+
+build-options:
+  append-path: /usr/lib/sdk/texlive/bin
+
 # This should match the exec line in your .desktop file and usually is the same
 # as your app ID
 command: io.github.phase1geo.minder
@@ -20,6 +27,7 @@ finish-args:
   - '--socket=fallback-x11'
   - '--socket=wayland'
   - '--filesystem=home'
+  - '--env=PATH=/app/bin:/app/bin/x86_64-linux:/app/bin/aarch64-linux:/usr/bin'
 
 # This section is where you list all the source code required to build your app.
 # If we had external dependencies that weren't included in our SDK, we would list
@@ -79,6 +87,11 @@ modules:
       - type: archive
         url: https://github.com/elementary/granite/archive/refs/tags/7.8.1.tar.gz
         sha256: bc8e7946ca091fdeeeebeb64db4e95d33a3ffb879048137f8d8a41ecd76caa3f
+
+  - name: texlive
+    buildsystem: simple
+    build-commands:
+      - /usr/lib/sdk/texlive/install.sh
 
   - name: minder
     buildsystem: meson
