@@ -20,6 +20,12 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so the job can access it
     - uses: actions/checkout@v3
 
+      # The texlive SDK extension lives on Flathub, not AppCenter, so install it up front
+    - name: Install texlive SDK extension from Flathub
+      run: |
+        flatpak remote-add --system --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+        flatpak install --system -y --noninteractive flathub org.freedesktop.Sdk.Extension.texlive//24.08
+
       # Builds your flatpak manifest using the Flatpak Builder action
     - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:
