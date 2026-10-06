@@ -56,16 +56,16 @@ In the middle of the header bar, the name of the current document will be displa
 
 ### Zoom
 
-Clicking on this button will display a menu of options that will control the amount of zoom that is used within the canvas. More information on zoom support can be found [[here|Zoom]].
+Clicking on this button will display a menu of options that will control the amount of zoom that is used within the canvas. More information on zoom support can be found [here](Zoom.md).
 
 ### Search
 
-Clicking on this button will display the document search and search filter popup. More information on search support can be found [[here|Search]].
+Clicking on this button will display the document search and search filter popup. More information on search support can be found [here](Search.md).
 
 ### Export
 
-Clicking on this button will display a menu that will provide a series of exporting options. More information on export support can be found [[here|Exporting]].
+Clicking on this button will display a menu that will provide a series of exporting options. More information on export support can be found [here](Exporting.md).
 
 ### Show/Hide Sidebar
 
-Clicking on this button will toggle the display of the sidebar. More information on the sidebar can be found [[here|Sidebar]]. 
+Clicking on this button will toggle the display of the sidebar. More information on the sidebar can be found [here](Sidebar.md). 

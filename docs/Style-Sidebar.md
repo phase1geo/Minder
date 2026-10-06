@@ -6,11 +6,11 @@ Changing style settings when items are selected will only impact the selected it
 
 Let's take a closer look at the style settings for each of the following groups:
 
-- [[Branch Options|Branch-Options-Group]]
-- [[Link Options|Link-Options-Group]]
-- [[Node Options|Node-Options-Group]]
-- [[Connection Options|Connection-Options-Group]]
-- [[Callout Options|Callout-Options-Group]]
+- [Branch Options](Branch-Options-Group.md)
+- [Link Options](Link-Options-Group.md)
+- [Node Options](Node-Options-Group.md)
+- [Connection Options](Connection-Options-Group.md)
+- [Callout Options](Callout-Options-Group.md)
 
 ## Style Templates
 
