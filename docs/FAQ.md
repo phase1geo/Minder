@@ -1,3 +1,10 @@
+---
+layout: default
+title: Frequently Asked Questions
+parent: Home
+nav_order: 2
+---
+
 # Frequently Asked Questions
 
 ***
