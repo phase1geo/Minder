@@ -88,10 +88,34 @@ modules:
         url: https://github.com/elementary/granite/archive/refs/tags/7.8.1.tar.gz
         sha256: bc8e7946ca091fdeeeebeb64db4e95d33a3ffb879048137f8d8a41ecd76caa3f
 
+  # We need to bring in texlive, but we will prune unneeded directories to reduce Flatpak size
   - name: texlive
     buildsystem: simple
     build-commands:
       - /usr/lib/sdk/texlive/install.sh
+      - du -sh /app/texmf-dist
+      # Docs, sources, and fonts only used by xetex/luatex or font building
+      - rm -rf /app/texmf-dist/doc /app/texmf-dist/source /app/texmf-dist/tex4ht
+      - rm -rf /app/share/texmf-dist/doc /app/share/texmf-dist/source /app/share/man /app/share/info
+      - for d in afm opentype truetype source type3 vf; do rm -rf /app/texmf-dist/fonts/$d; done
+      # Keep only the Computer Modern + AMS font families (tfm and type1)
+      - |
+        for t in tfm type1; do
+          dir=/app/texmf-dist/fonts/$t
+          [ -d "$dir" ] || continue
+          find "$dir" -mindepth 1 -maxdepth 1 ! -name public -exec rm -rf {} +
+          [ -d "$dir/public" ] && find "$dir/public" -mindepth 1 -maxdepth 1 \
+            ! -name cm ! -name amsfonts ! -name latex-fonts ! -name ec \
+            -exec rm -rf {} +
+        done
+      # Engines and macro sets you are not using
+      - for d in context xelatex lualatex luatex xetex texinfo; do rm -rf /app/texmf-dist/tex/$d; done
+      - rm -rf /app/texmf-dist/metapost /app/texmf-dist/bibtex
+      # Rebuild the filename database after pruning
+      - PATH=/app/bin:/app/bin/x86_64-linux:/app/bin/aarch64-linux:$PATH mktexlsr /app/texmf-dist || true
+      - du -sh /app/texmf-dist
+      - du -sh /app/texmf-dist/* | sort -h | tail -8
+      - du -sh /app/texmf-dist/tex/latex/* | sort -h | tail -15
 
   - name: minder
     buildsystem: meson
