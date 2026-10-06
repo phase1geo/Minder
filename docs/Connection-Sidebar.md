@@ -13,12 +13,12 @@ The following image is a representation of this tab when a connection is selecte
 
 ![Current Connection Sidebar Panel](images/connection-property-panel.png)
 
-#### Color
+### Color
 
 Clicking on the button will display a color picker dialog window. If a new color is selected, the color of the connection line and the box around the title text will be changed to the selected color.
 
 The button to the right of the color picker will revert the color back to the theme's default connection color.
 
-#### Note
+### Note
 
 This field allows you to add any additional information about the connection that you would like to include. This text is searchable within the search feature, accessible from the header bar.
