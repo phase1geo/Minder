@@ -5,8 +5,8 @@ The sidebar displays and exposes additional functionality about the currently se
 
 INSERT IMAGE
 
-* [[Current Properties Panel|Current Sidebar]]
-* [[Style Properties Panel|Style Sidebar]]
-* [[Tag Properties Panel|Tags Sidebar]]
-* [[Sticker Properties Panel|Adding Stickers]]
-* [[Map Properties Panel|Map Sidebar]]
+* [Current Properties Panel](Current-Sidebar.md)
+* [Style Properties Panel](Style-Sidebar.md)
+* [Tag Properties Panel](Tags-Sidebar.md)
+* [Sticker Properties Panel](Adding-Stickers.md)
+* [Map Properties Panel](Map-Sidebar.md)
