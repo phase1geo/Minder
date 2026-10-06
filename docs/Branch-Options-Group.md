@@ -1,3 +1,12 @@
+---
+layout: default
+title: Branch Options
+parent: Style Tab
+nav_order: 1
+---
+
+# Branch Options
+
 Branches in the canvas are the lines drawn automatically between parent and child nodes. A branch belongs to the parent node, so selecting a node and changing the branch style will affect only the links between the selected node and its children.
 
 ### Style

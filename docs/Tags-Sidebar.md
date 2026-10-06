@@ -1,3 +1,12 @@
+---
+layout: default
+title: Tags Tab
+parent: Sidebar
+nav_order: 3
+---
+
+# Tags Tab
+
 Tags added to nodes provide additional context and allow nodes that do not have a parent-child relationship to be grouped together. When nodes are tagged, the user can easily see all nodes within a particular group or combination of groups by using the tag sidebar. Tags can also act as a filter in searching nodes, allowing you to search for nodes that have a given set of tags.
 
 The tags sidebar displays the list of tags for the current mind map. Each mind map can have its own unique list of tags and those tags are stored in the corresponding .minder file.

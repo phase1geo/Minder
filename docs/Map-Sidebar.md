@@ -1,3 +1,12 @@
+---
+layout: default
+title: Map Tab
+parent: Sidebar
+nav_order: 5
+---
+
+# Map Tab
+
 The map sidebar properties panel exists in the sidebar and provides quick access to functions that affect the entire mind-map. This panel can be accessed by displaying the sidebar with the right-most button in the header bar and then selecting the **Map** tab at the top of the sidebar.
 
 The following is a representation of this panel:

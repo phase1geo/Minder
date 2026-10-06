@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Connection Details
+title: Connection Properties
 parent: Current Tab
 nav_order: 2
 ---

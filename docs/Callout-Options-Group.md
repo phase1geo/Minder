@@ -1,3 +1,12 @@
+---
+layout: default
+title: Callout Options
+parent: Style Tab
+nav_order: 5
+---
+
+# Callout Options
+
 Callouts are associated with nodes but have their own styling options. Callouts contain text and have a "pointer" on them which points to the node that it is calling attention to. Callout colors are dictated by the theme and are not a part of the style of the callout. The following options are available for styling callouts.
 
 ### Text Font

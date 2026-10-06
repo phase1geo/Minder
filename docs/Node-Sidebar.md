@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Node Details
+title: Node Properties
 parent: Current Tab
 nav_order: 1
 ---

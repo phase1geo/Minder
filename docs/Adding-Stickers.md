@@ -1,3 +1,12 @@
+---
+layout: default
+title: Stickers Tab
+parent: Sidebar
+nav_order: 4
+---
+
+# Stickers Tab
+
 Stickers are a great way to add meaning to a node, connection or other area of the mind map with a visual image.  You can attach a sticker to a node and a connection.  You can also place a sticker anywhere else within the mind-map.
 
 It is important to note that attaching a sticker to a node or connection will allow the sticker to change locations as the mind map is modified, whereas placing a sticker on the mind map itself will not automatically change the position of the sticker as the mind-map is modified.

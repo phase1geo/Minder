@@ -1,3 +1,12 @@
+---
+layout: default
+title: Connection Options
+parent: Style Tab
+nav_order: 4
+---
+
+# Connection Options
+
 Connections are manually created links between any two nodes within the mind map. Generally, the linked nodes are not direct relatives of each other. These connection lines can optionally contain a text box and can indicate direction with arrows. The following styling options apply to connections:
 
 ### Line Dash

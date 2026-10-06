@@ -1,3 +1,12 @@
+---
+layout: default
+title: Node Options
+parent: Style Tab
+nav_order: 3
+---
+
+# Node Options
+
 Nodes make up the structure of the mind map itself.  Each node in the mind map has a relationship to other nodes within the map. Nodes can contain text, notes, images, stickers and other visual indicators. The visual look of a node can be changed within the Styles sidebar with the following options.
 
 ### Border Style

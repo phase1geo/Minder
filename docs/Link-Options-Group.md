@@ -1,3 +1,12 @@
+---
+layout: default
+title: Link Options
+parent: Style Tab
+nav_order: 2
+---
+
+# Link Options
+
 A link is a single connection between a child and its parent.  Links are associated with the child node, such that selecting a node and changing the link style options will affect the link between the selected node and its parent.
 
 Link colors are automatically derived from the color of the child node. Colors are not considered to be part of the styles so they are not changed in the styles sidebar. To change colors of links, select on the **Current** tab in the sidebar and make the changes to the selected child nodes. All other styling changes to branches should be handled in the Style sidebar.
