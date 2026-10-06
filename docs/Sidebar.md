@@ -1,3 +1,10 @@
+---
+layout: default
+title: Sidebar
+parent: User Interface
+nav_order: 3
+has_children: true
+---
 
 ### Sidebar
 

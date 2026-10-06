@@ -1,3 +1,10 @@
+---
+layout: default
+title: Node Details
+parent: Current Tab
+nav_order: 1
+---
+
 To view functionality and information about the currently selected node, select the **Node** tab at the top of the sidebar. This will allow you to quickly change any of the node properties for the currently selected node as well as access quick functions for the current node. All changes made in this panel will be immediately and automatically saved to the current document.
 
 The following is a representation of this panel:

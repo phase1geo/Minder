@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Canvas
+parent: User Interface
 nav_order: 2
 ---
 

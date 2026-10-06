@@ -1,3 +1,10 @@
+---
+layout: default
+title: Connection Details
+parent: Current Tab
+nav_order: 2
+---
+
 If the **Current** tab is active in the sidebar and a connection is selected in the mind-map, this tab will display the properties for the selected connection. Any changes made within this tab will be immediately visible within the mind-map canvas and automatically saved to file.
 
 The following image is a representation of this tab when a connection is selected.

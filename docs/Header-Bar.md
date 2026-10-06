@@ -2,6 +2,7 @@ The header bar runs across the top of the main window. It provides quick access 
 ---
 layout: default
 title: Header Bar
+parent: User Interface
 nav_order: 1
 ---
 

@@ -1,6 +1,7 @@
 ---
 layout: default
 title: User Interface
+parent: Documentation
 nav_order: 2
 has_children: true
 ---
