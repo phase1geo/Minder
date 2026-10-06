@@ -114,8 +114,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/elementary/icons.git
-        tag: 8.2.0
-        commit: 6ddbb535af70a5ceeff5e1fec05d9b0562641b2a
+        tag: 9.0.0
+        commit: 31c7285a1d10170abd363a2553a7f377a031bb33
         x-checker-data:
           type: git
           tag-pattern: ^([\d.]+)$

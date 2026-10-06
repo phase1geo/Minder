@@ -123,6 +123,7 @@
   <url type="homepage">https://github.com/phase1geo/minder/</url>
   <url type="bugtracker">https://github.com/phase1geo/minder/issues/</url>
   <url type="vcs-browser">https://github.com/phase1geo/minder/</url>
+  <url type="help">https://phase1geo.github.io/Minder/</url>
   <custom>
     <value key="x-appcenter-color-primary">#603461</value>
     <value key="x-appcenter-color-primary-text">rgb(255, 255, 255)</value>

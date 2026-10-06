@@ -8,7 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Minder 1.12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2026-09-28 21:24-0500\n"
+=======
+"POT-Creation-Date: 2026-10-05 23:08-0500\n"
+>>>>>>> master
 "PO-Revision-Date: 2024-01-15 07:09+0100\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -20,6 +24,7 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 3.4\n"
 
+<<<<<<< HEAD
 #: data/io.github.phase1geo.minder.desktop.in:3
 #: data/io.github.phase1geo.minder.appdata.xml.in:7
 msgid "Minder"
@@ -39,6 +44,27 @@ msgid "Mind;Mapping;"
 msgstr ""
 
 #: data/io.github.phase1geo.minder.desktop.in:18
+=======
+#: data/com.github.phase1geo.minder.desktop.in:3
+#: data/com.github.phase1geo.minder.appdata.xml.in:7
+msgid "Minder"
+msgstr "Minder"
+
+#: data/com.github.phase1geo.minder.desktop.in:4
+msgid "Mind-mapper"
+msgstr "Редактор диаграмм связи"
+
+#: data/com.github.phase1geo.minder.desktop.in:5
+#: data/com.github.phase1geo.minder.appdata.xml.in:8
+msgid "Create, develop and visualize your ideas"
+msgstr "Создавайте, развивайте и визуализуйте идеи"
+
+#: data/com.github.phase1geo.minder.desktop.in:14
+msgid "Mind;Mapping;"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.desktop.in:18
+>>>>>>> master
 msgid "New Document"
 msgstr "Создать документ"
 
