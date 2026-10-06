@@ -17,8 +17,8 @@ The quick entry insertion utility can be invoked with the keyboard shortcut (Con
 
 The user interface for the the quick entry window is straightforward with a standard text field at the top of the window, a syntax help button in the lower left corner, a `Cancel` button on the lower right side, and either an `Insert` or `Replace` button in the lower right corner of the window.  A representation of this field is listed below:
 
-INSERT IMAGE
+![Quick Entry Dialog](images/quick-entry.png)
 
 Clicking on the help button in the lower left corner will show/hide the syntax information for the window which is represented below:
 
-INSERT IMAGE
+![Quick Entry Dialog With Help](images/quick-entry-help.png)

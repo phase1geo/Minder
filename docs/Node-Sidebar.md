@@ -9,7 +9,7 @@ To view functionality and information about the currently selected node, select 
 
 The following is a representation of this panel:
 
-![Node Sidebar Property Panel](https://github.com/phase1geo/Minder/wiki/images/node-property-panel.png)
+![Node Sidebar Property Panel](images/node-property-panel.png)
 
 <u>Important Note:</u> If a node is not currently selected this panel will be blank.
 

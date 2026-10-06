@@ -9,7 +9,7 @@ The header bar runs across the top of the main window. It provides quick access 
 
 The following is a representation of the header bar:
 
-![Header Bar](https://github.com/phase1geo/Minder/wiki/images/header-bar.png)
+![Header Bar](images/header-bar.png)
 
 ***
 
@@ -61,6 +61,14 @@ In the middle of the header bar, the name of the current document will be displa
 
 ***
 
+### Brainstorm
+
+Clicking this button will reveal the brainstorming UI which will allow you to quickly add ideas to your mindmap document without requiring the user to determine where those ideas fit into the map itself. After ideas have been added, those ideas remain with the mind map document until the user either moves those ideas into the mind map or deletes them.  More information on brainstorming can be found [[here|Brainstorming]]
+
+### Focus Mode
+
+Clicking on the focus mode toggle with allow you to focus on the currently selected node and its tree path while drawing the rest of the mind map dimly.  You can traverse the tree as normal and Minder will automatically adjust the view to keep you focused on the current node.  Click the focus mode toggle again to return to normal mode.
+
 ### Zoom
 
 Clicking on this button will display a menu of options that will control the amount of zoom that is used within the canvas. More information on zoom support can be found [here](Zoom.md).
@@ -72,6 +80,10 @@ Clicking on this button will display the document search and search filter popup
 ### Export
 
 Clicking on this button will display a menu that will provide a series of exporting options. More information on export support can be found [here](Exporting.md).
+
+### Miscellaneous
+
+Clicking on this button will display the miscellaneous menu which contains menu items to view [keyboard shortcuts](Keyboard-shortcuts.md), preferences, and the About menu.
 
 ### Show/Hide Sidebar
 
