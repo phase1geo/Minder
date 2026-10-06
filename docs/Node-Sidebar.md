@@ -36,23 +36,3 @@ The _Note_ text field allows the user to attach additional textual information t
 #### Image
 
 The _Image_ area will either display a button to click on to add an image to the current node (if one doesn't currently exist) or it will display the current image as a thumbnail. To add an image, simply click on the **Add Image...** button which will display a standard file chooser. Choosing a file and clicking on the "Select" button will display the image in the sidebar and add an image to the node within the canvas. If the mouse cursor is hovering over the image thumbnail, two buttons will be overlayed on the image. The left button that looks like a pencil, if clicked, will allow the image to be edited in the image editor. The right button that looks like a trash can, if clicked, will remove the image from the current node, updating the canvas as well. To associate a different image with a node, you can either remove it using the trash can icon, click on the edit button and change the image within the image editor, or you can drag and drop an image onto the current image to change it.
-
-#### Button Bar
-
-At the bottom of the panel are four buttons that allow you to quickly operate on the current node.
-
-##### Copy Node
-
-Copies the current node and its descendants for the purposes of pasting it onto another node.
-
-##### Cut Node
-
-Copies the current node and its descendants for the purposes of pasting it onto another node and then removes the current node and its descendants from the canvas.
-
-##### Detach Node
-
-Removes the link from the current node to its parent node, making the current node a root node of a new tree.
-
-##### Delete Node
-
-Removes the current node and its descendants from the canvas.
