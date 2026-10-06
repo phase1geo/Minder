@@ -40,6 +40,20 @@ public class NodeMenu : BaseMenu {
     append_menu_item( _edit_menu, KeyCommand.NODE_REMOVE,        _( "Delete" ) );
     append_menu_item( _edit_menu, KeyCommand.NODE_REMOVE_ONLY,   _( "Delete Single Node" ) );
 
+    var set_pri_menu = new GLib.Menu();
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY1,  _( "Priority 1" ) );
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY2,  _( "Priority 2" ) );
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY3,  _( "Priority 3" ) );
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY4,  _( "Priority 4" ) );
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY5,  _( "Priority 5" ) );
+
+    var clr_pri_menu = new GLib.Menu();
+    append_menu_item( clr_pri_menu, KeyCommand.NODE_CLEAR_PRIORITY, _( "Clear Priority" ) );
+
+    var priority_menu = new GLib.Menu();
+    priority_menu.append_section( null, set_pri_menu );
+    priority_menu.append_section( null, clr_pri_menu );
+
     var color_menu = new GLib.Menu();
     append_menu_item( color_menu, KeyCommand.NODE_CHANGE_LINK_COLOR,    _( "Set to color…" ) );
     append_menu_item( color_menu, KeyCommand.NODE_RANDOMIZE_LINK_COLOR, _( "Randomize color" ) );
@@ -54,12 +68,14 @@ public class NodeMenu : BaseMenu {
     append_menu_item( _change_submenu, KeyCommand.EDIT_NOTE,           _( "Edit Note" ), false );
     append_menu_item( _change_submenu, KeyCommand.SHOW_TAG_SIDEBAR,    _( "Edit Tags" ), false );
     append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_TASK,    _( "Add Task" ) );
-    append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_IMAGE,   _( "Add Image" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_IMAGE,   _( "Add Image…" ) );
+    append_menu_item( _change_submenu, KeyCommand.NODE_CHANGE_TABLE,   _( "Add Table…" ) );
     append_menu_item( _change_submenu, KeyCommand.REMOVE_STICKER_SELECTED, _( "Remove Sticker" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_LINKS,   _( "Add Node Link" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_ADD_CONNECTION, _( "Add Connection" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_ADD_GROUP,      _( "Add Group" ) );
     append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_CALLOUT, _( "Add Callout" ) );
+    _change_submenu.append_submenu( _( "Priority" ), priority_menu );
     _change_submenu.append_submenu( _( "Link Color" ), color_menu );
     _change_submenu.append_submenu( _( "Toggle Folding" ), fold_menu );
     append_menu_item( _change_submenu, KeyCommand.NODE_TOGGLE_SEQUENCE,      _( "Toggle Sequence" ) );
@@ -141,10 +157,13 @@ public class NodeMenu : BaseMenu {
   //-------------------------------------------------------------
   // Returns true if a note is associated with the currently
   // selected node.
+  /*
+   NOTE: This function is not called
   private bool node_has_note() {
     Node? current = map.get_current_node();
     return( (current != null) && (current.note != "") );
   }
+  */
 
   //-------------------------------------------------------------
   // Returns true if an image is associated with the currently
@@ -152,6 +171,13 @@ public class NodeMenu : BaseMenu {
   private bool node_has_image() {
     Node? current = map.get_current_node();
     return( (current != null) && (current.image != null) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if a table is associated with the currently selected node.
+  private bool node_has_table() {
+    Node? current = map.get_current_node();
+    return( (current != null) && (current.table != null) );
   }
 
   //-------------------------------------------------------------
@@ -212,10 +238,13 @@ public class NodeMenu : BaseMenu {
   //-------------------------------------------------------------
   // Changes the menu item at the given position in the given Menu
   // to the new name.
+  /*
+   NOTE:  This function is not called
   private void change_menu( GLib.Menu menu, int pos, string new_name, string action ) {
     menu.remove( pos );
     menu.insert( pos, new_name, action );
   }
+  */
 
   //-------------------------------------------------------------
   // Called when the menu is popped up.
@@ -232,9 +261,11 @@ public class NodeMenu : BaseMenu {
     var fold_lbl    = node_is_folded()   ? _( "Unfold Children" )  : _( "Fold Children" );
     var callout_lbl = node_has_callout() ? _( "Remove Callout" ) : _( "Add Callout" );
     var img_lbl     = node_has_image()   ? _( "Remove Image" )   : _( "Add Image" );
+    var table_lbl   = node_has_table()   ? _( "Edit Table…" )    : _( "Add Table…" );
 
     change_menu_item_label( _change_submenu, KeyCommand.NODE_CHANGE_TASK,          task_lbl );
     change_menu_item_label( _change_submenu, KeyCommand.NODE_CHANGE_IMAGE,         img_lbl );
+    change_menu_item_label( _change_submenu, KeyCommand.NODE_CHANGE_TABLE,         table_lbl );
     change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_LINKS,         link_lbl );
     change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_CALLOUT,       callout_lbl );
     change_menu_item_label( _change_submenu, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, fold_lbl );
@@ -268,6 +299,7 @@ public class NodeMenu : BaseMenu {
     set_enabled( KeyCommand.EDIT_NOTE,                 map.editable );
     set_enabled( KeyCommand.NODE_CHANGE_TASK,          map.editable );
     set_enabled( KeyCommand.NODE_CHANGE_IMAGE,         map.editable );
+    set_enabled( KeyCommand.NODE_CHANGE_TABLE,         map.editable );
     set_enabled( KeyCommand.NODE_ADD_CONNECTION,       (!map.model.connections.hide && map.editable) );
     set_enabled( KeyCommand.NODE_ADD_PARENT,           (node_parentable() && map.editable) );
     set_enabled( KeyCommand.NODE_ADD_GROUP,            map.editable );

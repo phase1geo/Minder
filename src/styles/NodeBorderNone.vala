@@ -40,14 +40,8 @@ public class NodeBorderNone : Object, NodeBorder {
 
   //-------------------------------------------------------------
   // Returns the name of the icon
-  public string light_icon_name() {
+  public string icon_name() {
     return( "minder-node-border-none-symbolic" );
-  }
-
-  //-------------------------------------------------------------
-  // Returns null since the light and dark mode icons are the same
-  public string? dark_icon_name() {
-    return( null );
   }
 
   //-------------------------------------------------------------

@@ -21,20 +21,22 @@
 
 public class LayoutUp : Layout {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public LayoutUp() {
     name        = _( "Upwards" );
-    light_icon  = "minder-layout-up-light-symbolic";
-    dark_icon   = "minder-layout-up-dark-symbolic";
+    icon        = "minder-layout-up-symbolic";
     balanceable = false;
   }
 
-  /* Maps the given side to the appropriate side for this layout */
+  //-------------------------------------------------------------
+  // Maps the given side to the appropriate side for this layout
   public override NodeSide side_mapping( NodeSide side ) {
     return( NodeSide.TOP );
   }
 
-  /* Provides the default position for a newly created node */
+  //-------------------------------------------------------------
+  // Provides the default position for a newly created node
   public override void set_side( Node current ) {
     current.side = NodeSide.TOP;
   }

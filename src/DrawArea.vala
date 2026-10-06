@@ -87,9 +87,9 @@ public class DrawArea : Gtk.DrawingArea {
   private TextMenu              _text_menu;
   private uint?                 _scroll_save_id = null;
   private ImageEditor           _image_editor;
+  private TableEditor           _table_editor;
   private UrlEditor             _url_editor;
   private IMContext             _im_context;
-  private bool                  _debug        = true;
   private SelectBox             _select_box;
   private Tagger                _tagger;
   private TextCompletion        _completion;
@@ -105,7 +105,7 @@ public class DrawArea : Gtk.DrawingArea {
   public MainWindow win      { private set; get; }
   public Animator   animator { set; get; }
 
-  public MindMap map {
+  public MindMap mmap {
     get {
       return( _map );
     }
@@ -169,6 +169,11 @@ public class DrawArea : Gtk.DrawingArea {
       return( _image_editor );
     }
   }
+  public TableEditor table_editor {
+    get {
+      return( _table_editor );
+    }
+  }
   public Tagger tagger {
     get {
       return( _tagger );
@@ -213,6 +218,9 @@ public class DrawArea : Gtk.DrawingArea {
     _image_editor = new ImageEditor( this );
     _image_editor.changed.connect( _map.model.current_image_edited );
 
+    _table_editor = new TableEditor( this );
+    _table_editor.changed.connect( _map.model.current_table_edited );
+
     // Allocate the URL editor popover
     _url_editor = new UrlEditor( this );
 
@@ -242,21 +250,30 @@ public class DrawArea : Gtk.DrawingArea {
       button = Gdk.BUTTON_PRIMARY
     };
     this.add_controller( click );
-    click.pressed.connect((n_press, x, y) => { on_press( n_press, x, y, Gdk.BUTTON_PRIMARY ); });
+    click.pressed.connect((n_press, x, y) => {
+      sync_modifier_keys( click.get_current_event_state() );
+      on_press( n_press, x, y, Gdk.BUTTON_PRIMARY );
+    });
     click.released.connect( on_release );
 
     var middle_click = new GestureClick() {
       button = Gdk.BUTTON_MIDDLE
     };
     this.add_controller( middle_click );
-    middle_click.pressed.connect((n_press, x, y) => { on_press( n_press, x, y, Gdk.BUTTON_MIDDLE ); });
+    middle_click.pressed.connect((n_press, x, y) => {
+      sync_modifier_keys( middle_click.get_current_event_state() );
+      on_press( n_press, x, y, Gdk.BUTTON_MIDDLE );
+    });
     middle_click.released.connect( on_release );
 
     var right_click = new GestureClick() {
       button = Gdk.BUTTON_SECONDARY
     };
     this.add_controller( right_click );
-    right_click.pressed.connect( on_right_press );
+    right_click.pressed.connect((n_press, x, y) => {
+      sync_modifier_keys( right_click.get_current_event_state() );
+      on_right_press( n_press, x, y );
+    });
 
     var motion = new EventControllerMotion();
     this.add_controller( motion );
@@ -280,31 +297,31 @@ public class DrawArea : Gtk.DrawingArea {
     this.add_controller( file_drop );
     file_drop.motion.connect( handle_file_drag_motion );
     file_drop.drop.connect( handle_file_drop );
-    file_drop.leave.connect( handle_cursor_leave );
+    // file_drop.leave.connect( handle_cursor_leave );
 
     var sticker_drop = new DropTarget( typeof(Picture), Gdk.DragAction.COPY );
     this.add_controller( sticker_drop );
     sticker_drop.motion.connect( handle_sticker_drag_motion );
     sticker_drop.drop.connect( handle_sticker_drop );
-    sticker_drop.leave.connect( handle_cursor_leave );
+    // sticker_drop.leave.connect( handle_cursor_leave );
 
     var text_drop = new DropTarget( typeof(string), Gdk.DragAction.COPY );
     this.add_controller( text_drop );
     text_drop.motion.connect( handle_text_drag_motion );
     text_drop.drop.connect( handle_text_drop );
-    text_drop.leave.connect( handle_cursor_leave );
+    // text_drop.leave.connect( handle_cursor_leave );
 
     var idea_drop = new DropTarget( typeof(Idea), Gdk.DragAction.MOVE );
     this.add_controller( idea_drop );
     idea_drop.motion.connect( handle_idea_drag_motion );
     idea_drop.drop.connect( handle_idea_drop );
-    idea_drop.leave.connect( handle_cursor_leave );
+    // idea_drop.leave.connect( handle_cursor_leave );
 
     var tag_drop = new DropTarget( typeof(Tag), Gdk.DragAction.COPY );
     this.add_controller( tag_drop );
     tag_drop.motion.connect( handle_tag_drag_motion );
     tag_drop.drop.connect( handle_tag_drop );
-    tag_drop.leave.connect( handle_cursor_leave );
+    // tag_drop.leave.connect( handle_cursor_leave );
 
     // Make sure the drawing area can receive keyboard focus
     this.can_focus = true;
@@ -312,7 +329,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     // Make sure that we add a CSS class name to ourselves so we can color
     // our background with the theme.
-    get_style_context().add_class( "canvas" );
+    add_css_class( "canvas" );
 
     // Make sure that we us the ImContextSimple input method
     _im_context = new IMMulticontext();
@@ -342,7 +359,7 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Gets the top and bottom y position of this draw area.
   public void get_window_ys( out int top, out int bottom ) {
-    var vh = get_allocated_height();
+    var vh = get_height();
     top    = (int)origin_y;
     bottom = top + vh;
   }
@@ -488,7 +505,6 @@ public class DrawArea : Gtk.DrawingArea {
     var tpress = _press_num == 3;
     var tag    = FormatTag.LENGTH;
     var url    = "";
-    var left   = 0.0;
 
     set_tooltip_markup( null );
 
@@ -525,6 +541,7 @@ public class DrawArea : Gtk.DrawingArea {
       case MapItemComponent.TAGS :
         _map.show_properties( "tag", PropertyGrab.FIRST );
         break;
+      default :  break;
     }
 
     _orig_side = node.side;
@@ -555,6 +572,9 @@ public class DrawArea : Gtk.DrawingArea {
       if( _map.editable ) {
         if( component == MapItemComponent.IMAGE ) {
           _map.model.edit_current_image();
+          return( false );
+        } else if( component == MapItemComponent.TABLE ) {
+          _map.model.edit_current_table();
           return( false );
         } else {
           _map.model.set_node_mode( node, NodeMode.EDITABLE );
@@ -685,6 +705,7 @@ public class DrawArea : Gtk.DrawingArea {
           return( false );
         }
         break;
+      default :  break;
     }
 
     if( callout.mode == CalloutMode.EDITABLE ) {
@@ -832,8 +853,8 @@ public class DrawArea : Gtk.DrawingArea {
   // center pixel to remain in the center and forces a redraw.
   public bool set_scaling_factor( double sf ) {
     if( sfactor != sf ) {
-      int    width  = get_allocated_width()  / 2;
-      int    height = get_allocated_height() / 2;
+      int    width  = get_width()  / 2;
+      int    height = get_height() / 2;
       double diff_x = (width  / sf) - (width / sfactor);
       double diff_y = (height / sf) - (height / sfactor );
       if( move_origin( diff_x, diff_y, sf ) ) {
@@ -868,8 +889,8 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Returns the scaling factor based on the given width and height.
   private double get_scaling_factor( double width, double height ) {
-    double w  = get_allocated_width() / width;
-    double h  = get_allocated_height() / height;
+    double w  = get_width() / width;
+    double h  = get_height() / height;
     double sf = (w < h) ? w : h;
     return( (sf > 4) ? 4 : sf );
   }
@@ -879,8 +900,8 @@ public class DrawArea : Gtk.DrawingArea {
   // zoom was successful; otherwise, returns false.
   public bool zoom_in() {
     // Zoom center of the screen
-    int s_x = get_allocated_width() / 2;
-    int s_y = get_allocated_height() / 2;
+    int s_x = get_width() / 2;
+    int s_y = get_height() / 2;
 
     return zoom_in_coords(s_x, s_y);
   }
@@ -891,7 +912,6 @@ public class DrawArea : Gtk.DrawingArea {
   public bool zoom_in_coords( double zoom_x, double zoom_y ) {
     double value = sfactor * 100;
     var    marks = get_scale_marks();
-    double last  = marks[0];
     if( value < marks[0] ) {
       value = marks[0];
     }
@@ -917,8 +937,8 @@ public class DrawArea : Gtk.DrawingArea {
   // the zoom was successful; otherwise, returns false.
   public bool zoom_out() {
     // Zoom center of the screen
-    int s_x = get_allocated_width() / 2;
-    int s_y = get_allocated_height() / 2;
+    int s_x = get_width() / 2;
+    int s_y = get_height() / 2;
 
     return zoom_out_coords(s_x, s_y);
   }
@@ -955,8 +975,8 @@ public class DrawArea : Gtk.DrawingArea {
   // Positions the given box in the canvas based on the provided
   // x and y positions (values between 0 and 1).
   private void position_box( double x, double y, double w, double h, double xpos, double ypos, string msg = "NONE" ) {
-    double ccx = scale_value( get_allocated_width()  * xpos );
-    double ccy = scale_value( get_allocated_height() * ypos );
+    double ccx = scale_value( get_width()  * xpos );
+    double ccy = scale_value( get_height() * ypos );
     double ncx = x + (w * xpos);
     double ncy = y + (h * ypos);
     move_origin( (ccx - ncx), (ccy - ncy) );
@@ -1038,12 +1058,12 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Brings the given node into view in its entirety including
   // the given amount of padding.
-  public void see( bool animate = true, double width_adjust = 0, double pad = 100.0 ) {
+  public void see( bool show_attach = false, bool animate = true, double width_adjust = 0, double pad = 100.0 ) {
 
     double x, y, w, h;
 
     var current_conn    = _map.selected.current_connection();
-    var current_node    = _map.selected.current_node();
+    var current_node    = (show_attach && (_map.model.attach_node != null)) ? _map.model.attach_node : _map.selected.current_node();
     var current_callout = _map.selected.current_callout();
     var current_group   = _map.selected.current_group();
 
@@ -1061,8 +1081,8 @@ public class DrawArea : Gtk.DrawingArea {
 
     double diff_x = 0;
     double diff_y = 0;
-    double sw     = scale_value( get_allocated_width() + width_adjust );
-    double sh     = scale_value( get_allocated_height() );
+    double sw     = scale_value( get_width() + width_adjust );
+    double sh     = scale_value( get_height() );
     double sf     = get_scaling_factor( (w + (pad * 2)), (h + (pad * 2)) );
 
     if( (x - pad) < 0 ) {
@@ -1119,8 +1139,8 @@ public class DrawArea : Gtk.DrawingArea {
   private bool out_of_bounds( double diff_x, double diff_y, double scale ) {
 
     double x, y, w, h;
-    double aw = get_allocated_width()  / scale;
-    double ah = get_allocated_height() / scale;
+    double aw = get_width()  / scale;
+    double ah = get_height() / scale;
     double s  = 40 / scale;
 
     _map.model.document_rectangle( out x, out y, out w, out h );
@@ -1149,7 +1169,7 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Draw the background from the stylesheet.
   public void draw_background( Context ctx ) {
-    get_style_context().render_background( ctx, 0, 0, (get_allocated_width() / _scale_factor), (get_allocated_height() / _scale_factor) );
+    get_style_context().render_background( ctx, 0, 0, (get_width() / _scale_factor), (get_height() / _scale_factor) );
   }
 
   //-------------------------------------------------------------
@@ -1263,8 +1283,8 @@ public class DrawArea : Gtk.DrawingArea {
 
     double diffx = 0.0;
     double diffy = 0.0;
-    var aw = get_allocated_width();
-    var ah = get_allocated_height();
+    var aw = get_width();
+    var ah = get_height();
     var inner_edge = autopan_inner_edge;
     var outer_edge = autopan_outer_edge;
     var max_speed  = autopan_max_speed;
@@ -1311,7 +1331,9 @@ public class DrawArea : Gtk.DrawingArea {
     _map.model.set_attach_summary( null );
 
     // If the node is attached, clear it
-    _map.model.set_attach_node( null );
+    if( (_map.model.attach_node != null) && (_map.model.attach_node.mode != NodeMode.DROPPABLE) ) {
+      _map.model.set_attach_node( null );
+    }
 
     var last_x = _scaled_x;
     var last_y = _scaled_y;
@@ -1338,10 +1360,8 @@ public class DrawArea : Gtk.DrawingArea {
   
       // Pan the canvas if we are dragging something that is draggable
       if( _map.selected.is_any_draggable_selected() && !_select_box.valid ) {
-        double diff_x = _scaled_x - last_x;
-        double diff_y = _scaled_y - last_y;
         var edge = autopan_inner_edge;
-        if( !Utils.is_within_bounds( x, y, edge, edge, (get_allocated_width() - (edge * 2)), (get_allocated_height() - (edge * 2)) ) ) {
+        if( !Utils.is_within_bounds( x, y, edge, edge, (get_width() - (edge * 2)), (get_height() - (edge * 2)) ) ) {
           start_autopan();
         } else {
           stop_autopan();
@@ -1364,6 +1384,7 @@ public class DrawArea : Gtk.DrawingArea {
               _map.model.set_attach_node( match );
             }
             break;
+          default :  break;
         }
 
       // If we are dealing with a node, handle it based on its mode
@@ -1376,7 +1397,7 @@ public class DrawArea : Gtk.DrawingArea {
             current_node.resize( diffx );
             _map.auto_save();
           } else if( _map.editable ) {
-            var attach_summary = _map.model.attachable_summary_node( _scaled_x, _scaled_y );
+            // var attach_summary = _map.model.attachable_summary_node( _scaled_x, _scaled_y );
             if( _map.model.attach_summary != null ) {
               _map.model.set_attach_summary( _map.model.attach_summary );
             }
@@ -1782,7 +1803,10 @@ public class DrawArea : Gtk.DrawingArea {
               current_node.parent.clear_summary_extents();
             }
             if( current_node.is_summary() ) {
-              (current_node as SummaryNode).nodes_changed( 1, 1 );
+              var sn = (current_node as SummaryNode);
+              if( sn != null ) {
+                sn.nodes_changed( 1, 1 );
+              }
             } else {
               moved = current_node.parent.move_to_position( current_node, _orig_side, scale_value( x ), scale_value( y ) );
               if( !moved ) {
@@ -1907,7 +1931,7 @@ public class DrawArea : Gtk.DrawingArea {
     int    cursor, selstart, selend;
     string text = ct.text.text;
     ct.get_cursor_info( out cursor, out selstart, out selend );
-    _im_context.set_surrounding( text, text.length, text.index_of_nth_char( cursor ) );
+    _im_context.set_surrounding_with_selection( text, text.length, text.index_of_nth_char( cursor ), text.index_of_nth_char( selstart ) );
   }
 
   //-------------------------------------------------------------
@@ -1965,6 +1989,8 @@ public class DrawArea : Gtk.DrawingArea {
         break;
       case Gdk.Key.Alt_L :
       case Gdk.Key.Alt_R :
+      case Gdk.Key.Meta_L :
+      case Gdk.Key.Meta_R :
         _alt = true;
         break;
     }
@@ -1998,9 +2024,27 @@ public class DrawArea : Gtk.DrawingArea {
         break;
       case Gdk.Key.Alt_L :
       case Gdk.Key.Alt_R :
+      case Gdk.Key.Meta_L :
+      case Gdk.Key.Meta_R :
         _alt = false;
         break;
     }
+  }
+
+  //-------------------------------------------------------------
+  // Synchronizes cached modifier keys with a pointer event.
+  private void sync_modifier_keys( ModifierType state ) {
+    _control = (state & ModifierType.CONTROL_MASK) != 0;
+    _shift   = (state & ModifierType.SHIFT_MASK) != 0;
+    _alt     = (state & ModifierType.ALT_MASK) != 0;
+  }
+
+  //-------------------------------------------------------------
+  // Clears cached modifier keys after focus moves through a popover.
+  public void reset_modifier_keys() {
+    _control = false;
+    _shift   = false;
+    _alt     = false;
   }
 
   //-------------------------------------------------------------
@@ -2008,9 +2052,7 @@ public class DrawArea : Gtk.DrawingArea {
   // shift and alt variables since we might not detect when these
   // keys are released.
   private void on_focus_leave() {
-    _control = false;
-    _shift   = false;
-    _alt     = false;
+    reset_modifier_keys();
   }
 
   //-------------------------------------------------------------
@@ -2101,9 +2143,12 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // This function should be called when a drop target is deciding
   // whether to accept a drop action or not.
+  /*
+   NOTE:  This function is not called according to valac
   private bool handle_drop_accept( Drop drop ) {
     return( _map.editable );
   }
+  */
 
   //-------------------------------------------------------------
   // Handle any drag operations involving text.

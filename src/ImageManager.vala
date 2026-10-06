@@ -42,11 +42,10 @@ public class ImageManager {
     // Default constructor
     public ImageItem( ImageManager manager, string uri ) {
       _manager   = manager;
-      this.id    = Minder.settings.get_int( "image-id" );
+      this.id    = manager.allocate_id();
       this.uri   = uri;
       this.ext   = get_extension();
       this.valid = true;
-      Minder.settings.set_int( "image-id", (this.id + 1) );
     }
 
     //-------------------------------------------------------------
@@ -79,6 +78,23 @@ public class ImageManager {
     }
 
     //-------------------------------------------------------------
+    // Saves the image and its contents for clipboard transfer.
+    public void save_for_copy( Xml.Node* parent ) {
+      uint8[] contents;
+      try {
+        FileUtils.get_data( get_path(), out contents );
+      } catch( FileError e ) {
+        warning( "Unable to copy image data: %s", e.message );
+        return;
+      }
+      Xml.Node* n = new Xml.Node( null, "image" );
+      n->new_prop( "id", id.to_string() );
+      n->new_prop( "ext", ext );
+      n->new_text_child( null, "data", Base64.encode( contents ) );
+      parent->add_child( n );
+    }
+
+    //-------------------------------------------------------------
     // Returns true if the file exists
     public bool exists() {
       return( FileUtils.test( get_path(), FileTest.EXISTS ) );
@@ -89,8 +105,9 @@ public class ImageManager {
     public string get_extension() {
       if( uri != "" ) {
         var parts = uri.split( "." );
-        var ext   = parts[parts.length - 1].split( "?" )[0];
-        if( (ext == "bmp") || (ext == "png") || (ext == "jpg") || (ext == "jpeg") || (ext == "svg") ) {
+        var ext   = parts[parts.length - 1].split( "?" )[0].down();
+        if( (ext == "bmp") || (ext == "png") || (ext == "jpg") || (ext == "jpeg") ||
+            (ext == "svg") || (ext == "svgz") ) {
           return( "." + ext );
         }
       } else {
@@ -174,7 +191,8 @@ public class ImageManager {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "image" ) {
           var ii = new ImageItem.from_xml( this, it );
-          if( !_id_map.has_key( ii.id ) ) {
+          reserve_id( ii.id );
+          if( !_id_map.has_key( ii.id ) && (find_match( ii.id ) == null) ) {
             _images.append_val( ii );
           }
         }
@@ -193,6 +211,54 @@ public class ImageManager {
   }
 
   //-------------------------------------------------------------
+  // Saves the requested images and their contents for clipboard transfer.
+  public void save_for_copy( Xml.Node* n, HashSet<int> ids ) {
+    for( int i=0; i<_images.length; i++ ) {
+      var item = _images.index( i );
+      if( item.valid && ids.contains( item.id ) ) {
+        item.save_for_copy( n );
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Loads clipboard images and maps their source IDs to new local IDs.
+  public void load_for_paste( Xml.Node* n ) {
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( (it->type != Xml.ElementType.ELEMENT_NODE) || (it->name != "image") ) {
+        continue;
+      }
+      var id_value = it->get_prop( "id" );
+      var ext_value = it->get_prop( "ext" );
+      Xml.Node* data_node = null;
+      for( Xml.Node* child = it->children; child != null; child = child->next ) {
+        if( (child->type == Xml.ElementType.ELEMENT_NODE) && (child->name == "data") ) {
+          data_node = child;
+          break;
+        }
+      }
+      if( (id_value == null) || (data_node == null) ) {
+        continue;
+      }
+      var ext = (ext_value == null) ? ".png" : ext_value.down();
+      if( (ext != ".bmp") && (ext != ".png") && (ext != ".jpg") &&
+          (ext != ".jpeg") && (ext != ".svg") && (ext != ".svgz") ) {
+        ext = ".png";
+      }
+      var item = new ImageItem( this, "" );
+      item.ext = ext;
+      try {
+        var contents = Base64.decode( data_node->get_content() );
+        FileUtils.set_data( item.get_path(), contents );
+        _images.append_val( item );
+        _id_map.set( int.parse( id_value ), item.id );
+      } catch( FileError e ) {
+        warning( "Unable to paste image data: %s", e.message );
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
   // Searches the list of stored image items, returning the array
   // index of the item that matches.  If no match is found, a
   // value of -1 is returned.
@@ -203,6 +269,29 @@ public class ImageManager {
       }
     }
     return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Allocates an image ID that is not already used by this map.
+  private int allocate_id() {
+
+    var id = int.max( 1, Minder.settings.get_int( "image-id" ) );
+    while( find_match( id ) != null ) {
+      id++;
+    }
+    Minder.settings.set_int( "image-id", (id + 1) );
+    return( id );
+
+  }
+
+  //-------------------------------------------------------------
+  // Ensures newly allocated IDs follow IDs loaded from a map.
+  private void reserve_id( int id ) {
+
+    if( id >= Minder.settings.get_int( "image-id" ) ) {
+      Minder.settings.set_int( "image-id", (id + 1) );
+    }
+
   }
 
   //-------------------------------------------------------------
@@ -251,6 +340,9 @@ public class ImageManager {
     } catch( Error e ) {
       return( -1 );
     }
+    if( orig_id != null ) {
+      _id_map.set( orig_id, item.id );
+    }
     return( item.id );
   }
 
@@ -270,6 +362,9 @@ public class ImageManager {
   public string? get_mime_type( int id ) {
     var item = find_match( id );
     if( item != null ) {
+      if( (item.ext.down() == ".svg") || (item.ext.down() == ".svgz") ) {
+        return( "image/svg+xml" );
+      }
       return( "image/%s".printf( item.get_extension().substring( 1 ) ) );
     }
     return( null );
@@ -344,6 +439,8 @@ public class ImageManager {
     filter.add_pattern( "*.jpg" );
     filter.add_pattern( "*.jpeg" );
     filter.add_pattern( "*.svg" );
+    filter.add_pattern( "*.svgz" );
+    filter.add_mime_type( "image/svg+xml" );
 
     var filters = new GLib.ListStore( typeof(FileFilter) );
     filters.append( filter );
@@ -355,11 +452,14 @@ public class ImageManager {
         if( file != null ) {
           id = add_image( file.get_uri() );
           func( id );
+        } else {
+          func( -1 );
         }
-      } catch( Error e ) {}
+      } catch( Error e ) {
+        func( -1 );
+      }
     });
 
   }
 
 }
-

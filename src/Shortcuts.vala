@@ -28,12 +28,15 @@ public enum MapState {
   CALLOUT,
   STICKER,
   GROUP,
+  TABLE,
   EDITING;
 
   //-------------------------------------------------------------
   // Returns the state from the given MindMap
   public static MapState get_state( MindMap map ) {
-    if( map.is_node_editable() || map.is_connection_editable() || map.is_callout_editable() ) {
+    if( map.canvas.table_editor.is_shown() ) {
+      return( TABLE );
+    } else if( map.is_node_editable() || map.is_connection_editable() || map.is_callout_editable() ) {
       return( EDITING );
     } else if( map.selected.num_nodes() > 0 ) {
       return( NODE );
@@ -59,6 +62,7 @@ public enum MapState {
     var for_call = command.for_callout();
     var for_stkr = command.for_sticker();
     var for_grp  = command.for_group();
+    var for_tbl  = command.for_table();
     var for_edit = command.for_editing();
     var for_none = command.for_none();
     var for_any  = !for_node && !for_conn && !for_call && !for_stkr && !for_grp && !for_edit && !for_none;
@@ -68,6 +72,7 @@ public enum MapState {
       (for_call && (state == MapState.CALLOUT))    ||
       (for_stkr && (state == MapState.STICKER))    ||
       (for_grp  && (state == MapState.GROUP))      ||
+      (for_tbl  && (state == MapState.TABLE))      ||
       (for_edit && (state == MapState.EDITING))    ||
       (for_none && (state == MapState.NONE))       ||
       for_any
@@ -214,7 +219,6 @@ public class Shortcut {
   public string get_label() {
     string[] lbl = {};
     unichar  uc  = keyval_to_unicode( _keycode );
-    string   str = "";
     if( _control ) {
       lbl += "Ctrl";
     }
@@ -533,6 +537,7 @@ public class Shortcuts {
     add_shortcut( Key.Return,    false, false, false, KeyCommand.NODE_ADD_SIBLING_AFTER );
     add_shortcut( Key.Return,    false, true,  false, KeyCommand.EDIT_SHIFT_RETURN );
     add_shortcut( Key.Return,    false, true,  false, KeyCommand.NODE_ADD_SIBLING_BEFORE );
+    add_shortcut( Key.Return,    false, true,  true,  KeyCommand.NODE_ATTACH );
     add_shortcut( Key.Tab,       false, false, false, KeyCommand.EDIT_TAB );
     add_shortcut( Key.Tab,       false, false, false, KeyCommand.NODE_ADD_CHILD );
     add_shortcut( Key.Tab,       false, true,  false, KeyCommand.EDIT_SHIFT_TAB );
@@ -540,17 +545,21 @@ public class Shortcuts {
     add_shortcut( Key.Right,     false, false, false, KeyCommand.EDIT_CURSOR_CHAR_NEXT );
     add_shortcut( Key.Right,     false, false, false, KeyCommand.NODE_SELECT_RIGHT );
     add_shortcut( Key.Right,     false, true,  false, KeyCommand.EDIT_SELECT_CHAR_NEXT );
+    add_shortcut( Key.Right,     false, true,  true,  KeyCommand.NODE_ATTACH_RIGHT );
     add_shortcut( Key.Left,      false, false, false, KeyCommand.EDIT_CURSOR_CHAR_PREV );
     add_shortcut( Key.Left,      false, false, false, KeyCommand.NODE_SELECT_LEFT );
     add_shortcut( Key.Left,      false, true,  false, KeyCommand.EDIT_SELECT_CHAR_PREV );
+    add_shortcut( Key.Left,      false, true,  true,  KeyCommand.NODE_ATTACH_LEFT );
     add_shortcut( Key.Up,        false, false, false, KeyCommand.EDIT_CURSOR_UP );
     add_shortcut( Key.Up,        false, false, false, KeyCommand.NODE_SELECT_UP );
     add_shortcut( Key.Up,        false, false, true,  KeyCommand.NODE_SWAP_UP );
     add_shortcut( Key.Up,        false, true,  false, KeyCommand.EDIT_SELECT_UP );
+    add_shortcut( Key.Up,        false, true,  true,  KeyCommand.NODE_ATTACH_UP );
     add_shortcut( Key.Down,      false, false, false, KeyCommand.EDIT_CURSOR_DOWN );
     add_shortcut( Key.Down,      false, false, false, KeyCommand.NODE_SELECT_DOWN );
     add_shortcut( Key.Down,      false, false, true,  KeyCommand.NODE_SWAP_DOWN );
     add_shortcut( Key.Down,      false, true,  false, KeyCommand.EDIT_SELECT_DOWN );
+    add_shortcut( Key.Down,      false, true,  true,  KeyCommand.NODE_ATTACH_DOWN );
     add_shortcut( Key.Page_Up,   false, false, false, KeyCommand.NODE_SELECT_SIBLING_PREV );
     add_shortcut( Key.Page_Down, false, false, false, KeyCommand.NODE_SELECT_SIBLING_NEXT );
     add_shortcut( Key.Control_L, false, false, false, KeyCommand.CONTROL_PRESSED );
@@ -677,6 +686,13 @@ public class Shortcuts {
     add_default( Key.Up,           false, false, true,  KeyCommand.NODE_SWAP_UP );
     add_default( Key.Down,         false, false, true,  KeyCommand.NODE_SWAP_DOWN );
 
+    add_default( Key.@1,           false, false, false, KeyCommand.NODE_SET_PRIORITY1 );
+    add_default( Key.@2,           false, false, false, KeyCommand.NODE_SET_PRIORITY2 );
+    add_default( Key.@3,           false, false, false, KeyCommand.NODE_SET_PRIORITY3 );
+    add_default( Key.@4,           false, false, false, KeyCommand.NODE_SET_PRIORITY4 );
+    add_default( Key.@5,           false, false, false, KeyCommand.NODE_SET_PRIORITY5 );
+    add_default( Key.@0,           false, false, false, KeyCommand.NODE_CLEAR_PRIORITY );
+
   }
 
   private Xml.Node* make_property( string name, string value, string? translatable = null ) {
@@ -767,7 +783,7 @@ public class Shortcuts {
 
     doc->set_root_element( root );
 
-    root->set_prop( "domain", "com.github.phase1geo.minder" );
+    root->set_prop( "domain", "io.github.phase1geo.minder" );
 
     var window = make_object( "GtkShortcutsWindow", "shortcuts" );
     root->add_child( window );

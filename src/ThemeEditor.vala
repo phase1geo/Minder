@@ -25,14 +25,14 @@ using Gee;
 
 public class ThemeEditor : Gtk.Box {
 
-  private MainWindow                  _win;
-  private Theme                       _theme;
-  private Theme                       _orig_theme;
-  private bool                        _edit;
-  private Entry                       _name;
-  private HashMap<string,ColorButton> _btns;
-  private Button                      _del;
-  private bool                        _ignore = false;
+  private MainWindow _win;
+  private Theme      _theme;
+  private Theme      _orig_theme;
+  private bool       _edit;
+  private Entry      _name;
+  private Button     _del;
+  private bool       _ignore = false;
+  private HashMap<string,ColorDialogButton> _btns;
 
   public ThemeEditor( MainWindow win ) {
 
@@ -46,7 +46,7 @@ public class ThemeEditor : Gtk.Box {
     );
 
     _win  = win;
-    _btns = new HashMap<string,ColorButton>();
+    _btns = new HashMap<string,ColorDialogButton>();
 
     // Add title
     var title = new Label( _( "Customize Theme" ) + "\n" );
@@ -159,7 +159,7 @@ public class ThemeEditor : Gtk.Box {
     var save = new Button.with_label( _( "Save" ) ) {
       halign = Align.END
     };
-    save.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    save.add_css_class( Granite.CssClass.SUGGESTED );
     save.clicked.connect( save_theme );
 
     var bbox = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -182,11 +182,18 @@ public class ThemeEditor : Gtk.Box {
       xalign = (float)0
     };
 
-    var btn = new ColorButton() {
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Select color" ),
+      with_alpha = false
+    };
+
+    var btn = new ColorDialogButton( dialog ) {
       valign = Align.CENTER
     };
-    btn.color_set.connect(() => {
-      _theme.set_color( name, btn.rgba );
+
+    btn.notify["rgba"].connect(() => {
+      _theme.set_color( name, btn.get_rgba() );
       _win.get_current_map().model.set_theme( _theme, true );
     });
     _btns.set( name, btn );
@@ -241,7 +248,7 @@ public class ThemeEditor : Gtk.Box {
     dialog.add_action_widget( no, ResponseType.CANCEL );
 
     var yes = new Button.with_label( _( "Yes" ) );
-    yes.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    yes.add_css_class( Granite.CssClass.SUGGESTED );
     dialog.add_action_widget( yes, ResponseType.ACCEPT );
 
     dialog.set_transient_for( _win );

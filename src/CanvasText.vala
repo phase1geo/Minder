@@ -60,6 +60,11 @@ public class CanvasText : Object {
       return( _text );
     }
   }
+  public FormattedText stripped_text {
+    get {
+      return( _nomarkup_text );
+    }
+  }
   public double posx {
     get {
       return( _posx + _map.origin_x );
@@ -154,6 +159,7 @@ public class CanvasText : Object {
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
+    set_parsers();
     update_size( false );
   }
 
@@ -173,6 +179,7 @@ public class CanvasText : Object {
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
     _latex.update( _nomarkup_text, _font_size );
+    set_parsers();
     update_size( false );
   }
 
@@ -210,6 +217,20 @@ public class CanvasText : Object {
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     _latex.update( _nomarkup_text, _font_size );
     update_size( true );
+  }
+
+  //-------------------------------------------------------------
+  // Adds the valid parsers.
+  public void set_parsers() {
+    if( _map.markdown_parser != null ) {
+      _text.add_parser( _map.markdown_parser );
+    }
+    if( _map.url_parser != null ) {
+      _text.add_parser( _map.url_parser );
+    }
+    if( _map.unicode_parser != null ) {
+      _text.add_parser( _map.unicode_parser );
+    }
   }
 
   //-------------------------------------------------------------
@@ -1000,7 +1021,7 @@ public class CanvasText : Object {
 
   //-------------------------------------------------------------
   // Inserts the Markdown formatting
-  public void insert_markdown( string pretext, string midtext = "", string posttext = "", UndoTextBuffer undo_buffer ) {
+  public void insert_markdown( string pretext, string midtext, string posttext, UndoTextBuffer undo_buffer ) {
     var cur = _cursor;
     if( _selstart != _selend ) {
       var spos = text.text.index_of_nth_char( _selstart );

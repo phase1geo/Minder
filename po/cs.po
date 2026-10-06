@@ -7,7 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
+"POT-Creation-Date: 2026-09-28 21:24-0500\n"
+=======
 "POT-Creation-Date: 2026-10-05 23:08-0500\n"
+>>>>>>> master
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -35,39 +39,82 @@ msgstr "Minder je v AppCenter"
 msgid "Flatpak Runtime: %s"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/Application.vala:55 src/MainWindow.vala:250 src/MainWindow.vala:1958
+msgid "Minder"
+msgstr "Minder"
+
+#: src/Application.vala:145
+=======
 #: src/Application.vala:52 src/MainWindow.vala:183 src/MainWindow.vala:1666
 msgid "Minder"
 msgstr "Minder"
 
 #: src/Application.vala:135
+>>>>>>> master
 #, c-format
 msgid "Import file from format (%s)"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/Application.vala:146
+=======
 #: src/Application.vala:136
+>>>>>>> master
 #, fuzzy, c-format
 msgid "Export mindmap as format (%s)"
 msgstr "Možnosti exportu"
 
+<<<<<<< HEAD
+#: src/Application.vala:151
+msgid "Display version number"
+msgstr "Zobrazit označení verze"
+
+#: src/Application.vala:152
+=======
 #: src/Application.vala:141
 msgid "Display version number"
 msgstr "Zobrazit označení verze"
 
 #: src/Application.vala:142
+>>>>>>> master
 #, fuzzy
 msgid "Display help"
 msgstr "Displej"
 
+<<<<<<< HEAD
+#: src/Application.vala:153
+msgid "Starts Minder with a new file"
+msgstr "Začít Minder s novým souborem"
+
+#: src/Application.vala:156
+=======
 #: src/Application.vala:143
 msgid "Starts Minder with a new file"
 msgstr "Začít Minder s novým souborem"
 
 #: src/Application.vala:146
+>>>>>>> master
 #, fuzzy
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
 msgstr "Povolit průhledné pozadí"
 
+<<<<<<< HEAD
+#: src/Application.vala:157
+msgid "PNG compression value (0-9). Default is 0."
+msgstr ""
+
+#: src/Application.vala:158
+msgid "JPEG quality (0-100). Default is 90."
+msgstr ""
+
+#: src/Application.vala:159
+msgid "Enables image links in exported Markdown"
+msgstr ""
+
+#: src/Application.vala:164
+=======
 #: src/Application.vala:147
 msgid "PNG compression value (0-9). Default is 0."
 msgstr ""
@@ -81,42 +128,78 @@ msgid "Enables image links in exported Markdown"
 msgstr ""
 
 #: src/Application.vala:154
+>>>>>>> master
 #, fuzzy
 msgid "Import Example:\n"
 msgstr "Importovat soubor"
 
+<<<<<<< HEAD
+#: src/Application.vala:165
+=======
 #: src/Application.vala:155
+>>>>>>> master
 #, c-format
-msgid "  %scom.github.phase1geo.minder --import=markdown file.markdown\n"
+msgid "  %sio.github.phase1geo.minder --import=markdown file.markdown\n"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/Application.vala:167
+=======
 #: src/Application.vala:157
+>>>>>>> master
 #, fuzzy
 msgid "Export Example:\n"
 msgstr "Exportovat soubor"
 
+<<<<<<< HEAD
+#: src/Application.vala:168
+=======
 #: src/Application.vala:158
+>>>>>>> master
 #, c-format
 msgid ""
-"  %scom.github.phase1geo.minder --export=png --png-transparent file.minder "
+"  %sio.github.phase1geo.minder --export=png --png-transparent file.minder "
 "file.png\n"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/Application.vala:177
+=======
 #: src/Application.vala:167
+>>>>>>> master
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "ERROR: %s\n"
 
+<<<<<<< HEAD
+#: src/Application.vala:178
+=======
 #: src/Application.vala:168
+>>>>>>> master
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "Zadejte '%s --help' pro zobrazení všech možností\n"
 
+<<<<<<< HEAD
+#: src/Application.vala:201
+=======
 #: src/Application.vala:191
+>>>>>>> master
 #, fuzzy
 msgid "ERROR: Unable to import file"
 msgstr "ERROR: Nelze otevřít soubor '%s'\n"
 
+<<<<<<< HEAD
+#: src/Application.vala:205
+msgid "ERROR: Import is missing filename to import"
+msgstr ""
+
+#: src/Application.vala:228
+msgid "ERROR: Export is missing input file and/or export output file"
+msgstr ""
+
+#: src/Application.vala:238
+=======
 #: src/Application.vala:195
 msgid "ERROR: Import is missing filename to import"
 msgstr ""
@@ -126,11 +209,16 @@ msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
 
 #: src/Application.vala:228
+>>>>>>> master
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "ERROR: Nelze otevřít soubor '%s'\n"
 
+<<<<<<< HEAD
+#: src/Application.vala:274
+=======
 #: src/Application.vala:264
+>>>>>>> master
 #, fuzzy, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "ERROR: Nelze otevřít soubor '%s'\n"
@@ -154,6 +242,33 @@ msgstr "Smazat"
 msgid "Select Node"
 msgstr "Vybrat uzel"
 
+<<<<<<< HEAD
+#: src/Callout.vala:131 src/KeyCommands.vala:813 src/NodeMenu.vala:113
+msgid "Callout"
+msgstr ""
+
+#: src/CanvasText.vala:347 src/FormattedText.vala:1218
+msgid "No text found"
+msgstr "Text nenalezen"
+
+#: src/Clipboard.vala:122
+msgid "Recognizing formula"
+msgstr ""
+
+#: src/Clipboard.vala:123
+msgid "Converting the pasted image to editable LaTeX locally"
+msgstr ""
+
+#: src/Clipboard.vala:130
+msgid "Formula recognized"
+msgstr ""
+
+#: src/Clipboard.vala:131
+msgid "The pasted image was converted to editable LaTeX"
+msgstr ""
+
+#: src/Clipboard.vala:137
+=======
 #: src/Callout.vala:131 src/KeyCommands.vala:724 src/NodeMenu.vala:97
 msgid "Callout"
 msgstr ""
@@ -179,34 +294,49 @@ msgid "The pasted image was converted to editable LaTeX"
 msgstr ""
 
 #: src/Clipboard.vala:135
+>>>>>>> master
 #, fuzzy
 msgid "Pasted as an image"
 msgstr "Vložit a nahradit obrázek uzlu"
 
+<<<<<<< HEAD
+#: src/Clipboard.vala:138
+=======
 #: src/Clipboard.vala:136
+>>>>>>> master
 #, c-format
 msgid "Formula recognition was skipped: %s"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/ConnectionInspector.vala:84 src/KeyCommands.vala:816
+#: src/NodeMenu.vala:112
+=======
 #: src/ConnectionInspector.vala:84 src/KeyCommands.vala:727
 #: src/NodeMenu.vala:96
+>>>>>>> master
 msgid "Connection"
 msgstr "Spojení"
 
-#: src/ConnectionInspector.vala:97 src/NodeInspector.vala:205
+#: src/ConnectionInspector.vala:97 src/NodeInspector.vala:200
 msgid "Color"
 msgstr "Barva"
 
-#: src/ConnectionInspector.vala:111
+#: src/ConnectionInspector.vala:105
+#, fuzzy
+msgid "Select Connection Color"
+msgstr "Barva spojení"
+
+#: src/ConnectionInspector.vala:118
 msgid "Use Theme Default Color"
 msgstr "Použít základní barvu motivu"
 
-#: src/ConnectionInspector.vala:137 src/GroupInspector.vala:92
-#: src/NodeInspector.vala:290
+#: src/ConnectionInspector.vala:144 src/GroupInspector.vala:92
+#: src/NodeInspector.vala:299
 msgid "Note"
 msgstr "Poznámka"
 
-#: src/ConnectionInspector.vala:193
+#: src/ConnectionInspector.vala:200
 msgid "Delete Connection"
 msgstr "Smazat spojení"
 
@@ -214,11 +344,11 @@ msgstr "Smazat spojení"
 msgid "Edit Title…"
 msgstr "Upravit název…"
 
-#: src/ConnectionMenu.vala:38 src/GroupsMenu.vala:36 src/NodeMenu.vala:54
+#: src/ConnectionMenu.vala:38 src/GroupsMenu.vala:36 src/NodeMenu.vala:68
 msgid "Edit Note"
 msgstr "Upravit poznámku"
 
-#: src/ConnectionMenu.vala:39 src/NodeMenu.vala:58
+#: src/ConnectionMenu.vala:39 src/NodeMenu.vala:73
 msgid "Remove Sticker"
 msgstr "Odstranit nálepku"
 
@@ -238,16 +368,16 @@ msgstr "Příští spojení"
 msgid "Previous Connection"
 msgstr "Předchozí spojení"
 
-#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:336
-#: src/NodeMenu.vala:104 src/NodesMenu.vala:59
+#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:431
+#: src/NodeMenu.vala:120 src/NodesMenu.vala:74
 msgid "Select"
 msgstr "Vybrat"
 
-#: src/Connection.vala:810
+#: src/Connection.vala:807
 msgid "Connection Title"
 msgstr "Název spojení"
 
-#: src/Connection.vala:818
+#: src/Connection.vala:813
 msgid "Connection Note"
 msgstr "Poznámka ke spojení"
 
@@ -281,74 +411,74 @@ msgstr ""
 msgid "unnamed"
 msgstr "nepomenováno"
 
-#: src/Document.vala:691
+#: src/Document.vala:699
 msgid "Upgrade?"
 msgstr ""
 
-#: src/Document.vala:692
+#: src/Document.vala:700
 msgid ""
 "This file is from an older version Minder and needs to be upgraded to edit.\n"
 "\n"
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:697 src/ImageEditor.vala:428 src/MainWindow.vala:1373
-#: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
-#: src/ThemeEditor.vala:154 src/UrlEditor.vala:63
+#: src/Document.vala:705 src/ImageEditor.vala:430 src/MainWindow.vala:1657
+#: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TableEditor.vala:366
+#: src/TemplateEditor.vala:100 src/ThemeEditor.vala:154 src/UrlEditor.vala:63
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: src/Document.vala:700 src/ImageEditor.vala:431 src/MainWindow.vala:2238
-#: src/UrlEditor.vala:53
+#: src/Document.vala:708 src/ImageEditor.vala:433 src/MainWindow.vala:2379
+#: src/TableEditor.vala:367 src/UrlEditor.vala:53
 msgid "Apply"
 msgstr "Aplikovat"
 
-#: src/Document.vala:711
+#: src/Document.vala:719
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:714 src/MainWindow.vala:2275
+#: src/Document.vala:722 src/MainWindow.vala:2416
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
-#: src/Document.vala:735
+#: src/Document.vala:743
 msgid "Upgrade Needed"
 msgstr ""
 
-#: src/DrawArea.vala:1528
+#: src/DrawArea.vala:1549
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% hotovo"
 
-#: src/DrawArea.vala:1546
+#: src/DrawArea.vala:1567
 msgid "Drag to resize node"
 msgstr ""
 
-#: src/DrawArea.vala:1548
+#: src/DrawArea.vala:1569
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:1690
+#: src/DrawArea.vala:1711
 #, c-format
 msgid "Children: %u\n"
 msgstr "Podřadných uzlů: %u\n"
 
-#: src/DrawArea.vala:1691
+#: src/DrawArea.vala:1712
 #, c-format
 msgid "Total: %d"
 msgstr "Celkově: %d"
 
-#: src/DrawArea.vala:1745
+#: src/DrawArea.vala:1766
 msgid "connection endpoint change"
 msgstr "změna konce spojení"
 
-#: src/DrawArea.vala:1752
+#: src/DrawArea.vala:1773
 msgid "connection drag"
 msgstr "přetáhnutí spojení"
 
-#: src/DrawArea.vala:2277 src/MapModel.vala:1835 src/MapModel.vala:1850
+#: src/DrawArea.vala:2322 src/MapModel.vala:1874 src/MapModel.vala:1889
 msgid "Another Idea"
 msgstr "Další myšlenka"
 
@@ -361,12 +491,12 @@ msgstr ""
 "Vyberte uzel nebo spojení\n"
 "pro zobrazení/upravení informací"
 
-#: src/EmptyMenu.vala:33 src/NodeMenu.vala:38 src/NodeMenu.vala:253
+#: src/EmptyMenu.vala:33 src/NodeMenu.vala:38 src/NodeMenu.vala:284
 #: src/TextMenu.vala:38
 msgid "Paste"
 msgstr "Vložit"
 
-#: src/EmptyMenu.vala:36 src/NodeMenu.vala:71
+#: src/EmptyMenu.vala:36 src/NodeMenu.vala:87
 msgid "Add Root Node"
 msgstr "Přidat kořenový uzel"
 
@@ -396,7 +526,7 @@ msgstr "Možnosti exportu"
 msgid "Export As %s"
 msgstr "Exportovat jako %s"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1070 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1309 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Export"
 
@@ -439,16 +569,16 @@ msgstr "Přiblížení"
 msgid "Quality"
 msgstr "Kvalita"
 
-#: src/exports/ExportMarkdown.vala:34 src/NoteView.vala:330
+#: src/exports/ExportMarkdown.vala:34 src/NoteView.vala:328
 #: src/TextMenu.vala:68
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/exports/ExportMarkdown.vala:382
+#: src/exports/ExportMarkdown.vala:401
 msgid "Include image links"
 msgstr "Obsáhnout odkazy na obrázky"
 
-#: src/exports/ExportMarkdown.vala:383
+#: src/exports/ExportMarkdown.vala:402
 msgid "Creates a directory containing the Markdown and embedded images"
 msgstr "Vytvoří adresář obsahující Markdown a přiložené obrázky"
 
@@ -456,23 +586,23 @@ msgstr "Vytvoří adresář obsahující Markdown a přiložené obrázky"
 msgid "Mermaid"
 msgstr "Mermaid"
 
-#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutVertical.vala:26
+#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutVertical.vala:27
 msgid "Vertical"
 msgstr "Vertikální"
 
-#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutDown.vala:26
+#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutDown.vala:27
 msgid "Downwards"
 msgstr "Dolů"
 
-#: src/exports/ExportMermaid.vala:77 src/layouts/LayoutLeft.vala:26
+#: src/exports/ExportMermaid.vala:77 src/layouts/LayoutLeft.vala:27
 msgid "To left"
 msgstr "Do leva"
 
-#: src/exports/ExportMermaid.vala:79 src/layouts/LayoutUp.vala:26
+#: src/exports/ExportMermaid.vala:79 src/layouts/LayoutUp.vala:27
 msgid "Upwards"
 msgstr "Vzhůru"
 
-#: src/exports/ExportMermaid.vala:481
+#: src/exports/ExportMermaid.vala:452
 msgid "Use Mermaid Mindmap Format"
 msgstr ""
 
@@ -537,13 +667,13 @@ msgstr ""
 msgid "XMind 2021"
 msgstr "XMind 2021"
 
-#: src/exports/ExportXMind2021.vala:682 src/exports/ExportXMind8.vala:695
-#: src/layouts/LayoutHorizontal.vala:26
+#: src/exports/ExportXMind2021.vala:689 src/exports/ExportXMind8.vala:698
+#: src/layouts/LayoutHorizontal.vala:27
 msgid "Horizontal"
 msgstr "Horizontální"
 
-#: src/exports/ExportXMind2021.vala:684 src/exports/ExportXMind8.vala:697
-#: src/layouts/LayoutRight.vala:26
+#: src/exports/ExportXMind2021.vala:691 src/exports/ExportXMind8.vala:700
+#: src/layouts/LayoutRight.vala:27
 msgid "To right"
 msgstr "Do prava"
 
@@ -588,7 +718,11 @@ msgstr ""
 msgid "The recognized formula is too long"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/GroupInspector.vala:79 src/KeyCommands.vala:822
+=======
 #: src/GroupInspector.vala:79 src/KeyCommands.vala:733
+>>>>>>> master
 #, fuzzy
 msgid "Group"
 msgstr "Přidat skupinu"
@@ -609,58 +743,85 @@ msgstr "Vrchní uzle"
 msgid "All Grouped Nodes"
 msgstr "Všechny sdružené uzle"
 
-#: src/ImageEditor.vala:197
+#: src/ImageEditor.vala:199
 #, c-format
 msgid "Crop Area: %d,%d %3dx%3d"
 msgstr "Oblast ořezu: %d,%d %3dx%3d"
 
-#: src/ImageEditor.vala:399
+#: src/ImageEditor.vala:401
 #, c-format
 msgid "Cursor: %3d,%3d"
 msgstr "Kurzor: %3d, %3d"
 
-#: src/ImageEditor.vala:408
+#: src/ImageEditor.vala:410
 msgid "Change Image"
 msgstr "Změnit obrázek"
 
-#: src/ImageEditor.vala:412
+#: src/ImageEditor.vala:414
 msgid "Paste Image from Clipboard"
 msgstr "Vložit obrázek ze schránky"
 
-#: src/ImageEditor.vala:416 src/NodeInspector.vala:392 src/NodeMenu.vala:234
+#: src/ImageEditor.vala:418 src/NodeInspector.vala:401 src/NodeMenu.vala:263
 msgid "Remove Image"
 msgstr "Odstranit obrázek"
 
-#: src/ImageEditor.vala:420
+#: src/ImageEditor.vala:422
 msgid "Copy Image to Clipboard"
 msgstr "Zkopírovat obrázek do schránky"
 
-#: src/ImageEditor.vala:425
+#: src/ImageEditor.vala:427
 msgid "Cut Image to Clipboard"
 msgstr "Vyjmout obrázek do schránky"
 
-#: src/ImageManager.vala:336
+#: src/ImageManager.vala:431
 msgid "Select Image"
 msgstr "Vybrat obrázek"
 
-#: src/ImageManager.vala:341
+#: src/ImageManager.vala:436
 msgid "Images"
 msgstr "Obrázky"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:692 src/Shortcuts.vala:829
+msgid "General"
+msgstr "Obecné"
+
+#: src/KeyCommands.vala:693
+=======
 #: src/KeyCommands.vala:618 src/Shortcuts.vala:813
 msgid "General"
 msgstr "Obecné"
 
 #: src/KeyCommands.vala:619
+>>>>>>> master
 #, fuzzy
 msgid "File Commands"
 msgstr "Uzlové příkazy"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:694
+=======
 #: src/KeyCommands.vala:620
+>>>>>>> master
 #, fuzzy
 msgid "Create new mindmap"
 msgstr "Vytvořit spojení"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:695
+msgid "Open saved mindmap"
+msgstr ""
+
+#: src/KeyCommands.vala:696
+msgid "Create mindmap from directory structure"
+msgstr ""
+
+#: src/KeyCommands.vala:697
+msgid "Save mindmap to current file"
+msgstr ""
+
+#: src/KeyCommands.vala:698
+=======
 #: src/KeyCommands.vala:621
 msgid "Open saved mindmap"
 msgstr ""
@@ -674,182 +835,342 @@ msgid "Save mindmap to current file"
 msgstr ""
 
 #: src/KeyCommands.vala:624
+>>>>>>> master
 #, fuzzy
 msgid "Save mindmap to new file"
 msgstr "Začít Minder s novým souborem"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:699
+msgid "Show print dialog for current mindmap"
+msgstr ""
+
+#: src/KeyCommands.vala:700
+=======
 #: src/KeyCommands.vala:625
 msgid "Show print dialog for current mindmap"
 msgstr ""
 
 #: src/KeyCommands.vala:626
+>>>>>>> master
 #, fuzzy
 msgid "Tab Commands"
 msgstr "Uzlové příkazy"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:701
+=======
 #: src/KeyCommands.vala:627
+>>>>>>> master
 #, fuzzy
 msgid "Select next tab"
 msgstr "Vybrat další souřadný uzel"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:702
+=======
 #: src/KeyCommands.vala:628
+>>>>>>> master
 #, fuzzy
 msgid "Select previous tab"
 msgstr "Vybrat předchozí souřadný uzel"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:703
+=======
 #: src/KeyCommands.vala:629
+>>>>>>> master
 #, fuzzy
 msgid "Close the current mindmap"
 msgstr "Zavřít aktuální panel"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:704
+=======
 #: src/KeyCommands.vala:630
+>>>>>>> master
 #, fuzzy
 msgid "Undo/Redo Commands"
 msgstr "Uzlové příkazy"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:705
+=======
 #: src/KeyCommands.vala:631
+>>>>>>> master
 #, fuzzy
 msgid "Undo last action"
 msgstr "Vrátit poslední změnu"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:706
+=======
 #: src/KeyCommands.vala:632
+>>>>>>> master
 #, fuzzy
 msgid "Redo last undone action"
 msgstr "Znovu přidat co bylo odebráno"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:707
+=======
 #: src/KeyCommands.vala:633
+>>>>>>> master
 #, fuzzy
 msgid "Zoom Commands"
 msgstr "Uzlové příkazy"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:708
+=======
 #: src/KeyCommands.vala:634
+>>>>>>> master
 #, fuzzy
 msgid "Zoom in"
 msgstr "Přiblížit"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:709
+=======
 #: src/KeyCommands.vala:635
+>>>>>>> master
 #, fuzzy
 msgid "Zoom out"
 msgstr "Oddálit"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:710
+msgid "Zoom to fit entire mindmap in viewer"
+msgstr ""
+
+#: src/KeyCommands.vala:711
+=======
 #: src/KeyCommands.vala:636
 msgid "Zoom to fit entire mindmap in viewer"
 msgstr ""
 
 #: src/KeyCommands.vala:637
+>>>>>>> master
 #, fuzzy
 msgid "Zoom selected node subtree in viewer"
 msgstr "Vměstnat do okna vybraný uzel"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:712
+=======
 #: src/KeyCommands.vala:638
+>>>>>>> master
 #, fuzzy
 msgid "Zoom to 100%"
 msgstr "Vměstnat do okna"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:713
+=======
 #: src/KeyCommands.vala:639
+>>>>>>> master
 #, fuzzy
 msgid "Sidebar Commands"
 msgstr "Uzlové příkazy"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:714
+=======
 #: src/KeyCommands.vala:640
+>>>>>>> master
 #, fuzzy
 msgid "Show current tab in sidebar"
 msgstr "Zobrazit aktuální panel"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:715
+=======
 #: src/KeyCommands.vala:641
+>>>>>>> master
 #, fuzzy
 msgid "Show style tab in sidebar"
 msgstr "Zobrazit panel stylů"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:716
+=======
 #: src/KeyCommands.vala:642
+>>>>>>> master
 #, fuzzy
 msgid "Show tag tab in sidebar"
 msgstr "Zobrazit panel vlastností"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:717
+=======
 #: src/KeyCommands.vala:643
+>>>>>>> master
 #, fuzzy
 msgid "Show sticker tab in sidebar"
 msgstr "Zobrazit panel nálepek"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:718
+=======
 #: src/KeyCommands.vala:644
+>>>>>>> master
 #, fuzzy
 msgid "Show map tab in sidebar"
 msgstr "Zobrazit panel vlastností"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:719
+=======
 #: src/KeyCommands.vala:645
+>>>>>>> master
 #, fuzzy
 msgid "Show currently select node/connection/group information in sidebar"
 msgstr ""
 "Vyberte uzel nebo spojení\n"
 "pro zobrazení/upravení informací"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:720
+=======
 #: src/KeyCommands.vala:646
+>>>>>>> master
 #, fuzzy
 msgid "Map Commands"
 msgstr "Uzlové příkazy"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:721
+=======
 #: src/KeyCommands.vala:647
+>>>>>>> master
 #, fuzzy
 msgid "Show/Hide Connections"
 msgstr "Schovat spojení"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:722
+=======
 #: src/KeyCommands.vala:648
+>>>>>>> master
 #, fuzzy
 msgid "Show/Hide Callouts"
 msgstr "Videohovor"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:723
+msgid "Balance nodes in vertical/horizontal layouts"
+msgstr ""
+
+#: src/KeyCommands.vala:724
+=======
 #: src/KeyCommands.vala:649
 msgid "Balance nodes in vertical/horizontal layouts"
 msgstr ""
 
 #: src/KeyCommands.vala:650
+>>>>>>> master
 #, fuzzy
 msgid "Fold all completed tasks"
 msgstr "Sbalit dokončené úkoly"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:725
+=======
 #: src/KeyCommands.vala:651
+>>>>>>> master
 #, fuzzy
 msgid "Unfold all folded nodes"
 msgstr "Rozbalit všechny uzly"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:726
+=======
 #: src/KeyCommands.vala:652
+>>>>>>> master
 #, fuzzy
 msgid "Miscellaneous Commands"
 msgstr "Smíšené"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:727
+=======
 #: src/KeyCommands.vala:653
+>>>>>>> master
 #, fuzzy
 msgid "Show preferences window"
 msgstr "Zobrazit možnosti"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:728
+=======
 #: src/KeyCommands.vala:654
+>>>>>>> master
 #, fuzzy
 msgid "Show shortcuts cheatsheet"
 msgstr "Seznam všech zkratek"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:729
+=======
 #: src/KeyCommands.vala:655
+>>>>>>> master
 #, fuzzy
 msgid "Show contextual menu"
 msgstr "Zobrazit kontextové menu"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:730
+msgid "Show find popup"
+msgstr ""
+
+#: src/KeyCommands.vala:731
+=======
 #: src/KeyCommands.vala:656
 msgid "Show find popup"
 msgstr ""
 
 #: src/KeyCommands.vala:657
+>>>>>>> master
 #, fuzzy
 msgid "Show About window"
 msgstr "O Minderu"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:732
+msgid "Toggle braindump input mode"
+msgstr ""
+
+#: src/KeyCommands.vala:733
+=======
 #: src/KeyCommands.vala:658
 msgid "Toggle braindump input mode"
 msgstr ""
 
 #: src/KeyCommands.vala:659
+>>>>>>> master
 #, fuzzy
 msgid "Toggle focus mode"
 msgstr "Přepnout režim soustředění"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:734
+msgid "Edit note of current item"
+msgstr ""
+
+#: src/KeyCommands.vala:735
+msgid "Edit currently selected item"
+msgstr ""
+
+#: src/KeyCommands.vala:736
+msgid "Show currently selected item"
+msgstr ""
+
+#: src/KeyCommands.vala:737
+msgid "Remove sticker from current node or connection"
+msgstr ""
+
+#: src/KeyCommands.vala:738
+=======
 #: src/KeyCommands.vala:660
 msgid "Edit note of current item"
 msgstr ""
@@ -867,25 +1188,53 @@ msgid "Remove sticker from current node or connection"
 msgstr ""
 
 #: src/KeyCommands.vala:664
+>>>>>>> master
 #, fuzzy
 msgid "Quit the application"
 msgstr "Ukončit aplikaci"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:739 src/NodeInspector.vala:101
+=======
 #: src/KeyCommands.vala:665 src/NodeInspector.vala:106
+>>>>>>> master
 #, fuzzy
 msgid "Node"
 msgstr "Uzly"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:740
+=======
 #: src/KeyCommands.vala:666
+>>>>>>> master
 #, fuzzy
 msgid "Creation/Deletion Commands"
 msgstr "Vytvoření/smazání"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:741
+=======
 #: src/KeyCommands.vala:667
+>>>>>>> master
 #, fuzzy
 msgid "Add root node"
 msgstr "Přidat kořenový uzel"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:742
+msgid "Add sibling node after current node"
+msgstr ""
+
+#: src/KeyCommands.vala:743
+msgid "Add sibling node before current node"
+msgstr ""
+
+#: src/KeyCommands.vala:744
+msgid "Add child node to current node"
+msgstr ""
+
+#: src/KeyCommands.vala:745
+=======
 #: src/KeyCommands.vala:668
 msgid "Add sibling node after current node"
 msgstr ""
@@ -899,53 +1248,110 @@ msgid "Add child node to current node"
 msgstr ""
 
 #: src/KeyCommands.vala:671
+>>>>>>> master
 #, fuzzy
 msgid "Add parent node to current node"
 msgstr "přidat nadřazený uzel"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:746
+=======
 #: src/KeyCommands.vala:672
+>>>>>>> master
 #, fuzzy
 msgid "Use quick entry to insert nodes"
 msgstr "Vložení Rychlého zadávání"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:747
+=======
 #: src/KeyCommands.vala:673
+>>>>>>> master
 #, fuzzy
 msgid "Use quick entry to replace current node"
 msgstr "Nahrazení Rychlého zadávání"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:748
+msgid "Remove selected node only (leave subtree)"
+msgstr ""
+
+#: src/KeyCommands.vala:749 src/KeyCommands.vala:861
+=======
 #: src/KeyCommands.vala:674
 msgid "Remove selected node only (leave subtree)"
 msgstr ""
 
 #: src/KeyCommands.vala:675 src/KeyCommands.vala:762
+>>>>>>> master
 #, fuzzy
 msgid "Clipboard Commands"
 msgstr "Uzlové příkazy"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:750
+msgid "Paste node link from clipboard into current node"
+msgstr ""
+
+#: src/KeyCommands.vala:751
+=======
 #: src/KeyCommands.vala:676
 msgid "Paste node link from clipboard into current node"
 msgstr ""
 
 #: src/KeyCommands.vala:677
+>>>>>>> master
 #, fuzzy
 msgid "Replace current node with clipboard content"
 msgstr "Nahradit ze schránky"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:752
+=======
 #: src/KeyCommands.vala:678
+>>>>>>> master
 #, fuzzy
 msgid "View Commands"
 msgstr "Uzlové příkazy"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:753
+=======
 #: src/KeyCommands.vala:679
+>>>>>>> master
 #, fuzzy
 msgid "Center current node in map canvas"
 msgstr "Zarovnat tento uzel na střed"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:754 src/KeyCommands.vala:823
+=======
 #: src/KeyCommands.vala:680 src/KeyCommands.vala:734
+>>>>>>> master
 #, fuzzy
 msgid "Change Commands"
 msgstr "Uzlové příkazy"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:755
+msgid "Change task status of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:756
+msgid "Add/Edit image of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:757
+msgid "Remove image from current node"
+msgstr ""
+
+#: src/KeyCommands.vala:758
+#, fuzzy
+msgid "Add/Edit table of current node"
+msgstr "přidat nadřazený uzel"
+
+#: src/KeyCommands.vala:759
+=======
 #: src/KeyCommands.vala:681
 msgid "Change task status of current node"
 msgstr ""
@@ -959,34 +1365,100 @@ msgid "Remove image from current node"
 msgstr ""
 
 #: src/KeyCommands.vala:684
+>>>>>>> master
 #, fuzzy
 msgid "Change link color of current node"
 msgstr "podřadit  barvu odkazu"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:760
+=======
 #: src/KeyCommands.vala:685
+>>>>>>> master
 #, fuzzy
 msgid "Randomize the current node link color"
 msgstr "změna náhodné barvy odkazu uzlu"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:761
+=======
 #: src/KeyCommands.vala:686
+>>>>>>> master
 #, fuzzy
 msgid "Set current node link color to match parent node"
 msgstr "změna náhodné barvy odkazu uzlu"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:762
+msgid "Toggle folding of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:763
+=======
 #: src/KeyCommands.vala:687
 msgid "Toggle folding of current node"
 msgstr ""
 
 #: src/KeyCommands.vala:688
+>>>>>>> master
 #, fuzzy
 msgid "Toggle folding of current node subtree"
 msgstr "Přepnout výběr uzlu/podřadného stromu"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:764
+=======
 #: src/KeyCommands.vala:689
+>>>>>>> master
 #, fuzzy
 msgid "Toggle the node link state"
 msgstr "Přepnout odkaz uzlu"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:765
+msgid "Add group for current node and its subtree"
+msgstr ""
+
+#: src/KeyCommands.vala:766
+msgid "Start creation of connection from current node"
+msgstr ""
+
+#: src/KeyCommands.vala:767
+msgid "Add/Remove callout for current node"
+msgstr ""
+
+#: src/KeyCommands.vala:768
+msgid "Toggle sequence state of children of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:769
+msgid "Set node priority to 1"
+msgstr ""
+
+#: src/KeyCommands.vala:770
+msgid "Set node priority to 2"
+msgstr ""
+
+#: src/KeyCommands.vala:771
+msgid "Set node priority to 3"
+msgstr ""
+
+#: src/KeyCommands.vala:772
+msgid "Set node priority to 4"
+msgstr ""
+
+#: src/KeyCommands.vala:773
+msgid "Set node priority to 5"
+msgstr ""
+
+#: src/KeyCommands.vala:774
+#, fuzzy
+msgid "Clear node priority"
+msgstr "Střední priorita"
+
+#: src/KeyCommands.vala:775 src/KeyCommands.vala:814 src/KeyCommands.vala:817
+#: src/KeyCommands.vala:826 src/KeyCommands.vala:882
+=======
 #: src/KeyCommands.vala:690
 msgid "Add group for current node and its subtree"
 msgstr ""
@@ -1005,43 +1477,103 @@ msgstr ""
 
 #: src/KeyCommands.vala:694 src/KeyCommands.vala:725 src/KeyCommands.vala:728
 #: src/KeyCommands.vala:737 src/KeyCommands.vala:783
+>>>>>>> master
 #, fuzzy
 msgid "Selection Commands"
 msgstr "Příkazy spojení"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:776
+=======
 #: src/KeyCommands.vala:695
+>>>>>>> master
 #, fuzzy
 msgid "Select root node of current node"
 msgstr "Vybrat současné slovo"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:777
+=======
 #: src/KeyCommands.vala:696
+>>>>>>> master
 #, fuzzy
 msgid "Select parent node of current node"
 msgstr "Vybrat současné slovo"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:778
+=======
 #: src/KeyCommands.vala:697
+>>>>>>> master
 #, fuzzy
 msgid "Select all child nodes of current node"
 msgstr "Vytvoří podřadný uzel k předchozímu uzlu."
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:779
+=======
 #: src/KeyCommands.vala:698
+>>>>>>> master
 #, fuzzy
 msgid "Select single child node of current node"
 msgstr "Vytvoří podřadný uzel k předchozímu uzlu."
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:780
+msgid "Select all nodes in subtree of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:781
+msgid "Select next sibling node of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:782
+#, fuzzy
+msgid "Select previous sibling node of current node"
+msgstr "Vybrat předchozí souřadný uzel"
+
+#: src/KeyCommands.vala:783
+#, fuzzy
+msgid "Select first sibling node of current node"
+msgstr "Vybrat předchozí souřadný uzel"
+
+#: src/KeyCommands.vala:784
+#, fuzzy
+msgid "Select last sibling node of current node"
+msgstr "Vybrat předchozí souřadný uzel"
+
+#: src/KeyCommands.vala:785
+msgid "Select node to the left of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:786
+msgid "Select node to the right of current node"
+=======
 #: src/KeyCommands.vala:699
 msgid "Select all nodes in subtree of current node"
 msgstr ""
 
 #: src/KeyCommands.vala:700
 msgid "Select next sibling node of current node"
+>>>>>>> master
 msgstr ""
 
-#: src/KeyCommands.vala:701
+#: src/KeyCommands.vala:787
 #, fuzzy
 msgid "Select previous sibling node of current node"
 msgstr "Vybrat předchozí souřadný uzel"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:788
+#, fuzzy
+msgid "Select node below current node"
+msgstr "Vybrat současné slovo"
+
+#: src/KeyCommands.vala:789
+#, fuzzy
+msgid "Select linked node of current node"
+msgstr "Vybrat současné slovo"
+=======
 #: src/KeyCommands.vala:702
 msgid "Select node to the left of current node"
 msgstr ""
@@ -1049,18 +1581,19 @@ msgstr ""
 #: src/KeyCommands.vala:703
 msgid "Select node to the right of current node"
 msgstr ""
+>>>>>>> master
 
-#: src/KeyCommands.vala:704
+#: src/KeyCommands.vala:790
 #, fuzzy
 msgid "Select node above current node"
 msgstr "Vybrat současné slovo"
 
-#: src/KeyCommands.vala:705
+#: src/KeyCommands.vala:791
 #, fuzzy
 msgid "Select node below current node"
 msgstr "Vybrat současné slovo"
 
-#: src/KeyCommands.vala:706
+#: src/KeyCommands.vala:792
 #, fuzzy
 msgid "Select linked node of current node"
 msgstr "Vybrat současné slovo"
@@ -1080,6 +1613,35 @@ msgstr "Vybrat současné slovo"
 msgid "Move Commands"
 msgstr "Uzlové příkazy"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:793
+msgid "Swap current node with right node"
+msgstr ""
+
+#: src/KeyCommands.vala:794
+msgid "Swap current node with left node"
+msgstr ""
+
+#: src/KeyCommands.vala:795
+msgid "Swap current node with above node"
+msgstr ""
+
+#: src/KeyCommands.vala:796
+msgid "Swap current node with below node"
+msgstr ""
+
+#: src/KeyCommands.vala:797
+#, fuzzy
+msgid "Sort child nodes of current node alphabetically"
+msgstr "Řadit podřadné uzly abecedně"
+
+#: src/KeyCommands.vala:798
+msgid "Sort child nodes of current node randomly"
+msgstr ""
+
+#: src/KeyCommands.vala:799
+msgid "Detaches current node and its subtree"
+=======
 #: src/KeyCommands.vala:710
 msgid "Swap current node with right node"
 msgstr ""
@@ -1094,13 +1656,59 @@ msgstr ""
 
 #: src/KeyCommands.vala:713
 msgid "Swap current node with below node"
+>>>>>>> master
 msgstr ""
 
-#: src/KeyCommands.vala:714
+#: src/KeyCommands.vala:800
+#, fuzzy
+msgid "Attach current node to the current attach node"
+msgstr "přidat nadřazený uzel"
+
+#: src/KeyCommands.vala:801
+#, fuzzy
+msgid "Attach Node Commands"
+msgstr "Uzlové příkazy"
+
+#: src/KeyCommands.vala:802
+msgid "Change the attach node to node to left of current"
+msgstr ""
+
+#: src/KeyCommands.vala:803
+msgid "Change the attach node to node to right of current"
+msgstr ""
+
+#: src/KeyCommands.vala:804
+#, fuzzy
+msgid "Change the attach node to node above current"
+msgstr "Vybrat současné slovo"
+
+#: src/KeyCommands.vala:805
+#, fuzzy
+msgid "Change the attach node to node below current"
+msgstr "Vybrat současné slovo"
+
+#: src/KeyCommands.vala:806
 #, fuzzy
 msgid "Sort child nodes of current node alphabetically"
 msgstr "Řadit podřadné uzly abecedně"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:807
+msgid "Align selected node top edges"
+msgstr ""
+
+#: src/KeyCommands.vala:808
+#, fuzzy
+msgid "Align selected node vertical centers"
+msgstr "Zarovnat prostředek svisle"
+
+#: src/KeyCommands.vala:809
+msgid "Align selected node bottom edges"
+msgstr ""
+
+#: src/KeyCommands.vala:810
+msgid "Align selected node left edges"
+=======
 #: src/KeyCommands.vala:715
 msgid "Sort child nodes of current node randomly"
 msgstr ""
@@ -1116,9 +1724,10 @@ msgstr "Zarovnání"
 
 #: src/KeyCommands.vala:718
 msgid "Align selected node top edges"
+>>>>>>> master
 msgstr ""
 
-#: src/KeyCommands.vala:719
+#: src/KeyCommands.vala:811
 #, fuzzy
 msgid "Align selected node vertical centers"
 msgstr "Zarovnat prostředek svisle"
@@ -1136,35 +1745,128 @@ msgstr ""
 msgid "Align selected node horizontal centers"
 msgstr "Zarovnat prostředek vodorovně"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:812
+msgid "Align selected node right edges"
+msgstr ""
+
+#: src/KeyCommands.vala:815
+=======
 #: src/KeyCommands.vala:723
 msgid "Align selected node right edges"
 msgstr ""
 
 #: src/KeyCommands.vala:726
+>>>>>>> master
 #, fuzzy
 msgid "Select callout node"
 msgstr "Vybrat celý text"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:818
+=======
 #: src/KeyCommands.vala:729
+>>>>>>> master
 #, fuzzy
 msgid "Select connection source node"
 msgstr "Vybraná spojení"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:819
+=======
 #: src/KeyCommands.vala:730
+>>>>>>> master
 #, fuzzy
 msgid "Select connection target node"
 msgstr "Vybraná spojení"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:820
+=======
 #: src/KeyCommands.vala:731
+>>>>>>> master
 #, fuzzy
 msgid "Select next connection in map"
 msgstr "Vybrat další spojení"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:821
+=======
 #: src/KeyCommands.vala:732
+>>>>>>> master
 #, fuzzy
 msgid "Select previous connection in map"
 msgstr "Vybrat předchozí spojení"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:824
+msgid "Change the color of the current group"
+msgstr ""
+
+#: src/KeyCommands.vala:825
+msgid "Merge current groups into single group"
+msgstr ""
+
+#: src/KeyCommands.vala:827
+msgid "Select main node(s) of current group(s)"
+msgstr ""
+
+#: src/KeyCommands.vala:828
+msgid "Selects all nodes within current group(s)"
+msgstr ""
+
+#: src/KeyCommands.vala:829
+#, fuzzy
+msgid "Table Editor"
+msgstr "Tablet android"
+
+#: src/KeyCommands.vala:830
+#, fuzzy
+msgid "Adds a row above the currently selected row"
+msgstr "Přidat předchozí znak"
+
+#: src/KeyCommands.vala:831
+#, fuzzy
+msgid "Adds a row below the currently selected row"
+msgstr "Přidat předchozí znak"
+
+#: src/KeyCommands.vala:832
+msgid "Deletes the currently selected row(s)"
+msgstr ""
+
+#: src/KeyCommands.vala:833
+msgid "Adds a column to the left of the currently selected row"
+msgstr ""
+
+#: src/KeyCommands.vala:834
+msgid "Adds a column to the right of the currently selected row"
+msgstr ""
+
+#: src/KeyCommands.vala:835
+msgid "Deletes the currently selected columns(s)"
+msgstr ""
+
+#: src/KeyCommands.vala:836
+#, fuzzy
+msgid "Merges selected cells into one"
+msgstr "Vyčistit výběr"
+
+#: src/KeyCommands.vala:837
+#, fuzzy
+msgid "Splits merged cell"
+msgstr "Vybrané uzly"
+
+#: src/KeyCommands.vala:838
+#, fuzzy
+msgid "Clears selected cell contents"
+msgstr "Vyjmout vybraný text"
+
+#: src/KeyCommands.vala:839
+msgid "Text Editing"
+msgstr "Úprava textu"
+
+#: src/KeyCommands.vala:840
+=======
 #: src/KeyCommands.vala:735
 msgid "Change the color of the current group"
 msgstr ""
@@ -1186,40 +1888,124 @@ msgid "Text Editing"
 msgstr "Úprava textu"
 
 #: src/KeyCommands.vala:741
+>>>>>>> master
 #, fuzzy
 msgid "Insertion/Deletion Commands"
 msgstr "Příkazy spojení"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:841
+=======
 #: src/KeyCommands.vala:742
+>>>>>>> master
 #, fuzzy
 msgid "Insert newline character"
 msgstr "Vložit znak na novém řádku"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:842
+=======
 #: src/KeyCommands.vala:743
+>>>>>>> master
 #, fuzzy
 msgid "Insert TAB character"
 msgstr "Vložit znak panelu"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:843
+=======
 #: src/KeyCommands.vala:744
+>>>>>>> master
 #, fuzzy
 msgid "Insert emoji"
 msgstr "Vložit emotikon"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:844
+=======
 #: src/KeyCommands.vala:745
+>>>>>>> master
 #, fuzzy
 msgid "Remove next word"
 msgstr "přesunout uzel"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:845
+=======
 #: src/KeyCommands.vala:746
+>>>>>>> master
 #, fuzzy
 msgid "Remove previous word"
 msgstr "Předchozí slovo"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:846
+=======
 #: src/KeyCommands.vala:747
+>>>>>>> master
 #, fuzzy
 msgid "Markdown Syntax"
 msgstr "Znaky syntaxe Markdownu"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:847
+msgid "Insert Markdown header-1 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:848
+msgid "Insert Markdown header-2 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:849
+msgid "Insert Markdown header-3 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:850
+msgid "Insert Markdown header-4 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:851
+msgid "Insert Markdown header-5 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:852
+msgid "Insert Markdown header-6 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:853
+msgid "Insert Markdown bold syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:854
+msgid "Insert Markdown italics syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:855
+msgid "Insert Markdown strikethrough syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:856
+msgid "Insert Markdown code syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:857
+msgid "Insert Markdown highlighting syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:858
+msgid "Insert Markdown superscript syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:859
+msgid "Insert Markdown subscript syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:860
+msgid "Insert Markdown URL link syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:862
+=======
 #: src/KeyCommands.vala:748
 msgid "Insert Markdown header-1 syntax"
 msgstr ""
@@ -1277,29 +2063,65 @@ msgid "Insert Markdown URL link syntax"
 msgstr ""
 
 #: src/KeyCommands.vala:763
+>>>>>>> master
 #, fuzzy
 msgid "Copy selected nodes or text"
 msgstr "Zkopírovat vybraný text"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:863
+=======
 #: src/KeyCommands.vala:764
+>>>>>>> master
 #, fuzzy
 msgid "Cut selected nodes or text"
 msgstr "Vyjmout vybraný text"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:864
+=======
 #: src/KeyCommands.vala:765
+>>>>>>> master
 #, fuzzy
 msgid "Paste nodes or text from clipboard"
 msgstr "Vložit obrázek ze schránky"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:865
+msgid "Convert a clipboard image to LaTeX"
+msgstr ""
+
+#: src/KeyCommands.vala:866
+=======
 #: src/KeyCommands.vala:766
 msgid "Convert a clipboard image to LaTeX"
 msgstr ""
 
 #: src/KeyCommands.vala:767
+>>>>>>> master
 #, fuzzy
 msgid "URL Commands"
 msgstr "Uzlové příkazy"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:867
+msgid "Open URL link at current cursor position"
+msgstr ""
+
+#: src/KeyCommands.vala:868
+msgid "Add URL link at current cursor position"
+msgstr ""
+
+#: src/KeyCommands.vala:869
+msgid "Change URL link at current cursor position"
+msgstr ""
+
+#: src/KeyCommands.vala:870
+msgid "Remove URL link at current cursor position"
+msgstr ""
+
+#: src/KeyCommands.vala:871
+=======
 #: src/KeyCommands.vala:768
 msgid "Open URL link at current cursor position"
 msgstr ""
@@ -1317,19 +2139,67 @@ msgid "Remove URL link at current cursor position"
 msgstr ""
 
 #: src/KeyCommands.vala:772
+>>>>>>> master
 #, fuzzy
 msgid "Cursor Commands"
 msgstr "Uzlové příkazy"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:872
+msgid "Move cursor to next character"
+msgstr ""
+
+#: src/KeyCommands.vala:873
+=======
 #: src/KeyCommands.vala:773
 msgid "Move cursor to next character"
 msgstr ""
 
 #: src/KeyCommands.vala:774
+>>>>>>> master
 #, fuzzy
 msgid "Move cursor to previous character"
 msgstr "Předchozí znak"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:874
+msgid "Move cursor up one line"
+msgstr ""
+
+#: src/KeyCommands.vala:875
+msgid "Move cursor down one line"
+msgstr ""
+
+#: src/KeyCommands.vala:876
+msgid "Move cursor to beginning of next word"
+msgstr ""
+
+#: src/KeyCommands.vala:877
+msgid "Move cursor to beginning of previous word"
+msgstr ""
+
+#: src/KeyCommands.vala:878
+msgid "Move cursor to start of text"
+msgstr ""
+
+#: src/KeyCommands.vala:879
+msgid "Move cursor to end of text"
+msgstr ""
+
+#: src/KeyCommands.vala:880
+msgid "Move cursor to start of current line"
+msgstr ""
+
+#: src/KeyCommands.vala:881
+msgid "Move cursor to end of current line"
+msgstr ""
+
+#: src/KeyCommands.vala:883
+msgid "Add next character to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:884
+=======
 #: src/KeyCommands.vala:775
 msgid "Move cursor up one line"
 msgstr ""
@@ -1367,10 +2237,58 @@ msgid "Add next character to current selection"
 msgstr ""
 
 #: src/KeyCommands.vala:785
+>>>>>>> master
 #, fuzzy
 msgid "Add previous character to current selection"
 msgstr "Přidat předchozí znak"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:885
+msgid "Add line up to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:886
+msgid "Add line down to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:887
+msgid "Add next word to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:888
+msgid "Add previous word to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:889
+msgid "Add start of text to current selection (Control-Up)"
+msgstr ""
+
+#: src/KeyCommands.vala:890
+msgid "Add start of text to current selection (Control-Home)"
+msgstr ""
+
+#: src/KeyCommands.vala:891
+msgid "Add end of text to current selection (Control-Down)"
+msgstr ""
+
+#: src/KeyCommands.vala:892
+msgid "Add end of text to current selection (Control-End)"
+msgstr ""
+
+#: src/KeyCommands.vala:893
+msgid "Add start of current line to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:894
+msgid "Add end of current line to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:895 src/Shortcuts.vala:854
+msgid "Select all text"
+msgstr "Vybrat celý text"
+
+#: src/KeyCommands.vala:896
+=======
 #: src/KeyCommands.vala:786
 msgid "Add line up to current selection"
 msgstr ""
@@ -1416,15 +2334,48 @@ msgid "Select all text"
 msgstr "Vybrat celý text"
 
 #: src/KeyCommands.vala:797
+>>>>>>> master
 #, fuzzy
 msgid "Deselect all text"
 msgstr "Vybrat celý text"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:2189
+=======
 #: src/KeyCommands.vala:1966
+>>>>>>> master
 #, fuzzy
 msgid "Select a group color"
 msgstr "Vyberte barvu odkazu"
 
+<<<<<<< HEAD
+#: src/LatexRenderer.vala:446
+msgid "Unable to read LaTeX formula dimensions"
+msgstr ""
+
+#: src/LatexRenderer.vala:473
+msgid "The generated LaTeX SVG has no usable size"
+msgstr ""
+
+#: src/LatexRenderer.vala:541
+msgid "LaTeX rendering was cancelled"
+msgstr ""
+
+#: src/LatexRenderer.vala:545
+msgid "LaTeX rendering timed out"
+msgstr ""
+
+#: src/LatexRenderer.vala:549
+msgid "LaTeX rendering failed"
+msgstr ""
+
+#: src/layouts/LayoutManual.vala:27 src/MapInspector.vala:265
+#: src/MapInspector.vala:511 src/MapModel.vala:2362
+msgid "Manual"
+msgstr "Ruční"
+
+#: src/MainWindow.vala:309
+=======
 #: src/LatexRenderer.vala:420
 msgid "Unable to read LaTeX formula dimensions"
 msgstr ""
@@ -1451,288 +2402,335 @@ msgid "Manual"
 msgstr "Ruční"
 
 #: src/MainWindow.vala:242
+>>>>>>> master
 msgid "New File"
 msgstr "Nový soubor"
 
-#: src/MainWindow.vala:247 src/MainWindow.vala:1463
+#: src/MainWindow.vala:314 src/MainWindow.vala:1747
 msgid "Open File"
 msgstr "Otevřít soubor"
 
-#: src/MainWindow.vala:252
+#: src/MainWindow.vala:319
 msgid "Save File As"
 msgstr "Uložit soubor jako"
 
-#: src/MainWindow.vala:259 src/StickerSet.vala:307 src/UndoBuffer.vala:91
+#: src/MainWindow.vala:326 src/StickerSet.vala:307 src/UndoBuffer.vala:91
 msgid "Undo"
 msgstr "Zpět"
 
-#: src/MainWindow.vala:266 src/StickerSet.vala:308 src/UndoBuffer.vala:98
+#: src/MainWindow.vala:333 src/StickerSet.vala:308 src/UndoBuffer.vala:98
 msgid "Redo"
 msgstr "Znovu"
 
-#: src/MainWindow.vala:725
+#: src/MainWindow.vala:792
 msgid "Tag Highlight Mode"
 msgstr ""
 
-#: src/MainWindow.vala:727 src/MainWindow.vala:1140
+#: src/MainWindow.vala:794 src/MainWindow.vala:1379
 msgid "Focus Mode"
 msgstr "Režim soustředění"
 
-#: src/MainWindow.vala:730
+#: src/MainWindow.vala:797
 msgid "Unnamed Document"
 msgstr "Nepojmenovaný dokument"
 
-#: src/MainWindow.vala:733
+#: src/MainWindow.vala:800
 #, fuzzy
 msgid "Read-Only"
 msgstr "Čtení"
 
-#: src/MainWindow.vala:752
+#: src/MainWindow.vala:819
 msgid "Zoom to Fit"
 msgstr "Vměstnat do okna"
 
-#: src/MainWindow.vala:753
+#: src/MainWindow.vala:820
 #, fuzzy
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "Vměstnat do okna vybraný uzel"
 
-#: src/MainWindow.vala:754
+#: src/MainWindow.vala:821
 msgid "Zoom to Actual Size"
 msgstr "Přiblížení na skutečnou velikost"
 
-#: src/MainWindow.vala:762
+#: src/MainWindow.vala:829
 msgid "Zoom to Percent"
 msgstr "Procentuální přiblížení"
 
-#: src/MainWindow.vala:777 src/ZoomWidget.vala:105
+#: src/MainWindow.vala:844 src/ZoomWidget.vala:105
 msgid "Zoom In"
 msgstr "Přiblížit"
 
-#: src/MainWindow.vala:784 src/ZoomWidget.vala:93
+#: src/MainWindow.vala:851 src/ZoomWidget.vala:93
 msgid "Zoom Out"
 msgstr "Oddálit"
 
-#: src/MainWindow.vala:802 src/MainWindow.vala:1732
+#: src/MainWindow.vala:869 src/MainWindow.vala:2024
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Přiblížení (%d%%)"
 
-#: src/MainWindow.vala:815
+#: src/MainWindow.vala:898
+msgid "Where"
+msgstr ""
+
+#: src/MainWindow.vala:930
+msgid "Matched Content"
+msgstr ""
+
+#: src/MainWindow.vala:960 src/QuickEntry.vala:89
+msgid "Tab"
+msgstr "Panel"
+
+#: src/MainWindow.vala:977
 #, fuzzy
 msgid "Search Nodes, Callouts and Connections"
 msgstr "Hledat uzly a spojení"
 
-#: src/MainWindow.vala:860
+#: src/MainWindow.vala:1043
 msgid "Search Criteria"
 msgstr "Kritéria hledání"
 
-#: src/MainWindow.vala:864
+#: src/MainWindow.vala:1047
 msgid "Search all tabs"
 msgstr "Prohledat všechny panely"
 
-#: src/MainWindow.vala:905 src/StickerSet.vala:114
+#: src/MainWindow.vala:1088 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Hledat"
 
-#: src/MainWindow.vala:914
+#: src/MainWindow.vala:1097
 msgid "Nodes"
 msgstr "Uzly"
 
-#: src/MainWindow.vala:915
+#: src/MainWindow.vala:1098
 msgid "Connections"
 msgstr "Spojení"
 
-#: src/MainWindow.vala:916
+#: src/MainWindow.vala:1099
 msgid "Callouts"
 msgstr ""
 
-#: src/MainWindow.vala:917
+#: src/MainWindow.vala:1100
 #, fuzzy
 msgid "Groups"
 msgstr "Přidat skupinu"
 
-#: src/MainWindow.vala:918
+#: src/MainWindow.vala:1101
 msgid "Titles"
 msgstr "Názvy"
 
-#: src/MainWindow.vala:919
+#: src/MainWindow.vala:1102
 msgid "Notes"
 msgstr "Poznámky"
 
-#: src/MainWindow.vala:920
+#: src/MainWindow.vala:1103
+msgid "Tables"
+msgstr ""
+
+#: src/MainWindow.vala:1104
 msgid "Folded"
 msgstr "Sbalené"
 
-#: src/MainWindow.vala:921
+#: src/MainWindow.vala:1105
 msgid "Unfolded"
 msgstr "Rozbalené"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:1106
 msgid "Tasks"
 msgstr "Úkoly"
 
-#: src/MainWindow.vala:923
+#: src/MainWindow.vala:1107
 msgid "Non-tasks"
 msgstr "Nejsou úkoly"
 
-#: src/MainWindow.vala:1045
+#: src/MainWindow.vala:1108
+#, fuzzy
+msgid "No priority"
+msgstr "Nízká priorita"
+
+#: src/MainWindow.vala:1109 src/NodeMenu.vala:44 src/NodesMenu.vala:38
+#, fuzzy
+msgid "Priority 1"
+msgstr "Nízká priorita"
+
+#: src/MainWindow.vala:1110 src/NodeMenu.vala:45 src/NodesMenu.vala:39
+#, fuzzy
+msgid "Priority 2"
+msgstr "Nízká priorita"
+
+#: src/MainWindow.vala:1111 src/NodeMenu.vala:46 src/NodesMenu.vala:40
+#, fuzzy
+msgid "Priority 3"
+msgstr "Nízká priorita"
+
+#: src/MainWindow.vala:1112 src/NodeMenu.vala:47 src/NodesMenu.vala:41
+#, fuzzy
+msgid "Priority 4"
+msgstr "Nízká priorita"
+
+#: src/MainWindow.vala:1113 src/NodeMenu.vala:48 src/NodesMenu.vala:42
+#, fuzzy
+msgid "Priority 5"
+msgstr "Nízká priorita"
+
+#: src/MainWindow.vala:1284
 msgid "Print…"
 msgstr "Vytisknout…"
 
-#: src/MainWindow.vala:1084
+#: src/MainWindow.vala:1323
 msgid "Brain Dump"
 msgstr ""
 
-#: src/MainWindow.vala:1160 src/Preferences.vala:50
+#: src/MainWindow.vala:1399 src/Preferences.vala:50
 msgid "Preferences"
 msgstr "Přizpůsobení"
 
-#: src/MainWindow.vala:1161
+#: src/MainWindow.vala:1400
 msgid "Shortcuts Cheatsheet"
 msgstr "Seznam všech zkratek"
 
-#: src/MainWindow.vala:1164
+#: src/MainWindow.vala:1403
 msgid "About Minder"
 msgstr "O Minderu"
 
-#: src/MainWindow.vala:1187 src/TextMenu.vala:52
+#: src/MainWindow.vala:1426 src/TextMenu.vala:52
 #, fuzzy
 msgid "# Header1"
 msgstr "Headset"
 
-#: src/MainWindow.vala:1188 src/TextMenu.vala:53
+#: src/MainWindow.vala:1427 src/TextMenu.vala:53
 msgid "## Header2"
 msgstr ""
 
-#: src/MainWindow.vala:1189 src/TextMenu.vala:54
+#: src/MainWindow.vala:1428 src/TextMenu.vala:54
 msgid "### Header3"
 msgstr ""
 
-#: src/MainWindow.vala:1190 src/TextMenu.vala:55
+#: src/MainWindow.vala:1429 src/TextMenu.vala:55
 msgid "#### Header4"
 msgstr ""
 
-#: src/MainWindow.vala:1191 src/TextMenu.vala:56
+#: src/MainWindow.vala:1430 src/TextMenu.vala:56
 msgid "##### Header5"
 msgstr ""
 
-#: src/MainWindow.vala:1192 src/TextMenu.vala:57
+#: src/MainWindow.vala:1431 src/TextMenu.vala:57
 msgid "###### Header6"
 msgstr ""
 
-#: src/MainWindow.vala:1193 src/TextMenu.vala:58
+#: src/MainWindow.vala:1432 src/TextMenu.vala:58
 msgid "**Bold**"
 msgstr ""
 
-#: src/MainWindow.vala:1194 src/TextMenu.vala:59
+#: src/MainWindow.vala:1433 src/TextMenu.vala:59
 msgid "__Italicize_"
 msgstr ""
 
-#: src/MainWindow.vala:1195 src/TextMenu.vala:60
+#: src/MainWindow.vala:1434 src/TextMenu.vala:60
 msgid "~~Strikeout~~"
 msgstr ""
 
-#: src/MainWindow.vala:1196 src/TextMenu.vala:61
+#: src/MainWindow.vala:1435 src/TextMenu.vala:61
 msgid "`Code`"
 msgstr ""
 
-#: src/MainWindow.vala:1197 src/TextMenu.vala:62
+#: src/MainWindow.vala:1436 src/TextMenu.vala:62
 #, fuzzy
 msgid "==Highlight=="
 msgstr "Zarovnat pravou stranu"
 
-#: src/MainWindow.vala:1198 src/TextMenu.vala:63
+#: src/MainWindow.vala:1437 src/TextMenu.vala:63
 msgid "<sup>Superscript</sup>"
 msgstr ""
 
-#: src/MainWindow.vala:1199 src/TextMenu.vala:64
+#: src/MainWindow.vala:1438 src/TextMenu.vala:64
 msgid "<sub>Subscript</sub>"
 msgstr ""
 
-#: src/MainWindow.vala:1200 src/TextMenu.vala:65
+#: src/MainWindow.vala:1439 src/TextMenu.vala:65
 msgid "[Link text](URL)"
 msgstr ""
 
-#: src/MainWindow.vala:1218 src/MainWindow.vala:1831
+#: src/MainWindow.vala:1502 src/MainWindow.vala:2125
 msgid "Show Property Sidebar"
 msgstr "Zobrazit panel vlastností"
 
-#: src/MainWindow.vala:1229 src/MainWindow.vala:1287
+#: src/MainWindow.vala:1513 src/MainWindow.vala:1571
 msgid "Current"
 msgstr "Současné"
 
-#: src/MainWindow.vala:1230 src/MainWindow.vala:1288
+#: src/MainWindow.vala:1514 src/MainWindow.vala:1572
 #: src/StyleInspector.vala:362
 msgid "Style"
 msgstr "Styl"
 
-#: src/MainWindow.vala:1231 src/MainWindow.vala:1289 src/Preferences.vala:68
+#: src/MainWindow.vala:1515 src/MainWindow.vala:1573 src/Preferences.vala:68
 msgid "Tags"
 msgstr ""
 
-#: src/MainWindow.vala:1232 src/MainWindow.vala:1290
+#: src/MainWindow.vala:1516 src/MainWindow.vala:1574
 msgid "Stickers"
 msgstr "Nálepky"
 
-#: src/MainWindow.vala:1233 src/MainWindow.vala:1291
+#: src/MainWindow.vala:1517 src/MainWindow.vala:1575
 msgid "Map"
 msgstr "Mapa"
 
-#: src/MainWindow.vala:1364
+#: src/MainWindow.vala:1648
 msgid "Save current unnamed document?"
 msgstr "Uložit aktuální nepojmenovaný dokument?"
 
-#: src/MainWindow.vala:1365
+#: src/MainWindow.vala:1649
 msgid "Changes will be permanently lost if not saved."
 msgstr "Pokud soubor neuložíte, provedené změny se navždy ztratí."
 
-#: src/MainWindow.vala:1370
+#: src/MainWindow.vala:1654
 msgid "Discard Changes"
 msgstr "Zahodit změny"
 
-#: src/MainWindow.vala:1376 src/MainWindow.vala:1662 src/ThemeEditor.vala:159
+#: src/MainWindow.vala:1660 src/MainWindow.vala:1954 src/ThemeEditor.vala:159
 msgid "Save"
 msgstr "Uložit"
 
-#: src/MainWindow.vala:1408
+#: src/MainWindow.vala:1692
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "Soubor %s byl upraven mimo tuto aplikaci."
 
-#: src/MainWindow.vala:1409
+#: src/MainWindow.vala:1693
 msgid "What do you want to do?"
 msgstr "Co chcete dělat?"
 
-#: src/MainWindow.vala:1414
+#: src/MainWindow.vala:1698
 msgid "Discard Changes and reload"
 msgstr "Zahodit změny a obnovit"
 
-#: src/MainWindow.vala:1417
+#: src/MainWindow.vala:1701
 msgid "Save local version and overwrite"
 msgstr "Uložit lokální verzi a přepsat"
 
-#: src/MainWindow.vala:1463
+#: src/MainWindow.vala:1747
 #, fuzzy
 msgid "Open Directory"
 msgstr "Otevřít soubor"
 
-#: src/MainWindow.vala:1463
+#: src/MainWindow.vala:1747
 msgid "Open"
 msgstr "Otevřít"
 
-#: src/MainWindow.vala:1662
+#: src/MainWindow.vala:1954
 msgid "Save File"
 msgstr "Uložit soubor"
 
-#: src/MainWindow.vala:1762
+#: src/MainWindow.vala:2054
 msgid "Hide Property Sidebar"
 msgstr "Schovat panel vlastností"
 
-#: src/MainWindow.vala:2229
+#: src/MainWindow.vala:2370
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2230
+#: src/MainWindow.vala:2371
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1740,31 +2738,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2235
+#: src/MainWindow.vala:2376
 #, fuzzy
 msgid "Quit Minder"
 msgstr "O Minderu"
 
-#: src/MainWindow.vala:2255
+#: src/MainWindow.vala:2396
 #, fuzzy
 msgid "Detail"
 msgstr "Odpojit"
 
-#: src/MainWindow.vala:2263
+#: src/MainWindow.vala:2404
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2264
+#: src/MainWindow.vala:2405
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2265
+#: src/MainWindow.vala:2406
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1772,103 +2770,103 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2272
+#: src/MainWindow.vala:2413
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2297
+#: src/MainWindow.vala:2438
 msgid "Upgrades Needed"
 msgstr ""
 
-#: src/MapInspector.vala:113
+#: src/MapInspector.vala:112
 #, fuzzy
 msgid "Read-only"
 msgstr "Čtení"
 
-#: src/MapInspector.vala:148
+#: src/MapInspector.vala:147
 msgid "Hide connections"
 msgstr "Schovat spojení"
 
-#: src/MapInspector.vala:184
+#: src/MapInspector.vala:183
 #, fuzzy
 msgid "Hide callouts"
 msgstr "Videohovor"
 
-#: src/MapInspector.vala:228
+#: src/MapInspector.vala:226
 msgid "Node Layouts"
 msgstr "Rozvržení uzlů"
 
-#: src/MapInspector.vala:282
+#: src/MapInspector.vala:276
 #, fuzzy
 msgid "Node Alignment"
 msgstr "zarovnání uzlu"
 
-#: src/MapInspector.vala:289
+#: src/MapInspector.vala:283
 #, fuzzy
 msgid "Align left edges"
 msgstr "Zarovnat levou stranu"
 
-#: src/MapInspector.vala:293
+#: src/MapInspector.vala:287
 #, fuzzy
 msgid "Align horizontal centers"
 msgstr "Zarovnat prostředek vodorovně"
 
-#: src/MapInspector.vala:297
+#: src/MapInspector.vala:291
 #, fuzzy
 msgid "Align right edges"
 msgstr "Zarovnat pravou stranu"
 
-#: src/MapInspector.vala:301
+#: src/MapInspector.vala:295
 #, fuzzy
 msgid "Align top edges"
 msgstr "Zarovnat uzly"
 
-#: src/MapInspector.vala:305
+#: src/MapInspector.vala:299
 #, fuzzy
 msgid "Align vertical centers"
 msgstr "Zarovnat prostředek svisle"
 
-#: src/MapInspector.vala:309
+#: src/MapInspector.vala:303
 #, fuzzy
 msgid "Align bottom edges"
 msgstr "Zarovnat spodní stranu"
 
-#: src/MapInspector.vala:351
+#: src/MapInspector.vala:345
 msgid "Themes"
 msgstr "Témata"
 
-#: src/MapInspector.vala:378
+#: src/MapInspector.vala:372
 msgid "Add Custom Theme"
 msgstr "Přidat vlastní motiv"
 
-#: src/MapInspector.vala:396
+#: src/MapInspector.vala:390
 msgid "Copy location of temporary directory"
 msgstr ""
 
-#: src/MapInspector.vala:421
+#: src/MapInspector.vala:415
 #, fuzzy
 msgid "Balance nodes"
 msgstr "vyvážit uzly"
 
-#: src/MapInspector.vala:423
+#: src/MapInspector.vala:417
 msgid "Balance Nodes"
 msgstr "Vyvážit uzly"
 
-#: src/MapInspector.vala:427
+#: src/MapInspector.vala:421
 #, fuzzy
 msgid "Fold nodes with completed tasks"
 msgstr "Sbalit dokončené úkoly"
 
-#: src/MapInspector.vala:429
+#: src/MapInspector.vala:423
 msgid "Fold Completed Tasks"
 msgstr "Sbalit dokončené úkoly"
 
-#: src/MapInspector.vala:433
+#: src/MapInspector.vala:427
 #, fuzzy
 msgid "Unfold all nodes"
 msgstr "Rozbalit všechny uzly"
 
-#: src/MapInspector.vala:435
+#: src/MapInspector.vala:429
 msgid "Unfold All Nodes"
 msgstr "Rozbalit všechny uzly"
 
@@ -1876,65 +2874,83 @@ msgstr "Rozbalit všechny uzly"
 msgid "Main Idea"
 msgstr "Hlavní myšlenka"
 
+<<<<<<< HEAD
+#: src/MindMap.vala:1089
+=======
 #: src/MindMap.vala:1085
+>>>>>>> master
 msgid "Select a link color"
 msgstr "Vyberte barvu odkazu"
 
-#: src/NodeGroup.vala:167
+#: src/NodeGroup.vala:165
 #, fuzzy
 msgid "Group Note"
 msgstr "Přidat skupinu"
 
-#: src/NodeInspector.vala:120
+#: src/NodeInspector.vala:115
 msgid "Task"
 msgstr "Úkol"
 
-#: src/NodeInspector.vala:146
+#: src/NodeInspector.vala:141
 msgid "Fold"
 msgstr "Sbalit"
 
-#: src/NodeInspector.vala:172
+#: src/NodeInspector.vala:167
 msgid "Sequence"
 msgstr ""
 
-#: src/NodeInspector.vala:181
+#: src/NodeInspector.vala:176
 msgid ""
 "When set, automatically numbers child nodes and displays them as a sequence."
 msgstr ""
 
-#: src/NodeInspector.vala:236
+#: src/NodeInspector.vala:209
+#, fuzzy
+msgid "Select Link Color"
+msgstr "Vyberte barvu odkazu"
+
+#: src/NodeInspector.vala:238
 msgid "Override Color"
 msgstr "Přepsat barvu"
 
-#: src/NodeInspector.vala:351 src/NodeInspector.vala:375
+#: src/NodeInspector.vala:262
+#, fuzzy
+msgid "Select Root Color"
+msgstr "Vybrat kořen"
+
+#: src/NodeInspector.vala:360 src/NodeInspector.vala:384
 msgid "Image"
 msgstr "Obrázek"
 
-#: src/NodeInspector.vala:357
+#: src/NodeInspector.vala:366 src/NodeMenu.vala:71
 msgid "Add Image…"
 msgstr "Přidat obrázek…"
 
+<<<<<<< HEAD
+#: src/NodeInspector.vala:393 src/Shortcuts.vala:831
+=======
 #: src/NodeInspector.vala:384 src/Shortcuts.vala:815
+>>>>>>> master
 msgid "Edit Image"
 msgstr "Upravit obrázek"
 
-#: src/NodeInspector.vala:401
+#: src/NodeInspector.vala:410
 msgid "Resizable"
 msgstr ""
 
-#: src/NodeInspector.vala:488
+#: src/NodeInspector.vala:500
 msgid "Copy Node To Clipboard"
 msgstr "Zkopírovat uzel do schránky"
 
-#: src/NodeInspector.vala:493
+#: src/NodeInspector.vala:505
 msgid "Cut Node To Clipboard"
 msgstr "Vyjmout uzel do schránky"
 
-#: src/NodeInspector.vala:499
+#: src/NodeInspector.vala:511
 msgid "Detach Node"
 msgstr "Odpojit uzel"
 
-#: src/NodeInspector.vala:509
+#: src/NodeInspector.vala:517
 msgid "Delete Node"
 msgstr "Smazat uzel"
 
@@ -1950,7 +2966,7 @@ msgstr "Kopírovat"
 msgid "Cut"
 msgstr "Vyjmout"
 
-#: src/NodeMenu.vala:39 src/NodeMenu.vala:245 src/NodeMenu.vala:254
+#: src/NodeMenu.vala:39 src/NodeMenu.vala:276 src/NodeMenu.vala:285
 msgid "Paste and Replace Node"
 msgstr "Režim vložení a nahrazení"
 
@@ -1958,287 +2974,321 @@ msgstr "Režim vložení a nahrazení"
 msgid "Delete Single Node"
 msgstr "Smazat jednotlivý uzel"
 
-#: src/NodeMenu.vala:44
+#: src/NodeMenu.vala:51 src/NodesMenu.vala:45
+#, fuzzy
+msgid "Clear Priority"
+msgstr "Střední priorita"
+
+#: src/NodeMenu.vala:58
 msgid "Set to color…"
 msgstr "Nastavit barvu…"
 
-#: src/NodeMenu.vala:45
+#: src/NodeMenu.vala:59
 msgid "Randomize color"
 msgstr "Randomizovat barvu"
 
-#: src/NodeMenu.vala:46
+#: src/NodeMenu.vala:60
 msgid "Use parent color"
 msgstr "Použít nadřazenou barvu"
 
-#: src/NodeMenu.vala:49
+#: src/NodeMenu.vala:63
 msgid "One Level"
 msgstr ""
 
-#: src/NodeMenu.vala:50
+#: src/NodeMenu.vala:64
 msgid "All Levels"
 msgstr ""
 
-#: src/NodeMenu.vala:53
+#: src/NodeMenu.vala:67
 msgid "Edit Text…"
 msgstr "Upravit text…"
 
-#: src/NodeMenu.vala:55 src/NodesMenu.vala:43
+#: src/NodeMenu.vala:69 src/NodesMenu.vala:57
 #, fuzzy
 msgid "Edit Tags"
 msgstr "Upravit obrázek"
 
-#: src/NodeMenu.vala:56 src/NodeMenu.vala:230
+#: src/NodeMenu.vala:70 src/NodeMenu.vala:259
 msgid "Add Task"
 msgstr "Přidat úkol"
 
-#: src/NodeMenu.vala:57 src/NodeMenu.vala:234
-msgid "Add Image"
-msgstr "Přidat obrázek"
+#: src/NodeMenu.vala:72 src/NodeMenu.vala:264
+#, fuzzy
+msgid "Add Table…"
+msgstr "Přidat obrázek…"
 
-#: src/NodeMenu.vala:59 src/NodeMenu.vala:231
+#: src/NodeMenu.vala:74 src/NodeMenu.vala:260
 msgid "Add Node Link"
 msgstr "Přidat poznámku k odkazu"
 
-#: src/NodeMenu.vala:60
+#: src/NodeMenu.vala:75
 msgid "Add Connection"
 msgstr "Přidat spojení"
 
-#: src/NodeMenu.vala:61
+#: src/NodeMenu.vala:76
 msgid "Add Group"
 msgstr "Přidat skupinu"
 
-#: src/NodeMenu.vala:62 src/NodeMenu.vala:233
+#: src/NodeMenu.vala:77 src/NodeMenu.vala:262
 #, fuzzy
 msgid "Add Callout"
 msgstr "Přidat skupinu"
 
-#: src/NodeMenu.vala:63 src/ThemeEditor.vala:138
+#: src/NodeMenu.vala:78 src/NodesMenu.vala:58
+#, fuzzy
+msgid "Priority"
+msgstr "Nízká priorita"
+
+#: src/NodeMenu.vala:79 src/ThemeEditor.vala:138
 msgid "Link Color"
 msgstr "Barva odkazu"
 
-#: src/NodeMenu.vala:64
+#: src/NodeMenu.vala:80
 #, fuzzy
 msgid "Toggle Folding"
 msgstr "Přepnout sbalení"
 
-#: src/NodeMenu.vala:65
+#: src/NodeMenu.vala:81
 #, fuzzy
 msgid "Toggle Sequence"
 msgstr "Přepnout výběr položky"
 
-#: src/NodeMenu.vala:68
+#: src/NodeMenu.vala:84
 msgid "Change Node"
 msgstr "Změnit uzly"
 
-#: src/NodeMenu.vala:72
+#: src/NodeMenu.vala:88
 msgid "Add Parent Node"
 msgstr "Hledat nadřazený uzel"
 
-#: src/NodeMenu.vala:73
+#: src/NodeMenu.vala:89
 msgid "Add Child Node"
 msgstr "Přidat podřadný uzel"
 
-#: src/NodeMenu.vala:74
+#: src/NodeMenu.vala:90
 msgid "Add Sibling Node"
 msgstr "Přidat souřadný uzel"
 
-#: src/NodeMenu.vala:77
+#: src/NodeMenu.vala:93
 msgid "Insert Nodes"
 msgstr "Vložit uzly"
 
-#: src/NodeMenu.vala:78
+#: src/NodeMenu.vala:94
 msgid "Replace Nodes"
 msgstr "Nahradit uzly"
 
-#: src/NodeMenu.vala:81
+#: src/NodeMenu.vala:97
 msgid "Add Node"
 msgstr "Přidat uzel"
 
-#: src/NodeMenu.vala:83 src/QuickEntry.vala:40
+#: src/NodeMenu.vala:99 src/QuickEntry.vala:40
 msgid "Quick Entry"
 msgstr "Rychlé zadávání"
 
-#: src/NodeMenu.vala:86
+#: src/NodeMenu.vala:102
 msgid "Root Node"
 msgstr "Kořenový uzel"
 
-#: src/NodeMenu.vala:87
+#: src/NodeMenu.vala:103
 msgid "Next Sibling Node"
 msgstr "Další souřadný uzel"
 
-#: src/NodeMenu.vala:88
+#: src/NodeMenu.vala:104
 msgid "Previous Sibling Node"
 msgstr "Předchozí souřadný uzel"
 
-#: src/NodeMenu.vala:89
+#: src/NodeMenu.vala:105
 msgid "Child Node"
 msgstr "Podřadný uzel"
 
-#: src/NodeMenu.vala:90 src/NodesMenu.vala:56
+#: src/NodeMenu.vala:106 src/NodesMenu.vala:71
 msgid "Child Nodes"
 msgstr "Podřadné uzly"
 
-#: src/NodeMenu.vala:91
+#: src/NodeMenu.vala:107
 msgid "Subtree"
 msgstr "Podřadný strom"
 
-#: src/NodeMenu.vala:92
+#: src/NodeMenu.vala:108
 msgid "Parent Node"
 msgstr "Nadřazený uzel"
 
-#: src/NodeMenu.vala:93
+#: src/NodeMenu.vala:109
 msgid "Linked Node"
 msgstr "Spojený uzel"
 
-#: src/NodeMenu.vala:105
+#: src/NodeMenu.vala:121
 msgid "Center Current Node"
 msgstr "Zarovnat tento uzel na střed"
 
-#: src/NodeMenu.vala:108
+#: src/NodeMenu.vala:124
 msgid "Alphabetically"
 msgstr "Abecedně"
 
-#: src/NodeMenu.vala:109
+#: src/NodeMenu.vala:125
 #, fuzzy
 msgid "Randomly"
 msgstr "Randomizovat"
 
-#: src/NodeMenu.vala:112
+#: src/NodeMenu.vala:128
 msgid "Sort Children"
 msgstr "Třídit podřadné uzly"
 
-#: src/NodeMenu.vala:115
+#: src/NodeMenu.vala:131
 msgid "Detach"
 msgstr "Odpojit"
 
-#: src/NodeMenu.vala:228
+#: src/NodeMenu.vala:257
 msgid "Remove Task"
 msgstr "Odstranit úkol"
 
-#: src/NodeMenu.vala:229
+#: src/NodeMenu.vala:258
 msgid "Mark Task As Done"
 msgstr "Označit úkol za splněný"
 
-#: src/NodeMenu.vala:231
+#: src/NodeMenu.vala:260
 msgid "Remove Node Link"
 msgstr "Odstranit odkaz uzlu"
 
-#: src/NodeMenu.vala:232
+#: src/NodeMenu.vala:261
 msgid "Unfold Children"
 msgstr "Rozbalit podřadné uzly"
 
-#: src/NodeMenu.vala:232
+#: src/NodeMenu.vala:261
 msgid "Fold Children"
 msgstr "Sbalit podřadné uzly"
 
-#: src/NodeMenu.vala:233
+#: src/NodeMenu.vala:262
 #, fuzzy
 msgid "Remove Callout"
 msgstr "Odstranit úkol"
 
-#: src/NodeMenu.vala:244
+#: src/NodeMenu.vala:263
+msgid "Add Image"
+msgstr "Přidat obrázek"
+
+#: src/NodeMenu.vala:264
+#, fuzzy
+msgid "Edit Table…"
+msgstr "Upravit název…"
+
+#: src/NodeMenu.vala:275
 msgid "Paste Node As Child"
 msgstr "Vložit uzel jako podřadný"
 
-#: src/NodeMenu.vala:247
+#: src/NodeMenu.vala:278
 msgid "Paste Image As Child Node"
 msgstr "Vložit obrázek jako podřadný uzel"
 
-#: src/NodeMenu.vala:248
+#: src/NodeMenu.vala:279
 msgid "Paste and Replace Node Image"
 msgstr "Vložit a nahradit obrázek uzlu"
 
-#: src/NodeMenu.vala:250
+#: src/NodeMenu.vala:281
 msgid "Paste Text As Child Node"
 msgstr "Vložit uzel jako podřadný"
 
-#: src/NodeMenu.vala:251
+#: src/NodeMenu.vala:282
 msgid "Paste and Replace Node Text"
 msgstr "Vložit a nahradit text uzlu"
 
-#: src/NodesMenu.vala:38
+#: src/NodesMenu.vala:52
 #, fuzzy
 msgid "Set To Color…"
 msgstr "Nastavit barvu…"
 
-#: src/NodesMenu.vala:39
+#: src/NodesMenu.vala:53
 #, fuzzy
 msgid "Randomize Colors"
 msgstr "Randomizovat barvy"
 
-#: src/NodesMenu.vala:40
+#: src/NodesMenu.vala:54
 #, fuzzy
 msgid "Use Parent Color"
 msgstr "Použít nadřazenou barvu"
 
-#: src/NodesMenu.vala:44 src/ThemeEditor.vala:129
+#: src/NodesMenu.vala:59 src/ThemeEditor.vala:129
 msgid "Link Colors"
 msgstr "Barvy odkazu"
 
-#: src/NodesMenu.vala:45
+#: src/NodesMenu.vala:60
 msgid "Toggle Tasks"
 msgstr "Přepnout úkoly"
 
-#: src/NodesMenu.vala:46
+#: src/NodesMenu.vala:61
 #, fuzzy
 msgid "Toggle Folds"
 msgstr "Přepnout sbalení"
 
-#: src/NodesMenu.vala:47
+#: src/NodesMenu.vala:62
 #, fuzzy
 msgid "Toggle Sequences"
 msgstr "Přepnout výběr položky"
 
-#: src/NodesMenu.vala:50
+#: src/NodesMenu.vala:65
 msgid "Connect"
 msgstr "Spojit"
 
-#: src/NodesMenu.vala:51
+#: src/NodesMenu.vala:66
 msgid "Link Nodes"
 msgstr "Uzly s odkazem"
 
-#: src/NodesMenu.vala:55
+#: src/NodesMenu.vala:70
 msgid "Parent Nodes"
 msgstr "Nadřazené uzly"
 
-#: src/NodesMenu.vala:62
+#: src/NodesMenu.vala:77
 msgid "Align Top"
 msgstr "Zarovnat nahoru"
 
-#: src/NodesMenu.vala:63
+#: src/NodesMenu.vala:78
 msgid "Align Center Horizontally"
 msgstr "Zarovnat prostředek vodorovně"
 
-#: src/NodesMenu.vala:64
+#: src/NodesMenu.vala:79
 msgid "Align Bottom"
 msgstr "Zarovnat dolů"
 
-#: src/NodesMenu.vala:67
+#: src/NodesMenu.vala:82 src/TableEditor.vala:320
 msgid "Align Left"
 msgstr "Zarovnat vlevo"
 
-#: src/NodesMenu.vala:68
+#: src/NodesMenu.vala:83
 msgid "Align Center Vertically"
 msgstr "Zarovnat prostředek svisle"
 
-#: src/NodesMenu.vala:69
+#: src/NodesMenu.vala:84 src/TableEditor.vala:322
 msgid "Align Right"
 msgstr "Zarovnat vpravo"
 
-#: src/NodesMenu.vala:76
+#: src/NodesMenu.vala:91
 #, fuzzy
 msgid "Align"
 msgstr "Zarovnat nahoru"
 
-#: src/Node.vala:2689
+#: src/NodeTable.vala:372
+msgid "Table Truncated"
+msgstr ""
+
+#: src/NodeTable.vala:373
+#, c-format
+msgid "Tables are limited to %d rows, %d columns, and %d cells."
+msgstr ""
+
+#: src/Node.vala:2883
 msgid "Node Title"
 msgstr "Název poznámky"
 
-#: src/Node.vala:2697
+#: src/Node.vala:2889
 msgid "Node Note"
 msgstr "Poznámka uzlu"
 
-#: src/Node.vala:2707
+#: src/Node.vala:2895
+#, fuzzy
+msgid "Node Table"
+msgstr "Název poznámky"
+
+#: src/Node.vala:2903
 #, fuzzy
 msgid "Callout Text"
 msgstr "Vložit text"
@@ -2429,6 +3479,25 @@ msgstr "Uzlové příkazy"
 msgid "Search shortcuts"
 msgstr "Zkratky Minderu"
 
+<<<<<<< HEAD
+#: src/Preferences.vala:476
+msgid "Show upgrade dialog when file upgrade is needed"
+msgstr ""
+
+#: src/Preferences.vala:480
+msgid "Show temporary directory containing current mindmap in map sidebar"
+msgstr ""
+
+#: src/Preferences.vala:490
+msgid "Default file upgrade action"
+msgstr ""
+
+#: src/Preferences.vala:564 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
+msgid "None"
+msgstr "Žádný"
+
+#: src/Preferences.vala:565
+=======
 #: src/Preferences.vala:467
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr ""
@@ -2446,44 +3515,77 @@ msgid "None"
 msgstr "Žádný"
 
 #: src/Preferences.vala:556
+>>>>>>> master
 #, fuzzy
 msgid "Enter shortcut"
 msgstr "Zkratky Minderu"
 
+<<<<<<< HEAD
+#: src/Preferences.vala:733
+msgid "Unable to set new shortcut due to conflicts"
+msgstr ""
+
+#: src/Preferences.vala:734
+=======
 #: src/Preferences.vala:724
 msgid "Unable to set new shortcut due to conflicts"
 msgstr ""
 
 #: src/Preferences.vala:725
+>>>>>>> master
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/Preferences.vala:799
+=======
 #: src/Preferences.vala:790
+>>>>>>> master
 #, fuzzy
 msgid "Clear all shortcuts?"
 msgstr "Zkratky Minderu"
 
+<<<<<<< HEAD
+#: src/Preferences.vala:799 src/Preferences.vala:810
+msgid "Current shortcut settings will be lost"
+msgstr ""
+
+#: src/Preferences.vala:810
+=======
 #: src/Preferences.vala:790 src/Preferences.vala:801
 msgid "Current shortcut settings will be lost"
 msgstr ""
 
 #: src/Preferences.vala:801
+>>>>>>> master
 #, fuzzy
 msgid "Use Minder Default Shortcuts?"
 msgstr "Zkratky Minderu"
 
+<<<<<<< HEAD
+#: src/Preferences.vala:842 src/Preferences.vala:860
+=======
 #: src/Preferences.vala:833 src/Preferences.vala:851
+>>>>>>> master
 #, fuzzy
 msgid "Minder Default"
 msgstr "Základní"
 
+<<<<<<< HEAD
+#: src/Preferences.vala:845 src/Preferences.vala:861
+=======
 #: src/Preferences.vala:836 src/Preferences.vala:852
+>>>>>>> master
 #, fuzzy
 msgid "Last Used"
 msgstr "Znovu přidat co bylo odebráno"
 
+<<<<<<< HEAD
+#: src/Preferences.vala:847 src/Preferences.vala:865
+=======
 #: src/Preferences.vala:838 src/Preferences.vala:856
+>>>>>>> master
 #, c-format
 msgid "Named Style: %s"
 msgstr ""
@@ -2497,10 +3599,6 @@ msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
 msgstr "Každý řádek textu popisuje buď název uzlu nebo nebo poznámku k uzlu."
-
-#: src/QuickEntry.vala:89
-msgid "Tab"
-msgstr "Panel"
 
 #: src/QuickEntry.vala:90
 msgid "Creates a child node of the previous node."
@@ -2562,11 +3660,30 @@ msgstr "Nahradit"
 msgid "Insert"
 msgstr "Vložit"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:806 src/Shortcuts.vala:812
+=======
 #: src/Shortcuts.vala:790 src/Shortcuts.vala:796
+>>>>>>> master
 #, fuzzy
 msgid "No Shortcuts Set"
 msgstr "Zkratky Minderu"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:827
+msgid "Mouse Events"
+msgstr "Události myši"
+
+#: src/Shortcuts.vala:830
+msgid "Show Contextual Menu"
+msgstr "Zobrazit kontextové menu"
+
+#: src/Shortcuts.vala:830
+msgid "[Right-click when item is selected]"
+msgstr "[Pravé tlačítko, když je položka vybrána]"
+
+#: src/Shortcuts.vala:831
+=======
 #: src/Shortcuts.vala:811
 msgid "Mouse Events"
 msgstr "Události myši"
@@ -2580,10 +3697,38 @@ msgid "[Right-click when item is selected]"
 msgstr "[Pravé tlačítko, když je položka vybrána]"
 
 #: src/Shortcuts.vala:815
+>>>>>>> master
 #, fuzzy
 msgid "[Double left-click image]"
 msgstr "[Dvojitý poklep levého tlačítka na obrázek]"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:833
+msgid "Canvas Movement"
+msgstr "Pohyb plátna"
+
+#: src/Shortcuts.vala:834
+msgid "Pan Canvas"
+msgstr "Natočit plátno"
+
+#: src/Shortcuts.vala:834
+msgid "[Middle-click + Drag / Alt + Motion]"
+msgstr "[Prostřední tlačítko + táhnutí/ alt + táhnutí"
+
+#: src/Shortcuts.vala:835
+msgid "Scroll Vertically"
+msgstr "Scrolovat vertikálně"
+
+#: src/Shortcuts.vala:835
+msgid "[Scrollwheel up/down]"
+msgstr "[Scroll tlačítko nahoru/dolú]"
+
+#: src/Shortcuts.vala:836
+msgid "Scroll Horizontally"
+msgstr "Scrolovat vodorovně"
+
+#: src/Shortcuts.vala:836
+=======
 #: src/Shortcuts.vala:817
 msgid "Canvas Movement"
 msgstr "Pohyb plátna"
@@ -2609,10 +3754,58 @@ msgid "Scroll Horizontally"
 msgstr "Scrolovat vodorovně"
 
 #: src/Shortcuts.vala:820
+>>>>>>> master
 #, fuzzy
 msgid "[Scrollwheel left/right]"
 msgstr "[Scroll tlačítko nahoru/dolú]"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:838
+msgid "Item Selection"
+msgstr "Výběr položek"
+
+#: src/Shortcuts.vala:839
+msgid "Select Single Item"
+msgstr "Vybrat jedinou položku"
+
+#: src/Shortcuts.vala:839
+msgid "[Left-click on item]"
+msgstr "[Levé kliknutí na položku]"
+
+#: src/Shortcuts.vala:840
+msgid "Select Child Nodes"
+msgstr "Vybrat podřadné uzly"
+
+#: src/Shortcuts.vala:840
+msgid "[Control + Left-click on parent node]"
+msgstr "[Control + levé tlačítko na nadřazený uzel]"
+
+#: src/Shortcuts.vala:841
+msgid "Select Node Tree/Subtree"
+msgstr "Vybrat strom/podřadný strom uzlů"
+
+#: src/Shortcuts.vala:841
+msgid "[Control + Double left-click on parent node]"
+msgstr "[Control + dvojité pravé kliknutí na nadřazený uzel"
+
+#: src/Shortcuts.vala:842
+msgid "Select All Nodes at Same Depth Level"
+msgstr "Vybrat všechny uzly na stejné úrovni"
+
+#: src/Shortcuts.vala:842
+msgid "[Control + Triple left-click on node]"
+msgstr "[Control + trojité levé klinutí na uzel]"
+
+#: src/Shortcuts.vala:843
+msgid "Block Selection"
+msgstr "Výběr oblasti"
+
+#: src/Shortcuts.vala:843
+msgid "[Left-click + Drag]"
+msgstr "[Levé tlačítko + táhnutí]"
+
+#: src/Shortcuts.vala:845
+=======
 #: src/Shortcuts.vala:822
 msgid "Item Selection"
 msgstr "Výběr položek"
@@ -2658,10 +3851,42 @@ msgid "[Left-click + Drag]"
 msgstr "[Levé tlačítko + táhnutí]"
 
 #: src/Shortcuts.vala:829
+>>>>>>> master
 #, fuzzy
 msgid "Item Selection Toggle"
 msgstr "Výběr položek"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:846
+msgid "Toggle Selection of Item"
+msgstr "Přepnout výběr položky"
+
+#: src/Shortcuts.vala:846
+msgid "[Shift + Left-click on item]"
+msgstr "[Shift + levé tlačítko na položku]"
+
+#: src/Shortcuts.vala:847
+msgid "Toggle Selection of Child Nodes"
+msgstr "Přepnout výběr souřadných uzlů"
+
+#: src/Shortcuts.vala:847
+msgid "[Shift + Control + Left-click on item]"
+msgstr "[Shift + control + levé tlačítko na položku]"
+
+#: src/Shortcuts.vala:848
+msgid "Toggle Selection of Node Tree/Subtree"
+msgstr "Přepnout výběr uzlu/podřadného stromu"
+
+#: src/Shortcuts.vala:848
+msgid "[Shift + Control + Double left-click on parent node]"
+msgstr "[Shift + control + dvojité pravé kliknutí na nadřazený uzel]"
+
+#: src/Shortcuts.vala:849
+msgid "Toggle Selection of All Nodes at Same Depth Level"
+msgstr "Přepnout výběr všech uzlů na stejné úrovni"
+
+#: src/Shortcuts.vala:849
+=======
 #: src/Shortcuts.vala:830
 msgid "Toggle Selection of Item"
 msgstr "Přepnout výběr položky"
@@ -2691,10 +3916,22 @@ msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr "Přepnout výběr všech uzlů na stejné úrovni"
 
 #: src/Shortcuts.vala:833
+>>>>>>> master
 #, fuzzy
 msgid "[Shift + Control + Triple-click on node]"
 msgstr "[Shift + control + trojité kliknutí na uzel]"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:851
+msgid "Text Selection"
+msgstr "Výběr textu"
+
+#: src/Shortcuts.vala:852
+msgid "Set Cursor Insert Point"
+msgstr "Nastavit místo vložení ukazatele myši"
+
+#: src/Shortcuts.vala:852
+=======
 #: src/Shortcuts.vala:835
 msgid "Text Selection"
 msgstr "Výběr textu"
@@ -2704,20 +3941,33 @@ msgid "Set Cursor Insert Point"
 msgstr "Nastavit místo vložení ukazatele myši"
 
 #: src/Shortcuts.vala:836
+>>>>>>> master
 #, fuzzy
 msgid "[Left-click in text]"
 msgstr "[Levé kliknutí na položku]"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:853
+=======
 #: src/Shortcuts.vala:837
+>>>>>>> master
 #, fuzzy
 msgid "Select Current Word"
 msgstr "Vybrat současné slovo"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:853
+msgid "[Double left-click on word]"
+msgstr "[dvojité kliknutí na slovo]"
+
+#: src/Shortcuts.vala:854
+=======
 #: src/Shortcuts.vala:837
 msgid "[Double left-click on word]"
 msgstr "[dvojité kliknutí na slovo]"
 
 #: src/Shortcuts.vala:838
+>>>>>>> master
 #, fuzzy
 msgid "[Triple left-click text]"
 msgstr "[trojité levé kliknutí kdekoliv v textu]"
@@ -2760,12 +4010,12 @@ msgstr ""
 msgid "Add custom stickers"
 msgstr "přidat poznámku uzlu"
 
-#: src/StickerInspector.vala:484
+#: src/StickerInspector.vala:490
 #, fuzzy
 msgid "Import Sticker(s)"
 msgstr "Odstranit nálepku"
 
-#: src/StickerInspector.vala:484 src/StickerSet.vala:353
+#: src/StickerInspector.vala:490 src/StickerSet.vala:353
 msgid "Import"
 msgstr "Import"
 
@@ -2789,7 +4039,7 @@ msgstr "Průmysl"
 msgid "Mobile"
 msgstr "Souvisí s mobilem"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1240
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1232
 msgid "Arrows"
 msgstr "Šipky"
 
@@ -3769,13 +5019,13 @@ msgstr "Nahoru"
 msgid "Right up"
 msgstr "Doprava nahoru"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1051
-#: src/StyleInspector.vala:1483 src/StyleInspector.vala:1648
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1043
+#: src/StyleInspector.vala:1475 src/StyleInspector.vala:1640
 msgid "Left"
 msgstr "Do leva"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1053
-#: src/StyleInspector.vala:1485 src/StyleInspector.vala:1650
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1045
+#: src/StyleInspector.vala:1477 src/StyleInspector.vala:1642
 msgid "Right"
 msgstr "Do prava"
 
@@ -4032,7 +5282,7 @@ msgstr "Vybraná spojení"
 msgid "Selected Callouts"
 msgstr "Vybrané uzly"
 
-#: src/StyleInspector.vala:41
+#: src/StyleInspector.vala:40
 msgid "Unknown"
 msgstr "Neznámý"
 
@@ -4068,52 +5318,52 @@ msgstr "Šablona"
 msgid "Branch Options"
 msgstr "Možnosti větve"
 
-#: src/StyleInspector.vala:419
+#: src/StyleInspector.vala:415
 msgid "Corner Radius"
 msgstr "Rozsah rohu"
 
-#: src/StyleInspector.vala:464 src/StyleInspector.vala:904
+#: src/StyleInspector.vala:460 src/StyleInspector.vala:896
 msgid "Margin"
 msgstr "Okraj"
 
-#: src/StyleInspector.vala:527
+#: src/StyleInspector.vala:523
 msgid "Link Options"
 msgstr "Možnosti odkazu"
 
-#: src/StyleInspector.vala:550 src/StyleInspector.vala:1199
+#: src/StyleInspector.vala:546 src/StyleInspector.vala:1191
 msgid "Line Dash"
 msgstr "Vzhled čáry"
 
-#: src/StyleInspector.vala:591 src/StyleInspector.vala:1327
+#: src/StyleInspector.vala:587 src/StyleInspector.vala:1319
 msgid "Line Width"
 msgstr "Tloušťka čáry"
 
-#: src/StyleInspector.vala:643
+#: src/StyleInspector.vala:639
 msgid "Link Arrow"
 msgstr "Šipka odkazu"
 
-#: src/StyleInspector.vala:677
+#: src/StyleInspector.vala:673
 #, fuzzy
 msgid "Link Arrow Size"
 msgstr "Šipka odkazu"
 
-#: src/StyleInspector.vala:752 src/Templates.vala:59 src/Templates.vala:64
+#: src/StyleInspector.vala:748 src/Templates.vala:59 src/Templates.vala:64
 msgid "Node Options"
 msgstr "Možnosti uzlu"
 
-#: src/StyleInspector.vala:775
+#: src/StyleInspector.vala:771
 msgid "Border Style"
 msgstr "Styl okraje"
 
-#: src/StyleInspector.vala:818
+#: src/StyleInspector.vala:810
 msgid "Border Width"
 msgstr "Šířka okraje"
 
-#: src/StyleInspector.vala:869
+#: src/StyleInspector.vala:861
 msgid "Color Fill"
 msgstr "Barevná výplň"
 
-#: src/StyleInspector.vala:878
+#: src/StyleInspector.vala:870
 msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
@@ -4121,68 +5371,68 @@ msgstr ""
 "Vyplní uzel barvou, když je okraj uzlu\n"
 "hranatý, kulatý nebo Pill-shaped"
 
-#: src/StyleInspector.vala:949 src/StyleInspector.vala:1380
-#: src/StyleInspector.vala:1679
+#: src/StyleInspector.vala:941 src/StyleInspector.vala:1372
+#: src/StyleInspector.vala:1671
 msgid "Padding"
 msgstr "Odstup"
 
-#: src/StyleInspector.vala:994
+#: src/StyleInspector.vala:986
 msgid "Font"
 msgstr "Styl písma"
 
-#: src/StyleInspector.vala:1040 src/StyleInspector.vala:1472
-#: src/StyleInspector.vala:1637
+#: src/StyleInspector.vala:1032 src/StyleInspector.vala:1464
+#: src/StyleInspector.vala:1629
 #, fuzzy
 msgid "Text Alignment"
 msgstr "zarovnání uzlu"
 
-#: src/StyleInspector.vala:1052 src/StyleInspector.vala:1484
-#: src/StyleInspector.vala:1649
+#: src/StyleInspector.vala:1044 src/StyleInspector.vala:1476
+#: src/StyleInspector.vala:1641
 #, fuzzy
 msgid "Center"
 msgstr "Zarovnat do pohledu"
 
-#: src/StyleInspector.vala:1082
+#: src/StyleInspector.vala:1074
 msgid "Width"
 msgstr "Šířka"
 
-#: src/StyleInspector.vala:1115
+#: src/StyleInspector.vala:1107
 msgid "Enable Markup"
 msgstr "Povolit Markup"
 
-#: src/StyleInspector.vala:1176 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1168 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "Možnosti spojení"
 
-#: src/StyleInspector.vala:1280
+#: src/StyleInspector.vala:1272
 #, fuzzy
 msgid "Arrow Size"
 msgstr "Šipky"
 
-#: src/StyleInspector.vala:1426
+#: src/StyleInspector.vala:1418
 msgid "Title Font"
 msgstr "Styl názvu"
 
-#: src/StyleInspector.vala:1514
+#: src/StyleInspector.vala:1506
 msgid "Title Width"
 msgstr "Šířka názvu"
 
-#: src/StyleInspector.vala:1567 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1559 src/Templates.vala:61 src/Templates.vala:66
 #, fuzzy
 msgid "Callout Options"
 msgstr "Možnosti exportu"
 
-#: src/StyleInspector.vala:1591
+#: src/StyleInspector.vala:1583
 #, fuzzy
 msgid "Text Font"
 msgstr "Styl názvu"
 
-#: src/StyleInspector.vala:1725
+#: src/StyleInspector.vala:1717
 #, fuzzy
 msgid "Pointer Width"
 msgstr "Tloušťka čáry"
 
-#: src/StyleInspector.vala:1771
+#: src/StyleInspector.vala:1763
 msgid "Pointer Length"
 msgstr ""
 
@@ -4238,6 +5488,110 @@ msgstr "Krátce čárkovaná"
 msgid "Long Dash"
 msgstr "Dlouze čárkovaná"
 
+#: src/TableEditor.vala:234
+#, fuzzy
+msgid "Add Row Above"
+msgstr "Přidat kořenový uzel"
+
+#: src/TableEditor.vala:235
+#, fuzzy
+msgid "Add Row Below"
+msgstr "Přidat kořenový uzel"
+
+#: src/TableEditor.vala:237
+#, fuzzy
+msgid "Delete Selected Rows"
+msgstr "Vybrané uzly"
+
+#: src/TableEditor.vala:243
+#, fuzzy
+msgid "Row Actions"
+msgstr "Spojení"
+
+#: src/TableEditor.vala:253
+#, fuzzy
+msgid "Add Column Left"
+msgstr "Přidat sloupec"
+
+#: src/TableEditor.vala:254
+#, fuzzy
+msgid "Add Column Right"
+msgstr "Přidat sloupec"
+
+#: src/TableEditor.vala:256
+#, fuzzy
+msgid "Delete Selected Columns"
+msgstr "Smazat sloupec"
+
+#: src/TableEditor.vala:262
+#, fuzzy
+msgid "Column Actions"
+msgstr "Spojení"
+
+#: src/TableEditor.vala:308
+msgid "Undo Table Edit (Ctrl+Z)"
+msgstr ""
+
+#: src/TableEditor.vala:311
+#, fuzzy
+msgid "Paste Table"
+msgstr "Vložit text"
+
+#: src/TableEditor.vala:314
+#, fuzzy
+msgid "Merge Selection"
+msgstr "Vyčistit výběr"
+
+#: src/TableEditor.vala:315
+msgid "Split Cell"
+msgstr ""
+
+#: src/TableEditor.vala:316
+#, fuzzy
+msgid "Clear Cells"
+msgstr "Odstranit vše"
+
+#: src/TableEditor.vala:317 src/TextMenu.vala:41
+msgid "Insert Emoji"
+msgstr "Vložit emotikon"
+
+#: src/TableEditor.vala:321
+#, fuzzy
+msgid "Align Center"
+msgstr "Zarovnání"
+
+#: src/TableEditor.vala:326
+#, fuzzy
+msgid "Highlight Cells"
+msgstr "Zarovnat pravou stranu"
+
+#: src/TableEditor.vala:330
+msgid "Bold"
+msgstr ""
+
+#: src/TableEditor.vala:334
+msgid "Italic"
+msgstr ""
+
+#: src/TableEditor.vala:338
+#, fuzzy
+msgid "Underline"
+msgstr "Podtrhnutý"
+
+#: src/TableEditor.vala:342
+msgid "Strikethrough"
+msgstr ""
+
+#: src/TableEditor.vala:356
+#, fuzzy
+msgid "Selected cells:"
+msgstr "Vybrané uzly"
+
+#: src/TableEditor.vala:362
+#, fuzzy
+msgid "Delete Table"
+msgstr "Smazat databázi"
+
 #: src/TagEditor.vala:60
 #, fuzzy
 msgid "Click to change tag color"
@@ -4258,19 +5612,19 @@ msgstr ""
 msgid "Enter tag name"
 msgstr ""
 
-#: src/TagEditor.vala:157 src/TagEditor.vala:252
+#: src/TagEditor.vala:157 src/TagEditor.vala:248
 msgid "Click to add tag to highlight list"
 msgstr ""
 
-#: src/TagEditor.vala:251
+#: src/TagEditor.vala:247
 msgid "Click to remove tag from highlight"
 msgstr ""
 
-#: src/TagEditor.vala:312
+#: src/TagEditor.vala:307
 msgid "Enter name of tag to find or create"
 msgstr ""
 
-#: src/TagEditor.vala:429
+#: src/TagEditor.vala:424
 #, c-format
 msgid "Create '%s' tag"
 msgstr ""
@@ -4279,18 +5633,18 @@ msgstr ""
 msgid "Add Tag"
 msgstr "Přidat štítek"
 
-#: src/TagInspector.vala:41
+#: src/TagInspector.vala:40
 msgid ""
 "Create, delete, edit mindmap tags.  Add or remove tags in selected node(s).  "
 "Highlight tagged nodes in map."
 msgstr ""
 
-#: src/TagInspector.vala:70
+#: src/TagInspector.vala:69
 #, fuzzy
 msgid "Highlight Mode"
 msgstr "Zarovnat pravou stranu"
 
-#: src/TagInspector.vala:80
+#: src/TagInspector.vala:79
 msgid "End Tag Highlighting"
 msgstr ""
 
@@ -4349,10 +5703,6 @@ msgstr "Možnosti větve"
 msgid "Node Link Options"
 msgstr "Možnosti odkazu"
 
-#: src/TextMenu.vala:41
-msgid "Insert Emoji"
-msgstr "Vložit emotikon"
-
 #: src/TextMenu.vala:44
 msgid "Open Link"
 msgstr "Otevřít odkaz"
@@ -4369,9 +5719,9 @@ msgstr "Upravit odkaz"
 msgid "Remove Link"
 msgstr "Odstranit odkaz"
 
-#: src/TextParser.vala:68
-#, c-format
-msgid "Parser regex error (re: %s, error: %s)\n"
+#: src/TextParser.vala:74
+#, fuzzy, c-format
+msgid "Parser regex error (pattern: %s, error: %s)\n"
 msgstr "Parser regex error (re: %s, error: %s)\n"
 
 #: src/ThemeEditor.vala:52
@@ -4468,27 +5818,32 @@ msgstr "Udělat popředí schodným"
 msgid "Markdown List Item"
 msgstr "Předmět Markdown seznamu"
 
-#: src/ThemeEditor.vala:212
+#: src/ThemeEditor.vala:187
+#, fuzzy
+msgid "Select color"
+msgstr "Vybrat kořen"
+
+#: src/ThemeEditor.vala:219
 msgid "Custom"
 msgstr "Vlastní"
 
-#: src/ThemeEditor.vala:234
+#: src/ThemeEditor.vala:241
 msgid "Delete theme?"
 msgstr "Smazat motiv?"
 
-#: src/ThemeEditor.vala:235
+#: src/ThemeEditor.vala:242
 msgid "This operation cannot be undone."
 msgstr "Tato operace nemůže být vrácena."
 
-#: src/ThemeEditor.vala:240 src/Utils.vala:473
+#: src/ThemeEditor.vala:247 src/Utils.vala:507
 msgid "No"
 msgstr "Ne"
 
-#: src/ThemeEditor.vala:243 src/Utils.vala:476
+#: src/ThemeEditor.vala:250 src/Utils.vala:510
 msgid "Yes"
 msgstr "Ano"
 
-#: src/ThemeEditor.vala:265
+#: src/ThemeEditor.vala:272
 msgid "Default"
 msgstr "Základní"
 
@@ -4513,12 +5868,7 @@ msgstr "Solarized Light"
 msgid "Error parsing regular expression"
 msgstr "Vyskytla se chyba v parsování regulárního výrazu\n"
 
-#: src/Theme.vala:212
-#, c-format
-msgid "Unable to load background color: %s"
-msgstr "Nebylo možné načíst barvu pozadí: %s"
-
-#: src/Theme.vala:308
+#: src/Theme.vala:320
 msgid "Root"
 msgstr "Kořen"
 
@@ -4731,6 +6081,16 @@ msgstr "změna odkazu uzlu"
 msgid "sort nodes"
 msgstr "třídit uzly"
 
+#: src/undo_actions/UndoNodesPriority.vala:35
+#, fuzzy
+msgid "clear priority"
+msgstr "Nízká priorita"
+
+#: src/undo_actions/UndoNodesPriority.vala:35
+#, fuzzy
+msgid "set priority"
+msgstr "Nízká priorita"
+
 #: src/undo_actions/UndoNodesRandLinkColor.vala:34
 msgid "random node link color changes"
 msgstr "změna náhodné barvy odkazu uzlu"
@@ -4775,6 +6135,11 @@ msgstr "vložit uzel"
 #, fuzzy
 msgid "insert summary node"
 msgstr "vložit uzel"
+
+#: src/undo_actions/UndoNodeTable.vala:31
+#, fuzzy
+msgid "node table change"
+msgstr "přejmenovat uzel"
 
 #: src/undo_actions/UndoNodeTasks.vala:31
 msgid "node task changes"
@@ -4871,6 +6236,13 @@ msgstr "Aktuální zoom"
 #~ msgid "[Control + Double left-click on parent node"
 #~ msgstr "[Control + dvojité pravé kliknutí na nadřazený uzel"
 
+<<<<<<< HEAD
+#, c-format
+#~ msgid "Unable to load background color: %s"
+#~ msgstr "Nebylo možné načíst barvu pozadí: %s"
+
+=======
+>>>>>>> master
 #~ msgid "Unsaved"
 #~ msgstr "Neuložené"
 
@@ -4957,9 +6329,6 @@ msgstr "Aktuální zoom"
 #~ msgid "Quit Application"
 #~ msgstr "Ukončit aplikaci"
 
-#~ msgid "Node Commands"
-#~ msgstr "Uzlové příkazy"
-
 #~ msgid "Creation/Deletion"
 #~ msgstr "Vytvoření/smazání"
 
@@ -5045,9 +6414,6 @@ msgstr "Aktuální zoom"
 #~ msgid "Selection"
 #~ msgstr "Výběr"
 
-#~ msgid "Select Root"
-#~ msgstr "Vybrat kořen"
-
 #~ msgid "Select Parent"
 #~ msgstr "Vybrat nadřazený uzel"
 
@@ -5105,9 +6471,6 @@ msgstr "Aktuální zoom"
 
 #~ msgid "Sort Child Nodes Alphabetically"
 #~ msgstr "Řadit podřadné uzly abecedně"
-
-#~ msgid "Alignment"
-#~ msgstr "Zarovnání"
 
 #~ msgid "Align Top Side"
 #~ msgstr "Zarovnat vrchní stranu"
@@ -5206,9 +6569,6 @@ msgstr "Aktuální zoom"
 #~ msgid "Cut Selected Text"
 #~ msgstr "Vyjmout vybraný text"
 
-#~ msgid "Paste Text"
-#~ msgstr "Vložit text"
-
 #~ msgid "Add Next Character"
 #~ msgstr "Přidat další znak"
 
@@ -5235,9 +6595,6 @@ msgstr "Aktuální zoom"
 
 #~ msgid "Select All Text"
 #~ msgstr "Vybrat všechen text"
-
-#~ msgid "Clear Selection"
-#~ msgstr "Vyčistit výběr"
 
 #~ msgid "Edit Image in Canvas"
 #~ msgstr "Upravit obrázek na plátně"
@@ -5289,9 +6646,6 @@ msgstr "Aktuální zoom"
 
 #~ msgid "Close Other Tabs"
 #~ msgstr "Zavřít ostatní panely"
-
-#~ msgid "Clear All"
-#~ msgstr "Odstranit vše"
 
 #~ msgid "New Tab"
 #~ msgstr "Nový panel"

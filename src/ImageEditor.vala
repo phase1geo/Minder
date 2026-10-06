@@ -27,18 +27,21 @@ public class ImageEditor {
 
   private const double MIN_WIDTH   = 50;
   private const int    CROP_WIDTH  = 8;
-  private const int    EDIT_WIDTH  = 600;
-  private const int    EDIT_HEIGHT = 600;
+  private const int    EDIT_WIDTH  = 500;
+  private const int    EDIT_HEIGHT = 500;
+  private const int    MIN_EDIT    = 150;
+  private const int    POPOVER_PAD = 20;   // Room for the popover arrow and shadow
 
   private Popover         _popover;
+  private DrawArea        _canvas;
   private ImageManager    _im;
   private DrawingArea     _da;
   private Node            _node;
   private NodeImage       _image;
   private Button          _paste;
   private int             _crop_target = -1;
-  private double          _press_x;
-  private double          _press_y;
+  private double          _last_x;
+  private double          _last_y;
   private Gdk.Rectangle[] _crop_points;
   private string[]        _crop_cursors;
   private Label           _status_cursor;
@@ -48,6 +51,11 @@ public class ImageEditor {
   private double          _crop_y;
   private double          _crop_w;
   private double          _crop_h;
+  private int             _edit_size = EDIT_WIDTH;
+  private EventControllerLegacy? _blocker        = null;
+  private Gtk.Window?            _win            = null;
+  private ulong                  _active_id      = 0;
+  private bool                   _choosing_image = false;
 
   public signal void changed( NodeImage? orig_image );
 
@@ -55,7 +63,8 @@ public class ImageEditor {
   // Default constructor
   public ImageEditor( DrawArea da ) {
 
-    _im = da.map.image_manager;
+    _canvas = da;
+    _im     = da.mmap.image_manager;
 
     // Allocate crop points
     _crop_points  = new Gdk.Rectangle[9];
@@ -84,7 +93,7 @@ public class ImageEditor {
     _crop_cursors[7] = "nwse-resize";
 
     // Create the user interface of the editor window
-    create_ui( da, da.map.image_manager );
+    create_ui( da, da.mmap.image_manager );
 
   }
 
@@ -93,10 +102,8 @@ public class ImageEditor {
   // specified node
   public void edit_image( ImageManager im, Node node, double x, double y ) {
 
-    var int_x = (int)x;
-    var int_y = (int)y;
-    Gdk.Rectangle rect = {int_x, int_y, 1, 1};
-    _popover.pointing_to = rect;
+    // Size and position the popover so that it fits within the window
+    place_popover( x, y );
 
     // Set the defaults
     _node  = node;
@@ -104,7 +111,7 @@ public class ImageEditor {
 
     if( _image.valid ) {
 
-      _scale = (double)EDIT_WIDTH / _image.orig_width;
+      _scale = (double)_edit_size / _image.orig_width;
 
       _crop_x = (double)node.image.crop_x;
       _crop_y = (double)node.image.crop_y;
@@ -118,9 +125,140 @@ public class ImageEditor {
       _da.queue_draw();
 
       // Display ourselves
+      block_window_input();
       _popover.popup();
+      watch_focus();
+      _paste.grab_focus();
 
     }
+
+  }
+
+  //-------------------------------------------------------------
+  // Blocks window from losing keyboard input.
+  private void block_window_input() {
+    var win = (Widget)_canvas.get_root();
+    _blocker = new EventControllerLegacy() {
+      propagation_phase = PropagationPhase.CAPTURE
+    };
+    _blocker.event.connect((ev) => {
+      switch( ev.get_event_type() ) {
+        case Gdk.EventType.BUTTON_PRESS   :
+        case Gdk.EventType.BUTTON_RELEASE :
+        case Gdk.EventType.SCROLL         :
+        case Gdk.EventType.KEY_PRESS      :
+        case Gdk.EventType.KEY_RELEASE    :
+        case Gdk.EventType.TOUCH_BEGIN    :
+        case Gdk.EventType.TOUCH_END      :  return( true );   // swallow
+        default                           :  return( false );
+      }
+    });
+    win.add_controller( _blocker );
+  }
+
+  //-------------------------------------------------------------
+  // Undoes block_window_input.
+  private void unblock_window_input() {
+    if( _blocker != null ) {
+      ((Widget)_canvas.get_root()).remove_controller( _blocker );
+      _blocker = null;
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Watches to see if the main window ever loses focus.
+  private void watch_focus() {
+    _win = _canvas.get_root() as Gtk.Window;
+    if( _win == null ) return;
+    _active_id = _win.notify["is-active"].connect(() => {
+      if( _win.is_active ) {
+        _choosing_image = false;
+      } else if( !_choosing_image ) {
+        action_cancel();
+      }
+    });
+  }
+
+  //-------------------------------------------------------------
+  // Undoes the affects of watch_focus.
+  private void unwatch_focus() {
+    if( (_win != null) && (_active_id != 0) ) {
+      _win.disconnect( _active_id );
+    }
+    _active_id = 0;
+    _win       = null;
+  }
+
+  //-------------------------------------------------------------
+  // Displays the popover after a new image has been chosen with the
+  // file selector.
+  private void reshow_popover() {
+    if( !_choosing_image ) return;   // makes this safe to call more than once
+    _choosing_image = false;
+    block_window_input();
+    _popover.popup();
+    _paste.grab_focus();
+    watch_focus();
+  }
+
+  //-------------------------------------------------------------
+  // Sizes and positions the popover so that it always fits within
+  // the window.  (x, y) is the anchor point in the canvas's
+  // coordinates.
+  private void place_popover( double x, double y ) {
+
+    var win = (Widget)_canvas.get_root();
+
+    // Convert the anchor point into window coordinates
+    Graphene.Point pt  = {(float)x, (float)y};
+    Graphene.Point wpt;
+    if( !_canvas.compute_point( win, pt, out wpt ) ) {
+      wpt = pt;
+    }
+
+    var win_w = win.get_width();
+    var win_h = win.get_height();
+
+    // Figure out how much of the popover is not the editing area
+    int cw, ch;
+    _popover.child.measure( Orientation.HORIZONTAL, -1, null, out cw, null, null );
+    _popover.child.measure( Orientation.VERTICAL,   cw, null, out ch, null, null );
+    var chrome_w = cw - _da.width_request;
+    var chrome_h = ch - _da.height_request;
+
+    // Shrink the editing area if the window is too small to hold it
+    var avail  = int.min( win_w - chrome_w, win_h - chrome_h ) - (2 * POPOVER_PAD);
+    _edit_size = int.max( MIN_EDIT, int.min( EDIT_WIDTH, avail ) );
+    _da.width_request  = _edit_size;
+    _da.height_request = _edit_size;
+
+    var pw = chrome_w + _edit_size;
+    var ph = chrome_h + _edit_size;
+
+    // Keep the popover horizontally within the window
+    var cx = double.max( (pw / 2.0), double.min( (win_w - (pw / 2.0)), wpt.x ) );
+    var dx = cx - wpt.x;
+    var dy = 0.0;
+
+    var pos       = PositionType.BOTTOM;
+    var has_arrow = true;
+
+    if( (win_h - wpt.y) >= (ph + POPOVER_PAD) ) {
+      pos = PositionType.BOTTOM;
+    } else if( wpt.y >= (ph + POPOVER_PAD) ) {
+      pos = PositionType.TOP;
+    } else {
+      // There is room neither above nor below the anchor point, so
+      // center the popover vertically in the window without an arrow
+      has_arrow = false;
+      dy = ((win_h - ph) / 2.0) - wpt.y;
+    }
+
+    Gdk.Rectangle rect = {(int)(x + dx), (int)(y + dy), 1, 1};
+
+    _popover.position     = pos;
+    _popover.has_arrow    = has_arrow;
+    _popover.pointing_to  = rect;
 
   }
 
@@ -134,7 +272,7 @@ public class ImageEditor {
     // Load the image and draw it
     if( _image.valid ) {
 
-      _scale = (double)EDIT_WIDTH / _image.orig_width;
+      _scale = (double)_edit_size / _image.orig_width;
 
       _crop_x = (double)_image.crop_x;
       _crop_y = (double)_image.crop_y;
@@ -235,11 +373,11 @@ public class ImageEditor {
         case 7 :                            w += diffx;  h += diffy;  break;
         case 8 :  x += diffx;  y += diffy;                            break;
       }
-      if( (x >= 0) && ((x + w) <= _da.width_request) && (w >= MIN_WIDTH) ) {
+      if( (x >= 0) && ((x + w) <= _image.orig_width) && (w >= MIN_WIDTH) ) {
         _crop_x = x;
         _crop_w = w;
       }
-      if( (y >= 0) && ((y + h) <= _da.height_request) && (h >= MIN_WIDTH) ) {
+      if( (y >= 0) && ((y + h) <= _image.orig_height) && (h >= MIN_WIDTH) ) {
         _crop_y = y;
         _crop_h = h;
       }
@@ -268,9 +406,15 @@ public class ImageEditor {
 
     // Add the box to the popover
     _popover = new Popover() {
+      autohide = false,
       child = box
     };
     _popover.set_parent( da );
+    _popover.closed.connect(() => {
+      unblock_window_input();
+      unwatch_focus();
+      _crop_target = -1;
+    });
 
     // Set the stage for keyboard shortcuts
     var key = new EventControllerKey();
@@ -333,8 +477,6 @@ public class ImageEditor {
       if( _crop_target == 8 ) {
         da.set_cursor( new Gdk.Cursor.from_name( "grabbing", null ) );
       }
-      _press_x = scaled_x;
-      _press_y = scaled_y;
     });
 
     click.released.connect((n_press, x, y) => {
@@ -356,10 +498,12 @@ public class ImageEditor {
         }
         _crop_target = -1;
       } else {
-        adjust_crop_points( (scaled_x - _press_x), (scaled_y - _press_y) );
+        adjust_crop_points( (scaled_x - _last_x), (scaled_y - _last_y) );
         da.queue_draw();
       }
       set_cursor_location( (int)scaled_x, (int)scaled_y );
+      _last_x = scaled_x;
+      _last_y = scaled_y;
     });
 
     // Set ourselves up to be a drag target
@@ -435,11 +579,16 @@ public class ImageEditor {
     _paste = paste;
 
     open.clicked.connect(() => {
+      _choosing_image = true;
+      _popover.popdown();
       im.choose_image( da.win, (id) => {
-        var ni = new NodeImage( im, id, _node.style.node_width );
-        if( ni != null ) {
-          initialize( ni );
+        if( id != -1 ) {
+          var ni = new NodeImage( im, id, _node.style.node_width );
+          if( ni != null ) {
+            initialize( ni );
+          }
         }
+        reshow_popover();
       });
     });
 
@@ -485,12 +634,11 @@ public class ImageEditor {
     ctx.scale( _scale, _scale );
 
     // Draw the cropped portion of the image
-    cairo_set_source_pixbuf( ctx, _image.get_orig_pixbuf(), 0, 0 );
-    ctx.paint();
+    _image.draw_original( ctx, 1.0, _canvas.mmap.get_theme().is_dark() );
 
     // On top of that, draw the crop transparency
     ctx.set_source_rgba( 0, 0, 0, 0.8 );
-    ctx.rectangle( 0, 0, _da.width_request, _da.height_request );
+    ctx.rectangle( 0, 0, (_da.width_request / _scale), (_da.height_request / _scale) );
     ctx.fill();
 
     // Cut out the area for the image
@@ -500,9 +648,11 @@ public class ImageEditor {
 
     // Finally, draw the portion of the image this not cropped
     ctx.set_operator( Operator.OVER );
-    cairo_set_source_pixbuf( ctx, _image.get_orig_pixbuf(), 0, 0 );
+    ctx.save();
     ctx.rectangle( (int)_crop_x, (int)_crop_y, (int)_crop_w, (int)_crop_h );
-    ctx.fill();
+    ctx.clip();
+    _image.draw_original( ctx, 1.0, _canvas.mmap.get_theme().is_dark() );
+    ctx.restore();
 
     // Draw the crop points
     ctx.set_line_width( 1 );
@@ -587,13 +737,10 @@ public class ImageEditor {
   //-------------------------------------------------------------
   // Copies the current image to the clipboard
   private void action_copy() {
-    var fname = _im.get_file( _node.image.id );
-    if( fname != null ) {
-      try {
-        var buf = new Gdk.Pixbuf.from_file( fname );
-        MinderClipboard.copy_image( buf );
-        update_ui();
-      } catch( Error e ) {}
+    var buf = _node.image.get_orig_pixbuf( _canvas.mmap.get_theme().is_dark() );
+    if( buf != null ) {
+      MinderClipboard.copy_image( buf );
+      update_ui();
     }
   }
 
@@ -644,4 +791,3 @@ public class ImageEditor {
   }
 
 }
-

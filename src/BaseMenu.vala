@@ -43,7 +43,7 @@ public class BaseMenu {
   // Default constructor
   public BaseMenu( Gtk.Application app, DrawArea canvas, string group ) {
 
-    _map        = canvas.map;
+    _map        = canvas.mmap;
     _app        = app;
     _group_name = group;
 
@@ -140,9 +140,9 @@ public class BaseMenu {
   //-------------------------------------------------------------
   // Sets the action enable for the given command to the given value.
   protected void set_enabled( KeyCommand command, bool enable ) {
-    var action = _group.lookup_action( command.to_string() );
+    var action = (_group.lookup_action( command.to_string() ) as SimpleAction);
     if( action != null ) {
-      (action as SimpleAction).set_enabled( enable );
+      action.set_enabled( enable );
     }
   }
 

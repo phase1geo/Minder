@@ -89,25 +89,18 @@ public class ExportMermaid : Export {
   private string export_top_nodes_graph( MindMap map ) {
 
     var retval = "";
+    var nodes   = map.get_nodes();
+    int link_id = 0;
 
-    try {
+    if( nodes.length == 0 ) {
+      return( retval );
+    }
 
-      var nodes   = map.get_nodes();
-      int link_id = 0;
+    string title = "graph " + map_layout_to_direction( nodes.index( 0 ) ) + "\n";
+    retval += title;
 
-      if( nodes.length == 0 ) {
-        return( retval );
-      }
-
-      string title = "graph " + map_layout_to_direction( nodes.index( 0 ) ) + "\n";
-      retval += title;
-
-      for( int i=0; i<nodes.length; i++ ) {
-        retval += export_node_graph( nodes.index( i ), ref link_id );
-      }
-
-    } catch( Error e ) {
-      // Handle the error
+    for( int i=0; i<nodes.length; i++ ) {
+      retval += export_node_graph( nodes.index( i ), ref link_id );
     }
 
     return( retval );
@@ -119,27 +112,20 @@ public class ExportMermaid : Export {
   private string export_top_nodes_mindmap( MindMap map ) {
 
     var retval = "";
-
-    try {
-
-      var nodes = map.get_nodes();
+    var nodes = map.get_nodes();
       
-      if( nodes.length != 1 ) {
-        return( retval );
-      }
+    if( nodes.length != 1 ) {
+      return( retval );
+    }
 
-      var root     = nodes.index( 0 );
-      var children = root.children();
+    var root     = nodes.index( 0 );
+    var children = root.children();
 
-      string title = "mindmap\n%s\n".printf( make_title( root, true ) );
-      retval += title;
+    string title = "mindmap\n%s\n".printf( make_title( root, true ) );
+    retval += title;
 
-      for( int i=0; i<children.length; i++ ) {
-        retval += export_node_mindmap( children.index( i ), "  " );
-      }
-
-    } catch( Error e ) {
-      // Handle the error
+    for( int i=0; i<children.length; i++ ) {
+      retval += export_node_mindmap( children.index( i ), "  " );
     }
 
     return( retval );
@@ -251,30 +237,23 @@ public class ExportMermaid : Export {
   // for graph output
   private string export_node_graph( Node node, ref int link_id ) {
 
-    var retval = "";
+    var retval   = "";
+    var title    = make_title( node, false );
+    var children = node.children();
 
-    try {
-
-      var title    = make_title( node, false );
-      var children = node.children();
-
-      if( node.is_root() && (children.length == 0) ) {
-        var line = "  " + title + ";\n";
+    if( node.is_root() && (children.length == 0) ) {
+      var line = "  " + title + ";\n";
+      retval += line;
+    } else {
+      for( int i=0; i<children.length; i++ ) {
+        var link   = make_link( children.index( i ) );
+        var ctitle = make_title( children.index( i ), false );
+        var nstyle = make_node_style( children.index( i ) );
+        var lstyle = make_link_style( children.index( i ), ref link_id );
+        var line   = "  " + title + " " + link + " " + ctitle + ";  " + nstyle + ";  " + lstyle + ";\n";
         retval += line;
-      } else {
-        for( int i=0; i<children.length; i++ ) {
-          var link   = make_link( children.index( i ) );
-          var ctitle = make_title( children.index( i ), false );
-          var nstyle = make_node_style( children.index( i ) );
-          var lstyle = make_link_style( children.index( i ), ref link_id );
-          var line   = "  " + title + " " + link + " " + ctitle + ";  " + nstyle + ";  " + lstyle + ";\n";
-          retval += line;
-          retval += export_node_graph( children.index( i ), ref link_id );
-        }
+        retval += export_node_graph( children.index( i ), ref link_id );
       }
-
-    } catch( Error e ) {
-      // Handle error
     }
 
     return( retval );
@@ -286,21 +265,14 @@ public class ExportMermaid : Export {
   // for mindmap output
   private string export_node_mindmap( Node node, string prefix ) {
 
-    var retval = "";
+    var retval   = "";
+    var title    = prefix + make_title( node, true ) + "\n";
+    var children = node.children();
 
-    try {
+    retval += title;
 
-      var title    = prefix + make_title( node, true ) + "\n";
-      var children = node.children();
-
-      retval += title;
-
-      for( int i=0; i<children.length; i++ ) {
-        retval += export_node_mindmap( children.index( i ), prefix + "  " );
-      }
-
-    } catch( Error e ) {
-      // Handle error
+    for( int i=0; i<children.length; i++ ) {
+      retval += export_node_mindmap( children.index( i ), prefix + "  " );
     }
 
     return( retval );
@@ -321,7 +293,6 @@ public class ExportMermaid : Export {
       File            file = File.new_for_path( fname );
       DataInputStream dis  = new DataInputStream( file.read() );
       size_t          len;
-      Array<Node>     nodes;
 
       // Read the entire file contents
       var str = dis.read_upto( "\0", 1, out len ) + "\0";

@@ -62,10 +62,9 @@ public class Layouts : Object {
 
   //-------------------------------------------------------------
   // Populates the given array with a list of layout icon filenames
-  public void get_icons( ref Array<string> light_icons, ref Array<string> dark_icons ) {
+  public void get_icons( ref Array<string> icons ) {
     for( int i=0; i<_layouts.length; i++ ) {
-      light_icons.append_val( _layouts.index( i ).light_icon );
-      dark_icons.append_val( _layouts.index( i ).dark_icon );
+      icons.append_val( _layouts.index( i ).icon );
     }
   }
 

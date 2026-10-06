@@ -153,7 +153,7 @@ public class Braindump : Box {
     drag.set_icon( create_icon( label, text ), 10, 10 );
 
     drag.prepare.connect((x, y) => {
-      var val = new Value( typeof(Idea) );
+      var val = Value( typeof(Idea) );
       val.set_object( new Idea( text ) );
       var provider = new ContentProvider.for_value( val );
       return( provider );
@@ -194,7 +194,7 @@ public class Braindump : Box {
     var width   = (log.width  / Pango.SCALE) + (padding * 2);
     var height  = (log.height / Pango.SCALE) + (padding * 2);
 
-    var rect = Graphene.Rect.alloc();
+    var rect = Graphene.Rect();
     rect.init( (float)0.0, (float)0.0, (float)width, (float)height );
 
     var snapshot = new Gtk.Snapshot();

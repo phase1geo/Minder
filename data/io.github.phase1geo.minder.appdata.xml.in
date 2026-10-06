@@ -1,0 +1,1359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2018-2026 Trevor Williams <phase1geo@icloud.com> -->
+<component type="desktop-application">
+  <id>io.github.phase1geo.minder</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  <name>Minder</name>
+  <summary>Create, develop and visualize your ideas</summary>
+  <description>
+    <p>
+      Use the power of mind-mapping to make your ideas come to life.  Minder provides a mindmap creation and
+      exploration environment that focuses on a clean interface with smooth animations and rich, expressive elements
+      to help capture and organize your ideas quickly and stay in the your flow.
+    </p>
+    <ul>
+      <li>Quickly create visual mind-maps using the keyboard and automatic layout.</li>
+      <li>Choose from many tree layout choices.</li>
+      <li>Support for Markdown formatting.</li>
+      <li>Support for insertion of Unicode characters.</li>
+      <li>Add notes, tasks, and images to your nodes.</li>
+      <li>Add node-to-node connections with optional text and notes.</li>
+      <li>Stylize nodes, callouts, links and connections to add more meaning and improve readability.</li>
+      <li>Save and reuse style settings within and across open mindmaps.</li>
+      <li>Add stickers, tags, callouts and node groups to call out and visibly organize information.</li>
+      <li>Quick search of node and connection titles and notes, including filtering options.</li>
+      <li>Zoom in or enable focus mode to focus on certain ideas or zoom out to see the bigger picture.</li>
+      <li>Enter focus mode to better view and understand portions of the map.</li>
+      <li>Quickly brainstorm ideas with the brainstorming interface and worry about where those ideas belong in the
+          mindmap later.</li>
+      <li>Unlimited undo/redo of any change.</li>
+      <li>Automatically and manual saving supported.</li>
+      <li>Colorized node branches.</li>
+      <li>Open multiple mindmaps with the use of tabs.</li>
+      <li>Built-in and customizable theming.</li>
+      <li>Gorgeous animations.</li>
+      <li>Import from OPML, FreeMind, Freeplane, PlainText/Markdown (formatted), Outliner, Portable Minder, filesystem
+          and XMind formats.</li>
+      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, WebP, Markdown, Mermaid, Mermaid Mindmap, OPML, Org-Mode,
+          Outliner, PDF, PNG, PlainText, filesystem, XMind and yEd formats.</li>
+      <li>Printer support.</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">io.github.phase1geo.minder.desktop</launchable>
+  <provides>
+    <binary>io.github.phase1geo.minder</binary>
+  </provides>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Node/Connection/Group Property Sidebar</caption>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-current-properties.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Style Property Sidebar</caption>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-style-properties.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Tags Property Sidebar</caption>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-tags-properties.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Sticker Property Sidebar</caption>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-stickers-properties.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Map Property Sidebar</caption>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-map-properties.png</image>
+    </screenshot>
+  </screenshots>
+  <developer id="io.github.phase1geo">
+    <name>Trevor Williams</name>
+  </developer>
+  <url type="homepage">https://github.com/phase1geo/minder/</url>
+  <url type="bugtracker">https://github.com/phase1geo/minder/issues/</url>
+  <url type="vcs-browser">https://github.com/phase1geo/minder/</url>
+  <url type="help">https://phase1geo.github.io/Minder/</url> <custom>
+    <value key="x-appcenter-color-primary">#603461</value>
+    <value key="x-appcenter-color-primary-text">rgb(255, 255, 255)</value>
+    <value key="x-appcenter-suggested-price">10</value>
+    <value key="x-appcenter-stripe">pk_live_Uhb96elhovWNRGkq07m2FRO9008Ia8OtVa</value>
+  </custom>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="2.1.0" date="2026-09-26">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added keyboard support for moving up and down search results in search entry field.</li>
+          <li>Added support for showing Markdown text styling in callouts and connections.</li>
+          <li>Added support for removing Markdown markup in callouts and connections.</li>
+          <li>Added support for displaying highlighted text in note tooltips.</li>
+          <li>Added new default keyboard shortcuts for attaching nodes.</li>
+          <li>Added support for embedding LaTeX formulas in node text (thanks to @dragonleopardpig).</li>
+          <li>Added support for formula OCR on image paste (thanks to @dragonleopardpig).</li>
+          <li>Added support for editable tables in nodes (thanks to @dragonleopardpig).</li>
+          <li>Added support for embedding LaTeX into node text (thanks to @dragonleopardpig).</li>
+          <li>Added support for adding priority flags to nodes.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Swedish translation (thanks to Daniel Nylander).</li>
+          <li>Changed application ID from com.github.phase1geo.minder to io.github.phase1geo.minder.</li>
+          <li>Updated codebase to eliminate using obsoleted library functions.</li>
+          <li>Improved search results to eliminate displaying Markdown markup characters.</li>
+          <li>Cleaned up Minder local data directory contents.</li>
+          <li>Improvements to symbolic icons to improve memory footprint of application.</li>
+          <li>Improved shortcut searching in preferences to include section and group text.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed Vala compiler warnings.</li>
+          <li>Fixed issue displaying note tooltips that contain strikethrough text formatting.</li>
+          <li>Fixed issue with keyboard shortcut when pressed key is a symbol or movement key (thanks to Antoine Goulin).</li>
+          <li>Fixed displayed application name in system (thanks to Ballo Gyorgy).</li>
+          <li>Fixed display issues with preferences window (thanks to Ballo Gyorgy).</li>
+          <li>Fixed handling of SVG images in Minder (thanks to @dragonleopardpig).</li>
+          <li>Fixed issue with dragging/dropping image onto nodes.</li>
+          <li>Fixed issues with image handling when nodes containing images are copy-pasted.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.0.9" date="2026-04-19">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added syntax highlighting support for Markdown strikethrough and highlighting in notes.</li>
+          <li>Added Markdown highlighting theming support.</li>
+          <li>Added Markdown syntax insertion menus for canvas text and notes.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to Albano Battistella).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issues with saving custom themes.</li>
+          <li>Fixed issue where nodes with rendered Markdown text were not updated when markdown enablement was changed in settings.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.0.8" date="2026-04-05">
+      <description>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue with rendering node text when themes are changed.</li>
+          <li>Fixed Flathub linter warnings.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.0.7" date="2026-04-05">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Added Georgian translation (special thanks to Ekaterine Papava).</li>
+          <li>Removed markup characters from nodes when nodes are not being edited to improve display.</li>
+          <li>Improved coloring of URLs when node is selected.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue resetting application shortcuts to the Minder defaults.</li>
+          <li>Fixed issues with RTL language display.</li>
+          <li>Fixed issue with selecting the first root node via keyboard shortcut when no other nodes are selected.</li>
+          <li>Fixed issue with drag and drop of tags on nodes.</li>
+          <li>Fixed issue with copying nodes with tags.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.0.5" date="2026-01-31">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Improved .minder file icon image.</li>
+          <li>Improved connection drawing to avoid lines overlapping with other connection lines.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed runtime string in About window.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.0.4" date="2026-01-18">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Use Minder file icon for .minder files.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Changed importing to use an unnamed filename after import.</li>
+          <li>Minor memory optimizations for nodes.</li>
+          <li>Changed node styling for main nodes that have siblings to use sibling styling instead of default styling.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue with updating font UI in style sidebar.</li>
+          <li>Fixed several issues with closing sidebar with Escape key.</li>
+          <li>Fixed issues with importing legacy portable Minder files.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.0.3" date="2025-12-21">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Adding support for importing Mermaid mindmap files.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to Albano Battistella).</li>
+          <li>Adding import and export examples in command-line help output.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue with placing root node on application open.</li>
+          <li>Fixed issue with Style widgets accidentally scrolling.</li>
+          <li>Fixed various issues with command-line import/export.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.0.2" date="2025-12-17">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Changed Shift-F keyboard shortcut to toggle the node folding deeply rather than always unfold deeply.</li>
+          <li>Changed node menu from 'Fold Children' to 'Toggle Folding' submenu where one level or all levels can be selected.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed application crash caused by adding parent node between a root node and a main node.</li>
+          <li>Attempting to fix UI issue where dark mode is changed by the system, causing some icons to visually disappear.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.0.1" date="2025-12-14">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Removed unnecessary OARS values from appdata.xml.</li>
+          <li>Allowed window height to be much smaller when sidebar is displayed.</li>
+          <li>Improved performance of selections when dragging selection box over nodes.</li>
+          <li>Removed theme value to prefer dark mode, using system setting in window always.</li>
+          <li>Increased default padding for root nodes to make it more visible.</li>
+          <li>Improved default position of root node when a new mindmap is created.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue with some style settings not taking immediate effect in the mindmap.</li>
+          <li>Fixed issue with sequence numbers being obfuscated when multiple nodes selected.</li>
+          <li>Fixed issue with autopan when dragging out selection box.</li>
+          <li>Fixed issue with alpha when selection box is dragged over a single node.</li>
+          <li>Fixed potential issue with releasing selection box causing node changes.</li>
+          <li>Fixed display of branch corner radius adjustment in styles sidebar.</li>
+          <li>Fixed issue where panning with middle button continued to pan after button released.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.0.0" date="2025-12-07">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for node text alignment controls in Style sidebar</li>
+          <li>Added new brainstorming UI for quickly adding ideas without organizing them into the node tree</li>
+          <li>Added support for configuring shortcuts within preferences.</li>
+          <li>Added support for exporting as a Mermaid mindmap.</li>
+          <li>Added support for exporting as a WebP image file.</li>
+          <li>Added support for exporting most formats to the clipboard.</li>
+          <li>Added shortcut ability to close current tab.</li>
+          <li>Added support for node tagging.</li>
+          <li>Added support for style templates.</li>
+          <li>Added support for copying/pasting style.</li>
+          <li>Added support for adjust size of link and connection arrows in style sidebar.</li>
+          <li>Added support for multi-node selection drag-drop operations.</li>
+          <li>Added read-only support.</li>
+          <li>Added support for automatic mindmap panning when dragging nodes.</li>
+          <li>Added preference option to enable compact sidebar width (useful for Gnome environments).</li>
+          <li>Added preference option to control the default style settings used in new mindmaps (Minder default, last
+              used, or a saved style template).</li>
+          <li>Added preference option to control whether a new node style matches its sibling or parent node.</li>
+          <li>Added Swedish translation (thanks to Daniel Nylander).</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to Albano Battistella)</li>
+          <li>Updated Russian translation (thanks to Maksim Syomochkin).</li>
+          <li>Updated code base from Gtk3 to Gtk4.</li>
+          <li>Updated text editors from gtksourceview4 to gtksourceview5.</li>
+          <li>Updated granite to granite-7.</li>
+          <li>Changed .minder save format to contain mindmap, embedded images, etc. (IMPORTANT NOTES: .minder files
+              created with previous versions will load in Minder 2.0 but will be converted and saved in the new format
+              upon opening. New save format is not backward compatible with older versions of Minder).</li>
+          <li>Saving to the new save format only occurs when Control-S is used by the user or the application is closed
+              by the user.  Reduced number of saves to disk during application usage dramatically.</li>
+          <li>Updated elementary OS Flatpak runtime version from 6 to 8.2.</li>
+          <li>Added support for creating Flathub manifests (Flathub flatpaks are now officially supported by the project; Gnome 49 SDK used).</li>
+          <li>Added more support for tree change animations.</li>
+          <li>Under the hood code improvements to improve code quality and maintenance issues.</li>
+          <li>Node trees with only two main branches can still be balanced in horizontal or vertical node layouts.</li>
+          <li>Moved random link colors switch from Map sidebar to preferences.</li>
+          <li>Changed automatic task enablement to only adding a node task when a new node is created. New sibling nodes will be enabled if the sibling node was enabled. New child nodes will be enabled if the parent was enabled.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Improved look of icons when dark mode is changed between light and dark.</li>
+          <li>Improved URL detection to detect URLs that do not contain a period.</li>
+          <li>Fixed issues with including node groups in copy and paste of node tree containing them.</li>
+          <li>Fixed issue with all nodes getting selected when a group is selected.</li>
+          <li>Fixed application crashes when right-clicking on tabs (thanks to Quaylyn Rimer).</li>
+          <li>Fixed application crashes when resizing nodes with images (thanks to Quaylyn Rimer).</li>
+          <li>Fixed application crash when adding a child to a folded node.</li>
+          <li>Fixed location of text cursor when text is selected.</li>
+          <li>Fixed issues with cutting and pasting or deletion of more than one selected nodes.</li>
+          <li>Eliminated unnecessary move undo operations.</li>
+          <li>Fixed issue with selecting a node with a connection (previously the connection was incorrectly selected).</li>
+          <li>Fixed issue where not was not reporting a resize correctly.</li>
+          <li>Fixed potential issue when connecting nodes.</li>
+          <li>Fixed issues with sequence numbers not updating correctly.</li>
+          <li>Fixed issue with undo-ing a root node deletion.</li>
+          <li>Fixed potential text selection issue when hitting backspace.</li>
+          <li>Fixed issues with the location of contextual menus when the mindmap zoom level is not 100%.</li>
+          <li>Fixed issues with handling potential errors during clipboard paste operation.</li>
+          <li>Fixed issues with clearing attachment indicator when the cursor leaves the mindmap canvas.</li>
+          <li>Fixed layout issues caused by tasks being enabled in some nodes.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.17.0" date="2024-10-30">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for removing Markdown syntax highlighting in the note field.</li>
+          <li>Added support for moving a node to be a sibling of its parent (with Alt+direction-of-parent).</li>
+          <li>Added support for displaying child nodes as a sequence, including auto-numbering.</li>
+          <li>Added support for Shift-I keyboard shortcut to add an image to a node.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li>Updated German translation (thanks to Benjamin Weis).</li>
+          <li>Updated Flatpak platform from 7.2 to 8.</li>
+          <li>Adjusted blue color used in note field to improve readability in dark themes.</li>
+          <li>Regrouped node commands in shortcuts cheatsheet to reduce required window height.</li>
+          <li>Changed keyboard shortcut for moving child nodes of a node to be siblings with that node from Alt+direction-of-parent to Alt+direction-of-children.</li>
+          <li>Added tooltip to new info icon to Default Theme within preferences to improve user documentation on what this setting does.</li>
+          <li>Updated gtksourceview location in Flatpak manifest.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed memory leak issue when saving the document.</li>
+          <li>Fixed issue with inserting root nodes using the quick entry feature.</li>
+          <li>Fixed potential issue when creating a new tab.</li>
+          <li>Fixed issue with centering a node with the keyboard shortcut.</li>
+          <li>Fixed issue with pasting by replacement using the keyboard shortcut.</li>
+          <li>Fixed issues using up, down, left, right to navigate nodes when selected node is a root node.</li>
+          <li>Fixed issue with deleting the previous word when editing node text.</li>
+          <li>Fixed issue where application would crash when hovering over node note icon on systems that installed Discount version &gt;= 3.0.</li>
+          <li>Fixed issue where Minder process could remain running after application was closed.</li>
+          <li>Fixed issue related to invoking Minder while application is running.</li>
+          <li>Fixed issue with installation of application icon in the wrong directory.</li>
+          <li>Fixed potential issue with tab handling on startup.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.16.4" date="2024-04-07">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added ability to search group notes in search UI.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Removed executable permissions from SVG (thanks to @yangfl).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Removing node summary menu option when a single node is selected (unsupported feature).</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.16.3" date="2024-02-11">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added ability to use either Control key for keyboard commands.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li>Removed natural scrolling preference option and just using system setting.</li>
+          <li>Changed panning with Alt key when dragging on the canvas.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issues with panning when using Alt key or middle mouse button panning (canvas follows mouse cursor).</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.16.2" date="2024-01-15">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for Shift-L to change the color of any selected nodes.</li>
+          <li>Added support for natural scrolling preference.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Russian translation (thanks to Alexandre Prokoudine).</li>
+          <li>Updated README.md to change the installation instructions for Arch-based distros to avoid issues with discount library.</li>
+        </ul>
+      </description>
+      <issues>
+        <issue url="https://github.com/phase1geo/minder/issues/595">TODO status not inherited by all child nodes</issue>
+        <issue url="https://github.com/phase1geo/minder/issues/598">Favorited stickers are not displayed in favorited section on application restart</issue>
+        <issue url="https://github.com/phase1geo/minder/issues/599">Missing linked node causes errors with tooltip display</issue>
+      </issues>
+    </release>
+    <release version="1.16.1" date="2024-01-10">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for Shift-Tab to unindent nodes in Quick Entry.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobatistella).</li>
+          <li>Improved Quick Entry auto-formatting to reduce user errors.</li>
+        </ul>
+      </description>
+      <issues>
+        <issue url="https://github.com/phase1geo/minder/issues/591">Completion status not updated</issue>
+        <issue url="https://github.com/phase1geo/minder/issues/592">Crash when deleting nodes</issue>
+        <issue url="https://github.com/phase1geo/minder/issues/593">Crash when inserting nodes with Quick Entry</issue>
+      </issues>
+    </release>
+    <release version="1.16.0" date="2024-01-08">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for adding node links in node, connection or group notes.</li>
+          <li>Added support for providing custom stickers.</li>
+          <li>Added support for callouts that can be applied to nodes.</li>
+          <li>Added node alignment toolbar in map sidebar when manual layout mode is selected.</li>
+          <li>Added output scaling to PNG/JPEG export options.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobatistella).</li>
+          <li>Updated Revised Simplified Chinese translation (thanks to @aerowolf).</li>
+          <li>Updated German translation (thanks to Benjamin Weis).</li>
+          <li>Updated Russian translation (thanks to Alexandre Prokoudine).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed potential issues with custom themes.</li>
+          <li>Fixed tab state saving when tabs are closed.</li>
+          <li>Fixed contextual menu when connection text is editable.</li>
+        </ul>
+      </description>
+      <issues>
+        <issue url="https://github.com/phase1geo/minder/issues/575">Clicking on files in Minder Flatpak doesn't work</issue>
+        <issue url="https://github.com/phase1geo/minder/issues/583">Task node colors look bad</issue>
+        <issue url="https://github.com/phase1geo/minder/issues/587">Crashing while using Quick Entry Issue</issue>
+        <issue url="https://github.com/phase1geo/minder/issues/589">Crash when pasting into a blank document</issue>
+      </issues>
+    </release>
+    <release version="1.15.6" date="2023-08-25">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Adding auto-adjusting bottom margin in quick entry.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed application crash when root node contains a note/link and node fill style is enabled.</li>
+          <li>Fixed issue with unfolding all nodes.</li>
+          <li>Fixing middle mouse drag pan behavior.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.15.5" date="2023-08-22">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Added app script subcommands for building/running flatpaks.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issues with Flatpak</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.15.4" date="2023-08-22">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li>Updated Russian translation (thanks to Alexandre Prokoudine).</li>
+          <li>Adjusted codebase to compile on Fedora</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.15.3" date="2023-08-20">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added new --import command-line option for importing directly from command-line.</li>
+          <li>Added support for importing Markdown.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Removed --format command-line option in favor of new --import and --export options.</li>
+          <li>Improved export of Markdown output.</li>
+          <li>Improved loading of Minder Markdown syntax highlighting to make this an application-only syntax (not user-wide).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed Markdown export issue with root nodes.</li>
+          <li>Fixed issue with inserting non-printable characters.</li>
+          <li>Fixed issues with cursor movement for RTL languages.</li>
+          <li>Fixed issue with using Control-W shortcut when only a single tab is shown.</li>
+          <li>Fixed potential issue with adding a new tab.</li>
+          <li>Fixed issues with tab naming of new, unchanged documents.</li>
+          <li>Fixed cursor/selection issue when the Delete key is used (includes application crash issue).</li>
+          <li>Fixed issue with Control-Up cursor selection shortcut.</li>
+          <li>Fixed issue with centering a node with Shift-C.</li>
+          <li>Fixed several issues related to zoom/scaling.</li>
+          <li>Fixed location of input method entry field (thanks to @aeghn).</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.15.2" date="2023-05-20">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for embedding image path in Quick Entry.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Code cleanup</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issues with exported images including selection.</li>
+          <li>Fixed issue with importing OPML files (thanks to Ygor Mutti).</li>
+          <li>Fixed issue with undo/redo of Unicode characters.</li>
+          <li>Fixed issues with exporting to Outliner format.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.15.1" date="2023-04-25">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixing translation issues with Flatpak</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.15.0" date="2023-04-20">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added ability to change the size of the node while leaving the embedded image size unchanged.</li>
+          <li>Added tooltip to node resize handle.</li>
+          <li>Added Flatpak permission for home folder access by default (thanks to @SubhadeepJasu).</li>
+          <li>Added header font scaling in notes field.</li>
+          <li>Added support for exporting a mindmap via the command-line.</li>
+          <li>Added support for importing via the command-line.</li>
+          <li>Added ability to import a given filesystem as a mindmap.</li>
+          <li>Added ability to export a mindmap as a filesystem.</li>
+          <li>Added zh_CN translation (thanks to @potrans).</li>
+          <li>Added ability to enable/disable UI animations via gsettings.</li>
+          <li>Added ability to associate a note with a selected group.</li>
+          <li>Added ability to copy and cut nodes via shortcuts when multiple nodes are selected.</li>
+          <li>Added ability to insert unicode characters in nodes, connections, and notes when a backslash character is entered.</li>
+          <li>Added support to detect read-only mindmap files and handle them appropriately.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated German translation (thanks to @hztirf and @bewe)</li>
+          <li>Updated Czech translation (thanks to @G020B)</li>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Updated Russian translation (thanks to Alexandre Prokoudine)</li>
+          <li>Updated Portugese translation (thanks to @AncientBlueFrog)</li>
+          <li>Updated Polish translation (thanks to @pyotr71)</li>
+          <li>Updated Flatpak SDK from 6 to 6.1.</li>
+          <li>Improved sticker search (now case insensitive and uses fuzzy search -- thanks to @sibevin)</li>
+          <li>Changed node borders to use node padding to control shape.</li>
+          <li>Changed note popup to display rendered text instead of literal text.</li>
+          <li>Updated headerbar icons for Gnome environments.</li>
+          <li>Mindmap root node text is now used for default filename when initially saving mindmap.</li>
+          <li>Changed image UI in sidebar.</li>
+          <li>Removed connection sidebar button bar.</li>
+          <li>Improved Zoom to Selected Node functionality with name change (to better reflect what this feature does) and keyboard shortcut.</li>
+          <li>Enhanced OrgMode exporter (includes support for indent mode and improved output).</li>
+          <li>Enhanced image exporting features.</li>
+          <li>Minder files no longer contain precise positioning information so eliminate file changes on pan and zoom operations.</li>
+          <li>Removed Control-E (export) from shortcuts documentation.</li>
+          <li>Improved autosave frequency.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issues with connections being displayed when ancestor node is folded.</li>
+          <li>Fixed issue with loading an older mindmap.</li>
+          <li>Fixed syntax highlighting in note fields.</li>
+          <li>Fixed Edit Text node menu functionality.</li>
+          <li>Fixed issue with node fonts not following the style inspector.</li>
+          <li>Fixed application crashes when exporting to Freemind, Freeplane, XMind8 and Yed formats.</li>
+          <li>Fixed issue with saving the state of export switch values.</li>
+          <li>Fixed application crash when an image is dropped onto a blank portion of the mindmap canvas.</li>
+          <li>Fixed issues with URL link and text colors not changing when theme is changed.</li>
+          <li>Fixed application crash when grouping root nodes.</li>
+          <li>Fixed issue causing app script to generate a warning message.</li>
+          <li>Fixed potential issue which caused notes to get deleted when selecting nodes, connections or groups.</li>
+          <li>Fixed application crash when saving an unsaved document with no root node.</li>
+          <li>Fixed issues with capitalized keyboard shortcuts.</li>
+          <li>Fixed issue with loading file via the command-line.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.14.0" date="2022-01-14">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for shallow (one-level folding)</li>
+          <li>Added import/export support for XMind version 2021.</li>
+          <li>Added support for external mind-map node linking.</li>
+          <li>Added node link tooltips.</li>
+          <li>Added support for overriding the color of a root node.</li>
+          <li>Added support for Markdown strikethrough syntax.</li>
+          <li>Added support for Control-Backspace/Delete to delete the previous/next word when editing node/connection titles.</li>
+          <li>Added tooltip to node fill switch in style inspector.</li>
+          <li>Added keyboard shortcuts for adding and removing URL links from node text.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updates to Italian translation (thanks to @albanobattistella)</li>
+          <li>Updates to German translation (thanks to Hannes Fritz)</li>
+          <li>Improved accuracy of the list of translatable files.</li>
+          <li>Removed ability to use keyboard shortcuts when a mouse button is pressed.</li>
+          <li>Removed Accounts permissions from Flatpak manifest as it is no longer needed.</li>
+          <li>Improved adding URL link UI to automatically add URL from clipboard if one exists.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed layout issues when pressing keys while animations are in process.</li>
+          <li>Fixed location of text size help information in the appearances preferences dialog.</li>
+          <li>Fixed UX issues when the Hide Connections switch is enabled.</li>
+          <li>Fixed issue with pasting nodes when a node is not selected in a map.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.13.1" date="2021-08-12">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Updated screenshots for elementary OS 6.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed command support for non-English keyboard layouts.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.13.0" date="2021-08-07">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for toggling the task indicator when multiple nodes are selected.</li>
+          <li>Added German translation (thanks to Peter Sonntaga).</li>
+          <li>Added zoom amount in the zoom button tooltip.</li>
+          <li>Added support for y command to create/remove node links when multiple nodes are selected.</li>
+          <li>Added support for x command to create connections when two nodes are selected.</li>
+          <li>Added support for system dark mode setting.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li>Updated Russian translation (thanks to Alexandre Prokoudine).</li>
+          <li>Improved task indicator sizes in leaf nodes.</li>
+          <li>Changed fold indicator from a circle to a square.</li>
+          <li>Removed zoom in/out menu items and made them buttons instead.</li>
+          <li>Node/connection is now automatically selected on right click if it is not selected.</li>
+          <li>Moved node change contextual menu items into their own submenu.</li>
+          <li>Changed forward slash command to Control-A for selecting all text.</li>
+          <li>Changed backward slash command to Control-Shift-A for deselecting all text.</li>
+          <li>Changed F1 command to Control-? for displaying keyboard shortcuts.</li>
+          <li>Updated keyboard shortcuts cheatsheet.</li>
+          <li>Updated code base for elementary OS 6 (gtksourceview-4, libhandy-1, Flatpak support, etc.)</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue where sticker tooltips were not displaying translated names.</li>
+          <li>Fixed node resizing issues when system font is changed in system settings.</li>
+          <li>Fixed Flatpak issue to allow dark mode system settings to affect application.</li>
+          <li>Fixed layout issues when root node is resized.</li>
+          <li>Fixed squared and rounded link display for nodes attached to root node.</li>
+          <li>Fixed cursor location when End key used.</li>
+          <li>Fixed potential node identification generation issue that can lead to bad connections on load.</li>
+          <li>Fixed location of node stickers within the node to improve look.</li>
+          <li>Fixed issues copying and pasting a single selected node.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.12.5" date="2021-06-14">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Updated Russian translation (thanks to Alexandre Prokoudine)</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Added missing translatable strings in various parts of the UI.</li>
+          <li>Fixed URL parser issues.</li>
+          <li>Fixed application crash when forward deleting non-Latin text.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.12.4" date="2021-06-02">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Small optimization to Meson build procedure.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed compile and run issue for distros lacking full granite support.</li>
+          <li>Fixed issue with displaying correct themes when themes are hidden that don't match system theme.</li>
+          <li>Added missing translatable strings.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.12.3" date="2021-05-22">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added rounded branching style.</li>
+          <li>Added support for drawing clickable folding areas.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Changed shape of the unfold indicator.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed application crash on Manjaro.</li>
+          <li>Fixed link drawing order regression.</li>
+          <li>Removed error output when XML storage files do not exist.</li>
+          <li>Fixed parsing issue with filepaths starting with file://.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.12.2" date="2021-04-23">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for Control-Home/End to move the cursor to the beginning/end of the text.</li>
+          <li>Added support for folded children count tooltip.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue where selected text at beginning of text would not be deleted when the Backspace key was used.</li>
+          <li>Fixed issue where selected text at end of text would not be deleted when the Delete key was used.</li>
+          <li>Fixed selection issues after moving the cursor by a word.</li>
+          <li>Fixed Home/End keys to move the cursor to the beginning/end of the current line.</li>
+          <li>Fixed node size and layout when system text size changes between Minder sessions.</li>
+          <li>Fixed issue with application crashing when older Minder file is loaded that used a custom theme.</li>
+          <li>Fixed issue with node sidebar image not being properly updated when sidebar is hidden.</li>
+          <li>Fixed square branch link drawing when some links have arrows drawn in them.</li>
+          <li>Fixed issue with the background border being drawn around link arrows in contexts where it should not.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.12.1" date="2021-04-15">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added Basque translation (thanks to @alexgabi)</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated to Italian translation (thanks to @albanobattistella).</li>
+          <li>Updated to Brazilian Portugese translation (thanks to Felipe Simoes).</li>
+          <li>Opening a file will automatically close an existing unsaved, unchanged tab.</li>
+          <li>Changed color of connection drag handles to yellow.</li>
+          <li>Making it easier to grab connection drag handle when it is close to connection handles.</li>
+          <li>Reducing auto-saves when editing node text.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Removed help information from PNG export panel.</li>
+          <li>Fixed issue with exporting images with connections/stickers which could get cropped out.</li>
+          <li>Fixed issue with empty tab when file cannot be loaded.</li>
+          <li>Fixed issues with application crashes on startup in non-elementary environments.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.12.0" date="2021-02-11">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added subscript and superscript support to Markdown parser.</li>
+          <li>Added support for switching tabs with Control-Tab and Shift-Control-Tab.</li>
+          <li>Added support for remembering last used open/save dialog directories.</li>
+          <li>Added support for Alt-Left/Right/Up/Down keyboard shortcuts to rearrange sibling nodes.</li>
+          <li>Added support for searching all tabs (thanks to @Messius58).</li>
+          <li>Added about window for non-elementary builds.</li>
+          <li>Added ability to move child nodes to parent via Alt+direction.</li>
+          <li>Added support for including images in Markdown export.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Added installation instructions to README.md for Debian (thanks to Robert Hubinak).</li>
+          <li>Replaced export UI with a new, improved UI with support for export options.</li>
+          <li>Moved add node menu items to a submenu.</li>
+          <li>Improved focus mode behavior.</li>
+          <li>Changed property header button to a toggle button and clarified the tooltip.</li>
+          <li>Changed keyboard shortcut to open sidebar from Control-| to F9.</li>
+          <li>Changed non-symbolic header bar icons to symbolic icons for non-elementary OS environments.</li>
+          <li>Improved link drawing algorithm to make link connections easier to see.</li>
+          <li>Changed Link Color in node inspector to Color to reflect the colors use.</li>
+          <li>Improved task button drawing.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue where tab background colors were incorrect when changing tabs.</li>
+          <li>Fixed issue with getting valac pathname from Meson (thanks to paluszak).</li>
+          <li>Added desktop update call to post_install.py script.</li>
+          <li>Fixed issue with sidebar sizing.</li>
+          <li>Fixed issue with remembering the sticker sidebar panel was last opened when restarting.</li>
+          <li>Fixed layout issues when unfolding a parent with folded children.</li>
+          <li>Fixed issue with hiding node groups when the main node in group is folded.</li>
+          <li>Fixed issue with displaying link color in sidebar when root node is selected.</li>
+          <li>Fixed alpha value used for drawing node grouping when encompassed nodes are not in focus when focus mode is enabled.</li>
+          <li>Fixed issue with saving manually added embedded links in node text.</li>
+          <li>Fixed undo/redo text editing support.</li>
+          <li>Updated keyboard shortcuts in help window.</li>
+          <li>Fixed issue of tab content flashing when application opens with multiple tabs.</li>
+          <li>Fixed error when closing a tab.</li>
+          <li>Fixed issue with undo'ing text modifications.</li>
+          <li>Fixed issues with style inspector scale widgets not properly reflecting their current value.</li>
+          <li>Fixed various issues with node layout.</li>
+          <li>Fixed issue with undo'ing the deletion of a single node.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.11.3" date="2020-10-16">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to Albano Battistella).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed application crash issues due to using custom themes.</li>
+          <li>Added missing theme colors in custom theme pane.</li>
+          <li>Fixed issues with application crash when editing a root node.</li>
+          <li>Fixed issue with filepath parser highlighting normal text that contains slash characters.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.11.1" date="2020-09-25">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added Shift-e keyboard shortcut to edit note text for nodes and connections.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li>Improved automatic layout of node trees when adjacent tree sizes change.</li>
+          <li>Changed node and connection contextual menus to show (Edit Note) instead of (Add Note) and (Remove Note) options.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixing compilation issues.</li>
+          <li>Fixing behavior of 't' command when node is selected.</li>
+          <li>Fixing support for undo/redo of root node insertion.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.11.0" date="2020-09-16">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added Preferences dialog.</li>
+          <li>Added Portuguese translation (thanks to Andre Barata).</li>
+          <li>Added keyboard shortcut (Menu or Shift-F10) to display contextual menus in mindmap.</li>
+          <li>Added default theme preference option.</li>
+          <li>Added preference option to select map items on cursor hover.</li>
+          <li>Added Shift+Home/End support for selecting all text from current cursor to beginning/end of node or connection titles when editing.</li>
+          <li>Added support for PlantUML import/export.</li>
+          <li>Added support for displaying notifications on completion of export operation.</li>
+          <li>Added keyboard shortcuts for displaying tabs in sidebar.</li>
+          <li>Added support for making filepath URIs clickable in nodes, connections and notes (displays the files in the file manager application).</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>When nodes are copied to clipboard, pasting them as text in an external application will be displayed as in text export format.</li>
+          <li>When text is copied to the clipboard from an external application, pasting as nodes in Minder will parse in text import format.</li>
+          <li>Improved look of menu accelerators and added missing accelerators.</li>
+          <li>Changed 't' command to transition task status from disabled to enabled to done and back to disabled.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issues with undo/redo of node/connection title changes.</li>
+          <li>Fixed issue with undoing a connection add operation.</li>
+          <li>Fixed issue with connection titles being clear when connection is moved to a different node.</li>
+          <li>Fixed UI issue with changing window width by dragging right side of window when sidebar is hidden.</li>
+          <li>Fixed issues with inputting special characters with US international keyboard.</li>
+          <li>Fixed issue where images in resized nodes were not displaying properly on application restart.</li>
+          <li>Fixed issue where copying a filename in a file manager and pasting in Minder would attempt to past the icon image instead of the filename when editing text.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.10.0" date="2020-08-27">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added Markdown highlighting support to node titles.</li>
+          <li>Added ability to set the maximum node size in style inspector.</li>
+          <li>Added ability to set the maximum connection title size in style inspector.</li>
+          <li>Added ability to set text field font size via gsetting.</li>
+          <li>Added ability to set branch margin in the style inspector.</li>
+          <li>Added ability to add stickers to nodes, connections and anywhere else in the mind map.</li>
+          <li>Added ability to visually create and display node groupings.</li>
+          <li>Added import/export support for XMind.</li>
+          <li>Added support for specifying if connection titles should be added immediately after creating a connection.</li>
+          <li>Added support for middle-click-and-drag to pan the canvas (Alt + mouse movement still supported).</li>
+          <li>Added keyboard shortcut for the Zoom to Fit option (Control-1).</li>
+          <li>Added new Mouse Events shortcut panel in shortcut cheatsheet.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Removed the sidebar style affects selector and using the status of the current selection instead.</li>
+          <li>Lowered the minimum node margin from 5 pixels to 1 pixel to allow for greater node density.</li>
+          <li>Removed connection title editing field in sidebar for better UI consistency.</li>
+          <li>Removed bold and italicized fonts from the style inspector font selectors.</li>
+          <li>If connection title is empty, the title will be automatically removed.</li>
+          <li>Updated application icon (thanks to Fatih20).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue with importing Freemind notes.</li>
+          <li>Fixed display of right-to-left text within nodes.</li>
+          <li>Fixed issues with loading a .minder file that contains errant information.</li>
+          <li>Fixed issues with the layout of connection titles.</li>
+          <li>Fixed input method support when editing connection titles.</li>
+          <li>Fixed position of fold indicator when tree layout is Upwards.</li>
+          <li>Fixed node display issue when a node link is clicked to a node that is folded.</li>
+          <li>Fixed error when connection title is double clicked when no text is present.</li>
+          <li>Fixed issue with opening the same document twice (only one tab will now exist per file).</li>
+          <li>Fixed Shift-Control-s keyboard shortcut to display the 'Save As' dialog instead of the 'Open' dialog.</li>
+          <li>Fixed issue that allows you to click on or drag onto a hidden node.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.9.2" date="2020-08-07">
+      <description>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue with setting cursor position with mouse when zoom factor is not 100 percent.</li>
+          <li>Fixed issue with reading in Minder files that exceed the XML parser size limitations.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.9.1" date="2020-07-12">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue with setting cursor position with mouse when zoom factor is not 100 percent.</li>
+          <li>Fixed issue with reading in Minder files that exceed the XML parser size limitations.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.9.0" date="2020-06-26">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for selecting nodes by dragging out a selection box.</li>
+          <li>Added ability to configure the color used in connection titles.</li>
+          <li>Added Italian translation (thanks to albanobattistella on GitHub).</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Refined and pixel fitted the application icon (thanks to Fatih20 on GitHub).</li>
+          <li>Changed panning with mouse from left-click with motion to Alt with motion.</li>
+          <li>Changed select parent to work with multiple selected nodes.</li>
+          <li>Updated keyboard shortcuts cheatsheet for task commands.</li>
+          <li>Updated Spanish translation (thanks to febrezo on GitHub).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issues with changing connection styles.</li>
+          <li>Fixed application crashes associated with changing layout to a balanceable layout with animations enabled.</li>
+          <li>Fixed display of cursor when it is over a clickable feature in the mind map.</li>
+          <li>Fixed issues with creating custom themes.</li>
+          <li>Fixed cursor in note editor when Control key is held over a URL link.</li>
+          <li>Fixed meson.build issue when comparing valac version.</li>
+          <li>Fixed connection colors in dark themes to help them be more visible.</li>
+          <li>Fixed issue where connection colors don't follow theme if they have not been manually changed.</li>
+          <li>Fixed application crash when animation is disabled, a node is moved, animation is enabled and a node is moved.</li>
+          <li>Fixed various issues with quick entry.</li>
+          <li>Fixed ability to open one or more files from the command-line or from a file browser.</li>
+          <li>Fixed issues with connection coloring.</li>
+          <li>Fixed issue with pasting UTF8 strings from clipboard.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.8.0" date="2020-05-17">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for pasting an image or text as a new node.</li>
+          <li>Added support for pasting an image or text, replacing the current node content.</li>
+          <li>Added support for pasting text, replacing the current connection content.</li>
+          <li>Added task support to Outliner import/export.</li>
+          <li>Added keyboard shortcut (Control-E) to display export interface.</li>
+          <li>Added support for creating a new root node hitting the Return key when no node is selected.</li>
+          <li>Added ability to add a new root node via the contextual menu when no node is selected.</li>
+          <li>Added ability to launch quick entry dialog via the contextual menu when no node is selected.</li>
+          <li>Added node alignment support for manual node layouts.</li>
+          <li>Added ability to create a connected root node.</li>
+          <li>Added ability to replace/edit nodes via the Quick Entry feature.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated image editor dialog button bar to include support for clipboard operations.</li>
+          <li>Improved display of buttons in image area of the node inspector sidebar.</li>
+          <li>Updated keyboard shortcut cheatsheet.</li>
+          <li>Changed quick text entry keyboard shortcut from Control-E to Control-Shift-E.</li>
+          <li>Changed the paste text in contextual menu to indicate what will be pasted.</li>
+          <li>Updated Outliner import/export support for tasks.</li>
+          <li>Added tooltip and changed cursor when cursor is over a link and the Control key is held down.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Removed empty Outliner rows from being added when Outliner file is imported.</li>
+          <li>Fixed loss of selection when shift key is held down and the background is clicked.</li>
+          <li>Added themed background color to exported PDF format.</li>
+          <li>Fixed exports to allow existing files to be overwritten.</li>
+          <li>Fixed Org-Mode export syntax errors.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.7.3" date="2020-04-20">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for using input methods.</li>
+          <li>Added Dutch translation (thanks to Heimen Stoffels).</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated README.md to indicate which version of valac should be used if building from source.</li>
+          <li>Changed unnamed default filename to use translated value.</li>
+          <li>Updated French translations (thanks to Nathan Bonnemains).</li>
+          <li>Changed tab colors to match current document background.</li>
+          <li>Adjusted dark theme to help with current tab contrast.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue with New Document plank command to load application data before opening new tab.</li>
+          <li>Fixed build issues with compiling libarchive code using newer versions of libarchive and valac.</li>
+          <li>Fixed issues with translating shortcut cheetsheat strings.</li>
+          <li>Fixed issue with exporting images when manual layout mode is selected.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.7.2" date="2020-03-26">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for importing/exporting Outliner files (new app in AppCenter!).</li>
+          <li>Added map inspector switch to enable/disable automatic rotation of main branch link color selection.</li>
+          <li>Added ability to set all selected nodes to a specific color.</li>
+          <li>Added ability to set all selected nodes to a randomly selected link color.</li>
+          <li>Added ability to allow descendant nodes to have different link colors than ancestor nodes.</li>
+          <li>Added ability to cause a descendant node with a different color than its parent to re-use the parent color.</li>
+          <li>Added ability to select children nodes using Control-click.</li>
+          <li>Added ability to export a mind-map as a new Portable Minder filetype which will allow Minder files to be copied between different users/filesystems.</li>
+          <li>Added ability to export to Org-Mode format.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated French translation (thanks to Nathan Bonnemains).</li>
+          <li>Improved OPML import support.</li>
+          <li>Changed ability to select a subtree by Control + double-click.</li>
+          <li>Changed ability to select all nodes of the current level by Control + triple-click.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed NodeJS version for Travis CI.</li>
+          <li>Fixed issue with adding a new child node that doesn't cause other descendant nodes to unfold.</li>
+          <li>Fixed issue with showing/hiding sidebar.</li>
+          <li>Fixed segmentation faults when loading a theme.</li>
+          <li>Fixed issue with the style inspector Change Affect value when selection changes (thanks to Viliam K.).</li>
+          <li>Fixed issue with node markup within the node text (thanks to Viliam K).</li>
+          <li>Fixed issue with tab state not being properly saved when a new tab is added.</li>
+          <li>Fixed bug with updating tab tooltip and saving tab state when filename is changed.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.6.0" date="2019-12-26">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added ability to delete a single node (instead of the node and its subtree) in the contextual menu.</li>
+          <li>When a new document is first saved, the first root node text is used as the default filename.</li>
+          <li>Added multi-select support which includes:  Changing styles; Copy, cut, paste and delete support; Connect two selected nodes;
+            Create node links between two or more selected nodes; and Fold/unfold selected nodes.</li>
+          <li>Added support for URLs in node titles.</li>
+          <li>Added support for Markdown within a note:  Notes are syntax highlighted; and Embedded URLs can be opened by Control-Clicking on them.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated application icon and other recently improved icons for improved readability (thanks to Nararyans R.I.).</li>
+          <li>Improved look and readability of theme icons in the sidebar.</li>
+          <li>Changed sidebar to display theme icons in a grid layout.</li>
+          <li>Improved various export format output.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed various compiler warnings/errors after compiling with latest version of Vala compiler.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.5.1" date="2019-11-23">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Improved various icons (thanks to Nararyans R.I.)</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Downgraded Node.js to fix Travis CI builds</li>
+          <li>Fixed various compiler errors/warnings</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.5.0" date="2019-09-07">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added export to yEd.</li>
+          <li>Added ability to create, edit and delete custom themes.</li>
+          <li>Added new quick entry mode, allowing node trees to be input within a text editor.</li>
+          <li>Added Control-W keyboard shortcut to close the current tab.</li>
+          <li>Added shortcut exploration help window (use F1 key to display).</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>New search icon which has better contrast for Minder's themed header bar (thanks to Nararyans R.I.).</li>
+          <li>New non-symbolic sidebar icon in header bar (thanks to Nararyans R.I.).</li>
+          <li>New Minder application icon which fits in with the elementary OS color scheme better (thansk to Nararyans R.I.).</li>
+          <li>New focus icon in header bar (thanks to Nararyans R.I.).</li>
+          <li>Improved styling when creating a new node/connection.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue where separate trees in same mind-map where allowed to overlap.</li>
+          <li>Fixed node link drawing issue when using manual layout mode.</li>
+          <li>Fixed issues drawing arrows properly when straight node links were being used.</li>
+          <li>Fixed display issues with the node fill switch in the style inspector.</li>
+          <li>Fixed support for cut, copy and pasting connection title text.</li>
+          <li>Fixed keyboard shortcut for toggling focus mode.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.4.1" date="2019-07-14">
+      <description>
+        <ul>
+          <li>Fixed issue with automatic layout that was introduced in 1.4.0.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.4.0" date="2019-07-03">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for focus mode.</li>
+          <li>Added support for multiple documents with tabs.</li>
+          <li>Added support for resizing the inspector sidebar.</li>
+          <li>Added support for creating a new node directly from editing an existing node presssing Return or Tab.</li>
+          <li>Added support for adding a new parent node to an existing node.</li>
+          <li>Added support for importing/exporting to FreeMind and Freeplane formats.</li>
+          <li>Added support for sorting children either alphabetically or randomly.</li>
+          <li>Added support for creating a link from one node to another node in the same map.</li>
+          <li>Added support for building a Flatpak.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Removed markup from translated strings.</li>
+          <li>Standardized tooltips that display accelerator information.</li>
+          <li>Changed the way that node/connection titles are displayed in inspector.</li>
+          <li>Changed app terminal script to allow command-line arguments to be passed to debug subcommand.</li>
+          <li>Changed header bar and widget colors to match Minder brand color.</li>
+          <li>Changed search icon in header bar to a symbolic icon to improve readability.</li>
+          <li>When note tooltip is displayed, markup text is rendered for improved readability.</li>
+          <li>Enhanced app script to allow command-line arguments to be passed to debug subcommand.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed an issue with calculating connection endpoints when a portion of the node is not visible.</li>
+          <li>Fixed file naming issue when a file is imported.</li>
+          <li>Fixed issue with displaying resized nodes on open or application startup.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.3.1" date="2019-06-02">
+      <description>
+        <ul>
+          <li>Fixing issue with export functions.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.3.0" date="2019-05-20">
+      <description>
+        <p>Let's stay connected!</p>
+        <ul>
+          <li>Added support for creating a visual connection between any two nodes.</li>
+          <li>Added ability to show/hide all connections in the map.</li>
+          <li>Added support for remembering the last selected child of a node when navigating the map with the keyboard.</li>
+          <li>When escape key is used when editing text, editing mode is ended without reverting text.</li>
+          <li>Created unique contextual menus depending on what is selected in the mind map.</li>
+          <li>Changed Node sidebar tab to Current which shows either the currently selected node or connection.</li>
+          <li>Improved link drawing when a node tree is being moved.</li>
+          <li>Switched from using GtkFileChooserDialog to GtkFileChooserNative.</li>
+          <li>Added support for inserting emoji when editing text in the mind map (use Control-period).</li>
+          <li>Improved readability of theme name when the theme is selected.</li>
+          <li>Fixed issue where changing a global style was not saved/applied to new nodes.</li>
+          <li>Improved copy/paste support of nodes so that copied items can be pasted in other mind maps.</li>
+          <li>Added support for dynamically changing to dark mode in the UI if the prefer-dark desktop gsetting is set.</li>
+          <li>Added ability to show/hide each panel within the style inspector.</li>
+          <li>Removed support for Loki builds.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.2.1" date="2019-04-10">
+      <description>
+        <ul>
+          <li>Fixing appdata.xml file omission.</li>
+          <li>Removing automatic style apply when the affects is set to certain values.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.2" date="2019-04-09">
+      <description>
+        <ul>
+          <li>Added Spanish translation.</li>
+          <li>Added support for Control-Return/Tab to support adding newlines/tabs in a node's title.</li>
+          <li>Improved node title editing support for selection and cursor movement.</li>
+          <li>Added support for automatically opening Minder files from Files.</li>
+          <li>Added ability to modify styles of nodes and links.</li>
+          <li>Changed layouts to be stored on a per tree basis instead of a per document basis.</li>
+          <li>Added support for exporting to the Mermaid format.</li>
+          <li>Added support for disabling/enabling displaying markup in node title.</li>
+          <li>Improved the look of the fold indicators.</li>
+          <li>Lots of bug fixes.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.1.3" date="2018-10-13">
+      <description>
+        <ul>
+          <li>Adding Spanish translation (thanks to Adolfo Jayme-Barrientos).</li>
+          <li>Adding support for special character insertion via the Compose key.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.1.2" date="2018-10-09">
+      <description>
+        <p>Updating French translation.</p>
+      </description>
+    </release>
+    <release version="1.1.1" date="2018-09-27">
+      <description>
+        <p>Bug fix release</p>
+        <ul>
+          <li>Fixed bugs related to editing unicode characters in map area.</li>
+          <li>Reduced height of node textbox in sidebar to help alleviate window sizing problems.</li>
+          <li>Fixed issue with moving a node to a different position within a parent node.</li>
+          <li>Fixed issue connecting a root node to another node.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.1" date="2018-09-18">
+      <description>
+        <p>Images now supported!</p>
+        <ul>
+          <li>Added support for images within nodes.</li>
+          <li>Added basic image editing support.</li>
+          <li>Added support for dragging and dropping local and web images.</li>
+          <li>Added support for resizing node width.</li>
+          <li>Changed cursors when over a task button.</li>
+          <li>Changed location of task and note elements in a node.</li>
+          <li>Added support for keeping the map from scrolling off screen.</li>
+          <li>Added support for shift-mousewheel to scroll horizontally.</li>
+          <li>Added support for control-mousewheel to zoom in/out.</li>
+          <li>Fixed issue with drawing background when zoom factor was small.</li>
+          <li>Custom icons are now stored as a gresource rather than in the file system.</li>
+          <li>Other minor bug fixes.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.0.8" date="2018-08-06">
+      <description>
+        <p>Support for more export types and bug fixes.</p>
+        <ul>
+          <li>Added support for exporting to SVG, JPEG, BMP, Markdown, PlainText and CSV formats.</li>
+          <li>Added support for folding all completed tasks in map inspector.</li>
+          <li>Added support for unfolding all folded nodes in map inspector.</li>
+          <li>Added Solarized Dark and Solarized Light themes.</li>
+          <li>Changing button display in map inspector.</li>
+          <li>Cleaning up Export menu to include a single "Export" option.</li>
+          <li>Fixing issue where modified node title in node inspector was lost when input focus was changed.</li>
+          <li>Fixing issue where an entire tree is attached to another tree.</li>
+          <li>Added Czech translation (thanks to Jan Marek!).</li>
+          <li>Added French translation (thanks to Yannick A.!).</li>
+          <li>Added Brazilian Portuguese translation (thanks to btd1337!)</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.0.7" date="2018-07-13">
+      <description>
+        <p>Initial startup bug fix.</p>
+      </description>
+    </release>
+    <release version="1.0.4" date="2018-07-11">
+      <description>
+        <p>Search improvements and bug fixes</p>
+        <ul>
+          <li>Added ability to search within notes.</li>
+          <li>Added ability to optionally control search criteria within search popover.</li>
+          <li>Fixed screenshots.</li>
+          <li>Changed properties header bar icon to a sidebar hide/show icon for clarity.</li>
+          <li>Several minor UI improvements.</li>
+          <li>Removing deprecated GTK calls.</li>
+          <li>Added ability to double-click on a node to make it editable.</li>
+          <li>Bug fixes.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.0.2" date="2018-06-29">
+      <description>
+        <p>Initial release</p>
+      </description>
+    </release>
+  </releases>
+</component>

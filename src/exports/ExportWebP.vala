@@ -71,7 +71,7 @@ public class ExportWebP : Export {
       output_stream.write( obuf );
       output_stream.close();
       stdout.printf( "Successfully exported %s\n", fname );
-    } catch (IOError e) {
+    } catch( Error e ) {
       stdout.printf( "Error saving WebP file: %s", e.message );
       return( false );
     }

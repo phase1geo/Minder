@@ -38,8 +38,7 @@ public class ExportMarkdown : Export {
     mdfile = fname;
     imgdir = fname;
     if( get_bool( "include-image-links" ) ) {
-      var filename = fname;
-      var dirname  = fname;
+      var dirname = fname;
       if( fname.has_suffix( ".md" ) ) {
         var parts = fname.split( "." );
         dirname = string.joinv( ".", parts[0:parts.length-1] );
@@ -169,6 +168,16 @@ public class ExportMarkdown : Export {
   }
 
   //-------------------------------------------------------------
+  // Converts collected Markdown table rows into a node table.
+  private void apply_table_rows( MindMap map, Node? node, Array<string> rows ) {
+    if( (node != null) && (rows.length > 0) ) {
+      var table = NodeTable.from_markdown( map, rows );
+      if( table != null ) node.set_table( table );
+    }
+    rows.remove_range( 0, rows.length );
+  }
+
+  //-------------------------------------------------------------
   // Imports a mindmap from the given text
   private void import_text( string txt, MindMap map, string current_dir ) {
 
@@ -178,6 +187,8 @@ public class ExportMarkdown : Export {
       var lines   = txt.split( "\n" );
       var re      = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>|\\d+\\.)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
       var current = map.get_current_node();
+      var table_rows = new Array<string>();
+      Node? table_node = null;
 
       // Populate the stack with the current node, if one exists.  Set the spaces
       // count to -1 so that everything but a new header is added to this node.
@@ -197,9 +208,21 @@ public class ExportMarkdown : Export {
           var bullet = match_info.fetch( 3 );
           var task   = match_info.fetch( 5 );
           var str    = match_info.fetch( 6 );
+          var stripped = str.strip();
+
+          // Collect table rows for the current node.
+          if( (stack.length > 0) && (bullet == "") &&
+              NodeTableTextParser.is_markdown_row( stripped ) ) {
+            table_node = stack.index( stack.length - 1 ).node;
+            table_rows.append_val( stripped );
+            continue;
+          }
+
+          apply_table_rows( map, table_node, table_rows );
+          table_node = null;
 
           // Add note
-          if( str.strip() == "" ) continue;
+          if( stripped == "" ) continue;
           if( bullet == ">" ) {
             if( stack.length > 0 ) {
               append_note( stack.index( stack.length - 1 ).node, str );
@@ -247,6 +270,8 @@ public class ExportMarkdown : Export {
 
       }
 
+      apply_table_rows( map, table_node, table_rows );
+
     } catch( GLib.RegexError err ) {
       // TBD
     }
@@ -284,25 +309,22 @@ public class ExportMarkdown : Export {
   private string export_top_nodes( MindMap map, string? imgdir ) {
 
     var retval = "";
+    var nodes  = map.get_nodes();
 
-    try {
-
-      var nodes  = map.get_nodes();
-      for( int i=0; i<nodes.length; i++ ) {
-        var title = "# " + nodes.index( i ).name.text.text + "\n\n";
-        retval += title;
-        if( nodes.index( i ).note != "" ) {
-          var note = "  > " + nodes.index( i ).note.replace( "\n", "\n  > " ) + "\n\n";
-          retval += note;
-        }
-        var children = nodes.index( i ).children();
-        for( int j=0; j<children.length; j++ ) {
-          retval += export_node( map.image_manager, children.index( j ), imgdir );
-        }
+    for( int i=0; i<nodes.length; i++ ) {
+      var title = "# " + nodes.index( i ).name.text.text + "\n\n";
+      retval += title;
+      if( nodes.index( i ).note != "" ) {
+        var note = "  > " + nodes.index( i ).note.replace( "\n", "\n  > " ) + "\n\n";
+        retval += note;
       }
-
-    } catch( Error e ) {
-      // Handle the error
+      if( nodes.index( i ).table != null ) {
+        retval += nodes.index( i ).table.to_markdown() + "\n\n";
+      }
+      var children = nodes.index( i ).children();
+      for( int j=0; j<children.length; j++ ) {
+        retval += export_node( map.image_manager, children.index( j ), imgdir );
+      }
     }
 
     return( retval );
@@ -329,46 +351,43 @@ public class ExportMarkdown : Export {
   private string export_node( ImageManager im, Node node, string? imgdir, string prefix = "  " ) {
 
     var retval = "";
+    var title = prefix + (node.is_in_sequence() ? "%d. ".printf( node.index() + 1 ) : "- ");
 
-    try {
-
-      var title = prefix + (node.is_in_sequence() ? "%d. ".printf( node.index() + 1 ) : "- ");
-
-      if( node.is_task() ) {
-        if( node.is_task_done() ) {
-          title += "[x] ";
-        } else {
-          title += "[ ] ";
-        }
+    if( node.is_task() ) {
+      if( node.is_task_done() ) {
+        title += "[x] ";
+      } else {
+        title += "[ ] ";
       }
+    }
 
-      if( (node.image != null) && (imgdir != null) && get_bool( "include-image-links" ) ) {
-        var file = im.get_file( node.image.id );
-        if( copy_file( imgdir, file ) ) {
-          var basename = GLib.Path.get_basename( file );
-          title += "<img src=\"images/" + basename +
-                   "\" alt=\"image\" width=\"" + node.image.width.to_string() +
-                   "\" height=\"" + node.image.height.to_string() + "\"/><br/>\n" + prefix + "  ";
-        }
+    if( (node.image != null) && (imgdir != null) && get_bool( "include-image-links" ) ) {
+      var file = im.get_file( node.image.id );
+      if( copy_file( imgdir, file ) ) {
+        var basename = GLib.Path.get_basename( file );
+        title += "<img src=\"images/" + basename +
+                 "\" alt=\"image\" width=\"" + node.image.width.to_string() +
+                 "\" height=\"" + node.image.height.to_string() + "\"/><br/>\n" + prefix + "  ";
       }
+    }
 
-      title  += node.name.text.text.replace( "\n", prefix + " " ) + "\n";
-      retval += title;
+    title  += node.name.text.text.replace( "\n", prefix + " " ) + "\n";
+    retval += title;
 
-      if( node.note != "" ) {
-        string note = prefix + "  > " + node.note.replace( "\n", "\n" + prefix + "  > " ) + "\n";
-        retval += note;
+    if( node.note != "" ) {
+      var note = prefix + "  > " + node.note.replace( "\n", "\n" + prefix + "  > " ) + "\n";
+      retval += note;
+    }
+
+      if( node.table != null ) {
+        retval += prefix + "  " + node.table.to_markdown().replace( "\n", "\n" + prefix + "  " ) + "\n";
       }
 
       retval += "\n";
 
-      var children = node.children();
-      for( int i=0; i<children.length; i++ ) {
-        retval += export_node( im, children.index( i ), imgdir, prefix + "  " );
-      }
-
-    } catch( Error e ) {
-      // Handle error
+    var children = node.children();
+    for( int i=0; i<children.length; i++ ) {
+      retval += export_node( im, children.index( i ), imgdir, prefix + "  " );
     }
 
     return( retval );

@@ -168,9 +168,12 @@ public class SummaryNode : Node {
 
   //-------------------------------------------------------------
   // Comparison function of two double types
+  /*
+   NOTE:  This function is not used according to valac
   private static int compare_pos( double pos1, double pos2 ) {
     return( (pos1 == pos2) ? 0 : (pos1 < pos2) ? -1 : 1 );
   }
+  */
 
   private void nodes_changed_moved( double fx, double fy ) {
     // nodes_changed( fx, fy, "moved" );

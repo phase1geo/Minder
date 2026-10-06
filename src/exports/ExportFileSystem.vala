@@ -78,14 +78,18 @@ public class ExportFileSystem : Export {
   // Imports the given directory as a node tree of the given parent
   private bool import_node( string dname, Node parent, MindMap map ) {
     if( FileUtils.test( dname, FileTest.IS_DIR ) ) {
-      var dir = Dir.open( dname, 0 );
-      string? name;
-      while( (name = dir.read_name()) != null ) {
-        var node = map.model.create_child_node( parent, name );
-        var path = Path.build_filename( dname, name );
-        if( !import_node( path, node, map ) ) {
-          return( false );
+      try {
+        var dir = Dir.open( dname, 0 );
+        string? name;
+        while( (name = dir.read_name()) != null ) {
+          var node = map.model.create_child_node( parent, name );
+          var path = Path.build_filename( dname, name );
+          if( !import_node( path, node, map ) ) {
+            return( false );
+          }
         }
+      } catch( FileError e ) {
+        return( false );
       }
     }
     return( true );

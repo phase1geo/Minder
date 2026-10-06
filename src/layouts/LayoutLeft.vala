@@ -21,20 +21,22 @@
 
 public class LayoutLeft : Layout {
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public LayoutLeft() {
     name        = _( "To left" );
-    light_icon  = "minder-layout-left-light-symbolic";
-    dark_icon   = "minder-layout-left-dark-symbolic";
+    icon        = "minder-layout-left-symbolic";
     balanceable = false;
   }
 
-  /* Maps the given side to the appropriate side for this layout */
+  //-------------------------------------------------------------
+  // Maps the given side to the appropriate side for this layout
   public override NodeSide side_mapping( NodeSide side ) {
     return( NodeSide.LEFT );
   }
 
-  /* The side should always be set to the left */
+  //-------------------------------------------------------------
+  // The side should always be set to the left
   public override void set_side( Node current ) {
     current.side = NodeSide.LEFT;
   }

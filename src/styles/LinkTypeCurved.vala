@@ -38,15 +38,9 @@ public class LinkTypeCurved : Object, LinkType {
   }
 
   //-------------------------------------------------------------
-  // Returns the name of the light-mode icon
-  public string light_icon_name() {
-    return( "minder-link-curved-light-symbolic" );
-  }
-
-  //-------------------------------------------------------------
-  // Returns the name of the light-mode icon
-  public string dark_icon_name() {
-    return( "minder-link-curved-dark-symbolic" );
+  // Returns the name of the icon
+  public string icon_name() {
+    return( "minder-link-curved-symbolic" );
   }
 
   //-------------------------------------------------------------

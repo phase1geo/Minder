@@ -138,7 +138,7 @@ public class NodeGroup : Object {
   //-------------------------------------------------------------
   // Returns true if the given coordinates are within a group
   public bool is_within( double x, double y ) {
-    var cursor = new NodePoint( x, y );
+    var cursor = NodePoint( x, y );
     var points = new Array<NodePoint?>();
     var hull   = new Array<NodePoint?>();
     points.append_val( cursor );
@@ -157,14 +157,12 @@ public class NodeGroup : Object {
   //-------------------------------------------------------------
   // Populates the given ListStore with all groups that have notes
   // that match the given string pattern.
-  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref GLib.ListStore matches ) {
     var tab = Utils.rootname( tabname );
     if( search_opts[SearchOptions.NOTES] ) {
       string str = Utils.match_string( pattern, note );
       if( str.length > 0 ) {
-        TreeIter it;
-        matches.append( out it );
-        matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Group Note" ) ), 1, str, 2, null, 3, null, 4, null, 5, this, 6, tabname, 7, tab, -1 );
+        matches.append( new SearchItem.group( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Group Note" ) ), str ) );
       }
     }
   }
@@ -295,10 +293,10 @@ public class NodeGroup : Object {
       }
     }
 
-    points.append_val( new NodePoint( x1, y1 ) );
-    points.append_val( new NodePoint( x2, y1 ) );
-    points.append_val( new NodePoint( x1, y2 ) );
-    points.append_val( new NodePoint( x2, y2 ) );
+    points.append_val( NodePoint( x1, y1 ) );
+    points.append_val( NodePoint( x2, y1 ) );
+    points.append_val( NodePoint( x1, y2 ) );
+    points.append_val( NodePoint( x2, y2 ) );
 
   }
 

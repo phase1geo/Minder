@@ -37,8 +37,8 @@ public enum StyleAffects {
       case SELECTED_NODES       :  return( _( "Selected Nodes" ) );
       case SELECTED_CONNECTIONS :  return( _( "Selected Connections" ) );
       case SELECTED_CALLOUTS    :  return( _( "Selected Callouts" ) );
+      default                   :  return( _( "Unknown" ) );
     }
-    return( _( "Unknown" ) );
   }
 
 }
@@ -252,7 +252,7 @@ public class StyleInspector : Box {
     dialog.set_default_response( ResponseType.CLOSE );
 
     var close = new Button.with_label( _( "Close" ) );
-    close.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
+    close.add_css_class( Granite.CssClass.SUGGESTED );
     dialog.add_action_widget( close, ResponseType.CLOSE );
 
     dialog.response.connect((id) => {
@@ -371,14 +371,10 @@ public class StyleInspector : Box {
     };
     _link_types.changed.connect( action_set_link_type );
 
-    update_icons.connect(() => {
-      _link_types.update_icons();
-    });
-
     var link_types = styles.get_link_types();
     for( int i=0; i<link_types.length; i++ ) {
       var link_type = link_types.index( i );
-      _link_types.add_button( link_type.light_icon_name(), link_type.dark_icon_name(), link_type.display_name() );
+      _link_types.add_button( link_type.icon_name(), null, link_type.display_name() );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 10 ) {
@@ -783,14 +779,10 @@ public class StyleInspector : Box {
     };
     _node_borders.changed.connect( set_node_border );
 
-    update_icons.connect(() => {
-      _node_borders.update_icons();
-    });
-
     var node_borders = styles.get_node_borders();
     for( int i=0; i<node_borders.length; i++ ) {
       var node_border = node_borders.index( i );
-      _node_borders.add_button( node_border.light_icon_name(), node_border.dark_icon_name(), node_border.display_name() );
+      _node_borders.add_button( node_border.icon_name(), null, node_border.display_name() );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
@@ -1842,6 +1834,7 @@ public class StyleInspector : Box {
           callouts.index( i ).style = style;
         }
         break;
+      default :  break;
     }
     update_ui_with_style( style );
     _map.queue_draw();
@@ -1902,6 +1895,7 @@ public class StyleInspector : Box {
         _callout_exp.expanded  = true;
         _template_btn.popover  = _win.templates.get_template_group_menu( TemplateType.STYLE_CALLOUT );
         break;
+      default :  break;
     }
     update_ui_with_style( _curr_style );
   }
@@ -1909,6 +1903,8 @@ public class StyleInspector : Box {
   //-------------------------------------------------------------
   // Checks the nodes in the given tree at the specified level to
   // see if there are any non-leaf nodes.
+  /*
+   NOTE:  This function is not called by anything
   private bool check_level_for_branches( Node node, int levels, int level ) {
     if( (levels & (1 << level)) != 0 ) {
       return( !node.is_leaf() );
@@ -1921,6 +1917,7 @@ public class StyleInspector : Box {
       return( false );
     }
   }
+  */
 
   //-------------------------------------------------------------
   // We need to disable the link types widget if our affected
@@ -1944,6 +1941,7 @@ public class StyleInspector : Box {
           }
         }
         break;
+      default :  break;
     }
     _link_types.set_sensitive( sensitive && _map.editable );
   }

@@ -39,14 +39,8 @@ public class LinkTypeRounded : Object, LinkType {
 
   //-------------------------------------------------------------
   // Returns the name of the light-mode icon
-  public string light_icon_name() {
-    return( "minder-link-rounded-light-symbolic" );
-  }
-
-  //-------------------------------------------------------------
-  // Returns the name of the dark-mode icon
-  public string dark_icon_name() {
-    return( "minder-link-rounded-dark-symbolic" );
+  public string icon_name() {
+    return( "minder-link-rounded-symbolic" );
   }
 
   private void adjust_mid( Node parent, NodeSide child_side, double from_a, double to_a, double from_b, double to_b, double radius, out double mid, out double rnd_a, out double rnd_b ) {
@@ -64,7 +58,7 @@ public class LinkTypeRounded : Object, LinkType {
 
     var side       = to_node.side;
     var horizontal = side.horizontal();
-    var fstyle     = from_node.style;
+    // var fstyle     = from_node.style;
     var tstyle     = to_node.style;
     var adj_a      = adjust_a( tstyle );
     var adj_t      = adjust_tip( tstyle );

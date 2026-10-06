@@ -104,6 +104,7 @@ public class HtmlToMarkdown {
         case Xml.ElementType.CDATA_SECTION_NODE :
           text += "\n\n```\n" + it->content + "\n```";
           break;
+        default :  break;
       }
     }
     return( text.strip() );

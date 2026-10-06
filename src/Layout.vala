@@ -24,8 +24,7 @@ public class Layout : Object {
   protected double _rt_gap = 100;  // Root node gaps
 
   public string name        { protected set; get; default = ""; }
-  public string light_icon  { protected set; get; default = ""; }
-  public string dark_icon   { protected set; get; default = ""; }
+  public string icon        { protected set; get; default = ""; }
   public bool   balanceable { protected set; get; default = false; }
 
   //-------------------------------------------------------------
@@ -169,7 +168,9 @@ public class Layout : Object {
     if( parent.is_summary() ) {
 
       double xy1, xy2;
-      (parent as SummaryNode).get_extents( out xy1, out xy2 );
+      var sn = (parent as SummaryNode);
+      assert( sn != null );
+      sn.get_extents( out xy1, out xy2 );
 
       var extent_size    = xy2 - xy1;
       var orig_tree_size = (extent_size < parent.tree_size) ? parent.tree_size : extent_size;
@@ -418,11 +419,14 @@ public class Layout : Object {
     // If we are adding a summary node, get the summary node extent and place ourselves in the middle
     if( child.is_summary() ) {
       double xy1, xy2;
-      (child as SummaryNode).get_extents( out xy1, out xy2 );
-      if( child.side.horizontal() ) {
-        child.posy = xy1 + (((xy2 - xy1) / 2) - (oh / 2));
-      } else {
-        child.posx = xy1 + (((xy2 - xy1) / 2) - (ow / 2));
+      var sn = (child as SummaryNode);
+      if( sn != null ) {
+        sn.get_extents( out xy1, out xy2 );
+        if( child.side.horizontal() ) {
+          child.posy = xy1 + (((xy2 - xy1) / 2) - (oh / 2));
+        } else {
+          child.posx = xy1 + (((xy2 - xy1) / 2) - (ow / 2));
+        }
       }
 
     // If we are the only child on our side, place ourselves on the same plane as the

@@ -45,7 +45,6 @@ public class MapInspector : Box {
   private LinkButton    _map_dir;
 
   // This signal can be called by outside code to force icons to be updated
-  public signal void update_icons();
   public signal void editable_changed();
 
   //-------------------------------------------------------------
@@ -217,11 +216,10 @@ public class MapInspector : Box {
   // Adds the layout UI.
   private void add_layout_ui() {
 
-    var layouts     = new Layouts();
-    var light_icons = new Array<string>();
-    var dark_icons  = new Array<string>();
-    var names       = new Array<string>();
-    layouts.get_icons( ref light_icons, ref dark_icons );
+    var layouts = new Layouts();
+    var icons   = new Array<string>();
+    var names   = new Array<string>();
+    layouts.get_icons( ref icons );
     layouts.get_names( ref names );
 
     // Create the modebutton to select the current layout
@@ -237,12 +235,8 @@ public class MapInspector : Box {
     };
     _layout.changed.connect( set_layout );
     
-    update_icons.connect(() => {
-      _layout.update_icons();
-    });
-
     for( int i=0; i<names.length; i++ ) {
-      _layout.add_button( light_icons.index( i ), dark_icons.index( i ), names.index( i ) );
+      _layout.add_button( icons.index( i ), null, names.index( i ) );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -417,30 +411,23 @@ public class MapInspector : Box {
       row_spacing        = 5
     };
 
-    _balance = new Button.from_icon_name( "minder-balance-light-symbolic" ) {
+    _balance = new Button.from_icon_name( "minder-balance-symbolic" ) {
       tooltip_text = _( "Balance nodes" )
     };
     _win.register_widget_for_shortcut( _balance, KeyCommand.BALANCE_NODES, _( "Balance Nodes" ) );
     _balance.clicked.connect(() => { _win.execute_command( KeyCommand.BALANCE_NODES ); });
 
-    _fold_completed = new Button.from_icon_name( "minder-fold-completed-light-symbolic" ) {
+    _fold_completed = new Button.from_icon_name( "minder-fold-completed-symbolic" ) {
       tooltip_text = _( "Fold nodes with completed tasks")
     };
     _win.register_widget_for_shortcut( _fold_completed, KeyCommand.FOLD_COMPLETED_TASKS, _( "Fold Completed Tasks" ) );
     _fold_completed.clicked.connect(() => { _win.execute_command( KeyCommand.FOLD_COMPLETED_TASKS ); });
 
-    _unfold_all = new Button.from_icon_name( "minder-unfold-light-symbolic" ) {
+    _unfold_all = new Button.from_icon_name( "minder-unfold-symbolic" ) {
       tooltip_text = _( "Unfold all nodes" )
     };
     _win.register_widget_for_shortcut( _unfold_all, KeyCommand.UNFOLD_ALL_NODES, _( "Unfold All Nodes" ) );
     _unfold_all.clicked.connect(() => { _win.execute_command( KeyCommand.UNFOLD_ALL_NODES ); });
-
-    update_icons.connect(() => {
-      var dark = Utils.use_dark_mode( grid );
-      _balance.icon_name        = dark ? "minder-balance-dark-symbolic"        : "minder-balance-light-symbolic";
-      _fold_completed.icon_name = dark ? "minder-fold-completed-dark-symbolic" : "minder-fold-completed-light-symbolic";
-      _unfold_all.icon_name     = dark ? "minder-unfold-dark-symbolic"         : "minder-unfold-light-symbolic";
-    });
 
     grid.attach( _balance,        0, 0 );
     grid.attach( _fold_completed, 1, 0 );

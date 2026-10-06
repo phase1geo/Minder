@@ -37,6 +37,7 @@ public enum MapItemComponent {
   STICKER,
   NODE_LINK,
   IMAGE,
+  TABLE,
   LINK,
   TASK,
   FOLD,
@@ -64,13 +65,11 @@ public class MapModel {
   private Connection?   _attach_conn    = null;
   private Sticker?      _attach_sticker = null;
   private uint?         _auto_save_id   = null;
-  private bool          _debug          = true;
   private NodeGroups    _groups;
   private int           _next_node_id   = -1;
   private NodeLinks     _node_links;
   private bool          _hide_callouts  = false;
   private Array<string> _braindump;
-  private bool          _modifiable     = true;
   private Tags          _tags;
 
   public Layouts        layouts         { set; get; default = new Layouts(); }
@@ -175,7 +174,7 @@ public class MapModel {
   public signal void theme_changed();
   public signal void loaded();
   public signal void queue_draw();
-  public signal void see( bool animate = true, double width_adjust = 0, double pad = 100.0 );
+  public signal void see( bool show_attach = false, bool animate = true, double width_adjust = 0, double pad = 100.0 );
 
   //-------------------------------------------------------------
   // Default constructor
@@ -545,7 +544,7 @@ public class MapModel {
   //-------------------------------------------------------------
   // Populates the list of matches with any nodes that match the
   // given string pattern.
-  public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref GLib.ListStore matches ) {
     if( search_opts[SearchOptions.NODES] || search_opts[SearchOptions.CALLOUTS] ) {
       for( int i=0; i<_nodes.length; i++ ) {
         _nodes.index( i ).get_match_items( tabname, pattern, search_opts, ref matches );
@@ -961,6 +960,7 @@ public class MapModel {
     var current = _map.selected.current_node();
     if( (current != null) && (current.image == null) ) {
       image_manager.choose_image( _map.win, (id) => {
+        if( id == -1 ) return;
         var curr = _map.selected.current_node();
         curr.set_image( image_manager, new NodeImage( image_manager, id, curr.style.node_width ) );
         if( curr.image != null ) {
@@ -1008,6 +1008,25 @@ public class MapModel {
   public void current_image_edited( NodeImage? orig_image ) {
     var current = _map.selected.current_node();
     _map.add_undo( new UndoNodeImage( current, orig_image ) );
+    queue_draw();
+    current_changed();
+    auto_save();
+  }
+
+  //-------------------------------------------------------------
+  // Opens the table editor for the current node.
+  public void edit_current_table() {
+    var nodes = _map.selected.nodes();
+    if( nodes.length == 1 ) {
+      var current = nodes.index( 0 );
+      _map.canvas.table_editor.edit_table( current );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever the current node's table is changed.
+  public void current_table_edited( Node node, NodeTable? original_table ) {
+    _map.add_undo( new UndoNodeTable( _map, node, original_table ) );
     queue_draw();
     current_changed();
     auto_save();
@@ -1278,6 +1297,8 @@ public class MapModel {
           component = MapItemComponent.FOLD;
         } else if( node.is_within_image( x, y ) ) {
           component = MapItemComponent.IMAGE;
+        } else if( node.is_within_table( x, y ) ) {
+          component = MapItemComponent.TABLE;
         } else if( node.is_within_resizer( x, y ) ) {
           component = MapItemComponent.RESIZER;
         } else if( node.is_within_tags( x, y ) ) {
@@ -1332,7 +1353,7 @@ public class MapModel {
   public void set_attach_node( Node? n, NodeMode mode = NodeMode.ATTACHABLE ) {
     var change = _attach_node != n;
     if( _attach_node != null ) {
-      set_node_mode( _attach_node, NodeMode.NONE );
+      set_node_mode( _attach_node, _attach_node.mode.get_attach_reset_mode() );
     }
     _attach_node = n;
     if( n != null ) {
@@ -1621,6 +1642,25 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
+  // Sets the node priority of all selected nodes to the given value.
+  public void set_node_priority( int priority ) {
+    var changed      = new Array<Node>();
+    var old_priority = new Array<int>();
+    for( int i=0; i<_map.selected.nodes().length; i++ ) {
+      var node = _map.selected.nodes().index( i );
+      old_priority.append_val( node.priority );
+      changed.append_val( node );
+      node.priority = priority;
+    }
+    if( changed.length > 0 ) {
+      _map.add_undo( new UndoNodesPriority( changed, old_priority, priority ) );
+      current_changed();
+      auto_save();
+      queue_draw();
+    }
+  }
+
+  //-------------------------------------------------------------
   // Deletes the given node.
   public void delete_node() {
     var current = _map.selected.current_node();
@@ -1716,8 +1756,8 @@ public class MapModel {
   // adding it.
   public void position_root_node( Node node ) {
     if( _nodes.length == 0 ) {
-      var width  = (_map.canvas.get_allocated_width()  == 0) ? 600 : _map.canvas.get_allocated_width();
-      var height = (_map.canvas.get_allocated_height() == 0) ? 600 : _map.canvas.get_allocated_height();
+      var width  = (_map.canvas.get_width()  == 0) ? 600 : _map.canvas.get_width();
+      var height = (_map.canvas.get_height() == 0) ? 600 : _map.canvas.get_height();
       node.posx = (width  / 4) - 50;
       node.posy = (height / 2) - 30;
     } else {
@@ -2335,6 +2375,13 @@ public class MapModel {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
     doc->set_root_element( root );
+    var image_ids = new HashSet<int>();
+    for( int i=0; i<nodes.length; i++ ) {
+      get_image_ids_for_copy( nodes.index( i ), image_ids );
+    }
+    Xml.Node* images = new Xml.Node( null, "images" );
+    image_manager.save_for_copy( images, image_ids );
+    root->add_child( images );
     Xml.Node* ns = new Xml.Node( null, "nodes" );
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).save( ns );
@@ -2362,6 +2409,17 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
+  // Collects image IDs from the copied node and all of its children.
+  private void get_image_ids_for_copy( Node node, HashSet<int> ids ) {
+    if( node.image != null ) {
+      ids.add( node.image.id );
+    }
+    for( int i=0; i<node.children().length; i++ ) {
+      get_image_ids_for_copy( node.children().index( i ), ids );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Deserializes the paste string and returns the list of nodes
   public void deserialize_for_paste( string str, Array<Node> nodes, Array<Connection> conns, Array<NodeGroup> groups ) {
     Xml.Doc* doc = Xml.Parser.parse_doc( str );
@@ -2369,7 +2427,9 @@ public class MapModel {
     for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          // case "images"      :  image_manager.load( it );  break;
+          case "images"      :
+            image_manager.load_for_paste( it );
+            break;
           case "connections" :
             _connections.load( _map, it, conns, nodes );
             break;
@@ -2450,6 +2510,7 @@ public class MapModel {
       switch( current.mode ) {
         case NodeMode.CURRENT  :  MinderClipboard.copy_nodes( _map );  break;
         case NodeMode.EDITABLE :  copy_selected_text();  break;
+        default                :  break;
       }
     } else if( _map.selected.nodes().length > 1 ) {
       MinderClipboard.copy_nodes( _map );
@@ -2537,6 +2598,7 @@ public class MapModel {
       switch( current.mode ) {
         case NodeMode.CURRENT  :  cut_node_to_clipboard();  break;
         case NodeMode.EDITABLE :  cut_selected_text();      break;
+        default                :  break;
       }
     } else if( _map.selected.nodes().length > 1 ) {
       cut_selected_nodes_to_clipboard();

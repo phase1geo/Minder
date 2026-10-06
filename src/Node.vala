@@ -28,19 +28,74 @@ using Gee;
 //-------------------------------------------------------------
 // Enumeration describing the different modes a node can be in
 public enum NodeMode {
-  NONE = 0,    // Specifies that this node is not the current node
-  CURRENT,     // Specifies that this node is the current node and is not being edited
-  SELECTED,    // Specifies that this node is one of several selected nodes
-  EDITABLE,    // Specifies that this node's text has been and currently is actively being edited
-  ATTACHABLE,  // Specifies that this node is the currently attachable node (affects display)
-  DROPPABLE,   // Specifies that this node can receive a dropped item
-  HIGHLIGHTED; // Specifies that this node is both selected and being highlighted
+  NONE = 0,      // Specifies that this node is not the current node
+  CURRENT,       // Specifies that this node is the current node and is not being edited
+  SELECTED,      // Specifies that this node is one of several selected nodes
+  EDITABLE,      // Specifies that this node's text has been and currently is actively being edited
+  ATTACHABLE,    // Specifies that this node is the currently attachable node (affects display)
+  DROPPABLE,     // Specifies that this node can receive a dropped item
+  HIGHLIGHTED,   // Specifies that this node is both selected and being highlighted
+  MARKED_NONE,   // Specifies that this node is marked (highlight with dashed line) and previous state was NONE
+  MARKED_CURR,   // Specifies that this node is marked and previous state was CURRENT
+  MARKED_SEL;    // Specifies that this node is marked and previous state was SELECTED
+
+  //-------------------------------------------------------------
+  // Returns the mode to set a node to whose current state is
+  // not an attachable state.
+  public NodeMode get_attach_set_mode( bool mark ) {
+    switch( this ) {
+      case CURRENT  :  return( MARKED_CURR );
+      case SELECTED :  return( MARKED_SEL );
+      default       :  return( mark ? MARKED_NONE : ATTACHABLE );  
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the mode to set a node to whose current state is an
+  // attachable state.
+  public NodeMode get_attach_reset_mode() {
+    switch( this ) {
+      case MARKED_CURR :  return( CURRENT );
+      case MARKED_SEL  :  return( SELECTED );
+      default          :  return( NONE );
+    }
+  }
 
   //-------------------------------------------------------------
   // Returns true if the mode indicates that this node will be
   // drawn as selected.
   public bool is_selected() {
-    return( (this == CURRENT) || (this == SELECTED) || (this == HIGHLIGHTED) );
+    return(
+      (this == CURRENT)     ||
+      (this == SELECTED)    ||
+      (this == HIGHLIGHTED) ||
+      (this == MARKED_CURR) ||
+      (this == MARKED_SEL)
+    );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this node is indicating that the node should
+  // be distinguished as an attachable/droppable node.
+  public bool attachable() {
+    return(
+      (this == ATTACHABLE)  ||
+      (this == DROPPABLE)   ||
+      (this == HIGHLIGHTED) ||
+      is_marked()
+    );
+  }
+
+  //-------------------------------------------------------------
+  // Specifies if this node should be drawn as "marked" which means
+  // this it looks like an attachable node but is not as noted by
+  // a dashed highlight.
+  public bool is_marked() {
+    return(
+      (this == MARKED_NONE) ||
+      (this == MARKED_CURR) ||
+      (this == MARKED_SEL)
+    );
   }
 }
 
@@ -239,6 +294,7 @@ public class Node : Object {
   private   bool         _link_color_root = false;
   private   double       _min_width      = 50;
   private   NodeImage?   _image          = null;
+  private   NodeTable?   _table          = null;
   private   Layout?      _layout         = null;
   private   Style        _style          = new Style();
   private   bool         _loaded         = true;
@@ -249,6 +305,8 @@ public class Node : Object {
   private   Callout?     _callout        = null;
   private   bool         _sequence       = false;
   private   Tags         _tags;
+  private   int          _priority       = 0;
+  private   SequenceNum? _priority_text  = null;
 
   // Node signals
   public signal void moved( double diffx, double diffy );
@@ -404,12 +462,14 @@ public class Node : Object {
       return( _style );
     }
     set {
-      var branch_margin = style.branch_margin;
       if( _style.copy( value ) ) {
         name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
         name.set_text_alignment( _style.node_text_align );
         if( _sequence_num != null ) {
           _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+        }
+        if( _table != null ) {
+          _table.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
         }
         name.max_width = style.node_width;
         if( traversable() ) {
@@ -452,6 +512,11 @@ public class Node : Object {
   public NodeImage? image {
     get {
       return( _image );
+    }
+  }
+  public NodeTable? table {
+    get {
+      return( _table );
     }
   }
   public double total_width {
@@ -571,6 +636,26 @@ public class Node : Object {
       return( _tags );
     }
   }
+  public int priority {
+    get {
+      return( _priority );
+    }
+    set {
+      if( _priority != value ) {
+        _priority = (value < 0) ? 0 : value;
+        if( _priority == 0 ) {
+          _priority_text = null; 
+        } else {
+          if( _priority_text == null ) {
+            _priority_text = new SequenceNum( _map );
+            _priority_text.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+          }
+          _priority_text.set_num( _priority, SequenceNumType.INT );
+        }
+        position_text_and_update_size();
+      }
+    }
+  }
 
   //-------------------------------------------------------------
   // Default constructor.
@@ -583,7 +668,7 @@ public class Node : Object {
     _name      = new CanvasText( map );
     _name.resized.connect( position_text_and_update_size );
     _tags      = new Tags();
-    set_parsers();
+    update_size();
   }
 
   //-------------------------------------------------------------
@@ -597,7 +682,7 @@ public class Node : Object {
     _name      = new CanvasText.with_text( map, n );
     _name.resized.connect( position_text_and_update_size );
     _tags      = new Tags();
-    set_parsers();
+    update_size();
   }
 
   //-------------------------------------------------------------
@@ -610,7 +695,6 @@ public class Node : Object {
     _name      = new CanvasText.with_text( map, "" );
     _name.resized.connect( position_text_and_update_size );
     _tags      = new Tags();
-    set_parsers();
     siblings.append_val( this );
     load( map, n, isroot, sibling_parent, ref siblings );
   }
@@ -626,13 +710,15 @@ public class Node : Object {
     _tags      = new Tags();
     copy_variables( n, im );
     _name.resized.connect( position_text_and_update_size );
-    set_parsers();
     mode      = NodeMode.NONE;
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).parent = this;
     }
+    update_size();
   }
 
+  //-------------------------------------------------------------
+  // Copies only this node (not the descendants)
   public Node.copy_only( MindMap map, Node n, ImageManager im ) {
     _map       = map;
     _id        = map.next_node_id;
@@ -641,6 +727,7 @@ public class Node : Object {
     _name      = new CanvasText( map );
     _tags      = new Tags();
     copy_variables( n, im );
+    update_size();
   }
 
   //-------------------------------------------------------------
@@ -654,7 +741,6 @@ public class Node : Object {
     _tags      = new Tags();
     copy_variables( n, im );
     _name.resized.connect( position_text_and_update_size );
-    set_parsers();
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
     for( int i=0; i<n._children.length; i++ ) {
@@ -662,15 +748,7 @@ public class Node : Object {
       child.parent = this;
       _children.append_val( child );
     }
-  }
-
-  //-------------------------------------------------------------
-  // Adds the valid parsers.
-  public void set_parsers() {
-    _name.text.add_parser( _map.markdown_parser );
-    // _name.text.add_parser( _map.tagger_parser );
-    _name.text.add_parser( _map.url_parser );
-    _name.text.add_parser( _map.unicode_parser );
+    update_size();
   }
 
   //-------------------------------------------------------------
@@ -689,6 +767,7 @@ public class Node : Object {
     _posx           = n._posx;
     _posy           = n._posy;
     _image          = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, n.style.node_width );
+    set_table_reference( (n._table == null) ? null : new NodeTable.copy( _map, n._table ) );
     _name.copy( n._name );
     _link_color      = n._link_color;
     _link_color_set  = n._link_color_set;
@@ -857,18 +936,24 @@ public class Node : Object {
 
     int margin       = style.node_margin;
     int padding      = style.node_padding;
+    var pri_height   = priority_height();
     var stk_height   = sticker_height();
-    var noname_width = task_width() + sticker_width() + sequence_width() + note_width() + linked_node_width();
+    var noname_width = priority_width() + task_width() + sticker_width() + sequence_width() + note_width() + linked_node_width();
     var name_width   = noname_width + _name.width;
+    if( stk_height < pri_height ) {
+      stk_height = pri_height;
+    }
     var name_height  = (_name.height < stk_height) ? stk_height : _name.height;
     var image_width  = (_image != null) ? _image.width : 0;
     var image_height = (_image != null) ? (_image.height + padding) : 0;
+    var table_width  = (_table != null) ? _table.width : 0;
+    var table_height = (_table != null) ? (_table.height + padding) : 0;
     var tg_width     = noname_width + tags_width();
     var tg_height    = tags_height();
-    var all_width    = Math.fmax( name_width, Math.fmax( image_width, tg_width ) );
+    var all_width    = Math.fmax( table_width, Math.fmax( name_width, Math.fmax( image_width, tg_width ) ) );
 
     width      = (margin * 2) + (padding * 2) + all_width;
-    height     = (margin * 2) + (padding * 2) + image_height + name_height + tg_height;
+    height     = (margin * 2) + (padding * 2) + image_height + name_height + table_height + tg_height;
     name_space = all_width - name_width;
 
   }
@@ -937,6 +1022,9 @@ public class Node : Object {
   // Updates the size of all nodes within this tree.
   public void update_tree() {
     _name.update_size();
+    if( _table != null ) {
+      _table.update_layout();
+    }
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).update_tree();
     }
@@ -954,6 +1042,31 @@ public class Node : Object {
     }
     _image = ni;
     update_size();
+  }
+
+  //-------------------------------------------------------------
+  // Sets the table displayed by this node.
+  public void set_table( NodeTable? table ) {
+    set_table_reference( table );
+    if( _table != null ) {
+      _table.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+    }
+    position_text_and_update_size();
+  }
+
+  private void set_table_reference( NodeTable? table ) {
+    if( _table != null ) {
+      _table.resized.disconnect( table_resized );
+    }
+    _table = table;
+    if( _table != null ) {
+      _table.resized.connect( table_resized );
+    }
+  }
+
+  private void table_resized() {
+    position_text_and_update_size();
+    _map.queue_draw();
   }
 
   //-------------------------------------------------------------
@@ -995,13 +1108,15 @@ public class Node : Object {
   //-------------------------------------------------------------
   // Returns true if this node is the first node of a summary node.
   public virtual bool first_summarized() {
-    return( is_summarized() && ((_children.index( 0 ) as SummaryNode).first_node() == this) );
+    var sn = (_children.index( 0 ) as SummaryNode);
+    return( is_summarized() && (sn != null) && (sn.first_node() == this) );
   }
 
   //-------------------------------------------------------------
   // Returns true if this node is the last node of a summary node.
   public virtual bool last_summarized() {
-    return( is_summarized() && ((_children.index( 0 ) as SummaryNode).last_node() == this) );
+    var sn = (_children.index( 0 ) as SummaryNode);
+    return( is_summarized() && (sn != null) && (sn.last_node() == this) );
   }
 
   //-------------------------------------------------------------
@@ -1173,14 +1288,41 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns the top edge of the title row below any node image.
+  private double title_row_top() {
+    var margin = style.node_margin;
+    var padding = style.node_padding;
+    var image_height = (_image == null) ? 0 : (_image.height + padding);
+    return( posy + margin + padding + image_height );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the height occupied by the title and its sticker.
+  private double title_row_height() {
+    var max = Math.fmax( name.height, sticker_height() );
+    return( Math.fmax( max, priority_height() ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the positional information for where the priority item
+  // is located (if it exists).
+  protected virtual void priority_bbox( out double x, out double y, out double w, out double h ) {
+    int margin  = style.node_margin;
+    int padding = style.node_padding;
+    x = posx + margin + padding;
+    y = title_row_top() + (title_row_height() / 2) - (priority_height() / 2);
+    w = priority_width() - _ipadx;
+    h = priority_height();
+  }
+
+  //-------------------------------------------------------------
   // Returns the positional information for where the task item
   // is located (if it exists).
   protected virtual void task_bbox( out double x, out double y, out double w, out double h ) {
-    int    margin     = style.node_margin;
-    int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
-    x = posx + margin + padding;
-    y = posy + margin + padding + img_height + (((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - _task_radius);
+    int margin  = style.node_margin;
+    int padding = style.node_padding;
+    x = posx + margin + padding + priority_width();
+    y = title_row_top() + (title_row_height() / 2) - _task_radius;
     w = _task_radius * 2;
     h = _task_radius * 2;
   }
@@ -1191,10 +1333,9 @@ public class Node : Object {
   protected virtual void sticker_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin;
     int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
     double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
-    x = posx + margin + padding + task_width();
-    y = posy + margin + padding + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - (stk_height / 2);
+    x = posx + margin + padding + priority_width() + task_width();
+    y = title_row_top() + ((title_row_height() - stk_height) / 2);
     w = (_sticker_buf == null) ? 0 : _sticker_buf.width;
     h = (_sticker_buf == null) ? 0 : _sticker_buf.height;
   }
@@ -1203,12 +1344,9 @@ public class Node : Object {
   // Returns the positional information for where the sequence
   // number is located (if it exists).
   protected virtual void sequence_bbox( out double x, out double y, out double w, out double h ) {
-    int    margin     = style.node_margin;
-    int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
-    double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
-    double seq_height = (_sequence_num == null) ? 0 : _sequence_num.height;
-    x = posx + margin + padding + task_width() + sticker_width();
+    int margin  = style.node_margin;
+    int padding = style.node_padding;
+    x = posx + margin + padding + priority_width() + task_width() + sticker_width();
     y = name.posy;
     w = sequence_width();
     h = sequence_height();
@@ -1220,9 +1358,8 @@ public class Node : Object {
   protected virtual void linked_node_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin;
     int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
     x = posx + (_width - (linked_node_width() + padding + margin)) + _ipadx;
-    y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
+    y = title_row_top() + (title_row_height() / 2) - 5;
     w = 11;
     h = 11;
   }
@@ -1233,9 +1370,8 @@ public class Node : Object {
   protected virtual void note_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin;
     int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
     x = posx + (_width - (note_width() + linked_node_width() + padding + margin)) + _ipadx;
-    y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
+    y = title_row_top() + (title_row_height() / 2) - 5;
     w = 11;
     h = 11;
   }
@@ -1250,6 +1386,16 @@ public class Node : Object {
     y = posy + padding + margin;
     w = (_image == null) ? 0 : _image.width;
     h = (_image == null) ? 0 : _image.height;
+  }
+
+  //-------------------------------------------------------------
+  // Returns the positional information of the stored table.
+  protected virtual void table_bbox( out double x, out double y, out double w, out double h ) {
+    int padding = style.node_padding;
+    x = (posx + (_width / 2)) - ((_table == null) ? 0 : (_table.width / 2));
+    y = title_row_top() + title_row_height() + padding;
+    w = (_table == null) ? 0 : _table.width;
+    h = (_table == null) ? 0 : _table.height;
   }
 
   //-------------------------------------------------------------
@@ -1355,6 +1501,17 @@ public class Node : Object {
       double ix, iy, iw, ih;
       image_bbox( out ix, out iy, out iw, out ih );
       return( Utils.is_within_bounds( x, y, ix, iy, iw, ih ) );
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lie within the table area.
+  public virtual bool is_within_table( double x, double y ) {
+    if( _table != null ) {
+      double table_x, table_y, table_width, table_height;
+      table_bbox( out table_x, out table_y, out table_width, out table_height );
+      return( Utils.is_within_bounds( x, y, table_x, table_y, table_width, table_height ) );
     }
     return( false );
   }
@@ -1592,6 +1749,13 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // Loads the table information from the given XML node.
+  private void load_table( Xml.Node* n ) {
+    set_table_reference( new NodeTable.from_xml( _map, n ) );
+    _table.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+  }
+
+  //-------------------------------------------------------------
   // Loads the node link from the given XML node.
   private void load_node_link( Xml.Node* n ) {
     _linked_node = new NodeLink.from_xml( n );
@@ -1605,6 +1769,9 @@ public class Node : Object {
     _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
     if( _sequence_num != null ) {
       _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+    }
+    if( _table != null ) {
+      _table.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
     }
   }
 
@@ -1722,6 +1889,11 @@ public class Node : Object {
       siblings.append_val( this );
     }
 
+    string? pri = n->get_prop( "priority" );
+    if( pri != null ) {
+      priority = int.parse( pri );
+    }
+
     // If the posx and posy values are not set, set the layout now
     if( (x == null) && (y == null) ) {
       string? l = n->get_prop( "layout" );
@@ -1740,6 +1912,7 @@ public class Node : Object {
           case "nodename"   :  load_name( it );  break;
           case "nodenote"   :  load_note( it );  break;
           case "nodeimage"  :  load_image( map.image_manager, it );  break;
+          case "nodetable"  :  load_table( it );  break;
           case "nodelink"   :  load_node_link( it );  break;
           case "taglist"    :  tags.load_indices( it, _map.model.tags );  break;
           case "style"      :  load_style( it );  break;
@@ -1816,6 +1989,7 @@ public class Node : Object {
     node->new_prop( "side", side.to_string() );
     node->new_prop( "fold", folded.to_string() );
     node->new_prop( "sequence", sequence.to_string() );
+    node->new_prop( "priority", priority.to_string() );
     node->new_prop( "treesize", tree_size.to_string() );
     if( is_root() ) {
       if( _link_color_set ) {
@@ -1836,6 +2010,9 @@ public class Node : Object {
 
     if( _image != null ) {
       _image.save( node );
+    }
+    if( _table != null ) {
+      _table.save( node );
     }
 
     node->add_child( name.save( "nodename" ) );
@@ -1918,7 +2095,7 @@ public class Node : Object {
   public virtual void resize( double diff ) {
     diff = resizer_on_left() ? (0 - diff) : diff;
     var int_diff  = (int)diff;
-    if( (_name.width + diff) < tags_width() ) return;
+    if( (_image == null) && ((_name.width + diff) < tags_width()) ) return;
     if( _image == null ) {
       if( (diff < 0) ? ((style.node_width + diff) <= _min_width) : !_name.is_wrapped() ) return;
       style.node_width += int_diff;
@@ -2102,6 +2279,19 @@ public class Node : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns the amount of internal width to draw the priority
+  // indicator.
+  public double priority_width() {
+    return( (_priority_text != null) ? (_priority_text.width + 10 + _ipadx) : 0 );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the height of the priority area
+  public double priority_height() {
+    return( (_priority_text != null) ? (_priority_text.height + 10) : 0 );
+  }
+
+  //-------------------------------------------------------------
   // Returns the amount of internal width to draw the task
   // checkbutton.
   public double task_width() {
@@ -2198,7 +2388,6 @@ public class Node : Object {
     if( other == null ) return;
 
     var other_summary = other.summary_node();
-    var our_index     = index();
     var our_summary   = summary_node();
 
     detach( side );
@@ -2255,18 +2444,24 @@ public class Node : Object {
 
     var margin     = style.node_margin;
     var padding    = style.node_padding;
+    var pri_height = priority_height();
     var stk_height = sticker_height();
     var img_height = (_image != null) ? (_image.height + padding) : 0;
     var orig_posx  = name.posx;
     var orig_posy  = name.posy;
 
-    name.posx = posx + margin + padding + task_width() + sticker_width() + sequence_width();
+    if( stk_height < pri_height ) {
+      stk_height = pri_height;
+    }
+
+    name.posx = posx + margin + padding + priority_width() + task_width() + sticker_width() + sequence_width();
     name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0);
 
     if( style.node_text_align != null ) {
       switch( style.node_text_align ) {
         case Pango.Alignment.CENTER :  name.posx += (name_space / 2);  break;
         case Pango.Alignment.RIGHT  :  name.posx += name_space;        break;
+        default                     :  break;
       }
     }
 
@@ -2598,7 +2793,7 @@ public class Node : Object {
   // Toggles the current value of task done and propagates the
   // change to all parent nodes.
   public void toggle_task_done( ref Array<NodeTaskInfo?> changed ) {
-    var change = new NodeTaskInfo( task_enabled(), task_done(), this );
+    var change = NodeTaskInfo( task_enabled(), task_done(), this );
     changed.append_val( change );
     set_task_done( _task_done == 0 );
   }
@@ -2673,38 +2868,44 @@ public class Node : Object {
   //-------------------------------------------------------------
   // Populates the given ListStore with all nodes that have names
   // that match the given string pattern.
-  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref GLib.ListStore matches ) {
     if( search_opts[SearchOptions.NODES] &&
         (_alpha == 1.0) &&
         (((((_task_count == 0) || !is_leaf()) && search_opts[SearchOptions.NONTASKS]) ||
           ((_task_count != 0) && is_leaf()   && search_opts[SearchOptions.TASKS])) &&
          (((parent != null) && parent.folded && search_opts[SearchOptions.FOLDED]) ||
-          (((parent == null) || !parent.folded) && search_opts[SearchOptions.UNFOLDED]))) ) {
+          (((parent == null) || !parent.folded) && search_opts[SearchOptions.UNFOLDED])) &&
+         (((_priority == 0) && search_opts[SearchOptions.NO_PRIORITY]) ||
+          ((_priority == 1) && search_opts[SearchOptions.PRIORITY1]) ||
+          ((_priority == 2) && search_opts[SearchOptions.PRIORITY2]) ||
+          ((_priority == 3) && search_opts[SearchOptions.PRIORITY3]) ||
+          ((_priority == 4) && search_opts[SearchOptions.PRIORITY4]) ||
+          ((_priority >= 5) && search_opts[SearchOptions.PRIORITY5]))) ) {
       var tab = "<i>" + Utils.rootname( tabname ) + "</i>";
       if( search_opts[SearchOptions.TITLES] ) {
-        string str = Utils.match_string( pattern, name.text.text );
+        string str = Utils.match_string( pattern, name.stripped_text.text );
         if( str.length > 0 ) {
-          TreeIter it;
-          matches.append( out it );
-          matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Node Title" ) ), 1, str, 2, this, 3, null, 4, null, 5, null, 6, tabname, 7, tab, -1 );
+          matches.append( new SearchItem.node( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Node Title" ) ), str ) );
         }
       }
       if( search_opts[SearchOptions.NOTES] ) {
-        string str = Utils.match_string( pattern, note);
-        if(str.length > 0) {
-          TreeIter it;
-          matches.append( out it );
-          matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), 1, str, 2, this, 3, null, 4, null, 5, null, 6, tabname, 7, tab, -1 );
+        string str = Utils.match_string( pattern, Utils.remove_markdown( note ) );
+        if( str.length > 0 ) {
+          matches.append( new SearchItem.node( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), str ) );
+        }
+      }
+      if( search_opts[SearchOptions.TABLES] && (_table != null) ) {
+        var str = _table.get_match_string( pattern );
+        if( str != null ) {
+          matches.append( new SearchItem.node( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Node Table" ) ), str ) );
         }
       }
     }
     if( (_callout != null) && search_opts[SearchOptions.CALLOUTS] && search_opts[SearchOptions.TITLES] ) {
-      string str = Utils.match_string( pattern, _callout.text.text.text );
+      string str = Utils.match_string( pattern, _callout.text.stripped_text.text );
       if( str.length > 0 ) {
-        TreeIter it;
         var tab = "<i>" + Utils.rootname( tabname ) + "</i>";
-        matches.append( out it );
-        matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Callout Text" ) ), 1, str, 2, null, 3, null, 4, _callout, 5, null, 6, tabname, 7, tab, -1 );
+        matches.append( new SearchItem.callout( tabname, tab, _callout, "<b><i>%s:</i></b>".printf( _( "Callout Text" ) ), str ) );
       }
     }
     for( int i=0; i<_children.length; i++ ) {
@@ -2893,9 +3094,28 @@ public class Node : Object {
     if( _image != null ) {
       double x, y, w, h;
       image_bbox( out x, out y, out w, out h );
-      _image.draw( ctx, x, y, _alpha );
+      _image.draw( ctx, x, y, _alpha, theme.is_dark() );
     }
 
+  }
+
+  //-------------------------------------------------------------
+  // Draws the node table below the node title.
+  protected virtual void draw_table( Cairo.Context ctx, Theme theme, bool exporting ) {
+    if( _table != null ) {
+      double x, y, width, height;
+      table_bbox( out x, out y, out width, out height );
+      var color = theme.get_color( "foreground" );
+      if( mode.is_selected() && !exporting ) {
+        color = theme.get_color( "nodesel_foreground" );
+      } else if( parent == null ) {
+        color = _link_color_set ? Granite.contrasting_foreground_color( link_color ) :
+                                  theme.get_color( "root_foreground" );
+      } else if( style.is_fillable() ) {
+        color = Granite.contrasting_foreground_color( link_color );
+      }
+      _table.draw( ctx, x, y, color, _alpha );
+    }
   }
 
   //-------------------------------------------------------------
@@ -2929,6 +3149,43 @@ public class Node : Object {
     }
 
     name.draw( ctx, theme, color, _alpha, exporting );
+
+  }
+
+  //-------------------------------------------------------------
+  // Draws the priority to the screen.
+  protected virtual void draw_priority( Cairo.Context ctx, Theme theme ) {
+
+    if( _priority > 0 ) {
+
+      double x, y, w, h;
+      priority_bbox( out x, out y, out w, out h );
+
+      RGBA color = theme.get_color( "priority5" );
+      switch( _priority ) {
+        case 1  :  color = theme.get_color( "priority1" );  break;
+        case 2  :  color = theme.get_color( "priority2" );  break;
+        case 3  :  color = theme.get_color( "priority3" );  break;
+        case 4  :  color = theme.get_color( "priority4" );  break;
+        default :  break;
+      }
+
+      var outline_color = Granite.contrasting_foreground_color( color );
+
+      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      Utils.draw_rounded_rectangle( ctx, x, y, w, h, 5 );
+      ctx.fill_preserve();
+
+      Utils.set_context_color_with_alpha( ctx, outline_color, _alpha );
+      ctx.set_line_width( 1 );
+      ctx.stroke();
+
+      // Output the text
+      ctx.move_to( (x + 5), (y + 5) );
+      Pango.cairo_show_layout( ctx, _priority_text.layout );
+      ctx.new_path();
+
+    }
 
   }
 
@@ -3177,16 +3434,21 @@ public class Node : Object {
   // node is attachable.
   protected virtual void draw_attachable( Context ctx, Theme theme, RGBA? frost_background ) {
 
-    if( (mode == NodeMode.ATTACHABLE) || (mode == NodeMode.DROPPABLE) || (mode == NodeMode.HIGHLIGHTED) ) {
+    if( mode.attachable() ) {
 
       double x, y, w, h;
       node_bbox( out x, out y, out w, out h );
 
       // Draw highlight border
+      ctx.save();
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), _alpha );
       ctx.set_line_width( 4 );
+      if( mode.is_marked() ) {
+        ctx.set_dash( {5, 10}, 0 );
+      }
       ctx.rectangle( x, y, w, h );
       ctx.stroke();
+      ctx.restore();
 
     }
 
@@ -3204,7 +3466,6 @@ public class Node : Object {
     double  child_y1 = 0;
     double  child_x2 = 0;
     double  child_y2 = 0;
-    double? ext_x, ext_y;
 
     var margin  = style.node_margin;
     var padding = style.node_padding;
@@ -3413,6 +3674,8 @@ public class Node : Object {
       draw_shape( ctx, theme, background, exporting );
       draw_name( ctx, theme, exporting );
       draw_image( ctx, theme );
+      draw_table( ctx, theme, exporting );
+      draw_priority( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, foreground, null );
       } else {
@@ -3435,6 +3698,8 @@ public class Node : Object {
       draw_shape( ctx, theme, _link_color, exporting );
       draw_name( ctx, theme, exporting );
       draw_image( ctx, theme );
+      draw_table( ctx, theme, exporting );
+      draw_priority( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, _link_color, background );
       } else {

@@ -30,16 +30,16 @@ public class About {
   // Constructor
   public About( MainWindow win ) {
 
-    var image = new Image.from_resource( "/com/github/phase1geo/minder/minder-logo.svg" );
+    var image = new Image.from_resource( "/io/github/phase1geo/minder/minder-logo.svg" );
 
     _about = new AboutDialog() {
       authors            = { "Trevor Williams" },
       program_name       = "Minder",
       comments           = _( "Mind-mapping application" ),
       copyright          = _( "Copyright" ) + " © 2018-2026 Trevor Williams",
-      version            = Minder.version,
+      version            = Minder.static_version,
       license_type       = License.GPL_3_0,
-      website            = "https://appcenter.elementary.io/com.github.phase1geo.minder/",
+      website            = "https://appcenter.elementary.io/io.github.phase1geo.minder/",
       website_label      = _( "Minder in AppCenter" ),
       system_information = get_system_info(),
       logo               = image.get_paintable()

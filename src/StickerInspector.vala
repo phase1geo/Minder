@@ -105,7 +105,7 @@ public class StickerInspector : Box {
     var sw  = new ScrolledWindow() {
       child = box
     };
-    var vp = (Viewport)sw.child;
+    // var vp = (Viewport)sw.child;
     // vp.set_size_request( 200, 600 );
 
     // Create search result flowbox
@@ -345,7 +345,8 @@ public class StickerInspector : Box {
       var index = 0;
       var w     = Utils.get_child_at_index( _clicked_category, index++ );
       while( w != null ) {
-        if( (w as FlowBoxChild).get_child().name == _clicked_sticker ) {
+        var fbc = (w as FlowBoxChild);
+        if( (fbc != null) && (fbc.get_child().name == _clicked_sticker) ) {
           _clicked_category.remove( w );
           return;
         }
@@ -360,7 +361,8 @@ public class StickerInspector : Box {
     var index = 0;
     var w     = Utils.get_child_at_index( _favorites, index++ );
     while( w != null ) {
-      if( (w as FlowBoxChild).get_child().name == name ) {
+      var fbc = (w as FlowBoxChild);
+      if( (fbc != null) && (fbc.get_child().name == name) ) {
         return( true );
       }
       w = Utils.get_child_at_index( _favorites, index++ );
@@ -397,7 +399,8 @@ public class StickerInspector : Box {
     var index = 0;
     var w     = Utils.get_child_at_index( _favorites, index++ );
     while( w != null ) {
-      if( (w as FlowBoxChild).get_child().name == _clicked_sticker ) {
+      var fbc = (w as FlowBoxChild);
+      if( (fbc != null) && (fbc.get_child().name == _clicked_sticker) ) {
         _favorites.remove( w );
         save_favorites();
         return;
@@ -415,10 +418,13 @@ public class StickerInspector : Box {
     var index = 0;
     var w     = Utils.get_child_at_index( _favorites, index++ );
     while( w != null ) {
-      var name = (w as FlowBoxChild).get_child().name;
-      Xml.Node* n = new Xml.Node( null, "sticker" );
-      n->set_prop( "name", name );
-      root->add_child( n );
+      var fbc = (w as FlowBoxChild);
+      if( fbc != null ) {
+        var name = fbc.get_child().name;
+        Xml.Node* n = new Xml.Node( null, "sticker" );
+        n->set_prop( "name", name );
+        root->add_child( n );
+      }
       w = Utils.get_child_at_index( _favorites, index++ );
     }
     doc->save_format_file( favorites, 1 );

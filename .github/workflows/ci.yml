@@ -20,13 +20,19 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so the job can access it
     - uses: actions/checkout@v3
 
+      # The texlive SDK extension lives on Flathub, not AppCenter, so install it up front
+    - name: Install texlive SDK extension from Flathub
+      run: |
+        flatpak remote-add --system --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+        flatpak install --system -y --noninteractive flathub org.freedesktop.Sdk.Extension.texlive//24.08
+
       # Builds your flatpak manifest using the Flatpak Builder action
     - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:
         # This is the name of the Bundle file we're building and can be anything you like
-        bundle: com.github.phase1geo.minder.flatpak
+        bundle: io.github.phase1geo.minder.flatpak
         # This uses your app's RDNN ID
-        manifest-path: elementary/com.github.phase1geo.minder.yml
+        manifest-path: elementary/io.github.phase1geo.minder.yml
 
         # These lines specify the location of the elementary Runtime and Sdk
         repository-name: appcenter

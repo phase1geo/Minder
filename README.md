@@ -1,7 +1,7 @@
 # Minder
 
 <p align="center">
-  <a href="https://appcenter.elementary.io/com.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
+  <a href="https://appcenter.elementary.io/io.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
 </p>
 
 ![<center><b>Main Window - Light Theme</b></center>](https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-current-properties.png "Mind-mapping application for Elementary OS")
@@ -14,8 +14,8 @@ Use the power of mind-mapping to make your ideas come to life.
 - Choose from many tree layout choices.
 - Support for Markdown formatting.
 - Support for insertion of Unicode characters.
-- Typeset inline LaTeX expressions to scalable SVG using `$$...$$` delimiters.
-- Add notes, tasks, and images to your nodes.
+- Typeset inline LaTeX expressions to scalable SVG using `$...$` or `$$...$$` delimiters.
+- Add notes, tasks, images, and editable tables to your nodes.
 - Add node-to-node connections with optional text and notes.
 - Stylize nodes, callouts, links and connections to add more meaning and improve readability.
 - Save and reuse style settings within and across open mindmaps.
@@ -59,7 +59,8 @@ You will need the following dependencies to build Minder:
 * A LaTeX installation providing `latex`, `amsmath`, `amssymb` and `dvisvgm`
 
 To typeset a formula in a node, connection title, or callout, surround it with
-`$$` delimiters. Formulas can be mixed with ordinary text and more than one can
+standard `$...$` inline delimiters or `$$...$$` delimiters. Formulas can be
+mixed with ordinary text and more than one can
 be used in a text value. For example:
 
 ```latex
@@ -69,7 +70,8 @@ This is a formula $$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
 Minder displays the source while it is being edited. When editing finishes,
 ordinary and Markdown-formatted text remains native Pango text and each formula
 is drawn as an inline scalable SVG. If the LaTeX tools are unavailable or an
-expression is invalid, Minder leaves that source visible.
+expression is invalid, Minder leaves that source visible. Use `\$` for a
+literal dollar sign when needed; the escape is hidden when editing finishes.
 
 If the optional `formulaocr-offline` command is installed, pasting a formula
 image with **Ctrl+Shift+V** converts it locally to editable `$$...$$` source
@@ -77,6 +79,32 @@ and then renders it as SVG. Ordinary **Ctrl+V** keeps its usual behavior,
 including pasting clipboard images as images. Recognition is asynchronous and
 does not require an internet connection. Set `MINDER_FORMULA_OCR` to select a
 different local recognizer executable.
+
+### Tables in nodes
+
+Right-click a node and choose **Change Node → Add Table…** to display an
+editable table inside it. Double-click an existing table to edit it. Enter text
+directly into cells; editors expand and wrap while you type so longer and
+multiline content remains visible. Use **Paste Table** to import tab-separated
+clipboard data copied from a spreadsheet. Drag across cells, or Shift-click two
+cells, to select a rectangular range and then use **Merge Selection**. Select a merged
+cell and use **Split Cell** to restore its individual cells. Tables are saved in
+the mind-map and included in Markdown and plain-text exports. Use **Undo Table
+Edit** or `Ctrl+Z` to undo typing, formatting, and structural changes before
+applying the table. Cell text also
+supports Unicode, emoji insertion and completion, and inline LaTeX using the
+same `$$...$$` delimiters as node titles. Use the table formatting toolbar to
+align selected cells left, center, or right and to apply bold, italic,
+underline, or strikethrough formatting. Use **Highlight Cells** to mark any
+selected cells as headers; highlights are stored per cell and remain under
+direct user control after cells are merged or split. The **Rows** and **Columns** menus
+insert above, below, left, or right of the selection and can delete every
+selected row or column. **Clear Cells** removes selected cell contents and
+formatting while preserving the rectangular table structure. Plain-text table
+rows can be imported back into Minder from text or Markdown exports, including
+escaped `\|` characters.
+To keep the editor responsive, imported and pasted tables are limited to 100
+rows, 50 columns, and 1,000 cells.
 
 To install, run `sudo ./app install` and then run the application from your application launcher or from
 the command-line with `./app run`.  If you want to debug with gdb using this build, run `./app debug`.
@@ -130,5 +158,5 @@ Debian/Ubuntu package is also available:
 Minder documentation can be found [here](https://github.com/phase1geo/Minder/wiki/Table-of-Contents).
 
 <p align="center">
-  <a href="https://appcenter.elementary.io/com.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
+  <a href="https://appcenter.elementary.io/io.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
 </p>

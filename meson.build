@@ -1,5 +1,5 @@
-project('com.github.phase1geo.minder', ['vala', 'c'],
-    version : '2.0.9',
+project('io.github.phase1geo.minder', ['vala', 'c'],
+    version : '2.1.0',
     license: 'GPL-3.0'
 )
 
@@ -47,8 +47,8 @@ if libmarkdown.version().version_compare('>=3.0')
 endif
 
 add_project_arguments([
-        '--vapidir=' + join_paths(meson.project_source_root(), 'vapi'),
-        '--disable-warnings'
+        '--vapidir=' + join_paths(meson.project_source_root(), 'vapi')
+        # '--disable-warnings'
     ],
     language: 'vala',
 )
@@ -77,7 +77,12 @@ subdir('tests')
 test_executable = executable(
   'minder-regress',
   test_vala_sources,
-  files('src/LatexSpanParser.vala'),
+  files(
+    'src/LatexSpanParser.vala',
+    'src/ImageManager.vala',
+    'src/NodeImage.vala',
+    'src/NodeTableModel.vala',
+  ),
   dependencies: dependencies,
 )
 
@@ -86,7 +91,7 @@ test(
   test_executable,
 )
 
-e = executable('com.github.phase1geo.minder',
+e = executable('io.github.phase1geo.minder',
     sources,
     config_file,
     gresource,

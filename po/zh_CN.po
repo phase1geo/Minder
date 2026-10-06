@@ -7,7 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
+"POT-Creation-Date: 2026-09-28 21:24-0500\n"
+=======
 "POT-Creation-Date: 2026-10-05 23:08-0500\n"
+>>>>>>> master
 "PO-Revision-Date: 2023-10-10 17:50+0800\n"
 "Last-Translator: Aerowolf <aerowolf@tom.com>\n"
 "Language-Team: 简体中文\n"
@@ -36,105 +40,189 @@ msgstr "在 AppCenter 中打开 Minder"
 msgid "Flatpak Runtime: %s"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/Application.vala:55 src/MainWindow.vala:250 src/MainWindow.vala:1958
+msgid "Minder"
+msgstr "Minder"
+
+#: src/Application.vala:145
+=======
 #: src/Application.vala:52 src/MainWindow.vala:183 src/MainWindow.vala:1666
 msgid "Minder"
 msgstr "Minder"
 
 #: src/Application.vala:135
+>>>>>>> master
 #, c-format
 msgid "Import file from format (%s)"
 msgstr "导入 %s 格式文件"
 
+<<<<<<< HEAD
+#: src/Application.vala:146
+=======
 #: src/Application.vala:136
+>>>>>>> master
 #, fuzzy, c-format
 msgid "Export mindmap as format (%s)"
 msgstr "将思维导图导出为 %s 格式"
 
+<<<<<<< HEAD
+#: src/Application.vala:151
+msgid "Display version number"
+msgstr "显示版本号"
+
+#: src/Application.vala:152
+=======
 #: src/Application.vala:141
 msgid "Display version number"
 msgstr "显示版本号"
 
 #: src/Application.vala:142
+>>>>>>> master
 #, fuzzy
 msgid "Display help"
 msgstr "显示"
 
+<<<<<<< HEAD
+#: src/Application.vala:153
+msgid "Starts Minder with a new file"
+msgstr "启动 Minder 并新建空文件"
+
+#: src/Application.vala:156
+=======
 #: src/Application.vala:143
 msgid "Starts Minder with a new file"
 msgstr "启动 Minder 并新建空文件"
 
 #: src/Application.vala:146
+>>>>>>> master
 #, fuzzy
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
 msgstr "为 PNG 图像启用透明背景"
 
+<<<<<<< HEAD
+#: src/Application.vala:157
+=======
 #: src/Application.vala:147
+>>>>>>> master
 #, fuzzy
 msgid "PNG compression value (0-9). Default is 0."
 msgstr "PNG 压缩值 （0-9）"
 
+<<<<<<< HEAD
+#: src/Application.vala:158
+=======
 #: src/Application.vala:148
+>>>>>>> master
 #, fuzzy
 msgid "JPEG quality (0-100). Default is 90."
 msgstr "JPEG 质量 （0-100）"
 
+<<<<<<< HEAD
+#: src/Application.vala:159
+msgid "Enables image links in exported Markdown"
+msgstr "在导出的 Markdown 中启用图像链接"
+
+#: src/Application.vala:164
+=======
 #: src/Application.vala:149
 msgid "Enables image links in exported Markdown"
 msgstr "在导出的 Markdown 中启用图像链接"
 
 #: src/Application.vala:154
+>>>>>>> master
 #, fuzzy
 msgid "Import Example:\n"
 msgstr "导入文件"
 
+<<<<<<< HEAD
+#: src/Application.vala:165
+=======
 #: src/Application.vala:155
+>>>>>>> master
 #, c-format
-msgid "  %scom.github.phase1geo.minder --import=markdown file.markdown\n"
+msgid "  %sio.github.phase1geo.minder --import=markdown file.markdown\n"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/Application.vala:167
+=======
 #: src/Application.vala:157
+>>>>>>> master
 #, fuzzy
 msgid "Export Example:\n"
 msgstr "导出文件"
 
+<<<<<<< HEAD
+#: src/Application.vala:168
+=======
 #: src/Application.vala:158
+>>>>>>> master
 #, c-format
 msgid ""
-"  %scom.github.phase1geo.minder --export=png --png-transparent file.minder "
+"  %sio.github.phase1geo.minder --export=png --png-transparent file.minder "
 "file.png\n"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/Application.vala:177
+=======
 #: src/Application.vala:167
+>>>>>>> master
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "错误： %s\n"
 
+<<<<<<< HEAD
+#: src/Application.vala:178
+=======
 #: src/Application.vala:168
+>>>>>>> master
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "运行 “%s --help”可查看有效选项\n"
 
+<<<<<<< HEAD
+#: src/Application.vala:201
+msgid "ERROR: Unable to import file"
+msgstr "错误：无法导入文件"
+
+#: src/Application.vala:205
+=======
 #: src/Application.vala:191
 msgid "ERROR: Unable to import file"
 msgstr "错误：无法导入文件"
 
 #: src/Application.vala:195
+>>>>>>> master
 #, fuzzy
 msgid "ERROR: Import is missing filename to import"
 msgstr "错误：导出缺少文件名"
 
+<<<<<<< HEAD
+#: src/Application.vala:228
+=======
 #: src/Application.vala:218
+>>>>>>> master
 #, fuzzy
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr "错误：导出缺少输入文件和/或导出输出文件"
 
+<<<<<<< HEAD
+#: src/Application.vala:238
+=======
 #: src/Application.vala:228
+>>>>>>> master
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "错误：无法打开文件“%s”\n"
 
+<<<<<<< HEAD
+#: src/Application.vala:274
+=======
 #: src/Application.vala:264
+>>>>>>> master
 #, fuzzy, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "错误：不能载入Minder输入文件%s"
@@ -158,6 +246,33 @@ msgstr "删除"
 msgid "Select Node"
 msgstr "选择节点"
 
+<<<<<<< HEAD
+#: src/Callout.vala:131 src/KeyCommands.vala:813 src/NodeMenu.vala:113
+msgid "Callout"
+msgstr "标记"
+
+#: src/CanvasText.vala:347 src/FormattedText.vala:1218
+msgid "No text found"
+msgstr "未找到文本"
+
+#: src/Clipboard.vala:122
+msgid "Recognizing formula"
+msgstr ""
+
+#: src/Clipboard.vala:123
+msgid "Converting the pasted image to editable LaTeX locally"
+msgstr ""
+
+#: src/Clipboard.vala:130
+msgid "Formula recognized"
+msgstr ""
+
+#: src/Clipboard.vala:131
+msgid "The pasted image was converted to editable LaTeX"
+msgstr ""
+
+#: src/Clipboard.vala:137
+=======
 #: src/Callout.vala:131 src/KeyCommands.vala:724 src/NodeMenu.vala:97
 msgid "Callout"
 msgstr "标记"
@@ -183,34 +298,49 @@ msgid "The pasted image was converted to editable LaTeX"
 msgstr ""
 
 #: src/Clipboard.vala:135
+>>>>>>> master
 #, fuzzy
 msgid "Pasted as an image"
 msgstr "粘贴和替换节点图像"
 
+<<<<<<< HEAD
+#: src/Clipboard.vala:138
+=======
 #: src/Clipboard.vala:136
+>>>>>>> master
 #, c-format
 msgid "Formula recognition was skipped: %s"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/ConnectionInspector.vala:84 src/KeyCommands.vala:816
+#: src/NodeMenu.vala:112
+=======
 #: src/ConnectionInspector.vala:84 src/KeyCommands.vala:727
 #: src/NodeMenu.vala:96
+>>>>>>> master
 msgid "Connection"
 msgstr "连接"
 
-#: src/ConnectionInspector.vala:97 src/NodeInspector.vala:205
+#: src/ConnectionInspector.vala:97 src/NodeInspector.vala:200
 msgid "Color"
 msgstr "颜色"
 
-#: src/ConnectionInspector.vala:111
+#: src/ConnectionInspector.vala:105
+#, fuzzy
+msgid "Select Connection Color"
+msgstr "连接颜色"
+
+#: src/ConnectionInspector.vala:118
 msgid "Use Theme Default Color"
 msgstr "使用主题默认颜色"
 
-#: src/ConnectionInspector.vala:137 src/GroupInspector.vala:92
-#: src/NodeInspector.vala:290
+#: src/ConnectionInspector.vala:144 src/GroupInspector.vala:92
+#: src/NodeInspector.vala:299
 msgid "Note"
 msgstr "备注"
 
-#: src/ConnectionInspector.vala:193
+#: src/ConnectionInspector.vala:200
 msgid "Delete Connection"
 msgstr "删除连接"
 
@@ -218,11 +348,11 @@ msgstr "删除连接"
 msgid "Edit Title…"
 msgstr "编辑标题……"
 
-#: src/ConnectionMenu.vala:38 src/GroupsMenu.vala:36 src/NodeMenu.vala:54
+#: src/ConnectionMenu.vala:38 src/GroupsMenu.vala:36 src/NodeMenu.vala:68
 msgid "Edit Note"
 msgstr "编辑备注"
 
-#: src/ConnectionMenu.vala:39 src/NodeMenu.vala:58
+#: src/ConnectionMenu.vala:39 src/NodeMenu.vala:73
 msgid "Remove Sticker"
 msgstr "移除贴纸"
 
@@ -242,16 +372,16 @@ msgstr "下一个连接"
 msgid "Previous Connection"
 msgstr "上一个连接"
 
-#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:336
-#: src/NodeMenu.vala:104 src/NodesMenu.vala:59
+#: src/ConnectionMenu.vala:54 src/GroupsMenu.vala:45 src/ImageManager.vala:431
+#: src/NodeMenu.vala:120 src/NodesMenu.vala:74
 msgid "Select"
 msgstr "选择"
 
-#: src/Connection.vala:810
+#: src/Connection.vala:807
 msgid "Connection Title"
 msgstr "连接标题"
 
-#: src/Connection.vala:818
+#: src/Connection.vala:813
 msgid "Connection Note"
 msgstr "连接备注"
 
@@ -285,50 +415,50 @@ msgstr ""
 msgid "unnamed"
 msgstr "未命名"
 
-#: src/Document.vala:691
+#: src/Document.vala:699
 msgid "Upgrade?"
 msgstr ""
 
-#: src/Document.vala:692
+#: src/Document.vala:700
 msgid ""
 "This file is from an older version Minder and needs to be upgraded to edit.\n"
 "\n"
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:697 src/ImageEditor.vala:428 src/MainWindow.vala:1373
-#: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TemplateEditor.vala:100
-#: src/ThemeEditor.vala:154 src/UrlEditor.vala:63
+#: src/Document.vala:705 src/ImageEditor.vala:430 src/MainWindow.vala:1657
+#: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TableEditor.vala:366
+#: src/TemplateEditor.vala:100 src/ThemeEditor.vala:154 src/UrlEditor.vala:63
 msgid "Cancel"
 msgstr "取消"
 
-#: src/Document.vala:700 src/ImageEditor.vala:431 src/MainWindow.vala:2238
-#: src/UrlEditor.vala:53
+#: src/Document.vala:708 src/ImageEditor.vala:433 src/MainWindow.vala:2379
+#: src/TableEditor.vala:367 src/UrlEditor.vala:53
 msgid "Apply"
 msgstr "应用"
 
-#: src/Document.vala:711
+#: src/Document.vala:719
 msgid "Don't show this dialog again"
 msgstr ""
 
-#: src/Document.vala:714 src/MainWindow.vala:2275
+#: src/Document.vala:722 src/MainWindow.vala:2416
 msgid "<small>This can be changed in preferences</small>"
 msgstr ""
 
-#: src/Document.vala:735
+#: src/Document.vala:743
 msgid "Upgrade Needed"
 msgstr ""
 
-#: src/DrawArea.vala:1528
+#: src/DrawArea.vala:1549
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% 完成"
 
-#: src/DrawArea.vala:1546
+#: src/DrawArea.vala:1567
 msgid "Drag to resize node"
 msgstr "拖动可调整节点大小"
 
-#: src/DrawArea.vala:1548
+#: src/DrawArea.vala:1569
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -336,25 +466,25 @@ msgstr ""
 "拖动可调整节点和图像的大小。\n"
 "按住Ctrl键再拖动，可只调整节点大小。"
 
-#: src/DrawArea.vala:1690
+#: src/DrawArea.vala:1711
 #, c-format
 msgid "Children: %u\n"
 msgstr "子节点： %u\n"
 
-#: src/DrawArea.vala:1691
+#: src/DrawArea.vala:1712
 #, c-format
 msgid "Total: %d"
 msgstr "总计： %d"
 
-#: src/DrawArea.vala:1745
+#: src/DrawArea.vala:1766
 msgid "connection endpoint change"
 msgstr "连接端点修改"
 
-#: src/DrawArea.vala:1752
+#: src/DrawArea.vala:1773
 msgid "connection drag"
 msgstr "连接拖动"
 
-#: src/DrawArea.vala:2277 src/MapModel.vala:1835 src/MapModel.vala:1850
+#: src/DrawArea.vala:2322 src/MapModel.vala:1874 src/MapModel.vala:1889
 msgid "Another Idea"
 msgstr "其他想法"
 
@@ -364,12 +494,12 @@ msgid ""
 "to view/edit information"
 msgstr "选择节点、连接或群组，可查看/编辑信息"
 
-#: src/EmptyMenu.vala:33 src/NodeMenu.vala:38 src/NodeMenu.vala:253
+#: src/EmptyMenu.vala:33 src/NodeMenu.vala:38 src/NodeMenu.vala:284
 #: src/TextMenu.vala:38
 msgid "Paste"
 msgstr "粘贴"
 
-#: src/EmptyMenu.vala:36 src/NodeMenu.vala:71
+#: src/EmptyMenu.vala:36 src/NodeMenu.vala:87
 msgid "Add Root Node"
 msgstr "添加根节点"
 
@@ -399,7 +529,7 @@ msgstr "导出选项"
 msgid "Export As %s"
 msgstr "导出为 %s"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:1070 src/StickerSet.vala:352
+#: src/Exporter.vala:131 src/MainWindow.vala:1309 src/StickerSet.vala:352
 msgid "Export"
 msgstr "导出"
 
@@ -441,16 +571,16 @@ msgstr "放大 %"
 msgid "Quality"
 msgstr "质量"
 
-#: src/exports/ExportMarkdown.vala:34 src/NoteView.vala:330
+#: src/exports/ExportMarkdown.vala:34 src/NoteView.vala:328
 #: src/TextMenu.vala:68
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/exports/ExportMarkdown.vala:382
+#: src/exports/ExportMarkdown.vala:401
 msgid "Include image links"
 msgstr "包含图像链接"
 
-#: src/exports/ExportMarkdown.vala:383
+#: src/exports/ExportMarkdown.vala:402
 msgid "Creates a directory containing the Markdown and embedded images"
 msgstr "创建包含 Markdown 和嵌入图像的目录"
 
@@ -458,23 +588,23 @@ msgstr "创建包含 Markdown 和嵌入图像的目录"
 msgid "Mermaid"
 msgstr "Mermaid"
 
-#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutVertical.vala:26
+#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutVertical.vala:27
 msgid "Vertical"
 msgstr "垂直"
 
-#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutDown.vala:26
+#: src/exports/ExportMermaid.vala:75 src/layouts/LayoutDown.vala:27
 msgid "Downwards"
 msgstr "向下"
 
-#: src/exports/ExportMermaid.vala:77 src/layouts/LayoutLeft.vala:26
+#: src/exports/ExportMermaid.vala:77 src/layouts/LayoutLeft.vala:27
 msgid "To left"
 msgstr "向左"
 
-#: src/exports/ExportMermaid.vala:79 src/layouts/LayoutUp.vala:26
+#: src/exports/ExportMermaid.vala:79 src/layouts/LayoutUp.vala:27
 msgid "Upwards"
 msgstr "向上"
 
-#: src/exports/ExportMermaid.vala:481
+#: src/exports/ExportMermaid.vala:452
 msgid "Use Mermaid Mindmap Format"
 msgstr ""
 
@@ -539,13 +669,13 @@ msgstr ""
 msgid "XMind 2021"
 msgstr "XMind 2021"
 
-#: src/exports/ExportXMind2021.vala:682 src/exports/ExportXMind8.vala:695
-#: src/layouts/LayoutHorizontal.vala:26
+#: src/exports/ExportXMind2021.vala:689 src/exports/ExportXMind8.vala:698
+#: src/layouts/LayoutHorizontal.vala:27
 msgid "Horizontal"
 msgstr "水平"
 
-#: src/exports/ExportXMind2021.vala:684 src/exports/ExportXMind8.vala:697
-#: src/layouts/LayoutRight.vala:26
+#: src/exports/ExportXMind2021.vala:691 src/exports/ExportXMind8.vala:700
+#: src/layouts/LayoutRight.vala:27
 msgid "To right"
 msgstr "向右"
 
@@ -590,7 +720,11 @@ msgstr ""
 msgid "The recognized formula is too long"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/GroupInspector.vala:79 src/KeyCommands.vala:822
+=======
 #: src/GroupInspector.vala:79 src/KeyCommands.vala:733
+>>>>>>> master
 msgid "Group"
 msgstr "添加群组"
 
@@ -610,58 +744,85 @@ msgstr "顶部节点"
 msgid "All Grouped Nodes"
 msgstr "所有已分群组的节点"
 
-#: src/ImageEditor.vala:197
+#: src/ImageEditor.vala:199
 #, c-format
 msgid "Crop Area: %d,%d %3dx%3d"
 msgstr "裁剪区域： %d，%d %3dx%3d"
 
-#: src/ImageEditor.vala:399
+#: src/ImageEditor.vala:401
 #, c-format
 msgid "Cursor: %3d,%3d"
 msgstr "光标： %3d，%3d"
 
-#: src/ImageEditor.vala:408
+#: src/ImageEditor.vala:410
 msgid "Change Image"
 msgstr "修改图像"
 
-#: src/ImageEditor.vala:412
+#: src/ImageEditor.vala:414
 msgid "Paste Image from Clipboard"
 msgstr "从剪贴板粘贴图像"
 
-#: src/ImageEditor.vala:416 src/NodeInspector.vala:392 src/NodeMenu.vala:234
+#: src/ImageEditor.vala:418 src/NodeInspector.vala:401 src/NodeMenu.vala:263
 msgid "Remove Image"
 msgstr "删除图像"
 
-#: src/ImageEditor.vala:420
+#: src/ImageEditor.vala:422
 msgid "Copy Image to Clipboard"
 msgstr "将图像复制到剪贴板"
 
-#: src/ImageEditor.vala:425
+#: src/ImageEditor.vala:427
 msgid "Cut Image to Clipboard"
 msgstr "将图像剪切到剪贴板"
 
-#: src/ImageManager.vala:336
+#: src/ImageManager.vala:431
 msgid "Select Image"
 msgstr "选择图像"
 
-#: src/ImageManager.vala:341
+#: src/ImageManager.vala:436
 msgid "Images"
 msgstr "图像"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:692 src/Shortcuts.vala:829
+msgid "General"
+msgstr "常规"
+
+#: src/KeyCommands.vala:693
+=======
 #: src/KeyCommands.vala:618 src/Shortcuts.vala:813
 msgid "General"
 msgstr "常规"
 
 #: src/KeyCommands.vala:619
+>>>>>>> master
 #, fuzzy
 msgid "File Commands"
 msgstr "节点命令"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:694
+=======
 #: src/KeyCommands.vala:620
+>>>>>>> master
 #, fuzzy
 msgid "Create new mindmap"
 msgstr "创建连接"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:695
+msgid "Open saved mindmap"
+msgstr ""
+
+#: src/KeyCommands.vala:696
+msgid "Create mindmap from directory structure"
+msgstr ""
+
+#: src/KeyCommands.vala:697
+msgid "Save mindmap to current file"
+msgstr ""
+
+#: src/KeyCommands.vala:698
+=======
 #: src/KeyCommands.vala:621
 msgid "Open saved mindmap"
 msgstr ""
@@ -675,10 +836,480 @@ msgid "Save mindmap to current file"
 msgstr ""
 
 #: src/KeyCommands.vala:624
+>>>>>>> master
 #, fuzzy
 msgid "Save mindmap to new file"
 msgstr "启动 Minder 并新建空文件"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:699
+msgid "Show print dialog for current mindmap"
+msgstr ""
+
+#: src/KeyCommands.vala:700
+#, fuzzy
+msgid "Tab Commands"
+msgstr "节点命令"
+
+#: src/KeyCommands.vala:701
+#, fuzzy
+msgid "Select next tab"
+msgstr "选择下一个同级节点"
+
+#: src/KeyCommands.vala:702
+#, fuzzy
+msgid "Select previous tab"
+msgstr "选择上一个同级节点"
+
+#: src/KeyCommands.vala:703
+#, fuzzy
+msgid "Close the current mindmap"
+msgstr "关闭当前选项卡"
+
+#: src/KeyCommands.vala:704
+#, fuzzy
+msgid "Undo/Redo Commands"
+msgstr "节点命令"
+
+#: src/KeyCommands.vala:705
+#, fuzzy
+msgid "Undo last action"
+msgstr "撤消上次修改"
+
+#: src/KeyCommands.vala:706
+#, fuzzy
+msgid "Redo last undone action"
+msgstr "重做上次撤消"
+
+#: src/KeyCommands.vala:707
+#, fuzzy
+msgid "Zoom Commands"
+msgstr "节点命令"
+
+#: src/KeyCommands.vala:708
+#, fuzzy
+msgid "Zoom in"
+msgstr "放大"
+
+#: src/KeyCommands.vala:709
+#, fuzzy
+msgid "Zoom out"
+msgstr "缩小"
+
+#: src/KeyCommands.vala:710
+msgid "Zoom to fit entire mindmap in viewer"
+msgstr ""
+
+#: src/KeyCommands.vala:711
+#, fuzzy
+msgid "Zoom selected node subtree in viewer"
+msgstr "对选定的节点树进行合理缩放"
+
+#: src/KeyCommands.vala:712
+#, fuzzy
+msgid "Zoom to 100%"
+msgstr "自适应缩放"
+
+#: src/KeyCommands.vala:713
+#, fuzzy
+msgid "Sidebar Commands"
+msgstr "节点命令"
+
+#: src/KeyCommands.vala:714
+#, fuzzy
+msgid "Show current tab in sidebar"
+msgstr "显示当前选项卡"
+
+#: src/KeyCommands.vala:715
+#, fuzzy
+msgid "Show style tab in sidebar"
+msgstr "显示样式选项卡"
+
+#: src/KeyCommands.vala:716
+#, fuzzy
+msgid "Show tag tab in sidebar"
+msgstr "显示属性侧边栏"
+
+#: src/KeyCommands.vala:717
+#, fuzzy
+msgid "Show sticker tab in sidebar"
+msgstr "显示贴纸选项卡"
+
+#: src/KeyCommands.vala:718
+#, fuzzy
+msgid "Show map tab in sidebar"
+msgstr "显示属性侧边栏"
+
+#: src/KeyCommands.vala:719
+#, fuzzy
+msgid "Show currently select node/connection/group information in sidebar"
+msgstr "选择节点、连接或群组，可查看/编辑信息"
+
+#: src/KeyCommands.vala:720
+#, fuzzy
+msgid "Map Commands"
+msgstr "节点命令"
+
+#: src/KeyCommands.vala:721
+#, fuzzy
+msgid "Show/Hide Connections"
+msgstr "隐藏连接"
+
+#: src/KeyCommands.vala:722
+#, fuzzy
+msgid "Show/Hide Callouts"
+msgstr "隐藏标记"
+
+#: src/KeyCommands.vala:723
+msgid "Balance nodes in vertical/horizontal layouts"
+msgstr ""
+
+#: src/KeyCommands.vala:724
+#, fuzzy
+msgid "Fold all completed tasks"
+msgstr "折叠已完成的任务"
+
+#: src/KeyCommands.vala:725
+#, fuzzy
+msgid "Unfold all folded nodes"
+msgstr "展开所有节点"
+
+#: src/KeyCommands.vala:726
+#, fuzzy
+msgid "Miscellaneous Commands"
+msgstr "其他选项"
+
+#: src/KeyCommands.vala:727
+#, fuzzy
+msgid "Show preferences window"
+msgstr "显示首选项"
+
+#: src/KeyCommands.vala:728
+#, fuzzy
+msgid "Show shortcuts cheatsheet"
+msgstr "快捷键"
+
+#: src/KeyCommands.vala:729
+#, fuzzy
+msgid "Show contextual menu"
+msgstr "显示上下文菜单"
+
+#: src/KeyCommands.vala:730
+msgid "Show find popup"
+msgstr ""
+
+#: src/KeyCommands.vala:731
+#, fuzzy
+msgid "Show About window"
+msgstr "关于 Minder"
+
+#: src/KeyCommands.vala:732
+msgid "Toggle braindump input mode"
+msgstr ""
+
+#: src/KeyCommands.vala:733
+#, fuzzy
+msgid "Toggle focus mode"
+msgstr "切换对焦模式"
+
+#: src/KeyCommands.vala:734
+msgid "Edit note of current item"
+msgstr ""
+
+#: src/KeyCommands.vala:735
+msgid "Edit currently selected item"
+msgstr ""
+
+#: src/KeyCommands.vala:736
+msgid "Show currently selected item"
+msgstr ""
+
+#: src/KeyCommands.vala:737
+msgid "Remove sticker from current node or connection"
+msgstr ""
+
+#: src/KeyCommands.vala:738
+#, fuzzy
+msgid "Quit the application"
+msgstr "退出程序"
+
+#: src/KeyCommands.vala:739 src/NodeInspector.vala:101
+#, fuzzy
+msgid "Node"
+msgstr "节点"
+
+#: src/KeyCommands.vala:740
+#, fuzzy
+msgid "Creation/Deletion Commands"
+msgstr "创建/删除"
+
+#: src/KeyCommands.vala:741
+#, fuzzy
+msgid "Add root node"
+msgstr "添加根节点"
+
+#: src/KeyCommands.vala:742
+msgid "Add sibling node after current node"
+msgstr ""
+
+#: src/KeyCommands.vala:743
+msgid "Add sibling node before current node"
+msgstr ""
+
+#: src/KeyCommands.vala:744
+msgid "Add child node to current node"
+msgstr ""
+
+#: src/KeyCommands.vala:745
+#, fuzzy
+msgid "Add parent node to current node"
+msgstr "添加父节点"
+
+#: src/KeyCommands.vala:746
+#, fuzzy
+msgid "Use quick entry to insert nodes"
+msgstr "快速输入插入"
+
+#: src/KeyCommands.vala:747
+#, fuzzy
+msgid "Use quick entry to replace current node"
+msgstr "快速输入替换"
+
+#: src/KeyCommands.vala:748
+msgid "Remove selected node only (leave subtree)"
+msgstr ""
+
+#: src/KeyCommands.vala:749 src/KeyCommands.vala:861
+#, fuzzy
+msgid "Clipboard Commands"
+msgstr "节点命令"
+
+#: src/KeyCommands.vala:750
+msgid "Paste node link from clipboard into current node"
+msgstr ""
+
+#: src/KeyCommands.vala:751
+#, fuzzy
+msgid "Replace current node with clipboard content"
+msgstr "以剪贴板中内容替换"
+
+#: src/KeyCommands.vala:752
+#, fuzzy
+msgid "View Commands"
+msgstr "节点命令"
+
+#: src/KeyCommands.vala:753
+#, fuzzy
+msgid "Center current node in map canvas"
+msgstr "当前节点居中"
+
+#: src/KeyCommands.vala:754 src/KeyCommands.vala:823
+#, fuzzy
+msgid "Change Commands"
+msgstr "节点命令"
+
+#: src/KeyCommands.vala:755
+msgid "Change task status of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:756
+msgid "Add/Edit image of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:757
+msgid "Remove image from current node"
+msgstr ""
+
+#: src/KeyCommands.vala:758
+#, fuzzy
+msgid "Add/Edit table of current node"
+msgstr "添加父节点"
+
+#: src/KeyCommands.vala:759
+#, fuzzy
+msgid "Change link color of current node"
+msgstr "节点链接颜色重设"
+
+#: src/KeyCommands.vala:760
+#, fuzzy
+msgid "Randomize the current node link color"
+msgstr "节点链接颜色随机变化"
+
+#: src/KeyCommands.vala:761
+#, fuzzy
+msgid "Set current node link color to match parent node"
+msgstr "节点链接颜色随机变化"
+
+#: src/KeyCommands.vala:762
+msgid "Toggle folding of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:763
+#, fuzzy
+msgid "Toggle folding of current node subtree"
+msgstr "切换节点树/子树的选择"
+
+#: src/KeyCommands.vala:764
+#, fuzzy
+msgid "Toggle the node link state"
+msgstr "切换节点链接"
+
+#: src/KeyCommands.vala:765
+msgid "Add group for current node and its subtree"
+msgstr ""
+
+#: src/KeyCommands.vala:766
+msgid "Start creation of connection from current node"
+msgstr ""
+
+#: src/KeyCommands.vala:767
+msgid "Add/Remove callout for current node"
+msgstr ""
+
+#: src/KeyCommands.vala:768
+msgid "Toggle sequence state of children of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:769
+msgid "Set node priority to 1"
+msgstr ""
+
+#: src/KeyCommands.vala:770
+msgid "Set node priority to 2"
+msgstr ""
+
+#: src/KeyCommands.vala:771
+msgid "Set node priority to 3"
+msgstr ""
+
+#: src/KeyCommands.vala:772
+msgid "Set node priority to 4"
+msgstr ""
+
+#: src/KeyCommands.vala:773
+msgid "Set node priority to 5"
+msgstr ""
+
+#: src/KeyCommands.vala:774
+#, fuzzy
+msgid "Clear node priority"
+msgstr "中优先级"
+
+#: src/KeyCommands.vala:775 src/KeyCommands.vala:814 src/KeyCommands.vala:817
+#: src/KeyCommands.vala:826 src/KeyCommands.vala:882
+#, fuzzy
+msgid "Selection Commands"
+msgstr "连接命令"
+
+#: src/KeyCommands.vala:776
+#, fuzzy
+msgid "Select root node of current node"
+msgstr "选择当前单词"
+
+#: src/KeyCommands.vala:777
+#, fuzzy
+msgid "Select parent node of current node"
+msgstr "选择当前单词"
+
+#: src/KeyCommands.vala:778
+#, fuzzy
+msgid "Select all child nodes of current node"
+msgstr "创建前一个节点的子节点。"
+
+#: src/KeyCommands.vala:779
+#, fuzzy
+msgid "Select single child node of current node"
+msgstr "创建前一个节点的子节点。"
+
+#: src/KeyCommands.vala:780
+msgid "Select all nodes in subtree of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:781
+msgid "Select next sibling node of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:782
+#, fuzzy
+msgid "Select previous sibling node of current node"
+msgstr "选择上一个同级节点"
+
+#: src/KeyCommands.vala:783
+#, fuzzy
+msgid "Select first sibling node of current node"
+msgstr "选择上一个同级节点"
+
+#: src/KeyCommands.vala:784
+#, fuzzy
+msgid "Select last sibling node of current node"
+msgstr "选择上一个同级节点"
+
+#: src/KeyCommands.vala:785
+msgid "Select node to the left of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:786
+msgid "Select node to the right of current node"
+msgstr ""
+
+#: src/KeyCommands.vala:787
+#, fuzzy
+msgid "Select node above current node"
+msgstr "选择当前单词"
+
+#: src/KeyCommands.vala:788
+#, fuzzy
+msgid "Select node below current node"
+msgstr "选择当前单词"
+
+#: src/KeyCommands.vala:789
+#, fuzzy
+msgid "Select linked node of current node"
+msgstr "选择当前单词"
+
+#: src/KeyCommands.vala:790
+#, fuzzy
+msgid "Select connection of current node"
+msgstr "选择当前单词"
+
+#: src/KeyCommands.vala:791
+#, fuzzy
+msgid "Select callout of current node"
+msgstr "选择当前单词"
+
+#: src/KeyCommands.vala:792
+#, fuzzy
+msgid "Move Commands"
+msgstr "节点命令"
+
+#: src/KeyCommands.vala:793
+msgid "Swap current node with right node"
+msgstr ""
+
+#: src/KeyCommands.vala:794
+msgid "Swap current node with left node"
+msgstr ""
+
+#: src/KeyCommands.vala:795
+msgid "Swap current node with above node"
+msgstr ""
+
+#: src/KeyCommands.vala:796
+msgid "Swap current node with below node"
+msgstr ""
+
+#: src/KeyCommands.vala:797
+#, fuzzy
+msgid "Sort child nodes of current node alphabetically"
+msgstr "按字母顺序对子节点进行排序"
+
+#: src/KeyCommands.vala:798
+msgid "Sort child nodes of current node randomly"
+msgstr ""
+
+#: src/KeyCommands.vala:799
+msgid "Detaches current node and its subtree"
+=======
 #: src/KeyCommands.vala:625
 msgid "Show print dialog for current mindmap"
 msgstr ""
@@ -1093,9 +1724,38 @@ msgstr ""
 
 #: src/KeyCommands.vala:713
 msgid "Swap current node with below node"
+>>>>>>> master
 msgstr ""
 
-#: src/KeyCommands.vala:714
+#: src/KeyCommands.vala:800
+#, fuzzy
+msgid "Attach current node to the current attach node"
+msgstr "添加父节点"
+
+#: src/KeyCommands.vala:801
+#, fuzzy
+msgid "Attach Node Commands"
+msgstr "节点命令"
+
+#: src/KeyCommands.vala:802
+msgid "Change the attach node to node to left of current"
+msgstr ""
+
+#: src/KeyCommands.vala:803
+msgid "Change the attach node to node to right of current"
+msgstr ""
+
+#: src/KeyCommands.vala:804
+#, fuzzy
+msgid "Change the attach node to node above current"
+msgstr "选择当前单词"
+
+#: src/KeyCommands.vala:805
+#, fuzzy
+msgid "Change the attach node to node below current"
+msgstr "选择当前单词"
+
+#: src/KeyCommands.vala:806
 #, fuzzy
 msgid "Sort child nodes of current node alphabetically"
 msgstr "按字母顺序对子节点进行排序"
@@ -1113,61 +1773,174 @@ msgstr ""
 msgid "Alignment Commands"
 msgstr "对齐"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:807
+=======
 #: src/KeyCommands.vala:718
+>>>>>>> master
 #, fuzzy
 msgid "Align selected node top edges"
 msgstr "所选节点上部对齐"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:808
+=======
 #: src/KeyCommands.vala:719
+>>>>>>> master
 #, fuzzy
 msgid "Align selected node vertical centers"
 msgstr "垂直居中对齐"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:809
+=======
 #: src/KeyCommands.vala:720
+>>>>>>> master
 #, fuzzy
 msgid "Align selected node bottom edges"
 msgstr "所选节点上部对齐"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:810
+=======
 #: src/KeyCommands.vala:721
+>>>>>>> master
 #, fuzzy
 msgid "Align selected node left edges"
 msgstr "所选节点上部对齐"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:811
+=======
 #: src/KeyCommands.vala:722
+>>>>>>> master
 #, fuzzy
 msgid "Align selected node horizontal centers"
 msgstr "水平居中对齐"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:812
+=======
 #: src/KeyCommands.vala:723
+>>>>>>> master
 #, fuzzy
 msgid "Align selected node right edges"
 msgstr "所选节点上部对齐"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:815
+=======
 #: src/KeyCommands.vala:726
+>>>>>>> master
 #, fuzzy
 msgid "Select callout node"
 msgstr "选择标记"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:818
+=======
 #: src/KeyCommands.vala:729
+>>>>>>> master
 #, fuzzy
 msgid "Select connection source node"
 msgstr "选定的连接"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:819
+=======
 #: src/KeyCommands.vala:730
+>>>>>>> master
 #, fuzzy
 msgid "Select connection target node"
 msgstr "选定的连接"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:820
+=======
 #: src/KeyCommands.vala:731
+>>>>>>> master
 #, fuzzy
 msgid "Select next connection in map"
 msgstr "选择下一个连接"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:821
+=======
 #: src/KeyCommands.vala:732
+>>>>>>> master
 #, fuzzy
 msgid "Select previous connection in map"
 msgstr "选择上一个连接"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:824
+msgid "Change the color of the current group"
+msgstr ""
+
+#: src/KeyCommands.vala:825
+msgid "Merge current groups into single group"
+msgstr ""
+
+#: src/KeyCommands.vala:827
+msgid "Select main node(s) of current group(s)"
+msgstr ""
+
+#: src/KeyCommands.vala:828
+msgid "Selects all nodes within current group(s)"
+msgstr ""
+
+#: src/KeyCommands.vala:829
+#, fuzzy
+msgid "Table Editor"
+msgstr "安卓平板电脑"
+
+#: src/KeyCommands.vala:830
+#, fuzzy
+msgid "Adds a row above the currently selected row"
+msgstr "添加上一个字符"
+
+#: src/KeyCommands.vala:831
+#, fuzzy
+msgid "Adds a row below the currently selected row"
+msgstr "添加上一个字符"
+
+#: src/KeyCommands.vala:832
+msgid "Deletes the currently selected row(s)"
+msgstr ""
+
+#: src/KeyCommands.vala:833
+msgid "Adds a column to the left of the currently selected row"
+msgstr ""
+
+#: src/KeyCommands.vala:834
+msgid "Adds a column to the right of the currently selected row"
+msgstr ""
+
+#: src/KeyCommands.vala:835
+msgid "Deletes the currently selected columns(s)"
+msgstr ""
+
+#: src/KeyCommands.vala:836
+#, fuzzy
+msgid "Merges selected cells into one"
+msgstr "清除选择"
+
+#: src/KeyCommands.vala:837
+#, fuzzy
+msgid "Splits merged cell"
+msgstr "选定的节点"
+
+#: src/KeyCommands.vala:838
+#, fuzzy
+msgid "Clears selected cell contents"
+msgstr "剪切所选文本"
+
+#: src/KeyCommands.vala:839
+msgid "Text Editing"
+msgstr "文本编辑"
+
+#: src/KeyCommands.vala:840
+=======
 #: src/KeyCommands.vala:735
 msgid "Change the color of the current group"
 msgstr ""
@@ -1189,40 +1962,124 @@ msgid "Text Editing"
 msgstr "文本编辑"
 
 #: src/KeyCommands.vala:741
+>>>>>>> master
 #, fuzzy
 msgid "Insertion/Deletion Commands"
 msgstr "连接命令"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:841
+=======
 #: src/KeyCommands.vala:742
+>>>>>>> master
 #, fuzzy
 msgid "Insert newline character"
 msgstr "插入新行符号"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:842
+=======
 #: src/KeyCommands.vala:743
+>>>>>>> master
 #, fuzzy
 msgid "Insert TAB character"
 msgstr "插入制表符"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:843
+=======
 #: src/KeyCommands.vala:744
+>>>>>>> master
 #, fuzzy
 msgid "Insert emoji"
 msgstr "插入表情符号"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:844
+=======
 #: src/KeyCommands.vala:745
+>>>>>>> master
 #, fuzzy
 msgid "Remove next word"
 msgstr "移动节点"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:845
+=======
 #: src/KeyCommands.vala:746
+>>>>>>> master
 #, fuzzy
 msgid "Remove previous word"
 msgstr "上一个词"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:846
+=======
 #: src/KeyCommands.vala:747
+>>>>>>> master
 #, fuzzy
 msgid "Markdown Syntax"
 msgstr "Markdown 语法字符"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:847
+msgid "Insert Markdown header-1 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:848
+msgid "Insert Markdown header-2 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:849
+msgid "Insert Markdown header-3 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:850
+msgid "Insert Markdown header-4 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:851
+msgid "Insert Markdown header-5 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:852
+msgid "Insert Markdown header-6 syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:853
+msgid "Insert Markdown bold syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:854
+msgid "Insert Markdown italics syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:855
+msgid "Insert Markdown strikethrough syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:856
+msgid "Insert Markdown code syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:857
+msgid "Insert Markdown highlighting syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:858
+msgid "Insert Markdown superscript syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:859
+msgid "Insert Markdown subscript syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:860
+msgid "Insert Markdown URL link syntax"
+msgstr ""
+
+#: src/KeyCommands.vala:862
+=======
 #: src/KeyCommands.vala:748
 msgid "Insert Markdown header-1 syntax"
 msgstr ""
@@ -1280,29 +2137,65 @@ msgid "Insert Markdown URL link syntax"
 msgstr ""
 
 #: src/KeyCommands.vala:763
+>>>>>>> master
 #, fuzzy
 msgid "Copy selected nodes or text"
 msgstr "复制所选文本"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:863
+=======
 #: src/KeyCommands.vala:764
+>>>>>>> master
 #, fuzzy
 msgid "Cut selected nodes or text"
 msgstr "剪切所选文本"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:864
+=======
 #: src/KeyCommands.vala:765
+>>>>>>> master
 #, fuzzy
 msgid "Paste nodes or text from clipboard"
 msgstr "从剪贴板粘贴图像"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:865
+msgid "Convert a clipboard image to LaTeX"
+msgstr ""
+
+#: src/KeyCommands.vala:866
+=======
 #: src/KeyCommands.vala:766
 msgid "Convert a clipboard image to LaTeX"
 msgstr ""
 
 #: src/KeyCommands.vala:767
+>>>>>>> master
 #, fuzzy
 msgid "URL Commands"
 msgstr "节点命令"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:867
+msgid "Open URL link at current cursor position"
+msgstr ""
+
+#: src/KeyCommands.vala:868
+msgid "Add URL link at current cursor position"
+msgstr ""
+
+#: src/KeyCommands.vala:869
+msgid "Change URL link at current cursor position"
+msgstr ""
+
+#: src/KeyCommands.vala:870
+msgid "Remove URL link at current cursor position"
+msgstr ""
+
+#: src/KeyCommands.vala:871
+=======
 #: src/KeyCommands.vala:768
 msgid "Open URL link at current cursor position"
 msgstr ""
@@ -1320,19 +2213,67 @@ msgid "Remove URL link at current cursor position"
 msgstr ""
 
 #: src/KeyCommands.vala:772
+>>>>>>> master
 #, fuzzy
 msgid "Cursor Commands"
 msgstr "节点命令"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:872
+msgid "Move cursor to next character"
+msgstr ""
+
+#: src/KeyCommands.vala:873
+=======
 #: src/KeyCommands.vala:773
 msgid "Move cursor to next character"
 msgstr ""
 
 #: src/KeyCommands.vala:774
+>>>>>>> master
 #, fuzzy
 msgid "Move cursor to previous character"
 msgstr "上一个字符"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:874
+msgid "Move cursor up one line"
+msgstr ""
+
+#: src/KeyCommands.vala:875
+msgid "Move cursor down one line"
+msgstr ""
+
+#: src/KeyCommands.vala:876
+msgid "Move cursor to beginning of next word"
+msgstr ""
+
+#: src/KeyCommands.vala:877
+msgid "Move cursor to beginning of previous word"
+msgstr ""
+
+#: src/KeyCommands.vala:878
+msgid "Move cursor to start of text"
+msgstr ""
+
+#: src/KeyCommands.vala:879
+msgid "Move cursor to end of text"
+msgstr ""
+
+#: src/KeyCommands.vala:880
+msgid "Move cursor to start of current line"
+msgstr ""
+
+#: src/KeyCommands.vala:881
+msgid "Move cursor to end of current line"
+msgstr ""
+
+#: src/KeyCommands.vala:883
+msgid "Add next character to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:884
+=======
 #: src/KeyCommands.vala:775
 msgid "Move cursor up one line"
 msgstr ""
@@ -1370,10 +2311,58 @@ msgid "Add next character to current selection"
 msgstr ""
 
 #: src/KeyCommands.vala:785
+>>>>>>> master
 #, fuzzy
 msgid "Add previous character to current selection"
 msgstr "添加上一个字符"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:885
+msgid "Add line up to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:886
+msgid "Add line down to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:887
+msgid "Add next word to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:888
+msgid "Add previous word to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:889
+msgid "Add start of text to current selection (Control-Up)"
+msgstr ""
+
+#: src/KeyCommands.vala:890
+msgid "Add start of text to current selection (Control-Home)"
+msgstr ""
+
+#: src/KeyCommands.vala:891
+msgid "Add end of text to current selection (Control-Down)"
+msgstr ""
+
+#: src/KeyCommands.vala:892
+msgid "Add end of text to current selection (Control-End)"
+msgstr ""
+
+#: src/KeyCommands.vala:893
+msgid "Add start of current line to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:894
+msgid "Add end of current line to current selection"
+msgstr ""
+
+#: src/KeyCommands.vala:895 src/Shortcuts.vala:854
+msgid "Select all text"
+msgstr "选择所有文本"
+
+#: src/KeyCommands.vala:896
+=======
 #: src/KeyCommands.vala:786
 msgid "Add line up to current selection"
 msgstr ""
@@ -1419,15 +2408,48 @@ msgid "Select all text"
 msgstr "选择所有文本"
 
 #: src/KeyCommands.vala:797
+>>>>>>> master
 #, fuzzy
 msgid "Deselect all text"
 msgstr "选择所有文本"
 
+<<<<<<< HEAD
+#: src/KeyCommands.vala:2189
+=======
 #: src/KeyCommands.vala:1966
+>>>>>>> master
 #, fuzzy
 msgid "Select a group color"
 msgstr "选择链接颜色"
 
+<<<<<<< HEAD
+#: src/LatexRenderer.vala:446
+msgid "Unable to read LaTeX formula dimensions"
+msgstr ""
+
+#: src/LatexRenderer.vala:473
+msgid "The generated LaTeX SVG has no usable size"
+msgstr ""
+
+#: src/LatexRenderer.vala:541
+msgid "LaTeX rendering was cancelled"
+msgstr ""
+
+#: src/LatexRenderer.vala:545
+msgid "LaTeX rendering timed out"
+msgstr ""
+
+#: src/LatexRenderer.vala:549
+msgid "LaTeX rendering failed"
+msgstr ""
+
+#: src/layouts/LayoutManual.vala:27 src/MapInspector.vala:265
+#: src/MapInspector.vala:511 src/MapModel.vala:2362
+msgid "Manual"
+msgstr "手动"
+
+#: src/MainWindow.vala:309
+=======
 #: src/LatexRenderer.vala:420
 msgid "Unable to read LaTeX formula dimensions"
 msgstr ""
@@ -1454,284 +2476,331 @@ msgid "Manual"
 msgstr "手动"
 
 #: src/MainWindow.vala:242
+>>>>>>> master
 msgid "New File"
 msgstr "新建文件"
 
-#: src/MainWindow.vala:247 src/MainWindow.vala:1463
+#: src/MainWindow.vala:314 src/MainWindow.vala:1747
 msgid "Open File"
 msgstr "打开文件"
 
-#: src/MainWindow.vala:252
+#: src/MainWindow.vala:319
 msgid "Save File As"
 msgstr "将文件另存为"
 
-#: src/MainWindow.vala:259 src/StickerSet.vala:307 src/UndoBuffer.vala:91
+#: src/MainWindow.vala:326 src/StickerSet.vala:307 src/UndoBuffer.vala:91
 msgid "Undo"
 msgstr "撤消"
 
-#: src/MainWindow.vala:266 src/StickerSet.vala:308 src/UndoBuffer.vala:98
+#: src/MainWindow.vala:333 src/StickerSet.vala:308 src/UndoBuffer.vala:98
 msgid "Redo"
 msgstr "重做"
 
-#: src/MainWindow.vala:725
+#: src/MainWindow.vala:792
 msgid "Tag Highlight Mode"
 msgstr ""
 
-#: src/MainWindow.vala:727 src/MainWindow.vala:1140
+#: src/MainWindow.vala:794 src/MainWindow.vala:1379
 msgid "Focus Mode"
 msgstr "聚焦模式"
 
-#: src/MainWindow.vala:730
+#: src/MainWindow.vala:797
 msgid "Unnamed Document"
 msgstr "未命名文档"
 
-#: src/MainWindow.vala:733
+#: src/MainWindow.vala:800
 msgid "Read-Only"
 msgstr "只读"
 
-#: src/MainWindow.vala:752
+#: src/MainWindow.vala:819
 msgid "Zoom to Fit"
 msgstr "自适应缩放"
 
-#: src/MainWindow.vala:753
+#: src/MainWindow.vala:820
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "对选定的节点树进行合理缩放"
 
-#: src/MainWindow.vala:754
+#: src/MainWindow.vala:821
 msgid "Zoom to Actual Size"
 msgstr "缩放至实际大小"
 
-#: src/MainWindow.vala:762
+#: src/MainWindow.vala:829
 msgid "Zoom to Percent"
 msgstr "缩放百分比："
 
-#: src/MainWindow.vala:777 src/ZoomWidget.vala:105
+#: src/MainWindow.vala:844 src/ZoomWidget.vala:105
 msgid "Zoom In"
 msgstr "放大"
 
-#: src/MainWindow.vala:784 src/ZoomWidget.vala:93
+#: src/MainWindow.vala:851 src/ZoomWidget.vala:93
 msgid "Zoom Out"
 msgstr "缩小"
 
-#: src/MainWindow.vala:802 src/MainWindow.vala:1732
+#: src/MainWindow.vala:869 src/MainWindow.vala:2024
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "缩放 （%d%%）"
 
-#: src/MainWindow.vala:815
+#: src/MainWindow.vala:898
+msgid "Where"
+msgstr ""
+
+#: src/MainWindow.vala:930
+msgid "Matched Content"
+msgstr ""
+
+#: src/MainWindow.vala:960 src/QuickEntry.vala:89
+msgid "Tab"
+msgstr "Tab键"
+
+#: src/MainWindow.vala:977
 msgid "Search Nodes, Callouts and Connections"
 msgstr "搜索节点、标记和连接"
 
-#: src/MainWindow.vala:860
+#: src/MainWindow.vala:1043
 msgid "Search Criteria"
 msgstr "搜索条件"
 
-#: src/MainWindow.vala:864
+#: src/MainWindow.vala:1047
 msgid "Search all tabs"
 msgstr "搜索所有选项卡"
 
-#: src/MainWindow.vala:905 src/StickerSet.vala:114
+#: src/MainWindow.vala:1088 src/StickerSet.vala:114
 msgid "Search"
 msgstr "搜索"
 
-#: src/MainWindow.vala:914
+#: src/MainWindow.vala:1097
 msgid "Nodes"
 msgstr "节点"
 
-#: src/MainWindow.vala:915
+#: src/MainWindow.vala:1098
 msgid "Connections"
 msgstr "连接"
 
-#: src/MainWindow.vala:916
+#: src/MainWindow.vala:1099
 msgid "Callouts"
 msgstr "标记"
 
-#: src/MainWindow.vala:917
+#: src/MainWindow.vala:1100
 #, fuzzy
 msgid "Groups"
 msgstr "添加群组"
 
-#: src/MainWindow.vala:918
+#: src/MainWindow.vala:1101
 msgid "Titles"
 msgstr "标题"
 
-#: src/MainWindow.vala:919
+#: src/MainWindow.vala:1102
 msgid "Notes"
 msgstr "备注"
 
-#: src/MainWindow.vala:920
+#: src/MainWindow.vala:1103
+msgid "Tables"
+msgstr ""
+
+#: src/MainWindow.vala:1104
 msgid "Folded"
 msgstr "折叠"
 
-#: src/MainWindow.vala:921
+#: src/MainWindow.vala:1105
 msgid "Unfolded"
 msgstr "展开"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:1106
 msgid "Tasks"
 msgstr "任务"
 
-#: src/MainWindow.vala:923
+#: src/MainWindow.vala:1107
 msgid "Non-tasks"
 msgstr "非任务"
 
-#: src/MainWindow.vala:1045
+#: src/MainWindow.vala:1108
+#, fuzzy
+msgid "No priority"
+msgstr "低优先级"
+
+#: src/MainWindow.vala:1109 src/NodeMenu.vala:44 src/NodesMenu.vala:38
+#, fuzzy
+msgid "Priority 1"
+msgstr "低优先级"
+
+#: src/MainWindow.vala:1110 src/NodeMenu.vala:45 src/NodesMenu.vala:39
+#, fuzzy
+msgid "Priority 2"
+msgstr "低优先级"
+
+#: src/MainWindow.vala:1111 src/NodeMenu.vala:46 src/NodesMenu.vala:40
+#, fuzzy
+msgid "Priority 3"
+msgstr "低优先级"
+
+#: src/MainWindow.vala:1112 src/NodeMenu.vala:47 src/NodesMenu.vala:41
+#, fuzzy
+msgid "Priority 4"
+msgstr "低优先级"
+
+#: src/MainWindow.vala:1113 src/NodeMenu.vala:48 src/NodesMenu.vala:42
+#, fuzzy
+msgid "Priority 5"
+msgstr "低优先级"
+
+#: src/MainWindow.vala:1284
 msgid "Print…"
 msgstr "打印……"
 
-#: src/MainWindow.vala:1084
+#: src/MainWindow.vala:1323
 msgid "Brain Dump"
 msgstr ""
 
-#: src/MainWindow.vala:1160 src/Preferences.vala:50
+#: src/MainWindow.vala:1399 src/Preferences.vala:50
 msgid "Preferences"
 msgstr "参数设置"
 
-#: src/MainWindow.vala:1161
+#: src/MainWindow.vala:1400
 msgid "Shortcuts Cheatsheet"
 msgstr "快捷键"
 
-#: src/MainWindow.vala:1164
+#: src/MainWindow.vala:1403
 msgid "About Minder"
 msgstr "关于 Minder"
 
-#: src/MainWindow.vala:1187 src/TextMenu.vala:52
+#: src/MainWindow.vala:1426 src/TextMenu.vala:52
 #, fuzzy
 msgid "# Header1"
 msgstr "耳机"
 
-#: src/MainWindow.vala:1188 src/TextMenu.vala:53
+#: src/MainWindow.vala:1427 src/TextMenu.vala:53
 msgid "## Header2"
 msgstr ""
 
-#: src/MainWindow.vala:1189 src/TextMenu.vala:54
+#: src/MainWindow.vala:1428 src/TextMenu.vala:54
 msgid "### Header3"
 msgstr ""
 
-#: src/MainWindow.vala:1190 src/TextMenu.vala:55
+#: src/MainWindow.vala:1429 src/TextMenu.vala:55
 msgid "#### Header4"
 msgstr ""
 
-#: src/MainWindow.vala:1191 src/TextMenu.vala:56
+#: src/MainWindow.vala:1430 src/TextMenu.vala:56
 msgid "##### Header5"
 msgstr ""
 
-#: src/MainWindow.vala:1192 src/TextMenu.vala:57
+#: src/MainWindow.vala:1431 src/TextMenu.vala:57
 msgid "###### Header6"
 msgstr ""
 
-#: src/MainWindow.vala:1193 src/TextMenu.vala:58
+#: src/MainWindow.vala:1432 src/TextMenu.vala:58
 msgid "**Bold**"
 msgstr ""
 
-#: src/MainWindow.vala:1194 src/TextMenu.vala:59
+#: src/MainWindow.vala:1433 src/TextMenu.vala:59
 msgid "__Italicize_"
 msgstr ""
 
-#: src/MainWindow.vala:1195 src/TextMenu.vala:60
+#: src/MainWindow.vala:1434 src/TextMenu.vala:60
 msgid "~~Strikeout~~"
 msgstr ""
 
-#: src/MainWindow.vala:1196 src/TextMenu.vala:61
+#: src/MainWindow.vala:1435 src/TextMenu.vala:61
 msgid "`Code`"
 msgstr ""
 
-#: src/MainWindow.vala:1197 src/TextMenu.vala:62
+#: src/MainWindow.vala:1436 src/TextMenu.vala:62
 #, fuzzy
 msgid "==Highlight=="
 msgstr "右对齐"
 
-#: src/MainWindow.vala:1198 src/TextMenu.vala:63
+#: src/MainWindow.vala:1437 src/TextMenu.vala:63
 msgid "<sup>Superscript</sup>"
 msgstr ""
 
-#: src/MainWindow.vala:1199 src/TextMenu.vala:64
+#: src/MainWindow.vala:1438 src/TextMenu.vala:64
 msgid "<sub>Subscript</sub>"
 msgstr ""
 
-#: src/MainWindow.vala:1200 src/TextMenu.vala:65
+#: src/MainWindow.vala:1439 src/TextMenu.vala:65
 msgid "[Link text](URL)"
 msgstr ""
 
-#: src/MainWindow.vala:1218 src/MainWindow.vala:1831
+#: src/MainWindow.vala:1502 src/MainWindow.vala:2125
 msgid "Show Property Sidebar"
 msgstr "显示属性侧边栏"
 
-#: src/MainWindow.vala:1229 src/MainWindow.vala:1287
+#: src/MainWindow.vala:1513 src/MainWindow.vala:1571
 msgid "Current"
 msgstr "当前"
 
-#: src/MainWindow.vala:1230 src/MainWindow.vala:1288
+#: src/MainWindow.vala:1514 src/MainWindow.vala:1572
 #: src/StyleInspector.vala:362
 msgid "Style"
 msgstr "样式"
 
-#: src/MainWindow.vala:1231 src/MainWindow.vala:1289 src/Preferences.vala:68
+#: src/MainWindow.vala:1515 src/MainWindow.vala:1573 src/Preferences.vala:68
 msgid "Tags"
 msgstr ""
 
-#: src/MainWindow.vala:1232 src/MainWindow.vala:1290
+#: src/MainWindow.vala:1516 src/MainWindow.vala:1574
 msgid "Stickers"
 msgstr "贴纸"
 
-#: src/MainWindow.vala:1233 src/MainWindow.vala:1291
+#: src/MainWindow.vala:1517 src/MainWindow.vala:1575
 msgid "Map"
 msgstr "地图"
 
-#: src/MainWindow.vala:1364
+#: src/MainWindow.vala:1648
 msgid "Save current unnamed document?"
 msgstr "要保存当前未命名的文档吗？"
 
-#: src/MainWindow.vala:1365
+#: src/MainWindow.vala:1649
 msgid "Changes will be permanently lost if not saved."
 msgstr "如不保存，修改内容将永久丢失。"
 
-#: src/MainWindow.vala:1370
+#: src/MainWindow.vala:1654
 msgid "Discard Changes"
 msgstr "放弃修改"
 
-#: src/MainWindow.vala:1376 src/MainWindow.vala:1662 src/ThemeEditor.vala:159
+#: src/MainWindow.vala:1660 src/MainWindow.vala:1954 src/ThemeEditor.vala:159
 msgid "Save"
 msgstr "保存"
 
-#: src/MainWindow.vala:1408
+#: src/MainWindow.vala:1692
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "文件 %s 已被其他应用程序修改。"
 
-#: src/MainWindow.vala:1409
+#: src/MainWindow.vala:1693
 msgid "What do you want to do?"
 msgstr "想做什么？"
 
-#: src/MainWindow.vala:1414
+#: src/MainWindow.vala:1698
 msgid "Discard Changes and reload"
 msgstr "放弃修改并重新加载"
 
-#: src/MainWindow.vala:1417
+#: src/MainWindow.vala:1701
 msgid "Save local version and overwrite"
 msgstr "保存本地版本并覆盖"
 
-#: src/MainWindow.vala:1463
+#: src/MainWindow.vala:1747
 msgid "Open Directory"
 msgstr "打开目录"
 
-#: src/MainWindow.vala:1463
+#: src/MainWindow.vala:1747
 msgid "Open"
 msgstr "打开"
 
-#: src/MainWindow.vala:1662
+#: src/MainWindow.vala:1954
 msgid "Save File"
 msgstr "保存文件"
 
-#: src/MainWindow.vala:1762
+#: src/MainWindow.vala:2054
 msgid "Hide Property Sidebar"
 msgstr "隐藏属性侧边栏"
 
-#: src/MainWindow.vala:2229
+#: src/MainWindow.vala:2370
 msgid "File upgrades needed"
 msgstr ""
 
-#: src/MainWindow.vala:2230
+#: src/MainWindow.vala:2371
 msgid ""
 "All previously opened tabs contain Minder files that need to be upgraded to "
 "be edited by this version of Minder.\n"
@@ -1739,31 +2808,31 @@ msgid ""
 "Select an upgrade option below."
 msgstr ""
 
-#: src/MainWindow.vala:2235
+#: src/MainWindow.vala:2376
 #, fuzzy
 msgid "Quit Minder"
 msgstr "关于 Minder"
 
-#: src/MainWindow.vala:2255
+#: src/MainWindow.vala:2396
 #, fuzzy
 msgid "Detail"
 msgstr "拆分"
 
-#: src/MainWindow.vala:2263
+#: src/MainWindow.vala:2404
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session.  This action is irreversible as older versions of Minder "
 "cannot read the upgraded format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2264
+#: src/MainWindow.vala:2405
 msgid ""
 "<small>Upgrades each Minder file which had a tab opened for it in the last "
 "Minder session, but saves a copy of the older, original file in its original "
 "directory.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2265
+#: src/MainWindow.vala:2406
 msgid ""
 "<small>Leaves each Minder file in the original format, but opens each tab as "
 "read-only.  Read-only mindmaps can be viewed but cannot be changed.  To "
@@ -1771,102 +2840,102 @@ msgid ""
 "bar to write it to the newer format.</small>"
 msgstr ""
 
-#: src/MainWindow.vala:2272
+#: src/MainWindow.vala:2413
 msgid "Use the selected option when future older Minder files are opened"
 msgstr ""
 
-#: src/MainWindow.vala:2297
+#: src/MainWindow.vala:2438
 msgid "Upgrades Needed"
 msgstr ""
 
-#: src/MapInspector.vala:113
+#: src/MapInspector.vala:112
 #, fuzzy
 msgid "Read-only"
 msgstr "只读"
 
-#: src/MapInspector.vala:148
+#: src/MapInspector.vala:147
 msgid "Hide connections"
 msgstr "隐藏连接"
 
-#: src/MapInspector.vala:184
+#: src/MapInspector.vala:183
 msgid "Hide callouts"
 msgstr "隐藏标记"
 
-#: src/MapInspector.vala:228
+#: src/MapInspector.vala:226
 msgid "Node Layouts"
 msgstr "节点布局"
 
-#: src/MapInspector.vala:282
+#: src/MapInspector.vala:276
 #, fuzzy
 msgid "Node Alignment"
 msgstr "节点对齐"
 
-#: src/MapInspector.vala:289
+#: src/MapInspector.vala:283
 #, fuzzy
 msgid "Align left edges"
 msgstr "左对齐"
 
-#: src/MapInspector.vala:293
+#: src/MapInspector.vala:287
 #, fuzzy
 msgid "Align horizontal centers"
 msgstr "水平居中对齐"
 
-#: src/MapInspector.vala:297
+#: src/MapInspector.vala:291
 #, fuzzy
 msgid "Align right edges"
 msgstr "右对齐"
 
-#: src/MapInspector.vala:301
+#: src/MapInspector.vala:295
 #, fuzzy
 msgid "Align top edges"
 msgstr "对齐节点"
 
-#: src/MapInspector.vala:305
+#: src/MapInspector.vala:299
 #, fuzzy
 msgid "Align vertical centers"
 msgstr "垂直居中对齐"
 
-#: src/MapInspector.vala:309
+#: src/MapInspector.vala:303
 #, fuzzy
 msgid "Align bottom edges"
 msgstr "底部对齐"
 
-#: src/MapInspector.vala:351
+#: src/MapInspector.vala:345
 msgid "Themes"
 msgstr "主题"
 
-#: src/MapInspector.vala:378
+#: src/MapInspector.vala:372
 msgid "Add Custom Theme"
 msgstr "添加自定义主题"
 
-#: src/MapInspector.vala:396
+#: src/MapInspector.vala:390
 msgid "Copy location of temporary directory"
 msgstr ""
 
-#: src/MapInspector.vala:421
+#: src/MapInspector.vala:415
 #, fuzzy
 msgid "Balance nodes"
 msgstr "平衡节点"
 
-#: src/MapInspector.vala:423
+#: src/MapInspector.vala:417
 msgid "Balance Nodes"
 msgstr "平衡节点"
 
-#: src/MapInspector.vala:427
+#: src/MapInspector.vala:421
 #, fuzzy
 msgid "Fold nodes with completed tasks"
 msgstr "折叠已完成的任务"
 
-#: src/MapInspector.vala:429
+#: src/MapInspector.vala:423
 msgid "Fold Completed Tasks"
 msgstr "折叠已完成的任务"
 
-#: src/MapInspector.vala:433
+#: src/MapInspector.vala:427
 #, fuzzy
 msgid "Unfold all nodes"
 msgstr "展开所有节点"
 
-#: src/MapInspector.vala:435
+#: src/MapInspector.vala:429
 msgid "Unfold All Nodes"
 msgstr "展开所有节点"
 
@@ -1874,65 +2943,83 @@ msgstr "展开所有节点"
 msgid "Main Idea"
 msgstr "主要想法"
 
+<<<<<<< HEAD
+#: src/MindMap.vala:1089
+=======
 #: src/MindMap.vala:1085
+>>>>>>> master
 msgid "Select a link color"
 msgstr "选择链接颜色"
 
-#: src/NodeGroup.vala:167
+#: src/NodeGroup.vala:165
 #, fuzzy
 msgid "Group Note"
 msgstr "添加群组"
 
-#: src/NodeInspector.vala:120
+#: src/NodeInspector.vala:115
 msgid "Task"
 msgstr "任务"
 
-#: src/NodeInspector.vala:146
+#: src/NodeInspector.vala:141
 msgid "Fold"
 msgstr "折叠"
 
-#: src/NodeInspector.vala:172
+#: src/NodeInspector.vala:167
 msgid "Sequence"
 msgstr ""
 
-#: src/NodeInspector.vala:181
+#: src/NodeInspector.vala:176
 msgid ""
 "When set, automatically numbers child nodes and displays them as a sequence."
 msgstr ""
 
-#: src/NodeInspector.vala:236
+#: src/NodeInspector.vala:209
+#, fuzzy
+msgid "Select Link Color"
+msgstr "选择链接颜色"
+
+#: src/NodeInspector.vala:238
 msgid "Override Color"
 msgstr "覆盖颜色"
 
-#: src/NodeInspector.vala:351 src/NodeInspector.vala:375
+#: src/NodeInspector.vala:262
+#, fuzzy
+msgid "Select Root Color"
+msgstr "选择根节点"
+
+#: src/NodeInspector.vala:360 src/NodeInspector.vala:384
 msgid "Image"
 msgstr "图像"
 
-#: src/NodeInspector.vala:357
+#: src/NodeInspector.vala:366 src/NodeMenu.vala:71
 msgid "Add Image…"
 msgstr "添加图像……"
 
+<<<<<<< HEAD
+#: src/NodeInspector.vala:393 src/Shortcuts.vala:831
+=======
 #: src/NodeInspector.vala:384 src/Shortcuts.vala:815
+>>>>>>> master
 msgid "Edit Image"
 msgstr "编辑图像"
 
-#: src/NodeInspector.vala:401
+#: src/NodeInspector.vala:410
 msgid "Resizable"
 msgstr "可调整大小"
 
-#: src/NodeInspector.vala:488
+#: src/NodeInspector.vala:500
 msgid "Copy Node To Clipboard"
 msgstr "将节点复制到剪贴板"
 
-#: src/NodeInspector.vala:493
+#: src/NodeInspector.vala:505
 msgid "Cut Node To Clipboard"
 msgstr "将节点剪切到剪贴板"
 
-#: src/NodeInspector.vala:499
+#: src/NodeInspector.vala:511
 msgid "Detach Node"
 msgstr "拆分节点"
 
-#: src/NodeInspector.vala:509
+#: src/NodeInspector.vala:517
 msgid "Delete Node"
 msgstr "删除节点"
 
@@ -1948,7 +3035,7 @@ msgstr "复制"
 msgid "Cut"
 msgstr "剪切"
 
-#: src/NodeMenu.vala:39 src/NodeMenu.vala:245 src/NodeMenu.vala:254
+#: src/NodeMenu.vala:39 src/NodeMenu.vala:276 src/NodeMenu.vala:285
 msgid "Paste and Replace Node"
 msgstr "粘贴和替换节点"
 
@@ -1956,285 +3043,319 @@ msgstr "粘贴和替换节点"
 msgid "Delete Single Node"
 msgstr "删除单个节点"
 
-#: src/NodeMenu.vala:44
+#: src/NodeMenu.vala:51 src/NodesMenu.vala:45
+#, fuzzy
+msgid "Clear Priority"
+msgstr "中优先级"
+
+#: src/NodeMenu.vala:58
 msgid "Set to color…"
 msgstr "设置颜色……"
 
-#: src/NodeMenu.vala:45
+#: src/NodeMenu.vala:59
 msgid "Randomize color"
 msgstr "颜色随机"
 
-#: src/NodeMenu.vala:46
+#: src/NodeMenu.vala:60
 msgid "Use parent color"
 msgstr "使用父节点颜色"
 
-#: src/NodeMenu.vala:49
+#: src/NodeMenu.vala:63
 msgid "One Level"
 msgstr ""
 
-#: src/NodeMenu.vala:50
+#: src/NodeMenu.vala:64
 msgid "All Levels"
 msgstr ""
 
-#: src/NodeMenu.vala:53
+#: src/NodeMenu.vala:67
 msgid "Edit Text…"
 msgstr "编辑文本……"
 
-#: src/NodeMenu.vala:55 src/NodesMenu.vala:43
+#: src/NodeMenu.vala:69 src/NodesMenu.vala:57
 #, fuzzy
 msgid "Edit Tags"
 msgstr "编辑图像"
 
-#: src/NodeMenu.vala:56 src/NodeMenu.vala:230
+#: src/NodeMenu.vala:70 src/NodeMenu.vala:259
 msgid "Add Task"
 msgstr "添加任务"
 
-#: src/NodeMenu.vala:57 src/NodeMenu.vala:234
-msgid "Add Image"
-msgstr "添加图像"
+#: src/NodeMenu.vala:72 src/NodeMenu.vala:264
+#, fuzzy
+msgid "Add Table…"
+msgstr "添加图像……"
 
-#: src/NodeMenu.vala:59 src/NodeMenu.vala:231
+#: src/NodeMenu.vala:74 src/NodeMenu.vala:260
 msgid "Add Node Link"
 msgstr "添加节点链接"
 
-#: src/NodeMenu.vala:60
+#: src/NodeMenu.vala:75
 msgid "Add Connection"
 msgstr "添加连接"
 
-#: src/NodeMenu.vala:61
+#: src/NodeMenu.vala:76
 msgid "Add Group"
 msgstr "添加群组"
 
-#: src/NodeMenu.vala:62 src/NodeMenu.vala:233
+#: src/NodeMenu.vala:77 src/NodeMenu.vala:262
 msgid "Add Callout"
 msgstr "添加标记"
 
-#: src/NodeMenu.vala:63 src/ThemeEditor.vala:138
+#: src/NodeMenu.vala:78 src/NodesMenu.vala:58
+#, fuzzy
+msgid "Priority"
+msgstr "低优先级"
+
+#: src/NodeMenu.vala:79 src/ThemeEditor.vala:138
 msgid "Link Color"
 msgstr "链接颜色"
 
-#: src/NodeMenu.vala:64
+#: src/NodeMenu.vala:80
 #, fuzzy
 msgid "Toggle Folding"
 msgstr "切换折叠"
 
-#: src/NodeMenu.vala:65
+#: src/NodeMenu.vala:81
 #, fuzzy
 msgid "Toggle Sequence"
 msgstr "切换项目选择"
 
-#: src/NodeMenu.vala:68
+#: src/NodeMenu.vala:84
 msgid "Change Node"
 msgstr "修改节点"
 
-#: src/NodeMenu.vala:72
+#: src/NodeMenu.vala:88
 msgid "Add Parent Node"
 msgstr "添加父节点"
 
-#: src/NodeMenu.vala:73
+#: src/NodeMenu.vala:89
 msgid "Add Child Node"
 msgstr "添加子节点"
 
-#: src/NodeMenu.vala:74
+#: src/NodeMenu.vala:90
 msgid "Add Sibling Node"
 msgstr "添加同级节点"
 
-#: src/NodeMenu.vala:77
+#: src/NodeMenu.vala:93
 msgid "Insert Nodes"
 msgstr "插入节点"
 
-#: src/NodeMenu.vala:78
+#: src/NodeMenu.vala:94
 msgid "Replace Nodes"
 msgstr "替换节点"
 
-#: src/NodeMenu.vala:81
+#: src/NodeMenu.vala:97
 msgid "Add Node"
 msgstr "添加节点"
 
-#: src/NodeMenu.vala:83 src/QuickEntry.vala:40
+#: src/NodeMenu.vala:99 src/QuickEntry.vala:40
 msgid "Quick Entry"
 msgstr "快速输入"
 
-#: src/NodeMenu.vala:86
+#: src/NodeMenu.vala:102
 msgid "Root Node"
 msgstr "根节点"
 
-#: src/NodeMenu.vala:87
+#: src/NodeMenu.vala:103
 msgid "Next Sibling Node"
 msgstr "下一个同级节点"
 
-#: src/NodeMenu.vala:88
+#: src/NodeMenu.vala:104
 msgid "Previous Sibling Node"
 msgstr "上一个同级节点"
 
-#: src/NodeMenu.vala:89
+#: src/NodeMenu.vala:105
 msgid "Child Node"
 msgstr "子节点"
 
-#: src/NodeMenu.vala:90 src/NodesMenu.vala:56
+#: src/NodeMenu.vala:106 src/NodesMenu.vala:71
 msgid "Child Nodes"
 msgstr "子节点"
 
-#: src/NodeMenu.vala:91
+#: src/NodeMenu.vala:107
 msgid "Subtree"
 msgstr "子树"
 
-#: src/NodeMenu.vala:92
+#: src/NodeMenu.vala:108
 msgid "Parent Node"
 msgstr "父节点"
 
-#: src/NodeMenu.vala:93
+#: src/NodeMenu.vala:109
 msgid "Linked Node"
 msgstr "已链接的节点"
 
-#: src/NodeMenu.vala:105
+#: src/NodeMenu.vala:121
 msgid "Center Current Node"
 msgstr "当前节点居中"
 
-#: src/NodeMenu.vala:108
+#: src/NodeMenu.vala:124
 msgid "Alphabetically"
 msgstr "按字母顺序"
 
-#: src/NodeMenu.vala:109
+#: src/NodeMenu.vala:125
 #, fuzzy
 msgid "Randomly"
 msgstr "随机"
 
-#: src/NodeMenu.vala:112
+#: src/NodeMenu.vala:128
 msgid "Sort Children"
 msgstr "对子项进行排序"
 
-#: src/NodeMenu.vala:115
+#: src/NodeMenu.vala:131
 msgid "Detach"
 msgstr "拆分"
 
-#: src/NodeMenu.vala:228
+#: src/NodeMenu.vala:257
 msgid "Remove Task"
 msgstr "删除任务"
 
-#: src/NodeMenu.vala:229
+#: src/NodeMenu.vala:258
 msgid "Mark Task As Done"
 msgstr "将任务标记为已完成"
 
-#: src/NodeMenu.vala:231
+#: src/NodeMenu.vala:260
 msgid "Remove Node Link"
 msgstr "删除节点链接"
 
-#: src/NodeMenu.vala:232
+#: src/NodeMenu.vala:261
 msgid "Unfold Children"
 msgstr "展开子节点"
 
-#: src/NodeMenu.vala:232
+#: src/NodeMenu.vala:261
 msgid "Fold Children"
 msgstr "折叠子节点"
 
-#: src/NodeMenu.vala:233
+#: src/NodeMenu.vala:262
 msgid "Remove Callout"
 msgstr "删除标记"
 
-#: src/NodeMenu.vala:244
+#: src/NodeMenu.vala:263
+msgid "Add Image"
+msgstr "添加图像"
+
+#: src/NodeMenu.vala:264
+#, fuzzy
+msgid "Edit Table…"
+msgstr "编辑标题……"
+
+#: src/NodeMenu.vala:275
 msgid "Paste Node As Child"
 msgstr "将节点粘贴为子节点"
 
-#: src/NodeMenu.vala:247
+#: src/NodeMenu.vala:278
 msgid "Paste Image As Child Node"
 msgstr "将图像粘贴为子节点"
 
-#: src/NodeMenu.vala:248
+#: src/NodeMenu.vala:279
 msgid "Paste and Replace Node Image"
 msgstr "粘贴和替换节点图像"
 
-#: src/NodeMenu.vala:250
+#: src/NodeMenu.vala:281
 msgid "Paste Text As Child Node"
 msgstr "将文本粘贴为子节点"
 
-#: src/NodeMenu.vala:251
+#: src/NodeMenu.vala:282
 msgid "Paste and Replace Node Text"
 msgstr "粘贴和替换节点文本"
 
-#: src/NodesMenu.vala:38
+#: src/NodesMenu.vala:52
 #, fuzzy
 msgid "Set To Color…"
 msgstr "设置颜色……"
 
-#: src/NodesMenu.vala:39
+#: src/NodesMenu.vala:53
 #, fuzzy
 msgid "Randomize Colors"
 msgstr "颜色随机"
 
-#: src/NodesMenu.vala:40
+#: src/NodesMenu.vala:54
 #, fuzzy
 msgid "Use Parent Color"
 msgstr "使用父节点颜色"
 
-#: src/NodesMenu.vala:44 src/ThemeEditor.vala:129
+#: src/NodesMenu.vala:59 src/ThemeEditor.vala:129
 msgid "Link Colors"
 msgstr "链接颜色"
 
-#: src/NodesMenu.vala:45
+#: src/NodesMenu.vala:60
 msgid "Toggle Tasks"
 msgstr "切换任务"
 
-#: src/NodesMenu.vala:46
+#: src/NodesMenu.vala:61
 #, fuzzy
 msgid "Toggle Folds"
 msgstr "切换折叠"
 
-#: src/NodesMenu.vala:47
+#: src/NodesMenu.vala:62
 #, fuzzy
 msgid "Toggle Sequences"
 msgstr "切换项目选择"
 
-#: src/NodesMenu.vala:50
+#: src/NodesMenu.vala:65
 msgid "Connect"
 msgstr "连接"
 
-#: src/NodesMenu.vala:51
+#: src/NodesMenu.vala:66
 msgid "Link Nodes"
 msgstr "链接节点"
 
-#: src/NodesMenu.vala:55
+#: src/NodesMenu.vala:70
 msgid "Parent Nodes"
 msgstr "父节点"
 
-#: src/NodesMenu.vala:62
+#: src/NodesMenu.vala:77
 msgid "Align Top"
 msgstr "上部对齐"
 
-#: src/NodesMenu.vala:63
+#: src/NodesMenu.vala:78
 msgid "Align Center Horizontally"
 msgstr "水平居中对齐"
 
-#: src/NodesMenu.vala:64
+#: src/NodesMenu.vala:79
 msgid "Align Bottom"
 msgstr "下部对齐"
 
-#: src/NodesMenu.vala:67
+#: src/NodesMenu.vala:82 src/TableEditor.vala:320
 msgid "Align Left"
 msgstr "左对齐"
 
-#: src/NodesMenu.vala:68
+#: src/NodesMenu.vala:83
 msgid "Align Center Vertically"
 msgstr "垂直居中对齐"
 
-#: src/NodesMenu.vala:69
+#: src/NodesMenu.vala:84 src/TableEditor.vala:322
 msgid "Align Right"
 msgstr "右对齐"
 
-#: src/NodesMenu.vala:76
+#: src/NodesMenu.vala:91
 #, fuzzy
 msgid "Align"
 msgstr "上部对齐"
 
-#: src/Node.vala:2689
+#: src/NodeTable.vala:372
+msgid "Table Truncated"
+msgstr ""
+
+#: src/NodeTable.vala:373
+#, c-format
+msgid "Tables are limited to %d rows, %d columns, and %d cells."
+msgstr ""
+
+#: src/Node.vala:2883
 msgid "Node Title"
 msgstr "节点标题"
 
-#: src/Node.vala:2697
+#: src/Node.vala:2889
 msgid "Node Note"
 msgstr "节点备注"
 
-#: src/Node.vala:2707
+#: src/Node.vala:2895
+#, fuzzy
+msgid "Node Table"
+msgstr "节点标题"
+
+#: src/Node.vala:2903
 msgid "Callout Text"
 msgstr "标记文本"
 
@@ -2418,6 +3539,25 @@ msgstr "节点命令"
 msgid "Search shortcuts"
 msgstr "Minder快捷键"
 
+<<<<<<< HEAD
+#: src/Preferences.vala:476
+msgid "Show upgrade dialog when file upgrade is needed"
+msgstr ""
+
+#: src/Preferences.vala:480
+msgid "Show temporary directory containing current mindmap in map sidebar"
+msgstr ""
+
+#: src/Preferences.vala:490
+msgid "Default file upgrade action"
+msgstr ""
+
+#: src/Preferences.vala:564 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
+msgid "None"
+msgstr "无"
+
+#: src/Preferences.vala:565
+=======
 #: src/Preferences.vala:467
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr ""
@@ -2435,44 +3575,77 @@ msgid "None"
 msgstr "无"
 
 #: src/Preferences.vala:556
+>>>>>>> master
 #, fuzzy
 msgid "Enter shortcut"
 msgstr "Minder快捷键"
 
+<<<<<<< HEAD
+#: src/Preferences.vala:733
+msgid "Unable to set new shortcut due to conflicts"
+msgstr ""
+
+#: src/Preferences.vala:734
+=======
 #: src/Preferences.vala:724
 msgid "Unable to set new shortcut due to conflicts"
 msgstr ""
 
 #: src/Preferences.vala:725
+>>>>>>> master
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/Preferences.vala:799
+=======
 #: src/Preferences.vala:790
+>>>>>>> master
 #, fuzzy
 msgid "Clear all shortcuts?"
 msgstr "Minder快捷键"
 
+<<<<<<< HEAD
+#: src/Preferences.vala:799 src/Preferences.vala:810
+msgid "Current shortcut settings will be lost"
+msgstr ""
+
+#: src/Preferences.vala:810
+=======
 #: src/Preferences.vala:790 src/Preferences.vala:801
 msgid "Current shortcut settings will be lost"
 msgstr ""
 
 #: src/Preferences.vala:801
+>>>>>>> master
 #, fuzzy
 msgid "Use Minder Default Shortcuts?"
 msgstr "Minder快捷键"
 
+<<<<<<< HEAD
+#: src/Preferences.vala:842 src/Preferences.vala:860
+=======
 #: src/Preferences.vala:833 src/Preferences.vala:851
+>>>>>>> master
 #, fuzzy
 msgid "Minder Default"
 msgstr "默认"
 
+<<<<<<< HEAD
+#: src/Preferences.vala:845 src/Preferences.vala:861
+=======
 #: src/Preferences.vala:836 src/Preferences.vala:852
+>>>>>>> master
 #, fuzzy
 msgid "Last Used"
 msgstr "重做上次撤消"
 
+<<<<<<< HEAD
+#: src/Preferences.vala:847 src/Preferences.vala:865
+=======
 #: src/Preferences.vala:838 src/Preferences.vala:856
+>>>>>>> master
 #, c-format
 msgid "Named Style: %s"
 msgstr ""
@@ -2486,10 +3659,6 @@ msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
 msgstr "每行文本描述一个节点的标题或一个节点的注释信息。"
-
-#: src/QuickEntry.vala:89
-msgid "Tab"
-msgstr "Tab键"
 
 #: src/QuickEntry.vala:90
 msgid "Creates a child node of the previous node."
@@ -2541,11 +3710,30 @@ msgstr "替换"
 msgid "Insert"
 msgstr "插入"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:806 src/Shortcuts.vala:812
+=======
 #: src/Shortcuts.vala:790 src/Shortcuts.vala:796
+>>>>>>> master
 #, fuzzy
 msgid "No Shortcuts Set"
 msgstr "Minder快捷键"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:827
+msgid "Mouse Events"
+msgstr "鼠标事件"
+
+#: src/Shortcuts.vala:830
+msgid "Show Contextual Menu"
+msgstr "显示上下文菜单"
+
+#: src/Shortcuts.vala:830
+msgid "[Right-click when item is selected]"
+msgstr "[选择项目时单击鼠标右键]"
+
+#: src/Shortcuts.vala:831
+=======
 #: src/Shortcuts.vala:811
 msgid "Mouse Events"
 msgstr "鼠标事件"
@@ -2559,10 +3747,38 @@ msgid "[Right-click when item is selected]"
 msgstr "[选择项目时单击鼠标右键]"
 
 #: src/Shortcuts.vala:815
+>>>>>>> master
 #, fuzzy
 msgid "[Double left-click image]"
 msgstr "[双击图像]"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:833
+msgid "Canvas Movement"
+msgstr "画布移动"
+
+#: src/Shortcuts.vala:834
+msgid "Pan Canvas"
+msgstr "平移画布"
+
+#: src/Shortcuts.vala:834
+msgid "[Middle-click + Drag / Alt + Motion]"
+msgstr "[中键点击 + 拖动 / Alt键 + 拖动]"
+
+#: src/Shortcuts.vala:835
+msgid "Scroll Vertically"
+msgstr "垂直滚动"
+
+#: src/Shortcuts.vala:835
+msgid "[Scrollwheel up/down]"
+msgstr "[滚轮上/下]"
+
+#: src/Shortcuts.vala:836
+msgid "Scroll Horizontally"
+msgstr "水平滚动"
+
+#: src/Shortcuts.vala:836
+=======
 #: src/Shortcuts.vala:817
 msgid "Canvas Movement"
 msgstr "画布移动"
@@ -2588,10 +3804,58 @@ msgid "Scroll Horizontally"
 msgstr "水平滚动"
 
 #: src/Shortcuts.vala:820
+>>>>>>> master
 #, fuzzy
 msgid "[Scrollwheel left/right]"
 msgstr "[滚轮上/下]"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:838
+msgid "Item Selection"
+msgstr "项目选择"
+
+#: src/Shortcuts.vala:839
+msgid "Select Single Item"
+msgstr "选择单个项目"
+
+#: src/Shortcuts.vala:839
+msgid "[Left-click on item]"
+msgstr "[左键点击项目]"
+
+#: src/Shortcuts.vala:840
+msgid "Select Child Nodes"
+msgstr "选择子节点"
+
+#: src/Shortcuts.vala:840
+msgid "[Control + Left-click on parent node]"
+msgstr "[Ctrl键 + 左键点击父节点]"
+
+#: src/Shortcuts.vala:841
+msgid "Select Node Tree/Subtree"
+msgstr "选择节点树/子树"
+
+#: src/Shortcuts.vala:841
+msgid "[Control + Double left-click on parent node]"
+msgstr "[Ctrl键 + 双击父节点]"
+
+#: src/Shortcuts.vala:842
+msgid "Select All Nodes at Same Depth Level"
+msgstr "选择相同层级的所有节点"
+
+#: src/Shortcuts.vala:842
+msgid "[Control + Triple left-click on node]"
+msgstr "[Ctrl键 + 三次左键点击节点]"
+
+#: src/Shortcuts.vala:843
+msgid "Block Selection"
+msgstr "块选择"
+
+#: src/Shortcuts.vala:843
+msgid "[Left-click + Drag]"
+msgstr "[左键点击 + 拖动]"
+
+#: src/Shortcuts.vala:845
+=======
 #: src/Shortcuts.vala:822
 msgid "Item Selection"
 msgstr "项目选择"
@@ -2637,10 +3901,42 @@ msgid "[Left-click + Drag]"
 msgstr "[左键点击 + 拖动]"
 
 #: src/Shortcuts.vala:829
+>>>>>>> master
 #, fuzzy
 msgid "Item Selection Toggle"
 msgstr "项目选择"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:846
+msgid "Toggle Selection of Item"
+msgstr "切换项目选择"
+
+#: src/Shortcuts.vala:846
+msgid "[Shift + Left-click on item]"
+msgstr "[Shift键 + 左键点击项目]"
+
+#: src/Shortcuts.vala:847
+msgid "Toggle Selection of Child Nodes"
+msgstr "切换子节点的选择"
+
+#: src/Shortcuts.vala:847
+msgid "[Shift + Control + Left-click on item]"
+msgstr "[Shift键 + Ctrl键 + 左键点击项目]"
+
+#: src/Shortcuts.vala:848
+msgid "Toggle Selection of Node Tree/Subtree"
+msgstr "切换节点树/子树的选择"
+
+#: src/Shortcuts.vala:848
+msgid "[Shift + Control + Double left-click on parent node]"
+msgstr "[Shift键 + Ctrl键 + 双击父节点]"
+
+#: src/Shortcuts.vala:849
+msgid "Toggle Selection of All Nodes at Same Depth Level"
+msgstr "切换相同层级的所有节点的选择"
+
+#: src/Shortcuts.vala:849
+=======
 #: src/Shortcuts.vala:830
 msgid "Toggle Selection of Item"
 msgstr "切换项目选择"
@@ -2670,10 +3966,22 @@ msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr "切换相同层级的所有节点的选择"
 
 #: src/Shortcuts.vala:833
+>>>>>>> master
 #, fuzzy
 msgid "[Shift + Control + Triple-click on node]"
 msgstr "[Shift键 + Ctrl键 + 三次左键点击节点]"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:851
+msgid "Text Selection"
+msgstr "文本选择"
+
+#: src/Shortcuts.vala:852
+msgid "Set Cursor Insert Point"
+msgstr "设置光标插入点"
+
+#: src/Shortcuts.vala:852
+=======
 #: src/Shortcuts.vala:835
 msgid "Text Selection"
 msgstr "文本选择"
@@ -2683,20 +3991,33 @@ msgid "Set Cursor Insert Point"
 msgstr "设置光标插入点"
 
 #: src/Shortcuts.vala:836
+>>>>>>> master
 #, fuzzy
 msgid "[Left-click in text]"
 msgstr "[左键点击项目]"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:853
+=======
 #: src/Shortcuts.vala:837
+>>>>>>> master
 #, fuzzy
 msgid "Select Current Word"
 msgstr "选择当前单词"
 
+<<<<<<< HEAD
+#: src/Shortcuts.vala:853
+msgid "[Double left-click on word]"
+msgstr "[双击单词]"
+
+#: src/Shortcuts.vala:854
+=======
 #: src/Shortcuts.vala:837
 msgid "[Double left-click on word]"
 msgstr "[双击单词]"
 
 #: src/Shortcuts.vala:838
+>>>>>>> master
 #, fuzzy
 msgid "[Triple left-click text]"
 msgstr "[在文本中的任意位置单击三次左键]"
@@ -2736,11 +4057,11 @@ msgstr "显示自定义贴纸目录"
 msgid "Add custom stickers"
 msgstr "添加自定义贴纸"
 
-#: src/StickerInspector.vala:484
+#: src/StickerInspector.vala:490
 msgid "Import Sticker(s)"
 msgstr "导入贴纸"
 
-#: src/StickerInspector.vala:484 src/StickerSet.vala:353
+#: src/StickerInspector.vala:490 src/StickerSet.vala:353
 msgid "Import"
 msgstr "导入"
 
@@ -2764,7 +4085,7 @@ msgstr "工业"
 msgid "Mobile"
 msgstr "移动"
 
-#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1240
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:1232
 msgid "Arrows"
 msgstr "箭头"
 
@@ -3744,13 +5065,13 @@ msgstr "向上"
 msgid "Right up"
 msgstr "右上"
 
-#: src/StickerSet.vala:290 src/StyleInspector.vala:1051
-#: src/StyleInspector.vala:1483 src/StyleInspector.vala:1648
+#: src/StickerSet.vala:290 src/StyleInspector.vala:1043
+#: src/StyleInspector.vala:1475 src/StyleInspector.vala:1640
 msgid "Left"
 msgstr "向左"
 
-#: src/StickerSet.vala:291 src/StyleInspector.vala:1053
-#: src/StyleInspector.vala:1485 src/StyleInspector.vala:1650
+#: src/StickerSet.vala:291 src/StyleInspector.vala:1045
+#: src/StyleInspector.vala:1477 src/StyleInspector.vala:1642
 msgid "Right"
 msgstr "向右"
 
@@ -4006,7 +5327,7 @@ msgstr "选定的连接"
 msgid "Selected Callouts"
 msgstr "选定的标记"
 
-#: src/StyleInspector.vala:41
+#: src/StyleInspector.vala:40
 msgid "Unknown"
 msgstr "未知"
 
@@ -4042,116 +5363,116 @@ msgstr "模板"
 msgid "Branch Options"
 msgstr "分支选项"
 
-#: src/StyleInspector.vala:419
+#: src/StyleInspector.vala:415
 msgid "Corner Radius"
 msgstr "圆角半径"
 
-#: src/StyleInspector.vala:464 src/StyleInspector.vala:904
+#: src/StyleInspector.vala:460 src/StyleInspector.vala:896
 msgid "Margin"
 msgstr "边矩"
 
-#: src/StyleInspector.vala:527
+#: src/StyleInspector.vala:523
 msgid "Link Options"
 msgstr "链接选项"
 
-#: src/StyleInspector.vala:550 src/StyleInspector.vala:1199
+#: src/StyleInspector.vala:546 src/StyleInspector.vala:1191
 msgid "Line Dash"
 msgstr "线形"
 
-#: src/StyleInspector.vala:591 src/StyleInspector.vala:1327
+#: src/StyleInspector.vala:587 src/StyleInspector.vala:1319
 msgid "Line Width"
 msgstr "线宽"
 
-#: src/StyleInspector.vala:643
+#: src/StyleInspector.vala:639
 msgid "Link Arrow"
 msgstr "链接箭头"
 
-#: src/StyleInspector.vala:677
+#: src/StyleInspector.vala:673
 #, fuzzy
 msgid "Link Arrow Size"
 msgstr "链接箭头"
 
-#: src/StyleInspector.vala:752 src/Templates.vala:59 src/Templates.vala:64
+#: src/StyleInspector.vala:748 src/Templates.vala:59 src/Templates.vala:64
 msgid "Node Options"
 msgstr "节点选项"
 
-#: src/StyleInspector.vala:775
+#: src/StyleInspector.vala:771
 msgid "Border Style"
 msgstr "边框样式"
 
-#: src/StyleInspector.vala:818
+#: src/StyleInspector.vala:810
 msgid "Border Width"
 msgstr "边框宽度"
 
-#: src/StyleInspector.vala:869
+#: src/StyleInspector.vala:861
 msgid "Color Fill"
 msgstr "颜色填充"
 
-#: src/StyleInspector.vala:878
+#: src/StyleInspector.vala:870
 msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
 msgstr "当节点边框是矩形、圆形或药丸形状时，使用颜色填充节点"
 
-#: src/StyleInspector.vala:949 src/StyleInspector.vala:1380
-#: src/StyleInspector.vala:1679
+#: src/StyleInspector.vala:941 src/StyleInspector.vala:1372
+#: src/StyleInspector.vala:1671
 msgid "Padding"
 msgstr "填充"
 
-#: src/StyleInspector.vala:994
+#: src/StyleInspector.vala:986
 msgid "Font"
 msgstr "字体"
 
-#: src/StyleInspector.vala:1040 src/StyleInspector.vala:1472
-#: src/StyleInspector.vala:1637
+#: src/StyleInspector.vala:1032 src/StyleInspector.vala:1464
+#: src/StyleInspector.vala:1629
 #, fuzzy
 msgid "Text Alignment"
 msgstr "节点对齐"
 
-#: src/StyleInspector.vala:1052 src/StyleInspector.vala:1484
-#: src/StyleInspector.vala:1649
+#: src/StyleInspector.vala:1044 src/StyleInspector.vala:1476
+#: src/StyleInspector.vala:1641
 #, fuzzy
 msgid "Center"
 msgstr "居中视图"
 
-#: src/StyleInspector.vala:1082
+#: src/StyleInspector.vala:1074
 msgid "Width"
 msgstr "宽度"
 
-#: src/StyleInspector.vala:1115
+#: src/StyleInspector.vala:1107
 msgid "Enable Markup"
 msgstr "启用标记"
 
-#: src/StyleInspector.vala:1176 src/Templates.vala:60 src/Templates.vala:65
+#: src/StyleInspector.vala:1168 src/Templates.vala:60 src/Templates.vala:65
 msgid "Connection Options"
 msgstr "连接选项"
 
-#: src/StyleInspector.vala:1280
+#: src/StyleInspector.vala:1272
 #, fuzzy
 msgid "Arrow Size"
 msgstr "箭头"
 
-#: src/StyleInspector.vala:1426
+#: src/StyleInspector.vala:1418
 msgid "Title Font"
 msgstr "标题字体"
 
-#: src/StyleInspector.vala:1514
+#: src/StyleInspector.vala:1506
 msgid "Title Width"
 msgstr "标题宽度"
 
-#: src/StyleInspector.vala:1567 src/Templates.vala:61 src/Templates.vala:66
+#: src/StyleInspector.vala:1559 src/Templates.vala:61 src/Templates.vala:66
 msgid "Callout Options"
 msgstr "标记选项"
 
-#: src/StyleInspector.vala:1591
+#: src/StyleInspector.vala:1583
 msgid "Text Font"
 msgstr "文本字体"
 
-#: src/StyleInspector.vala:1725
+#: src/StyleInspector.vala:1717
 msgid "Pointer Width"
 msgstr "指针宽度"
 
-#: src/StyleInspector.vala:1771
+#: src/StyleInspector.vala:1763
 msgid "Pointer Length"
 msgstr "指标长度"
 
@@ -4207,6 +5528,110 @@ msgstr "短划线"
 msgid "Long Dash"
 msgstr "长破折号"
 
+#: src/TableEditor.vala:234
+#, fuzzy
+msgid "Add Row Above"
+msgstr "添加根节点"
+
+#: src/TableEditor.vala:235
+#, fuzzy
+msgid "Add Row Below"
+msgstr "添加根节点"
+
+#: src/TableEditor.vala:237
+#, fuzzy
+msgid "Delete Selected Rows"
+msgstr "选定的节点"
+
+#: src/TableEditor.vala:243
+#, fuzzy
+msgid "Row Actions"
+msgstr "连接"
+
+#: src/TableEditor.vala:253
+#, fuzzy
+msgid "Add Column Left"
+msgstr "添加列"
+
+#: src/TableEditor.vala:254
+#, fuzzy
+msgid "Add Column Right"
+msgstr "添加列"
+
+#: src/TableEditor.vala:256
+#, fuzzy
+msgid "Delete Selected Columns"
+msgstr "删除列"
+
+#: src/TableEditor.vala:262
+#, fuzzy
+msgid "Column Actions"
+msgstr "连接"
+
+#: src/TableEditor.vala:308
+msgid "Undo Table Edit (Ctrl+Z)"
+msgstr ""
+
+#: src/TableEditor.vala:311
+#, fuzzy
+msgid "Paste Table"
+msgstr "粘贴文本"
+
+#: src/TableEditor.vala:314
+#, fuzzy
+msgid "Merge Selection"
+msgstr "清除选择"
+
+#: src/TableEditor.vala:315
+msgid "Split Cell"
+msgstr ""
+
+#: src/TableEditor.vala:316
+#, fuzzy
+msgid "Clear Cells"
+msgstr "全部清除"
+
+#: src/TableEditor.vala:317 src/TextMenu.vala:41
+msgid "Insert Emoji"
+msgstr "插入表情符号"
+
+#: src/TableEditor.vala:321
+#, fuzzy
+msgid "Align Center"
+msgstr "对齐"
+
+#: src/TableEditor.vala:326
+#, fuzzy
+msgid "Highlight Cells"
+msgstr "右对齐"
+
+#: src/TableEditor.vala:330
+msgid "Bold"
+msgstr ""
+
+#: src/TableEditor.vala:334
+msgid "Italic"
+msgstr ""
+
+#: src/TableEditor.vala:338
+#, fuzzy
+msgid "Underline"
+msgstr "下划线"
+
+#: src/TableEditor.vala:342
+msgid "Strikethrough"
+msgstr ""
+
+#: src/TableEditor.vala:356
+#, fuzzy
+msgid "Selected cells:"
+msgstr "选定的节点"
+
+#: src/TableEditor.vala:362
+#, fuzzy
+msgid "Delete Table"
+msgstr "删除数据库"
+
 #: src/TagEditor.vala:60
 #, fuzzy
 msgid "Click to change tag color"
@@ -4227,19 +5652,19 @@ msgstr ""
 msgid "Enter tag name"
 msgstr ""
 
-#: src/TagEditor.vala:157 src/TagEditor.vala:252
+#: src/TagEditor.vala:157 src/TagEditor.vala:248
 msgid "Click to add tag to highlight list"
 msgstr ""
 
-#: src/TagEditor.vala:251
+#: src/TagEditor.vala:247
 msgid "Click to remove tag from highlight"
 msgstr ""
 
-#: src/TagEditor.vala:312
+#: src/TagEditor.vala:307
 msgid "Enter name of tag to find or create"
 msgstr ""
 
-#: src/TagEditor.vala:429
+#: src/TagEditor.vala:424
 #, c-format
 msgid "Create '%s' tag"
 msgstr ""
@@ -4248,18 +5673,18 @@ msgstr ""
 msgid "Add Tag"
 msgstr "添加标签"
 
-#: src/TagInspector.vala:41
+#: src/TagInspector.vala:40
 msgid ""
 "Create, delete, edit mindmap tags.  Add or remove tags in selected node(s).  "
 "Highlight tagged nodes in map."
 msgstr ""
 
-#: src/TagInspector.vala:70
+#: src/TagInspector.vala:69
 #, fuzzy
 msgid "Highlight Mode"
 msgstr "右对齐"
 
-#: src/TagInspector.vala:80
+#: src/TagInspector.vala:79
 msgid "End Tag Highlighting"
 msgstr ""
 
@@ -4318,10 +5743,6 @@ msgstr "分支选项"
 msgid "Node Link Options"
 msgstr "链接选项"
 
-#: src/TextMenu.vala:41
-msgid "Insert Emoji"
-msgstr "插入表情符号"
-
 #: src/TextMenu.vala:44
 msgid "Open Link"
 msgstr "打开链接"
@@ -4338,9 +5759,9 @@ msgstr "编辑链接"
 msgid "Remove Link"
 msgstr "删除链接"
 
-#: src/TextParser.vala:68
-#, c-format
-msgid "Parser regex error (re: %s, error: %s)\n"
+#: src/TextParser.vala:74
+#, fuzzy, c-format
+msgid "Parser regex error (pattern: %s, error: %s)\n"
 msgstr "解析器正则表达式错误（重新： %s， 错误： %s）\n"
 
 #: src/ThemeEditor.vala:52
@@ -4436,27 +5857,32 @@ msgstr "匹配前景"
 msgid "Markdown List Item"
 msgstr "Markdown 列表项目"
 
-#: src/ThemeEditor.vala:212
+#: src/ThemeEditor.vala:187
+#, fuzzy
+msgid "Select color"
+msgstr "选择根节点"
+
+#: src/ThemeEditor.vala:219
 msgid "Custom"
 msgstr "自定义"
 
-#: src/ThemeEditor.vala:234
+#: src/ThemeEditor.vala:241
 msgid "Delete theme?"
 msgstr "要删除主题吗？"
 
-#: src/ThemeEditor.vala:235
+#: src/ThemeEditor.vala:242
 msgid "This operation cannot be undone."
 msgstr "此操作无法撤消。"
 
-#: src/ThemeEditor.vala:240 src/Utils.vala:473
+#: src/ThemeEditor.vala:247 src/Utils.vala:507
 msgid "No"
 msgstr "否"
 
-#: src/ThemeEditor.vala:243 src/Utils.vala:476
+#: src/ThemeEditor.vala:250 src/Utils.vala:510
 msgid "Yes"
 msgstr "是"
 
-#: src/ThemeEditor.vala:265
+#: src/ThemeEditor.vala:272
 msgid "Default"
 msgstr "默认"
 
@@ -4480,12 +5906,7 @@ msgstr "日光亮色"
 msgid "Error parsing regular expression"
 msgstr "分析正则表达式时出错"
 
-#: src/Theme.vala:212
-#, c-format
-msgid "Unable to load background color: %s"
-msgstr "无法加载背景色： %s"
-
-#: src/Theme.vala:308
+#: src/Theme.vala:320
 msgid "Root"
 msgstr "根"
 
@@ -4695,6 +6116,16 @@ msgstr "节点链接修改"
 msgid "sort nodes"
 msgstr "排序节点"
 
+#: src/undo_actions/UndoNodesPriority.vala:35
+#, fuzzy
+msgid "clear priority"
+msgstr "低优先级"
+
+#: src/undo_actions/UndoNodesPriority.vala:35
+#, fuzzy
+msgid "set priority"
+msgstr "低优先级"
+
 #: src/undo_actions/UndoNodesRandLinkColor.vala:34
 msgid "random node link color changes"
 msgstr "节点链接颜色随机变化"
@@ -4739,6 +6170,11 @@ msgstr "插入节点"
 #, fuzzy
 msgid "insert summary node"
 msgstr "插入节点"
+
+#: src/undo_actions/UndoNodeTable.vala:31
+#, fuzzy
+msgid "node table change"
+msgstr "节点名称修改"
 
 #: src/undo_actions/UndoNodeTasks.vala:31
 msgid "node task changes"
@@ -4835,6 +6271,13 @@ msgstr "缩放到实际大小"
 #~ msgid "[Control + Double left-click on parent node"
 #~ msgstr "[Ctrl键 + 双击父节点]"
 
+<<<<<<< HEAD
+#, c-format
+#~ msgid "Unable to load background color: %s"
+#~ msgstr "无法加载背景色： %s"
+
+=======
+>>>>>>> master
 #~ msgid "Unsaved"
 #~ msgstr "未保存"
 
@@ -4921,9 +6364,6 @@ msgstr "缩放到实际大小"
 #~ msgid "Quit Application"
 #~ msgstr "退出程序"
 
-#~ msgid "Node Commands"
-#~ msgstr "节点命令"
-
 #~ msgid "Creation/Deletion"
 #~ msgstr "创建/删除"
 
@@ -5006,9 +6446,6 @@ msgstr "缩放到实际大小"
 #~ msgid "Selection"
 #~ msgstr "选择"
 
-#~ msgid "Select Root"
-#~ msgstr "选择根节点"
-
 #~ msgid "Select Parent"
 #~ msgstr "选择父节点"
 
@@ -5065,9 +6502,6 @@ msgstr "缩放到实际大小"
 
 #~ msgid "Sort Child Nodes Alphabetically"
 #~ msgstr "按字母顺序对子节点进行排序"
-
-#~ msgid "Alignment"
-#~ msgstr "对齐"
 
 #~ msgid "Align Top Side"
 #~ msgstr "顶部对齐"
@@ -5165,9 +6599,6 @@ msgstr "缩放到实际大小"
 #~ msgid "Cut Selected Text"
 #~ msgstr "剪切所选文本"
 
-#~ msgid "Paste Text"
-#~ msgstr "粘贴文本"
-
 #~ msgid "Add Next Character"
 #~ msgstr "添加下一个字符"
 
@@ -5194,9 +6625,6 @@ msgstr "缩放到实际大小"
 
 #~ msgid "Select All Text"
 #~ msgstr "选择所有文本"
-
-#~ msgid "Clear Selection"
-#~ msgstr "清除选择"
 
 #~ msgid "Edit Image in Canvas"
 #~ msgstr "在画布中编辑图像"
@@ -5248,9 +6676,6 @@ msgstr "缩放到实际大小"
 
 #~ msgid "Close Other Tabs"
 #~ msgstr "关闭其他选项卡"
-
-#~ msgid "Clear All"
-#~ msgstr "全部清除"
 
 #~ msgid "New Tab"
 #~ msgstr "新建选项卡"

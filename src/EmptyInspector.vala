@@ -43,7 +43,7 @@ public class EmptyInspector : Box {
 
   //-------------------------------------------------------------
   // Returns the width of this window
-  public int get_width() {
+  public int get_win_width() {
     return( 300 );
   }
 

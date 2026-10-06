@@ -1,0 +1,169 @@
+ # This is the same ID that you've used in meson.build and other files
+app-id: io.github.phase1geo.minder
+
+# Instead of manually specifying a long list of build and runtime dependencies,
+# we can use a convenient pre-made runtime and SDK. For this example, we'll be
+# using the runtime and SDK provided by elementary.
+runtime: org.gnome.Platform
+runtime-version: '50'
+sdk: org.gnome.Sdk
+
+# We will add the textlive Sdk extension to support LaTeX formulas in nodes
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.texlive
+
+build-options:
+  append-path: /usr/lib/sdk/texlive/bin
+
+# This should match the exec line in your .desktop file and usually is the same
+# as your app ID
+command: io.github.phase1geo.minder
+
+# Here we can specify the kinds of permissions our app needs to run. Since we're
+# not using hardware like webcams, making sound, or reading external files, we
+# only need permission to draw our app on screen using either X11 or Wayland.
+finish-args:
+  - '--share=ipc'
+  - '--socket=fallback-x11'
+  - '--socket=wayland'
+  - '--filesystem=home'
+  - '--device=dri'
+  - '--env=PATH=/app/bin:/app/bin/x86_64-linux:/app/bin/aarch64-linux:/usr/bin'
+
+# This section is where you list all the source code required to build your app.
+# If we had external dependencies that weren't included in our SDK, we would list
+# them here.
+modules:
+  - name: libmarkdown
+    buildsystem: simple
+    build-commands:
+      - ./configure.sh --shared --prefix=/app --pkg-config
+      - make -j${FLATPAK_BUILDER_N_JOBS}
+      - sed -e 's|/sbin/ldconfig|/sbin/ldconfig -n|' -i librarian.sh
+      - make install
+    sources:
+      - type: archive
+        url: https://github.com/Orc/discount/archive/refs/tags/v2.2.4.tar.gz
+        sha256: 918905377e6ed3d0a7158cac0a4a18ed3c4cc0cad8ee95dddd82cb86ba9dd044
+
+  - name: gtksourceview
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://github.com/GNOME/gtksourceview.git
+        tag: '5.15.0'
+
+  - name: sassc
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://github.com/sass/sassc/archive/3.6.2.tar.gz
+        sha256: 608dc9002b45a91d11ed59e352469ecc05e4f58fc1259fc9a9f5b8f0f8348a03
+      - type: script
+        dest-filename: autogen.sh
+        commands:
+          - autoreconf -si
+    modules:
+      - name: libsass
+        buildsystem: autotools
+        sources:
+          - type: archive
+            url: https://github.com/sass/libsass/archive/3.6.5.tar.gz
+            sha256: 89d8f2c46ae2b1b826b58ce7dde966a176bac41975b82e84ad46b01a55080582
+          - type: script
+            dest-filename: autogen.sh
+            commands:
+              - autoreconf -si
+
+  - name: granite-7
+    buildsystem: meson
+    config-opts:
+      - -Ddocumentation=false
+      - -Ddemo=false
+      -  --libdir=lib
+    cleanup:
+      - /share/icons
+      - /share/metainfo
+    sources:
+      - type: archive
+        url: https://github.com/elementary/granite/archive/refs/tags/7.8.1.tar.gz
+        sha256: bc8e7946ca091fdeeeebeb64db4e95d33a3ffb879048137f8d8a41ecd76caa3f
+
+  - name: stylesheet
+    buildsystem: meson
+    cleanup:
+      - /share/metainfo
+    sources:
+      - type: git
+        url: https://github.com/elementary/stylesheet.git
+        tag: 8.2.2
+        commit: 9cfb767873d583f6ed29e96cf27728bb69fd9237
+        x-checker-data:
+          type: git
+          tag-pattern: ^([\d.]+)$
+    post-install:
+      # Fallback "elementary", the theme name before stylesheet 6.0.0, to the blueberry variant
+      - ln -s /app/share/themes/io.elementary.stylesheet.blueberry /app/share/themes/elementary
+
+  - name: icons
+    buildsystem: meson
+    cleanup:
+      - /share/metainfo
+    config-opts:
+      - -Dpalettes=false
+    sources:
+      - type: git
+        url: https://github.com/elementary/icons.git
+        tag: 9.0.0
+        commit: 31c7285a1d10170abd363a2553a7f377a031bb33
+        x-checker-data:
+          type: git
+          tag-pattern: ^([\d.]+)$
+    modules:
+      - name: xcursorgen
+        cleanup:
+          - '*'
+        sources:
+          - type: git
+            url: https://gitlab.freedesktop.org/xorg/app/xcursorgen.git
+            tag: xcursorgen-1.0.9
+            commit: 3d0909b630ca82401489411c9b496de14f664c55
+            x-checker-data:
+              type: git
+              tag-pattern: ^xcursorgen-([\d.]+)$
+
+  # We need to bring in texlive, but we will prune unneeded directories to reduce Flatpak size
+  - name: texlive
+    buildsystem: simple
+    build-commands:
+      - /usr/lib/sdk/texlive/install.sh
+      - du -sh /app/texmf-dist
+      # Docs, sources, and fonts only used by xetex/luatex or font building
+      - rm -rf /app/texmf-dist/doc /app/texmf-dist/source /app/texmf-dist/tex4ht
+      - rm -rf /app/share/texmf-dist/doc /app/share/texmf-dist/source /app/share/man /app/share/info
+      - for d in afm opentype truetype source type3 vf; do rm -rf /app/texmf-dist/fonts/$d; done
+      # Keep only the Computer Modern + AMS font families (tfm and type1)
+      - |
+        for t in tfm type1; do
+          dir=/app/texmf-dist/fonts/$t
+          [ -d "$dir" ] || continue
+          find "$dir" -mindepth 1 -maxdepth 1 ! -name public -exec rm -rf {} +
+          [ -d "$dir/public" ] && find "$dir/public" -mindepth 1 -maxdepth 1 \
+            ! -name cm ! -name amsfonts ! -name latex-fonts ! -name ec \
+            -exec rm -rf {} +
+        done
+      # Engines and macro sets you are not using
+      - for d in context xelatex lualatex luatex xetex texinfo; do rm -rf /app/texmf-dist/tex/$d; done
+      - rm -rf /app/texmf-dist/metapost /app/texmf-dist/bibtex
+      # Rebuild the filename database after pruning
+      - PATH=/app/bin:/app/bin/x86_64-linux:/app/bin/aarch64-linux:$PATH mktexlsr /app/texmf-dist || true
+      - du -sh /app/texmf-dist
+      - du -sh /app/texmf-dist/* | sort -h | tail -8
+      - du -sh /app/texmf-dist/tex/latex/* | sort -h | tail -15
+
+  - name: minder
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: ..
+

@@ -91,7 +91,7 @@ namespace MinderTest {
 
     private GLib.TestSuite root_suite;
     private GLib.File      tmp_dir;
-    private const string   SCHEMA_FILE_NAME = "com.github.phase1geo.minder.gschema.xml";
+    private const string   SCHEMA_FILE_NAME = "io.github.phase1geo.minder.gschema.xml";
 
     public TestRunner( GLib.TestSuite? root_suite = null ) {
       if( root_suite == null ) {
@@ -228,7 +228,10 @@ public static int main (string[] args) {
 
   var tests = new MinderTest.TestRunner ();
   tests.add( new MinderTest.ExampleTest() );
+  tests.add( new MinderTest.ImageManagerTest() );
   tests.add( new MinderTest.LatexSpanParserTest() );
+  tests.add( new MinderTest.NodeImageTest() );
+  tests.add( new MinderTest.NodeTableModelTest() );
 
   exit_status = tests.run();
 

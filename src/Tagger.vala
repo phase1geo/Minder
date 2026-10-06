@@ -32,7 +32,7 @@ public class Tagger {
   //-------------------------------------------------------------
   // Default constructor
   public Tagger( DrawArea da ) {
-    _map  = da.map;
+    _map  = da.mmap;
     _tags = new HashMap<string,int>();
   }
 
