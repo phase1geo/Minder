@@ -1,3 +1,12 @@
+---
+layout: default
+title: Exporting
+parent: Documentation
+nav_order: 5
+---
+
+# Exporting
+
 Minder has the ability to export created mind-map information into several different formats.  This allows information created within Minder to be shared with other applications, shared with other people, or shared with the world.  The following data formats are supported out of the box:
 
 ### Text Formats

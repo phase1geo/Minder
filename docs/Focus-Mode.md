@@ -1,8 +1,15 @@
+---
+layout: default
+title: Focus Mode
+parent: Changing the View
+nav_order: 4
+---
+
+# Focus Mode
+
 Mind mapping is a terrific way to get thoughts down, make connections and grow your understanding of something that starts as a simple concept. But sometimes, the growth of that idea becomes a complex mind map with lots of elements that make it difficult to focus on one specific area. For that reason, Minder has a view option called "Focus Mode" which is a dynamic way to view your mind mapping, displaying the currently selected branch of a tree while dimming the rest of the map elements. Focus mode allows you to move around your map and make edits just like normal view, but dynamically dims the portion of the map that is not selected.
 
-
-https://github.com/phase1geo/Minder/assets/22555565/c6fb536f-af1b-4d21-8644-832a6ac83b82
-
+![Focus Mode Enabled](https://github.com/phase1geo/Minder/assets/22555565/c6fb536f-af1b-4d21-8644-832a6ac83b82)
 
 ### Toggling Focus Mode
 

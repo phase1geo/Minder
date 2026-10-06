@@ -1,3 +1,12 @@
+---
+layout: default
+title: Adding Node Groups
+parent: Creating a Mind Map
+nav_order: 8
+---
+
+# Node Groups
+
 Multiple nodes can be visually grouped with a node group.  The group is visualized by drawing a colorized background with an alpha channel for only those nodes that are a part of the group.  The color of the background is the same color of the main node within the group.  Multiple node groups can be drawn and can overlap each other as each node can be a part of more than one group concurrently.
 
 Node groups can also contain notes which can help document why the node group exists or other relevant information.
@@ -16,4 +25,4 @@ A node group gets its color from either the subtree ancestor node color or from 
 
 ### Removing a Node Group
 
-Once a node group has been created, you can remove the grouping by left-clicking anywhere inside the node group that is not a node.  This will select the node group.  Hit the Delete button (alternatively, right click to bring up the contextual menu and select the “Remove Group” menu option) to remove the node grouping from the mind map.
+Once a node group has been created, you can remove the grouping by left-clicking anywhere inside the node group that is not a node.  This will select the node group.  Hit the Delete button (alternatively, right click to bring up the contextual menu and select the **Remove Group** menu option) to remove the node grouping from the mind map.

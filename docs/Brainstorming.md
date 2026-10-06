@@ -1,3 +1,12 @@
+---
+layout: default
+title: Brainstorming
+parent: Creating a Mind Map
+nav_order: 10 
+---
+
+# Brainstorming
+
 Sometimes it can be useful, when mind mapping, to just enter a bunch of ideas without worrying about how it relates to other items in the mindmap. This is where the brainstorming feature of Minder can help you get those ideas down before they disappear and then figure out where those ideas go in the mind map itself at a later date.
 
 ![Brainstorming Panel](images/brainstorming.png)

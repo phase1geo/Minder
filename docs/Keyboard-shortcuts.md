@@ -1,3 +1,12 @@
+---
+layout: default
+title: Keyboard Shortcuts
+parent: Documentation
+nav_order: 6
+---
+
+# Keyboard Shortcuts
+
 ### Shortcuts Cheatsheet
 
 All keyboard shortcuts will be accessible within the Minder **Shortcuts Cheatsheet** menu option available within the Preferences header bar button. It can also be displayed using the keyboard shortcut 'Control+?'.

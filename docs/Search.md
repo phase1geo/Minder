@@ -1,3 +1,12 @@
+---
+layout: default
+title: Search
+parent: Changing the View
+nav_order: 3
+---
+
+# Searching
+
 In a large mind map, it sometimes be difficult to find a piece of information that you are looking for. As a result, Minder has support for search within your mind map. Search is performed on text stored within the mind map, meaning that Minder can search for text within a node, a connection, a callout and within any note. Search is performed dynamically as search characters are entered into the search entry field, allowing you to more quickly drill down to the mind map item that you are looking for.
 
 In the match results, Minder will show you a sample of the text that matched your criteria along with the item type (Node, Connection, Callout) and the stored text type (Title, Note) that was matched on.

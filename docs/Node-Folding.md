@@ -1,3 +1,12 @@
+---
+layout: default
+title: Node Folding
+parent: Changing the View
+nav_order: 2
+---
+
+# Node Folding
+
 Just like a good outlining application or editor can allow you to hide portions of its content using disclosure triangles or code folding, Minder has the ability to hide child nodes of a given parent through a feature known as "node folding". Folding a node will hide the subtree of the node and display a node unfold box next to the root node of the hidden subtree. This box can be clicked to unfold the nodes and can serve as a reminder as to which nodes currently have hidden subtrees.
 
 Let's take a closer look at how to use node folding without your document.
@@ -26,4 +35,4 @@ If a node has folded nodes and then afterwards you fold that node by folding an 
 
 ### Unfolding All Nodes
 
-Minder has a button in the sidebar's Map tab and the bottom of the panel with the tooltip of "Unfold All Nodes". Use that to perform a deep unfold of the entire mind map. Note that unfolding can be undone using the "Undo" header bar button so if you want to revert the state of the mind map prior to the global unfold operation it can be done.
+Minder has a button in the sidebar's Map tab and the bottom of the panel with the tooltip of **Unfold All Nodes**. Use that to perform a deep unfold of the entire mind map. Note that unfolding can be undone using the **Undo** header bar button so if you want to revert the state of the mind map prior to the global unfold operation it can be done.

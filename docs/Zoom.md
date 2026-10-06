@@ -1,3 +1,12 @@
+---
+layout: default
+title: Zooming
+parent: Changing the View
+nav_order: 1
+---
+
+# Zooming
+
 By default, Minder sets the zoom level to 100% which displays nodes and text at a size that is deemed to be easy to edit and work with; however, for mind maps that exceed the size of mind mapping canvas, it is often useful to zoom out or in to see more content or to focus on a portion of your data. For these purposes, Minder has support for mind map zooming via the **Zoom** button in the header bar.
 
 ![Zoom Menu](images/zoom-menu.png)

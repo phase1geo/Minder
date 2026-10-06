@@ -1,3 +1,12 @@
+---
+layout: default
+title: Adding Node Links
+parent: Creating a Mind Map
+nav_order: 7
+---
+
+# Node Links
+
 In addition to creating connections between nodes, which are visible lines connecting nodes, Minder allows you to create a link to another node in either the same mind-map or a node in a different mind-map altogether.  Creating these links can be useful when presenting or for creating "deep mind-maps".
 
 Once a node link is added to a node, you can traverse to the linked node by clicking on the arrow displayed on the right side of the node.

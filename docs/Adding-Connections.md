@@ -2,7 +2,7 @@
 layout: default
 title: Adding Connections
 parent: Creating a Mind Map
-nav_order: 5
+nav_order: 6
 ---
 
 # Adding Connections
