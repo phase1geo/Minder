@@ -1,3 +1,9 @@
+---
+layout: default
+title: Introduction
+nav_order: 1
+---
+
 ### What is Minder?
 
 Minder is a mind-mapping application with many features that make it ideal for capturing, organizing and visualizing your ideas. Minder has automatic node layout features that allow you to focus on putting down your ideas in a tree-like format. Links and nodes can be colorized to help differentiate trains of thought. Images can be added to nodes to help convey meaningful information. Notes can be added to a node to provide even more information to an idea. Each node in the mind-map can be made a task which can be checked as complete.

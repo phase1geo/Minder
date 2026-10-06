@@ -1,3 +1,9 @@
+---
+layout: default
+title: Canvas
+nav_order: 2
+---
+
 This is the main area below the header bar where the user can create, edit, view and rearrange mind map nodes.
 
 The following is a representation of this area.

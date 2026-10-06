@@ -1,3 +1,12 @@
+---
+layout: default
+title: Documentation
+nav_order: 2
+has_children: true
+---
+
+# Table of Contents
+
 * [Introduction](Introduction.md)
 * [User Interface](User-Interface.md)
   * [Header Bar](Header-Bar.md)
