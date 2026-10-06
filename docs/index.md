@@ -1,5 +1,5 @@
-Welcome to the Minder wiki!
+Welcome to Minder documentation!
 
-* [[Documentation|Table of Contents]]
-* [[FAQ]]
-* [[Tips & Tricks]]
+* [Documentation](Table-of-Contents.md)
+* [FAQ](FAQ.md)
+* [Tips & Tricks](Tips-&-Tricks.md)
