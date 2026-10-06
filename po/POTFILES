@@ -4,6 +4,7 @@ src/Braindump.vala
 src/CalloutMenu.vala
 src/Callout.vala
 src/CanvasText.vala
+src/Clipboard.vala
 src/ConnectionInspector.vala
 src/ConnectionMenu.vala
 src/ConnectionsMenu.vala
@@ -36,11 +37,13 @@ src/exports/ExportYed.vala
 src/Exports.vala
 src/Export.vala
 src/FormattedText.vala
+src/FormulaRecognizer.vala
 src/GroupInspector.vala
 src/GroupsMenu.vala
 src/ImageEditor.vala
 src/ImageManager.vala
 src/KeyCommands.vala
+src/LatexRenderer.vala
 src/layouts/LayoutDown.vala
 src/layouts/LayoutHorizontal.vala
 src/layouts/LayoutLeft.vala
