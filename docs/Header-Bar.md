@@ -1,10 +1,11 @@
-The header bar runs across the top of the main window. It provides quick access to several functions. Simply click on one of the buttons in the header bar to access its functionality.
 ---
 layout: default
 title: Header Bar
 parent: User Interface
 nav_order: 1
 ---
+
+The header bar runs across the top of the main window. It provides quick access to several functions. Simply click on one of the buttons in the header bar to access its functionality.
 
 The following is a representation of the header bar:
 

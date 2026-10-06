@@ -1,3 +1,12 @@
+---
+layout: default
+title: Adding Tasks
+parent: Creating a Mind Map
+nav_order: 3
+---
+
+# Adding Tasks
+
 Though Minder is not intended to be a replacement for a good task management application, it does provide a simple mechanism for making a leaf node in the mind map an actionable task by placing a checkbox on the node.  When a leaf node (i.e., a node that does not have any children) is enabled as a task, all ancestor nodes of the leaf node will automatically be converted into tasks as well, displaying the completeness percentage of all descendant nodes that are assigned as a task.
 
 ### Making a Leaf Node Into a Task

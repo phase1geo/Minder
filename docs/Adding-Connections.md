@@ -1,3 +1,12 @@
+---
+layout: default
+title: Adding Connections
+parent: Creating a Mind Map
+nav_order: 5
+---
+
+# Adding Connections
+
 A mind map tree shows the relationships between an idea and subideas using a parent/child relationship; however, sometimes it is useful to show a connection between two ideas that do not share this relationship. For this reason, Minder supports creating a connection between any two nodes in the mind map.
 
 #### Creating a Connection with the Mouse
@@ -32,7 +41,7 @@ To remove an existing connection title, edit the connection text as described ab
 
 #### Adding a Note
 
-Like nodes, connections can also store additional information about themselves in the form of a note.  Note text is not displayed in the canvas but can be viewed/edited in the [[Connection Sidebar]].  Any changes to the note will be immediately saved to file.  Note text is searchable via the header bar search function.
+Like nodes, connections can also store additional information about themselves in the form of a note.  Note text is not displayed in the canvas but can be viewed/edited in the [Connection Sidebar](Connection-Sidebar.md).  Any changes to the note will be immediately saved to file.  Note text is searchable via the header bar search function.
 
 #### Styling a Connection
 

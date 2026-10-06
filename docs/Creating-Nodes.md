@@ -1,3 +1,12 @@
+---
+layout: default
+title: Adding Nodes
+parent: Creating a Mind Map
+nav_order: 1
+---
+
+# Adding Nodes
+
 A node in a mind-map represents an idea.  Nodes are arranged in a tree-like structure such that each tree contains a single, high-level idea at the top-level of the tree.  The next level of nodes in the tree are sub-ideas of the main idea and are related to the main idea via a "link".  Nodes at the same level are also known as "sibling" nodes in the tree.  Nodes can continuously be added to the tree at any level of the tree, helping to gain greater understanding of the main idea.
 
 The node representing the main idea of the tree is also known as the "root" node.  All nodes closer to the root of the tree from any given nodes are also known as "ancestors" of that node.  All nodes that are further away from the root from any given node is also known as "descendants" of that node.  The node immediately linked to a node that is closer to the root is known as the "parent" of the node while any immediately linked node that is further from the root is known as a "child" of the node.
@@ -5,9 +14,9 @@ The node representing the main idea of the tree is also known as the "root" node
 Each node in minder is capable of displaying/storing the following information:
 
 1. A piece of text describing the idea.
-2. [[Images|Images]] which are directly displayed inside of the node.
-3. Any node can be represented as a [[task|Tasks]] which will draw a clickable checkbutton within the node, allowing you to track completion status within a mind-map.
-4. Additional text in the form of a [[note|Notes]].
+2. [Images](Adding-Images.md) which are directly displayed inside of the node.
+3. Any node can be represented as a [task](Adding-Tasks.md) which will draw a clickable checkbutton within the node, allowing you to track completion status within a mind-map.
+4. Additional text in the form of a [note](Adding-Notes.md).
 
 #### Creating a Node
 
@@ -29,7 +38,7 @@ To create a new sibling for a given node, select that node and press the **Retur
 
 #### Deleting a Node
 
-Whenever a node is deleted, it along with all of its descendants and any [[connections|Connections]] attached to it or its descendants are also deleted.  To delete a node, select it and press either the **Delete** or **Backspace** keys.  Alternatively, you can delete a node through both the contextual menu as well as within the [[Node Sidebar]].
+Whenever a node is deleted, it along with all of its descendants and any [connections](Adding-Connections.md) attached to it or its descendants are also deleted.  To delete a node, select it and press either the **Delete** or **Backspace** keys.  Alternatively, you can delete a node through both the contextual menu as well as within the [Node Sidebar](Node-Sidebar.md).
 
 #### Selecting a Node
 
@@ -59,7 +68,7 @@ The following table lists the various keyboard keys that can be used to navigate
 
 #### Detaching a Node
 
-Sometimes it will be necessary to create a new tree in the mind-map from an existing descendant node within a tree. To accomplish this, Minder allows you to "detach" the node and its descendants from its current tree, creating a new tree. To detach a node, make sure the node is selected and right-click to display the contextual menu and select the **Detach Node** menu option.  Alternatively, you can detach a node within the [[Node Sidebar]] from the button bar at the bottom of the panel.
+Sometimes it will be necessary to create a new tree in the mind-map from an existing descendant node within a tree. To accomplish this, Minder allows you to "detach" the node and its descendants from its current tree, creating a new tree. To detach a node, make sure the node is selected and right-click to display the contextual menu and select the **Detach Node** menu option.  Alternatively, you can detach a node within the [Node Sidebar](Node-Sidebar.md) from the button bar at the bottom of the panel.
 
 #### Attaching a Node
 
@@ -73,7 +82,7 @@ If more than one node is selected, Minder allows you to move only the selected n
 
 Nodes can be copied, cut and/or pasted into a mind map.  The copied node is placed into a special, system-wide clipboard that is only recognized by Minder, meaning that if you copy a node and attempt to paste it into another application, nothing will occur.  When you copy a node, you are also copying the node's descendant nodes and any connections that are attached to nodes within the copied tree.
 
-To copy or cut a node, make sure that it is selected and use the ubiquitous Control-c (copy) or Control-x (cut) keyboard shortcut.  Alternatively, you perform these actions with either the contextual menu or the [[Node Sidebar]] button bar.
+To copy or cut a node, make sure that it is selected and use the ubiquitous Control-c (copy) or Control-x (cut) keyboard shortcut.  Alternatively, you perform these actions with either the contextual menu or the [Node Sidebar](Node-Sidebar.md) button bar.
 
 #### Editing the Node Title
 

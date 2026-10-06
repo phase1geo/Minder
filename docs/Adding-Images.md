@@ -1,10 +1,19 @@
+---
+layout: default
+title: Adding Images
+parent: Creating a Mind Map
+nav_order: 2
+---
+
+# Adding Images
+
 Minder supports adding user images to mind-maps as a part of a node in the tree.
 
 ### Special Note About Image Handling in Minder
 
 Images are handled in a special way with Minder that is worth noting here.
 
-When an image is added to a mind-map (either from a file, from the clipboard, or via a drag-and-drop operation), Minder creates a copy of this image and stores the raw image it in the user's data directory (this is typically ~/.local/share/minder/images in systems like elementary OS).  The image is given a unique ID which is stored in the .minder file when changes are made to the mind map.  It is important to note that as of Minder version 1.12.0, images are not automatically saved in the .minder XML file to improve save performance.  If the user wants to share the Minder mind map with another user not on the local machine, a Portable Minder file needs to be exported from within the [[Exporting]] UI.  This file format is an archived format which stores the .minder information along with all associated assets (i.e., images used within the mind map).
+When an image is added to a mind-map (either from a file, from the clipboard, or via a drag-and-drop operation), Minder creates a copy of this image and stores the raw image it in the user's data directory (this is typically ~/.local/share/minder/images in systems like elementary OS).  The image is given a unique ID which is stored in the .minder file when changes are made to the mind map.  It is important to note that as of Minder version 1.12.0, images are not automatically saved in the .minder XML file to improve save performance.  If the user wants to share the Minder mind map with another user not on the local machine, a Portable Minder file needs to be exported from within the [Exporting](Exporting.md) UI.  This file format is an archived format which stores the .minder information along with all associated assets (i.e., images used within the mind map).
 
 Once the .pminder file has been created, it can be opened by Minder as you would with any other importable file type.  In this case, when a .pminder file is created, the stored images will be copied into the user's data directory where it will be used as normal.
 
