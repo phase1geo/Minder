@@ -22,3 +22,5 @@ The button to the right of the color picker will revert the color back to the th
 ### Note
 
 This field allows you to add any additional information about the connection that you would like to include. This text is searchable within the search feature, accessible from the header bar.
+
+More information about editing within the notes field can be found [here](Notes.md).

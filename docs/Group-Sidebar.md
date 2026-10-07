@@ -16,3 +16,5 @@ The following image is a representation of this tab when a group is selected.
 ### Note
 
 This field allows you to add any additional information about the group that you would like to include. This text is searchable within the search feature, accessible from the header bar.
+
+More information on editing within the notes field can be found [here](Notes.md).
