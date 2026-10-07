@@ -8,11 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: io.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
-"POT-Creation-Date: 2026-09-28 21:24-0500\n"
-=======
-"POT-Creation-Date: 2026-10-05 23:08-0500\n"
->>>>>>> master:po/com.github.phase1geo.minder.pot
+"POT-Creation-Date: 2026-10-06 21:55-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,33 +34,20 @@ msgstr ""
 msgid "Flatpak Runtime: %s"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/Application.vala:55 src/MainWindow.vala:250 src/MainWindow.vala:1958
 msgid "Minder"
 msgstr ""
 
 #: src/Application.vala:145
-=======
-#: src/Application.vala:52 src/MainWindow.vala:183 src/MainWindow.vala:1666
-msgid "Minder"
-msgstr ""
-
-#: src/Application.vala:135
->>>>>>> master:po/com.github.phase1geo.minder.pot
 #, c-format
 msgid "Import file from format (%s)"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/Application.vala:146
-=======
-#: src/Application.vala:136
->>>>>>> master:po/com.github.phase1geo.minder.pot
 #, c-format
 msgid "Export mindmap as format (%s)"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/Application.vala:151
 msgid "Display version number"
 msgstr ""
@@ -78,26 +61,10 @@ msgid "Starts Minder with a new file"
 msgstr ""
 
 #: src/Application.vala:156
-=======
-#: src/Application.vala:141
-msgid "Display version number"
-msgstr ""
-
-#: src/Application.vala:142
-msgid "Display help"
-msgstr ""
-
-#: src/Application.vala:143
-msgid "Starts Minder with a new file"
-msgstr ""
-
-#: src/Application.vala:146
->>>>>>> master:po/com.github.phase1geo.minder.pot
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/Application.vala:157
 msgid "PNG compression value (0-9). Default is 0."
 msgstr ""
@@ -115,41 +82,6 @@ msgid "Import Example:\n"
 msgstr ""
 
 #: src/Application.vala:165
-=======
-#: src/Application.vala:147
-msgid "PNG compression value (0-9). Default is 0."
-msgstr ""
-
-#: src/Application.vala:148
-msgid "JPEG quality (0-100). Default is 90."
-msgstr ""
-
-#: src/Application.vala:149
-msgid "Enables image links in exported Markdown"
-msgstr ""
-
-#: src/Application.vala:154
-msgid "Import Example:\n"
-msgstr ""
-
-#: src/Application.vala:155
-#, c-format
-msgid "  %scom.github.phase1geo.minder --import=markdown file.markdown\n"
-msgstr ""
-
-#: src/Application.vala:157
-msgid "Export Example:\n"
-msgstr ""
-
-#: src/Application.vala:158
-#, c-format
-msgid ""
-"  %scom.github.phase1geo.minder --export=png --png-transparent file.minder "
-"file.png\n"
-msgstr ""
-
-#: src/Application.vala:167
->>>>>>> master:po/com.github.phase1geo.minder.pot
 #, c-format
 msgid "  %sio.github.phase1geo.minder --import=markdown file.markdown\n"
 msgstr ""
@@ -170,16 +102,11 @@ msgstr ""
 msgid "ERROR: %s\n"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/Application.vala:178
-=======
-#: src/Application.vala:168
->>>>>>> master:po/com.github.phase1geo.minder.pot
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/Application.vala:201
 msgid "ERROR: Unable to import file"
 msgstr ""
@@ -193,30 +120,11 @@ msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
 
 #: src/Application.vala:238
-=======
-#: src/Application.vala:191
-msgid "ERROR: Unable to import file"
-msgstr ""
-
-#: src/Application.vala:195
-msgid "ERROR: Import is missing filename to import"
-msgstr ""
-
-#: src/Application.vala:218
-msgid "ERROR: Export is missing input file and/or export output file"
-msgstr ""
-
-#: src/Application.vala:228
->>>>>>> master:po/com.github.phase1geo.minder.pot
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/Application.vala:274
-=======
-#: src/Application.vala:264
->>>>>>> master:po/com.github.phase1geo.minder.pot
 #, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr ""
@@ -239,7 +147,6 @@ msgstr ""
 msgid "Select Node"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/Callout.vala:131 src/KeyCommands.vala:813 src/NodeMenu.vala:113
 msgid "Callout"
 msgstr ""
@@ -269,48 +176,12 @@ msgid "Pasted as an image"
 msgstr ""
 
 #: src/Clipboard.vala:138
-=======
-#: src/Callout.vala:131 src/KeyCommands.vala:724 src/NodeMenu.vala:97
-msgid "Callout"
-msgstr ""
-
-#: src/CanvasText.vala:326 src/FormattedText.vala:1199
-msgid "No text found"
-msgstr ""
-
-#: src/Clipboard.vala:120
-msgid "Recognizing formula"
-msgstr ""
-
-#: src/Clipboard.vala:121
-msgid "Converting the pasted image to editable LaTeX locally"
-msgstr ""
-
-#: src/Clipboard.vala:128
-msgid "Formula recognized"
-msgstr ""
-
-#: src/Clipboard.vala:129
-msgid "The pasted image was converted to editable LaTeX"
-msgstr ""
-
-#: src/Clipboard.vala:135
-msgid "Pasted as an image"
-msgstr ""
-
-#: src/Clipboard.vala:136
->>>>>>> master:po/com.github.phase1geo.minder.pot
 #, c-format
 msgid "Formula recognition was skipped: %s"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/ConnectionInspector.vala:84 src/KeyCommands.vala:816
 #: src/NodeMenu.vala:112
-=======
-#: src/ConnectionInspector.vala:84 src/KeyCommands.vala:727
-#: src/NodeMenu.vala:96
->>>>>>> master:po/com.github.phase1geo.minder.pot
 msgid "Connection"
 msgstr ""
 
@@ -417,14 +288,14 @@ msgid ""
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
 
-#: src/Document.vala:705 src/ImageEditor.vala:430 src/MainWindow.vala:1657
-#: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TableEditor.vala:366
+#: src/Document.vala:705 src/ImageEditor.vala:572 src/MainWindow.vala:1657
+#: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TableEditor.vala:422
 #: src/TemplateEditor.vala:100 src/ThemeEditor.vala:154 src/UrlEditor.vala:63
 msgid "Cancel"
 msgstr ""
 
-#: src/Document.vala:708 src/ImageEditor.vala:433 src/MainWindow.vala:2379
-#: src/TableEditor.vala:367 src/UrlEditor.vala:53
+#: src/Document.vala:708 src/ImageEditor.vala:575 src/MainWindow.vala:2379
+#: src/TableEditor.vala:423 src/UrlEditor.vala:53
 msgid "Apply"
 msgstr ""
 
@@ -473,7 +344,7 @@ msgstr ""
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2322 src/MapModel.vala:1874 src/MapModel.vala:1889
+#: src/DrawArea.vala:2322 src/MapModel.vala:1875 src/MapModel.vala:1890
 msgid "Another Idea"
 msgstr ""
 
@@ -705,11 +576,7 @@ msgstr ""
 msgid "The recognized formula is too long"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/GroupInspector.vala:79 src/KeyCommands.vala:822
-=======
-#: src/GroupInspector.vala:79 src/KeyCommands.vala:733
->>>>>>> master:po/com.github.phase1geo.minder.pot
 msgid "Group"
 msgstr ""
 
@@ -729,33 +596,33 @@ msgstr ""
 msgid "All Grouped Nodes"
 msgstr ""
 
-#: src/ImageEditor.vala:199
+#: src/ImageEditor.vala:335
 #, c-format
 msgid "Crop Area: %d,%d %3dx%3d"
 msgstr ""
 
-#: src/ImageEditor.vala:401
+#: src/ImageEditor.vala:543
 #, c-format
 msgid "Cursor: %3d,%3d"
 msgstr ""
 
-#: src/ImageEditor.vala:410
+#: src/ImageEditor.vala:552
 msgid "Change Image"
 msgstr ""
 
-#: src/ImageEditor.vala:414
+#: src/ImageEditor.vala:556
 msgid "Paste Image from Clipboard"
 msgstr ""
 
-#: src/ImageEditor.vala:418 src/NodeInspector.vala:401 src/NodeMenu.vala:263
+#: src/ImageEditor.vala:560 src/NodeInspector.vala:401 src/NodeMenu.vala:263
 msgid "Remove Image"
 msgstr ""
 
-#: src/ImageEditor.vala:422
+#: src/ImageEditor.vala:564
 msgid "Copy Image to Clipboard"
 msgstr ""
 
-#: src/ImageEditor.vala:427
+#: src/ImageEditor.vala:569
 msgid "Cut Image to Clipboard"
 msgstr ""
 
@@ -767,7 +634,6 @@ msgstr ""
 msgid "Images"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/KeyCommands.vala:692 src/Shortcuts.vala:829
 msgid "General"
 msgstr ""
@@ -1578,728 +1444,11 @@ msgid "LaTeX rendering failed"
 msgstr ""
 
 #: src/layouts/LayoutManual.vala:27 src/MapInspector.vala:265
-#: src/MapInspector.vala:511 src/MapModel.vala:2362
+#: src/MapInspector.vala:511 src/MapModel.vala:2363
 msgid "Manual"
 msgstr ""
 
 #: src/MainWindow.vala:309
-=======
-#: src/KeyCommands.vala:618 src/Shortcuts.vala:813
-msgid "General"
-msgstr ""
-
-#: src/KeyCommands.vala:619
-msgid "File Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:620
-msgid "Create new mindmap"
-msgstr ""
-
-#: src/KeyCommands.vala:621
-msgid "Open saved mindmap"
-msgstr ""
-
-#: src/KeyCommands.vala:622
-msgid "Create mindmap from directory structure"
-msgstr ""
-
-#: src/KeyCommands.vala:623
-msgid "Save mindmap to current file"
-msgstr ""
-
-#: src/KeyCommands.vala:624
-msgid "Save mindmap to new file"
-msgstr ""
-
-#: src/KeyCommands.vala:625
-msgid "Show print dialog for current mindmap"
-msgstr ""
-
-#: src/KeyCommands.vala:626
-msgid "Tab Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:627
-msgid "Select next tab"
-msgstr ""
-
-#: src/KeyCommands.vala:628
-msgid "Select previous tab"
-msgstr ""
-
-#: src/KeyCommands.vala:629
-msgid "Close the current mindmap"
-msgstr ""
-
-#: src/KeyCommands.vala:630
-msgid "Undo/Redo Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:631
-msgid "Undo last action"
-msgstr ""
-
-#: src/KeyCommands.vala:632
-msgid "Redo last undone action"
-msgstr ""
-
-#: src/KeyCommands.vala:633
-msgid "Zoom Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:634
-msgid "Zoom in"
-msgstr ""
-
-#: src/KeyCommands.vala:635
-msgid "Zoom out"
-msgstr ""
-
-#: src/KeyCommands.vala:636
-msgid "Zoom to fit entire mindmap in viewer"
-msgstr ""
-
-#: src/KeyCommands.vala:637
-msgid "Zoom selected node subtree in viewer"
-msgstr ""
-
-#: src/KeyCommands.vala:638
-msgid "Zoom to 100%"
-msgstr ""
-
-#: src/KeyCommands.vala:639
-msgid "Sidebar Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:640
-msgid "Show current tab in sidebar"
-msgstr ""
-
-#: src/KeyCommands.vala:641
-msgid "Show style tab in sidebar"
-msgstr ""
-
-#: src/KeyCommands.vala:642
-msgid "Show tag tab in sidebar"
-msgstr ""
-
-#: src/KeyCommands.vala:643
-msgid "Show sticker tab in sidebar"
-msgstr ""
-
-#: src/KeyCommands.vala:644
-msgid "Show map tab in sidebar"
-msgstr ""
-
-#: src/KeyCommands.vala:645
-msgid "Show currently select node/connection/group information in sidebar"
-msgstr ""
-
-#: src/KeyCommands.vala:646
-msgid "Map Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:647
-msgid "Show/Hide Connections"
-msgstr ""
-
-#: src/KeyCommands.vala:648
-msgid "Show/Hide Callouts"
-msgstr ""
-
-#: src/KeyCommands.vala:649
-msgid "Balance nodes in vertical/horizontal layouts"
-msgstr ""
-
-#: src/KeyCommands.vala:650
-msgid "Fold all completed tasks"
-msgstr ""
-
-#: src/KeyCommands.vala:651
-msgid "Unfold all folded nodes"
-msgstr ""
-
-#: src/KeyCommands.vala:652
-msgid "Miscellaneous Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:653
-msgid "Show preferences window"
-msgstr ""
-
-#: src/KeyCommands.vala:654
-msgid "Show shortcuts cheatsheet"
-msgstr ""
-
-#: src/KeyCommands.vala:655
-msgid "Show contextual menu"
-msgstr ""
-
-#: src/KeyCommands.vala:656
-msgid "Show find popup"
-msgstr ""
-
-#: src/KeyCommands.vala:657
-msgid "Show About window"
-msgstr ""
-
-#: src/KeyCommands.vala:658
-msgid "Toggle braindump input mode"
-msgstr ""
-
-#: src/KeyCommands.vala:659
-msgid "Toggle focus mode"
-msgstr ""
-
-#: src/KeyCommands.vala:660
-msgid "Edit note of current item"
-msgstr ""
-
-#: src/KeyCommands.vala:661
-msgid "Edit currently selected item"
-msgstr ""
-
-#: src/KeyCommands.vala:662
-msgid "Show currently selected item"
-msgstr ""
-
-#: src/KeyCommands.vala:663
-msgid "Remove sticker from current node or connection"
-msgstr ""
-
-#: src/KeyCommands.vala:664
-msgid "Quit the application"
-msgstr ""
-
-#: src/KeyCommands.vala:665 src/NodeInspector.vala:106
-msgid "Node"
-msgstr ""
-
-#: src/KeyCommands.vala:666
-msgid "Creation/Deletion Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:667
-msgid "Add root node"
-msgstr ""
-
-#: src/KeyCommands.vala:668
-msgid "Add sibling node after current node"
-msgstr ""
-
-#: src/KeyCommands.vala:669
-msgid "Add sibling node before current node"
-msgstr ""
-
-#: src/KeyCommands.vala:670
-msgid "Add child node to current node"
-msgstr ""
-
-#: src/KeyCommands.vala:671
-msgid "Add parent node to current node"
-msgstr ""
-
-#: src/KeyCommands.vala:672
-msgid "Use quick entry to insert nodes"
-msgstr ""
-
-#: src/KeyCommands.vala:673
-msgid "Use quick entry to replace current node"
-msgstr ""
-
-#: src/KeyCommands.vala:674
-msgid "Remove selected node only (leave subtree)"
-msgstr ""
-
-#: src/KeyCommands.vala:675 src/KeyCommands.vala:762
-msgid "Clipboard Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:676
-msgid "Paste node link from clipboard into current node"
-msgstr ""
-
-#: src/KeyCommands.vala:677
-msgid "Replace current node with clipboard content"
-msgstr ""
-
-#: src/KeyCommands.vala:678
-msgid "View Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:679
-msgid "Center current node in map canvas"
-msgstr ""
-
-#: src/KeyCommands.vala:680 src/KeyCommands.vala:734
-msgid "Change Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:681
-msgid "Change task status of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:682
-msgid "Add/Edit image of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:683
-msgid "Remove image from current node"
-msgstr ""
-
-#: src/KeyCommands.vala:684
-msgid "Change link color of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:685
-msgid "Randomize the current node link color"
-msgstr ""
-
-#: src/KeyCommands.vala:686
-msgid "Set current node link color to match parent node"
-msgstr ""
-
-#: src/KeyCommands.vala:687
-msgid "Toggle folding of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:688
-msgid "Toggle folding of current node subtree"
-msgstr ""
-
-#: src/KeyCommands.vala:689
-msgid "Toggle the node link state"
-msgstr ""
-
-#: src/KeyCommands.vala:690
-msgid "Add group for current node and its subtree"
-msgstr ""
-
-#: src/KeyCommands.vala:691
-msgid "Start creation of connection from current node"
-msgstr ""
-
-#: src/KeyCommands.vala:692
-msgid "Add/Remove callout for current node"
-msgstr ""
-
-#: src/KeyCommands.vala:693
-msgid "Toggle sequence state of children of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:694 src/KeyCommands.vala:725 src/KeyCommands.vala:728
-#: src/KeyCommands.vala:737 src/KeyCommands.vala:783
-msgid "Selection Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:695
-msgid "Select root node of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:696
-msgid "Select parent node of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:697
-msgid "Select all child nodes of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:698
-msgid "Select single child node of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:699
-msgid "Select all nodes in subtree of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:700
-msgid "Select next sibling node of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:701
-msgid "Select previous sibling node of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:702
-msgid "Select node to the left of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:703
-msgid "Select node to the right of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:704
-msgid "Select node above current node"
-msgstr ""
-
-#: src/KeyCommands.vala:705
-msgid "Select node below current node"
-msgstr ""
-
-#: src/KeyCommands.vala:706
-msgid "Select linked node of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:707
-msgid "Select connection of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:708
-msgid "Select callout of current node"
-msgstr ""
-
-#: src/KeyCommands.vala:709
-msgid "Move Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:710
-msgid "Swap current node with right node"
-msgstr ""
-
-#: src/KeyCommands.vala:711
-msgid "Swap current node with left node"
-msgstr ""
-
-#: src/KeyCommands.vala:712
-msgid "Swap current node with above node"
-msgstr ""
-
-#: src/KeyCommands.vala:713
-msgid "Swap current node with below node"
-msgstr ""
-
-#: src/KeyCommands.vala:714
-msgid "Sort child nodes of current node alphabetically"
-msgstr ""
-
-#: src/KeyCommands.vala:715
-msgid "Sort child nodes of current node randomly"
-msgstr ""
-
-#: src/KeyCommands.vala:716
-msgid "Detaches current node and its subtree"
-msgstr ""
-
-#: src/KeyCommands.vala:717
-msgid "Alignment Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:718
-msgid "Align selected node top edges"
-msgstr ""
-
-#: src/KeyCommands.vala:719
-msgid "Align selected node vertical centers"
-msgstr ""
-
-#: src/KeyCommands.vala:720
-msgid "Align selected node bottom edges"
-msgstr ""
-
-#: src/KeyCommands.vala:721
-msgid "Align selected node left edges"
-msgstr ""
-
-#: src/KeyCommands.vala:722
-msgid "Align selected node horizontal centers"
-msgstr ""
-
-#: src/KeyCommands.vala:723
-msgid "Align selected node right edges"
-msgstr ""
-
-#: src/KeyCommands.vala:726
-msgid "Select callout node"
-msgstr ""
-
-#: src/KeyCommands.vala:729
-msgid "Select connection source node"
-msgstr ""
-
-#: src/KeyCommands.vala:730
-msgid "Select connection target node"
-msgstr ""
-
-#: src/KeyCommands.vala:731
-msgid "Select next connection in map"
-msgstr ""
-
-#: src/KeyCommands.vala:732
-msgid "Select previous connection in map"
-msgstr ""
-
-#: src/KeyCommands.vala:735
-msgid "Change the color of the current group"
-msgstr ""
-
-#: src/KeyCommands.vala:736
-msgid "Merge current groups into single group"
-msgstr ""
-
-#: src/KeyCommands.vala:738
-msgid "Select main node(s) of current group(s)"
-msgstr ""
-
-#: src/KeyCommands.vala:739
-msgid "Selects all nodes within current group(s)"
-msgstr ""
-
-#: src/KeyCommands.vala:740
-msgid "Text Editing"
-msgstr ""
-
-#: src/KeyCommands.vala:741
-msgid "Insertion/Deletion Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:742
-msgid "Insert newline character"
-msgstr ""
-
-#: src/KeyCommands.vala:743
-msgid "Insert TAB character"
-msgstr ""
-
-#: src/KeyCommands.vala:744
-msgid "Insert emoji"
-msgstr ""
-
-#: src/KeyCommands.vala:745
-msgid "Remove next word"
-msgstr ""
-
-#: src/KeyCommands.vala:746
-msgid "Remove previous word"
-msgstr ""
-
-#: src/KeyCommands.vala:747
-msgid "Markdown Syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:748
-msgid "Insert Markdown header-1 syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:749
-msgid "Insert Markdown header-2 syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:750
-msgid "Insert Markdown header-3 syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:751
-msgid "Insert Markdown header-4 syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:752
-msgid "Insert Markdown header-5 syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:753
-msgid "Insert Markdown header-6 syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:754
-msgid "Insert Markdown bold syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:755
-msgid "Insert Markdown italics syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:756
-msgid "Insert Markdown strikethrough syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:757
-msgid "Insert Markdown code syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:758
-msgid "Insert Markdown highlighting syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:759
-msgid "Insert Markdown superscript syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:760
-msgid "Insert Markdown subscript syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:761
-msgid "Insert Markdown URL link syntax"
-msgstr ""
-
-#: src/KeyCommands.vala:763
-msgid "Copy selected nodes or text"
-msgstr ""
-
-#: src/KeyCommands.vala:764
-msgid "Cut selected nodes or text"
-msgstr ""
-
-#: src/KeyCommands.vala:765
-msgid "Paste nodes or text from clipboard"
-msgstr ""
-
-#: src/KeyCommands.vala:766
-msgid "Convert a clipboard image to LaTeX"
-msgstr ""
-
-#: src/KeyCommands.vala:767
-msgid "URL Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:768
-msgid "Open URL link at current cursor position"
-msgstr ""
-
-#: src/KeyCommands.vala:769
-msgid "Add URL link at current cursor position"
-msgstr ""
-
-#: src/KeyCommands.vala:770
-msgid "Change URL link at current cursor position"
-msgstr ""
-
-#: src/KeyCommands.vala:771
-msgid "Remove URL link at current cursor position"
-msgstr ""
-
-#: src/KeyCommands.vala:772
-msgid "Cursor Commands"
-msgstr ""
-
-#: src/KeyCommands.vala:773
-msgid "Move cursor to next character"
-msgstr ""
-
-#: src/KeyCommands.vala:774
-msgid "Move cursor to previous character"
-msgstr ""
-
-#: src/KeyCommands.vala:775
-msgid "Move cursor up one line"
-msgstr ""
-
-#: src/KeyCommands.vala:776
-msgid "Move cursor down one line"
-msgstr ""
-
-#: src/KeyCommands.vala:777
-msgid "Move cursor to beginning of next word"
-msgstr ""
-
-#: src/KeyCommands.vala:778
-msgid "Move cursor to beginning of previous word"
-msgstr ""
-
-#: src/KeyCommands.vala:779
-msgid "Move cursor to start of text"
-msgstr ""
-
-#: src/KeyCommands.vala:780
-msgid "Move cursor to end of text"
-msgstr ""
-
-#: src/KeyCommands.vala:781
-msgid "Move cursor to start of current line"
-msgstr ""
-
-#: src/KeyCommands.vala:782
-msgid "Move cursor to end of current line"
-msgstr ""
-
-#: src/KeyCommands.vala:784
-msgid "Add next character to current selection"
-msgstr ""
-
-#: src/KeyCommands.vala:785
-msgid "Add previous character to current selection"
-msgstr ""
-
-#: src/KeyCommands.vala:786
-msgid "Add line up to current selection"
-msgstr ""
-
-#: src/KeyCommands.vala:787
-msgid "Add line down to current selection"
-msgstr ""
-
-#: src/KeyCommands.vala:788
-msgid "Add next word to current selection"
-msgstr ""
-
-#: src/KeyCommands.vala:789
-msgid "Add previous word to current selection"
-msgstr ""
-
-#: src/KeyCommands.vala:790
-msgid "Add start of text to current selection (Control-Up)"
-msgstr ""
-
-#: src/KeyCommands.vala:791
-msgid "Add start of text to current selection (Control-Home)"
-msgstr ""
-
-#: src/KeyCommands.vala:792
-msgid "Add end of text to current selection (Control-Down)"
-msgstr ""
-
-#: src/KeyCommands.vala:793
-msgid "Add end of text to current selection (Control-End)"
-msgstr ""
-
-#: src/KeyCommands.vala:794
-msgid "Add start of current line to current selection"
-msgstr ""
-
-#: src/KeyCommands.vala:795
-msgid "Add end of current line to current selection"
-msgstr ""
-
-#: src/KeyCommands.vala:796 src/Shortcuts.vala:838
-msgid "Select all text"
-msgstr ""
-
-#: src/KeyCommands.vala:797
-msgid "Deselect all text"
-msgstr ""
-
-#: src/KeyCommands.vala:1966
-msgid "Select a group color"
-msgstr ""
-
-#: src/LatexRenderer.vala:420
-msgid "Unable to read LaTeX formula dimensions"
-msgstr ""
-
-#: src/LatexRenderer.vala:447
-msgid "The generated LaTeX SVG has no usable size"
-msgstr ""
-
-#: src/LatexRenderer.vala:515
-msgid "LaTeX rendering was cancelled"
-msgstr ""
-
-#: src/LatexRenderer.vala:519
-msgid "LaTeX rendering timed out"
-msgstr ""
-
-#: src/LatexRenderer.vala:523
-msgid "LaTeX rendering failed"
-msgstr ""
-
-#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:271
-#: src/MapInspector.vala:524 src/MapModel.vala:2323
-msgid "Manual"
-msgstr ""
-
-#: src/MainWindow.vala:242
->>>>>>> master:po/com.github.phase1geo.minder.pot
 msgid "New File"
 msgstr ""
 
@@ -2744,11 +1893,7 @@ msgstr ""
 msgid "Main Idea"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/MindMap.vala:1089
-=======
-#: src/MindMap.vala:1085
->>>>>>> master:po/com.github.phase1geo.minder.pot
 msgid "Select a link color"
 msgstr ""
 
@@ -2793,11 +1938,7 @@ msgstr ""
 msgid "Add Image…"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/NodeInspector.vala:393 src/Shortcuts.vala:831
-=======
-#: src/NodeInspector.vala:384 src/Shortcuts.vala:815
->>>>>>> master:po/com.github.phase1geo.minder.pot
 msgid "Edit Image"
 msgstr ""
 
@@ -3101,7 +2242,7 @@ msgstr ""
 msgid "Align Bottom"
 msgstr ""
 
-#: src/NodesMenu.vala:82 src/TableEditor.vala:320
+#: src/NodesMenu.vala:82 src/TableEditor.vala:376
 msgid "Align Left"
 msgstr ""
 
@@ -3109,7 +2250,7 @@ msgstr ""
 msgid "Align Center Vertically"
 msgstr ""
 
-#: src/NodesMenu.vala:84 src/TableEditor.vala:322
+#: src/NodesMenu.vala:84 src/TableEditor.vala:378
 msgid "Align Right"
 msgstr ""
 
@@ -3126,19 +2267,19 @@ msgstr ""
 msgid "Tables are limited to %d rows, %d columns, and %d cells."
 msgstr ""
 
-#: src/Node.vala:2883
+#: src/Node.vala:2888
 msgid "Node Title"
 msgstr ""
 
-#: src/Node.vala:2889
+#: src/Node.vala:2894
 msgid "Node Note"
 msgstr ""
 
-#: src/Node.vala:2895
+#: src/Node.vala:2900
 msgid "Node Table"
 msgstr ""
 
-#: src/Node.vala:2903
+#: src/Node.vala:2908
 msgid "Callout Text"
 msgstr ""
 
@@ -3313,7 +2454,6 @@ msgstr ""
 msgid "Search shortcuts"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/Preferences.vala:476
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr ""
@@ -3339,38 +2479,10 @@ msgid "Unable to set new shortcut due to conflicts"
 msgstr ""
 
 #: src/Preferences.vala:734
-=======
-#: src/Preferences.vala:467
-msgid "Show upgrade dialog when file upgrade is needed"
-msgstr ""
-
-#: src/Preferences.vala:471
-msgid "Show temporary directory containing current mindmap in map sidebar"
-msgstr ""
-
-#: src/Preferences.vala:481
-msgid "Default file upgrade action"
-msgstr ""
-
-#: src/Preferences.vala:555 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
-msgid "None"
-msgstr ""
-
-#: src/Preferences.vala:556
-msgid "Enter shortcut"
-msgstr ""
-
-#: src/Preferences.vala:724
-msgid "Unable to set new shortcut due to conflicts"
-msgstr ""
-
-#: src/Preferences.vala:725
->>>>>>> master:po/com.github.phase1geo.minder.pot
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/Preferences.vala:799
 msgid "Clear all shortcuts?"
 msgstr ""
@@ -3392,29 +2504,6 @@ msgid "Last Used"
 msgstr ""
 
 #: src/Preferences.vala:847 src/Preferences.vala:865
-=======
-#: src/Preferences.vala:790
-msgid "Clear all shortcuts?"
-msgstr ""
-
-#: src/Preferences.vala:790 src/Preferences.vala:801
-msgid "Current shortcut settings will be lost"
-msgstr ""
-
-#: src/Preferences.vala:801
-msgid "Use Minder Default Shortcuts?"
-msgstr ""
-
-#: src/Preferences.vala:833 src/Preferences.vala:851
-msgid "Minder Default"
-msgstr ""
-
-#: src/Preferences.vala:836 src/Preferences.vala:852
-msgid "Last Used"
-msgstr ""
-
-#: src/Preferences.vala:838 src/Preferences.vala:856
->>>>>>> master:po/com.github.phase1geo.minder.pot
 #, c-format
 msgid "Named Style: %s"
 msgstr ""
@@ -3477,7 +2566,6 @@ msgstr ""
 msgid "Insert"
 msgstr ""
 
-<<<<<<< HEAD:po/io.github.phase1geo.minder.pot
 #: src/Shortcuts.vala:806 src/Shortcuts.vala:812
 msgid "No Shortcuts Set"
 msgstr ""
@@ -3627,157 +2715,6 @@ msgid "[Double left-click on word]"
 msgstr ""
 
 #: src/Shortcuts.vala:854
-=======
-#: src/Shortcuts.vala:790 src/Shortcuts.vala:796
-msgid "No Shortcuts Set"
-msgstr ""
-
-#: src/Shortcuts.vala:811
-msgid "Mouse Events"
-msgstr ""
-
-#: src/Shortcuts.vala:814
-msgid "Show Contextual Menu"
-msgstr ""
-
-#: src/Shortcuts.vala:814
-msgid "[Right-click when item is selected]"
-msgstr ""
-
-#: src/Shortcuts.vala:815
-msgid "[Double left-click image]"
-msgstr ""
-
-#: src/Shortcuts.vala:817
-msgid "Canvas Movement"
-msgstr ""
-
-#: src/Shortcuts.vala:818
-msgid "Pan Canvas"
-msgstr ""
-
-#: src/Shortcuts.vala:818
-msgid "[Middle-click + Drag / Alt + Motion]"
-msgstr ""
-
-#: src/Shortcuts.vala:819
-msgid "Scroll Vertically"
-msgstr ""
-
-#: src/Shortcuts.vala:819
-msgid "[Scrollwheel up/down]"
-msgstr ""
-
-#: src/Shortcuts.vala:820
-msgid "Scroll Horizontally"
-msgstr ""
-
-#: src/Shortcuts.vala:820
-msgid "[Scrollwheel left/right]"
-msgstr ""
-
-#: src/Shortcuts.vala:822
-msgid "Item Selection"
-msgstr ""
-
-#: src/Shortcuts.vala:823
-msgid "Select Single Item"
-msgstr ""
-
-#: src/Shortcuts.vala:823
-msgid "[Left-click on item]"
-msgstr ""
-
-#: src/Shortcuts.vala:824
-msgid "Select Child Nodes"
-msgstr ""
-
-#: src/Shortcuts.vala:824
-msgid "[Control + Left-click on parent node]"
-msgstr ""
-
-#: src/Shortcuts.vala:825
-msgid "Select Node Tree/Subtree"
-msgstr ""
-
-#: src/Shortcuts.vala:825
-msgid "[Control + Double left-click on parent node]"
-msgstr ""
-
-#: src/Shortcuts.vala:826
-msgid "Select All Nodes at Same Depth Level"
-msgstr ""
-
-#: src/Shortcuts.vala:826
-msgid "[Control + Triple left-click on node]"
-msgstr ""
-
-#: src/Shortcuts.vala:827
-msgid "Block Selection"
-msgstr ""
-
-#: src/Shortcuts.vala:827
-msgid "[Left-click + Drag]"
-msgstr ""
-
-#: src/Shortcuts.vala:829
-msgid "Item Selection Toggle"
-msgstr ""
-
-#: src/Shortcuts.vala:830
-msgid "Toggle Selection of Item"
-msgstr ""
-
-#: src/Shortcuts.vala:830
-msgid "[Shift + Left-click on item]"
-msgstr ""
-
-#: src/Shortcuts.vala:831
-msgid "Toggle Selection of Child Nodes"
-msgstr ""
-
-#: src/Shortcuts.vala:831
-msgid "[Shift + Control + Left-click on item]"
-msgstr ""
-
-#: src/Shortcuts.vala:832
-msgid "Toggle Selection of Node Tree/Subtree"
-msgstr ""
-
-#: src/Shortcuts.vala:832
-msgid "[Shift + Control + Double left-click on parent node]"
-msgstr ""
-
-#: src/Shortcuts.vala:833
-msgid "Toggle Selection of All Nodes at Same Depth Level"
-msgstr ""
-
-#: src/Shortcuts.vala:833
-msgid "[Shift + Control + Triple-click on node]"
-msgstr ""
-
-#: src/Shortcuts.vala:835
-msgid "Text Selection"
-msgstr ""
-
-#: src/Shortcuts.vala:836
-msgid "Set Cursor Insert Point"
-msgstr ""
-
-#: src/Shortcuts.vala:836
-msgid "[Left-click in text]"
-msgstr ""
-
-#: src/Shortcuts.vala:837
-msgid "Select Current Word"
-msgstr ""
-
-#: src/Shortcuts.vala:837
-msgid "[Double left-click on word]"
-msgstr ""
-
-#: src/Shortcuts.vala:838
->>>>>>> master:po/com.github.phase1geo.minder.pot
 msgid "[Triple left-click text]"
 msgstr ""
 
@@ -5281,91 +4218,91 @@ msgstr ""
 msgid "Long Dash"
 msgstr ""
 
-#: src/TableEditor.vala:234
+#: src/TableEditor.vala:290
 msgid "Add Row Above"
 msgstr ""
 
-#: src/TableEditor.vala:235
+#: src/TableEditor.vala:291
 msgid "Add Row Below"
 msgstr ""
 
-#: src/TableEditor.vala:237
+#: src/TableEditor.vala:293
 msgid "Delete Selected Rows"
 msgstr ""
 
-#: src/TableEditor.vala:243
+#: src/TableEditor.vala:299
 msgid "Row Actions"
 msgstr ""
 
-#: src/TableEditor.vala:253
+#: src/TableEditor.vala:309
 msgid "Add Column Left"
 msgstr ""
 
-#: src/TableEditor.vala:254
+#: src/TableEditor.vala:310
 msgid "Add Column Right"
 msgstr ""
 
-#: src/TableEditor.vala:256
+#: src/TableEditor.vala:312
 msgid "Delete Selected Columns"
 msgstr ""
 
-#: src/TableEditor.vala:262
+#: src/TableEditor.vala:318
 msgid "Column Actions"
 msgstr ""
 
-#: src/TableEditor.vala:308
+#: src/TableEditor.vala:364
 msgid "Undo Table Edit (Ctrl+Z)"
 msgstr ""
 
-#: src/TableEditor.vala:311
+#: src/TableEditor.vala:367
 msgid "Paste Table"
 msgstr ""
 
-#: src/TableEditor.vala:314
+#: src/TableEditor.vala:370
 msgid "Merge Selection"
 msgstr ""
 
-#: src/TableEditor.vala:315
+#: src/TableEditor.vala:371
 msgid "Split Cell"
 msgstr ""
 
-#: src/TableEditor.vala:316
+#: src/TableEditor.vala:372
 msgid "Clear Cells"
 msgstr ""
 
-#: src/TableEditor.vala:317 src/TextMenu.vala:41
+#: src/TableEditor.vala:373 src/TextMenu.vala:41
 msgid "Insert Emoji"
 msgstr ""
 
-#: src/TableEditor.vala:321
+#: src/TableEditor.vala:377
 msgid "Align Center"
 msgstr ""
 
-#: src/TableEditor.vala:326
+#: src/TableEditor.vala:382
 msgid "Highlight Cells"
 msgstr ""
 
-#: src/TableEditor.vala:330
+#: src/TableEditor.vala:386
 msgid "Bold"
 msgstr ""
 
-#: src/TableEditor.vala:334
+#: src/TableEditor.vala:390
 msgid "Italic"
 msgstr ""
 
-#: src/TableEditor.vala:338
+#: src/TableEditor.vala:394
 msgid "Underline"
 msgstr ""
 
-#: src/TableEditor.vala:342
+#: src/TableEditor.vala:398
 msgid "Strikethrough"
 msgstr ""
 
-#: src/TableEditor.vala:356
+#: src/TableEditor.vala:412
 msgid "Selected cells:"
 msgstr ""
 
-#: src/TableEditor.vala:362
+#: src/TableEditor.vala:418
 msgid "Delete Table"
 msgstr ""
 
@@ -5396,11 +4333,11 @@ msgstr ""
 msgid "Click to remove tag from highlight"
 msgstr ""
 
-#: src/TagEditor.vala:307
+#: src/TagEditor.vala:308
 msgid "Enter name of tag to find or create"
 msgstr ""
 
-#: src/TagEditor.vala:424
+#: src/TagEditor.vala:425
 #, c-format
 msgid "Create '%s' tag"
 msgstr ""
