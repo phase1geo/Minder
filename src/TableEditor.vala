@@ -154,6 +154,8 @@ private class TableCellEntry : Grid {
 public class TableEditor {
 
   private const int MAX_UNDO_STATES = 50;
+  private const int POPOVER_PAD = 20;   // Room for the popover arrow and shadow
+
   private DrawArea _draw_area;
   private Popover _popover;
   private Grid _grid;
@@ -179,6 +181,8 @@ public class TableEditor {
   private EventControllerLegacy? _blocker = null;
   private Gtk.Window? _win = null;
   private ulong _active_id = 0;
+  private uint _deactivate_id     = 0;
+  private bool _popover_has_focus = false;
 
   public signal void changed( Node node, NodeTable? original_table );
 
@@ -234,20 +238,80 @@ public class TableEditor {
     _win = _draw_area.get_root() as Gtk.Window;
     if( _win == null ) return;
     _active_id = _win.notify["is-active"].connect(() => {
-      if( !_win.is_active ) {
-        close_editor();
-      }
+      if( (_win == null) || _win.is_active || (_deactivate_id != 0) ) return;
+      _deactivate_id = Timeout.add( 150, () => {
+        _deactivate_id = 0;
+        if( (_win != null) && !_win.is_active && !_popover_has_focus && _popover.visible ) {
+          close_editor();
+        }
+        return( Source.REMOVE );
+      });
     });
   }
 
   //-------------------------------------------------------------
   // Undoes the affects of watch_focus.
   private void unwatch_focus() {
+    if( _deactivate_id != 0 ) {
+      Source.remove( _deactivate_id );
+      _deactivate_id = 0;
+    }
     if( (_win != null) && (_active_id != 0) ) {
       _win.disconnect( _active_id );
     }
     _active_id = 0;
     _win       = null;
+    _popover_has_focus = false;
+  }
+
+  //-------------------------------------------------------------
+  // Sizes and positions the popover so that it always fits within
+  // the window.  (x, y) is the anchor point in the canvas's
+  // coordinates.
+  private void place_popover( double x, double y ) {
+
+    var win = (Widget)_draw_area.get_root();
+
+    // Convert the anchor point into window coordinates
+    Graphene.Point pt  = {(float)x, (float)y};
+    Graphene.Point wpt;
+    if( !_draw_area.compute_point( win, pt, out wpt ) ) {
+      wpt = pt;
+    }
+
+    var win_w = win.get_width();
+    var win_h = win.get_height();
+
+    // Figure out how much of the popover is not the editing area
+    int pw, ph;
+    _popover.child.measure( Orientation.HORIZONTAL, -1, null, out pw, null, null );
+    _popover.child.measure( Orientation.VERTICAL,   pw, null, out ph, null, null );
+
+    // Keep the popover horizontally within the window
+    var cx = double.max( (pw / 2.0), double.min( (win_w - (pw / 2.0)), wpt.x ) );
+    var dx = cx - wpt.x;
+    var dy = 0.0;
+
+    var pos       = PositionType.BOTTOM;
+    var has_arrow = true;
+
+    if( (win_h - wpt.y) >= (ph + POPOVER_PAD) ) {
+      pos = PositionType.BOTTOM;
+    } else if( wpt.y >= (ph + POPOVER_PAD) ) {
+      pos = PositionType.TOP;
+    } else {
+      // There is room neither above nor below the anchor point, so
+      // center the popover vertically in the window without an arrow
+      has_arrow = false;
+      dy = ((win_h - ph) / 2.0) - wpt.y;
+    }
+
+    Gdk.Rectangle rect = {(int)(x + dx), (int)(y + dy), 1, 1};
+
+    _popover.position     = pos;
+    _popover.has_arrow    = has_arrow;
+    _popover.pointing_to  = rect;
+
   }
 
   //-------------------------------------------------------------
@@ -435,12 +499,22 @@ public class TableEditor {
     content.append( scroller );
     content.append( action_buttons );
 
+    var focus = new EventControllerFocus();
+    content.add_controller( focus );
+    focus.notify["contains-focus"].connect(() => {
+      _popover_has_focus = focus.contains_focus;
+    });
+
     _popover = new Popover() {
       child = content,
       autohide = false,
       position = PositionType.RIGHT
     };
     _popover.set_parent( _draw_area );
+    _popover.closed.connect(() => {
+      unblock_window_input();
+      unwatch_focus();
+    });
 
     var key = new EventControllerKey() {
       propagation_phase = PropagationPhase.CAPTURE
@@ -499,19 +573,11 @@ public class TableEditor {
     _undo_states.remove_range( 0, _undo_states.length );
     _undo_button.sensitive = false;
     rebuild_grid();
-    double node_x, node_y, node_width, node_height;
-    node.node_bbox( out node_x, out node_y, out node_width, out node_height );
-    var scale = _draw_area.sfactor;
-    var rectangle = Gdk.Rectangle() {
-      x = (int)Math.floor( node_x * scale ),
-      y = (int)Math.floor( node_y * scale ),
-      width = int.max( 1, (int)Math.ceil( node_width * scale ) ),
-      height = int.max( 1, (int)Math.ceil( node_height * scale ) )
-    };
-    _popover.pointing_to = rectangle;
+    place_popover( node.posx, node.posy );
     block_window_input();
     _popover.popup();
     watch_focus();
+    _undo_button.grab_focus();
   }
 
   //-------------------------------------------------------------
