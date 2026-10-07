@@ -44,7 +44,7 @@ Minder has the ability to export created mind-map information into several diffe
 
 ## Exporting to a File Format
 
-Exporting a document is pretty straightforward.  Click on the `Export` button in the headerbar of the application.  The resulting popover window will display the export panel at the top.  Select the export format from the dropdown menu, change any applicable export options, and select the `Export...` option.  This will display a file dialog window to allow you to choose a save location.  After selecting a directory, choosing a location to save the file to and giving it a name, click the Export button.  Minder will automatically add the proper file extension if it is not provided in the name.
+Exporting a document is pretty straightforward.  Click on the `Export` button in the header bar of the application.  The resulting popover window will display the export panel at the top.  Select the export format from the dropdown menu, change any applicable export options, and select the `Export...` option.  This will display a file dialog window to allow you to choose a save location.  After selecting a directory, choosing a location to save the file to and giving it a name, click the Export button.  Minder will automatically add the proper file extension if it is not provided in the name.
 
 ### Exporting to the Clipboard
 

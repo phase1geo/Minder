@@ -86,7 +86,7 @@ Clicking on this button will display the document search and search filter popup
 
 Clicking on this button will display a menu that will provide a series of exporting options. More information on export support can be found [here](Exporting.md).
 
-### Miscellaneous
+#### Miscellaneous
 
 Clicking on this button will display the miscellaneous menu which contains menu items to view [keyboard shortcuts](Keyboard-shortcuts.md), preferences, and the About menu.
 
