@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Adding Images
+title: Images
 parent: Creating a Mind Map
 nav_order: 2
 ---
 
-# Adding Images
+# Images
 
 Minder supports adding user images to mind-maps as a part of a node in the tree.
 

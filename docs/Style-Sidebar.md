@@ -4,7 +4,10 @@ title: Style Tab
 parent: Sidebar
 nav_order: 2
 has_children: true
+has_toc: false
 ---
+
+# Style Sidebar Tab
 
 To view or change the style of nodes, connections and groups (either the currently selected items or all items if nothing is selected), click on the **Style** tab within the sidebar. This will display a list of style selectors which are grouped by the  canvas item that they control.  Each group may have its contents hidden or revealed by clicking on the chevron next to the group name.  Additionally, the style sidebar will dynamically adjust its contents based on the currently selected item(s) in the canvas.
 

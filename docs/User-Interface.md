@@ -7,6 +7,8 @@ has_children: true
 has_toc: false
 ---
 
+# User Interface
+
 The interface for Minder is intended to be minimal, putting the focus on the content itself. The main window is comprised of three main components:
 
 * [The header bar](Header-Bar.md)

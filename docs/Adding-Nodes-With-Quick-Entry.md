@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Adding Nodes With Quick Entry
+title: Quick Entry
 parent: Creating a Mind Map
 nav_order: 9
 ---

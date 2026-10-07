@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Adding Notes
+title: Notes
 parent: Creating a Mind Map
 nav_order: 5
 ---
 
-# Adding Notes
+# Notes
 
 Each node in the mind map can have free-form text associated with it in the form of a note.  The note is written and stored in Markdown format.  The note text is not displayed directly in the mind map itself but is viewable either by clicking on the note icon to the right of the node’s title or by viewing the Current tab in the sidebar when the node is selected in the mind map.
 

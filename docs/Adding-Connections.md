@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Adding Connections
+title: Connections
 parent: Creating a Mind Map
 nav_order: 6
 ---
 
-# Adding Connections
+# Connections
 
 A mind map tree shows the relationships between an idea and subideas using a parent/child relationship; however, sometimes it is useful to show a connection between two ideas that do not share this relationship. For this reason, Minder supports creating a connection between any two nodes in the mind map.
 

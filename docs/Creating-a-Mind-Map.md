@@ -4,6 +4,7 @@ title: Creating a Mind Map
 parent: Documentation
 nav_order: 3
 has_children: true
+has_toc: false
 ---
 
 # Creating a Mind Map

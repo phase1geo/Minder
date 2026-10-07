@@ -5,7 +5,7 @@ parent: Sidebar
 nav_order: 3
 ---
 
-# Tags Tab
+# Tags Sidebar Tab
 
 Tags added to nodes provide additional context and allow nodes that do not have a parent-child relationship to be grouped together. When nodes are tagged, the user can easily see all nodes within a particular group or combination of groups by using the tag sidebar. Tags can also act as a filter in searching nodes, allowing you to search for nodes that have a given set of tags.
 

@@ -4,6 +4,7 @@ title: Changing the View
 parent: Documentation
 nav_order: 4
 has_children: true
+has_toc: false
 ---
 
 # Changing the View

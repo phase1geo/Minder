@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Adding Node Groups
+title: Node Groups
 parent: Creating a Mind Map
 nav_order: 8
 ---

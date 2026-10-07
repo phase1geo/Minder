@@ -5,7 +5,7 @@ parent: Sidebar
 nav_order: 4
 ---
 
-# Stickers Tab
+# Stickers Sidebar Tab
 
 Stickers are a great way to add meaning to a node, connection or other area of the mind map with a visual image.  You can attach a sticker to a node and a connection.  You can also place a sticker anywhere else within the mind-map.
 

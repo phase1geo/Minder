@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Adding URL Links
+title: URL Links
 parent: Creating a Mind Map
 nav_order: 4
 ---
