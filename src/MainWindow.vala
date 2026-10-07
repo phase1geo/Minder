@@ -1396,8 +1396,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     GLib.Menu menu;
 
     var misc_menu = new GLib.Menu();
-    append_menu_item( misc_menu, KeyCommand.SHOW_PREFERENCES, _( "Preferences" ) );
-    append_menu_item( misc_menu, KeyCommand.SHOW_SHORTCUTS,   _( "Shortcuts Cheatsheet" ) );
+    append_menu_item( misc_menu, KeyCommand.SHOW_PREFERENCES,   _( "Preferences" ) );
+    append_menu_item( misc_menu, KeyCommand.SHOW_SHORTCUTS,     _( "Shortcuts Cheatsheet" ) );
+    append_menu_item( misc_menu, KeyCommand.SHOW_DOCUMENTATION, _( "Documentation" ) );
 
     var about_menu = new GLib.Menu();
     append_menu_item( about_menu, KeyCommand.SHOW_ABOUT, _( "About Minder" ) );

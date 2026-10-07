@@ -68,6 +68,7 @@ public enum KeyCommand {
     MISCELLANEOUS_START,
       SHOW_PREFERENCES,
       SHOW_SHORTCUTS,
+      SHOW_DOCUMENTATION,
       SHOW_CONTEXTUAL_MENU,
       SHOW_FIND,
       SHOW_ABOUT,
@@ -319,6 +320,7 @@ public enum KeyCommand {
       case UNFOLD_ALL_NODES          :  return( "unfold-all-nodes" );
       case SHOW_PREFERENCES          :  return( "show-preferences" );
       case SHOW_SHORTCUTS            :  return( "show-shortcuts" );
+      case SHOW_DOCUMENTATION        :  return( "show-documentation" );
       case SHOW_CONTEXTUAL_MENU      :  return( "show-contextual_menu" );
       case SHOW_FIND                 :  return( "show-find" );
       case SHOW_ABOUT                :  return( "show-about" );
@@ -522,6 +524,7 @@ public enum KeyCommand {
       case "unfold-all-nodes"          :  return( UNFOLD_ALL_NODES );
       case "show-preferences"          :  return( SHOW_PREFERENCES );
       case "show-shortcuts"            :  return( SHOW_SHORTCUTS );
+      case "show-documentation"        :  return( SHOW_DOCUMENTATION );
       case "show-contextual-menu"      :  return( SHOW_CONTEXTUAL_MENU );
       case "show-find"                 :  return( SHOW_FIND );
       case "show-about"                :  return( SHOW_ABOUT );
@@ -726,6 +729,7 @@ public enum KeyCommand {
       case MISCELLANEOUS_START       :  return( _( "Miscellaneous Commands" ) );
       case SHOW_PREFERENCES          :  return( _( "Show preferences window" ) );
       case SHOW_SHORTCUTS            :  return( _( "Show shortcuts cheatsheet" ) );
+      case SHOW_DOCUMENTATION        :  return( _( "Show user documentation webpage" ) );
       case SHOW_CONTEXTUAL_MENU      :  return( _( "Show contextual menu" ) );
       case SHOW_FIND                 :  return( _( "Show find popup" ) );
       case SHOW_ABOUT                :  return( _( "Show About window" ) );
@@ -932,6 +936,7 @@ public enum KeyCommand {
       case UNFOLD_ALL_NODES          :  return( unfold_all_nodes );
       case SHOW_PREFERENCES          :  return( show_preferences );
       case SHOW_SHORTCUTS            :  return( show_shortcuts );
+      case SHOW_DOCUMENTATION        :  return( show_documentation );
       case SHOW_CONTEXTUAL_MENU      :  return( show_contextual_menu );
       case SHOW_FIND                 :  return( show_find );
       case SHOW_ABOUT                :  return( show_about );
@@ -1571,6 +1576,10 @@ public enum KeyCommand {
 
     win.show();
 
+  }
+
+  public static void show_documentation( MindMap map ) {
+    Utils.open_url( "https://phase1geo.github.io/Minder/" );
   }
 
   public static void show_contextual_menu( MindMap map ) {
