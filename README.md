@@ -155,7 +155,7 @@ Debian/Ubuntu package is also available:
 
 ## Documentation
 
-Minder documentation can be found [here](https://github.com/phase1geo/Minder/wiki/Table-of-Contents).
+Minder documentation can be found [here](https://phase1geo.github.io/Minder/).
 
 <p align="center">
   <a href="https://appcenter.elementary.io/io.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
