@@ -106,7 +106,9 @@ escaped `\|` characters.
 To keep the editor responsive, imported and pasted tables are limited to 100
 rows, 50 columns, and 1,000 cells.
 
-To install, run `sudo ./app install` and then run the application from your application launcher or from
+## Installing From Source
+
+To install from source, run `sudo ./app install` and then run the application from your application launcher or from
 the command-line with `./app run`.  If you want to debug with gdb using this build, run `./app debug`.
 
 Alternatively, you can install the elementary OS Flatpak using `./app elementary` or the Flathub Flatpak using `./app flathub`.  Once the Flatpak has been built, it can be run using `./app run-flatpak`.  To make this work, make sure that `flatpak` and `flatpak-builder` are installed on your system along with the required Sdk and Platform flatpaks.
