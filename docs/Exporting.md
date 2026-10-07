@@ -19,7 +19,6 @@ Minder has the ability to export created mind-map information into several diffe
 ### Image Formats
 
 - JPEG
-- BMP
 - PNG
 - SVG
 - WebP
@@ -30,16 +29,16 @@ Minder has the ability to export created mind-map information into several diffe
 - Freeplane
 - Mermaid Mindmap
 - OPML
+- PlantUML Mindmap
 - Portable Minder
-- XMind
+- XMind 8
 - yEd
 
 ### Other Formats
 
-- Mermaid
-  * Diagramming file format
-- Outliner
-  * Outlining application
+- Mermaid (_Diagramming file format_)
+- Outliner (_Outlining application_)
+- File System (_Create filesystem using mind map tree layout_)
 - PDF
 
 ## Exporting to a File Format
