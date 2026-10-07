@@ -11,7 +11,7 @@ This is the main area below the header bar where the user can create, edit, view
 
 The following is a representation of this area.
 
-![Mind Map Canvas](https://github.com/phase1geo/Minder/wiki/images/canvas.png)
+![Mind Map Canvas](images/canvas.png)
 
 ### Navigating the Canvas
 
