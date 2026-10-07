@@ -4,6 +4,7 @@ title: User Interface
 parent: Documentation
 nav_order: 2
 has_children: true
+has_toc: false
 ---
 
 The interface for Minder is intended to be minimal, putting the focus on the content itself. The main window is comprised of three main components:
