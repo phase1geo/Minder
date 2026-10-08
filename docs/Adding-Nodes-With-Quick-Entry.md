@@ -2,7 +2,7 @@
 layout: default
 title: Quick Entry
 parent: Creating a Mind Map
-nav_order: 9
+nav_order: 11
 ---
 
 # Quick Entry
@@ -13,7 +13,7 @@ The Quick Entry utility can be used in two different modes. One for inserting ne
 
 The quick entry insertion utility can be invoked with the keyboard shortcut (Control-Shift-E) when either a single node is selected or no nodes are selected.  The quick entry replacement utility can be invoked with the keyboard shortcut (Control-Shift-R) when a single node is selected.
 
-#### Quick Entry UI
+## Quick Entry UI
 
 The user interface for the the quick entry window is straightforward with a standard text field at the top of the window, a syntax help button in the lower left corner, a `Cancel` button on the lower right side, and either an `Insert` or `Replace` button in the lower right corner of the window.  A representation of this field is listed below:
 

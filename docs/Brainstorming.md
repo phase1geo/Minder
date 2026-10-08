@@ -2,7 +2,7 @@
 layout: default
 title: Brainstorming
 parent: Creating a Mind Map
-nav_order: 10 
+nav_order: 12 
 ---
 
 # Brainstorming

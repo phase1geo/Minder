@@ -2,7 +2,7 @@
 layout: default
 title: Node Groups
 parent: Creating a Mind Map
-nav_order: 8
+nav_order: 10
 ---
 
 # Node Groups

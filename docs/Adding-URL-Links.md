@@ -26,6 +26,6 @@ The characters following the prefix string must be valid for that URI type and m
 
 ### Jumping to a link
 
-To click on a URL to jump to it in edit mode, position the cursor anywhere within the linked text, right-click to display the contextual menu and select the **Open URL** menu item.  This will automatically open the URL in the preferred application.
+To jump to a URL in edit mode, position the cursor anywhere within the linked text, right-click to display the contextual menu and select the **Open Link** menu item.  This will automatically open the URL in the preferred application.
 
-To click on a URL when the node title is not being edited, simply hold the Control button while clicking anywhere in the link text.  This will display a popover displaying the URL that will be visited.  To visit the URL, click on the popover URL.  To remove the popover, click anywhere else on the canvas.
+To jump to a URL when the node title is not being edited, simply hold the Control button while clicking anywhere in the link text.  To view any link's URL, hold down control while positioning the mouse over the link.  This will display a tooltip showing the associated URL.
