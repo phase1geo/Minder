@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Note Field
+parent: Current Tab
 nav_order: 1
 ---
 
