@@ -391,12 +391,28 @@ public class NodeTable : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns the alignment to use for all empty row cells at the given
+  // column.
+  private Pango.Alignment get_alignment_for_cell( int column ) {
+    for( int row=0; row<rows; row++ ) {
+      var cell = cell_at( row, column );
+      if( cell != null ) {
+        return( cell.alignment );
+      }
+    }
+    return( Pango.Alignment.LEFT );
+  }
+
+  //-------------------------------------------------------------
   // Adds individual cells for every uncovered grid position.
   private void fill_empty_cells() {
-    for( int row=0; row<rows; row++ ) {
-      for( int column=0; column<columns; column++ ) {
+    for( int column=0; column<columns; column++ ) {
+      var col_alignment = get_alignment_for_cell( column );
+      for( int row=0; row<rows; row++ ) {
         if( cell_at( row, column ) == null ) {
-          append_cell( new NodeTableCell( _map, row, column ) );
+          var cell = new NodeTableCell( _map, row, column );
+          cell.set_text_alignment( col_alignment );
+          append_cell( cell );
         }
       }
     }
