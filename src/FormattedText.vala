@@ -164,6 +164,9 @@ public class FormattedText {
        	FormattedRange** y1 = (FormattedRange**)y;
         return( (int)((*x1)->start > (*y1)->start) - (int)((*x1)->start < (*y1)->start) );
       }
+      public string to_string() {
+        return( "start: %d, end: %d, extra: %s".printf( start, end, (extra ?? "null") ) );
+      }
     }
 
     private Array<FormattedRange> _info;
@@ -437,6 +440,21 @@ public class FormattedText {
         if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "range") ) {
           _info.append_val( new FormattedRange.from_xml( it ) );
         }
+      }
+    }
+
+    //-------------------------------------------------------------
+    // Returns a string version of this instance (for debugging purposes).
+    public string to_string() {
+      if( _info.length == 0 ) {
+        return( "" );
+      } else {
+        string str = "";
+        for( int i=0; i<_info.length; i++ ) {
+          var info = _info.index( i );
+          str += "    %d: %s\n".printf( i, info.to_string() );
+        }
+        return( str );
       }
     }
 
@@ -768,7 +786,7 @@ public class FormattedText {
   private string            _text      = "";
   private Array<TextParser> _parsers   = new Array<TextParser>();
 
-  public signal void changed();
+  public signal void changed( string msg );
 
   public string text {
     get {
@@ -843,6 +861,11 @@ public class FormattedText {
     for( int i=0; i<FormatTag.LENGTH; i++ ) {
       _formats[i] = new TagInfo();
     }
+    /*
+    changed.connect((msg) => {
+      stdout.printf( "%s: %s", msg, to_string( true ) );
+    });
+    */
   }
 
   //-------------------------------------------------------------
@@ -881,7 +904,7 @@ public class FormattedText {
     _parsers.append_val( parser );
     parser.enable_changed.connect( handle_parser_enable_change );
     parse();
-    changed();
+    changed( "add_parser" );
   }
 
   //-------------------------------------------------------------
@@ -889,7 +912,7 @@ public class FormattedText {
   // its parsers.
   private void handle_parser_enable_change() {
     parse();
-    changed();
+    changed( "handle_parser_enable_change" );
   }
 
   //-------------------------------------------------------------
@@ -900,7 +923,7 @@ public class FormattedText {
         parser.enable_changed.disconnect( handle_parser_enable_change );
         _parsers.remove_index( i );
         parse( true );
-        changed();
+        changed( "remove_parser" );
         return;
       }
     }
@@ -913,7 +936,7 @@ public class FormattedText {
     for( int i=0; i<FormatTag.LENGTH; i++ ) {
       _formats[i].copy( other._formats[i] );
     }
-    changed();
+    changed( "copy" );
   }
 
   //-------------------------------------------------------------
@@ -936,7 +959,7 @@ public class FormattedText {
       f.adjust( index, str.length );
     }
     parse();
-    changed();
+    changed( "insert_text" );
   }
 
   //-------------------------------------------------------------
@@ -957,7 +980,7 @@ public class FormattedText {
       f.adjust( index, ((0 - chars) + str.length) );
     }
     parse();
-    changed();
+    changed( "replace_text" );
   }
 
   //-------------------------------------------------------------
@@ -970,42 +993,42 @@ public class FormattedText {
       f.adjust( index, (0 - chars) );
     }
     parse();
-    changed();
+    changed( "remove_text" );
   }
 
   //-------------------------------------------------------------
   // Adds the given tag.
-  public void add_tag( FormatTag tag, int start, int end, bool parsed, string? extra=null ) {
+  public void add_tag( string msg, FormatTag tag, int start, int end, bool parsed, string? extra=null ) {
     _formats[tag].add_tag( start, end, extra, parsed );
-    changed();
+    changed( "add_tag %s".printf( msg ) );
   }
 
   //-------------------------------------------------------------
   // Replaces the given tag with the given range.
   public void replace_tag( FormatTag tag, int start, int end, bool parsed, string? extra=null ) {
     _formats[tag].replace_tag( start, end, extra, parsed );
-    changed();
+    changed( "replace_tag" );
   }
 
   //-------------------------------------------------------------
   // Removes the given tag
   public void remove_tag( FormatTag tag, int start, int end ) {
     _formats[tag].remove_tag( start, end );
-    changed();
+    changed( "remove_tag" );
   }
 
   //-------------------------------------------------------------
   // Removes all parsed ranges for the given tag.
   public void remove_parsed_tags( FormatTag tag ) {
     _formats[tag].remove_parsed_tags();
-    changed();
+    changed( "remove_parsed_tags" );
   }
 
   //-------------------------------------------------------------
   // Removes all parsed ranges for the given tag
   public void remove_tag_all( FormatTag tag ) {
     _formats[tag].remove_tag_all();
-    changed();
+    changed( "remove_tag_all" );
   }
 
   //-------------------------------------------------------------
@@ -1014,7 +1037,7 @@ public class FormattedText {
     for( int i=0; i<FormatTag.LENGTH-3; i++ ) {
       _formats[i].remove_tag( start, end );
     }
-    changed();
+    changed( "remove_all_tags" );
   }
 
   //-------------------------------------------------------------
@@ -1093,7 +1116,7 @@ public class FormattedText {
       var info = tags.index( i );
       _formats[info.tag].add_tag( (info.start + start), (info.end + start), info.extra, info.parsed );
     }
-    changed();
+    changed( "apply_tags" );
   }
 
   //-------------------------------------------------------------
@@ -1245,7 +1268,23 @@ public class FormattedText {
       }
     }
     parse();
-    changed();
+    changed( "load" );
+  }
+
+  //-------------------------------------------------------------
+  // Returns a string version of this formatted text.
+  public string to_string( bool include_ranges = false ) {
+    string str = _text;
+    if( include_ranges ) {
+      str += "\n";
+      for( int i=0; i<FormatTag.LENGTH; i++ ) {
+        var tag = (FormatTag)i;
+        if( !_formats[i].is_empty() ) {
+          str += "  %s\n%s".printf( tag.to_string(), _formats[i].to_string() );
+        }
+      }
+    }
+    return( str );
   }
 
 }

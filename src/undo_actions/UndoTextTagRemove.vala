@@ -41,7 +41,7 @@ public class UndoTextTagRemove : UndoTextItem {
   //-------------------------------------------------------------
   // Causes the stored item to be put into the before state
   public override void undo_text( MindMap map, CanvasText ct ) {
-    ct.text.add_tag( tag, start, end, parsed, extra );
+    ct.text.add_tag( "undo_remove", tag, start, end, parsed, extra );
     ct.set_cursor_only( start_cursor );
     map.queue_draw();
   }

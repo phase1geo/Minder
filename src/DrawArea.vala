@@ -2451,7 +2451,7 @@ public class DrawArea : Gtk.DrawingArea {
     orig_text.copy( name );
     tagger.preedit_load_tags( name.text );
     name.text.insert_text( name.text.text.length, (" @" + tag) );
-    name.text.changed();
+    name.text.changed( "da::add_tag" );
     tagger.postedit_load_tags( name.text );
     _map.add_undo( new UndoNodeName( _map, node, orig_text ) );
     _map.auto_save();

@@ -982,7 +982,7 @@ public class CanvasText : Object {
       for( int i=0; i<ttags.length; i++ ) {
         var ttag = ttags.index( i );
         var ftag = (FormatTag)ttag.tag;
-        text.add_tag( ftag, (ttag.start + spos), (ttag.end + spos), ttag.parsed, ttag.extra );
+        text.add_tag( "ct-A", ftag, (ttag.start + spos), (ttag.end + spos), ttag.parsed, ttag.extra );
       }
       set_cursor_only( _selstart + slen );
       change_selection( _cursor, _cursor, "insert_formatted_text A" );
@@ -993,7 +993,7 @@ public class CanvasText : Object {
       for( int i=0; i<ttags.length; i++ ) {
         var ttag = ttags.index( i );
         var ftag = (FormatTag)ttag.tag;
-        text.add_tag( ftag, (ttag.start + cpos), (ttag.end + cpos), ttag.parsed, ttag.extra );
+        text.add_tag( "ct-B", ftag, (ttag.start + cpos), (ttag.end + cpos), ttag.parsed, ttag.extra );
       }
       set_cursor_only( _cursor + slen );
       change_selection( _cursor, _cursor, "insert_formatted_text A" );
@@ -1137,7 +1137,7 @@ public class CanvasText : Object {
   public void add_tag( FormatTag tag, string? extra, bool parsed, UndoTextBuffer undo_buffer ) {
     var spos = is_selected() ? text.text.index_of_nth_char( _selstart ) : 0;
     var epos = is_selected() ? text.text.index_of_nth_char( _selend )   : text.text.length;
-    text.add_tag( tag, spos, epos, parsed, extra );
+    text.add_tag( "ct-add", tag, spos, epos, parsed, extra );
     undo_buffer.add_tag_add( spos, epos, tag, extra, parsed, _cursor );
   }
 

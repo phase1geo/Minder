@@ -48,7 +48,7 @@ public class UnicodeParser : TextParser {
     var tag = get_text( match, 0 );
 
     // Highlight the tag
-    add_tag( text, match, 0, FormatTag.TAG, tag );
+    add_tag( "unicode", text, match, 0, FormatTag.TAG, tag );
 
     // If the FormattedText item matches the currently edited
     if( _map.is_node_selected() ) {

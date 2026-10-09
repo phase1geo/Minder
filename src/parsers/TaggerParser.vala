@@ -43,7 +43,7 @@ public class TaggerParser : TextParser {
     var tag = get_text( match, 2 );
 
     // Highlight the tag
-    add_tag( text, match, 1, FormatTag.TAG, tag );
+    add_tag( "tag", text, match, 1, FormatTag.TAG, tag );
 
     // If the FormattedText item matches the currently edited
     var current = _map.get_current_node();
