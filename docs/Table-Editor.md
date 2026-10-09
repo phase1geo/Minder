@@ -1,3 +1,10 @@
+---
+layout: default
+title: Table Editor
+parent: Adding Tables
+nav_order: 1
+---
+
 # Table Editor
 
 The following image depicts the node table editor interface.

@@ -3,6 +3,8 @@ layout: default
 title: Adding Tables
 parent: Creating a Mind Map
 nav_order: 10
+has_children: true
+has_toc: false
 ---
 
 # Tables
