@@ -181,6 +181,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private SimpleActionGroup _actions;
   private Gee.HashMap<KeyCommand,ShortcutTooltip> _shortcut_widgets;
   private Templates                               _templates;
+  private bool              _mouse_in_sidebar = false;
 
   private bool on_elementary = Utils.on_elementary();
 
@@ -1502,7 +1503,31 @@ public class MainWindow : Gtk.ApplicationWindow {
       active       = false,
       tooltip_text = _( "Show Property Sidebar" )
     };
-    _prop_btn.toggled.connect( inspector_clicked );
+    _prop_btn.clicked.connect( inspector_clicked );
+    
+    var prop_motion = new EventControllerMotion();
+    _prop_btn.add_controller( prop_motion );
+    prop_motion.enter.connect((x, y) => {
+      _mouse_in_sidebar = true;
+      if( !_prop_btn.active ) {
+        Timeout.add( 500, () => {
+          peek_properties();
+          return( false );
+        });
+      }
+    });
+    prop_motion.leave.connect(() => {
+      _mouse_in_sidebar = false;
+      if( !_prop_btn.active ) {
+        Timeout.add( 200, () => {
+          if( !_mouse_in_sidebar ) {
+            hide_properties();
+          }
+          return( false );
+        });
+      }
+    });
+
     _header.pack_end( _prop_btn );
 
     _stack = new Stack() {
@@ -1618,6 +1643,23 @@ public class MainWindow : Gtk.ApplicationWindow {
     _inspector_nb.append_page( box );
     _inspector_nb.append_page( _themer );
 
+    var inspector_motion = new EventControllerMotion();
+    _inspector_nb.add_controller( inspector_motion );
+    inspector_motion.enter.connect((x, y) => {
+      _mouse_in_sidebar = true;
+    });
+    inspector_motion.leave.connect(() => {
+      _mouse_in_sidebar = false;
+      if( !_prop_btn.active ) {
+        Timeout.add( 200, () => {
+          if( !_mouse_in_sidebar ) {
+            hide_properties();
+          }
+          return( false );
+        });
+      }
+    });
+
   }
 
   //-------------------------------------------------------------
@@ -1634,10 +1676,10 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Show or hides the inspector sidebar
   private void inspector_clicked() {
-    if( _inspector_nb.get_mapped() ) {
+    if( _inspector_nb.get_mapped() && !_prop_btn.active ) {
       hide_properties();
     } else {
-      show_properties( null, PropertyGrab.NONE );
+      keep_properties();
     }
   }
 
@@ -2045,6 +2087,30 @@ public class MainWindow : Gtk.ApplicationWindow {
         map.close();
       }
     }
+  }
+
+  //-------------------------------------------------------------
+  // Shows the properties panel, but doesn't update any other UI
+  // elements and doesn't change focus.
+  private void peek_properties() {
+    if( !_inspector_nb.get_mapped() ) {
+      _prop_btn.tooltip_text = _( "Keep Property Sidebar Shown" );
+      _pane.end_child = _inspector_nb;
+      _pane.position  = _settings.get_int( "properties-width" );
+      var map = get_current_map();
+      if( map != null ) {
+        map.canvas.see( false, true, -300 );
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Called by the inspector_clicked method which will 
+  private void keep_properties() {
+    peek_properties();
+    _prop_btn.icon_name    = _prop_hide;
+    _prop_btn.tooltip_text = _( "Hide Property Sidebar" );
+    _prop_btn.active       = true;
   }
 
   //-------------------------------------------------------------
