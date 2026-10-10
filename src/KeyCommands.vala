@@ -201,9 +201,13 @@ public enum KeyCommand {
   TABLE_START,
     TABLE_ADD_ROW_ABOVE,
     TABLE_ADD_ROW_BELOW,
+    TABLE_MOVE_ROW_UP,
+    TABLE_MOVE_ROW_DOWN,
     TABLE_DELETE_ROWS,
     TABLE_ADD_COL_LEFT,
     TABLE_ADD_COL_RIGHT,
+    TABLE_MOVE_COL_LEFT,
+    TABLE_MOVE_COL_RIGHT,
     TABLE_DELETE_COLS,
     TABLE_MERGE_CELLS,
     TABLE_SPLIT_CELL,
@@ -420,9 +424,13 @@ public enum KeyCommand {
       case TABLE_START               :  return( "table-editor" );
       case TABLE_ADD_ROW_ABOVE       :  return( "table-add-row-above" );
       case TABLE_ADD_ROW_BELOW       :  return( "table-add-row-below" );
+      case TABLE_MOVE_ROW_UP         :  return( "table-move-row-up" );
+      case TABLE_MOVE_ROW_DOWN       :  return( "table-move-row-down" );
       case TABLE_DELETE_ROWS         :  return( "table-delete-rows" );
       case TABLE_ADD_COL_LEFT        :  return( "table-add-col-left" );  
       case TABLE_ADD_COL_RIGHT       :  return( "table-add-col-right" );
+      case TABLE_MOVE_COL_LEFT       :  return( "table-move-col-left" );
+      case TABLE_MOVE_COL_RIGHT      :  return( "table-move-col-right" );
       case TABLE_DELETE_COLS         :  return( "table-delete-cols" );
       case TABLE_MERGE_CELLS         :  return( "table-merge-cells" );
       case TABLE_SPLIT_CELL          :  return( "table-split-cell" );
@@ -618,9 +626,13 @@ public enum KeyCommand {
       case "group-select-all"          :  return( GROUP_SELECT_ALL );
       case "table-add-row-above"       :  return( TABLE_ADD_ROW_ABOVE );
       case "table-add-row-below"       :  return( TABLE_ADD_ROW_BELOW );
+      case "table-move-row-up"         :  return( TABLE_MOVE_ROW_UP );
+      case "table-move-row-down"       :  return( TABLE_MOVE_ROW_DOWN );
       case "table-delete-rows"         :  return( TABLE_DELETE_ROWS );
       case "table-add-col-left"        :  return( TABLE_ADD_COL_LEFT );
       case "table-add-col-right"       :  return( TABLE_ADD_COL_RIGHT );
+      case "table-move-col-left"       :  return( TABLE_MOVE_COL_LEFT );
+      case "table-move-col-right"      :  return( TABLE_MOVE_COL_RIGHT );
       case "table-delete-cols"         :  return( TABLE_DELETE_COLS );
       case "table-merge-cells"         :  return( TABLE_MERGE_CELLS );
       case "table-split-cell"          :  return( TABLE_SPLIT_CELL );
@@ -833,9 +845,13 @@ public enum KeyCommand {
       case TABLE_START               :  return( _( "Table Editor" ) );
       case TABLE_ADD_ROW_ABOVE       :  return( _( "Adds a row above the currently selected row" ) );
       case TABLE_ADD_ROW_BELOW       :  return( _( "Adds a row below the currently selected row" ) );
+      case TABLE_MOVE_ROW_UP         :  return( _( "Moves the currently selected row up by one row" ) );
+      case TABLE_MOVE_ROW_DOWN       :  return( _( "Moves the currently selected row down by one row" ) );
       case TABLE_DELETE_ROWS         :  return( _( "Deletes the currently selected row(s)" ) );
       case TABLE_ADD_COL_LEFT        :  return( _( "Adds a column to the left of the currently selected row" ) );
       case TABLE_ADD_COL_RIGHT       :  return( _( "Adds a column to the right of the currently selected row" ) );
+      case TABLE_MOVE_COL_LEFT       :  return( _( "Moves the currently selected column left by one column" ) );
+      case TABLE_MOVE_COL_RIGHT      :  return( _( "Moves the currently selected column right by one column" ) );
       case TABLE_DELETE_COLS         :  return( _( "Deletes the currently selected columns(s)" ) );
       case TABLE_MERGE_CELLS         :  return( _( "Merges selected cells into one" ) );
       case TABLE_SPLIT_CELL          :  return( _( "Splits merged cell" ) );
@@ -1030,9 +1046,13 @@ public enum KeyCommand {
       case GROUP_SELECT_ALL          :  return( group_select_all );
       case TABLE_ADD_ROW_ABOVE       :  return( table_add_row_above );
       case TABLE_ADD_ROW_BELOW       :  return( table_add_row_below );
+      case TABLE_MOVE_ROW_UP         :  return( table_move_row_up );
+      case TABLE_MOVE_ROW_DOWN       :  return( table_move_row_down );
       case TABLE_DELETE_ROWS         :  return( table_delete_rows );
       case TABLE_ADD_COL_LEFT        :  return( table_add_col_left );
       case TABLE_ADD_COL_RIGHT       :  return( table_add_col_right );
+      case TABLE_MOVE_COL_LEFT       :  return( table_move_col_left );
+      case TABLE_MOVE_COL_RIGHT      :  return( table_move_col_right );
       case TABLE_DELETE_COLS         :  return( table_delete_cols );
       case TABLE_MERGE_CELLS         :  return( table_merge_cells );
       case TABLE_SPLIT_CELL          :  return( table_split_cell );
@@ -2335,6 +2355,14 @@ public enum KeyCommand {
     map.canvas.table_editor.add_row_below();
   }
 
+  public static void table_move_row_up( MindMap map ) {
+    map.canvas.table_editor.move_row_up();
+  }
+
+  public static void table_move_row_down( MindMap map ) {
+    map.canvas.table_editor.move_row_down();
+  }
+
   public static void table_delete_rows( MindMap map ) {
     map.canvas.table_editor.delete_rows();
   }
@@ -2345,6 +2373,14 @@ public enum KeyCommand {
 
   public static void table_add_col_right( MindMap map ) {
     map.canvas.table_editor.add_column_right();
+  }
+
+  public static void table_move_col_left( MindMap map ) {
+    map.canvas.table_editor.move_column_left();
+  }
+
+  public static void table_move_col_right( MindMap map ) {
+    map.canvas.table_editor.move_column_right();
   }
 
   public static void table_delete_cols( MindMap map ) {

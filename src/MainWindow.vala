@@ -2637,6 +2637,15 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
+  // Sets the action enable for the given command to the given value.
+  public void set_menu_item_enable( KeyCommand command, bool enable ) {
+    var action = (_actions.lookup_action( command.to_string() ) as SimpleAction);
+    if( action != null ) {
+      action.set_enabled( enable );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Execute command.
   public void execute_command( KeyCommand command ) {
     var func = command.get_func();

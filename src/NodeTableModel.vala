@@ -193,6 +193,92 @@ public class NodeTableTopology {
     return( true );
   }
 
+  //-------------------------------------------------------------
+  // Returns true if the block of rows can be shifted by one row
+  // (delta of -1 or 1) without splitting a merged cell.  Every region
+  // touched by the move must lie entirely within the moving block or
+  // entirely within the single row that it swaps places with.
+  public static bool can_move_rows(
+    Array<NodeTableRegion> regions,
+    int first_row,
+    int last_row,
+    int delta
+  ) {
+    var other_row  = (delta < 0) ? (first_row - 1) : (last_row + 1);
+    var span_first = int.min( first_row, other_row );
+    var span_last  = int.max( last_row,  other_row );
+    for( int index=0; index<regions.length; index++ ) {
+      var region = regions.index( index );
+      var region_first = region.row;
+      var region_last  = region.row + region.row_span - 1;
+      if( (region_last < span_first) || (region_first > span_last) ) continue;
+      var in_block = (region_first >= first_row) && (region_last <= last_row);
+      var in_other = (region_first == other_row) && (region_last == other_row);
+      if( !in_block && !in_other ) return( false );
+    }
+    return( true );
+  }
+
+  //-------------------------------------------------------------
+  // Shifts a region as part of moving a block of rows by one row.
+  // Call can_move_rows first.
+  public static void move_rows(
+    NodeTableRegion region,
+    int first_row,
+    int last_row,
+    int delta
+  ) {
+    var other_row   = (delta < 0) ? (first_row - 1) : (last_row + 1);
+    var region_last = region.row + region.row_span - 1;
+    if( (region.row >= first_row) && (region_last <= last_row) ) {
+      region.row += delta;
+    } else if( (region.row == other_row) && (region.row_span == 1) ) {
+      region.row = (delta < 0) ? last_row : first_row;
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the block of columns can be shifted by one column
+  // (delta of -1 or 1) without splitting a merged cell.
+  public static bool can_move_columns(
+    Array<NodeTableRegion> regions,
+    int first_column,
+    int last_column,
+    int delta
+  ) {
+    var other_column = (delta < 0) ? (first_column - 1) : (last_column + 1);
+    var span_first   = int.min( first_column, other_column );
+    var span_last    = int.max( last_column,  other_column );
+    for( int index=0; index<regions.length; index++ ) {
+      var region = regions.index( index );
+      var region_first = region.column;
+      var region_last  = region.column + region.col_span - 1;
+      if( (region_last < span_first) || (region_first > span_last) ) continue;
+      var in_block = (region_first >= first_column) && (region_last <= last_column);
+      var in_other = (region_first == other_column) && (region_last == other_column);
+      if( !in_block && !in_other ) return( false );
+    }
+    return( true );
+  }
+
+  //-------------------------------------------------------------
+  // Shifts a region as part of moving a block of columns by one column.
+  // Call can_move_columns first.
+  public static void move_columns(
+    NodeTableRegion region,
+    int first_column,
+    int last_column,
+    int delta
+  ) {
+    var other_column = (delta < 0) ? (first_column - 1) : (last_column + 1);
+    var region_last  = region.column + region.col_span - 1;
+    if( (region.column >= first_column) && (region_last <= last_column) ) {
+      region.column += delta;
+    } else if( (region.column == other_column) && (region.col_span == 1) ) {
+      region.column = (delta < 0) ? last_column : first_column;
+    }
+  }
+
 }
 
 public class NodeTableTextGrid : Object {

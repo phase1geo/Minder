@@ -353,16 +353,25 @@ public class TableEditor {
     var add_menu = new GLib.Menu();
     win.append_menu_item( add_menu, KeyCommand.TABLE_ADD_ROW_ABOVE, _( "Add Row Above" ) );
     win.append_menu_item( add_menu, KeyCommand.TABLE_ADD_ROW_BELOW, _( "Add Row Below" ) );
+    var move_menu = new GLib.Menu();
+    win.append_menu_item( move_menu, KeyCommand.TABLE_MOVE_ROW_UP,   _( "Move Row Up" ) );
+    win.append_menu_item( move_menu, KeyCommand.TABLE_MOVE_ROW_DOWN, _( "Move Row Down" ) );
     var del_menu = new GLib.Menu();
     win.append_menu_item( del_menu, KeyCommand.TABLE_DELETE_ROWS, _( "Delete Selected Rows" ) );
     var menu = new GLib.Menu();
     menu.append_section( null, add_menu );
+    menu.append_section( null, move_menu );
     menu.append_section( null, del_menu );
-    return( new MenuButton() {
+    var button = new MenuButton() {
       icon_name = "minder-table-row-symbolic",
       tooltip_text = _( "Row Actions" ),
       menu_model = menu
+    };
+    button.notify["active"].connect(() => {
+      win.set_menu_item_enable( KeyCommand.TABLE_MOVE_ROW_UP,   can_move_selected_rows( -1 ) );
+      win.set_menu_item_enable( KeyCommand.TABLE_MOVE_ROW_DOWN, can_move_selected_rows( 1 ) );
     });
+    return( button );
   }
 
   //-------------------------------------------------------------
@@ -372,16 +381,25 @@ public class TableEditor {
     var add_menu = new GLib.Menu();
     win.append_menu_item( add_menu, KeyCommand.TABLE_ADD_COL_LEFT,  _( "Add Column Left" ) );
     win.append_menu_item( add_menu, KeyCommand.TABLE_ADD_COL_RIGHT, _( "Add Column Right" ) );
+    var move_menu = new GLib.Menu();
+    win.append_menu_item( move_menu, KeyCommand.TABLE_MOVE_COL_LEFT,  _( "Move Column Left" ) );
+    win.append_menu_item( move_menu, KeyCommand.TABLE_MOVE_COL_RIGHT, _( "Move Column Right" ) );
     var del_menu = new GLib.Menu();
-    win.append_menu_item( add_menu, KeyCommand.TABLE_DELETE_COLS, _( "Delete Selected Columns" ) );
+    win.append_menu_item( del_menu, KeyCommand.TABLE_DELETE_COLS, _( "Delete Selected Columns" ) );
     var menu = new GLib.Menu();
     menu.append_section( null, add_menu );
+    menu.append_section( null, move_menu );
     menu.append_section( null, del_menu );
-    return( new MenuButton() {
+    var button = new MenuButton() {
       icon_name = "minder-table-column-symbolic",
       tooltip_text = _( "Column Actions" ),
       menu_model = menu
+    };
+    button.notify["active"].connect(() => {
+      win.set_menu_item_enable( KeyCommand.TABLE_MOVE_COL_LEFT,  can_move_selected_columns( -1 ) );
+      win.set_menu_item_enable( KeyCommand.TABLE_MOVE_COL_RIGHT, can_move_selected_columns( 1 ) );
     });
+    return( button );
   }
 
   //-------------------------------------------------------------
@@ -977,6 +995,83 @@ public class TableEditor {
     _anchor_row = int.min( first_row, _table.rows - 1 );
     _last_row = _anchor_row;
     rebuild_grid();
+  }
+
+  //-------------------------------------------------------------
+  // Moves the selected rows up by one row.
+  public void move_row_up() {
+    move_selected_rows( -1 );
+  }
+
+  //-------------------------------------------------------------
+  // Moves the selected rows down by one row.
+  public void move_row_down() {
+    move_selected_rows( 1 );
+  }
+
+  //-------------------------------------------------------------
+  // Moves the selected columns left by one column.
+  public void move_column_left() {
+    move_selected_columns( -1 );
+  }
+
+  //-------------------------------------------------------------
+  // Moves the selected columns right by one column.
+  public void move_column_right() {
+    move_selected_columns( 1 );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true only if the selected rows can be moved by the given
+  // delta.
+  private bool can_move_selected_rows( int delta ) {
+    if( _table == null ) return( false );
+    int first_row, first_column, last_row, last_column;
+    selection_bounds( out first_row, out first_column, out last_row, out last_column );
+    return( _table.can_move_rows( first_row, last_row, delta ) );
+  }
+
+  //-------------------------------------------------------------
+  // Shifts all rows touched by the selection and keeps them selected.
+  private void move_selected_rows( int delta ) {
+    if( _table == null ) return;
+    int first_row, first_column, last_row, last_column;
+    selection_bounds( out first_row, out first_column, out last_row, out last_column );
+    save_table_undo_state();
+    if( _table.move_rows( ref first_row, ref last_row, delta ) ) {
+      _anchor_row = first_row;
+      _last_row   = last_row;
+      rebuild_grid();
+    } else {
+      discard_last_undo_state();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true only if the selected columns can be moved by the given
+  // delta.
+  private bool can_move_selected_columns( int delta ) {
+    if( _table == null ) return( false );
+    int first_row, first_column, last_row, last_column;
+    selection_bounds( out first_row, out first_column, out last_row, out last_column );
+    save_table_undo_state();
+    return( _table.can_move_columns( first_column, last_column, delta ) );
+  }
+
+  //-------------------------------------------------------------
+  // Shifts all columns touched by the selection and keeps them selected.
+  private void move_selected_columns( int delta ) {
+    if( _table == null ) return;
+    int first_row, first_column, last_row, last_column;
+    selection_bounds( out first_row, out first_column, out last_row, out last_column );
+    save_table_undo_state();
+    if( _table.move_columns( ref first_column, ref last_column, delta ) ) {
+      _anchor_column = first_column;
+      _last_column   = last_column;
+      rebuild_grid();
+    } else {
+      discard_last_undo_state();
+    }
   }
 
   //-------------------------------------------------------------

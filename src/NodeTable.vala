@@ -680,6 +680,87 @@ public class NodeTable : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns true only if we can move the rows in the given range by the given
+  // delta value.
+  public bool can_move_rows( int first_row, int last_row, int delta ) {
+    delta = (delta < 0) ? -1 : 1;
+    var first = int.max( 0, int.min( first_row, last_row ) );
+    var last  = int.min( rows - 1, int.max( first_row, last_row ) );
+    var first_column = 0;
+    var last_column  = columns - 1;
+    var table_regions = regions();
+    NodeTableTopology.expand_selection( table_regions, ref first, ref first_column, ref last, ref last_column );
+    if( ((delta < 0) && (first == 0)) || ((delta > 0) && (last == (rows - 1))) ) return( false );
+    if( !NodeTableTopology.can_move_rows( table_regions, first, last, delta ) ) return( false );
+    return( true );
+  }
+
+  //-------------------------------------------------------------
+  // Moves the given block of rows up (delta < 0) or down (delta > 0)
+  // by one row.  The block is first expanded so that merged cells are
+  // never split.  On success, first_row and last_row are updated to
+  // the block's new position and true is returned.
+  public bool move_rows( ref int first_row, ref int last_row, int delta ) {
+    delta = (delta < 0) ? -1 : 1;
+    var first = int.max( 0, int.min( first_row, last_row ) );
+    var last  = int.min( rows - 1, int.max( first_row, last_row ) );
+    var first_column = 0;
+    var last_column  = columns - 1;
+    var table_regions = regions();
+    NodeTableTopology.expand_selection( table_regions, ref first, ref first_column, ref last, ref last_column );
+    if( ((delta < 0) && (first == 0)) || ((delta > 0) && (last == (rows - 1))) ) return( false );
+    if( !NodeTableTopology.can_move_rows( table_regions, first, last, delta ) ) return( false );
+    for( int index=0; index<_cells.length; index++ ) {
+      NodeTableTopology.move_rows( _cells.index( index ), first, last, delta );
+    }
+    first_row = first + delta;
+    last_row  = last + delta;
+    update_layout();
+    return( true );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true only if we can move the columns in the given
+  // range by the given delta value.
+  public bool can_move_columns( int first_column, int last_column, int delta ) {
+    delta = (delta < 0) ? -1 : 1;
+    var first = int.max( 0, int.min( first_column, last_column ) );
+    var last  = int.min( rows - 1, int.max( first_column, last_column ) );
+    var first_row = 0;
+    var last_row  = rows - 1;
+    var table_regions = regions();
+    NodeTableTopology.expand_selection( table_regions, ref first_row, ref first, ref last_row, ref last );
+    if( ((delta < 0) && (first == 0)) || ((delta > 0) && (last == (rows - 1))) ) return( false );
+    if( !NodeTableTopology.can_move_rows( table_regions, first, last, delta ) ) return( false );
+    return( true );
+  }
+
+  //-------------------------------------------------------------
+  // Moves the given block of columns left (delta < 0) or right
+  // (delta > 0) by one column.  The block is first expanded so that
+  // merged cells are never split.  On success, first_column and
+  // last_column are updated to the block's new position and true is
+  // returned.
+  public bool move_columns( ref int first_column, ref int last_column, int delta ) {
+    delta = (delta < 0) ? -1 : 1;
+    var first = int.max( 0, int.min( first_column, last_column ) );
+    var last  = int.min( columns - 1, int.max( first_column, last_column ) );
+    var first_row = 0;
+    var last_row  = rows - 1;
+    var table_regions = regions();
+    NodeTableTopology.expand_selection( table_regions, ref first_row, ref first, ref last_row, ref last );
+    if( ((delta < 0) && (first == 0)) || ((delta > 0) && (last == (columns - 1))) ) return( false );
+    if( !NodeTableTopology.can_move_columns( table_regions, first, last, delta ) ) return( false );
+    for( int index=0; index<_cells.length; index++ ) {
+      NodeTableTopology.move_columns( _cells.index( index ), first, last, delta );
+    }
+    first_column = first + delta;
+    last_column  = last + delta;
+    update_layout();
+    return( true );
+  }
+
+  //-------------------------------------------------------------
   // Clears the contents and formatting of selected cells.
   public void clear_cells( int first_row, int first_column, int last_row, int last_column ) {
     var selected_first_row = int.min( first_row, last_row );
