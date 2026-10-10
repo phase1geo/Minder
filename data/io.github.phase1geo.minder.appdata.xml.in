@@ -104,6 +104,7 @@
           <li>Cleaned up Minder local data directory contents.</li>
           <li>Improvements to symbolic icons to improve memory footprint of application.</li>
           <li>Improved shortcut searching in preferences to include section and group text.</li>
+          <li>Added support for mousing over the sidebar button to display the sidebar without stickiness.</li>
         </ul>
         <p>Bug Fixes</p>
         <ul>
