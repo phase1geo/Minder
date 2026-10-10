@@ -33,6 +33,8 @@ Clicking the Row Actions button displays a menu of functions that operate on the
 
 * Insert row above the current row
 * Insert row below the current row
+* Move current row up by one
+* Move current row down by one
 * Delete the current row
 
 #### Column Actions
@@ -41,6 +43,8 @@ Clicking the Column Actions button displays a menu of functions that operate on 
 
 * Insert column before the current column
 * Insert column after the current column
+* Move current column left by one
+* Move current column right by one
 * Delete the current column
 
 #### Merge Selection
