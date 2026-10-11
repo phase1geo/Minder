@@ -23,19 +23,9 @@ using Gtk;
 
 public class ReleaseNotes : Granite.Dialog {
 
-  public class ReleaseNote {
-    public string version { get; private set; default = ""; }
-    public string date    { get; private set; default = ""; }
-    public string html    { get; private set; default = ""; }
-    public ReleaseNote( string v, string d, string h ) {
-      version = v;
-      date    = d;
-      html    = h;
-    }
-  }
-
-  private WebKit.WebView     _viewer;
-  private Array<ReleaseNote> _releases;
+  private WebKit.WebView _viewer;
+  private Array<string>  _notes;
+  private bool           _show_current = false;
 
   //-------------------------------------------------------------
   // Displays the release notes window.
@@ -49,7 +39,7 @@ public class ReleaseNotes : Granite.Dialog {
       default_height: 600
     );
 
-    _releases = new Array<ReleaseNote>();
+    _notes = new Array<string>();
 
     var settings = new WebKit.Settings() {
       enable_javascript                     = false,
@@ -98,9 +88,7 @@ public class ReleaseNotes : Granite.Dialog {
         string  etag_out;
         if( file.load_contents_async.end( res, out contents, out etag_out ) ) {
           parse_xml( (string)contents );
-          if( _releases.length > 0 ) {
-            _viewer.load_html( _releases.index( 0 ).html, null );
-          }
+          _viewer.load_html( make_html(), null );
         } else {
           stdout.printf( "ERROR: Unable to load resource file contents\n" );
         }
@@ -131,9 +119,8 @@ public class ReleaseNotes : Granite.Dialog {
             var date    = it2->get_prop( "date" );
             for( Xml.Node* it3 = it2->children; it3 != null; it3 = it3->next ) {
               if( (it3->type == Xml.ElementType.ELEMENT_NODE) && (it3->name == "description") ) {
-                var html = make_html( it3, version, date );
-                var release = new ReleaseNote( version, date, html );
-                _releases.append_val( release );
+                var html = make_release_html( it3, version, date );
+                _notes.append_val( html );
               }
             }
           }
@@ -149,22 +136,62 @@ public class ReleaseNotes : Granite.Dialog {
 
   //-------------------------------------------------------------
   // Create the HTML document
-  private string make_html( Xml.Node* description, string version, string date ) {
+  private string make_html() {
+
+    string[] body = {};
+
+    if( _notes.length > 0 ) {
+      if( _show_current ) {
+        body += _notes.index( 0 );
+      } else {
+        for( int i=0; i<_notes.length; i++ ) {
+          body += _notes.index( i );
+        }
+      }
+    }
+
+    return( "<html><head/><body>%s</body></html>".printf( string.joinv( "<br/><hr/><br/>", body ) ) );
+
+  }
+
+  //-------------------------------------------------------------
+  // Create the HTML document
+  private string make_release_html( Xml.Node* description, string version, string date ) {
 
     Xml.Doc*  doc   = new Xml.Doc( "1.0" );
-    Xml.Node* root  = new Xml.Node( null, "html" );
-    Xml.Node* head  = new Xml.Node( null, "head" );
     Xml.Node* body  = new Xml.Node( null, "body" );
-    Xml.Node* title = new Xml.Node( null, "h1" ); 
-    Xml.Node* hr    = new Xml.Node( null, "hr" );
 
-    doc->set_root_element( root );
-    root->add_child( head );
-    root->add_child( body );
+    doc->set_root_element( body );
 
-    title->set_content( _( "Release %s (%s)" ).printf( version, date ) );
-    body->add_child( title );
-    body->add_child( hr );
+    add_release( body, description, true, version, date );
+
+    string html = "";
+    doc->dump_memory_format( out html );
+    delete doc;
+
+    var lines = html.split( "\n" );
+
+    return( string.joinv( "\n", lines[2:lines.length-1] ) );
+
+  }
+
+  //-------------------------------------------------------------
+  // Appends the description information to the body.
+  private void add_release( Xml.Node* body, Xml.Node* description, bool first, string version, string date ) {
+
+    Xml.Node* h1 = new Xml.Node( null, "h1" ); 
+    Xml.Node* p  = new Xml.Node( null, "p" );
+    Xml.Node* i  = new Xml.Node( null, "i" );
+    Xml.Node* br = new Xml.Node( null, "br" );
+
+    h1->set_content( _( "Release %s" ).printf( version ) );
+    body->add_child( h1 );
+
+    i->set_content( date );
+    p->add_child( i );
+    body->add_child( p );
+
+    body->add_child( br );
 
     for( Xml.Node* it = description->children; it != null; it = it->next ) {
       Xml.Node* node = it->copy( 1 );
@@ -173,13 +200,6 @@ public class ReleaseNotes : Granite.Dialog {
       }
       body->add_child( node );
     }
-
-    string html = "";
-    doc->dump_memory_format( out html );
-
-    delete doc;
-
-    return( html );
 
   }
 
