@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 16:52-0500\n"
+"POT-Creation-Date: 2026-10-11 17:42-0500\n"
 "PO-Revision-Date: 2026-03-31 12:29+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -1709,7 +1709,7 @@ msgstr "კლავიატურის მალსახმობები�
 msgid "Documentation"
 msgstr "დოკუმენტი"
 
-#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:36
+#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:38
 #, fuzzy
 msgid "Release Notes"
 msgstr "კვანძების ჩანაცვლება"
@@ -2421,7 +2421,7 @@ msgstr "მალსახმობები"
 msgid "Advanced"
 msgstr "დამატებით"
 
-#: src/Preferences.vala:93 src/ReleaseNotes.vala:70 src/StyleInspector.vala:254
+#: src/Preferences.vala:93 src/ReleaseNotes.vala:72 src/StyleInspector.vala:254
 msgid "Close"
 msgstr "დახურვა"
 

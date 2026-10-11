@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 16:52-0500\n"
+"POT-Creation-Date: 2026-10-11 17:42-0500\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -1797,7 +1797,7 @@ msgstr "Seznam všech zkratek"
 msgid "Documentation"
 msgstr "Dokument"
 
-#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:36
+#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:38
 #, fuzzy
 msgid "Release Notes"
 msgstr "Nahradit uzly"
@@ -2521,7 +2521,7 @@ msgstr "Zkratky Minderu"
 msgid "Advanced"
 msgstr "Výhoda"
 
-#: src/Preferences.vala:93 src/ReleaseNotes.vala:70 src/StyleInspector.vala:254
+#: src/Preferences.vala:93 src/ReleaseNotes.vala:72 src/StyleInspector.vala:254
 msgid "Close"
 msgstr "Zavřít"
 

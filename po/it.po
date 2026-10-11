@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 16:52-0500\n"
+"POT-Creation-Date: 2026-10-11 17:42-0500\n"
 "PO-Revision-Date: 2025-04-06 09:37+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -1714,7 +1714,7 @@ msgstr "collegamenti note"
 msgid "Documentation"
 msgstr "Documento"
 
-#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:36
+#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:38
 #, fuzzy
 msgid "Release Notes"
 msgstr "Sostituisci nodi"
@@ -2427,7 +2427,7 @@ msgstr "Scorciatoie"
 msgid "Advanced"
 msgstr "Avanzato"
 
-#: src/Preferences.vala:93 src/ReleaseNotes.vala:70 src/StyleInspector.vala:254
+#: src/Preferences.vala:93 src/ReleaseNotes.vala:72 src/StyleInspector.vala:254
 msgid "Close"
 msgstr "Chiudi"
 

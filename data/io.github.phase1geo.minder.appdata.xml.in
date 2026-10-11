@@ -101,6 +101,8 @@
           <li>Added support for editable tables in nodes (thanks to @dragonleopardpig).</li>
           <li>Added support for embedding LaTeX into node text (thanks to @dragonleopardpig).</li>
           <li>Added support for adding priority flags to nodes.</li>
+          <li>Added release notes on startup after upgrade and via the miscellaneous menu.</li>
+          <li>Added Persian translation (thanks to Farooq Karimi Zadeh).</li>
         </ul>
         <p>Changes</p>
         <ul>

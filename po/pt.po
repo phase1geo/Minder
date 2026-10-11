@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 16:52-0500\n"
+"POT-Creation-Date: 2026-10-11 17:42-0500\n"
 "PO-Revision-Date: 2020-08-30 14:45+0100\n"
 "Last-Translator: André Barata <andretiagob@protonmail.com>\n"
 "Language-Team: none\n"
@@ -1793,7 +1793,7 @@ msgstr "Cábula de Atalhos"
 msgid "Documentation"
 msgstr "Documento Sem Nome"
 
-#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:36
+#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:38
 #, fuzzy
 msgid "Release Notes"
 msgstr "Substituir Nós"
@@ -2523,7 +2523,7 @@ msgstr "Atalhos do Minder"
 msgid "Advanced"
 msgstr "Cancelar"
 
-#: src/Preferences.vala:93 src/ReleaseNotes.vala:70 src/StyleInspector.vala:254
+#: src/Preferences.vala:93 src/ReleaseNotes.vala:72 src/StyleInspector.vala:254
 #, fuzzy
 msgid "Close"
 msgstr "Fechar Guia"

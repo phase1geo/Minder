@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 16:52-0500\n"
+"POT-Creation-Date: 2026-10-11 17:42-0500\n"
 "PO-Revision-Date: 2026-10-04 10:38+0200\n"
 "Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
 "Language-Team: \n"
@@ -1724,7 +1724,7 @@ msgstr "Übersicht über Tastenkombinationen"
 msgid "Documentation"
 msgstr "Dokument"
 
-#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:36
+#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:38
 #, fuzzy
 msgid "Release Notes"
 msgstr "Knoten ersetzen"
@@ -2434,7 +2434,7 @@ msgstr "Tastenkombinationen"
 msgid "Advanced"
 msgstr "Erweitert"
 
-#: src/Preferences.vala:93 src/ReleaseNotes.vala:70 src/StyleInspector.vala:254
+#: src/Preferences.vala:93 src/ReleaseNotes.vala:72 src/StyleInspector.vala:254
 msgid "Close"
 msgstr "Schließen"
 
