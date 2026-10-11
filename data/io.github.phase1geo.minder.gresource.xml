@@ -4,6 +4,7 @@
     <file alias="Application.css" compressed="true">Application.css</file>
     <file alias="minder-logo.svg">icons/scalable/io.github.phase1geo.minder.svg</file>
     <file alias="README.md">custom_sticker_readme.md</file>
+    <file alias="appdata.xml">io.github.phase1geo.minder.appdata.xml.in</file>
 
     <file preprocess="xml-stripblanks">icons/hicolor/scalable/actions/minder-balance-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/hicolor/scalable/actions/minder-detach-symbolic.svg</file>

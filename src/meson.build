@@ -60,6 +60,7 @@ sources += files(
     'Partitioner.vala',
     'Preferences.vala',
     'QuickEntry.vala',
+    'ReleaseNotes.vala',
     'Selection.vala',
     'SequenceNum.vala',
     'SettingsUpdater.vala',

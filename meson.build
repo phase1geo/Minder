@@ -67,6 +67,7 @@ dependencies = [
     dependency('gtksourceview-5'),
     dependency('json-glib-1.0'),
     dependency('libwebp'),
+    dependency('webkitgtk-6.0'),
     libmarkdown,
     librsvg,
     math_dep
