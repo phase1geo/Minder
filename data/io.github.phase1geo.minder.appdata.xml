@@ -134,6 +134,12 @@
   <releases>
     <release version="3.0.0" date="2026-10-26">
       <description>
+        <p><em>Important Note</em>: This release changes Minder's application ID which effectively makes it
+          new application according to your system.  If you have previously used Minder, it is highly
+          recommended that you save any unsaved documents in the older version of Minder to your file system;
+          otherwise, your data could be lost.  Note that any mindmaps created with 2.x versions of Minder
+          will still be compatible with this version.
+        </p>
         <p>New</p>
         <p xml:lang="pt">Novo</p>
         <p xml:lang="fr">Nouveau</p>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 16:31-0500\n"
+"POT-Creation-Date: 2026-10-11 16:52-0500\n"
 "PO-Revision-Date: 2025-12-02 09:55+0100\n"
 "Last-Translator: Daniel Nylander <github@danielnylander.se>\n"
 "Language-Team: sv\n"
@@ -2518,11 +2518,15 @@ msgstr ""
 "och används när filen öppnas igen, om den finns kvar.  Säkerhetskopiorna "
 "döljs i samma katalog som originalet med filändelsen .bak."
 
-#: src/Preferences.vala:187
+#: src/Preferences.vala:164
+msgid "Show release notes on application startup after upgrading"
+msgstr ""
+
+#: src/Preferences.vala:191
 msgid "Default theme"
 msgstr "Standardtema"
 
-#: src/Preferences.vala:189
+#: src/Preferences.vala:193
 msgid ""
 "Sets the default theme to use for newly created mindmaps (use Map sidebar "
 "panel to make immediate changes)."
@@ -2530,19 +2534,19 @@ msgstr ""
 "Ställer in standardtemat som ska användas för nyapplikationer (använd "
 "kartans sidofält för att göra omedelbara ändringar)."
 
-#: src/Preferences.vala:192
+#: src/Preferences.vala:196
 msgid "Enable mindmap animations"
 msgstr "Aktivera animeringar"
 
-#: src/Preferences.vala:196
+#: src/Preferences.vala:200
 msgid "Enable window animations"
 msgstr "Aktivera animeringar"
 
-#: src/Preferences.vala:200
+#: src/Preferences.vala:204
 msgid "Text field font size"
 msgstr "Textfältets teckenstorlek"
 
-#: src/Preferences.vala:203
+#: src/Preferences.vala:207
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
@@ -2550,100 +2554,100 @@ msgstr ""
 "Anger den anpassade teckenstorlek som ska användas i textredigeringsfält "
 "(dvs. snabbinmatnings- eller anteckningsfält)."
 
-#: src/Preferences.vala:206
+#: src/Preferences.vala:210
 msgid "Colorize note fields"
 msgstr "Färglägg anteckningsfält"
 
-#: src/Preferences.vala:210
+#: src/Preferences.vala:214
 msgid "Default global style"
 msgstr "Global standardstil"
 
-#: src/Preferences.vala:212
+#: src/Preferences.vala:216
 msgid "Specifies the global style to use for newly created mindmaps."
 msgstr "Anger den globala stil som ska användas för nyskapade tankekartor."
 
-#: src/Preferences.vala:235
+#: src/Preferences.vala:239
 msgid "Tags in this list will be the starting list of tags for new mindmaps."
 msgstr ""
 "Taggar i denna lista kommer att utgöra startlistan med taggar för nya "
 "tankekartor."
 
-#: src/Preferences.vala:336
+#: src/Preferences.vala:340
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
 msgstr ""
 "Dubbelklicka för att redigera genväg.  Välj + Ta bort för att ta bort genväg."
 
-#: src/Preferences.vala:337
+#: src/Preferences.vala:341
 msgid "Escape to cancel.  Press key combination to set."
 msgstr "Escape för att avbryta.  Tryck tangentkombination att ställa in."
 
-#: src/Preferences.vala:345
+#: src/Preferences.vala:349
 msgid "Set Minder Defaults"
 msgstr "Ställ in Minder-standardvärden"
 
-#: src/Preferences.vala:348
+#: src/Preferences.vala:352
 msgid "Clear All Shortcuts"
 msgstr "Rensa alla genvägar"
 
-#: src/Preferences.vala:357
+#: src/Preferences.vala:361
 msgid "Search commands"
 msgstr "Sökkommandon"
 
-#: src/Preferences.vala:359
+#: src/Preferences.vala:363
 msgid "Search shortcuts"
 msgstr "Sök efter genvägar"
 
-#: src/Preferences.vala:476
+#: src/Preferences.vala:480
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr "Visa dialogruta för uppgradering när filuppgradering behövs"
 
-#: src/Preferences.vala:480
+#: src/Preferences.vala:484
 msgid "Show temporary directory containing current mindmap in map sidebar"
 msgstr ""
 "Visa tillfällig katalog som innehåller aktuell tankekarta i kartans sidofält"
 
-#: src/Preferences.vala:490
+#: src/Preferences.vala:494
 msgid "Default file upgrade action"
 msgstr "Standardåtgärd vid filuppgradering"
 
-#: src/Preferences.vala:564 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
+#: src/Preferences.vala:568 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
 msgid "None"
 msgstr "Ingen"
 
-#: src/Preferences.vala:565
+#: src/Preferences.vala:569
 msgid "Enter shortcut"
 msgstr "Ange genväg"
 
-#: src/Preferences.vala:733
+#: src/Preferences.vala:737
 msgid "Unable to set new shortcut due to conflicts"
 msgstr "Det går inte att skapa en ny genväg på grund av konflikter"
 
-#: src/Preferences.vala:734
+#: src/Preferences.vala:738
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr "%s är i konflikt med '%s'"
 
-#: src/Preferences.vala:799
+#: src/Preferences.vala:803
 msgid "Clear all shortcuts?"
 msgstr "Rensa alla genvägar?"
 
-#: src/Preferences.vala:799 src/Preferences.vala:810
+#: src/Preferences.vala:803 src/Preferences.vala:814
 msgid "Current shortcut settings will be lost"
 msgstr "Aktuella genvägsinställningar kommer att gå förlorade"
 
-#: src/Preferences.vala:810
+#: src/Preferences.vala:814
 msgid "Use Minder Default Shortcuts?"
 msgstr "Använd Minders standardgenvägar?"
 
-#: src/Preferences.vala:842 src/Preferences.vala:860
+#: src/Preferences.vala:846 src/Preferences.vala:864
 msgid "Minder Default"
 msgstr "Minder-standard"
 
-#: src/Preferences.vala:845 src/Preferences.vala:861
+#: src/Preferences.vala:849 src/Preferences.vala:865
 msgid "Last Used"
 msgstr "Senast använd"
 
-#: src/Preferences.vala:847 src/Preferences.vala:865
+#: src/Preferences.vala:851 src/Preferences.vala:869
 #, c-format
 msgid "Named Style: %s"
 msgstr "Namngiven stil: %s"

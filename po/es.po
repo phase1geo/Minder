@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 16:31-0500\n"
+"POT-Creation-Date: 2026-10-11 16:52-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Félix Brezo <felixbrezo@disroot.org>\n"
 "Language-Team: none\n"
@@ -2660,136 +2660,140 @@ msgid ""
 "files are hidden in the same directory as the original with a .bak extension."
 msgstr ""
 
-#: src/Preferences.vala:187
+#: src/Preferences.vala:164
+msgid "Show release notes on application startup after upgrading"
+msgstr ""
+
+#: src/Preferences.vala:191
 #, fuzzy
 msgid "Default theme"
 msgstr "Eliminar tema?"
 
-#: src/Preferences.vala:189
+#: src/Preferences.vala:193
 msgid ""
 "Sets the default theme to use for newly created mindmaps (use Map sidebar "
 "panel to make immediate changes)."
 msgstr ""
 
-#: src/Preferences.vala:192
+#: src/Preferences.vala:196
 #, fuzzy
 msgid "Enable mindmap animations"
 msgstr "Activar animaciones"
 
-#: src/Preferences.vala:196
+#: src/Preferences.vala:200
 #, fuzzy
 msgid "Enable window animations"
 msgstr "Activar animaciones"
 
-#: src/Preferences.vala:200
+#: src/Preferences.vala:204
 msgid "Text field font size"
 msgstr ""
 
-#: src/Preferences.vala:203
+#: src/Preferences.vala:207
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
 msgstr ""
 
-#: src/Preferences.vala:206
+#: src/Preferences.vala:210
 msgid "Colorize note fields"
 msgstr ""
 
-#: src/Preferences.vala:210
+#: src/Preferences.vala:214
 #, fuzzy
 msgid "Default global style"
 msgstr "Eliminar tema?"
 
-#: src/Preferences.vala:212
+#: src/Preferences.vala:216
 msgid "Specifies the global style to use for newly created mindmaps."
 msgstr ""
 
-#: src/Preferences.vala:235
+#: src/Preferences.vala:239
 msgid "Tags in this list will be the starting list of tags for new mindmaps."
 msgstr ""
 
-#: src/Preferences.vala:336
+#: src/Preferences.vala:340
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
 msgstr ""
 
-#: src/Preferences.vala:337
+#: src/Preferences.vala:341
 msgid "Escape to cancel.  Press key combination to set."
 msgstr ""
 
-#: src/Preferences.vala:345
+#: src/Preferences.vala:349
 msgid "Set Minder Defaults"
 msgstr ""
 
-#: src/Preferences.vala:348
+#: src/Preferences.vala:352
 #, fuzzy
 msgid "Clear All Shortcuts"
 msgstr "Atajos de Minder"
 
-#: src/Preferences.vala:357
+#: src/Preferences.vala:361
 #, fuzzy
 msgid "Search commands"
 msgstr "Comandos de conexión"
 
-#: src/Preferences.vala:359
+#: src/Preferences.vala:363
 #, fuzzy
 msgid "Search shortcuts"
 msgstr "Atajos de Minder"
 
-#: src/Preferences.vala:476
+#: src/Preferences.vala:480
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr ""
 
-#: src/Preferences.vala:480
+#: src/Preferences.vala:484
 msgid "Show temporary directory containing current mindmap in map sidebar"
 msgstr ""
 
-#: src/Preferences.vala:490
+#: src/Preferences.vala:494
 msgid "Default file upgrade action"
 msgstr ""
 
-#: src/Preferences.vala:564 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
+#: src/Preferences.vala:568 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
 msgid "None"
 msgstr "Ninguno"
 
-#: src/Preferences.vala:565
+#: src/Preferences.vala:569
 #, fuzzy
 msgid "Enter shortcut"
 msgstr "Atajos de Minder"
 
-#: src/Preferences.vala:733
+#: src/Preferences.vala:737
 msgid "Unable to set new shortcut due to conflicts"
 msgstr ""
 
-#: src/Preferences.vala:734
+#: src/Preferences.vala:738
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr ""
 
-#: src/Preferences.vala:799
+#: src/Preferences.vala:803
 #, fuzzy
 msgid "Clear all shortcuts?"
 msgstr "Atajos de Minder"
 
-#: src/Preferences.vala:799 src/Preferences.vala:810
+#: src/Preferences.vala:803 src/Preferences.vala:814
 msgid "Current shortcut settings will be lost"
 msgstr ""
 
-#: src/Preferences.vala:810
+#: src/Preferences.vala:814
 #, fuzzy
 msgid "Use Minder Default Shortcuts?"
 msgstr "Atajos de Minder"
 
-#: src/Preferences.vala:842 src/Preferences.vala:860
+#: src/Preferences.vala:846 src/Preferences.vala:864
 #, fuzzy
 msgid "Minder Default"
 msgstr "Predeterminado"
 
-#: src/Preferences.vala:845 src/Preferences.vala:861
+#: src/Preferences.vala:849 src/Preferences.vala:865
 #, fuzzy
 msgid "Last Used"
 msgstr "Rehacer último cambio"
 
-#: src/Preferences.vala:847 src/Preferences.vala:865
+#: src/Preferences.vala:851 src/Preferences.vala:869
 #, c-format
 msgid "Named Style: %s"
 msgstr ""

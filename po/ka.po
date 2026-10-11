@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 16:31-0500\n"
+"POT-Creation-Date: 2026-10-11 16:52-0500\n"
 "PO-Revision-Date: 2026-03-31 12:29+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -2523,11 +2523,15 @@ msgstr ""
 "თავიდან გახსნისას, თუ ის არსებობს.  მარქაფის ფაილი იგივე საქაღალდეშია "
 "ორიგინალ ფაილთან ერთად, დამალულია და აქვს გაფართოება .bak."
 
-#: src/Preferences.vala:187
+#: src/Preferences.vala:164
+msgid "Show release notes on application startup after upgrading"
+msgstr ""
+
+#: src/Preferences.vala:191
 msgid "Default theme"
 msgstr "ნაგულისხმები თემა"
 
-#: src/Preferences.vala:189
+#: src/Preferences.vala:193
 msgid ""
 "Sets the default theme to use for newly created mindmaps (use Map sidebar "
 "panel to make immediate changes)."
@@ -2535,19 +2539,19 @@ msgstr ""
 "დააყენებს ნაგულისხმევ თემას ახალი მენტალური რუკებისთვის (დაუყოვნებლივი "
 "ცვლილებების შესატანად გამოიყენეთ რუკის გვერდითი პანელი)."
 
-#: src/Preferences.vala:192
+#: src/Preferences.vala:196
 msgid "Enable mindmap animations"
 msgstr "მენტალური რუკის ანიმაციების ჩართვა"
 
-#: src/Preferences.vala:196
+#: src/Preferences.vala:200
 msgid "Enable window animations"
 msgstr "ფანჯრის ანიმაციების ჩართვა"
 
-#: src/Preferences.vala:200
+#: src/Preferences.vala:204
 msgid "Text field font size"
 msgstr "ტექსტური ველის ფონტის ზომა"
 
-#: src/Preferences.vala:203
+#: src/Preferences.vala:207
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
@@ -2555,100 +2559,100 @@ msgstr ""
 "მიუთითებს ტექსტის ჩასწორების ველების მორგებული ფონტის ზომას (ანუ, სწრაფი "
 "შეყვანის, ან შენიშვნების ველისთვის)."
 
-#: src/Preferences.vala:206
+#: src/Preferences.vala:210
 msgid "Colorize note fields"
 msgstr "შენიშვნის ველების გაფერადებ"
 
-#: src/Preferences.vala:210
+#: src/Preferences.vala:214
 msgid "Default global style"
 msgstr "ნაგულისხმევი გლობალური სტილი"
 
-#: src/Preferences.vala:212
+#: src/Preferences.vala:216
 msgid "Specifies the global style to use for newly created mindmaps."
 msgstr "მიუთითებს ახალი მენტალური რუკებისთვის გამოყენებულ გლობალურ სტილს."
 
-#: src/Preferences.vala:235
+#: src/Preferences.vala:239
 msgid "Tags in this list will be the starting list of tags for new mindmaps."
 msgstr "ჭდეები ამ სიაში ახალი მენტალური რუკების საწყისი ჭდეების სია იქნება."
 
-#: src/Preferences.vala:336
+#: src/Preferences.vala:340
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
 msgstr ""
 "ორმაგი წკაპი მალსახმობის ჩასასწორებლად.  მონიშვნა + Delete მალსახმობის "
 "წასაშლელად."
 
-#: src/Preferences.vala:337
+#: src/Preferences.vala:341
 msgid "Escape to cancel.  Press key combination to set."
 msgstr "Escape გასაუქმებლად.  დასაყენებლად დააჭირეთ ღილაკების კომბინაციას."
 
-#: src/Preferences.vala:345
+#: src/Preferences.vala:349
 msgid "Set Minder Defaults"
 msgstr "Minder-ის ნაგულისხმევების დაყენება"
 
-#: src/Preferences.vala:348
+#: src/Preferences.vala:352
 msgid "Clear All Shortcuts"
 msgstr "ყველა მალსახმობის გასუფთავება"
 
-#: src/Preferences.vala:357
+#: src/Preferences.vala:361
 msgid "Search commands"
 msgstr "ძებნის ბრძანებები"
 
-#: src/Preferences.vala:359
+#: src/Preferences.vala:363
 msgid "Search shortcuts"
 msgstr "ძებნის მალსახმობები"
 
-#: src/Preferences.vala:476
+#: src/Preferences.vala:480
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr "დიალოგის ჩვენება როცა განახლება საჭიროა"
 
-#: src/Preferences.vala:480
+#: src/Preferences.vala:484
 msgid "Show temporary directory containing current mindmap in map sidebar"
 msgstr ""
 "მიმდინარე მენტალური რუკების შემცველი დროებითი საქაღალდის ჩვენება რუკის "
 "გვერდით პანელზე"
 
-#: src/Preferences.vala:490
+#: src/Preferences.vala:494
 msgid "Default file upgrade action"
 msgstr "ნაგულისხმევი ფაილის განახლების ქმედება"
 
-#: src/Preferences.vala:564 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
+#: src/Preferences.vala:568 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
 msgid "None"
 msgstr "არცერთი"
 
-#: src/Preferences.vala:565
+#: src/Preferences.vala:569
 msgid "Enter shortcut"
 msgstr "შეიყვანეთ მალსახმობი"
 
-#: src/Preferences.vala:733
+#: src/Preferences.vala:737
 msgid "Unable to set new shortcut due to conflicts"
 msgstr "ახალი მალსახმობის დაყენება შეუძლებელია კონფლიქტების გამო"
 
-#: src/Preferences.vala:734
+#: src/Preferences.vala:738
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr "%s კონფლიქტშია '%s'-ისთან"
 
-#: src/Preferences.vala:799
+#: src/Preferences.vala:803
 msgid "Clear all shortcuts?"
 msgstr "ყველა მალსახმობის გასუფთავება?"
 
-#: src/Preferences.vala:799 src/Preferences.vala:810
+#: src/Preferences.vala:803 src/Preferences.vala:814
 msgid "Current shortcut settings will be lost"
 msgstr "მიმდინარე მალსახმობის პარამეტრები დაიკარგება"
 
-#: src/Preferences.vala:810
+#: src/Preferences.vala:814
 msgid "Use Minder Default Shortcuts?"
 msgstr "მოხდეს Minder-ის ნაგულისხმევი მალსახმობების გამოყენება?"
 
-#: src/Preferences.vala:842 src/Preferences.vala:860
+#: src/Preferences.vala:846 src/Preferences.vala:864
 msgid "Minder Default"
 msgstr "Minder-ის ნაგულისხმევი"
 
-#: src/Preferences.vala:845 src/Preferences.vala:861
+#: src/Preferences.vala:849 src/Preferences.vala:865
 msgid "Last Used"
 msgstr "ბოლოს გამოყენებულები"
 
-#: src/Preferences.vala:847 src/Preferences.vala:865
+#: src/Preferences.vala:851 src/Preferences.vala:869
 #, c-format
 msgid "Named Style: %s"
 msgstr "სახელიანი სტილი: %s"

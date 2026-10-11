@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 16:31-0500\n"
+"POT-Creation-Date: 2026-10-11 16:52-0500\n"
 "PO-Revision-Date: 2026-10-04 10:38+0200\n"
 "Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
 "Language-Team: \n"
@@ -2542,11 +2542,15 @@ msgstr ""
 "ist. Sicherungsdateien befinden sich im selben Verzeichnis wie die "
 "Originaldatei, sind jedoch versteckt und tragen die Erweiterung .bak."
 
-#: src/Preferences.vala:187
+#: src/Preferences.vala:164
+msgid "Show release notes on application startup after upgrading"
+msgstr ""
+
+#: src/Preferences.vala:191
 msgid "Default theme"
 msgstr "Standard Design"
 
-#: src/Preferences.vala:189
+#: src/Preferences.vala:193
 msgid ""
 "Sets the default theme to use for newly created mindmaps (use Map sidebar "
 "panel to make immediate changes)."
@@ -2554,19 +2558,19 @@ msgstr ""
 "Legt das Standarddesign für neu erstellte Mindmaps fest (über den Karte-"
 "Seitenleistenbereich können sofort Änderungen vorgenommen werden)."
 
-#: src/Preferences.vala:192
+#: src/Preferences.vala:196
 msgid "Enable mindmap animations"
 msgstr "Mindmap-Animationen aktivieren"
 
-#: src/Preferences.vala:196
+#: src/Preferences.vala:200
 msgid "Enable window animations"
 msgstr "Fensteranimationen aktivieren"
 
-#: src/Preferences.vala:200
+#: src/Preferences.vala:204
 msgid "Text field font size"
 msgstr "Schriftgröße des Textfeldes"
 
-#: src/Preferences.vala:203
+#: src/Preferences.vala:207
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
@@ -2575,106 +2579,106 @@ msgstr ""
 "Textbearbeitungsfeldern (z.B. Schnelleingabe- oder Hinweisfeld) verwendet "
 "werden soll."
 
-#: src/Preferences.vala:206
+#: src/Preferences.vala:210
 msgid "Colorize note fields"
 msgstr "Hinweisfelder einfärben"
 
-#: src/Preferences.vala:210
+#: src/Preferences.vala:214
 msgid "Default global style"
 msgstr "Standard-Globalstil"
 
-#: src/Preferences.vala:212
+#: src/Preferences.vala:216
 msgid "Specifies the global style to use for newly created mindmaps."
 msgstr ""
 "Legt den globalen Stil fest, der für neu erstellte Mindmaps verwendet werden "
 "soll."
 
-#: src/Preferences.vala:235
+#: src/Preferences.vala:239
 msgid "Tags in this list will be the starting list of tags for new mindmaps."
 msgstr ""
 "Die Schlagwörter in dieser Liste dienen als Ausgangsliste für neue Mindmaps."
 
-#: src/Preferences.vala:336
+#: src/Preferences.vala:340
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
 msgstr ""
 "Doppelklick, um die Tastenkombination zu bearbeiten.  Auswählen + Entfernen, "
 "um die Tastenkombination zu entfernen."
 
-#: src/Preferences.vala:337
+#: src/Preferences.vala:341
 msgid "Escape to cancel.  Press key combination to set."
 msgstr "Escape zum Abbrechen. Tastenkombination zum Festlegen drücken."
 
-#: src/Preferences.vala:345
+#: src/Preferences.vala:349
 msgid "Set Minder Defaults"
 msgstr "Minder-Standardeinstellungen festlegen"
 
-#: src/Preferences.vala:348
+#: src/Preferences.vala:352
 msgid "Clear All Shortcuts"
 msgstr "Alle Tastenkombinationen löschen"
 
-#: src/Preferences.vala:357
+#: src/Preferences.vala:361
 msgid "Search commands"
 msgstr "Befehle suchen"
 
-#: src/Preferences.vala:359
+#: src/Preferences.vala:363
 msgid "Search shortcuts"
 msgstr "Tastenkombinationen suchen"
 
-#: src/Preferences.vala:476
+#: src/Preferences.vala:480
 msgid "Show upgrade dialog when file upgrade is needed"
 msgstr ""
 "Aktualisierungsdialog anzeigen, wenn eine Dateiaktualisierung erforderlich "
 "ist"
 
-#: src/Preferences.vala:480
+#: src/Preferences.vala:484
 msgid "Show temporary directory containing current mindmap in map sidebar"
 msgstr ""
 "Temporäres Verzeichnis, das die aktuelle Mindmap enthält, in der Karten-"
 "Seitenleiste anzeigen"
 
-#: src/Preferences.vala:490
+#: src/Preferences.vala:494
 msgid "Default file upgrade action"
 msgstr "Standardmäßige Dateiaktualisierungsaktion"
 
-#: src/Preferences.vala:564 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
+#: src/Preferences.vala:568 src/styles/NodeBorderNone.vala:38 src/Tags.vala:47
 msgid "None"
 msgstr "Keine"
 
-#: src/Preferences.vala:565
+#: src/Preferences.vala:569
 msgid "Enter shortcut"
 msgstr "Tastenkombination eingeben"
 
-#: src/Preferences.vala:733
+#: src/Preferences.vala:737
 msgid "Unable to set new shortcut due to conflicts"
 msgstr ""
 "Aufgrund von Konflikten kann keine neue Tastenkombination festgelegt werden"
 
-#: src/Preferences.vala:734
+#: src/Preferences.vala:738
 #, c-format
 msgid "%s conflicts with '%s'"
 msgstr "%s steht in Konflikt mit ‚%s‘"
 
-#: src/Preferences.vala:799
+#: src/Preferences.vala:803
 msgid "Clear all shortcuts?"
 msgstr "Alle Tastenkombinationen löschen?"
 
-#: src/Preferences.vala:799 src/Preferences.vala:810
+#: src/Preferences.vala:803 src/Preferences.vala:814
 msgid "Current shortcut settings will be lost"
 msgstr "Die aktuellen Tastenkombinationseinstellungen gehen verloren"
 
-#: src/Preferences.vala:810
+#: src/Preferences.vala:814
 msgid "Use Minder Default Shortcuts?"
 msgstr "Minder-Standard-Tastenkombinationen verwenden?"
 
-#: src/Preferences.vala:842 src/Preferences.vala:860
+#: src/Preferences.vala:846 src/Preferences.vala:864
 msgid "Minder Default"
 msgstr "Minder Default"
 
-#: src/Preferences.vala:845 src/Preferences.vala:861
+#: src/Preferences.vala:849 src/Preferences.vala:865
 msgid "Last Used"
 msgstr "Zuletzt verwendet"
 
-#: src/Preferences.vala:847 src/Preferences.vala:865
+#: src/Preferences.vala:851 src/Preferences.vala:869
 #, c-format
 msgid "Named Style: %s"
 msgstr "Benannter Stil: %s"

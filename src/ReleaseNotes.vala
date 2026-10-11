@@ -23,6 +23,8 @@ using Gtk;
 
 public class ReleaseNotes : Granite.Dialog {
 
+  private const bool force_startup_notes = true;
+
   private WebKit.WebView _viewer;
   private Array<string>  _notes;
   private bool           _on_startup   = false;
@@ -79,13 +81,13 @@ public class ReleaseNotes : Granite.Dialog {
   public void startup() {
 
     var last_release = Minder.settings.get_string( "last-release-note" );
-    var show_startup = Minder.settings.get_boolean( "upgrade-release-notes" );
+    var show_startup = Minder.settings.get_boolean( "upgrade-release-notes" ) || force_startup_notes;
 
     // Set the last release to this current version
     Minder.settings.set_string( "last-release-note", Minder.static_version );
 
     // If no upgrade has happened, just destroy the class.
-    if( (last_release == "") || (Utils.compare_versions( last_release, Minder.static_version ) != -1) ) {
+    if( !show_startup || (last_release == "") || (Utils.compare_versions( last_release, Minder.static_version ) != -1) ) {
       destroy();
       return;
     }
@@ -93,7 +95,7 @@ public class ReleaseNotes : Granite.Dialog {
     _on_startup = true;
 
     // Load the XML
-    load_xml();
+    load_xml( last_release );
 
     // Present the window
     present();
@@ -107,7 +109,7 @@ public class ReleaseNotes : Granite.Dialog {
     _on_startup = false;
 
     // Load the XML
-    load_xml();
+    load_xml( "" );
 
     // Present the window
     present();
@@ -117,7 +119,7 @@ public class ReleaseNotes : Granite.Dialog {
   //-------------------------------------------------------------
   // Opens the appdata file and extract the release notes so that
   // we can output it to the web view.
-  private void load_xml() {
+  private void load_xml( string last_version ) {
 
     var file = File.new_for_uri( "resource:///io/github/phase1geo/minder/appdata.xml" );
 
@@ -126,7 +128,7 @@ public class ReleaseNotes : Granite.Dialog {
         uint8[] contents;
         string  etag_out;
         if( file.load_contents_async.end( res, out contents, out etag_out ) ) {
-          parse_xml( (string)contents );
+          parse_xml( (string)contents, last_version );
           _viewer.load_html( make_html(), null );
         } else {
           stdout.printf( "ERROR: Unable to load resource file contents\n" );
@@ -141,7 +143,7 @@ public class ReleaseNotes : Granite.Dialog {
   //-------------------------------------------------------------
   // Parses the release notes contents, extracting release information
   // as it finds it.
-  private bool parse_xml( string contents ) {
+  private bool parse_xml( string contents, string last_version ) {
 
     Xml.Doc* doc = Xml.Parser.read_memory( contents, contents.length, null, null, (Xml.ParserOption.HUGE | Xml.ParserOption.NOWARNING) );
     if( doc == null ) {
@@ -149,8 +151,6 @@ public class ReleaseNotes : Granite.Dialog {
     }
 
     Xml.Node* root = doc->get_root_element();
-
-    var last_version = Minder.settings.get_string( "last-release-note" );
 
     for( Xml.Node* it1 = root->children; it1 != null; it1 = it1->next ) {
       if( (it1->type == Xml.ElementType.ELEMENT_NODE) && (it1->name == "releases") ) {
@@ -238,7 +238,11 @@ public class ReleaseNotes : Granite.Dialog {
     for( Xml.Node* it = description->children; it != null; it = it->next ) {
       Xml.Node* node = it->copy( 1 );
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "p") ) {
-        node->set_name( "h3" );
+        if( it->get_content().has_prefix( "Important" ) ) {
+          node->set_prop( "style", "color: red; font-weight: bold;" );
+        } else {
+          node->set_name( "h3" );
+        }
       }
       body->add_child( node );
     }
