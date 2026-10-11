@@ -25,7 +25,7 @@ public class ReleaseNotes : Granite.Dialog {
 
   private WebKit.WebView _viewer;
   private Array<string>  _notes;
-  private bool           _show_current = false;
+  private int            _max_releases = 10;
 
   //-------------------------------------------------------------
   // Displays the release notes window.
@@ -140,14 +140,8 @@ public class ReleaseNotes : Granite.Dialog {
 
     string[] body = {};
 
-    if( _notes.length > 0 ) {
-      if( _show_current ) {
-        body += _notes.index( 0 );
-      } else {
-        for( int i=0; i<_notes.length; i++ ) {
-          body += _notes.index( i );
-        }
-      }
+    for( int i=0; i<int.min( _max_releases, (int)_notes.length ); i++ ) {
+      body += _notes.index( i );
     }
 
     return( "<html><head/><body>%s</body></html>".printf( string.joinv( "<br/><hr/><br/>", body ) ) );
