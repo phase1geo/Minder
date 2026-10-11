@@ -161,6 +161,10 @@ public class Preferences : Granite.Dialog {
     grid.attach( make_info( _( "Backup files are created prior to saving.  If enabled, the backup file is retained but is not used when re-opening the file.  If disabled, the backup file is removed after save and used on re-opening file if it exists.  Backup files are hidden in the same directory as the original with a .bak extension." ) ), 3, row );
     row++;
 
+    grid.attach( make_label( _( "Show release notes on application startup after upgrading" ) ), 0, row );
+    grid.attach( make_switch( "upgrade-release-notes" ), 1, row );
+    row++;
+
     tab_switched.connect((tab_name) => {
       if( tab_name == "behavior" ) {
         var w = grid.get_child_at( 1, 0 );
