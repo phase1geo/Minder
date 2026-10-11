@@ -65,6 +65,7 @@ src/Node.vala
 src/NoteView.vala
 src/Preferences.vala
 src/QuickEntry.vala
+src/ReleaseNotes.vala
 src/Shortcuts.vala
 src/StickerInspector.vala
 src/StickerSet.vala
