@@ -1609,7 +1609,7 @@ public enum KeyCommand {
 
   public static void show_releases( MindMap map ) {
     var releases = new ReleaseNotes( map.win );
-    releases.present();
+    releases.show_notes();
   }
 
   public static void show_contextual_menu( MindMap map ) {

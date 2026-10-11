@@ -25,6 +25,7 @@ public class ReleaseNotes : Granite.Dialog {
 
   private WebKit.WebView _viewer;
   private Array<string>  _notes;
+  private bool           _on_startup   = false;
   private int            _max_releases = 10;
 
   //-------------------------------------------------------------
@@ -71,7 +72,45 @@ public class ReleaseNotes : Granite.Dialog {
       destroy();
     });
 
+  }
+
+  //-------------------------------------------------------------
+  // This should be run on application start, after the UI is available.
+  public void startup() {
+
+    var last_release = Minder.settings.get_string( "last-release-note" );
+    var show_startup = Minder.settings.get_boolean( "upgrade-release-notes" );
+
+    // Set the last release to this current version
+    Minder.settings.set_string( "last-release-note", Minder.static_version );
+
+    // If no upgrade has happened, just destroy the class.
+    if( (last_release == "") || (Utils.compare_versions( last_release, Minder.static_version ) != -1) ) {
+      destroy();
+      return;
+    }
+
+    _on_startup = true;
+
+    // Load the XML
     load_xml();
+
+    // Present the window
+    present();
+
+  }
+
+  //-------------------------------------------------------------
+  // Displays the last X releases.
+  public void show_notes() {
+
+    _on_startup = false;
+
+    // Load the XML
+    load_xml();
+
+    // Present the window
+    present();
 
   }
 
@@ -111,12 +150,21 @@ public class ReleaseNotes : Granite.Dialog {
 
     Xml.Node* root = doc->get_root_element();
 
+    var last_version = Minder.settings.get_string( "last-release-note" );
+
     for( Xml.Node* it1 = root->children; it1 != null; it1 = it1->next ) {
       if( (it1->type == Xml.ElementType.ELEMENT_NODE) && (it1->name == "releases") ) {
         for( Xml.Node* it2 = it1->children; it2 != null; it2 = it2->next ) {
           if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "release") ) {
             var version = it2->get_prop( "version" );
             var date    = it2->get_prop( "date" );
+            assert( version != null );
+            assert( date != null );
+            if( ( _on_startup && (Utils.compare_versions( version, last_version ) != 1)) ||
+                (!_on_startup && (_notes.length >= _max_releases)) ) {
+              delete doc;
+              return( true );
+            }
             for( Xml.Node* it3 = it2->children; it3 != null; it3 = it3->next ) {
               if( (it3->type == Xml.ElementType.ELEMENT_NODE) && (it3->name == "description") ) {
                 var html = make_release_html( it3, version, date );
@@ -140,7 +188,7 @@ public class ReleaseNotes : Granite.Dialog {
 
     string[] body = {};
 
-    for( int i=0; i<int.min( _max_releases, (int)_notes.length ); i++ ) {
+    for( int i=0; i<_notes.length; i++ ) {
       body += _notes.index( i );
     }
 

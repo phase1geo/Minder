@@ -338,5 +338,14 @@
       <summary>When 'default-global-style' is set to a value of 2, the name of the saved global style to use.</summary>
       <description>When 'default-global-style' is set to a value of 2, the name of the saved global style to use.</description>
     </key>
+    <key name="last-release-note" type="s">
+      <default>""</default>
+      <summary>This value should not be modified by the user.</summary>
+    </key>
+    <key name="upgrade-release-notes" type="b">
+      <default>true</default>
+      <summary>Determines if the release notes will be displayed on application startup after an upgrade.</summary>
+      <description>Determines if the release notes will be displayed on application startup after an upgrade.</description>
+    </key>
   </schema>
 </schemalist>

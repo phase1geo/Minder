@@ -27,7 +27,7 @@ using Gee;
 public class Minder : Gtk.Application {
 
   private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
-  public const  string static_version   = "2.1.0";
+  public const  string static_version   = "3.0.0";
 
   private MainWindow    appwin;
   private GLib.Settings iface_settings;
@@ -82,6 +82,13 @@ public class Minder : Gtk.Application {
 
     // Load the tab data
     appwin.load_tab_state();
+
+    // Show the release notes after an upgrade, if necessary
+    Idle.add(() => {
+      var release_notes = new ReleaseNotes( appwin );
+      release_notes.startup();
+      return( false );
+    });
 
     // Initialize desktop interface settings
     string[] names = {"font-name", "text-scaling-factor"};
