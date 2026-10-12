@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 17:42-0500\n"
+"POT-Creation-Date: 2026-10-11 22:16-0500\n"
 "PO-Revision-Date: 2025-12-02 09:55+0100\n"
 "Last-Translator: Daniel Nylander <github@danielnylander.se>\n"
 "Language-Team: sv\n"
@@ -34,65 +34,65 @@ msgstr "Minder i AppCenter"
 msgid "Flatpak Runtime: %s"
 msgstr "Flatpak-körmiljö: %s"
 
-#: src/Application.vala:55 src/MainWindow.vala:251 src/MainWindow.vala:2002
+#: src/Application.vala:56 src/MainWindow.vala:251 src/MainWindow.vala:2002
 msgid "Minder"
 msgstr "Minder"
 
-#: src/Application.vala:152
+#: src/Application.vala:153
 #, c-format
 msgid "Import file from format (%s)"
 msgstr "Importera fil från format (%s)"
 
-#: src/Application.vala:153
+#: src/Application.vala:154
 #, c-format
 msgid "Export mindmap as format (%s)"
 msgstr "Exportera tankekarta som format (%s)"
 
-#: src/Application.vala:158
+#: src/Application.vala:159
 msgid "Display version number"
 msgstr "Visa versionsnummer"
 
-#: src/Application.vala:159
+#: src/Application.vala:160
 msgid "Display help"
 msgstr "Visa hjälp"
 
-#: src/Application.vala:160
+#: src/Application.vala:161
 msgid "Starts Minder with a new file"
 msgstr "Startar Minder med en ny fil"
 
-#: src/Application.vala:163
+#: src/Application.vala:164
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
 msgstr ""
 "Aktiverar en transparent bakgrund för PNG-bilder. Standardinställningen är "
 "ingen transparens."
 
-#: src/Application.vala:164
+#: src/Application.vala:165
 msgid "PNG compression value (0-9). Default is 0."
 msgstr "PNG-komprimeringsvärde (0-9). Standardvärdet är 0."
 
-#: src/Application.vala:165
+#: src/Application.vala:166
 msgid "JPEG quality (0-100). Default is 90."
 msgstr "JPEG-kvalitet (0-100). Standardvärdet är 90."
 
-#: src/Application.vala:166
+#: src/Application.vala:167
 msgid "Enables image links in exported Markdown"
 msgstr "Aktiverar bildlänkar i exporterad Markdown"
 
-#: src/Application.vala:171
+#: src/Application.vala:172
 msgid "Import Example:\n"
 msgstr "Importexempel:\n"
 
-#: src/Application.vala:172
+#: src/Application.vala:173
 #, fuzzy, c-format
 msgid "  %sio.github.phase1geo.minder --import=markdown file.markdown\n"
 msgstr "  %scom.github.phase1geo.minder --import=markdown fil.markdown\n"
 
-#: src/Application.vala:174
+#: src/Application.vala:175
 msgid "Export Example:\n"
 msgstr "Exportexempel:\n"
 
-#: src/Application.vala:175
+#: src/Application.vala:176
 #, c-format
 msgid ""
 "  %sio.github.phase1geo.minder --export=png --png-transparent file.minder "
@@ -101,34 +101,34 @@ msgstr ""
 "  %scom.github.phase1geo.minder --export=png --png-transparent fil.minder "
 "fil.png\n"
 
-#: src/Application.vala:184
+#: src/Application.vala:185
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "FEL: %s\n"
 
-#: src/Application.vala:185
+#: src/Application.vala:186
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "Kör '%s --help' för att se giltiga flaggor\n"
 
-#: src/Application.vala:208
+#: src/Application.vala:209
 msgid "ERROR: Unable to import file"
 msgstr "FEL: Det går inte att importera filen"
 
-#: src/Application.vala:212
+#: src/Application.vala:213
 msgid "ERROR: Import is missing filename to import"
 msgstr "FEL: Importen saknar filnamn att importera"
 
-#: src/Application.vala:235
+#: src/Application.vala:236
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr "FEL: Exporten saknar inmatningsfil och/eller exportutmatningsfil"
 
-#: src/Application.vala:245
+#: src/Application.vala:246
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "FEL: Det går inte att öppna filen '%s'\n"
 
-#: src/Application.vala:281
+#: src/Application.vala:282
 #, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "FEL:  Det går inte att läsa in Minder-inmatningsfilen %s"
@@ -1706,7 +1706,7 @@ msgstr "Genvägslathund"
 msgid "Documentation"
 msgstr "Dokument"
 
-#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:38
+#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:36
 #, fuzzy
 msgid "Release Notes"
 msgstr "Ersätt noder"
@@ -2414,7 +2414,7 @@ msgstr "Genvägar"
 msgid "Advanced"
 msgstr "Avancerat"
 
-#: src/Preferences.vala:93 src/ReleaseNotes.vala:72 src/StyleInspector.vala:254
+#: src/Preferences.vala:93 src/ReleaseNotes.vala:70 src/StyleInspector.vala:254
 msgid "Close"
 msgstr "Stäng"
 
@@ -2720,7 +2720,7 @@ msgstr "Ersätt"
 msgid "Insert"
 msgstr "Infoga"
 
-#: src/ReleaseNotes.vala:229
+#: src/ReleaseNotes.vala:227
 #, c-format
 msgid "Release %s"
 msgstr ""

@@ -164,6 +164,7 @@
         <ul>
           <li>Updated Swedish translation (thanks to Daniel Nylander).</li>
           <li>Changed application ID from com.github.phase1geo.minder to io.github.phase1geo.minder.</li>
+          <li>Updated application icon.</li>
           <li>Updated codebase to eliminate using obsoleted library functions.</li>
           <li>Improved search results to eliminate displaying Markdown markup characters.</li>
           <li>Cleaned up Minder local data directory contents.</li>

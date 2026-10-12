@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 17:42-0500\n"
+"POT-Creation-Date: 2026-10-11 22:16-0500\n"
 "PO-Revision-Date: 2026-10-04 10:38+0200\n"
 "Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
 "Language-Team: \n"
@@ -35,65 +35,65 @@ msgstr "Minder im AppCenter"
 msgid "Flatpak Runtime: %s"
 msgstr "Flatpak-Laufzeitumgebung: %s"
 
-#: src/Application.vala:55 src/MainWindow.vala:251 src/MainWindow.vala:2002
+#: src/Application.vala:56 src/MainWindow.vala:251 src/MainWindow.vala:2002
 msgid "Minder"
 msgstr "Minder"
 
-#: src/Application.vala:152
+#: src/Application.vala:153
 #, c-format
 msgid "Import file from format (%s)"
 msgstr "Datei aus Format (%s) importieren"
 
-#: src/Application.vala:153
+#: src/Application.vala:154
 #, c-format
 msgid "Export mindmap as format (%s)"
 msgstr "Mindmap als Format (%s) exportieren"
 
-#: src/Application.vala:158
+#: src/Application.vala:159
 msgid "Display version number"
 msgstr "Versionsnummer anzeigen"
 
-#: src/Application.vala:159
+#: src/Application.vala:160
 msgid "Display help"
 msgstr "Hilfe anzeigen"
 
-#: src/Application.vala:160
+#: src/Application.vala:161
 msgid "Starts Minder with a new file"
 msgstr "Startet Minder mit einer neuen Datei"
 
-#: src/Application.vala:163
+#: src/Application.vala:164
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
 msgstr ""
 "Aktiviert einen transparenten Hintergrund für PNG-Bilder. Standardmäßig ist "
 "keine Transparenz eingestellt."
 
-#: src/Application.vala:164
+#: src/Application.vala:165
 msgid "PNG compression value (0-9). Default is 0."
 msgstr "PNG-Komprimierungswert (0–9). Der Standardwert ist 0."
 
-#: src/Application.vala:165
+#: src/Application.vala:166
 msgid "JPEG quality (0-100). Default is 90."
 msgstr "JPEG-Qualität (0–100). Der Standardwert ist 90."
 
-#: src/Application.vala:166
+#: src/Application.vala:167
 msgid "Enables image links in exported Markdown"
 msgstr "Ermöglicht Bild-Links in exportiertem Markdown"
 
-#: src/Application.vala:171
+#: src/Application.vala:172
 msgid "Import Example:\n"
 msgstr "Beispiel für einen Import:\n"
 
-#: src/Application.vala:172
+#: src/Application.vala:173
 #, fuzzy, c-format
 msgid "  %sio.github.phase1geo.minder --import=markdown file.markdown\n"
 msgstr "  %scom.github.phase1geo.minder --import=markdown Datei.markdown\n"
 
-#: src/Application.vala:174
+#: src/Application.vala:175
 msgid "Export Example:\n"
 msgstr "Beispiel für einen Export:\n"
 
-#: src/Application.vala:175
+#: src/Application.vala:176
 #, c-format
 msgid ""
 "  %sio.github.phase1geo.minder --export=png --png-transparent file.minder "
@@ -102,35 +102,35 @@ msgstr ""
 "  %scom.github.phase1geo.minder --export=png --png-transparent Datei.minder "
 "Datei.png\n"
 
-#: src/Application.vala:184
+#: src/Application.vala:185
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "FEHLER: %s\n"
 
-#: src/Application.vala:185
+#: src/Application.vala:186
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "Führen Sie »%s --help« aus, um gültige Optionen zu sehen\n"
 
-#: src/Application.vala:208
+#: src/Application.vala:209
 msgid "ERROR: Unable to import file"
 msgstr "FEHLER: Datei kann nicht importiert werden"
 
-#: src/Application.vala:212
+#: src/Application.vala:213
 msgid "ERROR: Import is missing filename to import"
 msgstr "FEHLER: Beim Importieren fehlt der zu importierende Dateiname"
 
-#: src/Application.vala:235
+#: src/Application.vala:236
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
 "FEHLER: Beim Export fehlt eine Eingabedatei und/oder eine Export-Ausgabedatei"
 
-#: src/Application.vala:245
+#: src/Application.vala:246
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "FEHLER: Datei »%s« kann nicht geöffnet werden\n"
 
-#: src/Application.vala:281
+#: src/Application.vala:282
 #, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "FEHLER: Minder-Eingabedatei %s kann nicht geladen werden"
@@ -1724,7 +1724,7 @@ msgstr "Übersicht über Tastenkombinationen"
 msgid "Documentation"
 msgstr "Dokument"
 
-#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:38
+#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:36
 #, fuzzy
 msgid "Release Notes"
 msgstr "Knoten ersetzen"
@@ -2434,7 +2434,7 @@ msgstr "Tastenkombinationen"
 msgid "Advanced"
 msgstr "Erweitert"
 
-#: src/Preferences.vala:93 src/ReleaseNotes.vala:72 src/StyleInspector.vala:254
+#: src/Preferences.vala:93 src/ReleaseNotes.vala:70 src/StyleInspector.vala:254
 msgid "Close"
 msgstr "Schließen"
 
@@ -2755,7 +2755,7 @@ msgstr "Ersetzen"
 msgid "Insert"
 msgstr "Einfügen"
 
-#: src/ReleaseNotes.vala:229
+#: src/ReleaseNotes.vala:227
 #, c-format
 msgid "Release %s"
 msgstr ""

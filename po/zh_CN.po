@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 17:42-0500\n"
+"POT-Creation-Date: 2026-10-11 22:16-0500\n"
 "PO-Revision-Date: 2023-10-10 17:50+0800\n"
 "Last-Translator: Aerowolf <aerowolf@tom.com>\n"
 "Language-Team: 简体中文\n"
@@ -36,105 +36,105 @@ msgstr "在 AppCenter 中打开 Minder"
 msgid "Flatpak Runtime: %s"
 msgstr ""
 
-#: src/Application.vala:55 src/MainWindow.vala:251 src/MainWindow.vala:2002
+#: src/Application.vala:56 src/MainWindow.vala:251 src/MainWindow.vala:2002
 msgid "Minder"
 msgstr "Minder"
 
-#: src/Application.vala:152
+#: src/Application.vala:153
 #, c-format
 msgid "Import file from format (%s)"
 msgstr "导入 %s 格式文件"
 
-#: src/Application.vala:153
+#: src/Application.vala:154
 #, fuzzy, c-format
 msgid "Export mindmap as format (%s)"
 msgstr "将思维导图导出为 %s 格式"
 
-#: src/Application.vala:158
+#: src/Application.vala:159
 msgid "Display version number"
 msgstr "显示版本号"
 
-#: src/Application.vala:159
+#: src/Application.vala:160
 #, fuzzy
 msgid "Display help"
 msgstr "显示"
 
-#: src/Application.vala:160
+#: src/Application.vala:161
 msgid "Starts Minder with a new file"
 msgstr "启动 Minder 并新建空文件"
 
-#: src/Application.vala:163
+#: src/Application.vala:164
 #, fuzzy
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
 msgstr "为 PNG 图像启用透明背景"
 
-#: src/Application.vala:164
+#: src/Application.vala:165
 #, fuzzy
 msgid "PNG compression value (0-9). Default is 0."
 msgstr "PNG 压缩值 （0-9）"
 
-#: src/Application.vala:165
+#: src/Application.vala:166
 #, fuzzy
 msgid "JPEG quality (0-100). Default is 90."
 msgstr "JPEG 质量 （0-100）"
 
-#: src/Application.vala:166
+#: src/Application.vala:167
 msgid "Enables image links in exported Markdown"
 msgstr "在导出的 Markdown 中启用图像链接"
 
-#: src/Application.vala:171
+#: src/Application.vala:172
 #, fuzzy
 msgid "Import Example:\n"
 msgstr "导入文件"
 
-#: src/Application.vala:172
+#: src/Application.vala:173
 #, c-format
 msgid "  %sio.github.phase1geo.minder --import=markdown file.markdown\n"
 msgstr ""
 
-#: src/Application.vala:174
+#: src/Application.vala:175
 #, fuzzy
 msgid "Export Example:\n"
 msgstr "导出文件"
 
-#: src/Application.vala:175
+#: src/Application.vala:176
 #, c-format
 msgid ""
 "  %sio.github.phase1geo.minder --export=png --png-transparent file.minder "
 "file.png\n"
 msgstr ""
 
-#: src/Application.vala:184
+#: src/Application.vala:185
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "错误： %s\n"
 
-#: src/Application.vala:185
+#: src/Application.vala:186
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "运行 “%s --help”可查看有效选项\n"
 
-#: src/Application.vala:208
+#: src/Application.vala:209
 msgid "ERROR: Unable to import file"
 msgstr "错误：无法导入文件"
 
-#: src/Application.vala:212
+#: src/Application.vala:213
 #, fuzzy
 msgid "ERROR: Import is missing filename to import"
 msgstr "错误：导出缺少文件名"
 
-#: src/Application.vala:235
+#: src/Application.vala:236
 #, fuzzy
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr "错误：导出缺少输入文件和/或导出输出文件"
 
-#: src/Application.vala:245
+#: src/Application.vala:246
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "错误：无法打开文件“%s”\n"
 
-#: src/Application.vala:281
+#: src/Application.vala:282
 #, fuzzy, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "错误：不能载入Minder输入文件%s"
@@ -1797,7 +1797,7 @@ msgstr "快捷键"
 msgid "Documentation"
 msgstr "文档"
 
-#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:38
+#: src/MainWindow.vala:1403 src/ReleaseNotes.vala:36
 #, fuzzy
 msgid "Release Notes"
 msgstr "替换节点"
@@ -2516,7 +2516,7 @@ msgstr "Minder快捷键"
 msgid "Advanced"
 msgstr "进展"
 
-#: src/Preferences.vala:93 src/ReleaseNotes.vala:72 src/StyleInspector.vala:254
+#: src/Preferences.vala:93 src/ReleaseNotes.vala:70 src/StyleInspector.vala:254
 msgid "Close"
 msgstr "关闭"
 
@@ -2801,7 +2801,7 @@ msgstr "替换"
 msgid "Insert"
 msgstr "插入"
 
-#: src/ReleaseNotes.vala:229
+#: src/ReleaseNotes.vala:227
 #, c-format
 msgid "Release %s"
 msgstr ""
