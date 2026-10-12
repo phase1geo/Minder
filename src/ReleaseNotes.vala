@@ -23,8 +23,6 @@ using Gtk;
 
 public class ReleaseNotes : Granite.Dialog {
 
-  private const bool force_startup_notes = true;
-
   private WebKit.WebView _viewer;
   private Array<string>  _notes;
   private bool           _on_startup   = false;
@@ -81,13 +79,13 @@ public class ReleaseNotes : Granite.Dialog {
   public void startup() {
 
     var last_release = Minder.settings.get_string( "last-release-note" );
-    var show_startup = Minder.settings.get_boolean( "upgrade-release-notes" ) || force_startup_notes;
+    var show_startup = Minder.settings.get_boolean( "upgrade-release-notes" ) || Minder.force_startup_notes;
 
     // Set the last release to this current version
     Minder.settings.set_string( "last-release-note", Minder.static_version );
 
     // If no upgrade has happened, just destroy the class.
-    if( !show_startup || (last_release == "") || (Utils.compare_versions( last_release, Minder.static_version ) != -1) ) {
+    if( !show_startup || (Utils.compare_versions( last_release, Minder.static_version ) != -1) ) {
       destroy();
       return;
     }
