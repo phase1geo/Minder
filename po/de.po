@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 22:16-0500\n"
+"POT-Creation-Date: 2026-10-12 19:33-0500\n"
 "PO-Revision-Date: 2026-10-12 22:02+0200\n"
 "Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
 "Language-Team: \n"
@@ -186,7 +186,7 @@ msgstr "Als Bild eingefügt"
 msgid "Formula recognition was skipped: %s"
 msgstr "Formelerkennung wurde übersprungen: %s"
 
-#: src/ConnectionInspector.vala:84 src/KeyCommands.vala:832
+#: src/ConnectionInspector.vala:84 src/KeyCommands.vala:836
 #: src/NodeMenu.vala:112
 msgid "Connection"
 msgstr "Verbindung"

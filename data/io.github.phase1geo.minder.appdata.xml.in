@@ -107,6 +107,7 @@
         <p>Changes</p>
         <ul>
           <li>Updated Swedish translation (thanks to Daniel Nylander).</li>
+          <li>Updated German translation (thanks to Benjamin Weis).</li>
           <li>Changed application ID from com.github.phase1geo.minder to io.github.phase1geo.minder.</li>
           <li>Updated application icon.</li>
           <li>Updated codebase to eliminate using obsoleted library functions.</li>
