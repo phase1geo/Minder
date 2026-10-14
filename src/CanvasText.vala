@@ -1239,14 +1239,24 @@ public class CanvasText : Object {
 
     // Draw the insertion cursor if we are in the 'editable' state
     if( edit && !copy_layout ) {
+      Pango.Rectangle strong_rect, weak_rect;
       var cpos = text.text.index_of_nth_char( _cursor );
-      var rect = layout.index_to_pos( cpos );
-      Utils.set_context_color_with_alpha( ctx, theme.get_color( "text_cursor" ), alpha );
+      layout.get_cursor_pos( cpos, out strong_rect, out weak_rect );
+      var text_cursor = theme.get_color( "text_cursor" );
+      if( text_cursor.equal( theme.get_color( "foreground" ) ) ) {
+        text_cursor = fg;
+      }
+      Utils.set_context_color_with_alpha( ctx, text_cursor, alpha );
       double ix, iy;
-      ix = (posx + (rect.x / Pango.SCALE) - 1) - (log_rect.x / Pango.SCALE);
-      iy = posy + (rect.y / Pango.SCALE);
-      ctx.rectangle( ix, iy, 1, (rect.height / Pango.SCALE) );
-      ctx.fill();
+      ix = posx + (strong_rect.x / Pango.SCALE);
+      iy = posy + (strong_rect.y / Pango.SCALE);
+      ctx.save();
+      ctx.set_antialias( Cairo.Antialias.NONE );
+      ctx.set_line_width( 1.0 );
+      ctx.move_to( ix, iy );
+      ctx.line_to( ix, (iy + (strong_rect.height / Pango.SCALE)) );
+      ctx.stroke();
+      ctx.restore();
     }
 
   }
