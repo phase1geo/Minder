@@ -17,7 +17,7 @@
       <li>Choose from many tree layout choices.</li>
       <li>Support for Markdown formatting.</li>
       <li>Support for insertion of Unicode characters.</li>
-      <li>Add notes, tasks, and images to your nodes.</li>
+      <li>Add notes, tasks, images, formulas and tables to your nodes.</li>
       <li>Add node-to-node connections with optional text and notes.</li>
       <li>Stylize nodes, callouts, links and connections to add more meaning and improve readability.</li>
       <li>Save and reuse style settings within and across open mindmaps.</li>
@@ -127,6 +127,8 @@
           <li>Fixed handling of SVG images in Minder (thanks to @dragonleopardpig).</li>
           <li>Fixed issue with dragging/dropping image onto nodes.</li>
           <li>Fixed issues with image handling when nodes containing images are copy-pasted.</li>
+          <li>Fixed issue with insertion cursor display.</li>
+          <li>Fixed issue with insertion cursor color used in root nodes in certain themes.</li>
         </ul>
       </description>
     </release>
