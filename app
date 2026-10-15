@@ -94,10 +94,12 @@ case $1 in
     sudo ninja uninstall
     ;;
 "elementary")
+    yamllint -c .yamllint --no-warnings elementary/io.github.phase1geo.minder.yml
     flatpak-builder --user --install --force-clean ../build-minder-elementary elementary/io.github.phase1geo.minder.yml
     flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" io.github.phase1geo.minder.Debug
     ;;
 "flathub")
+    yamllint -c .yamllint --no-warnings flathub/io.github.phase1geo.minder.yml
     flatpak-builder --user --install --force-clean ../build-minder-flathub flathub/io.github.phase1geo.minder.yml
     flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" io.github.phase1geo.minder.Debug
     ;;
