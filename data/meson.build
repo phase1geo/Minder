@@ -8,6 +8,15 @@ install_data(
     install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'mimetypes')
 )
 
+install_data(
+    [ join_paths('fonts', 'cmex10.ttf'),
+      join_paths('fonts', 'cmmi10.ttf'),
+      join_paths('fonts', 'cmr10.ttf'),
+      join_paths('fonts', 'cmsy10.ttf'),
+      join_paths('fonts', 'LICENSE_BAKOMA') ],
+    install_dir: join_paths(get_option('datadir'), 'fonts', 'bakoma')
+)
+
 i18n.merge_file(
     input: meson.project_name() + '.desktop.in',
     output: meson.project_name() + '.desktop',

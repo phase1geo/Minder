@@ -28,29 +28,20 @@ modules:
         url: https://github.com/Orc/discount/archive/refs/tags/v2.2.4.tar.gz
         sha256: 918905377e6ed3d0a7158cac0a4a18ed3c4cc0cad8ee95dddd82cb86ba9dd044
 
-  - name: texlive
-    buildsystem: simple
-    build-commands:
-      - /usr/lib/sdk/texlive/install.sh
-      - du -sh /app/texmf-dist
-      - rm -rf /app/texmf-dist/doc /app/texmf-dist/source /app/texmf-dist/tex4ht
-      - rm -rf /app/share/texmf-dist/doc /app/share/texmf-dist/source /app/share/man /app/share/info
-      - for d in afm opentype truetype source type3 vf; do rm -rf /app/texmf-dist/fonts/$d; done
-      - |
-        for t in tfm type1; do
-          dir=/app/texmf-dist/fonts/$t
-          [ -d "$dir" ] || continue
-          find "$dir" -mindepth 1 -maxdepth 1 ! -name public -exec rm -rf {} +
-          [ -d "$dir/public" ] && find "$dir/public" -mindepth 1 -maxdepth 1 \
-            ! -name cm ! -name amsfonts ! -name latex-fonts ! -name ec \
-            -exec rm -rf {} +
-        done
-      - for d in context xelatex lualatex luatex xetex texinfo; do rm -rf /app/texmf-dist/tex/$d; done
-      - rm -rf /app/texmf-dist/metapost /app/texmf-dist/bibtex
-      - PATH=/app/bin:/app/bin/x86_64-linux:/app/bin/aarch64-linux:$PATH mktexlsr /app/texmf-dist || true
-      - du -sh /app/texmf-dist
-      - du -sh /app/texmf-dist/* | sort -h | tail -8
-      - du -sh /app/texmf-dist/tex/latex/* | sort -h | tail -15
+  - name: lasem
+    buildsystem: meson
+    config-opts:
+      - -Dintrospection=disabled
+      - -Dviewer=disabled
+      - -Ddocumentation=disabled
+    cleanup:
+      - /bin
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://github.com/LasemProject/lasem.git
+        commit: e657038b7f348a91fabd06da192aedef137bd2f2
 
   - name: minder
     buildsystem: meson

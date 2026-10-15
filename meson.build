@@ -68,6 +68,7 @@ dependencies = [
     dependency('json-glib-1.0'),
     dependency('libwebp'),
     dependency('webkitgtk-6.0'),
+    dependency('lasem-0.6'),
     libmarkdown,
     librsvg,
     math_dep
@@ -100,6 +101,7 @@ e = executable('io.github.phase1geo.minder',
     vala_args: [
         join_paths(meson.project_source_root(), 'vapi', 'libmarkdown.vapi'),
         join_paths(meson.project_source_root(), 'vapi', 'libwebp.vapi'),
+        join_paths(meson.project_source_root(), 'vapi', 'lasem-0.6.vapi'),
     ],
     install : true
 )
