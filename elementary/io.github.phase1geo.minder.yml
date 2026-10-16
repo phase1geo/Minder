@@ -1,6 +1,6 @@
 app-id: io.github.phase1geo.minder
 runtime: io.elementary.Platform
-runtime-version: '8.2'
+runtime-version: '9.1'
 sdk: io.elementary.Sdk
 command: io.github.phase1geo.minder
 finish-args:
