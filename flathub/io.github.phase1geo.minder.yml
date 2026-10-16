@@ -4,17 +4,12 @@ runtime-version: '51'
 sdk: org.gnome.Sdk
 base: io.elementary.BaseApp
 base-version: tanit-26.08
-sdk-extensions:
-  - org.freedesktop.Sdk.Extension.texlive
-build-options:
-  append-path: /usr/lib/sdk/texlive/bin
 command: io.github.phase1geo.minder
 finish-args:
   - '--share=ipc'
   - '--socket=fallback-x11'
   - '--socket=wayland'
   - '--device=dri'
-  - '--env=PATH=/app/bin:/app/bin/x86_64-linux:/app/bin/aarch64-linux:/usr/bin'
 modules:
   - name: libmarkdown
     buildsystem: simple
