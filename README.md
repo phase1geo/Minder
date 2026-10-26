@@ -56,16 +56,25 @@ You will need the following dependencies to build Minder:
 * libjson-glib-dev
 * libwebp-dev
 * webp-pixbuf-loader
-* A LaTeX installation providing `latex`, `amsmath`, `amssymb` and `dvisvgm` (i.e., texlive)
+* liblasem-0.6
 
 ## Installing From Source
 
-To install from source, run `sudo ./app install` and then run the application from your application launcher or from
-the command-line with `./app run`.  If you want to debug with gdb using this build, run `./app debug`.
+Before building and installing from source code, you will need to install the previous dependences.  All dependencies should be available in your repo's package manager (i.e., apt, dnf, etc.) with the exception of liblasem which can be built and installed with the following commands:
+
+```sh
+git clone https://github.com/LasemProject/lasem.git
+cd lasem
+git checkout e657038b7f348a91fabd06da192aedef137bd2f2
+meson setup build --prefix=/usr/local -Dintrospection=disabled -Dviewer=disabled -Ddocumentation=disabled
+ninja -C build && sudo ninja -C build install && sudo ldconfig
+```
+
+After installing all required dependencies, run `sudo ./app install` and then run the application from your application launcher or from the command-line with `./app run`.  If you want to debug with gdb using this build, run `./app debug`.
 
 Alternatively, you can install the elementary OS Flatpak using `./app elementary` or the Flathub Flatpak using `./app flathub`.  Once the Flatpak has been built, it can be run using `./app run-flatpak`.  To make this work, make sure that `flatpak` and `flatpak-builder` are installed on your system along with the required Sdk and Platform flatpaks.
 
-## Flatpak
+## Pre-Built Flatpaks
 
 Minder is available as a Flatpak (recommended) via Flathub and elementary OS AppCenter.
 
