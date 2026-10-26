@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-15 13:18-0500\n"
-"PO-Revision-Date: 2025-04-06 09:37+0200\n"
+"PO-Revision-Date: 2026-10-17 08:37+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -161,29 +161,28 @@ msgstr "Nessun testo trovato"
 
 #: src/Clipboard.vala:122
 msgid "Recognizing formula"
-msgstr ""
+msgstr "Riconoscimento della formula in corso"
 
 #: src/Clipboard.vala:123
 msgid "Converting the pasted image to editable LaTeX locally"
-msgstr ""
+msgstr "Conversione locale dell'immagine incollata in LaTeX modificabile"
 
 #: src/Clipboard.vala:130
 msgid "Formula recognized"
-msgstr ""
+msgstr "Formula riconosciuta"
 
 #: src/Clipboard.vala:131
 msgid "The pasted image was converted to editable LaTeX"
-msgstr ""
+msgstr "L'immagine incollata è stata convertita in LaTeX modificabile"
 
 #: src/Clipboard.vala:137
-#, fuzzy
 msgid "Pasted as an image"
-msgstr "Incolla e Sostituisci Immagine Nodo"
+msgstr "Incollato come immagine"
 
 #: src/Clipboard.vala:138
 #, c-format
 msgid "Formula recognition was skipped: %s"
-msgstr ""
+msgstr "Il riconoscimento della formula è stato saltato: %s"
 
 #: src/ConnectionInspector.vala:84 src/KeyCommands.vala:836
 #: src/NodeMenu.vala:112
@@ -195,9 +194,8 @@ msgid "Color"
 msgstr "Colore"
 
 #: src/ConnectionInspector.vala:105
-#, fuzzy
 msgid "Select Connection Color"
-msgstr "Colore Connessione"
+msgstr "Seleziona colore connessione"
 
 #: src/ConnectionInspector.vala:118
 msgid "Use Theme Default Color"
@@ -573,27 +571,27 @@ msgstr "Esporta negli Appunti"
 
 #: src/FormulaRecognizer.vala:55
 msgid "The offline formula recognizer is not installed"
-msgstr ""
+msgstr "Il riconoscimento delle formule offline non è installato"
 
 #: src/FormulaRecognizer.vala:58
 msgid "Another formula is already being recognized"
-msgstr ""
+msgstr "È già in corso il riconoscimento di un'altra formula"
 
 #: src/FormulaRecognizer.vala:92
 msgid "Offline formula recognition timed out"
-msgstr ""
+msgstr "Tempo scaduto per il riconoscimento delle formule offline"
 
 #: src/FormulaRecognizer.vala:96
 msgid "Offline formula recognition failed"
-msgstr ""
+msgstr "Riconoscimento delle formule offline non riuscito"
 
 #: src/FormulaRecognizer.vala:102
 msgid "The formula recognizer returned no LaTeX"
-msgstr ""
+msgstr "Il modulo di riconoscimento delle formule non ha restituito codice LaTeX"
 
 #: src/FormulaRecognizer.vala:105
 msgid "The recognized formula is too long"
-msgstr ""
+msgstr "La formula riconosciuta è troppo lunga"
 
 #: src/GroupInspector.vala:79 src/KeyCommands.vala:842
 msgid "Group"
@@ -805,12 +803,11 @@ msgstr "Mostra il promemoria delle scorciatoie"
 
 #: src/KeyCommands.vala:747
 msgid "Show user documentation webpage"
-msgstr ""
+msgstr "Mostra la pagina web della documentazione utente"
 
 #: src/KeyCommands.vala:748
-#, fuzzy
 msgid "Show release notes"
-msgstr "Mostra Preferenze"
+msgstr "Mostra le note di rilascio"
 
 #: src/KeyCommands.vala:749
 msgid "Show contextual menu"
@@ -929,9 +926,8 @@ msgid "Remove image from current node"
 msgstr "Rimuovi l'immagine dal nodo corrente"
 
 #: src/KeyCommands.vala:778
-#, fuzzy
 msgid "Add/Edit table of current node"
-msgstr "Aggiungi/modifica l'immagine del nodo corrente"
+msgstr "Aggiungi/modifica la tabella del nodo corrente"
 
 #: src/KeyCommands.vala:779
 msgid "Change link color of current node"
@@ -976,34 +972,28 @@ msgid "Toggle sequence state of children of current node"
 msgstr "Attiva lo stato della sequenza dei figli del nodo corrente"
 
 #: src/KeyCommands.vala:789
-#, fuzzy
 msgid "Set node priority to 1"
-msgstr "Priorità bassa"
+msgstr "Imposta la priorità del nodo a 1"
 
 #: src/KeyCommands.vala:790
-#, fuzzy
 msgid "Set node priority to 2"
-msgstr "Priorità bassa"
+msgstr "Imposta la priorità del nodo a 2"
 
 #: src/KeyCommands.vala:791
-#, fuzzy
 msgid "Set node priority to 3"
-msgstr "Priorità bassa"
+msgstr "Imposta la priorità del nodo a 3"
 
 #: src/KeyCommands.vala:792
-#, fuzzy
 msgid "Set node priority to 4"
-msgstr "Priorità bassa"
+msgstr "Imposta la priorità del nodo a 4"
 
 #: src/KeyCommands.vala:793
-#, fuzzy
 msgid "Set node priority to 5"
-msgstr "Priorità bassa"
+msgstr "Imposta la priorità del nodo a 5"
 
 #: src/KeyCommands.vala:794
-#, fuzzy
 msgid "Clear node priority"
-msgstr "Priorità bassa"
+msgstr "Cancella la priorità del nodo"
 
 #: src/KeyCommands.vala:795 src/KeyCommands.vala:834 src/KeyCommands.vala:837
 #: src/KeyCommands.vala:846 src/KeyCommands.vala:906
@@ -1039,14 +1029,12 @@ msgid "Select previous sibling node of current node"
 msgstr "Seleziona il nodo fratello precedente del nodo corrente"
 
 #: src/KeyCommands.vala:803
-#, fuzzy
 msgid "Select first sibling node of current node"
-msgstr "Seleziona il nodo fratello successivo del nodo corrente"
+msgstr "Seleziona il primo nodo fratello del nodo corrente"
 
 #: src/KeyCommands.vala:804
-#, fuzzy
 msgid "Select last sibling node of current node"
-msgstr "Seleziona il nodo fratello successivo del nodo corrente"
+msgstr "Seleziona l'ultimo nodo fratello del nodo corrente"
 
 #: src/KeyCommands.vala:805
 msgid "Select node to the left of current node"
@@ -1109,34 +1097,28 @@ msgid "Detaches current node and its subtree"
 msgstr "Scollega il nodo corrente e il suo sottoalbero"
 
 #: src/KeyCommands.vala:820
-#, fuzzy
 msgid "Attach current node to the current attach node"
-msgstr "Aggiungi nodo padre al nodo corrente"
+msgstr "Collega il nodo corrente al nodo di collegamento corrente"
 
 #: src/KeyCommands.vala:821
-#, fuzzy
 msgid "Attach Node Commands"
-msgstr "Comandi di spostamento"
+msgstr "Comandi del nodo di collegamento"
 
 #: src/KeyCommands.vala:822
-#, fuzzy
 msgid "Change the attach node to node to left of current"
-msgstr "Seleziona il nodo a sinistra del nodo corrente"
+msgstr "Cambia il nodo di collegamento con il nodo a sinistra del corrente"
 
 #: src/KeyCommands.vala:823
-#, fuzzy
 msgid "Change the attach node to node to right of current"
-msgstr "Seleziona il nodo a destra del nodo corrente"
+msgstr "Cambia il nodo di collegamento con il nodo a destra del corrente"
 
 #: src/KeyCommands.vala:824
-#, fuzzy
 msgid "Change the attach node to node above current"
-msgstr "Cambia il colore del gruppo corrente"
+msgstr "Cambia il nodo di collegamento con il nodo sopra il corrente"
 
 #: src/KeyCommands.vala:825
-#, fuzzy
 msgid "Change the attach node to node below current"
-msgstr "Cambia il colore del gruppo corrente"
+msgstr "Cambia il nodo di collegamento con il nodo sotto il corrente"
 
 #: src/KeyCommands.vala:826
 msgid "Alignment Commands"
@@ -1203,74 +1185,60 @@ msgid "Selects all nodes within current group(s)"
 msgstr "Seleziona tutti i nodi all'interno del gruppo(i) corrente"
 
 #: src/KeyCommands.vala:849
-#, fuzzy
 msgid "Table Editor"
-msgstr "Tablet android"
+msgstr "Editor tabelle"
 
 #: src/KeyCommands.vala:850
-#, fuzzy
 msgid "Adds a row above the currently selected row"
-msgstr "Aggiungi la riga inferiore alla selezione corrente"
+msgstr "Aggiunge una riga sopra la riga attualmente selezionata"
 
 #: src/KeyCommands.vala:851
-#, fuzzy
 msgid "Adds a row below the currently selected row"
-msgstr "Aggiungi la riga inferiore alla selezione corrente"
+msgstr "Aggiunge una riga sotto la riga attualmente selezionata"
 
 #: src/KeyCommands.vala:852
-#, fuzzy
 msgid "Moves the currently selected row up by one row"
-msgstr "Modifica l'elemento attualmente selezionato"
+msgstr "Sposta la riga attualmente selezionata su di una riga"
 
 #: src/KeyCommands.vala:853
-#, fuzzy
 msgid "Moves the currently selected row down by one row"
-msgstr "Modifica l'elemento attualmente selezionato"
+msgstr "Sposta la riga attualmente selezionata giù di una riga"
 
 #: src/KeyCommands.vala:854
-#, fuzzy
 msgid "Deletes the currently selected row(s)"
-msgstr "Modifica l'elemento attualmente selezionato"
+msgstr "Elimina le righe attualmente selezionate"
 
 #: src/KeyCommands.vala:855
-#, fuzzy
 msgid "Adds a column to the left of the currently selected row"
-msgstr "Aggiungi l'inizio della riga corrente alla selezione corrente"
+msgstr "Aggiunge una colonna a sinistra della colonna attualmente selezionata"
 
 #: src/KeyCommands.vala:856
-#, fuzzy
 msgid "Adds a column to the right of the currently selected row"
-msgstr "Aggiungi l'inizio della riga corrente alla selezione corrente"
+msgstr "Aggiunge una colonna a destra della colonna attualmente selezionata"
 
 #: src/KeyCommands.vala:857
-#, fuzzy
 msgid "Moves the currently selected column left by one column"
-msgstr "Elimina Colonna"
+msgstr "Sposta la colonna attualmente selezionata a sinistra di una colonna"
 
 #: src/KeyCommands.vala:858
-#, fuzzy
 msgid "Moves the currently selected column right by one column"
-msgstr "Elimina Colonna"
+msgstr "Sposta la colonna attualmente selezionata a destra di una colonna"
 
 #: src/KeyCommands.vala:859
-#, fuzzy
 msgid "Deletes the currently selected columns(s)"
-msgstr "Elimina Colonna"
+msgstr "Elimina le colonne attualmente selezionate"
 
 #: src/KeyCommands.vala:860
-#, fuzzy
 msgid "Merges selected cells into one"
-msgstr "Cancella selezione"
+msgstr "Unisce le celle selezionate in una sola"
 
 #: src/KeyCommands.vala:861
-#, fuzzy
 msgid "Splits merged cell"
-msgstr "Nodi selezionati"
+msgstr "Divide la cella unita"
 
 #: src/KeyCommands.vala:862
-#, fuzzy
 msgid "Clears selected cell contents"
-msgstr "Taglia i nodi o il testo selezionati"
+msgstr "Cancella il contenuto delle celle selezionate"
 
 #: src/KeyCommands.vala:863
 msgid "Text Editing"
@@ -1301,65 +1269,64 @@ msgid "Remove previous word"
 msgstr "Rimuovi la parola precedente"
 
 #: src/KeyCommands.vala:870
-#, fuzzy
 msgid "Markdown Syntax"
-msgstr "Caratteri della sintassi Markdown"
+msgstr "Sintassi Markdown"
 
 #: src/KeyCommands.vala:871
 msgid "Insert Markdown header-1 syntax"
-msgstr ""
+msgstr "Inserisci sintassi titolo 1 Markdown"
 
 #: src/KeyCommands.vala:872
 msgid "Insert Markdown header-2 syntax"
-msgstr ""
+msgstr "Inserisci sintassi titolo 2 Markdown"
 
 #: src/KeyCommands.vala:873
 msgid "Insert Markdown header-3 syntax"
-msgstr ""
+msgstr "Inserisci sintassi titolo 3 Markdown"
 
 #: src/KeyCommands.vala:874
 msgid "Insert Markdown header-4 syntax"
-msgstr ""
+msgstr "Inserisci sintassi titolo 4 Markdown"
 
 #: src/KeyCommands.vala:875
 msgid "Insert Markdown header-5 syntax"
-msgstr ""
+msgstr "Inserisci sintassi titolo 5 Markdown"
 
 #: src/KeyCommands.vala:876
 msgid "Insert Markdown header-6 syntax"
-msgstr ""
+msgstr "Inserisci sintassi titolo 6 Markdown"
 
 #: src/KeyCommands.vala:877
 msgid "Insert Markdown bold syntax"
-msgstr ""
+msgstr "Inserisci sintassi grassetto Markdown"
 
 #: src/KeyCommands.vala:878
 msgid "Insert Markdown italics syntax"
-msgstr ""
+msgstr "Inserisci sintassi corsivo Markdown"
 
 #: src/KeyCommands.vala:879
 msgid "Insert Markdown strikethrough syntax"
-msgstr ""
+msgstr "Inserisci sintassi barrato Markdown"
 
 #: src/KeyCommands.vala:880
 msgid "Insert Markdown code syntax"
-msgstr ""
+msgstr "Inserisci sintassi codice Markdown"
 
 #: src/KeyCommands.vala:881
 msgid "Insert Markdown highlighting syntax"
-msgstr ""
+msgstr "Inserisci sintassi evidenziato Markdown"
 
 #: src/KeyCommands.vala:882
 msgid "Insert Markdown superscript syntax"
-msgstr ""
+msgstr "Inserisci sintassi apice Markdown"
 
 #: src/KeyCommands.vala:883
 msgid "Insert Markdown subscript syntax"
-msgstr ""
+msgstr "Inserisci sintassi pedice Markdown"
 
 #: src/KeyCommands.vala:884
 msgid "Insert Markdown URL link syntax"
-msgstr ""
+msgstr "Inserisci sintassi collegamento URL Markdown"
 
 #: src/KeyCommands.vala:886
 msgid "Copy selected nodes or text"
@@ -1375,7 +1342,7 @@ msgstr "Incolla nodi o testo dagli appunti"
 
 #: src/KeyCommands.vala:889
 msgid "Convert a clipboard image to LaTeX"
-msgstr ""
+msgstr "Converti un'immagine negli appunti in LaTeX"
 
 #: src/KeyCommands.vala:890
 msgid "URL Commands"
@@ -1503,23 +1470,23 @@ msgstr "Seleziona un colore di gruppo"
 
 #: src/LatexRenderer.vala:446
 msgid "Unable to read LaTeX formula dimensions"
-msgstr ""
+msgstr "Impossibile leggere le dimensioni della formula LaTeX"
 
 #: src/LatexRenderer.vala:473
 msgid "The generated LaTeX SVG has no usable size"
-msgstr ""
+msgstr "L'SVG LaTeX generato non ha dimensioni utilizzabili"
 
 #: src/LatexRenderer.vala:541
 msgid "LaTeX rendering was cancelled"
-msgstr ""
+msgstr "Il rendering LaTeX è stato annullato"
 
 #: src/LatexRenderer.vala:545
 msgid "LaTeX rendering timed out"
-msgstr ""
+msgstr "Tempo scaduto per il rendering LaTeX"
 
 #: src/LatexRenderer.vala:549
 msgid "LaTeX rendering failed"
-msgstr ""
+msgstr "Rendering LaTeX non riuscito"
 
 #: src/layouts/LayoutManual.vala:27 src/MapInspector.vala:265
 #: src/MapInspector.vala:511 src/MapModel.vala:2363
@@ -1593,11 +1560,11 @@ msgstr "Zoom (%d%%)"
 
 #: src/MainWindow.vala:899
 msgid "Where"
-msgstr ""
+msgstr "Posizione"
 
 #: src/MainWindow.vala:931
 msgid "Matched Content"
-msgstr ""
+msgstr "Contenuto corrispondente"
 
 #: src/MainWindow.vala:961 src/QuickEntry.vala:89
 msgid "Tab"
@@ -1645,7 +1612,7 @@ msgstr "Note"
 
 #: src/MainWindow.vala:1104
 msgid "Tables"
-msgstr ""
+msgstr "Tabelle"
 
 #: src/MainWindow.vala:1105
 msgid "Folded"
@@ -1674,24 +1641,20 @@ msgid "Priority 1"
 msgstr "Priorità bassa"
 
 #: src/MainWindow.vala:1111 src/NodeMenu.vala:45 src/NodesMenu.vala:39
-#, fuzzy
 msgid "Priority 2"
-msgstr "Priorità bassa"
+msgstr "Priorità 2"
 
 #: src/MainWindow.vala:1112 src/NodeMenu.vala:46 src/NodesMenu.vala:40
-#, fuzzy
 msgid "Priority 3"
-msgstr "Priorità bassa"
+msgstr "Priorità 3"
 
 #: src/MainWindow.vala:1113 src/NodeMenu.vala:47 src/NodesMenu.vala:41
-#, fuzzy
 msgid "Priority 4"
-msgstr "Priorità bassa"
+msgstr "Priorità 4"
 
 #: src/MainWindow.vala:1114 src/NodeMenu.vala:48 src/NodesMenu.vala:42
-#, fuzzy
 msgid "Priority 5"
-msgstr "Priorità bassa"
+msgstr "Priorità 5"
 
 #: src/MainWindow.vala:1285
 msgid "Print…"
@@ -1710,76 +1673,72 @@ msgid "Shortcuts Cheatsheet"
 msgstr "collegamenti note"
 
 #: src/MainWindow.vala:1402
-#, fuzzy
 msgid "Documentation"
-msgstr "Documento"
+msgstr "Documentazione"
 
 #: src/MainWindow.vala:1403 src/ReleaseNotes.vala:36
-#, fuzzy
 msgid "Release Notes"
-msgstr "Sostituisci nodi"
+msgstr "Note di rilascio"
 
 #: src/MainWindow.vala:1406
 msgid "About Minder"
 msgstr "Informazioni su Minder"
 
 #: src/MainWindow.vala:1429 src/TextMenu.vala:52
-#, fuzzy
 msgid "# Header1"
-msgstr "Cuffie"
+msgstr "# Titolo 1"
 
 #: src/MainWindow.vala:1430 src/TextMenu.vala:53
 msgid "## Header2"
-msgstr ""
+msgstr "## Titolo 2"
 
 #: src/MainWindow.vala:1431 src/TextMenu.vala:54
 msgid "### Header3"
-msgstr ""
+msgstr "### Titolo 3"
 
 #: src/MainWindow.vala:1432 src/TextMenu.vala:55
 msgid "#### Header4"
-msgstr ""
+msgstr "#### Titolo 4"
 
 #: src/MainWindow.vala:1433 src/TextMenu.vala:56
 msgid "##### Header5"
-msgstr ""
+msgstr "##### Titolo 5"
 
 #: src/MainWindow.vala:1434 src/TextMenu.vala:57
 msgid "###### Header6"
-msgstr ""
+msgstr "###### Titolo 6"
 
 #: src/MainWindow.vala:1435 src/TextMenu.vala:58
 msgid "**Bold**"
-msgstr ""
+msgstr "**Grassetto**"
 
 #: src/MainWindow.vala:1436 src/TextMenu.vala:59
 msgid "__Italicize_"
-msgstr ""
+msgstr "__Corsivo_"
 
 #: src/MainWindow.vala:1437 src/TextMenu.vala:60
 msgid "~~Strikeout~~"
-msgstr ""
+msgstr "~~Barrato~~"
 
 #: src/MainWindow.vala:1438 src/TextMenu.vala:61
 msgid "`Code`"
-msgstr ""
+msgstr "`Codice`"
 
 #: src/MainWindow.vala:1439 src/TextMenu.vala:62
-#, fuzzy
 msgid "==Highlight=="
-msgstr "Modalità evidenziazione"
+msgstr "==Evidenziato=="
 
 #: src/MainWindow.vala:1440 src/TextMenu.vala:63
 msgid "<sup>Superscript</sup>"
-msgstr ""
+msgstr "<sup>Apice</sup>"
 
 #: src/MainWindow.vala:1441 src/TextMenu.vala:64
 msgid "<sub>Subscript</sub>"
-msgstr ""
+msgstr "<sub>Pedice</sub>"
 
 #: src/MainWindow.vala:1442 src/TextMenu.vala:65
 msgid "[Link text](URL)"
-msgstr ""
+msgstr "[Testo del collegamento](URL)"
 
 #: src/MainWindow.vala:1505 src/MainWindow.vala:2193
 msgid "Show Property Sidebar"
@@ -1852,9 +1811,8 @@ msgid "Save File"
 msgstr "Salva File"
 
 #: src/MainWindow.vala:2098
-#, fuzzy
 msgid "Keep Property Sidebar Shown"
-msgstr "Nascondi barra laterale delle proprietà"
+msgstr "Mantieni visibile la barra laterale delle proprietà"
 
 #: src/MainWindow.vala:2113 src/MainWindow.vala:2122
 msgid "Hide Property Sidebar"
@@ -2040,18 +1998,16 @@ msgstr ""
 "sequenza."
 
 #: src/NodeInspector.vala:209
-#, fuzzy
 msgid "Select Link Color"
-msgstr "Seleziona un colore di collegamento"
+msgstr "Seleziona colore collegamento"
 
 #: src/NodeInspector.vala:238
 msgid "Override Color"
 msgstr "Sostituisci colore"
 
 #: src/NodeInspector.vala:262
-#, fuzzy
 msgid "Select Root Color"
-msgstr "Seleziona Radice"
+msgstr "Seleziona colore radice"
 
 #: src/NodeInspector.vala:360 src/NodeInspector.vala:384
 msgid "Image"
@@ -2106,9 +2062,8 @@ msgid "Delete Single Node"
 msgstr "Elimina Nodo singolo"
 
 #: src/NodeMenu.vala:51 src/NodesMenu.vala:45
-#, fuzzy
 msgid "Clear Priority"
-msgstr "Priorità media"
+msgstr "Cancella priorità"
 
 #: src/NodeMenu.vala:58
 msgid "Set to color…"
@@ -2143,9 +2098,8 @@ msgid "Add Task"
 msgstr "Aggiungi Compito"
 
 #: src/NodeMenu.vala:72 src/NodeMenu.vala:264
-#, fuzzy
 msgid "Add Table…"
-msgstr "Aggiungi Immagine…"
+msgstr "Aggiungi tabella…"
 
 #: src/NodeMenu.vala:74 src/NodeMenu.vala:260
 msgid "Add Node Link"
@@ -2164,9 +2118,8 @@ msgid "Add Callout"
 msgstr "Aggiungi chiamata"
 
 #: src/NodeMenu.vala:78 src/NodesMenu.vala:58
-#, fuzzy
 msgid "Priority"
-msgstr "Priorità bassa"
+msgstr "Priorità"
 
 #: src/NodeMenu.vala:79 src/ThemeEditor.vala:138
 msgid "Link Color"
@@ -2293,9 +2246,8 @@ msgid "Add Image"
 msgstr "Aggiungi Immagine"
 
 #: src/NodeMenu.vala:264
-#, fuzzy
 msgid "Edit Table…"
-msgstr "Modifica Titolo…"
+msgstr "Modifica Tabella…"
 
 #: src/NodeMenu.vala:275
 msgid "Paste Node As Child"
@@ -2387,12 +2339,12 @@ msgstr "Allinea"
 
 #: src/NodeTable.vala:372
 msgid "Table Truncated"
-msgstr ""
+msgstr "Tabella troncata"
 
 #: src/NodeTable.vala:373
 #, c-format
 msgid "Tables are limited to %d rows, %d columns, and %d cells."
-msgstr ""
+msgstr "Le tabelle sono limitate a %d righe, %d colonne e %d celle."
 
 #: src/Node.vala:2888
 msgid "Node Title"
@@ -2403,9 +2355,8 @@ msgid "Node Note"
 msgstr "Nota Nodo"
 
 #: src/Node.vala:2900
-#, fuzzy
 msgid "Node Table"
-msgstr "Titolo Nodo"
+msgstr "Tabella nodo"
 
 #: src/Node.vala:2908
 msgid "Callout Text"
@@ -2535,7 +2486,7 @@ msgstr ""
 
 #: src/Preferences.vala:164
 msgid "Show release notes on application startup after upgrading"
-msgstr ""
+msgstr "Mostra le note di rilascio all'avvio dell'applicazione dopo un aggiornamento"
 
 #: src/Preferences.vala:191
 msgid "Default theme"
@@ -2745,7 +2696,7 @@ msgstr "Inserire"
 #: src/ReleaseNotes.vala:227
 #, c-format
 msgid "Release %s"
-msgstr ""
+msgstr "Versione %s"
 
 #: src/Shortcuts.vala:806 src/Shortcuts.vala:812
 msgid "No Shortcuts Set"
@@ -2793,9 +2744,8 @@ msgid "Scroll Horizontally"
 msgstr "Scorri Orizzontalmente"
 
 #: src/Shortcuts.vala:836
-#, fuzzy
 msgid "[Scrollwheel left/right]"
-msgstr "[Scorrimento a sinistra/destra]"
+msgstr "[Rotellina a sinistra/destra]"
 
 #: src/Shortcuts.vala:838
 msgid "Item Selection"
@@ -2876,9 +2826,8 @@ msgstr ""
 "profondità"
 
 #: src/Shortcuts.vala:849
-#, fuzzy
 msgid "[Shift + Control + Triple-click on node]"
-msgstr "[Maiusc + Ctrl + Triplo clic sul nodo]"
+msgstr "[Maiusc + Control + Triplo clic sul nodo]"
 
 #: src/Shortcuts.vala:851
 msgid "Text Selection"
@@ -4412,126 +4361,108 @@ msgid "Long Dash"
 msgstr "Trattino Lungo"
 
 #: src/TableEditor.vala:354
-#, fuzzy
 msgid "Add Row Above"
-msgstr "Aggiungi radice nodo"
+msgstr "Aggiungi riga sopra"
 
 #: src/TableEditor.vala:355
-#, fuzzy
 msgid "Add Row Below"
-msgstr "Aggiungi radice nodo"
+msgstr "Aggiungi riga sotto"
 
 #: src/TableEditor.vala:357
 msgid "Move Row Up"
-msgstr ""
+msgstr "Sposta riga su"
 
 #: src/TableEditor.vala:358
 msgid "Move Row Down"
-msgstr ""
+msgstr "Sposta riga giù"
 
 #: src/TableEditor.vala:360
-#, fuzzy
 msgid "Delete Selected Rows"
-msgstr "Nodi selezionati"
+msgstr "Elimina righe selezionate"
 
 #: src/TableEditor.vala:367
-#, fuzzy
 msgid "Row Actions"
-msgstr "Connessioni"
+msgstr "Azioni riga"
 
 #: src/TableEditor.vala:382
-#, fuzzy
 msgid "Add Column Left"
-msgstr "Aggiungi colonna"
+msgstr "Aggiungi colonna a sinistra"
 
 #: src/TableEditor.vala:383
-#, fuzzy
 msgid "Add Column Right"
-msgstr "Aggiungi colonna"
+msgstr "Aggiungi colonna a destra"
 
 #: src/TableEditor.vala:385
-#, fuzzy
 msgid "Move Column Left"
-msgstr "Aggiungi colonna"
+msgstr "Sposta colonna a sinistra"
 
 #: src/TableEditor.vala:386
-#, fuzzy
 msgid "Move Column Right"
-msgstr "Aggiungi colonna"
+msgstr "Sposta colonna a destra"
 
 #: src/TableEditor.vala:388
-#, fuzzy
 msgid "Delete Selected Columns"
-msgstr "Elimina Colonna"
+msgstr "Elimina colonne selezionate"
 
 #: src/TableEditor.vala:395
-#, fuzzy
 msgid "Column Actions"
-msgstr "Connessioni"
+msgstr "Azioni colonna"
 
 #: src/TableEditor.vala:446
 msgid "Undo Table Edit (Ctrl+Z)"
-msgstr ""
+msgstr "Annulla modifica tabella (Ctrl+Z)"
 
 #: src/TableEditor.vala:449
-#, fuzzy
 msgid "Paste Table"
-msgstr "Incolla Testo"
+msgstr "Incolla tabella"
 
 #: src/TableEditor.vala:452
-#, fuzzy
 msgid "Merge Selection"
-msgstr "Cancella selezione"
+msgstr "Unisci selezione"
 
 #: src/TableEditor.vala:453
 msgid "Split Cell"
-msgstr ""
+msgstr "Dividi cella"
 
 #: src/TableEditor.vala:454
-#, fuzzy
 msgid "Clear Cells"
-msgstr "Cancella Tutto"
+msgstr "Cancella celle"
 
 #: src/TableEditor.vala:455 src/TextMenu.vala:41
 msgid "Insert Emoji"
 msgstr "Inserisci Emoji"
 
 #: src/TableEditor.vala:459
-#, fuzzy
 msgid "Align Center"
-msgstr "Allineamento"
+msgstr "Allinea al centro"
 
 #: src/TableEditor.vala:464
-#, fuzzy
 msgid "Highlight Cells"
-msgstr "Modalità evidenziazione"
+msgstr "Evidenzia celle"
 
 #: src/TableEditor.vala:468
 msgid "Bold"
-msgstr ""
+msgstr "Grassetto"
 
 #: src/TableEditor.vala:472
 msgid "Italic"
-msgstr ""
+msgstr "Corsivo"
 
 #: src/TableEditor.vala:476
-#, fuzzy
 msgid "Underline"
 msgstr "Sottolineato"
 
 #: src/TableEditor.vala:480
 msgid "Strikethrough"
-msgstr ""
+msgstr "Barrato"
 
 #: src/TableEditor.vala:494
-#, fuzzy
 msgid "Selected cells:"
-msgstr "Nodi selezionati"
+msgstr "Celle selezionate:"
 
 #: src/TableEditor.vala:500
-#, fuzzy
 msgid "Delete Table"
-msgstr "Elimina database"
+msgstr "Elimina tabella"
 
 #: src/TagEditor.vala:60
 msgid "Click to change tag color"
@@ -4660,9 +4591,9 @@ msgid "Remove Link"
 msgstr "Rimuovi Collegamento"
 
 #: src/TextParser.vala:74
-#, fuzzy, c-format
+#, c-format
 msgid "Parser regex error (pattern: %s, error: %s)\n"
-msgstr "Errore regex del parser (re: %s, errore: %s)\n"
+msgstr "Errore regex del parser (pattern: %s, errore: %s)\n"
 
 #: src/ThemeEditor.vala:52
 msgid "Customize Theme"
@@ -4737,9 +4668,8 @@ msgid "URL Link Foreground"
 msgstr "URL del collegamento di primo piano"
 
 #: src/ThemeEditor.vala:119
-#, fuzzy
 msgid "Highlighter"
-msgstr "Modalità evidenziazione"
+msgstr "Evidenziatore"
 
 #: src/ThemeEditor.vala:121
 msgid "Markdown Syntax Chars"
@@ -4758,9 +4688,8 @@ msgid "Markdown List Item"
 msgstr "Voce di elenco Markdown"
 
 #: src/ThemeEditor.vala:187
-#, fuzzy
 msgid "Select color"
-msgstr "Seleziona Radice"
+msgstr "Seleziona colore"
 
 #: src/ThemeEditor.vala:219
 msgid "Custom"
@@ -5013,15 +4942,13 @@ msgstr "cambia collegamento nodo"
 msgid "sort nodes"
 msgstr "ordina i nodi"
 
-#: src/undo_actions/UndoNodesPriority.vala:35
-#, fuzzy
+##: src/undo_actions/UndoNodesPriority.vala:35
 msgid "clear priority"
-msgstr "Priorità bassa"
+msgstr "cancellare priorità"
 
 #: src/undo_actions/UndoNodesPriority.vala:35
-#, fuzzy
 msgid "set priority"
-msgstr "Priorità bassa"
+msgstr "impostare priorità"
 
 #: src/undo_actions/UndoNodesRandLinkColor.vala:34
 msgid "random node link color changes"
@@ -5064,9 +4991,8 @@ msgid "insert summary node"
 msgstr "inserisci nodo di riepilogo"
 
 #: src/undo_actions/UndoNodeTable.vala:31
-#, fuzzy
 msgid "node table change"
-msgstr "modifica nome nodo"
+msgstr "modifica tabella nodo"
 
 #: src/undo_actions/UndoNodeTasks.vala:31
 msgid "node task changes"
