@@ -686,6 +686,19 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
+  // Toggles the fold of the specified node.
+  public void toggle_fold( Node node, bool deep = false ) {
+    var parents = new Array<Node>();
+    parents.append_val( node );
+    var changes = new Array<Node>();
+    _map.animator.add_nodes_fold( _nodes, parents, "node fold" );
+    node.set_fold( !node.folded, deep, changes );
+    _map.add_undo( new UndoNodeFolds( changes ) );
+    _map.animator.animate();
+    auto_save();
+  }
+
+  //-------------------------------------------------------------
   // Removes the given tag from all nodes containing it.  Returns
   // the list of affected nodes.
   public void remove_tag( Tag tag, Array<Node> nodes ) {

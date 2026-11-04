@@ -520,7 +520,7 @@ public class DrawArea : Gtk.DrawingArea {
         _map.select_linked_node( node );
         return( false );
       case MapItemComponent.FOLD :
-        _map.model.toggle_folds( _shift );
+        _map.model.toggle_fold( node, _shift );
         current_changed( _map );
         return( false );
       case MapItemComponent.RESIZER :
