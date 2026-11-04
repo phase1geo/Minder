@@ -1,4 +1,3 @@
-# Minder
 <div align="center">
   <span align="center"> <img width="128" height="128" class="center" src="data/icons/scalable/io.github.phase1geo.minder.svg" alt="Minder Icon"></span>
   <h1 align="center">Minder</h1>
