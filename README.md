@@ -60,7 +60,7 @@ You will need the following dependencies to build Minder:
 
 ## Installing From Source
 
-Before building and installing from source code, you will need to install the previous dependences.  All dependencies should be available in your repo's package manager (i.e., apt, dnf, etc.) with the exception of liblasem which can be built and installed with the following commands:
+Before building and installing from source code, you will need to install the previous dependences.  All dependencies should be available in your repo's package manager (i.e., apt, dnf, etc.) with the exception of liblasem which can be built and installed with the following commands (you will need to install the `flex` and `bison` packages to build):
 
 ```sh
 git clone https://github.com/LasemProject/lasem.git
