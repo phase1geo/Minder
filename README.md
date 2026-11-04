@@ -1,4 +1,9 @@
 # Minder
+<div align="center">
+  <span align="center"> <img width="128" height="128" class="center" src="data/icons/scalable/io.github.phase1geo.minder.svg" alt="Minder Icon"></span>
+  <h1 align="center">Minder</h1>
+  <h3 align="center">Create, develop and visualize your ideas</h3>
+</div>
 
 <p align="center">
   <a href="https://appcenter.elementary.io/io.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
