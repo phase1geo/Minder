@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 13:18-0500\n"
+"POT-Creation-Date: 2026-11-04 08:06-0600\n"
 "PO-Revision-Date: 2025-12-02 09:55+0100\n"
 "Last-Translator: Daniel Nylander <github@danielnylander.se>\n"
 "Language-Team: sv\n"
@@ -360,7 +360,7 @@ msgstr "ändring av anslutningsändpunkt"
 msgid "connection drag"
 msgstr "anslutningsdrag"
 
-#: src/DrawArea.vala:2322 src/MapModel.vala:1875 src/MapModel.vala:1890
+#: src/DrawArea.vala:2322 src/MapModel.vala:1888 src/MapModel.vala:1903
 msgid "Another Idea"
 msgstr "En annan idé"
 
@@ -1493,28 +1493,8 @@ msgstr "Avmarkera all text"
 msgid "Select a group color"
 msgstr "Välj en gruppfärg"
 
-#: src/LatexRenderer.vala:446
-msgid "Unable to read LaTeX formula dimensions"
-msgstr ""
-
-#: src/LatexRenderer.vala:473
-msgid "The generated LaTeX SVG has no usable size"
-msgstr ""
-
-#: src/LatexRenderer.vala:541
-msgid "LaTeX rendering was cancelled"
-msgstr ""
-
-#: src/LatexRenderer.vala:545
-msgid "LaTeX rendering timed out"
-msgstr ""
-
-#: src/LatexRenderer.vala:549
-msgid "LaTeX rendering failed"
-msgstr ""
-
 #: src/layouts/LayoutManual.vala:27 src/MapInspector.vala:265
-#: src/MapInspector.vala:511 src/MapModel.vala:2363
+#: src/MapInspector.vala:511 src/MapModel.vala:2376
 msgid "Manual"
 msgstr "Manuell"
 

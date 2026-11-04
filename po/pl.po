@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 13:18-0500\n"
+"POT-Creation-Date: 2026-11-04 08:06-0600\n"
 "PO-Revision-Date: 2022-08-02 23:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -353,7 +353,7 @@ msgstr ""
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2322 src/MapModel.vala:1875 src/MapModel.vala:1890
+#: src/DrawArea.vala:2322 src/MapModel.vala:1888 src/MapModel.vala:1903
 msgid "Another Idea"
 msgstr "NOWY TEMAT"
 
@@ -1547,28 +1547,8 @@ msgstr "Zaznacz cały tekst"
 msgid "Select a group color"
 msgstr "Ustaw kolor..."
 
-#: src/LatexRenderer.vala:446
-msgid "Unable to read LaTeX formula dimensions"
-msgstr ""
-
-#: src/LatexRenderer.vala:473
-msgid "The generated LaTeX SVG has no usable size"
-msgstr ""
-
-#: src/LatexRenderer.vala:541
-msgid "LaTeX rendering was cancelled"
-msgstr ""
-
-#: src/LatexRenderer.vala:545
-msgid "LaTeX rendering timed out"
-msgstr ""
-
-#: src/LatexRenderer.vala:549
-msgid "LaTeX rendering failed"
-msgstr ""
-
 #: src/layouts/LayoutManual.vala:27 src/MapInspector.vala:265
-#: src/MapInspector.vala:511 src/MapModel.vala:2363
+#: src/MapInspector.vala:511 src/MapModel.vala:2376
 msgid "Manual"
 msgstr "Ręcznie"
 

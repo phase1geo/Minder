@@ -129,6 +129,7 @@
           <li>Fixed issues with image handling when nodes containing images are copy-pasted.</li>
           <li>Fixed issue with insertion cursor display.</li>
           <li>Fixed issue with insertion cursor color used in root nodes in certain themes.</li>
+          <li>Fixed issue where clicking the fold button in a mind map always folded the selected node instead of the intended node.</li>
         </ul>
       </description>
     </release>

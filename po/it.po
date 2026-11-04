@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 13:18-0500\n"
+"POT-Creation-Date: 2026-11-04 08:06-0600\n"
 "PO-Revision-Date: 2026-10-17 08:37+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -359,7 +359,7 @@ msgstr "modifica dell'endpoint di connessione"
 msgid "connection drag"
 msgstr "trascina della connessione"
 
-#: src/DrawArea.vala:2322 src/MapModel.vala:1875 src/MapModel.vala:1890
+#: src/DrawArea.vala:2322 src/MapModel.vala:1888 src/MapModel.vala:1903
 msgid "Another Idea"
 msgstr "Un'altra idea"
 
@@ -587,7 +587,8 @@ msgstr "Riconoscimento delle formule offline non riuscito"
 
 #: src/FormulaRecognizer.vala:102
 msgid "The formula recognizer returned no LaTeX"
-msgstr "Il modulo di riconoscimento delle formule non ha restituito codice LaTeX"
+msgstr ""
+"Il modulo di riconoscimento delle formule non ha restituito codice LaTeX"
 
 #: src/FormulaRecognizer.vala:105
 msgid "The recognized formula is too long"
@@ -1468,28 +1469,8 @@ msgstr "Deseleziona tutto il testo"
 msgid "Select a group color"
 msgstr "Seleziona un colore di gruppo"
 
-#: src/LatexRenderer.vala:446
-msgid "Unable to read LaTeX formula dimensions"
-msgstr "Impossibile leggere le dimensioni della formula LaTeX"
-
-#: src/LatexRenderer.vala:473
-msgid "The generated LaTeX SVG has no usable size"
-msgstr "L'SVG LaTeX generato non ha dimensioni utilizzabili"
-
-#: src/LatexRenderer.vala:541
-msgid "LaTeX rendering was cancelled"
-msgstr "Il rendering LaTeX è stato annullato"
-
-#: src/LatexRenderer.vala:545
-msgid "LaTeX rendering timed out"
-msgstr "Tempo scaduto per il rendering LaTeX"
-
-#: src/LatexRenderer.vala:549
-msgid "LaTeX rendering failed"
-msgstr "Rendering LaTeX non riuscito"
-
 #: src/layouts/LayoutManual.vala:27 src/MapInspector.vala:265
-#: src/MapInspector.vala:511 src/MapModel.vala:2363
+#: src/MapInspector.vala:511 src/MapModel.vala:2376
 msgid "Manual"
 msgstr "Manuale"
 
@@ -2486,7 +2467,8 @@ msgstr ""
 
 #: src/Preferences.vala:164
 msgid "Show release notes on application startup after upgrading"
-msgstr "Mostra le note di rilascio all'avvio dell'applicazione dopo un aggiornamento"
+msgstr ""
+"Mostra le note di rilascio all'avvio dell'applicazione dopo un aggiornamento"
 
 #: src/Preferences.vala:191
 msgid "Default theme"
@@ -4942,7 +4924,8 @@ msgstr "cambia collegamento nodo"
 msgid "sort nodes"
 msgstr "ordina i nodi"
 
-##: src/undo_actions/UndoNodesPriority.vala:35
+# #: src/undo_actions/UndoNodesPriority.vala:35
+#: src/undo_actions/UndoNodesPriority.vala:35
 msgid "clear priority"
 msgstr "cancellare priorità"
 
@@ -5080,6 +5063,21 @@ msgstr "errore: %s\n"
 #: src/ZoomWidget.vala:99
 msgid "Zoom Actual"
 msgstr "Zoom Effettivo"
+
+#~ msgid "Unable to read LaTeX formula dimensions"
+#~ msgstr "Impossibile leggere le dimensioni della formula LaTeX"
+
+#~ msgid "The generated LaTeX SVG has no usable size"
+#~ msgstr "L'SVG LaTeX generato non ha dimensioni utilizzabili"
+
+#~ msgid "LaTeX rendering was cancelled"
+#~ msgstr "Il rendering LaTeX è stato annullato"
+
+#~ msgid "LaTeX rendering timed out"
+#~ msgstr "Tempo scaduto per il rendering LaTeX"
+
+#~ msgid "LaTeX rendering failed"
+#~ msgstr "Rendering LaTeX non riuscito"
 
 #~ msgid "[Control + Double left-click on parent node"
 #~ msgstr "[Ctrl + doppio clic sinistro sul nodo padre]"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 13:18-0500\n"
+"POT-Creation-Date: 2026-11-04 08:06-0600\n"
 "PO-Revision-Date: 2026-10-12 22:02+0200\n"
 "Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
 "Language-Team: \n"
@@ -364,7 +364,7 @@ msgstr "Änderung des Verbindungsendpunkts"
 msgid "connection drag"
 msgstr "Verbindung verschieben"
 
-#: src/DrawArea.vala:2322 src/MapModel.vala:1875 src/MapModel.vala:1890
+#: src/DrawArea.vala:2322 src/MapModel.vala:1888 src/MapModel.vala:1903
 msgid "Another Idea"
 msgstr "Noch eine Idee"
 
@@ -1477,28 +1477,8 @@ msgstr "Gesamten Text abwählen"
 msgid "Select a group color"
 msgstr "Gruppenfarbe auswählen"
 
-#: src/LatexRenderer.vala:446
-msgid "Unable to read LaTeX formula dimensions"
-msgstr "Die Abmessungen der LaTeX-Formeln können nicht gelesen werden"
-
-#: src/LatexRenderer.vala:473
-msgid "The generated LaTeX SVG has no usable size"
-msgstr "Das generierte LaTeX-SVG hat keine brauchbare Größe"
-
-#: src/LatexRenderer.vala:541
-msgid "LaTeX rendering was cancelled"
-msgstr "LaTeX-Rendering wurde abgebrochen"
-
-#: src/LatexRenderer.vala:545
-msgid "LaTeX rendering timed out"
-msgstr "Zeitüberschreitung beim LaTeX-Rendering"
-
-#: src/LatexRenderer.vala:549
-msgid "LaTeX rendering failed"
-msgstr "LaTeX-Rendering fehlgeschlagen"
-
 #: src/layouts/LayoutManual.vala:27 src/MapInspector.vala:265
-#: src/MapInspector.vala:511 src/MapModel.vala:2363
+#: src/MapInspector.vala:511 src/MapModel.vala:2376
 msgid "Manual"
 msgstr "Manuell"
 
@@ -5091,6 +5071,21 @@ msgstr "Fehler: %s\n"
 #: src/ZoomWidget.vala:99
 msgid "Zoom Actual"
 msgstr "Zoom zurücksetzen"
+
+#~ msgid "Unable to read LaTeX formula dimensions"
+#~ msgstr "Die Abmessungen der LaTeX-Formeln können nicht gelesen werden"
+
+#~ msgid "The generated LaTeX SVG has no usable size"
+#~ msgstr "Das generierte LaTeX-SVG hat keine brauchbare Größe"
+
+#~ msgid "LaTeX rendering was cancelled"
+#~ msgstr "LaTeX-Rendering wurde abgebrochen"
+
+#~ msgid "LaTeX rendering timed out"
+#~ msgstr "Zeitüberschreitung beim LaTeX-Rendering"
+
+#~ msgid "LaTeX rendering failed"
+#~ msgstr "LaTeX-Rendering fehlgeschlagen"
 
 #~ msgid "[Control + Double left-click on parent node"
 #~ msgstr "[Steuerung + Doppelter Linksklick auf übergeordneten Knoten]"
