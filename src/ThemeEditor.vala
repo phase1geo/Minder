@@ -126,6 +126,20 @@ public class ThemeEditor : Gtk.Box {
     grid.attach( new Label( "" ), 0, row );
     row++;
 
+    var priority_lbl = new Label( _( "Priority Colors" ) + "\n" ) {
+      xalign = (float)0
+    };
+    priority_lbl.add_css_class( "titled" );
+    grid.attach( priority_lbl, 0, row, 2 );
+    row++;
+
+    for( int i=0; i<5; i++ ) {
+      add_color( _( "Priority #%d" ).printf( i + 1 ), "priority%d".printf( i + 1 ), grid, ref row );
+    }
+
+    grid.attach( new Label( "" ), 0, row );
+    row++;
+
     var link_lbl = new Label( _( "Link Colors" ) + "\n" ) {
       xalign = (float)0,
     };
