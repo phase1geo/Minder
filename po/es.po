@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 08:06-0600\n"
+"POT-Creation-Date: 2026-11-04 20:45-0600\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Félix Brezo <felixbrezo@disroot.org>\n"
 "Language-Team: none\n"
@@ -144,7 +144,7 @@ msgstr ""
 
 #: src/CalloutMenu.vala:33 src/ConnectionMenu.vala:34
 #: src/ConnectionsMenu.vala:33 src/GroupsMenu.vala:33 src/NodeMenu.vala:40
-#: src/NodesMenu.vala:35 src/TemplateEditor.vala:110 src/ThemeEditor.vala:142
+#: src/NodesMenu.vala:35 src/TemplateEditor.vala:110 src/ThemeEditor.vala:156
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -312,7 +312,7 @@ msgstr ""
 
 #: src/Document.vala:705 src/ImageEditor.vala:572 src/MainWindow.vala:1701
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TableEditor.vala:504
-#: src/TemplateEditor.vala:100 src/ThemeEditor.vala:154 src/UrlEditor.vala:63
+#: src/TemplateEditor.vala:100 src/ThemeEditor.vala:168 src/UrlEditor.vala:63
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -1895,7 +1895,7 @@ msgstr "Los cambios se perderán permanentemente si no los guarda."
 msgid "Discard Changes"
 msgstr "Descartar cambios"
 
-#: src/MainWindow.vala:1704 src/MainWindow.vala:1998 src/ThemeEditor.vala:159
+#: src/MainWindow.vala:1704 src/MainWindow.vala:1998 src/ThemeEditor.vala:173
 msgid "Save"
 msgstr "Guardar"
 
@@ -2252,7 +2252,7 @@ msgstr ""
 msgid "Priority"
 msgstr ""
 
-#: src/NodeMenu.vala:79 src/ThemeEditor.vala:138
+#: src/NodeMenu.vala:79 src/ThemeEditor.vala:152
 #, fuzzy
 msgid "Link Color"
 msgstr "Color del enlace"
@@ -2438,7 +2438,7 @@ msgstr "Aleatorizar colores"
 msgid "Use Parent Color"
 msgstr "Usar color del padre"
 
-#: src/NodesMenu.vala:59 src/ThemeEditor.vala:129
+#: src/NodesMenu.vala:59 src/ThemeEditor.vala:143
 #, fuzzy
 msgid "Link Colors"
 msgstr "Colores de enlace"
@@ -4959,34 +4959,44 @@ msgstr "Color principal"
 msgid "Markdown List Item"
 msgstr "Markdown"
 
-#: src/ThemeEditor.vala:187
+#: src/ThemeEditor.vala:129
+#, fuzzy
+msgid "Priority Colors"
+msgstr "Colores de enlace"
+
+#: src/ThemeEditor.vala:137
+#, c-format
+msgid "Priority #%d"
+msgstr ""
+
+#: src/ThemeEditor.vala:201
 #, fuzzy
 msgid "Select color"
 msgstr "Seleccionar raíz"
 
-#: src/ThemeEditor.vala:219
+#: src/ThemeEditor.vala:233
 msgid "Custom"
 msgstr "Personalizado"
 
-#: src/ThemeEditor.vala:241
+#: src/ThemeEditor.vala:255
 #, fuzzy
 msgid "Delete theme?"
 msgstr "Eliminar tema?"
 
-#: src/ThemeEditor.vala:242
+#: src/ThemeEditor.vala:256
 msgid "This operation cannot be undone."
 msgstr "Esta operación no puede ser deshecha."
 
-#: src/ThemeEditor.vala:247 src/Utils.vala:507
+#: src/ThemeEditor.vala:261 src/Utils.vala:507
 #, fuzzy
 msgid "No"
 msgstr "No"
 
-#: src/ThemeEditor.vala:250 src/Utils.vala:510
+#: src/ThemeEditor.vala:264 src/Utils.vala:510
 msgid "Yes"
 msgstr "Sí"
 
-#: src/ThemeEditor.vala:272
+#: src/ThemeEditor.vala:286
 msgid "Default"
 msgstr "Predeterminado"
 

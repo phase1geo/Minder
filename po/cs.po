@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 08:06-0600\n"
+"POT-Creation-Date: 2026-11-04 20:45-0600\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -146,7 +146,7 @@ msgstr ""
 
 #: src/CalloutMenu.vala:33 src/ConnectionMenu.vala:34
 #: src/ConnectionsMenu.vala:33 src/GroupsMenu.vala:33 src/NodeMenu.vala:40
-#: src/NodesMenu.vala:35 src/TemplateEditor.vala:110 src/ThemeEditor.vala:142
+#: src/NodesMenu.vala:35 src/TemplateEditor.vala:110 src/ThemeEditor.vala:156
 msgid "Delete"
 msgstr "Smazat"
 
@@ -299,7 +299,7 @@ msgstr ""
 
 #: src/Document.vala:705 src/ImageEditor.vala:572 src/MainWindow.vala:1701
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TableEditor.vala:504
-#: src/TemplateEditor.vala:100 src/ThemeEditor.vala:154 src/UrlEditor.vala:63
+#: src/TemplateEditor.vala:100 src/ThemeEditor.vala:168 src/UrlEditor.vala:63
 msgid "Cancel"
 msgstr "Zrušit"
 
@@ -1881,7 +1881,7 @@ msgstr "Pokud soubor neuložíte, provedené změny se navždy ztratí."
 msgid "Discard Changes"
 msgstr "Zahodit změny"
 
-#: src/MainWindow.vala:1704 src/MainWindow.vala:1998 src/ThemeEditor.vala:159
+#: src/MainWindow.vala:1704 src/MainWindow.vala:1998 src/ThemeEditor.vala:173
 msgid "Save"
 msgstr "Uložit"
 
@@ -2229,7 +2229,7 @@ msgstr "Přidat skupinu"
 msgid "Priority"
 msgstr "Nízká priorita"
 
-#: src/NodeMenu.vala:79 src/ThemeEditor.vala:138
+#: src/NodeMenu.vala:79 src/ThemeEditor.vala:152
 msgid "Link Color"
 msgstr "Barva odkazu"
 
@@ -2397,7 +2397,7 @@ msgstr "Randomizovat barvy"
 msgid "Use Parent Color"
 msgstr "Použít nadřazenou barvu"
 
-#: src/NodesMenu.vala:59 src/ThemeEditor.vala:129
+#: src/NodesMenu.vala:59 src/ThemeEditor.vala:143
 msgid "Link Colors"
 msgstr "Barvy odkazu"
 
@@ -4831,32 +4831,42 @@ msgstr "Udělat popředí schodným"
 msgid "Markdown List Item"
 msgstr "Předmět Markdown seznamu"
 
-#: src/ThemeEditor.vala:187
+#: src/ThemeEditor.vala:129
+#, fuzzy
+msgid "Priority Colors"
+msgstr "Nízká priorita"
+
+#: src/ThemeEditor.vala:137
+#, fuzzy, c-format
+msgid "Priority #%d"
+msgstr "Nízká priorita"
+
+#: src/ThemeEditor.vala:201
 #, fuzzy
 msgid "Select color"
 msgstr "Vybrat kořen"
 
-#: src/ThemeEditor.vala:219
+#: src/ThemeEditor.vala:233
 msgid "Custom"
 msgstr "Vlastní"
 
-#: src/ThemeEditor.vala:241
+#: src/ThemeEditor.vala:255
 msgid "Delete theme?"
 msgstr "Smazat motiv?"
 
-#: src/ThemeEditor.vala:242
+#: src/ThemeEditor.vala:256
 msgid "This operation cannot be undone."
 msgstr "Tato operace nemůže být vrácena."
 
-#: src/ThemeEditor.vala:247 src/Utils.vala:507
+#: src/ThemeEditor.vala:261 src/Utils.vala:507
 msgid "No"
 msgstr "Ne"
 
-#: src/ThemeEditor.vala:250 src/Utils.vala:510
+#: src/ThemeEditor.vala:264 src/Utils.vala:510
 msgid "Yes"
 msgstr "Ano"
 
-#: src/ThemeEditor.vala:272
+#: src/ThemeEditor.vala:286
 msgid "Default"
 msgstr "Základní"
 
