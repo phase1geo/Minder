@@ -27,6 +27,8 @@ using Pango;
 
 public class CanvasText : Object {
 
+  private static Regex? _hr_regex = null;
+
   // Member variables
   private MindMap       _map;
   private double        _posx          = 0.0;
@@ -1200,6 +1202,29 @@ public class CanvasText : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns [start, end, start, end, ...] byte ranges of each line in
+  // the given text that is a Markdown horizontal rule (---, ***, ___,
+  // optionally spaced like "- - -")
+  private int[] find_hr_lines( string txt ) {
+    int[] ranges = {};
+    try {
+      if( _hr_regex == null ) {
+        _hr_regex = new Regex( "^ {0,3}([-*_])(?: *\\1){2,} *$", RegexCompileFlags.MULTILINE );
+      }
+      MatchInfo mi;
+      if( _hr_regex.match( txt, 0, out mi ) ) {
+        do {
+          int s, e;
+          mi.fetch_pos( 0, out s, out e );
+          ranges += s;
+          ranges += e;
+        } while( mi.next() );
+      }
+    } catch( RegexError e ) {}
+    return( ranges );
+  }
+
+  //-------------------------------------------------------------
   // Draws the node font to the screen
   public void draw( Cairo.Context ctx, Theme theme, RGBA fg, double alpha, bool copy_layout ) {
 
@@ -1227,6 +1252,24 @@ public class CanvasText : Object {
       layout.set_attributes( attrs );
     }
 
+    // Hide the text of horizontal-rule lines; we draw them as lines below
+    int[] hr_ranges = {};
+    if( !edit && (_map.markdown_parser != null) && _map.markdown_parser.enable ) {
+      hr_ranges = find_hr_lines( _nomarkup_text.text );
+      if( hr_ranges.length > 0 ) {
+        layout = layout.copy();
+        var cur   = layout.get_attributes();
+        var attrs = (cur == null) ? new Pango.AttrList() : cur.copy();
+        for( int i = 0; i < hr_ranges.length; i += 2 ) {
+          var a = Pango.attr_foreground_alpha_new( 1 );
+          a.start_index = (uint)hr_ranges[i];
+          a.end_index   = (uint)hr_ranges[i+1];
+          attrs.change( (owned)a );
+        }
+        layout.set_attributes( attrs );
+      }
+    }
+
     Pango.Rectangle ink_rect, log_rect;
     layout.get_extents( out ink_rect, out log_rect );
 
@@ -1236,6 +1279,21 @@ public class CanvasText : Object {
     _latex.prepare_draw( fg, alpha );
     Pango.cairo_show_layout( ctx, layout );
     ctx.new_path();
+
+    // Draw the horizontal rules
+    for( int i = 0; i < hr_ranges.length; i += 2 ) {
+      var    rect = layout.index_to_pos( hr_ranges[i] );
+      double y    = Math.round( posy + ((rect.y + (rect.height / 2.0)) / Pango.SCALE) ) + 0.5;
+      double x0   = posx - (log_rect.x / Pango.SCALE);
+      double x1   = x0 + (log_rect.width / Pango.SCALE);
+      Utils.set_context_color_with_alpha( ctx, fg, alpha );
+      ctx.save();
+      ctx.set_line_width( 1.0 );
+      ctx.move_to( x0, y );
+      ctx.line_to( x1, y );
+      ctx.stroke();
+      ctx.restore();
+    }
 
     // Draw the insertion cursor if we are in the 'editable' state
     if( edit && !copy_layout ) {
