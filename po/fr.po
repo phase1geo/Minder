@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 20:45-0600\n"
+"POT-Creation-Date: 2026-11-18 22:04-0600\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Nathan Bonnemains (@NathanBnm)\n"
 "Language-Team: Français\n"
@@ -156,7 +156,7 @@ msgstr "Sélectionner le nœud"
 msgid "Callout"
 msgstr ""
 
-#: src/CanvasText.vala:347 src/FormattedText.vala:1241
+#: src/CanvasText.vala:349 src/FormattedText.vala:1241
 #, fuzzy
 msgid "No text found"
 msgstr "Mot suivant"

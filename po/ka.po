@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 20:45-0600\n"
+"POT-Creation-Date: 2026-11-18 22:04-0600\n"
 "PO-Revision-Date: 2026-03-31 12:29+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -155,7 +155,7 @@ msgstr "კვანძის მონიშვნა"
 msgid "Callout"
 msgstr "სქოლიო"
 
-#: src/CanvasText.vala:347 src/FormattedText.vala:1241
+#: src/CanvasText.vala:349 src/FormattedText.vala:1241
 msgid "No text found"
 msgstr "ტექსტი აღმოჩენილი არაა"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 20:45-0600\n"
+"POT-Creation-Date: 2026-11-18 22:04-0600\n"
 "PO-Revision-Date: 2020-04-20 14:26+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: \n"
@@ -157,7 +157,7 @@ msgstr "Knoop kiezen"
 msgid "Callout"
 msgstr ""
 
-#: src/CanvasText.vala:347 src/FormattedText.vala:1241
+#: src/CanvasText.vala:349 src/FormattedText.vala:1241
 #, fuzzy
 msgid "No text found"
 msgstr "Volgende woord"
