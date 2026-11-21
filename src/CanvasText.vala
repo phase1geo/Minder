@@ -1225,6 +1225,34 @@ public class CanvasText : Object {
   }
 
   //-------------------------------------------------------------
+  // Retrieves the Cairo tag that will allow links to be clickable
+  // in exports.
+  private string get_cairo_tag( Pango.Layout layout, UndoTagInfo info, double x, double y ) {
+
+    var a = layout.index_to_pos( info.start );
+    var b = layout.index_to_pos( info.end );
+
+    var rx = (int)(x + Pango.units_to_double( a.x ));
+    var ry = (int)(y + Pango.units_to_double( a.y ));
+    var rw = (int)Pango.units_to_double( b.x - a.x );
+    var rh = (int)Pango.units_to_double( a.height );
+
+    return( "rect=[%d %d %d %d] uri='%s'".printf( rx, ry, rw, rh, info.extra ) );
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds Cairo tags to the embedded URL links.
+  private void add_link_tags( Cairo.Context ctx, Pango.Layout layout, double x, double y ) {
+    var tags = _text.get_full_tags_in_range( FormatTag.URL, 0, _text.text.length );
+    for( int i=0; i<tags.length; i++ ) {
+      var tag = get_cairo_tag( layout, tags.index( i ), x, y );
+      ctx.tag_begin( Cairo.TAG_LINK, tag );
+      ctx.tag_end( Cairo.TAG_LINK );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Draws the node font to the screen
   public void draw( Cairo.Context ctx, Theme theme, RGBA fg, double alpha, bool copy_layout ) {
 
@@ -1279,6 +1307,10 @@ public class CanvasText : Object {
     _latex.prepare_draw( fg, alpha );
     Pango.cairo_show_layout( ctx, layout );
     ctx.new_path();
+
+    if( copy_layout && !edit ) {
+      add_link_tags( ctx, layout, (posx - (log_rect.x / Pango.SCALE)), posy );
+    }
 
     // Draw the horizontal rules
     for( int i = 0; i < hr_ranges.length; i += 2 ) {
