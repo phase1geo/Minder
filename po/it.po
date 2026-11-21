@@ -1612,14 +1612,12 @@ msgid "Non-tasks"
 msgstr "Non-attività"
 
 #: src/MainWindow.vala:1109
-#, fuzzy
 msgid "No priority"
-msgstr "Priorità bassa"
+msgstr "Nessuna priorità "
 
 #: src/MainWindow.vala:1110 src/NodeMenu.vala:44 src/NodesMenu.vala:38
-#, fuzzy
 msgid "Priority 1"
-msgstr "Priorità bassa"
+msgstr "Priorità 1"
 
 #: src/MainWindow.vala:1111 src/NodeMenu.vala:45 src/NodesMenu.vala:39
 msgid "Priority 2"
@@ -4670,14 +4668,12 @@ msgid "Markdown List Item"
 msgstr "Voce di elenco Markdown"
 
 #: src/ThemeEditor.vala:129
-#, fuzzy
 msgid "Priority Colors"
-msgstr "Priorità bassa"
+msgstr "Priorità colori"
 
 #: src/ThemeEditor.vala:137
-#, fuzzy, c-format
 msgid "Priority #%d"
-msgstr "Priorità bassa"
+msgstr "Priorità #%d"
 
 #: src/ThemeEditor.vala:201
 msgid "Select color"
