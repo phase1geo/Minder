@@ -79,10 +79,10 @@ public class TextParser {
   //-------------------------------------------------------------
   // Helper function that adds the tag for the given parenthesis
   // match.
-  protected void add_tag( FormattedText text, MatchInfo matches, int paren, FormatTag tag, string? extra = null ) {
+  protected void add_tag( string msg, FormattedText text, MatchInfo matches, int paren, FormatTag tag, string? extra = null ) {
     int start, end;
     matches.fetch_pos( paren, out start, out end );
-    text.add_tag( tag, start, end, true, extra );
+    text.add_tag( msg, tag, start, end, true, extra );
   }
 
   //-------------------------------------------------------------
@@ -117,7 +117,7 @@ public class TextParser {
   //-------------------------------------------------------------
   // This is called when the associated FormatBar button is clicked.
   public virtual void insert_tag( CanvasText ct, FormatTag tag, int start_pos, int end_pos, UndoTextBuffer undo_buffer, string? extra = null ) {
-    ct.text.add_tag( tag, start_pos, end_pos, false, extra );
+    ct.text.add_tag( "insert_tag", tag, start_pos, end_pos, false, extra );
   }
 
   //-------------------------------------------------------------

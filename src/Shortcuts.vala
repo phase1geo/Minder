@@ -28,12 +28,15 @@ public enum MapState {
   CALLOUT,
   STICKER,
   GROUP,
+  TABLE,
   EDITING;
 
   //-------------------------------------------------------------
   // Returns the state from the given MindMap
   public static MapState get_state( MindMap map ) {
-    if( map.is_node_editable() || map.is_connection_editable() || map.is_callout_editable() ) {
+    if( map.canvas.table_editor.is_shown() ) {
+      return( TABLE );
+    } else if( map.is_node_editable() || map.is_connection_editable() || map.is_callout_editable() ) {
       return( EDITING );
     } else if( map.selected.num_nodes() > 0 ) {
       return( NODE );
@@ -59,6 +62,7 @@ public enum MapState {
     var for_call = command.for_callout();
     var for_stkr = command.for_sticker();
     var for_grp  = command.for_group();
+    var for_tbl  = command.for_table();
     var for_edit = command.for_editing();
     var for_none = command.for_none();
     var for_any  = !for_node && !for_conn && !for_call && !for_stkr && !for_grp && !for_edit && !for_none;
@@ -68,6 +72,7 @@ public enum MapState {
       (for_call && (state == MapState.CALLOUT))    ||
       (for_stkr && (state == MapState.STICKER))    ||
       (for_grp  && (state == MapState.GROUP))      ||
+      (for_tbl  && (state == MapState.TABLE))      ||
       (for_edit && (state == MapState.EDITING))    ||
       (for_none && (state == MapState.NONE))       ||
       for_any
@@ -150,12 +155,23 @@ public class Shortcut {
 
   //-------------------------------------------------------------
   // Returns true if this shortcut matches the given match values
-  public bool matches_keypress( bool control, bool shift, bool alt, uint[] kvs, MapState state ) {
+  public bool matches_keypress( bool control, bool shift, bool alt, uint keyval, uint[] kvs, MapState state ) {
+    var match = false;
+    if( _keycode >= 0xff00 && _keycode <= 0xffff ) {
+      var event_keyval = keyval;
+      if( event_keyval == Key.ISO_Left_Tab ) {
+        event_keyval = Key.Tab;
+      }
+      match = (event_keyval == _keycode);
+    } else {
+      match = has_key( kvs );
+    }
+
     return(
       (_control == control) &&
       (_shift   == shift)   &&
       (_alt     == alt)     &&
-      has_key( kvs )        &&
+      match                 &&
       MapState.matches( state, _command )
     );
   }
@@ -385,7 +401,7 @@ public class Shortcuts {
     Display.get_default().map_keycode( keycode, out ks, out kvs );
 
     for( int i=0; i<_shortcuts.length; i++ ) {
-      if( _shortcuts.index( i ).matches_keypress( control, shift, alt, kvs, state ) ) {
+      if( _shortcuts.index( i ).matches_keypress( control, shift, alt, keyval, kvs, state ) ) {
         _shortcuts.index( i ).execute( map );
         return( true );
       }
@@ -587,7 +603,7 @@ public class Shortcuts {
     add_default( Key.c,            true, false, false, KeyCommand.EDIT_COPY );
     add_default( Key.x,            true, false, false, KeyCommand.EDIT_CUT );
     add_default( Key.v,            true, false, false, KeyCommand.EDIT_PASTE );
-    add_default( Key.v,            true, true,  false, KeyCommand.NODE_PASTE_REPLACE );
+    add_default( Key.v,            true, true,  false, KeyCommand.EDIT_PASTE_LATEX );
     add_default( Key.Return,       true, false, false, KeyCommand.EDIT_INSERT_NEWLINE );
     add_default( Key.BackSpace,    true, false, false, KeyCommand.EDIT_REMOVE_WORD_PREV );
     add_default( Key.Delete,       true, false, false, KeyCommand.EDIT_REMOVE_WORD_NEXT );
@@ -669,6 +685,13 @@ public class Shortcuts {
     add_default( Key.Right,        false, false, true,  KeyCommand.NODE_SWAP_RIGHT );
     add_default( Key.Up,           false, false, true,  KeyCommand.NODE_SWAP_UP );
     add_default( Key.Down,         false, false, true,  KeyCommand.NODE_SWAP_DOWN );
+
+    add_default( Key.@1,           false, false, false, KeyCommand.NODE_SET_PRIORITY1 );
+    add_default( Key.@2,           false, false, false, KeyCommand.NODE_SET_PRIORITY2 );
+    add_default( Key.@3,           false, false, false, KeyCommand.NODE_SET_PRIORITY3 );
+    add_default( Key.@4,           false, false, false, KeyCommand.NODE_SET_PRIORITY4 );
+    add_default( Key.@5,           false, false, false, KeyCommand.NODE_SET_PRIORITY5 );
+    add_default( Key.@0,           false, false, false, KeyCommand.NODE_CLEAR_PRIORITY );
 
   }
 
@@ -810,12 +833,12 @@ public class Shortcuts {
     section->add_child( make_base_group( _( "Canvas Movement" ), out group ) );
     group->add_child( make_mouse_shortcut( _( "Pan Canvas" ), _( "[Middle-click + Drag / Alt + Motion]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Scroll Vertically" ), _( "[Scrollwheel up/down]" ) ) );
-    group->add_child( make_mouse_shortcut( _( "Scroll Horizontally" ), _( "[Scrollwhile left/right]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Scroll Horizontally" ), _( "[Scrollwheel left/right]" ) ) );
 
     section->add_child( make_base_group( _( "Item Selection" ), out group ) );
     group->add_child( make_mouse_shortcut( _( "Select Single Item" ), _( "[Left-click on item]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Select Child Nodes" ), _( "[Control + Left-click on parent node]" ) ) );
-    group->add_child( make_mouse_shortcut( _( "Select Node Tree/Subtree" ), _( "[Control + Double left-click on parent node" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Select Node Tree/Subtree" ), _( "[Control + Double left-click on parent node]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Select All Nodes at Same Depth Level" ), _( "[Control + Triple left-click on node]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Block Selection" ), _( "[Left-click + Drag]" ) ) );
 
@@ -823,7 +846,7 @@ public class Shortcuts {
     group->add_child( make_mouse_shortcut( _( "Toggle Selection of Item" ), _( "[Shift + Left-click on item]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Toggle Selection of Child Nodes" ), _( "[Shift + Control + Left-click on item]" ) ) );
     group->add_child( make_mouse_shortcut( _( "Toggle Selection of Node Tree/Subtree" ), _( "[Shift + Control + Double left-click on parent node]" ) ) );
-    group->add_child( make_mouse_shortcut( _( "Toggle Selection of All Nodes at Same Depth Level" ), _( "Shift + Control + Triple-click on node]" ) ) );
+    group->add_child( make_mouse_shortcut( _( "Toggle Selection of All Nodes at Same Depth Level" ), _( "[Shift + Control + Triple-click on node]" ) ) );
 
     section->add_child( make_base_group( _( "Text Selection" ), out group ) );
     group->add_child( make_mouse_shortcut( _( "Set Cursor Insert Point" ), _( "[Left-click in text]" ) ) );

@@ -53,6 +53,7 @@ sources += files(
     'UndoNodeSummaryFromNode.vala',
     'UndoNodeSummaryDelete.vala',
     'UndoNodeTasks.vala',
+    'UndoNodeTable.vala',
     'UndoNodeUnclify.vala',
 
     'UndoNodesAlign.vala',
@@ -63,6 +64,7 @@ sources += files(
     'UndoNodesInsert.vala',
     'UndoNodesLink.vala',
     'UndoNodesLinkColor.vala',
+    'UndoNodesPriority.vala',
     'UndoNodesRandLinkColor.vala',
     'UndoNodesReparentLinkColor.vala',
     'UndoNodesReplace.vala',

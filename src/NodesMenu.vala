@@ -34,6 +34,20 @@ public class NodesMenu : BaseMenu {
     append_menu_item( edit_menu, KeyCommand.EDIT_CUT,    _( "Cut" ) );
     append_menu_item( edit_menu, KeyCommand.NODE_REMOVE, _( "Delete" ) );
 
+    var set_pri_menu = new GLib.Menu();
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY1, _( "Priority 1" ) );
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY2, _( "Priority 2" ) );
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY3, _( "Priority 3" ) );
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY4, _( "Priority 4" ) );
+    append_menu_item( set_pri_menu, KeyCommand.NODE_SET_PRIORITY5, _( "Priority 5" ) );
+
+    var clr_pri_menu = new GLib.Menu();
+    append_menu_item( clr_pri_menu, KeyCommand.NODE_CLEAR_PRIORITY, _( "Clear Priority" ) );
+
+    var priority_menu = new GLib.Menu();
+    priority_menu.append_section( null, set_pri_menu );
+    priority_menu.append_section( null, clr_pri_menu );
+
     var color_menu = new GLib.Menu();
     append_menu_item( color_menu, KeyCommand.NODE_CHANGE_LINK_COLOR,    _( "Set To Color…" ) );
     append_menu_item( color_menu, KeyCommand.NODE_RANDOMIZE_LINK_COLOR, _( "Randomize Colors" ) );
@@ -41,6 +55,7 @@ public class NodesMenu : BaseMenu {
 
     var change_menu = new GLib.Menu();
     append_menu_item( change_menu, KeyCommand.SHOW_TAG_SIDEBAR,          _( "Edit Tags" ), false );
+    change_menu.append_submenu( _( "Priority" ), priority_menu );
     change_menu.append_submenu( _( "Link Colors" ), color_menu );
     append_menu_item( change_menu, KeyCommand.NODE_CHANGE_TASK,          _( "Toggle Tasks" ) );
     append_menu_item( change_menu, KeyCommand.NODE_TOGGLE_FOLDS_SHALLOW, _( "Toggle Folds" ) );

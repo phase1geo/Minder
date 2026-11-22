@@ -1,0 +1,11 @@
+extends: default
+
+rules:
+  line-length:
+    level: warning
+  document-start:
+    level: warning
+  comments:
+    level: warning
+  indentation:
+    spaces: 2          # stays an error: a real structural problem

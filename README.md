@@ -1,4 +1,8 @@
-# Minder
+<div align="center">
+  <span align="center"> <img width="128" height="128" class="center" src="data/icons/scalable/io.github.phase1geo.minder.svg" alt="Minder Icon"></span>
+  <h1 align="center">Minder</h1>
+  <h3 align="center">Create, develop and visualize your ideas</h3>
+</div>
 
 <p align="center">
   <a href="https://appcenter.elementary.io/io.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
@@ -14,7 +18,8 @@ Use the power of mind-mapping to make your ideas come to life.
 - Choose from many tree layout choices.
 - Support for Markdown formatting.
 - Support for insertion of Unicode characters.
-- Add notes, tasks, and images to your nodes.
+- Typeset inline LaTeX expressions to scalable SVG using `$...$` or `$$...$$` delimiters.
+- Add notes, tasks, images, and editable tables to your nodes.
 - Add node-to-node connections with optional text and notes.
 - Stylize nodes, callouts, links and connections to add more meaning and improve readability.
 - Save and reuse style settings within and across open mindmaps.
@@ -51,16 +56,29 @@ You will need the following dependencies to build Minder:
 * libarchive-dev
 * libgtksourceview-5-dev
 * libmarkdown2-dev
+* librsvg2-dev
 * libjson-glib-dev
 * libwebp-dev
-* webp-pixbuf-loader`
+* webp-pixbuf-loader
+* liblasem-0.6
 
-To install, run `sudo ./app install` and then run the application from your application launcher or from
-the command-line with `./app run`.  If you want to debug with gdb using this build, run `./app debug`.
+## Installing From Source
+
+Before building and installing from source code, you will need to install the previous dependences.  All dependencies should be available in your repo's package manager (i.e., apt, dnf, etc.) with the exception of liblasem which can be built and installed with the following commands (you will need to install the `flex` and `bison` packages to build):
+
+```sh
+git clone https://github.com/LasemProject/lasem.git
+cd lasem
+git checkout e657038b7f348a91fabd06da192aedef137bd2f2
+meson setup build --prefix=/usr/local -Dintrospection=disabled -Dviewer=disabled -Ddocumentation=disabled
+ninja -C build && sudo ninja -C build install && sudo ldconfig
+```
+
+After installing all required dependencies, run `sudo ./app install` and then run the application from your application launcher or from the command-line with `./app run`.  If you want to debug with gdb using this build, run `./app debug`.
 
 Alternatively, you can install the elementary OS Flatpak using `./app elementary` or the Flathub Flatpak using `./app flathub`.  Once the Flatpak has been built, it can be run using `./app run-flatpak`.  To make this work, make sure that `flatpak` and `flatpak-builder` are installed on your system along with the required Sdk and Platform flatpaks.
 
-## Flatpak
+## Pre-Built Flatpaks
 
 Minder is available as a Flatpak (recommended) via Flathub and elementary OS AppCenter.
 
@@ -104,7 +122,7 @@ Debian/Ubuntu package is also available:
 
 ## Documentation
 
-Minder documentation can be found [here](https://github.com/phase1geo/Minder/wiki/Table-of-Contents).
+Minder documentation can be found [here](https://phase1geo.github.io/Minder/).
 
 <p align="center">
   <a href="https://appcenter.elementary.io/io.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>

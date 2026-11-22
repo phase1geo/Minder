@@ -4,6 +4,7 @@ src/Braindump.vala
 src/CalloutMenu.vala
 src/Callout.vala
 src/CanvasText.vala
+src/Clipboard.vala
 src/ConnectionInspector.vala
 src/ConnectionMenu.vala
 src/ConnectionsMenu.vala
@@ -36,6 +37,7 @@ src/exports/ExportYed.vala
 src/Exports.vala
 src/Export.vala
 src/FormattedText.vala
+src/FormulaRecognizer.vala
 src/GroupInspector.vala
 src/GroupsMenu.vala
 src/ImageEditor.vala
@@ -57,10 +59,12 @@ src/NodeInspector.vala
 src/NodeLink.vala
 src/NodeMenu.vala
 src/NodesMenu.vala
+src/NodeTable.vala
 src/Node.vala
 src/NoteView.vala
 src/Preferences.vala
 src/QuickEntry.vala
+src/ReleaseNotes.vala
 src/Shortcuts.vala
 src/StickerInspector.vala
 src/StickerSet.vala
@@ -76,6 +80,7 @@ src/styles/NodeBorderRounded.vala
 src/styles/NodeBorderSquared.vala
 src/styles/NodeBorderUnderlined.vala
 src/Styles.vala
+src/TableEditor.vala
 src/TagEditor.vala
 src/Tagger.vala
 src/TagInspector.vala
@@ -142,6 +147,7 @@ src/undo_actions/UndoNodesInsert.vala
 src/undo_actions/UndoNodesLinkColor.vala
 src/undo_actions/UndoNodesLink.vala
 src/undo_actions/UndoNodeSort.vala
+src/undo_actions/UndoNodesPriority.vala
 src/undo_actions/UndoNodesRandLinkColor.vala
 src/undo_actions/UndoNodesReparentLinkColor.vala
 src/undo_actions/UndoNodesReplace.vala
@@ -153,6 +159,7 @@ src/undo_actions/UndoNodeStickerRemove.vala
 src/undo_actions/UndoNodeSummaryDelete.vala
 src/undo_actions/UndoNodeSummaryFromNode.vala
 src/undo_actions/UndoNodeSummary.vala
+src/undo_actions/UndoNodeTable.vala
 src/undo_actions/UndoNodeTasks.vala
 src/undo_actions/UndoNodeUnclify.vala
 src/undo_actions/UndoStickerAdd.vala

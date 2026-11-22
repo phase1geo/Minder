@@ -131,15 +131,6 @@ public class Callout : Object {
     _text = new CanvasText.with_text( node.map, _( "Callout" ) );
     _text.resized.connect( position_text_from_ct );
     _style = new Style();
-    set_parsers();
-  }
-
-  //-------------------------------------------------------------
-  // Adds the valid parsers.
-  public void set_parsers() {
-    _text.text.add_parser( _node.map.markdown_parser );
-    _text.text.add_parser( _node.map.url_parser );
-    _text.text.add_parser( _node.map.unicode_parser );
   }
 
   //-------------------------------------------------------------

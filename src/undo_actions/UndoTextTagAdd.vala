@@ -49,7 +49,7 @@ public class UndoTextTagAdd : UndoTextItem {
   //-------------------------------------------------------------
   // Causes the stored item to be put into the after state
   public override void redo_text( MindMap map, CanvasText ct ) {
-    ct.text.add_tag( tag, start, end, parsed, extra );
+    ct.text.add_tag( "add_redo", tag, start, end, parsed, extra );
     ct.set_cursor_only( end_cursor );
     map.queue_draw();
   }

@@ -37,6 +37,7 @@ public enum MapItemComponent {
   STICKER,
   NODE_LINK,
   IMAGE,
+  TABLE,
   LINK,
   TASK,
   FOLD,
@@ -684,6 +685,19 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
+  // Toggles the fold of the specified node.
+  public void toggle_fold( Node node, bool deep = false ) {
+    var parents = new Array<Node>();
+    parents.append_val( node );
+    var changes = new Array<Node>();
+    _map.animator.add_nodes_fold( _nodes, parents, "node fold" );
+    node.set_fold( !node.folded, deep, changes );
+    _map.add_undo( new UndoNodeFolds( changes ) );
+    _map.animator.animate();
+    auto_save();
+  }
+
+  //-------------------------------------------------------------
   // Removes the given tag from all nodes containing it.  Returns
   // the list of affected nodes.
   public void remove_tag( Tag tag, Array<Node> nodes ) {
@@ -958,6 +972,7 @@ public class MapModel {
     var current = _map.selected.current_node();
     if( (current != null) && (current.image == null) ) {
       image_manager.choose_image( _map.win, (id) => {
+        if( id == -1 ) return;
         var curr = _map.selected.current_node();
         curr.set_image( image_manager, new NodeImage( image_manager, id, curr.style.node_width ) );
         if( curr.image != null ) {
@@ -1005,6 +1020,25 @@ public class MapModel {
   public void current_image_edited( NodeImage? orig_image ) {
     var current = _map.selected.current_node();
     _map.add_undo( new UndoNodeImage( current, orig_image ) );
+    queue_draw();
+    current_changed();
+    auto_save();
+  }
+
+  //-------------------------------------------------------------
+  // Opens the table editor for the current node.
+  public void edit_current_table() {
+    var nodes = _map.selected.nodes();
+    if( nodes.length == 1 ) {
+      var current = nodes.index( 0 );
+      _map.canvas.table_editor.edit_table( current );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever the current node's table is changed.
+  public void current_table_edited( Node node, NodeTable? original_table ) {
+    _map.add_undo( new UndoNodeTable( _map, node, original_table ) );
     queue_draw();
     current_changed();
     auto_save();
@@ -1275,6 +1309,8 @@ public class MapModel {
           component = MapItemComponent.FOLD;
         } else if( node.is_within_image( x, y ) ) {
           component = MapItemComponent.IMAGE;
+        } else if( node.is_within_table( x, y ) ) {
+          component = MapItemComponent.TABLE;
         } else if( node.is_within_resizer( x, y ) ) {
           component = MapItemComponent.RESIZER;
         } else if( node.is_within_tags( x, y ) ) {
@@ -1614,7 +1650,26 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
-  // Deletes the current node.
+  // Sets the node priority of all selected nodes to the given value.
+  public void set_node_priority( int priority ) {
+    var changed      = new Array<Node>();
+    var old_priority = new Array<int>();
+    for( int i=0; i<_map.selected.nodes().length; i++ ) {
+      var node = _map.selected.nodes().index( i );
+      old_priority.append_val( node.priority );
+      changed.append_val( node );
+      node.priority = priority;
+    }
+    if( changed.length > 0 ) {
+      _map.add_undo( new UndoNodesPriority( changed, old_priority, priority ) );
+      current_changed();
+      auto_save();
+      queue_draw();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Deletes the given node.
   public void delete_node() {
     var current = _map.selected.current_node();
     if( current == null ) return;
@@ -2377,6 +2432,13 @@ public class MapModel {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
     doc->set_root_element( root );
+    var image_ids = new HashSet<int>();
+    for( int i=0; i<nodes.length; i++ ) {
+      get_image_ids_for_copy( nodes.index( i ), image_ids );
+    }
+    Xml.Node* images = new Xml.Node( null, "images" );
+    image_manager.save_for_copy( images, image_ids );
+    root->add_child( images );
     Xml.Node* ns = new Xml.Node( null, "nodes" );
     for( int i=0; i<nodes.length; i++ ) {
       ns->add_child( nodes.index( i ).save() );
@@ -2404,6 +2466,17 @@ public class MapModel {
   }
 
   //-------------------------------------------------------------
+  // Collects image IDs from the copied node and all of its children.
+  private void get_image_ids_for_copy( Node node, HashSet<int> ids ) {
+    if( node.image != null ) {
+      ids.add( node.image.id );
+    }
+    for( int i=0; i<node.children().length; i++ ) {
+      get_image_ids_for_copy( node.children().index( i ), ids );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Deserializes the paste string and returns the list of nodes
   public void deserialize_for_paste( string str, Array<Node> nodes, Array<Connection> conns, Array<NodeGroup> groups ) {
     Xml.Doc* doc = Xml.Parser.parse_doc( str );
@@ -2411,7 +2484,9 @@ public class MapModel {
     for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          // case "images"      :  image_manager.load( it );  break;
+          case "images"      :
+            image_manager.load_for_paste( it );
+            break;
           case "connections" :
             _connections.load( _map, it, conns, nodes );
             break;

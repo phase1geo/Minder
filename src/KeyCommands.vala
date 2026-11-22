@@ -68,13 +68,15 @@ public enum KeyCommand {
     MISCELLANEOUS_START,
       SHOW_PREFERENCES,
       SHOW_SHORTCUTS,
+      SHOW_DOCUMENTATION,
+      SHOW_RELEASES,
       SHOW_CONTEXTUAL_MENU,
       SHOW_FIND,
       SHOW_ABOUT,
       TOGGLE_BRAINDUMP,
       TOGGLE_FOCUS_MODE,
       EDIT_NOTE,
-      EDIT_SELECTED,  // 50
+      EDIT_SELECTED, // 50
       SHOW_SELECTED,
       REMOVE_STICKER_SELECTED,
       QUIT,
@@ -104,8 +106,9 @@ public enum KeyCommand {
     NODE_VIEW_END,
     NODE_CHANGE_START,
       NODE_CHANGE_TASK,
-      NODE_CHANGE_IMAGE,  // 80
-      NODE_REMOVE_IMAGE,
+      NODE_CHANGE_IMAGE,
+      NODE_REMOVE_IMAGE, // 80
+      NODE_CHANGE_TABLE,
       NODE_CHANGE_LINK_COLOR,
       NODE_RANDOMIZE_LINK_COLOR,
       NODE_REPARENT_LINK_COLOR,
@@ -116,6 +119,12 @@ public enum KeyCommand {
       NODE_ADD_CONNECTION,
       NODE_TOGGLE_CALLOUT,  // 90
       NODE_TOGGLE_SEQUENCE,
+      NODE_SET_PRIORITY1,
+      NODE_SET_PRIORITY2,
+      NODE_SET_PRIORITY3,
+      NODE_SET_PRIORITY4,
+      NODE_SET_PRIORITY5,
+      NODE_CLEAR_PRIORITY,
     NODE_CHANGE_END,
     NODE_SELECT_START,
       NODE_SELECT_ROOT,
@@ -150,13 +159,13 @@ public enum KeyCommand {
       NODE_ATTACH_RIGHT,
       NODE_ATTACH_UP,
       NODE_ATTACH_DOWN,
-    NODE_ATTACH_END,
+    NODE_ATTACH_END, // 126
     NODE_ALIGN_START,
       NODE_ALIGN_TOP,
       NODE_ALIGN_VCENTER,
       NODE_ALIGN_BOTTOM,
       NODE_ALIGN_LEFT,
-      NODE_ALIGN_HCENTER,  // 120
+      NODE_ALIGN_HCENTER,
       NODE_ALIGN_RIGHT,
     NODE_ALIGN_END,
   NODE_END,
@@ -167,8 +176,8 @@ public enum KeyCommand {
     CALLOUT_REMOVE,
   CALLOUT_END,
   CONNECTION_START,
-    CONNECTION_EXIST_START,
-      CONNECTION_REMOVE,  // 130
+    CONNECTION_EXIST_START,  // 130
+      CONNECTION_REMOVE,
     CONNECTION_EXIST_END,
     CONNECTION_SELECT_START,
       CONNECTION_SELECT_FROM,
@@ -177,8 +186,8 @@ public enum KeyCommand {
       CONNECTION_SELECT_PREV,
     CONNECTION_SELECT_END,
   CONNECTION_END,
-  STICKER_START,
-    STICKER_REMOVE,  // 140
+  STICKER_START,  // 140
+    STICKER_REMOVE,
   STICKER_END,
   GROUP_START,
     GROUP_CHANGE_START,
@@ -187,18 +196,33 @@ public enum KeyCommand {
       GROUP_REMOVE,
     GROUP_CHANGE_END,
     GROUP_SELECT_START,
-      GROUP_SELECT_MAIN,
-      GROUP_SELECT_ALL,  // 150
+      GROUP_SELECT_MAIN,  // 150
+      GROUP_SELECT_ALL,
     GROUP_SELECT_END,
   GROUP_END,
+  TABLE_START,
+    TABLE_ADD_ROW_ABOVE,
+    TABLE_ADD_ROW_BELOW,
+    TABLE_MOVE_ROW_UP,
+    TABLE_MOVE_ROW_DOWN,
+    TABLE_DELETE_ROWS,
+    TABLE_ADD_COL_LEFT,
+    TABLE_ADD_COL_RIGHT,
+    TABLE_MOVE_COL_LEFT,
+    TABLE_MOVE_COL_RIGHT,
+    TABLE_DELETE_COLS,
+    TABLE_MERGE_CELLS,
+    TABLE_SPLIT_CELL,
+    TABLE_CLEAR_CELLS,
+  TABLE_END,
   EDIT_START,
     EDIT_TEXT_START,
       EDIT_INSERT_NEWLINE,
       EDIT_INSERT_TAB,
       EDIT_INSERT_EMOJI,
       EDIT_ESCAPE,
-      EDIT_BACKSPACE,
-      EDIT_DELETE,  // 160
+      EDIT_BACKSPACE,  // 160
+      EDIT_DELETE,
       EDIT_REMOVE_WORD_NEXT,
       EDIT_REMOVE_WORD_PREV,
     EDIT_TEXT_END,
@@ -222,9 +246,10 @@ public enum KeyCommand {
       EDIT_COPY,
       EDIT_CUT,
       EDIT_PASTE,
+      EDIT_PASTE_LATEX,
     EDIT_CLIPBOARD_END,
-    EDIT_URL_START,
-      EDIT_OPEN_URL,  // 170
+    EDIT_URL_START,  // 170
+      EDIT_OPEN_URL,
       EDIT_ADD_URL,
       EDIT_EDIT_URL,
       EDIT_REMOVE_URL,
@@ -232,8 +257,8 @@ public enum KeyCommand {
     EDIT_CURSOR_START,
       EDIT_CURSOR_CHAR_NEXT,
       EDIT_CURSOR_CHAR_PREV,
-      EDIT_CURSOR_UP,
-      EDIT_CURSOR_DOWN,  // 150
+      EDIT_CURSOR_UP,  // 150
+      EDIT_CURSOR_DOWN,
       EDIT_CURSOR_WORD_NEXT,
       EDIT_CURSOR_WORD_PREV,
       EDIT_CURSOR_FIRST,
@@ -242,8 +267,8 @@ public enum KeyCommand {
       EDIT_CURSOR_LINEEND,
     EDIT_CURSOR_END,
     EDIT_SELECT_START,
-      EDIT_SELECT_CHAR_NEXT,
-      EDIT_SELECT_CHAR_PREV,  // 160
+      EDIT_SELECT_CHAR_NEXT,  // 160
+      EDIT_SELECT_CHAR_PREV,
       EDIT_SELECT_UP,
       EDIT_SELECT_DOWN,
       EDIT_SELECT_WORD_NEXT,
@@ -252,8 +277,8 @@ public enum KeyCommand {
       EDIT_SELECT_START_HOME,
       EDIT_SELECT_END_DOWN,
       EDIT_SELECT_END_END,
-      EDIT_SELECT_LINESTART,
-      EDIT_SELECT_LINEEND,  // 170
+      EDIT_SELECT_LINESTART,  // 170
+      EDIT_SELECT_LINEEND,
       EDIT_SELECT_ALL,
       EDIT_SELECT_NONE,
     EDIT_SELECT_END,
@@ -262,8 +287,8 @@ public enum KeyCommand {
       EDIT_SHIFT_RETURN,
       EDIT_TAB,
       EDIT_SHIFT_TAB,
-    EDIT_MISC_END,
-  EDIT_END,  // 180
+    EDIT_MISC_END,  // 180
+  EDIT_END,
   NUM;
 
   //-------------------------------------------------------------
@@ -301,6 +326,8 @@ public enum KeyCommand {
       case UNFOLD_ALL_NODES          :  return( "unfold-all-nodes" );
       case SHOW_PREFERENCES          :  return( "show-preferences" );
       case SHOW_SHORTCUTS            :  return( "show-shortcuts" );
+      case SHOW_DOCUMENTATION        :  return( "show-documentation" );
+      case SHOW_RELEASES             :  return( "show-releases" );
       case SHOW_CONTEXTUAL_MENU      :  return( "show-contextual_menu" );
       case SHOW_FIND                 :  return( "show-find" );
       case SHOW_ABOUT                :  return( "show-about" );
@@ -330,6 +357,7 @@ public enum KeyCommand {
       case NODE_CHANGE_TASK          :  return( "node-change-task" );
       case NODE_CHANGE_IMAGE         :  return( "node-change-image" );
       case NODE_REMOVE_IMAGE         :  return( "node-remove-image" );
+      case NODE_CHANGE_TABLE         :  return( "node-change-table" );
       case NODE_CHANGE_LINK_COLOR    :  return( "node-change-link-color" );
       case NODE_RANDOMIZE_LINK_COLOR :  return( "node-randomize-link-color" );
       case NODE_REPARENT_LINK_COLOR  :  return( "node-reparent-link-color" );
@@ -340,6 +368,12 @@ public enum KeyCommand {
       case NODE_ADD_CONNECTION       :  return( "node-add-connection" );
       case NODE_TOGGLE_CALLOUT       :  return( "node-toggle-callout" );
       case NODE_TOGGLE_SEQUENCE      :  return( "node-toggle-sequence" );
+      case NODE_SET_PRIORITY1        :  return( "node-set-priority1" );
+      case NODE_SET_PRIORITY2        :  return( "node-set-priority2" );
+      case NODE_SET_PRIORITY3        :  return( "node-set-priority3" );
+      case NODE_SET_PRIORITY4        :  return( "node-set-priority4" );
+      case NODE_SET_PRIORITY5        :  return( "node-set-priority5" );
+      case NODE_CLEAR_PRIORITY       :  return( "node-clear-priority" );
       case NODE_SELECT_ROOT          :  return( "node-select-root" );
       case NODE_SELECT_PARENT        :  return( "node-select-parent" );
       case NODE_SELECT_SIBLING_NEXT  :  return( "node-select-sibling-next" );
@@ -391,6 +425,20 @@ public enum KeyCommand {
       case GROUP_REMOVE              :  return( "group-remove" );
       case GROUP_SELECT_MAIN         :  return( "group-select-main" );
       case GROUP_SELECT_ALL          :  return( "group-select-all" );
+      case TABLE_START               :  return( "table-editor" );
+      case TABLE_ADD_ROW_ABOVE       :  return( "table-add-row-above" );
+      case TABLE_ADD_ROW_BELOW       :  return( "table-add-row-below" );
+      case TABLE_MOVE_ROW_UP         :  return( "table-move-row-up" );
+      case TABLE_MOVE_ROW_DOWN       :  return( "table-move-row-down" );
+      case TABLE_DELETE_ROWS         :  return( "table-delete-rows" );
+      case TABLE_ADD_COL_LEFT        :  return( "table-add-col-left" );  
+      case TABLE_ADD_COL_RIGHT       :  return( "table-add-col-right" );
+      case TABLE_MOVE_COL_LEFT       :  return( "table-move-col-left" );
+      case TABLE_MOVE_COL_RIGHT      :  return( "table-move-col-right" );
+      case TABLE_DELETE_COLS         :  return( "table-delete-cols" );
+      case TABLE_MERGE_CELLS         :  return( "table-merge-cells" );
+      case TABLE_SPLIT_CELL          :  return( "table-split-cell" );
+      case TABLE_CLEAR_CELLS         :  return( "table-clear-cells" );
       case EDIT_START                :  return( "editing" );
       case EDIT_INSERT_NEWLINE       :  return( "edit-insert-newline" );
       case EDIT_INSERT_TAB           :  return( "edit-insert-tab" );
@@ -417,6 +465,7 @@ public enum KeyCommand {
       case EDIT_COPY                 :  return( "edit-copy" );
       case EDIT_CUT                  :  return( "edit-cut" );
       case EDIT_PASTE                :  return( "edit-paste" );
+      case EDIT_PASTE_LATEX          :  return( "edit-paste-latex" );
       case EDIT_OPEN_URL             :  return( "edit-open-url" );
       case EDIT_ADD_URL              :  return( "edit-add-url" );
       case EDIT_EDIT_URL             :  return( "edit-edit-url" );
@@ -487,6 +536,8 @@ public enum KeyCommand {
       case "unfold-all-nodes"          :  return( UNFOLD_ALL_NODES );
       case "show-preferences"          :  return( SHOW_PREFERENCES );
       case "show-shortcuts"            :  return( SHOW_SHORTCUTS );
+      case "show-documentation"        :  return( SHOW_DOCUMENTATION );
+      case "show-releases"             :  return( SHOW_RELEASES );
       case "show-contextual-menu"      :  return( SHOW_CONTEXTUAL_MENU );
       case "show-find"                 :  return( SHOW_FIND );
       case "show-about"                :  return( SHOW_ABOUT );
@@ -515,6 +566,7 @@ public enum KeyCommand {
       case "node-change-task"          :  return( NODE_CHANGE_TASK );
       case "node-change-image"         :  return( NODE_CHANGE_IMAGE );
       case "node-remove-image"         :  return( NODE_REMOVE_IMAGE );
+      case "node-change-table"         :  return( NODE_CHANGE_TABLE );
       case "node-change-link-color"    :  return( NODE_CHANGE_LINK_COLOR );
       case "node-randomize-link-color" :  return( NODE_RANDOMIZE_LINK_COLOR );
       case "node-reparent-link-color"  :  return( NODE_REPARENT_LINK_COLOR );
@@ -525,6 +577,12 @@ public enum KeyCommand {
       case "node-add-connection"       :  return( NODE_ADD_CONNECTION );
       case "node-toggle-callout"       :  return( NODE_TOGGLE_CALLOUT );
       case "node-toggle-sequence"      :  return( NODE_TOGGLE_SEQUENCE );
+      case "node-set-priority1"        :  return( NODE_SET_PRIORITY1 );
+      case "node-set-priority2"        :  return( NODE_SET_PRIORITY2 );
+      case "node-set-priority3"        :  return( NODE_SET_PRIORITY3 );
+      case "node-set-priority4"        :  return( NODE_SET_PRIORITY4 );
+      case "node-set-priority5"        :  return( NODE_SET_PRIORITY5 );
+      case "node-clear-priority"       :  return( NODE_CLEAR_PRIORITY );
       case "node-select-root"          :  return( NODE_SELECT_ROOT );
       case "node-select-parent"        :  return( NODE_SELECT_PARENT );
       case "node-select-sibling-next"  :  return( NODE_SELECT_SIBLING_NEXT );
@@ -572,6 +630,19 @@ public enum KeyCommand {
       case "group-remove"              :  return( GROUP_REMOVE );
       case "group-select-main"         :  return( GROUP_SELECT_MAIN );
       case "group-select-all"          :  return( GROUP_SELECT_ALL );
+      case "table-add-row-above"       :  return( TABLE_ADD_ROW_ABOVE );
+      case "table-add-row-below"       :  return( TABLE_ADD_ROW_BELOW );
+      case "table-move-row-up"         :  return( TABLE_MOVE_ROW_UP );
+      case "table-move-row-down"       :  return( TABLE_MOVE_ROW_DOWN );
+      case "table-delete-rows"         :  return( TABLE_DELETE_ROWS );
+      case "table-add-col-left"        :  return( TABLE_ADD_COL_LEFT );
+      case "table-add-col-right"       :  return( TABLE_ADD_COL_RIGHT );
+      case "table-move-col-left"       :  return( TABLE_MOVE_COL_LEFT );
+      case "table-move-col-right"      :  return( TABLE_MOVE_COL_RIGHT );
+      case "table-delete-cols"         :  return( TABLE_DELETE_COLS );
+      case "table-merge-cells"         :  return( TABLE_MERGE_CELLS );
+      case "table-split-cell"          :  return( TABLE_SPLIT_CELL );
+      case "table-clear-cells"         :  return( TABLE_CLEAR_CELLS );
       case "edit-insert-newline"       :  return( EDIT_INSERT_NEWLINE );
       case "edit-insert-tab"           :  return( EDIT_INSERT_TAB );
       case "edit-insert-emoji"         :  return( EDIT_INSERT_EMOJI );
@@ -597,6 +668,7 @@ public enum KeyCommand {
       case "edit-copy"                 :  return( EDIT_COPY );
       case "edit-cut"                  :  return( EDIT_CUT );
       case "edit-paste"                :  return( EDIT_PASTE );
+      case "edit-paste-latex"          :  return( EDIT_PASTE_LATEX );
       case "edit-open-url"             :  return( EDIT_OPEN_URL );
       case "edit-add-url"              :  return( EDIT_ADD_URL );
       case "edit-edit-url"             :  return( EDIT_EDIT_URL );
@@ -675,6 +747,8 @@ public enum KeyCommand {
       case MISCELLANEOUS_START       :  return( _( "Miscellaneous Commands" ) );
       case SHOW_PREFERENCES          :  return( _( "Show preferences window" ) );
       case SHOW_SHORTCUTS            :  return( _( "Show shortcuts cheatsheet" ) );
+      case SHOW_DOCUMENTATION        :  return( _( "Show user documentation webpage" ) );
+      case SHOW_RELEASES             :  return( _( "Show release notes" ) );
       case SHOW_CONTEXTUAL_MENU      :  return( _( "Show contextual menu" ) );
       case SHOW_FIND                 :  return( _( "Show find popup" ) );
       case SHOW_ABOUT                :  return( _( "Show About window" ) );
@@ -705,6 +779,7 @@ public enum KeyCommand {
       case NODE_CHANGE_TASK          :  return( _( "Change task status of current node" ) );
       case NODE_CHANGE_IMAGE         :  return( _( "Add/Edit image of current node" ) );
       case NODE_REMOVE_IMAGE         :  return( _( "Remove image from current node" ) );
+      case NODE_CHANGE_TABLE         :  return( _( "Add/Edit table of current node" ) );
       case NODE_CHANGE_LINK_COLOR    :  return( _( "Change link color of current node" ) );
       case NODE_RANDOMIZE_LINK_COLOR :  return( _( "Randomize the current node link color" ) );
       case NODE_REPARENT_LINK_COLOR  :  return( _( "Set current node link color to match parent node" ) );
@@ -715,6 +790,12 @@ public enum KeyCommand {
       case NODE_ADD_CONNECTION       :  return( _( "Start creation of connection from current node" ) );
       case NODE_TOGGLE_CALLOUT       :  return( _( "Add/Remove callout for current node" ) );
       case NODE_TOGGLE_SEQUENCE      :  return( _( "Toggle sequence state of children of current node" ) );
+      case NODE_SET_PRIORITY1        :  return( _( "Set node priority to 1" ) );
+      case NODE_SET_PRIORITY2        :  return( _( "Set node priority to 2" ) );
+      case NODE_SET_PRIORITY3        :  return( _( "Set node priority to 3" ) );
+      case NODE_SET_PRIORITY4        :  return( _( "Set node priority to 4" ) );
+      case NODE_SET_PRIORITY5        :  return( _( "Set node priority to 5" ) );
+      case NODE_CLEAR_PRIORITY       :  return( _( "Clear node priority" ) );
       case NODE_SELECT_START         :  return( _( "Selection Commands" ) );
       case NODE_SELECT_ROOT          :  return( _( "Select root node of current node" ) );
       case NODE_SELECT_PARENT        :  return( _( "Select parent node of current node" ) );
@@ -769,6 +850,20 @@ public enum KeyCommand {
       case GROUP_SELECT_START        :  return( _( "Selection Commands" ) );
       case GROUP_SELECT_MAIN         :  return( _( "Select main node(s) of current group(s)" ) );
       case GROUP_SELECT_ALL          :  return( _( "Selects all nodes within current group(s)" ) );
+      case TABLE_START               :  return( _( "Table Editor" ) );
+      case TABLE_ADD_ROW_ABOVE       :  return( _( "Adds a row above the currently selected row" ) );
+      case TABLE_ADD_ROW_BELOW       :  return( _( "Adds a row below the currently selected row" ) );
+      case TABLE_MOVE_ROW_UP         :  return( _( "Moves the currently selected row up by one row" ) );
+      case TABLE_MOVE_ROW_DOWN       :  return( _( "Moves the currently selected row down by one row" ) );
+      case TABLE_DELETE_ROWS         :  return( _( "Deletes the currently selected row(s)" ) );
+      case TABLE_ADD_COL_LEFT        :  return( _( "Adds a column to the left of the currently selected row" ) );
+      case TABLE_ADD_COL_RIGHT       :  return( _( "Adds a column to the right of the currently selected row" ) );
+      case TABLE_MOVE_COL_LEFT       :  return( _( "Moves the currently selected column left by one column" ) );
+      case TABLE_MOVE_COL_RIGHT      :  return( _( "Moves the currently selected column right by one column" ) );
+      case TABLE_DELETE_COLS         :  return( _( "Deletes the currently selected columns(s)" ) );
+      case TABLE_MERGE_CELLS         :  return( _( "Merges selected cells into one" ) );
+      case TABLE_SPLIT_CELL          :  return( _( "Splits merged cell" ) );
+      case TABLE_CLEAR_CELLS         :  return( _( "Clears selected cell contents" ) );
       case EDIT_START                :  return( _( "Text Editing" ) );
       case EDIT_TEXT_START           :  return( _( "Insertion/Deletion Commands" ) );
       case EDIT_INSERT_NEWLINE       :  return( _( "Insert newline character" ) );
@@ -795,6 +890,7 @@ public enum KeyCommand {
       case EDIT_COPY                 :  return( _( "Copy selected nodes or text" ) );
       case EDIT_CUT                  :  return( _( "Cut selected nodes or text" ) );
       case EDIT_PASTE                :  return( _( "Paste nodes or text from clipboard" ) );
+      case EDIT_PASTE_LATEX          :  return( _( "Convert a clipboard image to LaTeX" ) );
       case EDIT_URL_START            :  return( _( "URL Commands" ) );
       case EDIT_OPEN_URL             :  return( _( "Open URL link at current cursor position" ) );
       case EDIT_ADD_URL              :  return( _( "Add URL link at current cursor position" ) );
@@ -864,6 +960,8 @@ public enum KeyCommand {
       case UNFOLD_ALL_NODES          :  return( unfold_all_nodes );
       case SHOW_PREFERENCES          :  return( show_preferences );
       case SHOW_SHORTCUTS            :  return( show_shortcuts );
+      case SHOW_DOCUMENTATION        :  return( show_documentation );
+      case SHOW_RELEASES             :  return( show_releases );
       case SHOW_CONTEXTUAL_MENU      :  return( show_contextual_menu );
       case SHOW_FIND                 :  return( show_find );
       case SHOW_ABOUT                :  return( show_about );
@@ -892,6 +990,7 @@ public enum KeyCommand {
       case NODE_CHANGE_TASK          :  return( node_change_task );
       case NODE_CHANGE_IMAGE         :  return( node_change_image );
       case NODE_REMOVE_IMAGE         :  return( node_remove_image );
+      case NODE_CHANGE_TABLE         :  return( node_change_table );
       case NODE_CHANGE_LINK_COLOR    :  return( node_change_link_color );
       case NODE_RANDOMIZE_LINK_COLOR :  return( node_randomize_link_color );
       case NODE_REPARENT_LINK_COLOR  :  return( node_reparent_link_color );
@@ -902,6 +1001,12 @@ public enum KeyCommand {
       case NODE_ADD_CONNECTION       :  return( node_add_connection );
       case NODE_TOGGLE_CALLOUT       :  return( node_toggle_callout );
       case NODE_TOGGLE_SEQUENCE      :  return( node_toggle_sequence );
+      case NODE_SET_PRIORITY1        :  return( node_set_priority1 );
+      case NODE_SET_PRIORITY2        :  return( node_set_priority2 );
+      case NODE_SET_PRIORITY3        :  return( node_set_priority3 );
+      case NODE_SET_PRIORITY4        :  return( node_set_priority4 );
+      case NODE_SET_PRIORITY5        :  return( node_set_priority5 );
+      case NODE_CLEAR_PRIORITY       :  return( node_clear_priority );
       case NODE_SELECT_ROOT          :  return( node_select_root );
       case NODE_SELECT_PARENT        :  return( node_select_parent );
       case NODE_SELECT_SIBLING_NEXT  :  return( node_select_sibling_next );
@@ -949,6 +1054,19 @@ public enum KeyCommand {
       case GROUP_REMOVE              :  return( group_remove );
       case GROUP_SELECT_MAIN         :  return( group_select_main );
       case GROUP_SELECT_ALL          :  return( group_select_all );
+      case TABLE_ADD_ROW_ABOVE       :  return( table_add_row_above );
+      case TABLE_ADD_ROW_BELOW       :  return( table_add_row_below );
+      case TABLE_MOVE_ROW_UP         :  return( table_move_row_up );
+      case TABLE_MOVE_ROW_DOWN       :  return( table_move_row_down );
+      case TABLE_DELETE_ROWS         :  return( table_delete_rows );
+      case TABLE_ADD_COL_LEFT        :  return( table_add_col_left );
+      case TABLE_ADD_COL_RIGHT       :  return( table_add_col_right );
+      case TABLE_MOVE_COL_LEFT       :  return( table_move_col_left );
+      case TABLE_MOVE_COL_RIGHT      :  return( table_move_col_right );
+      case TABLE_DELETE_COLS         :  return( table_delete_cols );
+      case TABLE_MERGE_CELLS         :  return( table_merge_cells );
+      case TABLE_SPLIT_CELL          :  return( table_split_cell );
+      case TABLE_CLEAR_CELLS         :  return( table_clear_cells );
       case EDIT_INSERT_NEWLINE       :  return( edit_insert_newline );
       case EDIT_INSERT_TAB           :  return( edit_insert_tab );
       case EDIT_INSERT_EMOJI         :  return( edit_insert_emoji );
@@ -974,6 +1092,7 @@ public enum KeyCommand {
       case EDIT_COPY                 :  return( edit_copy );
       case EDIT_CUT                  :  return( edit_cut );
       case EDIT_PASTE                :  return( edit_paste );
+      case EDIT_PASTE_LATEX          :  return( edit_paste_latex );
       case EDIT_OPEN_URL             :  return( edit_open_url );
       case EDIT_ADD_URL              :  return( edit_add_url );
       case EDIT_EDIT_URL             :  return( edit_edit_url );
@@ -1024,6 +1143,7 @@ public enum KeyCommand {
       (this == EDIT_COPY) ||
       (this == EDIT_CUT)  ||
       (this == EDIT_PASTE) ||
+      (this == EDIT_PASTE_LATEX) ||
       (this == ESCAPE)
     );
   }
@@ -1077,6 +1197,14 @@ public enum KeyCommand {
   }
 
   //-------------------------------------------------------------
+  // Returns true if this command is valid for table editing.
+  public bool for_table() {
+    return(
+      ((TABLE_START < this) && (this < TABLE_END))
+    );
+  }
+
+  //-------------------------------------------------------------
   // Returns true if this command is valid when nothing is selected
   // in the map.
   public bool for_none() {
@@ -1086,6 +1214,7 @@ public enum KeyCommand {
       case NODE_ADD_SIBLING_BEFORE :
       case NODE_SELECT_ROOT        :
       case EDIT_PASTE              :
+      case EDIT_PASTE_LATEX        :
       case ESCAPE                  :
         return( true );
       default :
@@ -1113,12 +1242,14 @@ public enum KeyCommand {
       return( "3" );
     } else if( for_sticker() ) {
       return( "4" );
-    } else if( for_editing() ) {
+    } else if( for_table() ) {
       return( "5" );
-    } else if( for_none() ) {
+    } else if( for_editing() ) {
       return( "6" );
+    } else if( for_none() ) {
+      return( "7" );
     } else {
-      return( "0123456" );
+      return( "01234567" );
     }
   }
 
@@ -1210,6 +1341,7 @@ public enum KeyCommand {
       case CALLOUT_START    :
       case STICKER_START    :
       case GROUP_START      :
+      case TABLE_START      :
       case EDIT_START       :  return( true );
       default               :  return( false );
     }
@@ -1225,6 +1357,7 @@ public enum KeyCommand {
       case CALLOUT_END    :
       case STICKER_END    :
       case GROUP_END      :
+      case TABLE_END      :
       case EDIT_END       :  return( true );
       default             :  return( false );
     }
@@ -1473,6 +1606,15 @@ public enum KeyCommand {
 
     win.show();
 
+  }
+
+  public static void show_documentation( MindMap map ) {
+    Utils.open_url( "https://phase1geo.github.io/Minder/" );
+  }
+
+  public static void show_releases( MindMap map ) {
+    var releases = new ReleaseNotes( map.win );
+    releases.show_notes();
   }
 
   public static void show_contextual_menu( MindMap map ) {
@@ -1802,6 +1944,11 @@ public enum KeyCommand {
     map.model.delete_current_image();
   }
 
+  public static void node_change_table( MindMap map ) {
+    if( !map.editable ) return;
+    map.model.edit_current_table();
+  }
+
   public static void node_toggle_callout( MindMap map ) {
     if( !map.editable ) return;
     if (map.model.node_has_callout() ) {
@@ -1838,6 +1985,35 @@ public enum KeyCommand {
   public static void node_toggle_sequence( MindMap map ) {
     if( !map.editable ) return;
     map.model.toggle_sequence();
+  }
+
+  private static void node_set_priority( MindMap map, int priority ) {
+    if( !map.editable ) return;
+    map.model.set_node_priority( priority );
+  }
+
+  public static void node_set_priority1( MindMap map ) {
+    node_set_priority( map, 1 );
+  }
+
+  public static void node_set_priority2( MindMap map ) {
+    node_set_priority( map, 2 );
+  }
+
+  public static void node_set_priority3( MindMap map ) {
+    node_set_priority( map, 3 );
+  }
+
+  public static void node_set_priority4( MindMap map ) {
+    node_set_priority( map, 4 );
+  }
+
+  public static void node_set_priority5( MindMap map ) {
+    node_set_priority( map, 5 );
+  }
+
+  public static void node_clear_priority( MindMap map ) {
+    node_set_priority( map, 0 );
   }
 
   public static void node_toggle_links( MindMap map ) {
@@ -2191,6 +2367,58 @@ public enum KeyCommand {
     }
   }
 
+  public static void table_add_row_above( MindMap map ) {
+    map.canvas.table_editor.add_row_above();
+  }
+
+  public static void table_add_row_below( MindMap map ) {
+    map.canvas.table_editor.add_row_below();
+  }
+
+  public static void table_move_row_up( MindMap map ) {
+    map.canvas.table_editor.move_row_up();
+  }
+
+  public static void table_move_row_down( MindMap map ) {
+    map.canvas.table_editor.move_row_down();
+  }
+
+  public static void table_delete_rows( MindMap map ) {
+    map.canvas.table_editor.delete_rows();
+  }
+
+  public static void table_add_col_left( MindMap map ) {
+    map.canvas.table_editor.add_column_left();
+  }
+
+  public static void table_add_col_right( MindMap map ) {
+    map.canvas.table_editor.add_column_right();
+  }
+
+  public static void table_move_col_left( MindMap map ) {
+    map.canvas.table_editor.move_column_left();
+  }
+
+  public static void table_move_col_right( MindMap map ) {
+    map.canvas.table_editor.move_column_right();
+  }
+
+  public static void table_delete_cols( MindMap map ) {
+    map.canvas.table_editor.delete_columns();
+  }
+
+  public static void table_merge_cells( MindMap map ) {
+    map.canvas.table_editor.merge_selection();
+  }
+
+  public static void table_split_cell( MindMap map ) {
+    map.canvas.table_editor.split_cell();
+  }
+
+  public static void table_clear_cells( MindMap map ) {
+    map.canvas.table_editor.clear_cells();
+  }
+
   public static void edit_insert_newline( MindMap map ) {
     if( !map.editable ) return;
     insert_text( map, "\n" );
@@ -2441,7 +2669,9 @@ public enum KeyCommand {
       int cursor, selstart, selend;
       text.get_cursor_info( out cursor, out selstart, out selend );
       var links = text.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
-      Utils.open_url( links.index( 0 ).extra );
+      if( links.length > 0 ) {
+        Utils.open_url( links.index( 0 ).extra );
+      }
     }
   }
 
@@ -2473,6 +2703,11 @@ public enum KeyCommand {
   public static void edit_paste( MindMap map ) {
     if( !map.editable ) return;
     map.do_paste( false );
+  }
+
+  public static void edit_paste_latex( MindMap map ) {
+    if( !map.editable ) return;
+    map.do_paste_latex();
   }
 
   private static void edit_return_helper( MindMap map, bool shift ) {

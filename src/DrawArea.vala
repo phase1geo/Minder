@@ -87,6 +87,7 @@ public class DrawArea : Gtk.DrawingArea {
   private TextMenu              _text_menu;
   private uint?                 _scroll_save_id = null;
   private ImageEditor           _image_editor;
+  private TableEditor           _table_editor;
   private UrlEditor             _url_editor;
   private IMContext             _im_context;
   private SelectBox             _select_box;
@@ -168,6 +169,11 @@ public class DrawArea : Gtk.DrawingArea {
       return( _image_editor );
     }
   }
+  public TableEditor table_editor {
+    get {
+      return( _table_editor );
+    }
+  }
   public Tagger tagger {
     get {
       return( _tagger );
@@ -212,6 +218,9 @@ public class DrawArea : Gtk.DrawingArea {
     _image_editor = new ImageEditor( this );
     _image_editor.changed.connect( _map.model.current_image_edited );
 
+    _table_editor = new TableEditor( this );
+    _table_editor.changed.connect( _map.model.current_table_edited );
+
     // Allocate the URL editor popover
     _url_editor = new UrlEditor( this );
 
@@ -241,21 +250,30 @@ public class DrawArea : Gtk.DrawingArea {
       button = Gdk.BUTTON_PRIMARY
     };
     this.add_controller( click );
-    click.pressed.connect((n_press, x, y) => { on_press( n_press, x, y, Gdk.BUTTON_PRIMARY ); });
+    click.pressed.connect((n_press, x, y) => {
+      sync_modifier_keys( click.get_current_event_state() );
+      on_press( n_press, x, y, Gdk.BUTTON_PRIMARY );
+    });
     click.released.connect( on_release );
 
     var middle_click = new GestureClick() {
       button = Gdk.BUTTON_MIDDLE
     };
     this.add_controller( middle_click );
-    middle_click.pressed.connect((n_press, x, y) => { on_press( n_press, x, y, Gdk.BUTTON_MIDDLE ); });
+    middle_click.pressed.connect((n_press, x, y) => {
+      sync_modifier_keys( middle_click.get_current_event_state() );
+      on_press( n_press, x, y, Gdk.BUTTON_MIDDLE );
+    });
     middle_click.released.connect( on_release );
 
     var right_click = new GestureClick() {
       button = Gdk.BUTTON_SECONDARY
     };
     this.add_controller( right_click );
-    right_click.pressed.connect( on_right_press );
+    right_click.pressed.connect((n_press, x, y) => {
+      sync_modifier_keys( right_click.get_current_event_state() );
+      on_right_press( n_press, x, y );
+    });
 
     var motion = new EventControllerMotion();
     this.add_controller( motion );
@@ -279,31 +297,31 @@ public class DrawArea : Gtk.DrawingArea {
     this.add_controller( file_drop );
     file_drop.motion.connect( handle_file_drag_motion );
     file_drop.drop.connect( handle_file_drop );
-    file_drop.leave.connect( handle_cursor_leave );
+    // file_drop.leave.connect( handle_cursor_leave );
 
     var sticker_drop = new DropTarget( typeof(Picture), Gdk.DragAction.COPY );
     this.add_controller( sticker_drop );
     sticker_drop.motion.connect( handle_sticker_drag_motion );
     sticker_drop.drop.connect( handle_sticker_drop );
-    sticker_drop.leave.connect( handle_cursor_leave );
+    // sticker_drop.leave.connect( handle_cursor_leave );
 
     var text_drop = new DropTarget( typeof(string), Gdk.DragAction.COPY );
     this.add_controller( text_drop );
     text_drop.motion.connect( handle_text_drag_motion );
     text_drop.drop.connect( handle_text_drop );
-    text_drop.leave.connect( handle_cursor_leave );
+    // text_drop.leave.connect( handle_cursor_leave );
 
     var idea_drop = new DropTarget( typeof(Idea), Gdk.DragAction.MOVE );
     this.add_controller( idea_drop );
     idea_drop.motion.connect( handle_idea_drag_motion );
     idea_drop.drop.connect( handle_idea_drop );
-    idea_drop.leave.connect( handle_cursor_leave );
+    // idea_drop.leave.connect( handle_cursor_leave );
 
     var tag_drop = new DropTarget( typeof(Tag), Gdk.DragAction.COPY );
     this.add_controller( tag_drop );
     tag_drop.motion.connect( handle_tag_drag_motion );
     tag_drop.drop.connect( handle_tag_drop );
-    tag_drop.leave.connect( handle_cursor_leave );
+    // tag_drop.leave.connect( handle_cursor_leave );
 
     // Make sure the drawing area can receive keyboard focus
     this.can_focus = true;
@@ -502,7 +520,7 @@ public class DrawArea : Gtk.DrawingArea {
         _map.select_linked_node( node );
         return( false );
       case MapItemComponent.FOLD :
-        _map.model.toggle_folds( _shift );
+        _map.model.toggle_fold( node, _shift );
         current_changed( _map );
         return( false );
       case MapItemComponent.RESIZER :
@@ -554,6 +572,9 @@ public class DrawArea : Gtk.DrawingArea {
       if( _map.editable ) {
         if( component == MapItemComponent.IMAGE ) {
           _map.model.edit_current_image();
+          return( false );
+        } else if( component == MapItemComponent.TABLE ) {
+          _map.model.edit_current_table();
           return( false );
         } else {
           _map.model.set_node_mode( node, NodeMode.EDITABLE );
@@ -1306,7 +1327,9 @@ public class DrawArea : Gtk.DrawingArea {
     _map.model.set_attach_summary( null );
 
     // If the node is attached, clear it
-    _map.model.set_attach_node( null );
+    if( (_map.model.attach_node != null) && (_map.model.attach_node.mode != NodeMode.DROPPABLE) ) {
+      _map.model.set_attach_node( null );
+    }
 
     var last_x = _scaled_x;
     var last_y = _scaled_y;
@@ -2000,13 +2023,27 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   //-------------------------------------------------------------
+  // Synchronizes cached modifier keys with a pointer event.
+  private void sync_modifier_keys( ModifierType state ) {
+    _control = (state & ModifierType.CONTROL_MASK) != 0;
+    _shift   = (state & ModifierType.SHIFT_MASK) != 0;
+    _alt     = (state & ModifierType.ALT_MASK) != 0;
+  }
+
+  //-------------------------------------------------------------
+  // Clears cached modifier keys after focus moves through a popover.
+  public void reset_modifier_keys() {
+    _control = false;
+    _shift   = false;
+    _alt     = false;
+  }
+
+  //-------------------------------------------------------------
   // Called when we lose input focus.  We will close the control,
   // shift and alt variables since we might not detect when these
   // keys are released.
   private void on_focus_leave() {
-    _control = false;
-    _shift   = false;
-    _alt     = false;
+    reset_modifier_keys();
   }
 
   //-------------------------------------------------------------
@@ -2405,7 +2442,7 @@ public class DrawArea : Gtk.DrawingArea {
     orig_text.copy( name );
     tagger.preedit_load_tags( name.text );
     name.text.insert_text( name.text.text.length, (" @" + tag) );
-    name.text.changed();
+    name.text.changed( "da::add_tag" );
     tagger.postedit_load_tags( name.text );
     _map.add_undo( new UndoNodeName( _map, node, orig_text ) );
     _map.auto_save();

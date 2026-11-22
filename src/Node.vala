@@ -58,6 +58,7 @@ public class Node : BaseNode {
   private   bool         _link_color_root = false;
   private   double       _min_width      = 50;
   private   NodeImage?   _image          = null;
+  private   NodeTable?   _table          = null;
   private   NodeLink?    _linked_node    = null;
   private   string?      _sticker        = null;
   private   Pixbuf?      _sticker_buf    = null;
@@ -65,6 +66,8 @@ public class Node : BaseNode {
   private   Callout?     _callout        = null;
   private   bool         _sequence       = false;
   private   Tags         _tags;
+  private   int          _priority       = 0;
+  private   SequenceNum? _priority_text  = null;
 
   // Properties
   public CanvasText name {
@@ -157,10 +160,59 @@ public class Node : BaseNode {
       return( _link_color_set );
     }
   }
+  public bool  attached { get; set; default = false; }
+  public Style style {
+    get {
+      return( _style );
+    }
+    set {
+      if( _style.copy( value ) ) {
+        name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+        name.set_text_alignment( _style.node_text_align );
+        if( _sequence_num != null ) {
+          _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+        }
+        name.max_width = style.node_width;
+        if( traversable() ) {
+          for( int i=0; i<_children.length; i++ ) {
+            _layout.apply_margin( _children.index( i ) );
+          }
+        }
+        if( _callout != null ) {
+          _callout.position_text( false );
+        }
+        position_text_and_update_size();
+      }
+    }
+  }
+  public Layout? layout {
+    get {
+      return( _layout );
+    }
+    set {
+      _layout = value;
+      if( traversable() ) {
+        for( int i=0; i<_children.length; i++ ) {
+          _children.index( i ).layout = value;
+        }
+      }
+    }
+  }
+  public Node?       last_selected_child      { get; set; default = null; }
   public Connection? last_selected_connection { get; set; default = null; }
   public NodeImage? image {
     get {
       return( _image );
+    }
+  }
+  public double total_width {
+    get {
+      return( _total_width );
+    }
+  }
+  public double total_height {
+    get {
+      return( _total_height );
     }
   }
   public bool image_resizable {
@@ -249,6 +301,26 @@ public class Node : BaseNode {
       return( _tags );
     }
   }
+  public int priority {
+    get {
+      return( _priority );
+    }
+    set {
+      if( _priority != value ) {
+        _priority = (value < 0) ? 0 : value;
+        if( _priority == 0 ) {
+          _priority_text = null; 
+        } else {
+          if( _priority_text == null ) {
+            _priority_text = new SequenceNum( _map );
+            _priority_text.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+          }
+          _priority_text.set_num( _priority, SequenceNumType.INT );
+        }
+        position_text_and_update_size();
+      }
+    }
+  }
 
   //-------------------------------------------------------------
   // Default constructor.
@@ -297,6 +369,7 @@ public class Node : BaseNode {
     _task_count     = n._task_count;
     _task_done      = n._task_done;
     _image          = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, n.style.node_width );
+    set_table_reference( (n._table == null) ? null : new NodeTable.copy( _map, n._table ) );
     _name.copy( n._name );
     _link_color      = n._link_color;
     _link_color_set  = n._link_color_set;
@@ -430,18 +503,24 @@ public class Node : BaseNode {
 
     int margin       = style.node_margin;
     int padding      = style.node_padding;
+    var pri_height   = priority_height();
     var stk_height   = sticker_height();
-    var noname_width = task_width() + sticker_width() + sequence_width() + note_width() + linked_node_width();
+    var noname_width = priority_width() + task_width() + sticker_width() + sequence_width() + note_width() + linked_node_width();
     var name_width   = noname_width + _name.width;
+    if( stk_height < pri_height ) {
+      stk_height = pri_height;
+    }
     var name_height  = (_name.height < stk_height) ? stk_height : _name.height;
     var image_width  = (_image != null) ? _image.width : 0;
     var image_height = (_image != null) ? (_image.height + padding) : 0;
+    var table_width  = (_table != null) ? _table.width : 0;
+    var table_height = (_table != null) ? (_table.height + padding) : 0;
     var tg_width     = noname_width + tags_width();
     var tg_height    = tags_height();
-    var all_width    = Math.fmax( name_width, Math.fmax( image_width, tg_width ) );
+    var all_width    = Math.fmax( table_width, Math.fmax( name_width, Math.fmax( image_width, tg_width ) ) );
 
     width      = (margin * 2) + (padding * 2) + all_width;
-    height     = (margin * 2) + (padding * 2) + image_height + name_height + tg_height;
+    height     = (margin * 2) + (padding * 2) + image_height + name_height + table_height + tg_height;
     name_space = all_width - name_width;
 
   }
@@ -488,6 +567,9 @@ public class Node : BaseNode {
   public override void update_tree() {
     _name.update_size();
     base.update_tree();
+    if( _table != null ) {
+      _table.update_layout();
+    }
   }
 
   //-------------------------------------------------------------
@@ -502,6 +584,31 @@ public class Node : BaseNode {
     }
     _image = ni;
     update_size();
+  }
+
+  //-------------------------------------------------------------
+  // Sets the table displayed by this node.
+  public void set_table( NodeTable? table ) {
+    set_table_reference( table );
+    if( _table != null ) {
+      _table.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+    }
+    position_text_and_update_size();
+  }
+
+  private void set_table_reference( NodeTable? table ) {
+    if( _table != null ) {
+      _table.resized.disconnect( table_resized );
+    }
+    _table = table;
+    if( _table != null ) {
+      _table.resized.connect( table_resized );
+    }
+  }
+
+  private void table_resized() {
+    position_text_and_update_size();
+    _map.queue_draw();
   }
 
   //-------------------------------------------------------------
@@ -570,14 +677,70 @@ public class Node : BaseNode {
   }
 
   //-------------------------------------------------------------
+  // Returns true if the resizer should be in the upper left.
+  public bool resizer_on_left() {
+    return( !is_root() && (side == NodeSide.LEFT) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lie within any
+  // part of this node.
+  public virtual bool is_within( double x, double y ) {
+    double bx, by, bw, bh;
+    bbox( out bx, out by, out bw, out bh );
+    return( Utils.is_within_bounds( x, y, bx, by, bw, bh ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lies within
+  // the node bounding box.
+  public virtual bool is_within_node( double x, double y ) {
+    double margin = style.node_margin;
+    double cx, cy, cw, ch;
+    node_bbox( out cx, out cy, out cw, out ch );
+    cx += margin;
+    cy += margin;
+    cw -= margin * 2;
+    ch -= margin * 2;
+    return( Utils.is_within_bounds( x, y, cx, cy, cw, ch ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the top edge of the title row below any node image.
+  private double title_row_top() {
+    var margin = style.node_margin;
+    var padding = style.node_padding;
+    var image_height = (_image == null) ? 0 : (_image.height + padding);
+    return( posy + margin + padding + image_height );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the height occupied by the title and its sticker.
+  private double title_row_height() {
+    var max = Math.fmax( name.height, sticker_height() );
+    return( Math.fmax( max, priority_height() ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the positional information for where the priority item
+  // is located (if it exists).
+  protected virtual void priority_bbox( out double x, out double y, out double w, out double h ) {
+    int margin  = style.node_margin;
+    int padding = style.node_padding;
+    x = posx + margin + padding;
+    y = title_row_top() + (title_row_height() / 2) - (priority_height() / 2);
+    w = priority_width() - _ipadx;
+    h = priority_height();
+  }
+
+  //-------------------------------------------------------------
   // Returns the positional information for where the task item
   // is located (if it exists).
   protected virtual void task_bbox( out double x, out double y, out double w, out double h ) {
-    int    margin     = style.node_margin;
-    int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
-    x = posx + margin + padding;
-    y = posy + margin + padding + img_height + (((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - _task_radius);
+    int margin  = style.node_margin;
+    int padding = style.node_padding;
+    x = posx + margin + padding + priority_width();
+    y = title_row_top() + (title_row_height() / 2) - _task_radius;
     w = _task_radius * 2;
     h = _task_radius * 2;
   }
@@ -588,10 +751,9 @@ public class Node : BaseNode {
   protected virtual void sticker_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin;
     int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
     double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
-    x = posx + margin + padding + task_width();
-    y = posy + margin + padding + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - (stk_height / 2);
+    x = posx + margin + padding + priority_width() + task_width();
+    y = title_row_top() + ((title_row_height() - stk_height) / 2);
     w = (_sticker_buf == null) ? 0 : _sticker_buf.width;
     h = (_sticker_buf == null) ? 0 : _sticker_buf.height;
   }
@@ -602,7 +764,7 @@ public class Node : BaseNode {
   protected virtual void sequence_bbox( out double x, out double y, out double w, out double h ) {
     int margin  = style.node_margin;
     int padding = style.node_padding;
-    x = posx + margin + padding + task_width() + sticker_width();
+    x = posx + margin + padding + priority_width() + task_width() + sticker_width();
     y = name.posy;
     w = sequence_width();
     h = sequence_height();
@@ -614,9 +776,8 @@ public class Node : BaseNode {
   protected virtual void linked_node_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin;
     int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
     x = posx + (_width - (linked_node_width() + padding + margin)) + _ipadx;
-    y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
+    y = title_row_top() + (title_row_height() / 2) - 5;
     w = 11;
     h = 11;
   }
@@ -627,9 +788,8 @@ public class Node : BaseNode {
   protected virtual void note_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin;
     int    padding    = style.node_padding;
-    double img_height = (_image == null) ? 0 : (_image.height + padding);
     x = posx + (_width - (note_width() + linked_node_width() + padding + margin)) + _ipadx;
-    y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
+    y = title_row_top() + (title_row_height() / 2) - 5;
     w = 11;
     h = 11;
   }
@@ -644,6 +804,27 @@ public class Node : BaseNode {
     y = posy + padding + margin;
     w = (_image == null) ? 0 : _image.width;
     h = (_image == null) ? 0 : _image.height;
+  }
+
+  //-------------------------------------------------------------
+  // Returns the positional information of the stored table.
+  protected virtual void table_bbox( out double x, out double y, out double w, out double h ) {
+    int padding = style.node_padding;
+    x = (posx + (_width / 2)) - ((_table == null) ? 0 : (_table.width / 2));
+    y = title_row_top() + title_row_height() + padding;
+    w = (_table == null) ? 0 : _table.width;
+    h = (_table == null) ? 0 : _table.height;
+  }
+
+  //-------------------------------------------------------------
+  // Returns the positional information for where the resizer box
+  // is located (if it exists).
+  protected virtual void resizer_bbox( out double x, out double y, out double w, out double h ) {
+    int margin  = style.node_margin;
+    x = resizer_on_left() ? (posx + margin) : (posx + _width - margin - 8);
+    y = posy + margin;
+    w = 8;
+    h = 8;
   }
 
   //-------------------------------------------------------------
@@ -743,6 +924,17 @@ public class Node : BaseNode {
   }
 
   //-------------------------------------------------------------
+  // Returns true if the given cursor coordinates lie within the table area.
+  public virtual bool is_within_table( double x, double y ) {
+    if( _table != null ) {
+      double table_x, table_y, table_width, table_height;
+      table_bbox( out table_x, out table_y, out table_width, out table_height );
+      return( Utils.is_within_bounds( x, y, table_x, table_y, table_width, table_height ) );
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
   // Returns true if the given cursor coordinates lie within the
   // tags area.
   public virtual bool is_within_tags( double x, double y ) {
@@ -828,6 +1020,13 @@ public class Node : BaseNode {
   }
 
   //-------------------------------------------------------------
+  // Loads the table information from the given XML node.
+  private void load_table( Xml.Node* n ) {
+    set_table_reference( new NodeTable.from_xml( _map, n ) );
+    _table.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+  }
+
+  //-------------------------------------------------------------
   // Loads the node link from the given XML node.
   private void load_node_link( Xml.Node* n ) {
     _linked_node = new NodeLink.from_xml( n );
@@ -841,6 +1040,9 @@ public class Node : BaseNode {
     _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
     if( _sequence_num != null ) {
       _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+    }
+    if( _table != null ) {
+      _table.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
     }
   }
 
@@ -894,16 +1096,27 @@ public class Node : BaseNode {
       group = bool.parse( g );
     }
 
+    string? su = n->get_prop( "summarized" );
+    if( (su != null) && bool.parse( su ) ) {
+      siblings.append_val( this );
+    }
+
+    string? pri = n->get_prop( "priority" );
+    if( pri != null ) {
+      priority = int.parse( pri );
+    }
+
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "nodename"  :  load_name( it );  break;
-          case "nodenote"  :  load_note( it );  break;
-          case "nodeimage" :  load_image( map.image_manager, it );  break;
-          case "nodelink"  :  load_node_link( it );  break;
-          case "taglist"   :  tags.load_indices( it, _map.model.tags );  break;
-          case "callout"   :  load_callout( it );  break;
-          default          :  break;
+          case "nodename"   :  load_name( it );  break;
+          case "nodenote"   :  load_note( it );  break;
+          case "nodeimage"  :  load_image( map.image_manager, it );  break;
+          case "nodetable"  :  load_table( it );  break;
+          case "nodelink"   :  load_node_link( it );  break;
+          case "taglist"    :  tags.load_indices( it, _map.model.tags );  break;
+          case "style"      :  load_style( it );  break;
+          case "callout"    :  load_callout( it );  break;
         }
       }
     }
@@ -946,6 +1159,7 @@ public class Node : BaseNode {
     }
     node->new_prop( "fold", folded.to_string() );
     node->new_prop( "sequence", sequence.to_string() );
+    node->new_prop( "treesize", tree_size.to_string() );
     if( is_root() ) {
       if( _link_color_set ) {
         node->new_prop( "color", Utils.color_from_rgba( _link_color ) );
@@ -961,6 +1175,9 @@ public class Node : BaseNode {
 
     if( _image != null ) {
       _image.save( node );
+    }
+    if( _table != null ) {
+      _table.save( node );
     }
 
     node->add_child( name.save( "nodename" ) );
@@ -992,7 +1209,7 @@ public class Node : BaseNode {
   public override void resize( double diff ) {
     diff = resizer_on_left() ? (0 - diff) : diff;
     var int_diff  = (int)diff;
-    if( (_name.width + diff) < tags_width() ) return;
+    if( (_image == null) && ((_name.width + diff) < tags_width()) ) return;
     if( _image == null ) {
       if( (diff < 0) ? ((style.node_width + diff) <= _min_width) : !_name.is_wrapped() ) return;
       style.node_width += int_diff;
@@ -1124,6 +1341,19 @@ public class Node : BaseNode {
   }
 
   //-------------------------------------------------------------
+  // Returns the amount of internal width to draw the priority
+  // indicator.
+  public double priority_width() {
+    return( (_priority_text != null) ? (_priority_text.width + 10 + _ipadx) : 0 );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the height of the priority area
+  public double priority_height() {
+    return( (_priority_text != null) ? (_priority_text.height + 10) : 0 );
+  }
+
+  //-------------------------------------------------------------
   // Returns the amount of internal width to draw the task
   // checkbutton.
   public double task_width() {
@@ -1165,12 +1395,17 @@ public class Node : BaseNode {
 
     var margin     = style.node_margin;
     var padding    = style.node_padding;
+    var pri_height = priority_height();
     var stk_height = sticker_height();
     var img_height = (_image != null) ? (_image.height + padding) : 0;
     var orig_posx  = name.posx;
     var orig_posy  = name.posy;
 
-    name.posx = posx + margin + padding + task_width() + sticker_width() + sequence_width();
+    if( stk_height < pri_height ) {
+      stk_height = pri_height;
+    }
+
+    name.posx = posx + margin + padding + priority_width() + task_width() + sticker_width() + sequence_width();
     name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0);
 
     if( style.node_text_align != null ) {
@@ -1447,8 +1682,14 @@ public class Node : BaseNode {
         (_alpha == 1.0) &&
         (((((_task_count == 0) || !is_leaf()) && search_opts[SearchOptions.NONTASKS]) ||
           ((_task_count != 0) && is_leaf()   && search_opts[SearchOptions.TASKS])) &&
-         (((parent != null) && is_folded( parent ) && search_opts[SearchOptions.FOLDED]) ||
-          (((parent == null) || !is_folded( parent )) && search_opts[SearchOptions.UNFOLDED]))) ) {
+         (((parent != null) && parent.folded && search_opts[SearchOptions.FOLDED]) ||
+          (((parent == null) || !parent.folded) && search_opts[SearchOptions.UNFOLDED])) &&
+         (((_priority == 0) && search_opts[SearchOptions.NO_PRIORITY]) ||
+          ((_priority == 1) && search_opts[SearchOptions.PRIORITY1]) ||
+          ((_priority == 2) && search_opts[SearchOptions.PRIORITY2]) ||
+          ((_priority == 3) && search_opts[SearchOptions.PRIORITY3]) ||
+          ((_priority == 4) && search_opts[SearchOptions.PRIORITY4]) ||
+          ((_priority >= 5) && search_opts[SearchOptions.PRIORITY5]))) ) {
       var tab = "<i>" + Utils.rootname( tabname ) + "</i>";
       if( search_opts[SearchOptions.TITLES] ) {
         string str = Utils.match_string( pattern, name.stripped_text.text );
@@ -1460,6 +1701,12 @@ public class Node : BaseNode {
         string str = Utils.match_string( pattern, Utils.remove_markdown( note ) );
         if( str.length > 0 ) {
           matches.append( new SearchItem.node( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), str ) );
+        }
+      }
+      if( search_opts[SearchOptions.TABLES] && (_table != null) ) {
+        var str = _table.get_match_string( pattern );
+        if( str != null ) {
+          matches.append( new SearchItem.node( tabname, tab, this, "<b><i>%s:</i></b>".printf( _( "Node Table" ) ), str ) );
         }
       }
     }
@@ -1580,9 +1827,28 @@ public class Node : BaseNode {
     if( _image != null ) {
       double x, y, w, h;
       image_bbox( out x, out y, out w, out h );
-      _image.draw( ctx, x, y, _alpha );
+      _image.draw( ctx, x, y, _alpha, theme.is_dark() );
     }
 
+  }
+
+  //-------------------------------------------------------------
+  // Draws the node table below the node title.
+  protected virtual void draw_table( Cairo.Context ctx, Theme theme, bool exporting ) {
+    if( _table != null ) {
+      double x, y, width, height;
+      table_bbox( out x, out y, out width, out height );
+      var color = theme.get_color( "foreground" );
+      if( mode.is_selected() && !exporting ) {
+        color = theme.get_color( "nodesel_foreground" );
+      } else if( parent == null ) {
+        color = _link_color_set ? Granite.contrasting_foreground_color( link_color ) :
+                                  theme.get_color( "root_foreground" );
+      } else if( style.is_fillable() ) {
+        color = Granite.contrasting_foreground_color( link_color );
+      }
+      _table.draw( ctx, x, y, color, _alpha );
+    }
   }
 
   //-------------------------------------------------------------
@@ -1616,6 +1882,43 @@ public class Node : BaseNode {
     }
 
     name.draw( ctx, theme, color, _alpha, exporting );
+
+  }
+
+  //-------------------------------------------------------------
+  // Draws the priority to the screen.
+  protected virtual void draw_priority( Cairo.Context ctx, Theme theme ) {
+
+    if( _priority > 0 ) {
+
+      double x, y, w, h;
+      priority_bbox( out x, out y, out w, out h );
+
+      RGBA color = theme.get_color( "priority5" );
+      switch( _priority ) {
+        case 1  :  color = theme.get_color( "priority1" );  break;
+        case 2  :  color = theme.get_color( "priority2" );  break;
+        case 3  :  color = theme.get_color( "priority3" );  break;
+        case 4  :  color = theme.get_color( "priority4" );  break;
+        default :  break;
+      }
+
+      var outline_color = Granite.contrasting_foreground_color( color );
+
+      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      Utils.draw_rounded_rectangle( ctx, x, y, w, h, 5 );
+      ctx.fill_preserve();
+
+      Utils.set_context_color_with_alpha( ctx, outline_color, _alpha );
+      ctx.set_line_width( 1 );
+      ctx.stroke();
+
+      // Output the text
+      ctx.move_to( (x + 5), (y + 5) );
+      Pango.cairo_show_layout( ctx, _priority_text.layout );
+      ctx.new_path();
+
+    }
 
   }
 
@@ -2068,6 +2371,8 @@ public class Node : BaseNode {
       draw_shape( ctx, theme, background, exporting );
       draw_name( ctx, theme, exporting );
       draw_image( ctx, theme );
+      draw_table( ctx, theme, exporting );
+      draw_priority( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, foreground, null );
       } else {
@@ -2090,6 +2395,8 @@ public class Node : BaseNode {
       draw_shape( ctx, theme, _link_color, exporting );
       draw_name( ctx, theme, exporting );
       draw_image( ctx, theme );
+      draw_table( ctx, theme, exporting );
+      draw_priority( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, _link_color, background );
       } else {

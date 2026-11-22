@@ -529,7 +529,7 @@ public class Utils {
   //-------------------------------------------------------------
   // Compares to version strings.  Returns 0 if they match, returns
   // -1 if version A is less than version B, or returns 1 if version A
-  // is less than version B.
+  // is greater than version B.
   public static int compare_versions( string a, string b ) {
 
     string[] parts_a = a.split( "." );

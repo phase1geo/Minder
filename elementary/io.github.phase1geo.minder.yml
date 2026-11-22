@@ -1,29 +1,12 @@
- # This is the same ID that you've used in meson.build and other files
 app-id: io.github.phase1geo.minder
-
-# Instead of manually specifying a long list of build and runtime dependencies,
-# we can use a convenient pre-made runtime and SDK. For this example, we'll be
-# using the runtime and SDK provided by elementary.
 runtime: io.elementary.Platform
-runtime-version: '8.3'
+runtime-version: '9.1'
 sdk: io.elementary.Sdk
-
-# This should match the exec line in your .desktop file and usually is the same
-# as your app ID
 command: io.github.phase1geo.minder
-
-# Here we can specify the kinds of permissions our app needs to run. Since we're
-# not using hardware like webcams, making sound, or reading external files, we
-# only need permission to draw our app on screen using either X11 or Wayland.
 finish-args:
   - '--share=ipc'
   - '--socket=fallback-x11'
   - '--socket=wayland'
-  - '--filesystem=home'
-
-# This section is where you list all the source code required to build your app.
-# If we had external dependencies that weren't included in our SDK, we would list
-# them here.
 modules:
   - name: libmarkdown
     buildsystem: simple
@@ -43,6 +26,21 @@ modules:
       - type: git
         url: https://github.com/GNOME/gtksourceview.git
         tag: '5.12.0'
+
+  - name: lasem
+    buildsystem: meson
+    config-opts:
+      - -Dintrospection=disabled
+      - -Dviewer=disabled
+      - -Ddocumentation=disabled
+    cleanup:
+      - /bin
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://github.com/LasemProject/lasem.git
+        commit: e657038b7f348a91fabd06da192aedef137bd2f2
 
   - name: minder
     buildsystem: meson

@@ -33,16 +33,27 @@ public class MarkdownParser : TextParser {
     // Header
     add_regex( "^(#{1,6})[^#].*$", highlight_header );
 
+    // Escaped LaTeX delimiters
+    add_regex( "(\\\\)(\\$)", (text, match) => {
+      if( !within_latex( text, match, 1 ) ) {
+        make_grey( text, match, 1 );
+      }
+    });
+
     // Lists
     add_regex( "^\\s*(\\*|\\+|\\-|[0-9]+\\.)\\s", (text, match) => {
-      add_tag( text, match, 1, FormatTag.COLOR, _map.get_theme().get_color( "markdown_listitem" ).to_string() );
+      if( !within_latex( text, match, 1 ) ) {
+        add_tag( "list", text, match, 1, FormatTag.COLOR, _map.get_theme().get_color( "markdown_listitem" ).to_string() );
+      }
     });
 
     // Code
     add_regex( "(`)([^`]+)(`)", (text, match) => {
-      make_grey( text, match, 1 );
-      add_tag( text, match, 2, FormatTag.CODE );
-      make_grey( text, match, 3 );
+      if( !within_latex( text, match, 1 ) ) {
+        make_grey( text, match, 1 );
+        add_tag( "code", text, match, 2, FormatTag.CODE );
+        make_grey( text, match, 3 );
+      }
     });
 
     // Bold
@@ -60,7 +71,7 @@ public class MarkdownParser : TextParser {
     add_regex( "(==)([^= \t].*?(?<!\\\\|=| |\\t))(==)", highlight_highlight );
 
     // Links
-    add_regex( "(\\[)(.+?)(\\]\\s*\\((\\S+).*\\))", highlight_url1 );
+    add_regex( "(\\[)(.+?)(\\]\\s*\\((\\S+?)\\))", highlight_url1 );
     add_regex( "(<)((mailto:)?[a-z0-9.-]+@[-a-z0-9]+(\\.[-a-z0-9]+)*\\.[a-z]+)(>)", highlight_url2 );
     add_regex( "(<)((https?|ftp):[^'\">\\s]+)(>)", highlight_url3 );
 
@@ -71,82 +82,88 @@ public class MarkdownParser : TextParser {
   }
 
   private void make_grey( FormattedText text, MatchInfo match, int paren ) {
-    add_tag( text, match, paren, FormatTag.SYNTAX );
+    add_tag( "grey", text, match, paren, FormatTag.SYNTAX );
+  }
+
+  private bool within_latex( FormattedText text, MatchInfo match, int paren ) {
+    int start, end;
+    match.fetch_pos( paren, out start, out end );
+    return( LatexSpanParser.is_latex_at( text.text, start ) );
   }
 
   private void highlight_header( FormattedText text, MatchInfo match ) {
     make_grey( text, match, 1 );
-    add_tag( text, match, 0, FormatTag.HEADER, get_text( match, 1 ).length.to_string() );
+    add_tag( "header", text, match, 0, FormatTag.HEADER, get_text( match, 1 ).length.to_string() );
   }
 
   private void highlight_bold( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
-      add_tag( text, match, 2, FormatTag.BOLD );
+      add_tag( "bold", text, match, 2, FormatTag.BOLD );
       make_grey( text, match, 3 );
     }
   }
 
   private void highlight_italics( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
-      add_tag( text, match, 2, FormatTag.ITALICS );
+      add_tag( "italic", text, match, 2, FormatTag.ITALICS );
       make_grey( text, match, 3 );
     }
   }
 
   private void highlight_strikethrough( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
-      add_tag( text, match, 2, FormatTag.STRIKETHRU );
+      add_tag( "strike", text, match, 2, FormatTag.STRIKETHRU );
       make_grey( text, match, 3 );
     }
   }
 
   private void highlight_highlight( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
-      add_tag( text, match, 2, FormatTag.HILITE, "#A98400" );
+      add_tag( "hilite", text, match, 2, FormatTag.HILITE, "#A98400" );
       make_grey( text, match, 3 );
     }
   }
 
   private void highlight_url1( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
-      add_tag( text, match, 2, FormatTag.URL, get_text( match, 4 ) );
+      add_tag( "url1", text, match, 2, FormatTag.URL, get_text( match, 4 ) );
       make_grey( text, match, 3 );
     }
   }
 
   private void highlight_url2( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
-      add_tag( text, match, 2, FormatTag.URL, get_text( match, 2 ) );
+      add_tag( "url2", text, match, 2, FormatTag.URL, get_text( match, 2 ) );
       make_grey( text, match, 5 );
     }
   }
 
   private void highlight_url3( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
-      add_tag( text, match, 2, FormatTag.URL, get_text( match, 2 ) );
+      add_tag( "url3", text, match, 2, FormatTag.URL, get_text( match, 2 ) );
       make_grey( text, match, 4 );
     }
   }
 
   private void highlight_subscript( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
-      add_tag( text, match, 2, FormatTag.SUB, get_text( match, 2 ) );
+      add_tag( "sub", text, match, 2, FormatTag.SUB, get_text( match, 2 ) );
       make_grey( text, match, 3 );
     }
   }
 
   private void highlight_superscript( FormattedText text, MatchInfo match ) {
-    if( !within_tag( text, match, 1, FormatTag.CODE ) ) {
+    if( !within_latex( text, match, 1 ) && !within_tag( text, match, 1, FormatTag.CODE ) ) {
       make_grey( text, match, 1 );
-      add_tag( text, match, 2, FormatTag.SUPER, get_text( match, 2 ) );
+      add_tag( "sup", text, match, 2, FormatTag.SUPER, get_text( match, 2 ) );
       make_grey( text, match, 3 );
     }
   }

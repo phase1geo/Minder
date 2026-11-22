@@ -27,6 +27,8 @@ using Pango;
 
 public class CanvasText : Object {
 
+  private static Regex? _hr_regex = null;
+
   // Member variables
   private MindMap       _map;
   private double        _posx          = 0.0;
@@ -39,6 +41,7 @@ public class CanvasText : Object {
   private int           _column        = 0;   // Character column to use when moving vertically
   private Pango.Layout  _pango_layout  = null;
   private Pango.Layout  _line_layout   = null;
+  private LatexRenderer _latex         = null;
   private int           _selstart      = 0;
   private int           _selend        = 0;
   private int           _selanchor     = 0;
@@ -112,6 +115,7 @@ public class CanvasText : Object {
         _edit = value;
         if( !_edit ) {
           _nomarkup_text = new FormattedText.copy_clean( _map, _text );
+          _latex.update( _nomarkup_text, _font_size );
           clear_selection( "edit" );
         }
         update_size( true );
@@ -147,11 +151,13 @@ public class CanvasText : Object {
   public CanvasText( MindMap map ) {
     int int_max_width = (int)_max_width;
     _map           = map;
+    initialize_latex();
     _text          = new FormattedText( map );
     _text.changed.connect( text_changed );
     _nomarkup_text = new FormattedText( map );
     _line_layout   = map.canvas.create_pango_layout( "M" );
     _pango_layout  = map.canvas.create_pango_layout( null );
+    _latex.attach( _pango_layout.get_context() );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
@@ -164,16 +170,28 @@ public class CanvasText : Object {
   public CanvasText.with_text( MindMap map, string txt ) {
     int int_max_width = (int)_max_width;
     _map           = map;
+    initialize_latex();
     _text          = new FormattedText.with_text( map, txt );
     _text.changed.connect( text_changed );
     _nomarkup_text = new FormattedText.copy_clean( map, _text );
     _line_layout   = map.canvas.create_pango_layout( "M" );
     _pango_layout  = map.canvas.create_pango_layout( txt );
+    _latex.attach( _pango_layout.get_context() );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
+    _latex.update( _nomarkup_text, _font_size );
     set_parsers();
     update_size( false );
+  }
+
+  //-------------------------------------------------------------
+  // Creates the SVG-backed LaTeX renderer.
+  private void initialize_latex() {
+    _latex = new LatexRenderer();
+    _latex.changed.connect(() => {
+      update_size( true );
+    });
   }
 
   //-------------------------------------------------------------
@@ -199,6 +217,7 @@ public class CanvasText : Object {
     _pango_layout.set_font_description( ct._pango_layout.get_font_description() );
     _pango_layout.set_alignment( ct._pango_layout.get_alignment() );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
+    _latex.update( _nomarkup_text, _font_size );
     update_size( true );
   }
 
@@ -236,6 +255,9 @@ public class CanvasText : Object {
     fd.set_size( int_fsize );
     _line_layout.set_font_description( fd );
     _pango_layout.set_font_description( fd );
+    if( !edit ) {
+      _latex.update( _nomarkup_text, _font_size );
+    }
     update_size( true );
   }
 
@@ -282,10 +304,11 @@ public class CanvasText : Object {
     tag   = FormatTag.URL;
     extra = "";
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
-      var cindex = text.text.char_count( cursor + trailing );
+      var cindex      = text.text.char_count( cursor + trailing );
+      var layout_text = edit ? _text : _nomarkup_text;
       FormatTag[] tags = { FormatTag.URL };
       foreach( FormatTag t in tags ) {
-        var e = text.get_extra( t, cindex );
+        var e = layout_text.get_extra( t, cindex );
         if( e != null ) {
           tag   = t;
           extra = e;
@@ -342,6 +365,7 @@ public class CanvasText : Object {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "text" ) )  {
         _text.load( it );
         _nomarkup_text = new FormattedText.copy_clean( _map, _text );
+        _latex.update( _nomarkup_text, _font_size );
         update_size( false );
       }
     }
@@ -376,6 +400,7 @@ public class CanvasText : Object {
   private void text_changed() {
     if( !edit ) {
       _nomarkup_text = new FormattedText.copy_clean( _map, _text );
+      _latex.update( _nomarkup_text, _font_size );
     }
     update_size( true );
   }
@@ -385,8 +410,13 @@ public class CanvasText : Object {
   public void update_size( bool call_resized = true ) {
     if( _pango_layout != null ) {
       int text_width, text_height;
-      _pango_layout.set_text( (edit ? _text.text : _nomarkup_text.text), -1 );
-      _pango_layout.set_attributes( edit ? _text.get_attributes() : _nomarkup_text.get_attributes() );
+      var layout_text = edit ? _text : _nomarkup_text;
+      var attrs       = layout_text.get_attributes();
+      if( !edit ) {
+        _latex.apply_attributes( layout_text.text, ref attrs );
+      }
+      _pango_layout.set_text( layout_text.text, -1 );
+      _pango_layout.set_attributes( attrs );
       _pango_layout.get_size( out text_width, out text_height );
       _width  = (text_width  / Pango.SCALE);
       _height = (text_height / Pango.SCALE);
@@ -400,7 +430,12 @@ public class CanvasText : Object {
   // Updates the canvas item with the given theme
   public void update_attributes() {
     if( _pango_layout != null ) {
-      _pango_layout.set_attributes( edit ? _text.get_attributes() : _nomarkup_text.get_attributes() );
+      var layout_text = edit ? _text : _nomarkup_text;
+      var attrs       = layout_text.get_attributes();
+      if( !edit ) {
+        _latex.apply_attributes( layout_text.text, ref attrs );
+      }
+      _pango_layout.set_attributes( attrs );
     }
   }
 
@@ -949,7 +984,7 @@ public class CanvasText : Object {
       for( int i=0; i<ttags.length; i++ ) {
         var ttag = ttags.index( i );
         var ftag = (FormatTag)ttag.tag;
-        text.add_tag( ftag, (ttag.start + spos), (ttag.end + spos), ttag.parsed, ttag.extra );
+        text.add_tag( "ct-A", ftag, (ttag.start + spos), (ttag.end + spos), ttag.parsed, ttag.extra );
       }
       set_cursor_only( _selstart + slen );
       change_selection( _cursor, _cursor, "insert_formatted_text A" );
@@ -960,7 +995,7 @@ public class CanvasText : Object {
       for( int i=0; i<ttags.length; i++ ) {
         var ttag = ttags.index( i );
         var ftag = (FormatTag)ttag.tag;
-        text.add_tag( ftag, (ttag.start + cpos), (ttag.end + cpos), ttag.parsed, ttag.extra );
+        text.add_tag( "ct-B", ftag, (ttag.start + cpos), (ttag.end + cpos), ttag.parsed, ttag.extra );
       }
       set_cursor_only( _cursor + slen );
       change_selection( _cursor, _cursor, "insert_formatted_text A" );
@@ -1104,7 +1139,7 @@ public class CanvasText : Object {
   public void add_tag( FormatTag tag, string? extra, bool parsed, UndoTextBuffer undo_buffer ) {
     var spos = is_selected() ? text.text.index_of_nth_char( _selstart ) : 0;
     var epos = is_selected() ? text.text.index_of_nth_char( _selend )   : text.text.length;
-    text.add_tag( tag, spos, epos, parsed, extra );
+    text.add_tag( "ct-add", tag, spos, epos, parsed, extra );
     undo_buffer.add_tag_add( spos, epos, tag, extra, parsed, _cursor );
   }
 
@@ -1167,6 +1202,70 @@ public class CanvasText : Object {
   }
 
   //-------------------------------------------------------------
+  // Returns [start, end, start, end, ...] byte ranges of each line in
+  // the given text that is a Markdown horizontal rule (---, ***, ___,
+  // optionally spaced like "- - -")
+  private int[] find_hr_lines( string txt ) {
+    int[] ranges = {};
+    try {
+      if( _hr_regex == null ) {
+        _hr_regex = new Regex( "^ {0,3}([-*_])(?: *\\1){2,} *$", RegexCompileFlags.MULTILINE );
+      }
+      MatchInfo mi;
+      if( _hr_regex.match( txt, 0, out mi ) ) {
+        do {
+          int s, e;
+          mi.fetch_pos( 0, out s, out e );
+          ranges += s;
+          ranges += e;
+        } while( mi.next() );
+      }
+    } catch( RegexError e ) {}
+    return( ranges );
+  }
+
+  //-------------------------------------------------------------
+  // Retrieves the Cairo tag that will allow links to be clickable
+  // in exports.
+  private string get_cairo_tag( Cairo.Context ctx, Pango.Layout layout, UndoTagInfo info, double px, double py ) {
+
+    var a = layout.index_to_pos( info.start );
+    var b = layout.index_to_pos( info.end );
+
+    var x = (px + Pango.units_to_double( a.x ));
+    var y = (py + Pango.units_to_double( a.y ));
+    var w = Pango.units_to_double( b.x - a.x );
+    var h = Pango.units_to_double( a.height );
+
+    var x1 = x;
+    var y1 = y;
+    var x2 = (x + w);
+    var y2 = (y + h);
+
+    ctx.user_to_device( ref x1, ref y1 );
+    ctx.user_to_device( ref x2, ref y2 );
+
+    var rx = (int)double.min( x1, x2 );
+    var ry = (int)double.min( y1, y2 );
+    var rw = (int)(x2 - x1).abs();
+    var rh = (int)(y2 - y1).abs();
+
+    return( "rect=[%d %d %d %d] uri='%s'".printf( rx, ry, rw, rh, info.extra ) );
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds Cairo tags to the embedded URL links.
+  private void add_link_tags( Cairo.Context ctx, Pango.Layout layout, double x, double y ) {
+    var tags = _nomarkup_text.get_full_tags_in_range( FormatTag.URL, 0, _nomarkup_text.text.length );
+    for( int i=0; i<tags.length; i++ ) {
+      var tag = get_cairo_tag( ctx, layout, tags.index( i ), x, y );
+      ctx.tag_begin( Cairo.TAG_LINK, tag );
+      ctx.tag_end( Cairo.TAG_LINK );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Draws the node font to the screen
   public void draw( Cairo.Context ctx, Theme theme, RGBA fg, double alpha, bool copy_layout ) {
 
@@ -1174,13 +1273,18 @@ public class CanvasText : Object {
 
     if( copy_layout || node_selected ) {
       layout = _pango_layout.copy();
-      layout.set_attributes( edit ? _text.get_attributes_from_theme( theme, node_selected ) :
-                                    _nomarkup_text.get_attributes_from_theme( theme, node_selected ) );
+      var layout_text = edit ? _text : _nomarkup_text;
+      var attrs       = layout_text.get_attributes_from_theme( theme, node_selected );
+      if( !edit ) {
+        _latex.apply_attributes( layout_text.text, ref attrs );
+      }
+      layout.set_attributes( attrs );
     }
 
     if( alpha < 1.0 ) {
-      layout = _pango_layout.copy();
-      var attrs      = layout.get_attributes();
+      layout = layout.copy();
+      var current_attrs = layout.get_attributes();
+      var attrs      = (current_attrs == null) ? new Pango.AttrList() : current_attrs.copy();
       var alpha_val  = (uint16)(65536 * alpha);
       var alpha_attr = Pango.attr_foreground_alpha_new( alpha_val );
       alpha_attr.start_index = 0;
@@ -1189,25 +1293,73 @@ public class CanvasText : Object {
       layout.set_attributes( attrs );
     }
 
+    // Hide the text of horizontal-rule lines; we draw them as lines below
+    int[] hr_ranges = {};
+    if( !edit && (_map.markdown_parser != null) && _map.markdown_parser.enable ) {
+      hr_ranges = find_hr_lines( _nomarkup_text.text );
+      if( hr_ranges.length > 0 ) {
+        layout = layout.copy();
+        var cur   = layout.get_attributes();
+        var attrs = (cur == null) ? new Pango.AttrList() : cur.copy();
+        for( int i = 0; i < hr_ranges.length; i += 2 ) {
+          var a = Pango.attr_foreground_alpha_new( 1 );
+          a.start_index = (uint)hr_ranges[i];
+          a.end_index   = (uint)hr_ranges[i+1];
+          attrs.change( (owned)a );
+        }
+        layout.set_attributes( attrs );
+      }
+    }
+
     Pango.Rectangle ink_rect, log_rect;
     layout.get_extents( out ink_rect, out log_rect );
 
     // Output the text
     ctx.move_to( (posx - (log_rect.x / Pango.SCALE)), posy );
     Utils.set_context_color_with_alpha( ctx, fg, alpha );
+    _latex.prepare_draw( fg, alpha );
     Pango.cairo_show_layout( ctx, layout );
     ctx.new_path();
 
+    if( copy_layout && !edit ) {
+      add_link_tags( ctx, layout, (posx - (log_rect.x / Pango.SCALE)), posy );
+    }
+
+    // Draw the horizontal rules
+    for( int i = 0; i < hr_ranges.length; i += 2 ) {
+      var    rect = layout.index_to_pos( hr_ranges[i] );
+      double y    = Math.round( posy + ((rect.y + (rect.height / 2.0)) / Pango.SCALE) ) + 0.5;
+      double x0   = posx - (log_rect.x / Pango.SCALE);
+      double x1   = x0 + (log_rect.width / Pango.SCALE);
+      Utils.set_context_color_with_alpha( ctx, fg, alpha );
+      ctx.save();
+      ctx.set_line_width( 1.0 );
+      ctx.move_to( x0, y );
+      ctx.line_to( x1, y );
+      ctx.stroke();
+      ctx.restore();
+    }
+
     // Draw the insertion cursor if we are in the 'editable' state
     if( edit && !copy_layout ) {
+      Pango.Rectangle strong_rect, weak_rect;
       var cpos = text.text.index_of_nth_char( _cursor );
-      var rect = layout.index_to_pos( cpos );
-      Utils.set_context_color_with_alpha( ctx, theme.get_color( "text_cursor" ), alpha );
+      layout.get_cursor_pos( cpos, out strong_rect, out weak_rect );
+      var text_cursor = theme.get_color( "text_cursor" );
+      if( text_cursor.equal( theme.get_color( "foreground" ) ) ) {
+        text_cursor = fg;
+      }
+      Utils.set_context_color_with_alpha( ctx, text_cursor, alpha );
       double ix, iy;
-      ix = (posx + (rect.x / Pango.SCALE) - 1) - (log_rect.x / Pango.SCALE);
-      iy = posy + (rect.y / Pango.SCALE);
-      ctx.rectangle( ix, iy, 1, (rect.height / Pango.SCALE) );
-      ctx.fill();
+      ix = posx + (strong_rect.x / Pango.SCALE);
+      iy = posy + (strong_rect.y / Pango.SCALE);
+      ctx.save();
+      ctx.set_antialias( Cairo.Antialias.NONE );
+      ctx.set_line_width( 1.0 );
+      ctx.move_to( ix, iy );
+      ctx.line_to( ix, (iy + (strong_rect.height / Pango.SCALE)) );
+      ctx.stroke();
+      ctx.restore();
     }
 
   }

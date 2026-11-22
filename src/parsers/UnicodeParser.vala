@@ -40,10 +40,15 @@ public class UnicodeParser : TextParser {
   // Highlights the given tag.
   private void handle_code( FormattedText text, MatchInfo match ) {
 
+    // LaTeX commands must remain intact while a formula is edited.
+    int match_start, match_end;
+    match.fetch_pos( 0, out match_start, out match_end );
+    if( LatexSpanParser.is_latex_at( text.text, match_start ) ) return;
+
     var tag = get_text( match, 0 );
 
     // Highlight the tag
-    add_tag( text, match, 0, FormatTag.TAG, tag );
+    add_tag( "unicode", text, match, 0, FormatTag.TAG, tag );
 
     // If the FormattedText item matches the currently edited
     if( _map.is_node_selected() ) {

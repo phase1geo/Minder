@@ -118,8 +118,9 @@ public class TagInspector : Box {
       _map.reload_tags.disconnect( reload_tags );
     }
     _map = map;
-    _editor.set_tags( map.model.tags );
+    editable_changed();
     if( map != null ) {
+      _editor.set_tags( map.model.tags );
       map.current_changed.connect( current_changed );
       map.reload_tags.connect( reload_tags );
       current_changed();
