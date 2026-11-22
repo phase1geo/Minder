@@ -1092,9 +1092,7 @@ public class FormattedText {
   // range.
   public Array<UndoTagInfo> get_full_tags_in_range( FormatTag tag, int start, int end ) {
     var tags = new Array<UndoTagInfo>();
-    for( int i=0; i<FormatTag.LENGTH-4; i++ ) {
-      _formats[i].get_full_tags_in_range( i, start, end, ref tags );
-    }
+    _formats[tag].get_full_tags_in_range( tag, start, end, ref tags );
     return( tags );
   }
 
