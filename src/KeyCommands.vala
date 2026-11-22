@@ -2659,7 +2659,9 @@ public enum KeyCommand {
       int cursor, selstart, selend;
       text.get_cursor_info( out cursor, out selstart, out selend );
       var links = text.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
-      Utils.open_url( links.index( 0 ).extra );
+      if( links.length > 0 ) {
+        Utils.open_url( links.index( 0 ).extra );
+      }
     }
   }
 
