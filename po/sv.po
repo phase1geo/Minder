@@ -8,9 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: io.github.phase1geo.minder 3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 22:04-0600\n"
+"POT-Creation-Date: 2026-11-21 21:47-0600\n"
 "PO-Revision-Date: 2026-11-21 12:28+0200\n"
-"Last-Translator: Jonatan Nyberg <84130654+NickWick13@users.noreply.github.com>\n"
+"Last-Translator: Jonatan Nyberg <84130654+NickWick13@users.noreply.github."
+"com>\n"
 "Language-Team: Swedish\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
@@ -65,8 +66,7 @@ msgstr "Startar Minder med en ny fil"
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
 msgstr ""
-"Gör bakgrunden i PNG-bilder genomskinlig. Standard är ogenomskinlig "
-"bakgrund."
+"Gör bakgrunden i PNG-bilder genomskinlig. Standard är ogenomskinlig bakgrund."
 
 #: src/Application.vala:165
 msgid "PNG compression value (0-9). Default is 0."
@@ -99,8 +99,8 @@ msgid ""
 "  %sio.github.phase1geo.minder --export=png --png-transparent file.minder "
 "file.png\n"
 msgstr ""
-"  %sio.github.phase1geo.minder --export=png --png-transparent fil.minder "
-"fil.png\n"
+"  %sio.github.phase1geo.minder --export=png --png-transparent fil.minder fil."
+"png\n"
 
 #: src/Application.vala:185
 #, c-format
@@ -156,7 +156,7 @@ msgstr "Välj nod"
 msgid "Callout"
 msgstr "Pratbubbla"
 
-#: src/CanvasText.vala:349 src/FormattedText.vala:1241
+#: src/CanvasText.vala:349 src/FormattedText.vala:1239
 msgid "No text found"
 msgstr "Ingen text hittades"
 
@@ -296,9 +296,11 @@ msgid ""
 "\n"
 "Note: Upgraded files cannot be viewed/edited with older versions of Minder."
 msgstr ""
-"Filen kommer från en äldre version av Minder. Du behöver uppgradera den för att kunna redigera den.\n"
+"Filen kommer från en äldre version av Minder. Du behöver uppgradera den för "
+"att kunna redigera den.\n"
 "\n"
-"Obs! Uppgraderade filer går inte att visa eller redigera i äldre versioner av Minder."
+"Obs! Uppgraderade filer går inte att visa eller redigera i äldre versioner "
+"av Minder."
 
 #: src/Document.vala:705 src/ImageEditor.vala:572 src/MainWindow.vala:1701
 #: src/QuickEntry.vala:167 src/StickerSet.vala:75 src/TableEditor.vala:504
@@ -938,8 +940,7 @@ msgstr "Slumpa länkfärgen för den aktuella noden"
 
 #: src/KeyCommands.vala:781
 msgid "Set current node link color to match parent node"
-msgstr ""
-"Ge den aktuella nodens länk samma färg som den överordnade nodens länk"
+msgstr "Ge den aktuella nodens länk samma färg som den överordnade nodens länk"
 
 #: src/KeyCommands.vala:782
 msgid "Toggle folding of current node"
@@ -1835,8 +1836,8 @@ msgid ""
 "directory.</small>"
 msgstr ""
 "<small>Uppgraderar alla Minder-filer som var öppna förra gången du använde "
-"programmet. En kopia av varje original sparas i samma katalog som "
-"filen.</small>"
+"programmet. En kopia av varje original sparas i samma katalog som filen.</"
+"small>"
 
 #: src/MainWindow.vala:2474
 msgid ""
@@ -1845,9 +1846,9 @@ msgid ""
 "change a read-only mindmap, you can use the 'Save As' button in the header "
 "bar to write it to the newer format.</small>"
 msgstr ""
-"<small>Behåller Minder-filerna i originalformat och öppnar dem skrivskyddade"
-" i var sin flik. För att redigera en skrivskyddad tankekarta kan du spara en"
-" kopia i det nyare formatet med knappen ”Spara som” i namnlisten.</small>"
+"<small>Behåller Minder-filerna i originalformat och öppnar dem skrivskyddade "
+"i var sin flik. För att redigera en skrivskyddad tankekarta kan du spara en "
+"kopia i det nyare formatet med knappen ”Spara som” i namnlisten.</small>"
 
 #: src/MainWindow.vala:2481
 msgid "Use the selected option when future older Minder files are opened"
@@ -2362,8 +2363,7 @@ msgstr "Skapa ny nod från redigeringsläget"
 msgid ""
 "Specifies if we should create a new node directly from edit mode if Return "
 "or Tab is pressed."
-msgstr ""
-"Skapa en ny nod när du trycker på Retur eller Tabb i redigeringsläget."
+msgstr "Skapa en ny nod när du trycker på Retur eller Tabb i redigeringsläget."
 
 #: src/Preferences.vala:125
 msgid "Newly attached nodes get style from parent"
@@ -2401,8 +2401,8 @@ msgid ""
 "Specifies if Unicode characters can be input using backslash prefixed "
 "descriptors (ex. \\pi)"
 msgstr ""
-"Ange om det ska gå att skriva Unicode-tecken med ett omvänt snedstreck följt"
-" av ett namn (t.ex. \\pi)."
+"Ange om det ska gå att skriva Unicode-tecken med ett omvänt snedstreck följt "
+"av ett namn (t.ex. \\pi)."
 
 #: src/Preferences.vala:144
 msgid "Create connection title on creation"
@@ -2505,8 +2505,8 @@ msgstr "Nya tankekartor får från början de taggar som finns i den här listan
 #: src/Preferences.vala:340
 msgid "Double-click to edit shortcut.  Select + Delete to remove shortcut."
 msgstr ""
-"Dubbelklicka för att ändra ett kortkommando. Markera det och tryck på Delete"
-" för att ta bort det."
+"Dubbelklicka för att ändra ett kortkommando. Markera det och tryck på Delete "
+"för att ta bort det."
 
 #: src/Preferences.vala:341
 msgid "Escape to cancel.  Press key combination to set."
@@ -2592,8 +2592,7 @@ msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
 msgstr ""
-"Varje textrad anger antingen en nods titel eller text till nodens "
-"anteckning."
+"Varje textrad anger antingen en nods titel eller text till nodens anteckning."
 
 #: src/QuickEntry.vala:90
 msgid "Creates a child node of the previous node."
@@ -4428,8 +4427,8 @@ msgid ""
 "from tag list.  Double-click to rename tag."
 msgstr ""
 "Klicka för att lägga till eller ta bort taggen på markerade noder. Markera "
-"taggen och tryck på Delete för att ta bort den från listan. Dubbelklicka för"
-" att byta namn på taggen."
+"taggen och tryck på Delete för att ta bort den från listan. Dubbelklicka för "
+"att byta namn på taggen."
 
 #: src/TagEditor.vala:77
 msgid ""

@@ -133,6 +133,33 @@
   </custom>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="3.1.0" date="2026-12-01">
+      <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Added ability to draw horizontal rules when rendering node with horizontal rule Markdown syntax.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated Swedish translation (thanks to Jonatan Nyberg).</li>
+          <li>Updated Italian translation (thanks to Albano Battistella).</li>
+          <li xml:lang="ru">Обновлен перевод на итальянский (спаисбо Albano Battistella).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed issue where URL links in PDFs were not clickable.</li>
+          <li>Fixed issue when keyboard shortcut is used to open URL that the cursor is over when the cursor is not over a URL.</li>
+        </ul>
+      </description>
+    </release>
     <release version="3.0.0" date="2026-10-26">
       <description>
         <p><em>Important Note</em>: This release changes Minder's application ID which effectively makes it
