@@ -411,7 +411,7 @@ public class NodeImage {
     }
 
     var scale      = (width * 1.0) / crop_w;
-    var int_crop_h = (int)(crop_h * scale);
+    var int_crop_h = (int)Math.round( crop_h * scale );
     
     // Ensure scaled height is valid for GdkPixbuf
     if( int_crop_h <= 0 ) {
